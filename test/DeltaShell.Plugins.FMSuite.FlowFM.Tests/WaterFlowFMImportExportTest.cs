@@ -48,7 +48,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
               so it could happen the Spatially Varying operations are not loaded. */
             string mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
             string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localMduFilePath);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localMduFilePath);
 
             ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
             Assert.IsNotNull(fraction);
@@ -80,7 +82,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduFileName = "par16.mdu";
                 string localMduFilePath = Path.Combine(tempDir, mduFileName);
 
-                var model = new WaterFlowFMModel(localMduFilePath);
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(localMduFilePath);
 
                 Assert.IsNotNull(model);
             });
@@ -95,7 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
             string localMduDir = Path.GetDirectoryName(localMduFilePath);
 
-            var model = new WaterFlowFMModel(localMduFilePath);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -117,7 +121,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             const string mduFileName = "excesstemp.mdu";
             string mduPath = Path.Combine(Path.GetFullPath(dir), mduFileName);
             waterFlowFMModel.ExportTo(mduPath);
-            var importedModel = new WaterFlowFMModel(mduPath);
+
+            var importedModel = new WaterFlowFMModel();
+            importedModel.ImportFromMdu(mduPath);
+
             Assert.IsTrue(importedModel.UseTemperature);
         }
 
@@ -145,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                             new Coordinate(140.0, 8.0, 1.0),
                             new Coordinate(180.0, 4.0, 2.0),
                             new Coordinate(260.0, 0.0, 3.0)
-                        }),
+                        })
                 };
 
                 /* Set data model */
@@ -240,8 +247,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         model.ReloadGrid(true, true);
                     }
 
-                    using (var model = new WaterFlowFMModel(tempMduFilePath))
+                    using (var model = new WaterFlowFMModel())
                     {
+                        model.ImportFromMdu(tempMduFilePath);
+
                         TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UnstructuredGridFileHelper.BedLevelLocation.Faces);
 
                         Project project = app.Project;
@@ -336,7 +345,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                                                       BoundaryConditionDataType.TimeSeries)
                             {
                                 Feature = boundary,
-                                Name = flowBoundaryConditionName,
+                                Name = flowBoundaryConditionName
                             };
 
                         var morphologyBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,

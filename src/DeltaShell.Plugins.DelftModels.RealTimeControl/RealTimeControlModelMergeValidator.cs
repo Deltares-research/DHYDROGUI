@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             return new ValidationReport(destinationModel.Name + " (Real Time Control)", new[]
             {
-                ValidateControlGroups(destinationModel, sourceModel),
+                ValidateControlGroups(destinationModel, sourceModel)
             });
         }
 

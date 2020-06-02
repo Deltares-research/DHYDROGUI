@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using NSubstitute;
 using NUnit.Framework;

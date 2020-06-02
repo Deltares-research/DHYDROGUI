@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
     {
         public ISet<string> ObsoleteProperties { get; } = new HashSet<string>()
         {
-            "hdam",
+            "hdam"
         };
 
         public IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; } = new Dictionary<string, string>()
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
         public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; } = new Dictionary<string, string>()
         {
-            {"model", "General"},
+            {"model", "General"}
         };
     }
 }

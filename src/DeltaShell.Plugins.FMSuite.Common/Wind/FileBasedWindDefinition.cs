@@ -29,39 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Wind
             SpiderWeb
         }
 
-        public static readonly IDictionary<WindDefinitionType, IList<FileBasedWindQuantity>> ExpectedQuantities =
-            new Dictionary<WindDefinitionType, IList<FileBasedWindQuantity>>
-            {
-                {
-                    WindDefinitionType.WindXWindY, new[]
-                    {
-                        FileBasedWindQuantity.VelocityX,
-                        FileBasedWindQuantity.VelocityY,
-                        FileBasedWindQuantity.AirPressure
-                    }
-                },
-                {
-                    WindDefinitionType.WindXY, new[]
-                    {
-                        FileBasedWindQuantity.VelocityVector,
-                        FileBasedWindQuantity.AirPressure
-                    }
-                },
-                {
-                    WindDefinitionType.WindXYP, new[]
-                    {
-                        FileBasedWindQuantity.VelocityVectorAirPressure
-                    }
-                },
-                {
-                    WindDefinitionType.SpiderWebGrid, new[]
-                    {
-                        FileBasedWindQuantity.SpiderWeb
-                    }
-                }
-            };
-
-        public static readonly IDictionary<string, int> WindFileTypes = new Dictionary<string, int>
+        public static IDictionary<string, int> WindFileTypes { get; } = new Dictionary<string, int>
         {
             {UniformSeriesFilter, 1},
             {UniformXSeriesFilter, 1},
@@ -75,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Wind
             {SpiderWebFileFilter, 5}
         };
 
-        public static readonly IDictionary<string, int> WindFileMethods = new Dictionary<string, int>
+        public static IDictionary<string, int> WindFileMethods { get; } = new Dictionary<string, int>
         {
             {UniformSeriesFilter, 1},
             {UniformXSeriesFilter, 1},
@@ -89,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Wind
             {SpiderWebFileFilter, 1}
         };
 
-        public static readonly IDictionary<FileBasedWindQuantity, string[]> WindQuantityFileExtensions =
+        public static IDictionary<FileBasedWindQuantity, string[]> WindQuantityFileExtensions { get; } =
             new Dictionary<FileBasedWindQuantity, string[]>
             {
                 {
@@ -266,6 +234,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.Wind
 
             WindFile = spiderWebFile.FilePath;
         }
+
+        private static IDictionary<WindDefinitionType, IList<FileBasedWindQuantity>> ExpectedQuantities { get; } =
+            new Dictionary<WindDefinitionType, IList<FileBasedWindQuantity>>
+            {
+                {
+                    WindDefinitionType.WindXWindY, new[]
+                    {
+                        FileBasedWindQuantity.VelocityX,
+                        FileBasedWindQuantity.VelocityY,
+                        FileBasedWindQuantity.AirPressure
+                    }
+                },
+                {
+                    WindDefinitionType.WindXY, new[]
+                    {
+                        FileBasedWindQuantity.VelocityVector,
+                        FileBasedWindQuantity.AirPressure
+                    }
+                },
+                {
+                    WindDefinitionType.WindXYP, new[]
+                    {
+                        FileBasedWindQuantity.VelocityVectorAirPressure
+                    }
+                },
+                {
+                    WindDefinitionType.SpiderWebGrid, new[]
+                    {
+                        FileBasedWindQuantity.SpiderWeb
+                    }
+                }
+            };
 
         public class ExtForceValue
         {

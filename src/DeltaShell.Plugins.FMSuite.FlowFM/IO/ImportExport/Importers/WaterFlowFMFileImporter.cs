@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaterFlowFMFileImporter));
 
-        private Func<string> StoreWorkingDirectoryPathFunc;
+        private readonly Func<string> StoreWorkingDirectoryPathFunc;
 
         /// <summary>
         /// Constructor needed for connecting the Application.WorkingDirectory to the WaterFlowFMModel Working Directory.
@@ -68,8 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         {
             try
             {
-                WaterFlowFMModel importedFmModel = WaterFlowFMModel.Import(path, ProgressChanged);
-                importedFmModel.WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc;
+                var importedFmModel = new WaterFlowFMModel
+                {
+                    WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc
+                };
+
+                importedFmModel.ImportFromMdu(path, true, ProgressChanged);
 
                 //replace the FM Model
                 var targetFmModel = target as WaterFlowFMModel;

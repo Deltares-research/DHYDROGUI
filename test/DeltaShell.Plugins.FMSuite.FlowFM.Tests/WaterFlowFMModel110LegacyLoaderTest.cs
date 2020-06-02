@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 "_his.nc",
                 "_map.nc",
                 "_clm.nc",
-                "_numlimdth.xyz",
+                "_numlimdth.xyz"
             };
 
             var filtersOutputWAQ = new List<string>
@@ -105,7 +105,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Get model for test
                 string mduFilePath = Path.Combine(modelDirPath, mduFileName);
                 Assert.That(File.Exists(mduFilePath));
-                var model = new WaterFlowFMModel(mduFilePath);
+
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(mduFilePath);
 
                 // Get all output files in the model directory before migration
                 List<string> outputFilesBeforeMigration = GetAllFilesByFilter(filters, modelDirPath);
@@ -207,7 +209,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Get model for test
                 string mduFilePath = Path.Combine(modelDirPath, mduFileName);
                 Assert.That(File.Exists(mduFilePath));
-                var model = new WaterFlowFMModel(mduFilePath);
+
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(mduFilePath);
 
                 // Perform migration
                 TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowFMModel110LegacyLoader),

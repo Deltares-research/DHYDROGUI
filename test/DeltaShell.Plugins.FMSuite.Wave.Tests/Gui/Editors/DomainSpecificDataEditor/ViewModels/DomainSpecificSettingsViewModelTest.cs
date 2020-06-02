@@ -163,8 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.UseCustomDirectionalSpaceSettings = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.UseCustomDirectionalSpaceSettings));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.UseCustomDirectionalSpaceSettings));
             Assert.That(domainData.SpectralDomainData.UseDefaultDirectionalSpace, Is.EqualTo(!setValue));
         }
 
@@ -195,8 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.UseCustomFrequencySpaceSettings = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.UseCustomFrequencySpaceSettings));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.UseCustomFrequencySpaceSettings));
             Assert.That(domainData.SpectralDomainData.UseDefaultFrequencySpace, Is.EqualTo(!setValue));
         }
 
@@ -227,8 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.UseCustomHydroDynamicsSettings = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.UseCustomHydroDynamicsSettings));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.UseCustomHydroDynamicsSettings));
             Assert.That(domainData.HydroFromFlowData.UseDefaultHydroFromFlowSettings, Is.EqualTo(!setValue));
         }
 
@@ -259,8 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.UseCustomWindSettings = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.UseCustomWindSettings));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.UseCustomWindSettings));
             Assert.That(domainData.UseGlobalMeteoData, Is.EqualTo(!setValue));
         }
     }

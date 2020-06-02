@@ -3,4 +3,5 @@
 <Include>
   <File Id="DelftTools.Hydro.dll" Source='$(var.deltashell_gui_bin)DelftTools.Hydro.dll' />
   <File Id="DeltaShell.NGHS.Common.dll" Source='$(var.deltashell_gui_bin)DeltaShell.NGHS.Common.dll' />
+  <File Id="DeltaShell.NGHS.Common.Gui.dll" Source='$(var.deltashell_gui_bin)DeltaShell.NGHS.Common.Gui.dll' />
 </Include>

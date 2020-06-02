@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 model.Loads,
                 model.ObservationPoints,
                 model.OutputSubstancesDataItemSet,
-                model.OutputParametersDataItemSet,
+                model.OutputParametersDataItemSet
                 // not for observation areas! It is created by SharpMapGisGuiPlugin.
             };
 
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.Loads.AddRange(new[]
             {
                 new WaterQualityLoad {Name = "Load 1"},
-                new WaterQualityLoad {Name = "Load 2"},
+                new WaterQualityLoad {Name = "Load 2"}
             });
 
             var mapLayerProviders = new IMapLayerProvider[]
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.NotNull(groupLayer);
             Assert.IsTrue(groupLayer.LayersReadOnly);
 
-            ILayer[] allLayers = Map.GetLayers(groupLayer.Layers, true, true).ToArray();
+            ILayer[] allLayers = groupLayer.Layers.GetLayersRecursive(true, true).ToArray();
 
             Assert.AreEqual(17, allLayers.Length);
 

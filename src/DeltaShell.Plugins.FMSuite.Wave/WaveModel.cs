@@ -19,10 +19,10 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -36,7 +36,6 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -55,12 +54,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private readonly MdwFile mdwFile = new MdwFile();
 
+        private readonly BoundaryContainerSyncService boundaryContainerSyncService;
+
         private readonly string tempWorkingDirectory;
         private readonly DimrRunner runner;
-        private IGeometry previousFeatureGeometry;
-        private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
-        private IList<IDisposable> disposableItems = new List<IDisposable>();
         private string progressText;
         private IWaveModelApi waveApi;
 
@@ -77,8 +75,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
             runner = new DimrRunner(this);
-            Boundaries = new EventedList<Feature2D>();
-            Sp2Boundaries = new EventedList<Feature2D>();
             BuildModel(creationCode, false);
 
             ShowModelRunConsole = false;
@@ -90,16 +86,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ((INotifyPropertyChanged) this).PropertyChanged += (s, e) => MarkDirty();
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
 
-            // todo: implement snapping through SnapRules
-            ((INotifyPropertyChange) Boundaries).PropertyChanging += BoundariesPropertyChanging;
-            ((INotifyPropertyChanged) Boundaries).PropertyChanged += BoundariesPropertyChanged;
-
             dataItems.Add(new DataItem(new TextDocument(true) {Name = "Swan run log"}, DataItemRole.Output,
                                        SwanLogDataItemTag));
 
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
             InitializeCouplingTime();
+
+            boundaryContainerSyncService = new BoundaryContainerSyncService(this);
+#pragma warning disable 618
+            BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
+#pragma warning restore 618
         }
 
         /// <summary>
@@ -215,6 +212,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        public WaveInputFieldData TimePointData
+        {
+            get => ModelDefinition.TimePointData;
+        }
+
+        /// <summary>
+        /// Only used for bubbling events for updating project tree. Don't remove the setter.
+        /// It should be public.
+        /// </summary>
+        [Obsolete("Use BoundaryContainer.Boundaries")]
+        public IEventedList<IWaveBoundary> BoundariesFromBoundaryContainer { get; set; }
+
         public WaveModelDefinition ModelDefinition
         {
             get => modelDefinition;
@@ -261,10 +270,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
-
-        public WaveInputFieldData TimePointData { get; set; }
-
         public IEnumerable<WavmFileFunctionStore> WavmFunctionStores
         {
             get
@@ -278,21 +283,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         public MdwFile MdwFile => mdwFile;
-
-        public string OverallSpecFile
-        {
-            get => ModelDefinition.OverallSpecFile;
-            set
-            {
-                if (value == ModelDefinition.OverallSpecFile)
-                {
-                    return;
-                }
-
-                ModelDefinition.OverallSpecFile = value;
-                LoadSp2Boundary();
-            }
-        }
 
         public string WorkingDirectory => ExplicitWorkingDirectory ?? tempWorkingDirectory;
 
@@ -313,36 +303,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </summary>
         public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
 
-        public IEventedList<Feature2D> Boundaries { get; }
-        public IEventedList<Feature2D> Sp2Boundaries { get; }
-
-        public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
-        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
-        public IEventedList<WaveObstacle> Obstacles { get; set; }
-
-        public bool BoundaryIsDefinedBySpecFile
+        public IBoundaryContainer BoundaryContainer
         {
-            get => ModelDefinition.BoundaryIsDefinedBySpecFile;
-            set
-            {
-                if (value == ModelDefinition.BoundaryIsDefinedBySpecFile)
-                {
-                    return;
-                }
+            get => ModelDefinition.BoundaryContainer;
+        }
 
-                ModelDefinition.BoundaryIsDefinedBySpecFile = value;
+        public IEventedList<Feature2DPoint> ObservationPoints
+        {
+            get => ModelDefinition.ObservationPoints;
+        }
 
-                // load sp2 file:
-                if (ModelDefinition.BoundaryIsDefinedBySpecFile)
-                {
-                    Boundaries.Clear();
-                    LoadSp2Boundary();
-                }
-                else
-                {
-                    Sp2Boundaries.Clear();
-                }
-            }
+        public IEventedList<Feature2D> ObservationCrossSections
+        {
+            get => ModelDefinition.ObservationCrossSections;
+        }
+
+        public IEventedList<WaveObstacle> Obstacles
+        {
+            get => ModelDefinition.Obstacles;
         }
 
         public ICoordinateSystem CoordinateSystem
@@ -545,36 +523,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public void ResnapBoundaries()
-        {
-            try
-            {
-                BeginEdit(new DefaultEditAction("Snap boundaries"));
-                var unsnappable = new List<Feature2D>();
-                foreach (Feature2D b in Boundaries)
-                {
-                    if (gridOperationApi != null)
-                    {
-                        IGeometry snappedGeometry = GetGridSnappedBoundary(b.Geometry);
-                        if (snappedGeometry == null)
-                        {
-                            unsnappable.Add(b);
-                            continue;
-                        }
-
-                        b.Geometry = snappedGeometry;
-                    }
-                }
-
-                // delete
-                unsnappable.ForEach(b => Boundaries.Remove(b));
-            }
-            finally
-            {
-                EndEdit();
-            }
-        }
-
         public override IProjectItem DeepClone()
         {
             string tempDir = FileUtils.CreateTempDirectory();
@@ -598,12 +546,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             RestoreEnvironment();
-            if (disposableItems != null)
-            {
-                disposableItems.ForEach(d => d.Dispose());
-                disposableItems.Clear();
-                disposableItems = null;
-            }
         }
 
         public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
@@ -649,19 +591,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public IGeometry GetGridSnappedBoundary(IGeometry geometry)
-        {
-            // couldn't think of a better way to do this, for now..
-            if (BoundaryIsDefinedBySpecFile)
-            {
-                Log.WarnFormat(
-                    "Cannot add boundaries when the model boundary is defined by Swan spectrum file (*.sp2)");
-                return null;
-            }
-
-            return GetGridSnappedGeometry("boundaries", geometry);
-        }
-
         public override IEnumerable<object> GetDirectChildren()
         {
             foreach (object item in base.GetDirectChildren())
@@ -677,19 +606,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 yield return domain.Bathymetry;
             }
 
-            yield return BoundaryConditions;
-
-            foreach (WaveBoundaryCondition bc in BoundaryConditions)
-            {
-                yield return bc;
-            }
-
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
             {
                 if (wavmFileFunctionStore != null && !string.IsNullOrEmpty(wavmFileFunctionStore.Path))
                 {
                     yield return wavmFileFunctionStore;
                 }
+            }
+
+            foreach (IWaveBoundary boundary in BoundaryContainer.Boundaries)
+            {
+                yield return boundary;
             }
         }
 
@@ -943,9 +870,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// <param name="creationCode"> </param>
         private void BuildModel(Action<WaveModel> creationCode, bool loading)
         {
-            disposableItems.ForEach(d => d.Dispose());
-            disposableItems.Clear();
-
             creationCode(this);
             if (loading && !Equals(OuterDomain, ModelDefinition.OuterDomain))
             {
@@ -973,17 +897,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 UpdateCoordinateSystem(outerDomain.Grid.CoordinateSystem);
             }
-
-            BoundaryConditions = ModelDefinition.BoundaryConditions;
-            Obstacles = ModelDefinition.Obstacles;
-            TimePointData = ModelDefinition.TimePointData;
-            ObservationPoints = ModelDefinition.ObservationPoints;
-            ObservationCrossSections = ModelDefinition.ObservationCrossSections;
-
-            disposableItems.Add(new FeatureDataSyncer<Feature2D, WaveBoundaryCondition>(
-                                    Boundaries,
-                                    BoundaryConditions,
-                                    f => CreateWaveBoundaryCondition(f, this)));
         }
 
         private static void BuildModelFromMdw(WaveModel model, string mdwFilePath)
@@ -998,40 +911,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(model.ModelDefinition.OuterDomain);
 
             model.BuildWaveDomains(allDomains, mdwDir, model);
-
-            List<WaveBoundaryCondition> convertedBoundaries =
-                WaveBoundaryImportHelper.ConvertToCoordinateBased(model.ModelDefinition.OrientedBoundaryConditions,
-                                                                  model.ModelDefinition.OuterDomain.Grid).ToList();
-
-            model.ModelDefinition.BoundaryConditions.AddRange(convertedBoundaries);
-            model.ModelDefinition.OrientedBoundaryConditions.Clear();
-
-            // snap boundaries to grid
-            var tempSnapApi = new WaveGridOperationApi(model.ModelDefinition.OuterDomain.Grid);
-            IEnumerable<Feature2D> snappedBoundaries = model.ModelDefinition.BoundaryConditions.Select(b =>
-            {
-                if (model.gridOperationApi != null)
-                {
-                    b.Feature.Geometry = tempSnapApi.GetGridSnappedGeometry("boundaries", b.Feature.Geometry);
-                }
-
-                return b.Feature;
-            });
-            model.Boundaries.AddRange(snappedBoundaries);
-            model.LoadSp2Boundary();
         }
 
         private static void BuildEmptyModel(WaveModel model)
         {
             model.ModelDefinition = new WaveModelDefinition {OuterDomain = new WaveDomainData("Outer")};
-        }
-
-        private void BoundariesPropertyChanging(object sender, PropertyChangingEventArgs e)
-        {
-            var feature2D = sender as Feature2D;
-            previousFeatureGeometry = feature2D != null && Boundaries.Contains(feature2D)
-                                          ? feature2D.Geometry
-                                          : null;
         }
 
         /// <summary>
@@ -1062,7 +946,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                         bedFrictionCoefficientProperty.PropertyDefinition.MultipleDefaultValues[
                             (int) bedFrictionProperty.Value]);
 
-                    BedFriction = BedFriction;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFriction, o => BedFriction = (int) o);
                     EndEdit();
                 }
 
@@ -1082,63 +966,63 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                         maxNrIterationsProperty.PropertyDefinition.MultipleDefaultValues[
                             (int) simulationModeProperty.Value]);
 
-                    SimulationMode = SimulationMode;
+                    TriggerPropertyChanged(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode, o => SimulationMode = (int) o);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.DirectionalSpaceType,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching directional space type"));
-                    DirectionalSpaceType = DirectionalSpaceType;
+                    TriggerPropertyChanged(KnownWaveCategories.GeneralCategory, KnownWaveProperties.DirectionalSpaceType, o => DirectionalSpaceType = (int) o);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(
                     KnownWaveProperties.WriteCOM, StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching write COM"));
-                    WriteCOM = WriteCOM;
+                    TriggerPropertyChanged(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM, o => WriteCOM = (bool) o);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.WriteTable,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching write table"));
-                    WriteTable = WriteTable;
+                    TriggerPropertyChanged(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteTable, o => WriteTable = (bool) o);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.MapWriteNetCDF,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
-                    BeginEdit(new DefaultEditAction("Switcing MapWriteNetCDF"));
-                    MapWriteNetCDF = MapWriteNetCDF;
+                    BeginEdit(new DefaultEditAction("Switching MapWriteNetCDF"));
+                    TriggerPropertyChanged(KnownWaveCategories.OutputCategory, KnownWaveProperties.MapWriteNetCDF, o => MapWriteNetCDF = (bool) o);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.Breaking,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Breaking"));
-                    Breaking = Breaking;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Breaking, o => Breaking = (bool) o);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.Triads,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Triads"));
-                    Triads = Triads;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Triads, o => Triads = (bool) o);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.Diffraction,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Diffraction"));
-                    Diffraction = Diffraction;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Diffraction, o => Diffraction = (bool) o);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.WaveSetup,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching WaveSetup"));
-                    WaveSetup = WaveSetup;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup, o => WaveSetup = (bool) o);
                     if ((bool) prop.Value)
                     {
                         Log.WarnFormat(
@@ -1151,85 +1035,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private void BoundariesPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void TriggerPropertyChanged(string propertyCategory, string propertyName,
+                                            Action<object> setPropertyAction)
         {
-            var feature2D = sender as Feature2D;
-
-            if (snappingGeometry || feature2D == null ||
-                e.PropertyName != nameof(feature2D.Geometry))
-            {
-                return;
-            }
-
-            snappingGeometry = true;
-
-            try
-            {
-                feature2D.Geometry = GetGridSnappedBoundary(feature2D.Geometry) ?? previousFeatureGeometry;
-            }
-            finally
-            {
-                snappingGeometry = false;
-            }
-        }
-
-        private static WaveBoundaryCondition CreateWaveBoundaryCondition(Feature2D f, WaveModel model)
-        {
-            // default condition: parameterized and uniform
-            var waveBoundaryCondition = (WaveBoundaryCondition)
-                new WaveBoundaryConditionFactory().CreateBoundaryCondition(f, WaveBoundaryCondition.WaveQuantityName,
-                                                                           BoundaryConditionDataType
-                                                                               .ParameterizedSpectrumConstant);
-            waveBoundaryCondition.Name = NamingHelper.GetUniqueName("BoundaryCondition" + "{0:D2}",
-                                                                    model.BoundaryConditions.OfType<INameable>());
-            return waveBoundaryCondition;
+            // To trigger a property changed on the WaveModel, this self assignment is necessary.
+            object propertyValue = ModelDefinition.GetModelProperty(propertyCategory, propertyName).Value;
+            setPropertyAction(propertyValue);
         }
 
         private void BuildWaveDomains(IEnumerable<IWaveDomainData> allDomains, string workingDirectory, WaveModel model)
         {
             foreach (IWaveDomainData domain in allDomains)
             {
-                LoadGrid(workingDirectory, domain);
                 LoadBathymetry(model, workingDirectory, domain);
             }
-        }
-
-        private void LoadSp2Boundary()
-        {
-            Sp2Boundaries.Clear();
-
-            string mdwDirectory = Path.GetDirectoryName(MdwFilePath);
-
-            if (!ModelDefinition.BoundaryIsDefinedBySpecFile)
-            {
-                return;
-            }
-
-            if (mdwDirectory == null || ModelDefinition.OverallSpecFile == null)
-            {
-                return;
-            }
-
-            string sp2FilePath = Path.Combine(mdwDirectory, ModelDefinition.OverallSpecFile);
-            if (!File.Exists(sp2FilePath))
-            {
-                return;
-            }
-
-            List<Coordinate> coordinates = new Sp2File().Read(sp2FilePath).Keys.ToList();
-
-            if (coordinates.Count < 2)
-            {
-                return;
-            }
-
-            coordinates.Add(coordinates[0]);
-
-            Sp2Boundaries.Add(new Feature2D
-            {
-                Name = Path.GetFileNameWithoutExtension(ModelDefinition.OverallSpecFile),
-                Geometry = new LineString(coordinates.ToArray())
-            });
         }
 
         [EditAction]

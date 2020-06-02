@@ -15,9 +15,6 @@ using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -109,8 +106,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(model.ModelDefinition.Properties.Count, retrievedModel.ModelDefinition.Properties.Count);
-                Assert.AreEqual(model.ModelDefinition.BoundaryConditions.Count,
-                                retrievedModel.ModelDefinition.BoundaryConditions.Count);
+                Assert.AreEqual(model.ModelDefinition.BoundaryContainer.Boundaries.Count,
+                                retrievedModel.ModelDefinition.BoundaryContainer.Boundaries.Count);
             }
         }
 
@@ -141,8 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
 
-                Assert.AreEqual(retrievedModel.BoundaryConditions.Count, model.BoundaryConditions.Count);
-                Assert.AreEqual(retrievedModel.Boundaries.Count, model.Boundaries.Count);
+                Assert.AreEqual(retrievedModel.BoundaryContainer.Boundaries.Count, model.BoundaryContainer.Boundaries.Count);
                 Assert.AreEqual(retrievedModel.Obstacles.Count, model.Obstacles.Count);
                 Assert.AreEqual(retrievedModel.Obstacles.Count, model.Obstacles.Count);
                 Assert.AreEqual(WaveDomainHelper.GetAllDomains(retrievedModel.OuterDomain).Count,
@@ -259,42 +255,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 //Check persistance
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(newTimeStep, retrievedModel.TimeStep);
-            }
-        }
-
-        [Test]
-        public void CreateFromScratchAddBoundarySaveAndReload()
-        {
-            using (var app = new DeltaShellApplication())
-            {
-                LoadRequiredPlugins(app);
-                app.Run();
-
-                var path = "modelSaveTest.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
-
-                var model = new WaveModel {Name = "modelSaveTest"};
-                app.Project.RootFolder.Add(model);
-
-                var line = new LineString(new[]
-                {
-                    new Coordinate(15, 15),
-                    new Coordinate(20, 20)
-                });
-                model.Boundaries.Add(new Feature2D
-                {
-                    Name = "bound1",
-                    Geometry = line
-                });
-
-                // save & reload
-                app.SaveProject();
-                app.CloseProject();
-                app.OpenProject(path);
-
-                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
-                Assert.AreEqual(1, retrievedModel.Boundaries.Count, "#boundaries");
-                Assert.AreEqual(1, retrievedModel.BoundaryConditions.Count, "#bcs");
             }
         }
 

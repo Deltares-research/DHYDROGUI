@@ -2,8 +2,10 @@
 using System.Linq;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
@@ -31,17 +33,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                 if (subFile.Key.Equals(model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile)))
                 {
-                    bool writeToDisk = extForceFile.WriteToDisk;
+                    IEnumerable<ExtForceFileItem> newExtForceFileItems =
+                        ExtForceFileItemFactory.GetItems(model.ExtFilePath, model.ModelDefinition, !newFormatBoundaryConditions,
+                                                         extForceFile.PolyLineForceFileItems, extForceFile.ExistingForceFileItems);
 
-                    extForceFile.WriteToDisk = false;
-
-                    IEnumerable<ExtForceFileItem> extForceFileItems =
-                        extForceFile.WriteExtForceFileSubFiles(model.ExtFilePath, model.ModelDefinition, false,
-                                                               !newFormatBoundaryConditions);
-
-                    extForceFile.WriteToDisk = writeToDisk;
-
-                    foreach (ExtForceFileItem extForceFileItem in extForceFileItems)
+                    foreach (ExtForceFileItem extForceFileItem in newExtForceFileItems)
                     {
                         newNode.AddChildItem(extForceFileItem.Quantity, extForceFileItem.FileName);
                     }
@@ -49,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     if (!newFormatBoundaryConditions)
                     {
                         IEnumerable<string[]> boundaryDataItems =
-                            extForceFile.GetFeatureDataFiles(model.ModelDefinition);
+                            ExtForceFileHelper.GetFeatureDataFiles(model.ModelDefinition, extForceFile.PolyLineForceFileItems);
 
                         foreach (string[] boundaryDataItem in boundaryDataItems)
                         {
@@ -75,20 +71,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                         List<string> locationFiles =
                             bndExtForceFileItems.Select(
-                                                    item => item.GetPropertyValue(BndExtForceFile.LocationFileKey))
+                                                    item => item.GetPropertyValue(BndExtForceFileConstants.LocationFileKey))
                                                 .ToList();
 
                         foreach (string locationFile in locationFiles.Distinct())
                         {
-                            newNode.AddChildItem(BndExtForceFile.LocationFileKey, locationFile);
+                            newNode.AddChildItem(BndExtForceFileConstants.LocationFileKey, locationFile);
                         }
 
                         IEnumerable<string> forcingFiles =
-                            bndExtForceFileItems.Select(item => item.GetPropertyValue(BndExtForceFile.ForcingFileKey));
+                            bndExtForceFileItems.Select(item => item.GetPropertyValue(BndExtForceFileConstants.ForcingFileKey));
 
                         foreach (string forcingFile in forcingFiles.Distinct())
                         {
-                            newNode.AddChildItem(BndExtForceFile.ForcingFileKey, forcingFile);
+                            newNode.AddChildItem(BndExtForceFileConstants.ForcingFileKey, forcingFile);
                         }
 
                         bndExtForceFile.WriteToDisk = writeToDisk;

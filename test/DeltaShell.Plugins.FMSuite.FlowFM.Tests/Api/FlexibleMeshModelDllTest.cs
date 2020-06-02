@@ -53,7 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -68,8 +69,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            using (var model = new WaterFlowFMModel())
             {
+                model.ImportFromMdu(localCopy);
+
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
@@ -97,7 +100,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             using (IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew())
             {
@@ -126,7 +130,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             using (IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew())
             {
@@ -164,7 +169,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             try
             {
@@ -202,7 +208,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             try
             {
@@ -244,7 +251,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             try
             {
@@ -270,7 +278,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             try
             {
@@ -303,7 +312,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             try
             {
@@ -333,7 +343,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             try
             {
@@ -360,7 +372,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -378,7 +392,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -466,7 +482,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var mocks = new MockRepository();
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             try
             {
@@ -541,7 +558,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -568,7 +587,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -595,7 +616,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -622,7 +645,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -649,7 +674,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -676,7 +703,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -704,7 +733,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -731,7 +762,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -753,7 +786,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -775,7 +810,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -797,7 +834,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -819,7 +858,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
@@ -856,7 +897,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(localCopy);
 
             try
             {

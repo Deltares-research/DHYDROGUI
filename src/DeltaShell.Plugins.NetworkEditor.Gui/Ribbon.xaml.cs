@@ -34,7 +34,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
         private ICommand addNewBranchCommand = new AddNewBranchCommand();
         private ICommand addNewBranchScribbleCommand = new AddNewBranchUsingScribbleModeCommand();
-        private ICommand insertNewNodeCommand = new InsertNewNodeCommand();
         private ICommand addNewCrossSectionYZCommand = new AddNewCrossSectionYZCommand();
         private ICommand addNewCrossSectionZWCommand = new AddNewCrossSectionZWCommand();
         private ICommand addNewCrossSectionXYZCommand = new AddNewCrossSectionXYZCommand();
@@ -49,7 +48,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
-        private ICommand addNewRouteCommand = new AddNewNetworkRouteCommand();
         private ICommand showCrossSectionHistoryCommand = new ShowCrossSectionHistoryCommand();
         private ICommand addNewCatchmentPolderCommand = new AddNewCatchmentCommand.AddNewPolderCommand();
         private ICommand addNewCatchmentPavedCommand = new AddNewCatchmentCommand.AddNewPavedCommand();
@@ -62,21 +60,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewRunoffBoundaryCommand = new AddNewDrainageBasinFeatureCommand(HydroRegionEditorMapTool.AddRunoffBoundaryToolName);
         private ICommand addNewLinkCommand = new AddNewLinkCommand();
         private ICommand addNewNetworkLocationCommand = new AddNewNetworkLocationCommand();
-        private ICommand showSideViewCommand = new ShowSideViewCommand();
         private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
 
-        private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addObsCS2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationCrossSectionToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addPump2dCommand = new MapToolCommand(HydroRegionEditorMapTool.PumpToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.WeirToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) {LayerType = typeof(AreaLayer)};
-        private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) {LayerType = typeof(AreaLayer)};
+        private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addObsCS2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationCrossSectionToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addPump2dCommand = new MapToolCommand(HydroRegionEditorMapTool.PumpToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.WeirToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) {LayerType = typeof(HydroAreaLayer)};
 
         public Ribbon()
         {
@@ -92,7 +89,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return showHydroRegionContentsCommand;
                 yield return addNewBranchCommand;
                 yield return addNewBranchScribbleCommand;
-                yield return insertNewNodeCommand;
                 yield return addNewCrossSectionYZCommand;
                 yield return addNewCrossSectionZWCommand;
                 yield return addNewCrossSectionXYZCommand;
@@ -107,7 +103,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewLateralSourceCommand;
                 yield return addNewRetentionCommand;
                 yield return addNewObservationPointCommand;
-                yield return addNewRouteCommand;
                 yield return showCrossSectionHistoryCommand;
                 yield return addNewCatchmentPolderCommand;
                 yield return addNewCatchmentPavedCommand;
@@ -129,7 +124,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addDryArea2dCommand;
                 yield return addNewLinkCommand;
                 yield return addNewNetworkLocationCommand;
-                yield return showSideViewCommand;
                 yield return openCaseAnalysisCommand;
                 yield return addNewEmbankmentCommand;
                 yield return addEnclosure2dCommand;
@@ -153,7 +147,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             // branch tools
             ButtonAddNewBranch.SetState(addNewBranchCommand, showNetworkTools);
             ButtonAddNewBranchScribble.SetState(addNewBranchScribbleCommand, showNetworkTools);
-            ButtonInsertNewNode.SetState(insertNewNodeCommand, showNetworkTools);
 
             // crossSection tools
             ButtonAddNewCrossSectionYZ.SetState(addNewCrossSectionYZCommand, showNetworkTools);
@@ -173,7 +166,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
             ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
 
-            ButtonAddNewRoute.SetState(addNewRouteCommand, showNetworkTools);
             ButtonShowCrossSectionHistory.SetState(showCrossSectionHistoryCommand);
 
             // catchment tools
@@ -203,13 +195,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddBridgePillar.SetState(addBridgePillarCommand, showArea2DTools);
 
             ButtonAddNewLink.SetState(addNewLinkCommand, regions.Count > 0);
-
-            ButtonShowSideView.IsEnabled = showSideViewCommand.Enabled;
-            ButtonShowSideView.Visibility = showNetworkTools ? Visibility.Visible : Visibility.Collapsed;
-
+            
             ButtonOpenCaseAnalysis.IsEnabled = openCaseAnalysisCommand.Enabled;
-            ButtonShowSideView.Visibility = showNetworkTools ? Visibility.Visible : Visibility.Collapsed;
-
+            
             SetCoverageComboBox();
 
             // Depends on SetCoverageComboBox
@@ -325,13 +313,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             addNewBranchScribbleCommand.Execute();
             ValidateItems();
         }
-
-        private void ButtonInsertNewNode_Click(object sender, RoutedEventArgs e)
-        {
-            insertNewNodeCommand.Execute();
-            ValidateItems();
-        }
-
+        
         private void ButtonAddNewCrossSectionYZ_Click(object sender, RoutedEventArgs e)
         {
             addNewCrossSectionYZCommand.Execute();
@@ -415,13 +397,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             addNewObservationPointCommand.Execute();
             ValidateItems();
         }
-
-        private void ButtonAddNewRoute_Click(object sender, RoutedEventArgs e)
-        {
-            addNewRouteCommand.Execute();
-            ValidateItems();
-        }
-
+        
         private void ButtonShowCrossSectionHistory_Click(object sender, RoutedEventArgs e)
         {
             showCrossSectionHistoryCommand.Execute();
@@ -545,12 +521,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewNetworkLocation_Click(object sender, RoutedEventArgs e)
         {
             addNewNetworkLocationCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonShowSideView_Click(object sender, RoutedEventArgs e)
-        {
-            showSideViewCommand.Execute();
             ValidateItems();
         }
 

@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
     public class ShapeModifyTool : ShapeTool, IChartViewTool
     {
         private readonly List<IShapeLayerTool> tools = new List<IShapeLayerTool>();
-        public ShapeEditMode ShapeEditMode;
+        public ShapeEditMode ShapeEditMode { get; set; }
         private IShapeFeature selectedShape;
 
         public event EventHandler<EventArgs> ActiveChanged;

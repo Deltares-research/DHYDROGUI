@@ -9,8 +9,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 {
     public struct DimrCoupleInfo
     {
-        public string Source;
-        public string Target;
+        public string Source { get; set; }
+        public string Target { get; set; }
     }
 
     public class DimrConfigModelCoupler : IDimrConfigModelCoupler

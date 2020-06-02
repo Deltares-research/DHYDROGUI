@@ -75,45 +75,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public CommandHelper CustomCommand { get; set; }
 
-        public Type ValueType
-        {
-            get
-            {
-                return description?.ValueType;
-            }
-        }
+        public Type ValueType => description?.ValueType;
 
-        public string Name
-        {
-            get
-            {
-                return description?.Name;
-            }
-        }
+        public string Name => description?.Name;
 
-        public string SubCategory
-        {
-            get
-            {
-                return description?.SubCategory;
-            }
-        }
+        public string SubCategory => description?.SubCategory;
 
-        public string Label
-        {
-            get
-            {
-                return description?.Label;
-            }
-        }
+        public string Label => description?.Label;
 
-        public string ToolTip
-        {
-            get
-            {
-                return description?.ToolTip ?? "-";
-            }
-        }
+        public string ToolTip => description?.ToolTip ?? "-";
 
         /// <summary>
         /// Unit for this property
@@ -133,60 +103,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <summary>
         /// Minimum allowed value
         /// </summary>
-        public double? MinValue
-        {
-            get
-            {
-                return description?.MinValue;
-            }
-        }
+        public double? MinValue => description?.MinValue;
 
         /// <summary>
         /// Maximum allowed value
         /// </summary>
-        public double? MaxValue
-        {
-            get
-            {
-                return description?.MaxValue;
-            }
-        }
+        public double? MaxValue => description?.MaxValue;
 
         /// <summary>
         /// Has a minimum value is set
         /// </summary>
-        public bool? HasMinValue
-        {
-            get
-            {
-                return description?.HasMinValue;
-            }
-        }
+        public bool? HasMinValue => description?.HasMinValue;
 
         /// <summary>
         /// Has a maximum value is set
         /// </summary>
-        public bool? HasMaxValue
-        {
-            get
-            {
-                return description?.HasMaxValue;
-            }
-        }
+        public bool? HasMaxValue => description?.HasMaxValue;
 
         /// <summary>
         /// Has a minimum or a maximum value set
         /// </summary>
-        public bool? HasMinMaxValue
-        {
-            get
-            {
-                return HasMaxValue.HasValue &&
-                       HasMaxValue.Value ||
-                       HasMinValue.HasValue &&
-                       HasMinValue.Value;
-            }
-        }
+        public bool? HasMinMaxValue =>
+            HasMaxValue.HasValue &&
+            HasMaxValue.Value ||
+            HasMinValue.HasValue &&
+            HasMinValue.Value;
 
         /// <summary>
         /// Gets or sets the get model function that will be used later on for
@@ -197,10 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public Func<object> GetModel
         {
-            get
-            {
-                return getModel;
-            }
+            get => getModel;
             set
             {
                 getModel = value;
@@ -208,7 +146,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
-        public bool IsEditable => IsEnabled && CustomCommand.TextBoxEnabled;
+        /// <summary>
+        /// Gets whether the property is read only.
+        /// </summary>
+        public bool IsReadOnly => !IsEnabled || !CustomCommand.TextBoxEnabled;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is enabled.
@@ -266,10 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public object Value
         {
-            get
-            {
-                return description?.GetValue(GetModel?.Invoke());
-            }
+            get => description?.GetValue(GetModel?.Invoke());
             set
             {
                 object convertedValue = value;
@@ -291,13 +229,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             get
             {
-                var mssg = string.Empty;
-                if (!description.Validate(GetModel.Invoke(), Value, out mssg))
-                {
-                    return mssg;
-                }
-
-                return null;
+                var errorMessage = string.Empty;
+                return !description.Validate(GetModel.Invoke(), Value, out errorMessage) ? errorMessage : null;
             }
         }
 
@@ -306,12 +239,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </summary>
         public void RaisePropertyChangedEvents()
         {
-            OnPropertyChanged("IsEnabled");
-            OnPropertyChanged("IsVisible");
-            OnPropertyChanged("IsEditable");
-            OnPropertyChanged("Value");
+            OnPropertyChanged(nameof(IsEnabled));
+            OnPropertyChanged(nameof(IsVisible));
+            OnPropertyChanged(nameof(IsReadOnly));
+            OnPropertyChanged(nameof(Value));
             UpdateValueCollection();
-            OnPropertyChanged("ValueCollection");
+            OnPropertyChanged(nameof(ValueCollection));
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -333,7 +266,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                         {
                             v = wrapperValue;                                               //Overwrite value with new one.
                             Value = ValueCollection.Select(vc => vc.WrapperValue).ToList(); //Trigger update.
-                        },
+                        }
                     }).ToList();
             }
 

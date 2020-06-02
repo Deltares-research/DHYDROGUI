@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var structuresFile = new StructuresFile()
             {
-                StructureSchema = schema,
+                StructureSchema = schema
             };
             return structuresFile;
         }
@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 structureName,
                 "    2    2",
                 "10.0E+001  80.0E+001",
-                "10.0E+002  80.0E+002",
+                "10.0E+002  80.0E+002"
             };
             string PliFileContents = string.Join("\n", pliFileLines);
             string filePliPath = Path.Combine(tempDir, $"{structureName}.pli");

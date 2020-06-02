@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             new Feature2DCollection().Init(feature2Ds, "Boundary", modelName, fmModel.CoordinateSystem),
                         FeatureEditor =
                             new Boundary2DEditor(fmModel) {AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature},
-                        Style = AreaLayerStyles.BoundariesStyle,
+                        Style = HydroAreaLayerStyles.BoundariesStyle,
                         NameIsReadOnly = true,
                         ShowInLegend = false
                     };
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                                            fmModel.CoordinateSystem),
                         FeatureEditor =
                             new Feature2DEditor(fmModel),
-                        Style = AreaLayerStyles.SourcesAndSinksStyle,
+                        Style = HydroAreaLayerStyles.SourcesAndSinksStyle,
                         NameIsReadOnly = true,
                         CustomRenderers =
                             new IFeatureRenderer[]
@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         Style = snappedFeatures.SnappedLayerStyle,
                         DataSource = snappedFeatures,
                         Selectable = false,
-                        NameIsReadOnly = true,
+                        NameIsReadOnly = true
                     };
                     groupLayer.Layers.Add(layer);
                     snappedFeatures.Layer = layer;
@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         outputSnappedGroupLayerDataMapping.Add(model, outputLayerData);
                     }
 
-                    outputLayerData.coordinateSystem = model.CoordinateSystem;
+                    outputLayerData.CoordinateSystem = model.CoordinateSystem;
 
                     yield return outputLayerData;
                 }
@@ -422,6 +422,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     yield return function;
                 }
             }
+        }
+
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            // Nothing needs to be done after creation
         }
 
         private static string GetCommonFunctionName(IList<IFunction> functions)

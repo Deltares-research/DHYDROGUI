@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using NUnit.Framework;
 

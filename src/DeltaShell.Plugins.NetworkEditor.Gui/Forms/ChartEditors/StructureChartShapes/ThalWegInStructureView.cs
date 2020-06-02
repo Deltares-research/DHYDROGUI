@@ -53,8 +53,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private IShapeFeature GetShape()
         {
             double height = Chart.LeftAxis.Maximum - Chart.LeftAxis.Minimum;
-            double minZValue = Chart.LeftAxis.Minimum - (height / 10);
-            double maxZValue = Chart.LeftAxis.Maximum + (height / 10);
+            double minZValue = Chart.LeftAxis.Minimum - height / 10;
+            double maxZValue = Chart.LeftAxis.Maximum + height / 10;
             var thalWegShape = new FixedRectangleShapeFeature(Chart,
                                                               0,
                                                               maxZValue,

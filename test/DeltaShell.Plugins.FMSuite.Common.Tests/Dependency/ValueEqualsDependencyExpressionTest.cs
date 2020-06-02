@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                 {
                     FilePropertyName = "string",
                     DataType = typeof(string)
-                }, "1"),
+                }, "1")
             };
 
             ModelProperty propertyToBeComppiled = properties[0];

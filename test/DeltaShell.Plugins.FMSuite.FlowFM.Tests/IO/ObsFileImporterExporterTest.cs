@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var obsFileImporterExporter = new ObsFileImporterExporter<GroupableFeature2DPoint>()
             {
-                EqualityComparer = new GroupableFeatureComparer<GroupableFeature2DPoint>(),
+                EqualityComparer = new GroupableFeatureComparer<GroupableFeature2DPoint>()
             };
 
             try
@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     new T
                     {
                         Geometry = new Point(rnd.Next(0, 1000), rnd.Next(0, 1000)),
-                        Name = "ObservationPoint" + i,
+                        Name = "ObservationPoint" + i
                     }
                 );
             }

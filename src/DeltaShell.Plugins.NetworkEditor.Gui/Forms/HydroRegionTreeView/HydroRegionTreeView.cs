@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             TreeView = new TreeView
             {
                 AllowDrop = true,
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Fill
             };
 
             AddNodePresenters(guiPlugin);
@@ -187,11 +187,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 new NetworkRoutesTreeViewNodePresenter(guiPlugin),
                 new NetworkRouteTreeViewNodePresenter(guiPlugin),
                 new CompositeStructureTreeViewNodePresenter(guiPlugin),
-                new PumpTreeViewNodePresenter(guiPlugin),
-                new CulvertTreeViewNodePresenter(guiPlugin),
-                new WeirTreeViewNodePresenter(guiPlugin),
-                new BridgeTreeViewNodePresenter(guiPlugin),
-                new ExtraRestanceTreeViewNodePresenter(guiPlugin),
                 new CatchmentsTreeViewNodePresenter(guiPlugin),
                 new CatchmentTreeViewNodePresenter(guiPlugin),
                 new WasteWaterTreatmentPlantsTreeViewNodePresenter(guiPlugin),
@@ -307,30 +302,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 channel.BranchFeatures.Add(LateralSource.CreateDefault(channel));
             }
         }
-
-        private void handleButtonAddBridge_Click(object sender, EventArgs e)
-        {
-            var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel != null)
-            {
-                AddBranchFeatureToBranch(Bridge.CreateDefault(channel));
-            }
-        }
-
-        private void handleButtonAddPump_Click(object sender, EventArgs e)
-        {
-            var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel == null)
-            {
-                return;
-            }
-
-            var branchFeature = new Pump(false);
-            BranchStructure.AddStructureToNetwork(branchFeature, channel);
-
-            AddBranchFeatureToBranch(branchFeature);
-        }
-
+        
         private void handleButtonAddWeir_Click(object sender, EventArgs e)
         {
             var channel = TreeView.SelectedNode.Tag as IChannel;
@@ -340,25 +312,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 BranchStructure.AddStructureToNetwork(branchFeature, channel);
             }
         }
-
-        private void handleButtonAddCulvert_Click(object sender, EventArgs e)
-        {
-            var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel != null)
-            {
-                AddBranchFeatureToBranch(Culvert.CreateDefault(channel));
-            }
-        }
-
-        private void handleButtonAddExtraResistance_Click(object sender, EventArgs e)
-        {
-            var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel != null)
-            {
-                AddBranchFeatureToBranch(ExtraResistance.CreateDefault(channel));
-            }
-        }
-
+        
         private void handleButtonAddObservationPoint_Click(object sender, EventArgs e)
         {
             var channel = TreeView.SelectedNode.Tag as IChannel;
@@ -372,12 +326,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         {
             gui.CommandHandler.ShowProperties();
         }
-
-        private void AddBranchFeatureToBranch(IStructure1D branchFeature)
-        {
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(branchFeature, branchFeature.Branch);
-        }
-
+        
         private void handleButtonZoomToItem_Click(object sender, EventArgs e)
         {
             var feature = TreeView.SelectedNode.Tag as IFeature;
@@ -402,7 +351,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             {
                 Branch = channel,
                 Title =
-                    "Insert new default cross section into channel.",
+                    "Insert new default cross section into channel."
             };
             formPasteCrossSection.textBoxShift.Enabled = true;
             formPasteCrossSection.textBoxShift.Visible = true;
@@ -456,15 +405,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 SelectedNetwork.SharedCrossSectionDefinitions.Add(definition);
             }
         }
-
-        private void AddRouteToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (SelectedNetwork != null)
-            {
-                HydroNetworkHelper.AddNewRouteToNetwork(SelectedNetwork);
-            }
-        }
-
+        
         private void ShowUsageToolStripMenuItemClick(object sender, EventArgs e)
         {
             var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;

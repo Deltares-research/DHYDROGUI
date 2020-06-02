@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             {
                 GeometryType = typeof(IPolygon),
                 Fill = new SolidBrush(Color.DarkGray),
-                Outline = new Pen(Color.FromArgb(100, Color.CornflowerBlue), 4f),
+                Outline = new Pen(Color.FromArgb(100, Color.CornflowerBlue), 4f)
             };
         }
 

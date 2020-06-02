@@ -4,82 +4,85 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
 using NUnit.Framework;
 
-[TestFixture]
-public class WaveModelApiTest
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 {
-    [Test]
-    [Category(TestCategory.Integration)]
-    [Category(TestCategory.Slow)]
-    public void RemoteWaveModelApiInitAndRunTest()
+    [TestFixture]
+    public class WaveModelApiTest
     {
-        string oldDir = Directory.GetCurrentDirectory();
-        try
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
+        public void RemoteWaveModelApiInitAndRunTest()
         {
-            string path = TestHelper.GetTestFilePath(@"obw\obw.mdw");
-            string localPath = TestHelper.CreateLocalCopy(path);
-
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(localPath));
-            // from mdw file:
-            var refDate = new DateTime(2000, 7, 14);
-
-            using (var api = new RemoteWaveModelApi(false) {ReferenceDateTime = refDate})
+            string oldDir = Directory.GetCurrentDirectory();
+            try
             {
-                api.SetValues("mode", new[]
+                string path = TestHelper.GetTestFilePath(@"obw\obw.mdw");
+                string localPath = TestHelper.CreateLocalCopy(path);
+
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(localPath));
+                // from mdw file:
+                var refDate = new DateTime(2000, 7, 14);
+
+                using (var api = new RemoteWaveModelApi(false) {ReferenceDateTime = refDate})
                 {
-                    "stand-alone"
-                });
-                api.Initialize(Path.GetFileName(localPath));
-                api.Update(3600.0);
-                DateTime apiCurrentTime = api.CurrentTime;
-                Assert.That((apiCurrentTime - api.StartTime).TotalSeconds, Is.EqualTo(3600.0).Within(0.1));
-                Assert.AreEqual(refDate + new TimeSpan(1, 0, 0), apiCurrentTime);
-                api.Finish();
+                    api.SetValues("mode", new[]
+                    {
+                        "stand-alone"
+                    });
+                    api.Initialize(Path.GetFileName(localPath));
+                    api.Update(3600.0);
+                    DateTime apiCurrentTime = api.CurrentTime;
+                    Assert.That((apiCurrentTime - api.StartTime).TotalSeconds, Is.EqualTo(3600.0).Within(0.1));
+                    Assert.AreEqual(refDate + new TimeSpan(1, 0, 0), apiCurrentTime);
+                    api.Finish();
+                }
+            }
+            finally
+            {
+                Directory.SetCurrentDirectory(oldDir);
             }
         }
-        finally
+
+        [Test]
+        [Category(TestCategory.Jira)] // See issue D3DFMIQ-795
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
+        public void WaveModelApiInitAndRunTest()
         {
-            Directory.SetCurrentDirectory(oldDir);
-        }
-    }
-
-    [Test]
-    [Category(TestCategory.Jira)] // See issue D3DFMIQ-795
-    [Category(TestCategory.Integration)]
-    [Category(TestCategory.Slow)]
-    public void WaveModelApiInitAndRunTest()
-    {
-        if (!Environment.Is64BitProcess)
-        {
-            return; // wave only runs in 64 bits!
-        }
-
-        string oldDir = Directory.GetCurrentDirectory();
-        try
-        {
-            string path = TestHelper.GetTestFilePath(@"obw\obw.mdw");
-            string localPath = TestHelper.CreateLocalCopy(path);
-
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(localPath));
-            // from mdw file:
-            var refDate = new DateTime(2000, 7, 14);
-
-            using (var api = new WaveModelApi {ReferenceDateTime = refDate})
+            if (!Environment.Is64BitProcess)
             {
-                api.SetValues("mode", new[]
-                {
-                    "stand-alone"
-                });
-                api.Initialize(Path.GetFileName(localPath));
-                api.Update(3600.0);
-                DateTime apiCurrentTime = api.CurrentTime;
-                Assert.That((apiCurrentTime - api.StartTime).TotalSeconds, Is.EqualTo(3600.0).Within(0.1));
-                Assert.AreEqual(refDate + new TimeSpan(1, 0, 0), apiCurrentTime);
-                api.Finish();
+                return; // wave only runs in 64 bits!
             }
-        }
-        finally
-        {
-            Directory.SetCurrentDirectory(oldDir);
+
+            string oldDir = Directory.GetCurrentDirectory();
+            try
+            {
+                string path = TestHelper.GetTestFilePath(@"obw\obw.mdw");
+                string localPath = TestHelper.CreateLocalCopy(path);
+
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(localPath));
+                // from mdw file:
+                var refDate = new DateTime(2000, 7, 14);
+
+                using (var api = new WaveModelApi {ReferenceDateTime = refDate})
+                {
+                    api.SetValues("mode", new[]
+                    {
+                        "stand-alone"
+                    });
+                    api.Initialize(Path.GetFileName(localPath));
+                    api.Update(3600.0);
+                    DateTime apiCurrentTime = api.CurrentTime;
+                    Assert.That((apiCurrentTime - api.StartTime).TotalSeconds, Is.EqualTo(3600.0).Within(0.1));
+                    Assert.AreEqual(refDate + new TimeSpan(1, 0, 0), apiCurrentTime);
+                    api.Finish();
+                }
+            }
+            finally
+            {
+                Directory.SetCurrentDirectory(oldDir);
+            }
         }
     }
 }

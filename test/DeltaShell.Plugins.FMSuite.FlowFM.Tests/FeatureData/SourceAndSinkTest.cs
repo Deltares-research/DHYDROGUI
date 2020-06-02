@@ -218,17 +218,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
                 new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
                 {
                     Name = "Tracer_1",
-                    TracerName = "Tracer_1",
+                    TracerName = "Tracer_1"
                 },
                 new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
                 {
                     Name = "Tracer_2",
-                    TracerName = "Tracer_2",
+                    TracerName = "Tracer_2"
                 },
                 new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
                 {
                     Name = "Tracer_3",
-                    TracerName = "Tracer_3",
+                    TracerName = "Tracer_3"
                 }
             };
         }

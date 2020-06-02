@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         AirPressure,
 
         [Description("Wind vector and air pressure")]
-        VelocityVectorAirPressure,
+        VelocityVectorAirPressure
     }
 
     public interface IWindField

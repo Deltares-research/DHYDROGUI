@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 //Check for the CHEZY seg function in the include.
                 var initSettings = new WaqInitializationSettings
                 {
-                    ProcessCoefficients = waqModel.ProcessCoefficients,
+                    ProcessCoefficients = waqModel.ProcessCoefficients
                 };
                 string text = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
                 Assert.IsFalse(string.IsNullOrEmpty(text));
@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 MapTimeStep = new TimeSpan(0, 1, 0, 0),
                 BalanceStartTime = new DateTime(2010, 1, 1),
                 BalanceStopTime = new DateTime(2010, 1, 10),
-                BalanceTimeStep = new TimeSpan(1, 0, 0, 0),
+                BalanceTimeStep = new TimeSpan(1, 0, 0, 0)
             };
 
             string outputTimersInclude = IncludeFileFactory.CreateOutputTimersInclude(waqSettings);
@@ -262,7 +262,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                         5,
                         6
                     }
-                },
+                }
             };
 
             string text = IncludeFileFactory.CreateOutputLocationsInclude(obsPoints);
@@ -460,7 +460,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                         3,
                         4
                     }
-                },
+                }
             };
 
             string result = IncludeFileFactory.CreateBoundaryListInclude(boundaryNodes, 3);
@@ -583,23 +583,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     "measure point 1", new List<string>()
                     {
                         "boundary 1",
-                        "boundary 2",
+                        "boundary 2"
                     }
                 },
                 {
                     "measure point 2", new List<string>()
                     {
                         "boundary 1",
-                        "boundary 3",
+                        "boundary 3"
                     }
                 },
                 {
                     "measure point 3", new List<string>()
                     {
                         "boundary 3",
-                        "boundary 1",
+                        "boundary 1"
                     }
-                },
+                }
             };
 
             string boundaryAliasesIncludeFileContents = IncludeFileFactory.CreateBoundaryAliasesInclude(input);
@@ -711,23 +711,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     "measure point 1", new List<string>()
                     {
                         "load 1",
-                        "load 2",
+                        "load 2"
                     }
                 },
                 {
                     "measure point 2", new List<string>()
                     {
                         "load 1",
-                        "load 3",
+                        "load 3"
                     }
                 },
                 {
                     "measure point 3", new List<string>()
                     {
                         "load 3",
-                        "load 1",
+                        "load 1"
                     }
-                },
+                }
             };
 
             string boundaryAliasesIncludeFileContents = IncludeFileFactory.CreateDryWasteLoadAliasesInclude(input);
@@ -848,7 +848,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var waqInitializationSettings = new WaqInitializationSettings
             {
                 ProcessCoefficients = processCoefficients,
-                NumberOfLayers = 1,
+                NumberOfLayers = 1
             };
 
             string expectedString = "PARAMETERS" + Environment.NewLine +
@@ -879,7 +879,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             const string SurfacesFile = "uni3d.srf";
             var waqInitializationSettings = new WaqInitializationSettings
             {
-                SurfacesFile = SurfacesFile,
+                SurfacesFile = SurfacesFile
             };
 
             string expectedString = "PARAMETERS" + Environment.NewLine +
@@ -908,7 +908,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 {
                     aFunc,
                     bFunc
-                },
+                }
             };
 
             // call
@@ -946,7 +946,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 {
                     aFunc,
                     bFunc
-                },
+                }
             };
 
             // call
@@ -1158,7 +1158,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var waqInitializationSettings = new WaqInitializationSettings
             {
                 InitialConditions = initialConditions,
-                NumberOfLayers = 1,
+                NumberOfLayers = 1
             };
 
             string expectedString = "MASS/M2" + Environment.NewLine +

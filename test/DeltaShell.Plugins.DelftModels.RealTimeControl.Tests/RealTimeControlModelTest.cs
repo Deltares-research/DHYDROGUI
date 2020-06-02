@@ -691,7 +691,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Slow)]
-        [NUnit.Framework.Category(TestCategory.WindowsForms)]
+        [NUnit.Framework.Category(TestCategory.Wpf)]
         public void RulePropertyChangedShouldRefreshTreeView()
         {
             using (var gui = new DeltaShellGui())

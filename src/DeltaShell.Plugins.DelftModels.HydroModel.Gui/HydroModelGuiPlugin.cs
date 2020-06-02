@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 
@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     {
                         var topItem = new ClonableToolStripMenuItem
                         {
-                            Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model,
+                            Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model
                         };
 
                         var upgradeItem = new ClonableToolStripMenuItem {Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model};

@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 {ChezyName, () => ChezyCoefficientsRelativePath},
                 {VelocityName, () => VelocitiesRelativePath},
                 {WidthName, () => WidthsRelativePath},
-                {SurfName, () => SurfacesRelativePath},
+                {SurfName, () => SurfacesRelativePath}
             };
 
             VolumesRelativePath = string.Empty;
@@ -262,7 +262,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 hfd => hfd.AttributesRelativePath,
                 hfd => hfd.VelocitiesRelativePath,
                 hfd => hfd.WidthsRelativePath,
-                hfd => hfd.ChezyCoefficientsRelativePath,
+                hfd => hfd.ChezyCoefficientsRelativePath
             };
             return pathsToCheck.All(pathGetter => IsFileEqualWithOtherHydFile(other, pathGetter));
         }

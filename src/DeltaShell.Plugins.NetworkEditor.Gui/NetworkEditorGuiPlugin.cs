@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
@@ -26,14 +24,11 @@ using DeltaShell.Plugins.HydroNetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
-using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -50,7 +45,6 @@ using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
-using SharpMap.UI.Forms;
 using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
@@ -65,10 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private readonly IMapLayerProvider networkEditorMapLayerProvider;
         private HydroRegionTreeView hydroRegionTreeView;
         private bool settingGuiSelection;
-        private ClonableToolStripMenuItem generateCalculationGridLocationsToolStripMenuItem;
-        private ClonableToolStripMenuItem removeCalculationGridLocationsToolStripMenuItem;
         private ClonableToolStripMenuItem convertCoordinateSystemToolStripMenuItem;
-        private ContextMenuStrip calculationGridMenu;
         private ContextMenuStrip hydroRegionContextMenu;
         private ContextMenuStrip convertCoordinateSystemContextMenu;
         private IGui gui;
@@ -77,7 +68,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             InitializeComponent();
             Instance = this;
-            networkEditorMapLayerProvider = new NetworkEditorMapLayerProvider();
+            MapLayerProvider = NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider();
         }
 
         public override string Name
@@ -108,7 +99,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 
@@ -158,13 +149,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get
-            {
-                return networkEditorMapLayerProvider;
-            }
-        }
+        public override IMapLayerProvider MapLayerProvider { get; }
 
         public static NetworkEditorGuiPlugin Instance { get; private set; }
 
@@ -205,76 +190,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
-            yield return new PropertyInfo<ICrossSection, CrossSectionProperties>();
             yield return new PropertyInfo<ICrossSectionDefinition, CrossSectionDefinitionProperties>();
             yield return new PropertyInfo<IHydroNode, HydroNodeProperties>();
-            yield return new PropertyInfo<IChannel, ChannelProperties>();
             yield return new PropertyInfo<IHydroNetwork, HydroNetworkProperties>();
             yield return new PropertyInfo<DrainageBasin, DrainageBasinProperties>();
             yield return new PropertyInfo<HydroRegion, HydroRegionProperties>();
             yield return new PropertyInfo<Discretization, DiscretizationProperties>();
             yield return new PropertyInfo<INetworkCoverage, NetworkCoverageProperties>();
             yield return new PropertyInfo<IFeatureCoverage, FeatureCoverageProperties>();
-            yield return new PropertyInfo<ICompositeBranchStructure, CompositeStructureProperties>();
-            yield return new PropertyInfo<IWeir, WeirProperties> {AdditionalDataCheck = w => w.HydroNetwork != null};
             yield return new PropertyInfo<IGate, GateProperties>();
-            yield return new PropertyInfo<IPump, PumpProperties>();
-            yield return new PropertyInfo<IBridge, BridgeProperties>();
-            yield return new PropertyInfo<ICulvert, CulvertProperties>();
-            yield return new PropertyInfo<IExtraResistance, ExtraResistanceProperties>();
-            yield return new PropertyInfo<LateralSource, LateralSourceProperties>();
-            yield return new PropertyInfo<ObservationPoint, ObservationPointProperties>();
             yield return new PropertyInfo<Catchment, CatchmentProperties>();
             yield return new PropertyInfo<WasteWaterTreatmentPlant, WasteWaterTreatmentPlantProperties>();
             yield return new PropertyInfo<RunoffBoundary, RunoffBoundaryProperties>();
             yield return new PropertyInfo<NetworkLocation, NetworkLocationProperties>();
             yield return new PropertyInfo<NetworkSegment, NetworkSegmentProperties>();
             yield return new PropertyInfo<CrossSectionSectionType, CrossSectionSectionTypeProperties>();
-            yield return new PropertyInfo<Retention, RetentionProperties>();
             yield return new PropertyInfo<HydroLink, HydroLinkProperties>();
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            yield return new ViewInfo<IPump, PumpView>
-            {
-                AdditionalDataCheck = o => o != null && o.Branch != null,
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
-            };
-            yield return new ViewInfo<IWeir, WeirView>
-            {
-                AdditionalDataCheck = o => o != null && o.Branch != null,
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
-            };
-            yield return new ViewInfo<IBridge, BridgeView>
-            {
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
-            };
-            yield return new ViewInfo<ICulvert, CulvertViewWpf>
-            {
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
-            };
-            yield return new ViewInfo<IExtraResistance, ExtraResistanceView>
-            {
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
-            };
-            yield return new ViewInfo<ICompositeBranchStructure, CompositeStructureView>
-            {
-                AfterCreate = (v, o) =>
-                {
-                    v.Presenter = new CompositeStructureViewPresenter
-                    {
-                        SelectionContainer = Gui,
-                        CreateView = ob => Gui.DocumentViewsResolver.CreateViewForData(ob, info => info.CompositeViewType == typeof(CompositeStructureView))
-                    };
-                }
-            };
             yield return new ViewInfo<IEnumerable<IGate>, ILayer, VectorLayerAttributeTableView>
             {
                 Description = "Attribute Table",
@@ -324,19 +260,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     v.ViewModel = viewModel;
                 }
             };
-            yield return new ViewInfo<Route, NetworkSideView>
-            {
-                Description = "Network side view",
-                AdditionalDataCheck = r => r.Locations.Values.Count > 1,
-                AfterCreate = (v, o) =>
-                {
-                    Project project = Gui.Application.Project;
-                    IEnumerable<ICoverage> coverages = project.GetAllItemsRecursive().OfType<ICoverage>().Distinct();
-                    var manager = new NetworkSideViewCoverageManager(o, (INotifyCollectionChange) project,
-                                                                     coverages) {OnRouteRemoved = () => Gui.DocumentViews.Remove(v)};
-                    v.DataController = new NetworkSideViewDataController(o, manager, GetModelNameForCoverage);
-                }
-            };
             yield return new ViewInfo<Embankment, IGeometry, GeometryEditor>
             {
                 GetViewData = (v) => v.Geometry,
@@ -359,11 +282,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 Description = "Map (spatial data)",
                 AdditionalDataCheck = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network) != null,
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network),
+                GetCompositeViewData = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network)
             };
 
-            yield return CreateAreaStructureCollectionViewInfo<Pump2D>(HydroArea.PumpsPluralName);
-            yield return CreateAreaStructureCollectionViewInfo<Weir2D>(HydroArea.WeirsPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Pump2D>(HydroAreaLayerNames.PumpsPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Weir2D>(HydroAreaLayerNames.WeirsPluralName);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.LandBoundaries);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryPoints);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryAreas);
@@ -402,9 +325,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 excludedTypes.Add(typeof(NetworkCoverageLocationLayer));
                 excludedTypes.Add(typeof(NetworkCoverageSegmentLayer));
             }
-
-            ImportBranchesFromSelectionMapTool.BeforeExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = true;
-            ImportBranchesFromSelectionMapTool.AfterExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = false;
 
             base.Activate();
         }
@@ -465,17 +385,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new MenuItemContextMenuStripAdapter(convertCoordinateSystemContextMenu);
             }
 
-            if (data is IDiscretization discretization)
-            {
-                generateCalculationGridLocationsToolStripMenuItem.Tag = discretization;
-                generateCalculationGridLocationsToolStripMenuItem.Enabled = true;
-
-                removeCalculationGridLocationsToolStripMenuItem.Tag = discretization;
-                removeCalculationGridLocationsToolStripMenuItem.Enabled = discretization.Locations.Values.Count > 0;
-
-                return new MenuItemContextMenuStripAdapter(calculationGridMenu);
-            }
-
             return null;
         }
 
@@ -492,8 +401,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new HydroRegionProjectTreeViewNodePresenter {GuiPlugin = this};
-            yield return new HydroNetworkProjectTreeViewNodePresenter {GuiPlugin = this};
-            yield return new DrainageBasinProjectTreeViewNodePresenter {GuiPlugin = this};
             yield return new HydroAreaProjectTreeViewNodePresenter {GuiPlugin = this};
         }
 
@@ -520,11 +427,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 compositeView.ChildViews
                              .OfType<MapView>()
                              .ForEach(mv => HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mv.MapControl));
-            }
-
-            if (view is NetworkSideView networkSideView)
-            {
-                networkSideView.SelectionChanged -= NetworkSideViewSelectionChanged;
             }
         }
 
@@ -609,7 +511,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 Name = AddGroupToolStripMenuKey,
                 Text = Properties.Resources.NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group,
-                Enabled = Gui.CommandHandler.CanImportOn(eventedList),
+                Enabled = Gui.CommandHandler.CanImportOn(eventedList)
             };
             addAreaItemsGroup.Click += (s, e) => { Gui.CommandHandler.ImportOn(eventedList); };
             stripItemCollection.Add(addAreaItemsGroup);
@@ -632,7 +534,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     var groupMenuItem = new ToolStripMenuItem
                     {
-                        Text = groupName,
+                        Text = groupName
                     };
 
                     groupMenuItem.Click += (s, e) => eventedList.RemoveGroup(groupName);
@@ -695,41 +597,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void InitializeComponent()
         {
-            generateCalculationGridLocationsToolStripMenuItem = new ClonableToolStripMenuItem
-            {
-                Image = Properties.Resources.GeneratePoints,
-                Name = "generateCalculationGridLocationsToolStripMenuItem",
-                Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Generate_Computational_Grid_Nodes___
-            };
-
-            removeCalculationGridLocationsToolStripMenuItem = new ClonableToolStripMenuItem
-            {
-                Image = Properties.Resources.RemovePoints,
-                Name = "removeCalculationGridLocationsToolStripMenuItem",
-                Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Remove_Computational_Grid_Nodes
-            };
             convertCoordinateSystemToolStripMenuItem = new ClonableToolStripMenuItem
             {
                 Image = Properties.Resources.HydroRegion,
                 Name = "convertCoordinateSystemToolStripMenuItem",
                 Text = "Convert to Coordinate System..."
             };
-
-            generateCalculationGridLocationsToolStripMenuItem.Click += GenerateCalculationGridLocationsToolStripMenuItemClick;
-            removeCalculationGridLocationsToolStripMenuItem.Click += RemoveCalculationGridLocationsToolStripMenuItem_Click;
+            
             convertCoordinateSystemToolStripMenuItem.Click += ConvertCoordinateSystemToolStripMenuItemClick;
-
-            calculationGridMenu = new ContextMenuStrip
-            {
-                Name = "calculationGridMenu",
-                Size = new Size(210, 48)
-            };
-            calculationGridMenu.Items.AddRange(new ToolStripItem[]
-            {
-                generateCalculationGridLocationsToolStripMenuItem,
-                removeCalculationGridLocationsToolStripMenuItem
-            });
-
+            
             hydroRegionContextMenu = new ContextMenuStrip
             {
                 Name = "addNewHydroRegion",
@@ -742,70 +618,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 convertCoordinateSystemToolStripMenuItem
             });
         }
-
-        private void NetworkSideViewSelectionChanged(object sender, SelectedItemChangedEventArgs e)
-        {
-            Gui.Selection = e.Item;
-        }
-
+        
         private void ApplicationProjectOpened(Project project)
         {
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
-            project.RootFolder.PropertyChanged += RootFolderPropertyChanged;
-        }
-
-        [EditAction]
-        private void RootFolderPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (Gui == null || Gui.DocumentViews == null)
-            {
-                return;
-            }
-
-            // TODO: this looks very dirty, can we find a better way to manage these dependencies?
-
-            // Update the network in the network layers of all relevant maps after changing a network coverage network
-            var networkCoverage = sender as INetworkCoverage;
-            if (networkCoverage != null && e.PropertyName == "Network")
-            {
-                // Try to find maps for open views
-                IEnumerable<IMap> openMaps = Gui.DocumentViews.AllViews
-                                                .OfType<MapView>()
-                                                .Select(mv => mv.Map)
-                                                .Where(m => m.Layers.OfType<NetworkCoverageGroupLayer>()
-                                                             .Any(l => l.NetworkCoverage == networkCoverage));
-
-                if (openMaps.Any())
-                {
-                    foreach (IMap openMap in openMaps)
-                    {
-                        RefreshNetworkMapLayers(networkCoverage, openMap);
-                    }
-                }
-                else
-                {
-                    // Try to find maps in a view contexts
-                    foreach (CoverageViewViewContext viewContext in Gui.ViewContextManager.ProjectViewContexts.OfType<CoverageViewViewContext>().Where(cvvc => cvvc.Coverage == networkCoverage))
-                    {
-                        RefreshNetworkMapLayers(networkCoverage, viewContext.Map);
-                    }
-                }
-            }
-        }
-
-        private void RefreshNetworkMapLayers(INetworkCoverage networkCoverage, IMap map)
-        {
-            HydroRegionMapLayer hydroNetworkMapLayer = map.Layers.OfType<HydroRegionMapLayer>().FirstOrDefault(l => l.Region is IHydroNetwork);
-            if (hydroNetworkMapLayer != null)
-            {
-                map.Layers.Remove(hydroNetworkMapLayer);
-            }
-
-            if (networkCoverage.Network != null)
-            {
-                map.Layers.Add(MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, Gui.Plugins.Select(p => p.MapLayerProvider).ToList()));
-                map.ZoomToExtents();
-            }
         }
 
         /// <summary>
@@ -907,7 +723,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (project != null)
             {
                 project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
-                project.RootFolder.PropertyChanged -= RootFolderPropertyChanged;
                 foreach (INetwork network in project.RootFolder.GetAllItemsRecursive().OfType<INetwork>())
                 {
                     RemoveNetworkViews(network);
@@ -960,11 +775,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         }
                     }
                 }
-            }
-
-            if (view is NetworkSideView sideView)
-            {
-                sideView.SelectionChanged += NetworkSideViewSelectionChanged;
             }
         }
 
@@ -1043,22 +853,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 region = (activeView as CrossSectionDefinitionView).ViewModel.HydroNetwork;
             }
-            else if (activeView is CompositeStructureView)
-            {
-                var structureView = (CompositeStructureView) activeView;
-
-                var structure = structureView.Data as IStructure1D;
-
-                if (structure != null)
-                {
-                    region = (IHydroNetwork) structure.Network;
-                }
-            }
-            else if (activeView is NetworkSideView)
-            {
-                var route = ((NetworkSideView) activeView).Data as Route;
-                region = route != null ? route.Network as IHydroNetwork : null;
-            }
             else if (activeView != null)
             {
                 region = activeView.Data as IHydroNetwork;
@@ -1124,51 +918,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             //open view for selected object
             Gui.CommandHandler.OpenViewForSelection();
         }
-
-        private void GenerateCalculationGridLocationsToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            var discretization = (IDiscretization) ((ToolStripMenuItem) sender).Tag;
-            var hydroNetwork = (IHydroNetwork) discretization.Network;
-
-            // if the actievview is the discretization view allow generation of gridpoints 
-            // for selected channel only.
-            MapControl mapControl = null;
-
-            if (Gui.DocumentViews.ActiveView is CoverageView coverageView && coverageView.Coverage == discretization)
-            {
-                MapView mapView = coverageView.ChildViews.OfType<MapView>().FirstOrDefault();
-                mapControl = mapView?.MapControl;
-            }
-
-            IList<IChannel> selectedChannels = null;
-            if (mapControl != null)
-            {
-                selectedChannels = mapControl.SelectedFeatures.OfType<IChannel>().Where(f => Equals(f.Network, hydroNetwork)).ToList();
-            }
-
-            bool hasRun = HydroNetworkEditorMapToolHelper.RunCalculationGridWizard(selectedChannels, discretization);
-            if (hasRun)
-            {
-                Gui.CommandHandler.OpenView(discretization);
-                RefreshMapViewSelection();
-            }
-        }
-
-        private void RemoveCalculationGridLocationsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var discretization = (IDiscretization) ((ToolStripMenuItem) sender).Tag;
-            discretization.Clear();
-
-            //this should not be necessary...but collectionchanged is not properly handled in map
-            RefreshMapViewSelection();
-        }
-
-        private void RefreshMapViewSelection()
-        {
-            MapView mapView = Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault();
-            mapView?.MapControl.SelectTool.RefreshSelection();
-        }
-
+        
         private void ConvertCoordinateSystemToolStripMenuItemClick(object sender, EventArgs e)
         {
             var network = ((ToolStripMenuItem) sender).Tag as INetwork;
@@ -1182,21 +932,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 MapView mapView = GetFocusedMapView();
                 mapView?.Map?.ZoomToExtents();
             }
-        }
-
-        private string GetModelNameForCoverage(ICoverage coverage)
-        {
-            IEnumerable<IModel> allModels = Gui.Application.GetAllModelsInProject();
-            List<IModel> models = allModels.Where(m => m.GetAllItemsRecursive().Any(obj => obj is IFunction &&
-                                                                                           coverage.IsEqualOrDescendant(obj as IFunction))).ToList();
-
-            if (models.Count > 1) //several matches, do more filtering
-            {
-                models = models.Where(m => !(m is CompositeModel)).ToList();
-            }
-
-            IModel model = models.FirstOrDefault();
-            return model != null ? model.Name : "";
         }
     }
 }

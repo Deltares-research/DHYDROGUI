@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var fieldUiDescriptions = new List<FieldUIDescription>();
             var fieldUiDescription = new FieldUIDescription(null, null)
             {
-                Label = "dummyName",
+                Label = "dummyName"
             };
             fieldUiDescriptions.Add(fieldUiDescription);
             var subCategory = new WpfGuiSubCategory("dummySubCateogry", fieldUiDescriptions);

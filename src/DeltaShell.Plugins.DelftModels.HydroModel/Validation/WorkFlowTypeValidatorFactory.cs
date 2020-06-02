@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
 {
     public static class WorkFlowTypeValidatorFactory
     {
-        public static List<IWorkFlowTypeValidatorProvider> WorkFlowTypeValidators = new List<IWorkFlowTypeValidatorProvider>();
+        private static readonly List<IWorkFlowTypeValidatorProvider> WorkFlowTypeValidators = new List<IWorkFlowTypeValidatorProvider>();
 
         public static IWorkFlowTypeValidator GetWorkFlowTypeValidator(IActivity activity)
         {

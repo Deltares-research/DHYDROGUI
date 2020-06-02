@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 fmModel.SedimentFractions.AddRange(new List<SedimentFraction>()
                 {
                     new SedimentFraction() {Name = "SedFrac1"},
-                    new SedimentFraction() {Name = "SedFrac2"},
+                    new SedimentFraction() {Name = "SedFrac2"}
                 });
                 expectedNumberOfComponents += 2;
             }

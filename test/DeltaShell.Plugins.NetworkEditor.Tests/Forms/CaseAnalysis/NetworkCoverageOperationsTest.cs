@@ -670,7 +670,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CaseAnalysis
                 20,
                 2,
                 22,
-                -999.0,
+                -999.0
             };
 
             networkCoverage.Components[0].SetValues(values);

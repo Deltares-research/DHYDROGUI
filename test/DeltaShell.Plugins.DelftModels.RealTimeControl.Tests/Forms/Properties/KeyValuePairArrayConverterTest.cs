@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
             {
                 new KeyValuePair<string, string>("A", "value_a"),
                 new KeyValuePair<string, string>("B", "value_b"),
-                new KeyValuePair<string, string>("C", "value_c"),
+                new KeyValuePair<string, string>("C", "value_c")
             };
             var converter = new KeyValuePairArrayConverter<string>();
 

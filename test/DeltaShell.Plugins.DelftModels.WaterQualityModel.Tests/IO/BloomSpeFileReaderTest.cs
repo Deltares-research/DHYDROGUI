@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 "ncrdim_m",
                 "ncrulf_n",
                 "ncrulf_p",
-                "ncrnod_e",
+                "ncrnod_e"
             };
 
             var expectedDescriptions = new[]
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 "Mixotrophic DINOFLAG type",
                 "Ulva attached nitrogen type",
                 "Ulva attached phosphorus type",
-                "NODULARIA energy type",
+                "NODULARIA energy type"
             };
 
             CollectionAssert.AreEquivalent(expected, result.AllParameters);

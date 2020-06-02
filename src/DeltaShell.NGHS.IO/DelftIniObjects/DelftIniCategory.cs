@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 
 namespace DeltaShell.NGHS.IO.DelftIniObjects
@@ -9,7 +10,7 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
     /// <summary>
     /// Representation of a category in a .ini file.
     /// </summary>
-    public class DelftIniCategory
+    public class DelftIniCategory : INameable
     {
         private readonly List<DelftIniProperty> delftIniProperties;
 
@@ -30,11 +31,6 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
         }
 
         /// <summary>
-        /// The category name.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// The properties that belong to the category.
         /// </summary>
         public IEnumerable<DelftIniProperty> Properties => delftIniProperties;
@@ -43,6 +39,11 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
         /// The line number where this category was read in the file.
         /// </summary>
         public int LineNumber { get; }
+
+        /// <summary>
+        /// The category name.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets the property value as a string.

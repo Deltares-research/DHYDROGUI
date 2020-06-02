@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 FlowBoundaryQuantityType.Discharge,
                 BoundaryConditionDataType.TimeSeries
-            },
+            }
         };
 
         private static object[] Harmonics =
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 FlowBoundaryQuantityType.Discharge,
                 BoundaryConditionDataType.Harmonics
-            },
+            }
         };
 
         private static object[] HarmonicsCorrection =
@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 FlowBoundaryQuantityType.Discharge,
                 BoundaryConditionDataType.HarmonicCorrection
-            },
+            }
         };
 
         private static object[] Astronomical =
@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 FlowBoundaryQuantityType.Discharge,
                 BoundaryConditionDataType.AstroComponents
-            },
+            }
         };
 
         private static object[] AstronomicalCorrection =
@@ -286,7 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 FlowBoundaryQuantityType.Discharge,
                 BoundaryConditionDataType.AstroCorrection
-            },
+            }
         };
 
         private static object[] Qh =
@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 FlowBoundaryQuantityType.Discharge,
                 BoundaryConditionDataType.Qh
-            },
+            }
         };
     }
 }

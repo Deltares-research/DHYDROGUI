@@ -1,0 +1,317 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Features;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
+{
+    public partial class BndExtForceFile
+    {
+        private string bndExtSubFilesReferenceFilePath;
+
+        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition,
+                         string bndExtForceSubFilesReferenceFilePath)
+        {
+            bndExtFilePath = bndExtForceFilePath;
+            bndExtSubFilesReferenceFilePath = bndExtForceSubFilesReferenceFilePath;
+
+            IList<DelftIniCategory> bndBlocks;
+            using (var fileStream = new FileStream(bndExtForceFilePath, FileMode.Open, FileAccess.Read))
+            {
+                bndBlocks = new DelftIniReader().ReadDelftIniFile(fileStream, bndExtForceFilePath);
+            }
+
+            ReadPolyLines(bndBlocks, modelDefinition);
+
+            ReadBoundaryConditions(bndBlocks, modelDefinition);
+        }
+
+        private string GetFullPathForReading(string relativePath)
+        {
+            return Path.Combine(Path.GetDirectoryName(bndExtSubFilesReferenceFilePath), relativePath);
+        }
+
+        private void ReadPolyLines(IEnumerable<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
+        {
+            modelDefinition.Boundaries.ForEach(b =>
+            {
+                existingPolyLineFiles[b] = b.Name + FileConstants.PliFileExtension;
+            });
+
+            foreach (DelftIniCategory delftIniCategory in bndBlocks)
+            {
+                string locationFile = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.LocationFileKey);
+                bool locationFileHasAlreadyBeenRead = existingPolyLineFiles.Values.Contains(locationFile);
+                if (locationFile == null || locationFileHasAlreadyBeenRead)
+                {
+                    continue;
+                }
+
+                if (locationFile == string.Empty)
+                {
+                    log.WarnFormat("Empty location file encountered in boundary ext-force file {0}", bndExtFilePath);
+                    continue;
+                }
+
+                string pliFilePath = GetFullPathForReading(locationFile);
+                CheckFilePath(pliFilePath, $"Boundary location file {pliFilePath} not found");
+
+                if (IsEmbankmentCategory(delftIniCategory))
+                {
+                    ReadPlizFile(modelDefinition, pliFilePath);
+                }
+                else
+                {
+                    ReadPliFile(modelDefinition, pliFilePath, locationFile);
+                }
+            }
+        }
+
+        private void ReadPliFile(WaterFlowFMModelDefinition modelDefinition, string pliFilePath, string locationFile)
+        {
+            var pliFile = new PliFile<Feature2D>();
+            IList<Feature2D> features = pliFile.Read(pliFilePath);
+
+            foreach (Feature2D feature in features)
+            {
+                existingPolyLineFiles[feature] = locationFile;
+                modelDefinition.Boundaries.Add(feature);
+                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet
+                {
+                    Feature = feature
+                });
+            }
+        }
+
+        private static void ReadPlizFile(WaterFlowFMModelDefinition modelDefinition, string pliFilePath)
+        {
+            var plizFile = new PlizFile<Embankment>();
+            IList<Embankment> embankments = plizFile.Read(pliFilePath);
+            LogWarningMessagesForOnePointGeometryEmbankments(embankments, pliFilePath);
+
+            Embankment[] validEmbankments = embankments.Where(e => e.Geometry.Coordinates.Length > 1).ToArray();
+            if (!validEmbankments.Any())
+            {
+                return;
+            }
+
+            modelDefinition.Embankments.Add(validEmbankments.First());
+        }
+
+        private static void CheckFilePath(string filePath, string warningMessage)
+        {
+            if (!File.Exists(filePath))
+            {
+                log.Warn(warningMessage);
+            }
+        }
+
+        private static void LogWarningMessagesForOnePointGeometryEmbankments(
+            IEnumerable<Embankment> embankments, string pliFilePath)
+        {
+            IEnumerable<Embankment> onePointEmbankments = embankments.Where(e => e.Geometry.Coordinates.Length == 1);
+            string directory = Directory.GetParent(pliFilePath).FullName;
+            onePointEmbankments.ForEach(e =>
+            {
+                string embankmentFilePath = Path.Combine(directory, $"{e.Name}{FileConstants.EmbankmentFileExtension}");
+                log.Warn(
+                    $"Embankment file '{embankmentFilePath}' with only 1 point detected and it will not be imported.");
+            });
+        }
+
+        private static bool IsEmbankmentCategory(DelftIniCategory delftIniCategory)
+        {
+            return delftIniCategory.GetPropertyValue(BndExtForceFileConstants.QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
+        }
+
+        private void ReadBoundaryConditions(IList<DelftIniCategory> delftIniCategories,
+                                            WaterFlowFMModelDefinition modelDefinition)
+        {
+            List<string> correctionFunctionTypes = BcFileFlowBoundaryDataBuilder.CorrectionFunctionTypes.ToList();
+
+            IEnumerable<string> bcFilePaths = GetForcingFilePathsFromIniCategories(delftIniCategories);
+
+            List<BcBlockData> dataBlocks = ReadBoundaryConditionBlocks(bcFilePaths);
+
+            List<BcBlockData> correctionBlocks =
+                dataBlocks.Where(db => correctionFunctionTypes.Contains(db.FunctionType)).ToList();
+
+            List<BcBlockData> signalBlocks = dataBlocks.Except(correctionBlocks).ToList();
+
+            foreach (DelftIniCategory delftIniCategory in delftIniCategories)
+            {
+                if (TryGetQuantityValue(delftIniCategory, out FlowBoundaryQuantityType quantity))
+                {
+                    continue;
+                }
+
+                string pliFile = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.LocationFileKey);
+
+                Feature2D feature = existingPolyLineFiles.FirstOrDefault(kvp => kvp.Value == pliFile).Key;
+
+                if (feature == null)
+                {
+                    continue;
+                }
+
+                BcFileFlowBoundaryDataBuilder builder = CreateFlowBoundaryDataBuilder(quantity, feature);
+
+                List<BoundaryConditionSet> bcSets = CreateBoundaryConditionSetsWithFeature(modelDefinition);
+
+                // first loading signals, then corrections
+
+                string timeLagString = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey);
+
+                var usedDataBlocks = new List<BcBlockData>();
+                usedDataBlocks.AddRange(signalBlocks
+                                            .Where(dataBlock =>
+                                                       builder.InsertBoundaryData(bcSets, dataBlock, timeLagString)));
+                usedDataBlocks.AddRange(correctionBlocks
+                                            .Where(dataBlock =>
+                                                       builder.InsertBoundaryData(bcSets, dataBlock, timeLagString)));
+
+                IBoundaryCondition newBoundaryCondition =
+                    bcSets.SelectMany(bcs => bcs.BoundaryConditions).FirstOrDefault();
+                if (newBoundaryCondition != null)
+                {
+                    existingBndForceFileItems[newBoundaryCondition] = delftIniCategory;
+                }
+
+                RemoveUsedDataBlocks(usedDataBlocks, signalBlocks, correctionBlocks);
+
+                AddBoundaryConditionsToModelDefinition(modelDefinition, bcSets);
+            }
+        }
+
+        private static void AddBoundaryConditionsToModelDefinition(WaterFlowFMModelDefinition modelDefinition,
+                                                                   List<BoundaryConditionSet> bcSets)
+        {
+            for (var i = 0; i < bcSets.Count; ++i)
+            {
+                modelDefinition.BoundaryConditionSets[i].BoundaryConditions.AddRange(bcSets[i].BoundaryConditions);
+            }
+        }
+
+        private static List<BoundaryConditionSet> CreateBoundaryConditionSetsWithFeature(
+            WaterFlowFMModelDefinition modelDefinition)
+        {
+            return modelDefinition.BoundaryConditionSets
+                                  .Select(bcs => new BoundaryConditionSet
+                                  {
+                                      Feature = bcs.Feature
+                                  })
+                                  .ToList();
+        }
+
+        private static void RemoveUsedDataBlocks(List<BcBlockData> usedDataBlocks, List<BcBlockData> signalBlocks,
+                                                 List<BcBlockData> correctionBlocks)
+        {
+            usedDataBlocks.ForEach(b =>
+            {
+                signalBlocks.Remove(b);
+                correctionBlocks.Remove(b);
+            });
+        }
+
+        private static BcFileFlowBoundaryDataBuilder CreateFlowBoundaryDataBuilder(FlowBoundaryQuantityType quantity,
+                                                                                   IFeature feature)
+        {
+            List<FlowBoundaryQuantityType> excludedQuantities = Enum.GetValues(typeof(FlowBoundaryQuantityType))
+                                                                    .Cast<FlowBoundaryQuantityType>()
+                                                                    .Except(new[]
+                                                                    {
+                                                                        quantity
+                                                                    })
+                                                                    .ToList();
+
+            BcFileFlowBoundaryDataBuilder builder = IsMorphologyRelatedProperty(quantity)
+                                                        ? new BcmFileFlowBoundaryDataBuilder()
+                                                        : new BcFileFlowBoundaryDataBuilder();
+
+            builder.ExcludedQuantities = excludedQuantities;
+            builder.OverwriteExistingData = true;
+            builder.CanCreateNewBoundaryCondition = true;
+            builder.LocationFilter = feature;
+
+            return builder;
+        }
+
+        private static bool TryGetQuantityValue(DelftIniCategory delftIniCategory,
+                                                out FlowBoundaryQuantityType quantity)
+        {
+            string quantityValue = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.QuantityKey);
+            quantity = FlowBoundaryQuantityType.WaterLevel;
+
+            if (string.IsNullOrEmpty(quantityValue)
+                || ExtForceQuantNames.TryParseBoundaryQuantityType(quantityValue, out quantity))
+            {
+                return false;
+            }
+
+            if (quantityValue != ExtForceQuantNames.EmbankmentBnd)
+            {
+                log.WarnFormat("Could not parse quantity {0} into a valid flow boundary condition", quantityValue);
+            }
+
+            return true;
+        }
+
+        private static List<BcBlockData> ReadBoundaryConditionBlocks(IEnumerable<string> bcFilePaths)
+        {
+            var dataBlocks = new List<BcBlockData>();
+            foreach (string bcFilePath in bcFilePaths.Distinct())
+            {
+                if (!File.Exists(bcFilePath))
+                {
+                    if (Path.GetFileName(bcFilePath) != ExtForceQuantNames.EmbankmentForcingFile)
+                    {
+                        log.WarnFormat("Boundary condition data file {0} not found", bcFilePath);
+                    }
+
+                    continue;
+                }
+
+                dataBlocks.AddRange(bcFilePath.EndsWith(".bcm")
+                                        ? new BcmFile().Read(bcFilePath)
+                                        : new BcFile().Read(bcFilePath));
+            }
+
+            return dataBlocks;
+        }
+
+        private IEnumerable<string> GetForcingFilePathsFromIniCategories(IList<DelftIniCategory> bndBlocks)
+        {
+            var bcFilePaths = new List<string>();
+
+            foreach (DelftIniCategory delftIniCategory in bndBlocks)
+            {
+                IEnumerable<string> bcFiles = delftIniCategory.GetPropertyValues(BndExtForceFileConstants.ForcingFileKey);
+                bcFilePaths.AddRange(bcFiles.Select(GetFullPathForReading));
+            }
+
+            return bcFilePaths;
+        }
+
+        private static bool IsMorphologyRelatedProperty(FlowBoundaryQuantityType quantity)
+        {
+            return quantity == FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
+                   || quantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
+                   || quantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport
+                   || quantity == FlowBoundaryQuantityType.MorphologyBedLevelFixed
+                   || quantity == FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint;
+        }
+    }
+}

@@ -17,6 +17,6 @@ namespace DelftTools.Hydro.Structures
         StricklerKs = 3,
 
         [Description("White colebrook")]
-        WhiteColebrook = 4,
+        WhiteColebrook = 4
     }
 }

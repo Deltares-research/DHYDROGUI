@@ -16,8 +16,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
     /// </summary>
     public class RectangleSeriesShapeFeature : CompositeShapeFeature
     {
-        public readonly List<double> Borders = new List<double>();
-        public readonly List<IShapeFeature> BorderShapes = new List<IShapeFeature>();
+        public List<double> Borders { get; } = new List<double>();
+        public List<IShapeFeature> BorderShapes { get; } = new List<IShapeFeature>();
         private readonly IChart chart;
 
         public RectangleSeriesShapeFeature(IChart chart, double x, double y, double width, double height, double top, bool widthIsWorld, bool heightIsWorld) : base(chart)

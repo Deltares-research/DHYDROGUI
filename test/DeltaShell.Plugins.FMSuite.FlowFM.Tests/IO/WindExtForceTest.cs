@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             modelDefinition.WindFields.Add(windPolarField);
 
             var writer = new ExtForceFile();
-            writer.Write("testmodel", modelDefinition);
+            writer.Write("testmodel", modelDefinition, true, true);
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             modelDefinition.WindFields.Add(GriddedWindField.CreateCurviField(windCurviFile, windCurviGrid));
 
             var writer = new ExtForceFile();
-            writer.Write("testmodel", modelDefinition);
+            writer.Write("testmodel", modelDefinition, true, true);
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;
@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             modelDefinition.WindFields.Add(SpiderWebWindField.Create(windSpwFile));
 
             var writer = new ExtForceFile();
-            writer.Write("testmodel", modelDefinition);
+            writer.Write("testmodel", modelDefinition, true, true);
 
             var loadedModelDefinition = new WaterFlowFMModelDefinition();
             loadedModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = refDate;

@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Name = "A",
                 ObservationPointType = ObservationPointType.SinglePoint,
-                Z = 0,
+                Z = 0
             });
 
             // call
@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Name = "A",
                 ObservationPointType = ObservationPointType.SinglePoint,
-                Z = 0,
+                Z = 0
             });
 
             // call
@@ -585,7 +585,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 ObservationPointType = type,
                 X = x,
                 Y = y,
-                Z = type == ObservationPointType.SinglePoint ? 0.5 : double.NaN,
+                Z = type == ObservationPointType.SinglePoint ? 0.5 : double.NaN
             });
 
             // call
@@ -1177,7 +1177,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 -1,
                 -1
-            },
+            }
         };
 
         [Test]

@@ -13,13 +13,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
         {
             "neubcmud",
             "neubcsand",
-            "eqmbc",
+            "eqmbc"
         };
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyPropertyMapping =>
             new Dictionary<string, string>
             {
-                {"bslhd", "Bshld"},
+                {"bslhd", "Bshld"}
             };
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping =>

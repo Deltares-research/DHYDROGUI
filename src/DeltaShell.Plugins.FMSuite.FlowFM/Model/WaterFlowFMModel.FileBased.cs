@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             if (MduFilePath == null) // switch from nothing: load
             {
-                OnLoad(mduPath);
+                LoadFromMdu(mduPath);
             }
             else // else: switch from existing: only change path
             {

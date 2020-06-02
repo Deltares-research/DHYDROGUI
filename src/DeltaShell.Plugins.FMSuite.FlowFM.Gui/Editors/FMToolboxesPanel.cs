@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 {"Model", Model},
                 {"ModelDirectory", ((WaterFlowFMModel) Model).ModelDefinition.ModelDirectory},
-                {"MapControl", FlowFMGuiPlugin.ActiveMapView != null ? FlowFMGuiPlugin.ActiveMapView.MapControl : null},
+                {"MapControl", FlowFMGuiPlugin.ActiveMapView != null ? FlowFMGuiPlugin.ActiveMapView.MapControl : null}
             };
         }
     }

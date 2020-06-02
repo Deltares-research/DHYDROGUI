@@ -27,8 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
             buttonCommands.Add(ButtonAddObstacle, new MapToolCommand(WaveMapViewDecorator.ObstacleToolName));
             buttonCommands.Add(ButtonAddBoundary, new MapToolCommand(WaveMapViewDecorator.BoundaryToolName));
             buttonCommands.Add(ButtonAddObsPoint, new MapToolCommand(WaveMapViewDecorator.ObservationPointToolName));
-            buttonCommands.Add(ButtonAddObsCrossSection,
-                               new MapToolCommand(WaveMapViewDecorator.ObservationCrossSectionToolName));
+            buttonCommands.Add(ButtonAddObsCrossSection, new MapToolCommand(WaveMapViewDecorator.ObservationCrossSectionToolName));
         }
 
         public IEnumerable<ICommand> Commands => buttonCommands.Values;
@@ -55,7 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
                 {
                     CurvilinearGrid curvilinearGrid = ((WaveModel) modelGroupLayer.Model).OuterDomain.Grid;
                     bool hasGrid = curvilinearGrid != null && !curvilinearGrid.IsEmpty;
-                    button.IsEnabled = hasGrid && command.Enabled;
+                    bool boundaryDefinedByFile = ((WaveModel) modelGroupLayer.Model).BoundaryContainer.DefinitionPerFileUsed;
+                    button.IsEnabled = hasGrid && !boundaryDefinedByFile && command.Enabled;
                 }
                 else
                 {

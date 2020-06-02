@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 70,
                     Y = 70
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 70,
                     Y = 20
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 20,
                     Y = 70
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 20,
                     Y = 20
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -321,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 80,
                     Y = 40
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -387,7 +387,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 20,
                     Y = 40
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -453,7 +453,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 50,
                     Y = 70
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -519,7 +519,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 50,
                     Y = 20
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -590,7 +590,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 120,
                     Y = 20
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
             network.Branches.Add(branch1);
@@ -664,7 +664,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 130,
                     Y = 120
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
             network.Branches.Add(branch1);
@@ -737,7 +737,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 20,
                     Y = 120
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
             network.Branches.Add(branch1);
@@ -828,7 +828,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = -80,
                     Y = 70
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
             network.Branches.Add(branch1);
@@ -909,7 +909,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 70,
                     Y = 70
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -959,7 +959,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 70,
                     Y = 70
-                },
+                }
             };
             branch1.Geometry = new LineString(vertices.ToArray());
 
@@ -1026,7 +1026,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side2, 8),
                 new Coordinate(-side2 + 5, 0.0),
                 new Coordinate(side1 - 5, 0.0),
-                new Coordinate(side1, 10.0),
+                new Coordinate(side1, 10.0)
             };
 
             var yzCoordinates2 = new List<Coordinate>
@@ -1034,7 +1034,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side1, 10.0),
                 new Coordinate(-side1 + 5, 0.0),
                 new Coordinate(side2 - 5, 0.0),
-                new Coordinate(side2, 8.0),
+                new Coordinate(side2, 8.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, Math.Sqrt(1800.0), yzCoordinates1,
@@ -1140,7 +1140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side2, 8),
                 new Coordinate(-side2 + 5, 0.0),
                 new Coordinate(side1 - 5, 0.0),
-                new Coordinate(side1, 10.0),
+                new Coordinate(side1, 10.0)
             };
 
             var yzCoordinates2 = new List<Coordinate>
@@ -1148,7 +1148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side1, 10.0),
                 new Coordinate(-side1 + 5, 0.0),
                 new Coordinate(side2 - 5, 0.0),
-                new Coordinate(side2, 8.0),
+                new Coordinate(side2, 8.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, 0.0, yzCoordinates1, "CrossSection1");
@@ -1223,7 +1223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side2, 8),
                 new Coordinate(-side2 + 5, 0.0),
                 new Coordinate(side1 - 5, 0.0),
-                new Coordinate(side1, 10.0),
+                new Coordinate(side1, 10.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, channel1.Length / 2.0, yzCoordinates1,
@@ -1307,7 +1307,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side2, 8),
                 new Coordinate(-side2 + 5, 0.0),
                 new Coordinate(side1 - 5, 0.0),
-                new Coordinate(side1, 10.0),
+                new Coordinate(side1, 10.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, channel1.Length / 2.0, yzCoordinates1,
@@ -1411,7 +1411,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side2, 8),
                 new Coordinate(-side2 + 5, 0.0),
                 new Coordinate(side1 - 5, 0.0),
-                new Coordinate(side1, 10.0),
+                new Coordinate(side1, 10.0)
             };
 
             var yzCoordinates2 = new List<Coordinate>
@@ -1419,7 +1419,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side1, 10.0),
                 new Coordinate(-side1 + 5, 0.0),
                 new Coordinate(side2 - 5, 0.0),
-                new Coordinate(side2, 8.0),
+                new Coordinate(side2, 8.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, Math.Sqrt(1800.0), yzCoordinates1,
@@ -1550,7 +1550,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side2, 8),
                 new Coordinate(-side2 + 5, 0.0),
                 new Coordinate(side1 - 5, 0.0),
-                new Coordinate(side1, 10.0),
+                new Coordinate(side1, 10.0)
             };
 
             var yzCoordinates2 = new List<Coordinate>
@@ -1558,7 +1558,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side1, 10.0),
                 new Coordinate(-side1 + 5, 0.0),
                 new Coordinate(side2 - 5, 0.0),
-                new Coordinate(side2, 8.0),
+                new Coordinate(side2, 8.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, Math.Sqrt(1800.0), yzCoordinates1,
@@ -1785,7 +1785,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-30, 10),
                 new Coordinate(-25, 0.0),
                 new Coordinate(25 - 5, 0.0),
-                new Coordinate(30, 9.0),
+                new Coordinate(30, 9.0)
             };
 
             var yzCoordinates2 = new List<Coordinate>
@@ -1793,7 +1793,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-40, 12.0),
                 new Coordinate(-35, 0.0),
                 new Coordinate(15, 0.0),
-                new Coordinate(20, 13.0),
+                new Coordinate(20, 13.0)
             };
 
             var yzCoordinates3 = new List<Coordinate>
@@ -1801,7 +1801,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-20, 8.0),
                 new Coordinate(-15, 0.0),
                 new Coordinate(25, 0.0),
-                new Coordinate(30, 11.0),
+                new Coordinate(30, 11.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, 0.0, yzCoordinates1, "CrossSection1");
@@ -1905,7 +1905,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-30, 10),
                 new Coordinate(-25, 0.0),
                 new Coordinate(25 - 5, 0.0),
-                new Coordinate(30, 9.0),
+                new Coordinate(30, 9.0)
             };
 
             var yzCoordinates2 = new List<Coordinate>
@@ -1913,7 +1913,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-40, 12.0),
                 new Coordinate(-35, 0.0),
                 new Coordinate(15, 0.0),
-                new Coordinate(20, 13.0),
+                new Coordinate(20, 13.0)
             };
 
             var yzCoordinates3 = new List<Coordinate>
@@ -1921,7 +1921,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-20, 8.0),
                 new Coordinate(-15, 0.0),
                 new Coordinate(25, 0.0),
-                new Coordinate(30, 11.0),
+                new Coordinate(30, 11.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, 0.0, yzCoordinates1, "CrossSection1");
@@ -2024,7 +2024,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side1, 8),
                 new Coordinate(-side1 + 5, 0.0),
                 new Coordinate(side1 - 5, 0.0),
-                new Coordinate(side1, 10.0),
+                new Coordinate(side1, 10.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, channel1.Length / 2.0, yzCoordinates1,
@@ -2125,7 +2125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(-side1, 8),
                 new Coordinate(-side1 + 5, 0.0),
                 new Coordinate(side1 - 5, 0.0),
-                new Coordinate(side1, 10.0),
+                new Coordinate(side1, 10.0)
             };
 
             CrossSectionHelper.AddYZCrossSectionFromYZCoordinates(channel1, channel1.Length / 2.0, yzCoordinates1,

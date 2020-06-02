@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private readonly IDictionary<DateTime, IDictionary<string, string>> data =
             new SortedDictionary<DateTime, IDictionary<string, string>>();
 
-        public string Name;
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets the sparse time dependent substance data.

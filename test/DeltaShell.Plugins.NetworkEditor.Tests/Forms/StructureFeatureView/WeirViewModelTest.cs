@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var generalStructureWeirFormula = new GeneralStructureWeirFormula
             {
                 BedLevelStructureCentre = viewModel.Weir.CrestLevel,
-                WidthStructureCentre = viewModel.Weir.CrestWidth,
+                WidthStructureCentre = viewModel.Weir.CrestWidth
             };
 
             viewModel.Weir.WeirFormula = generalStructureWeirFormula;
@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var viewModel = new WeirViewModel
             {
                 Weir = new Weir {WeirFormula = new GeneralStructureWeirFormula {}},
-                BedLevelStructureCentre = 3.5d,
+                BedLevelStructureCentre = 3.5d
             };
 
             Assert.That(viewModel.Weir.CrestLevel, Is.EqualTo(3.5d));
@@ -309,7 +309,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var viewModel = new WeirViewModel
             {
                 Weir = new Weir(true),
-                EnableCrestLevelTimeSeries = previousValue,
+                EnableCrestLevelTimeSeries = previousValue
             };
 
             Assert.AreEqual(previousValue, viewModel.EnableCrestLevelTimeSeries);
@@ -331,7 +331,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var viewModel = new WeirViewModel
             {
                 Weir = new Weir(true),
-                EnableCrestLevelTimeSeries = previousValue,
+                EnableCrestLevelTimeSeries = previousValue
             };
 
             Assert.AreEqual(previousValue, viewModel.EnableCrestLevelTimeSeries);
@@ -605,7 +605,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(),
+                Weir = new Weir()
             };
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
@@ -619,7 +619,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(),
+                Weir = new Weir()
             };
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
@@ -633,7 +633,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(),
+                Weir = new Weir()
             };
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
@@ -647,7 +647,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(),
+                Weir = new Weir()
             };
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
@@ -661,7 +661,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(),
+                Weir = new Weir()
             };
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
@@ -675,7 +675,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(),
+                Weir = new Weir()
             };
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
@@ -689,7 +689,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(),
+                Weir = new Weir()
             };
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
@@ -704,7 +704,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(),
+                Weir = new Weir()
             };
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
@@ -718,7 +718,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(),
+                Weir = new Weir()
             };
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;

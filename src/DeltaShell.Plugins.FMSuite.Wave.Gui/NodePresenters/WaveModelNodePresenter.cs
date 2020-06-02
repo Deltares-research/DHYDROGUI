@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private const string GeneralFolderName = "General";
         private const string AreaFolderName = "Area";
         private const string TimePointFolderName = "Time Frame";
-        private const string BoundaryFolderName = "Boundary Conditions";
+        private const string BoundaryFolderName = "Boundaries";
         private const string PhysicalProcessesName = "Physical Processes";
         private const string NumericalParametersName = "Numerical Parameters";
         private const string OutputParametersName = "Output Parameters";
@@ -77,9 +77,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return model.OuterDomain;
             yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, model, model.TimePointData,
                                                    ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(BoundaryFolderName, BoundaryConditionsImage, model,
-                                                   model.BoundaryConditions, ShortCutType.FeatureSet,
-                                                   model.BoundaryConditions);
+
+            yield return new WaveModelTreeShortcut(BoundaryFolderName,
+                                                   BoundaryConditionsImage,
+                                                   model,
+                                                   model.BoundaryContainer.Boundaries,
+                                                   ShortCutType.FeatureSet,
+                                                   model.BoundaryContainer.Boundaries);
+
             yield return new WaveModelTreeShortcut(PhysicalProcessesName, ProcessesImage, model, PhysicalProcessesName);
             yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, model,
                                                    NumericalParametersName);
@@ -173,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             var item = new ClonableToolStripMenuItem
             {
                 Text = "Settings",
-                Tag = model,
+                Tag = model
             };
             item.Click += OnSettingsClicked;
             return item;

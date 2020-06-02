@@ -10,19 +10,6 @@ namespace DelftTools.Hydro
     [Entity]
     public class HydroArea : RegionBase, IHydroRegion
     {
-        public const string LandBoundariesPluralName = "Land Boundaries";
-        public const string DryPointsPluralName = "Dry Points";
-        public const string DryAreasPluralName = "Dry Areas";
-        public const string ThinDamsPluralName = "Thin Dams";
-        public const string FixedWeirsPluralName = "Fixed Weirs";
-        public const string ObservationPointsPluralName = "Observation Points";
-        public const string ObservationCrossSectionsPluralName = "Observation Cross-Sections";
-        public const string PumpsPluralName = "Pumps";
-        public const string WeirsPluralName = "Structures";
-        public const string EmbankmentsPluralName = "Embankments";
-        public const string EnclosureName = "Enclosure";
-        public const string BridgePillarsPluralName = "Bridge Pillars";
-
         public HydroArea()
         {
             Initialize();

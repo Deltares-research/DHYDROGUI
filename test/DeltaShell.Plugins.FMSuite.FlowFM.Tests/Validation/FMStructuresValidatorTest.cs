@@ -337,7 +337,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthStructureLeftSide = 1.0,
                 WidthStructureRightSide = 1.0,
                 WidthLeftSideOfStructure = 1.0,
-                WidthRightSideOfStructure = 1.0,
+                WidthRightSideOfStructure = 1.0
             };
             var weir = new Weir2D(true)
             {
@@ -367,7 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthStructureLeftSide = -1.0,
                 WidthStructureRightSide = 1.0,
                 WidthLeftSideOfStructure = 1.0,
-                WidthRightSideOfStructure = 1.0,
+                WidthRightSideOfStructure = 1.0
             };
             var weir = new Weir2D(true)
             {
@@ -399,7 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthStructureLeftSide = 1.0,
                 WidthStructureRightSide = 1.0,
                 WidthLeftSideOfStructure = -1.0,
-                WidthRightSideOfStructure = 1.0,
+                WidthRightSideOfStructure = 1.0
             };
             var weir = new Weir2D(true)
             {
@@ -431,7 +431,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthStructureLeftSide = 1.0,
                 WidthStructureRightSide = -1.0,
                 WidthLeftSideOfStructure = 1.0,
-                WidthRightSideOfStructure = 1.0,
+                WidthRightSideOfStructure = 1.0
             };
             var weir = new Weir2D(true)
             {
@@ -463,7 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthStructureLeftSide = 1.0,
                 WidthStructureRightSide = 1.0,
                 WidthLeftSideOfStructure = 1.0,
-                WidthRightSideOfStructure = -1.0,
+                WidthRightSideOfStructure = -1.0
             };
             var weir = new Weir2D(true)
             {

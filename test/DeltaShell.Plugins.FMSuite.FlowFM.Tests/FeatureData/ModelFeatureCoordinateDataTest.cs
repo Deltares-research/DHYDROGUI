@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             lineGeomery = new LineString(new Coordinate[]
             {
                 new Coordinate(10, 10),
-                new Coordinate(10, 0),
+                new Coordinate(10, 0)
             });
 
             ((INotifyPropertyChanged) feature).Raise(f => f.PropertyChanged += null, feature, new PropertyChangedEventArgs(nameof(feature.Geometry)));

@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     NegativeFreeWeirFlow = 19.0,
                     NegativeDrownedWeirFlow = 20.0,
                     NegativeContractionCoefficient = 21.0,
-                    ExtraResistance = 22.0,
+                    ExtraResistance = 22.0
                 }
             };
             structs.Add(generalStructureWeir);
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var structuresFile = new StructuresFile()
             {
-                StructureSchema = schema,
+                StructureSchema = schema
             };
 
             string exportFilePath = TestHelper.GetCurrentMethodName() + ".ini";
@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 WidthRightSideOfStructure = double.NaN,
                 WidthStructureCentre = double.NaN,
                 WidthStructureLeftSide = double.NaN,
-                WidthStructureRightSide = double.NaN,
+                WidthStructureRightSide = double.NaN
             };
 
             var generalWeir = new Weir2D("Weir-d salute")
@@ -270,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var structuresFile = new StructuresFile()
             {
-                StructureSchema = schema,
+                StructureSchema = schema
             };
             return structuresFile;
         }

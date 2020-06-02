@@ -15,7 +15,6 @@ using GeoAPI.Geometries;
 using log4net;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -26,9 +25,6 @@ namespace DelftTools.Hydro.Tests
     [TestFixture]
     public class HydroNetworkTest
     {
-        private static readonly MockRepository mocks = new MockRepository();
-        private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkTest));
-
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
@@ -101,45 +97,7 @@ namespace DelftTools.Hydro.Tests
             });
         }
 
-        [Test]
-        [Category(TestCategory.Performance)] // TODO: test Add or change name
-        public void AddManyBranchesWithSimpleBranchFeature()
-        {
-            const int count = 10000;
-            var weirCount = 0;
-
-            Action action = delegate // TODO: what are we testing here? Test only add.
-            {
-                var network = new HydroNetwork();
-                for (var i = 0; i < count; i++)
-                {
-                    var from = new HydroNode();
-                    var to = new HydroNode();
-
-                    network.Nodes.Add(from);
-                    network.Nodes.Add(to);
-
-                    var channel = new Channel
-                    {
-                        Source = from,
-                        Target = to
-                    };
-
-                    var compositeBranchStructure = new CompositeBranchStructure();
-                    NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, channel, 0);
-                    HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Weir());
-
-                    network.Branches.Add(channel);
-                }
-
-                foreach (IWeir weir in network.Weirs) // access all Weirs should be also fast
-                {
-                    weirCount++;
-                }
-            };
-
-            TestHelper.AssertIsFasterThan(2750, string.Format("Added {0} branches with {1} weirs", count, weirCount), action);
-        }
+      
 
         [Test]
         public void BranchCrossSectionShouldRaiseCollectionChangedEvent()
@@ -394,99 +352,7 @@ namespace DelftTools.Hydro.Tests
             var clonedHydroNetwork = (IHydroNetwork) network.Clone();
             clonedHydroNetwork.CrossSections.Should().Have.Count.EqualTo(1);
         }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void CloneHydroNetworkWithVariousBranchFeatures()
-        {
-            var network = new HydroNetwork();
-            var from = new HydroNode();
-            var to = new HydroNode();
-            network.Nodes.Add(from);
-            network.Nodes.Add(to);
-            var channel = new Channel
-            {
-                Source = from,
-                Target = to
-            };
-            network.Branches.Add(channel);
-            var compositeBranchStructure = new CompositeBranchStructure();
-            NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, channel, 0);
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Weir());
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Gate());
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Pump());
-
-            var crossSectionXYZ = new CrossSectionDefinitionXYZ
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(0, 0, 0),
-                    new Coordinate(10, 0, 0)
-                })
-            };
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
-
-            var clonedHydroNetwork = (IHydroNetwork) network.Clone();
-            clonedHydroNetwork.CrossSections.Should().Have.Count.EqualTo(1);
-            clonedHydroNetwork.CompositeBranchStructures.Should().Have.Count.EqualTo(1);
-            clonedHydroNetwork.Weirs.Should().Have.Count.EqualTo(1);
-            clonedHydroNetwork.Pumps.Should().Have.Count.EqualTo(1);
-            clonedHydroNetwork.Gates.Should().Have.Count.EqualTo(1);
-            clonedHydroNetwork.Pumps.First().Should().Not.Be.SameInstanceAs(network.Pumps.First());
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void AutoCloneHydroNetworkWithVariousBranchFeatures()
-        {
-            var network = new HydroNetwork();
-            var from = new HydroNode();
-            var to = new HydroNode();
-            network.Nodes.Add(from);
-            network.Nodes.Add(to);
-            var channel = new Channel
-            {
-                Source = from,
-                Target = to
-            };
-            network.Branches.Add(channel);
-            var compositeBranchStructure = new CompositeBranchStructure();
-            NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, channel, 0);
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Weir());
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Gate());
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Pump());
-
-            var crossSectionXYZ = new CrossSectionDefinitionXYZ
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(10, 0)
-                })
-            };
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
-
-            HydroNetwork clonedHydroNetwork = TypeUtils.DeepClone(network);
-
-            List<string> hits = TestReferenceHelper.SearchObjectInObjectGraph(clonedHydroNetwork, network);
-            hits.ForEach(Console.WriteLine);
-            Assert.AreEqual(0, hits.Count);
-
-            clonedHydroNetwork.CrossSections.Should().Have.Count.EqualTo(1);
-            clonedHydroNetwork.CompositeBranchStructures.Should().Have.Count.EqualTo(1);
-            clonedHydroNetwork.Weirs.Should().Have.Count.EqualTo(1);
-            clonedHydroNetwork.Gates.Should().Have.Count.EqualTo(1);
-            clonedHydroNetwork.Pumps.Should().Have.Count.EqualTo(1);
-
-            // failing asserts:
-            var route = new Route();
-            clonedHydroNetwork.Routes.Add(route);
-            route.Network.Should().Be.EqualTo(clonedHydroNetwork); //due to missing event resubscription
-
-            // due to no cloning of enumerables
-            clonedHydroNetwork.Pumps.First().Should().Not.Be.SameInstanceAs(network.Pumps.First());
-        }
-
+        
         [Test]
         [Category(TestCategory.Integration)]
         public void CloneHydroNetworkAndAddBranch()

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             {
                 {BedLevelAtBound, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
                 {BedLevelChangeAtBound, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
-                {BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
+                {BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport}
             };
 
         protected override IDictionary<string, FlowBoundaryQuantityType> QuantityNameToTypeDictionary =>

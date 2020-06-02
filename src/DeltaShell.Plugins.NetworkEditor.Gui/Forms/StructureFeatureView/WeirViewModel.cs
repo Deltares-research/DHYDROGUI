@@ -590,7 +590,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                             WidthStructureLeftSide = double.NaN,
                             WidthStructureRightSide = double.NaN,
                             WidthLeftSideOfStructure = double.NaN,
-                            WidthRightSideOfStructure = double.NaN,
+                            WidthRightSideOfStructure = double.NaN
                         };
 
                         Weir.WeirFormula = generalStructureWeirFormula;

@@ -58,71 +58,76 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Category(TestCategory.Integration)]
         public void CopyPasteAllShapesUsingClipboard()
         {
-            var input = new Input
+            using (var clipboardMock = new ClipboardMock())
             {
-                ParameterName = "parameter",
-                Feature = new RtcTestFeature {Name = "input_feature"}
-            };
-            var output = new Output
-            {
-                ParameterName = "parameter",
-                Feature = new RtcTestFeature {Name = "output_feature"}
-            };
+                clipboardMock.GetData_Returns_SetData();
 
-            const string ruleName = "ruleTest";
-            RuleBase hydRule = new HydraulicRule {Name = ruleName};
+                var input = new Input
+                {
+                    ParameterName = "parameter",
+                    Feature = new RtcTestFeature {Name = "input_feature"}
+                };
+                var output = new Output
+                {
+                    ParameterName = "parameter",
+                    Feature = new RtcTestFeature {Name = "output_feature"}
+                };
 
-            const string conditionName = "ruleTest";
-            var condition = new StandardCondition {Name = conditionName};
+                const string ruleName = "ruleTest";
+                RuleBase hydRule = new HydraulicRule {Name = ruleName};
 
-            const string signalName = "ruleTest";
-            var signal = new LookupSignal {Name = signalName};
+                const string conditionName = "ruleTest";
+                var condition = new StandardCondition {Name = conditionName};
 
-            var controlGroup = new ControlGroup();
-            var controlGroupEditor = new ControlGroupEditor {Data = controlGroup};
-            GraphControl graphControl = controlGroupEditor.GraphControl;
+                const string signalName = "ruleTest";
+                var signal = new LookupSignal {Name = signalName};
 
-            hydRule.Inputs.Add(input);
-            hydRule.Outputs.Add(output);
-            condition.Input = input;
-            condition.TrueOutputs.Add(hydRule);
-            signal.Inputs.Add(input);
-            signal.RuleBases.Add(hydRule);
+                var controlGroup = new ControlGroup();
+                var controlGroupEditor = new ControlGroupEditor {Data = controlGroup};
+                GraphControl graphControl = controlGroupEditor.GraphControl;
 
-            controlGroup.Rules.Add(hydRule);
-            controlGroup.Inputs.Add(input);
-            controlGroup.Outputs.Add(output);
-            controlGroup.Conditions.Add(condition);
-            controlGroup.Signals.Add(signal);
-            ControlGroupEditorController controller = controlGroupEditor.Controller;
-            IEnumerable<ShapeBase> shapecollection = graphControl.GetShapes<ShapeBase>();
+                hydRule.Inputs.Add(input);
+                hydRule.Outputs.Add(output);
+                condition.Input = input;
+                condition.TrueOutputs.Add(hydRule);
+                signal.Inputs.Add(input);
+                signal.RuleBases.Add(hydRule);
 
-            RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(shapecollection);
-            IEnumerable<ShapeBase> retievedCollection = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
-            RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(retievedCollection, controller, new Point(12, 15));
+                controlGroup.Rules.Add(hydRule);
+                controlGroup.Inputs.Add(input);
+                controlGroup.Outputs.Add(output);
+                controlGroup.Conditions.Add(condition);
+                controlGroup.Signals.Add(signal);
+                ControlGroupEditorController controller = controlGroupEditor.Controller;
+                IEnumerable<ShapeBase> shapecollection = graphControl.GetShapes<ShapeBase>();
 
-            Assert.AreEqual(10, graphControl.GetShapes<ShapeBase>().Count());
+                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(shapecollection);
+                IEnumerable<ShapeBase> retievedCollection = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
+                RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(retievedCollection, controller, new Point(12, 15));
 
-            List<RuleBase> retrievedRules = graphControl.GetShapes<RuleShape>().Select(rs => rs.Tag).Cast<RuleBase>().ToList();
-            Assert.AreEqual(2, retrievedRules.Count);
+                Assert.AreEqual(10, graphControl.GetShapes<ShapeBase>().Count());
 
-            // Original rule inputs and outputs should still be set
-            Assert.AreEqual(input.Name, retrievedRules[0].Inputs.First().Name);
-            Assert.AreEqual(output.Name, retrievedRules[0].Outputs.First().Name);
+                List<RuleBase> retrievedRules = graphControl.GetShapes<RuleShape>().Select(rs => rs.Tag).Cast<RuleBase>().ToList();
+                Assert.AreEqual(2, retrievedRules.Count);
 
-            // Inputs and outputs should have been reset
-            Assert.AreEqual("[Not Set]", retrievedRules[1].Inputs.First().Name);
-            Assert.AreEqual("[Not Set]", retrievedRules[1].Outputs.First().Name);
+                // Original rule inputs and outputs should still be set
+                Assert.AreEqual(input.Name, retrievedRules[0].Inputs.First().Name);
+                Assert.AreEqual(output.Name, retrievedRules[0].Outputs.First().Name);
 
-            List<ConditionBase> copiedConditions = graphControl.GetShapes<ConditionShape>().Select(cs => cs.Tag).Cast<ConditionBase>().ToList();
-            Assert.AreEqual(2, copiedConditions.Count);
-            Assert.IsNotNull(copiedConditions.Last().Input);
-            Assert.AreEqual(1, copiedConditions.Last().TrueOutputs.Count);
+                // Inputs and outputs should have been reset
+                Assert.AreEqual("[Not Set]", retrievedRules[1].Inputs.First().Name);
+                Assert.AreEqual("[Not Set]", retrievedRules[1].Outputs.First().Name);
 
-            List<SignalBase> copiedSignals = graphControl.GetShapes<SignalShape>().Select(ss => ss.Tag).Cast<SignalBase>().ToList();
-            Assert.AreEqual(2, copiedSignals.Count);
-            Assert.AreEqual(1, copiedSignals.Last().Inputs.Count);
-            Assert.AreEqual(1, copiedSignals.Last().RuleBases.Count);
+                List<ConditionBase> copiedConditions = graphControl.GetShapes<ConditionShape>().Select(cs => cs.Tag).Cast<ConditionBase>().ToList();
+                Assert.AreEqual(2, copiedConditions.Count);
+                Assert.IsNotNull(copiedConditions.Last().Input);
+                Assert.AreEqual(1, copiedConditions.Last().TrueOutputs.Count);
+
+                List<SignalBase> copiedSignals = graphControl.GetShapes<SignalShape>().Select(ss => ss.Tag).Cast<SignalBase>().ToList();
+                Assert.AreEqual(2, copiedSignals.Count);
+                Assert.AreEqual(1, copiedSignals.Last().Inputs.Count);
+                Assert.AreEqual(1, copiedSignals.Last().RuleBases.Count);
+            }
         }
 
         [Test]

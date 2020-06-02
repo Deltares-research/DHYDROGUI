@@ -39,7 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             List<ValidationIssue> baseTimeIssues = base.ValidateModelTimers(model, outputTimeStep, viewData).ToList();
             if (timerCategory != null)
             {
-                baseTimeIssues.ForEach(i => i.Subject = timerCategory);
+                var clonedWithSubjectChanged = new List<ValidationIssue>();
+                baseTimeIssues.ForEach(i => clonedWithSubjectChanged.Add(new ValidationIssue(timerCategory, i.Severity, i.Message, i.ViewData)));
+                baseTimeIssues = clonedWithSubjectChanged;
             }
 
             foreach (ValidationIssue issue in baseTimeIssues)

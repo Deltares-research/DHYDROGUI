@@ -155,7 +155,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         {
             string mduPath = TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var m = new WaterFlowFMModel(mduPath);
+
+            var m = new WaterFlowFMModel();
+            m.ImportFromMdu(mduPath);
+
             UnstructuredGrid grid = m.Grid;
 
             var gridLayer = new UnstructuredGridLayer {Grid = grid};

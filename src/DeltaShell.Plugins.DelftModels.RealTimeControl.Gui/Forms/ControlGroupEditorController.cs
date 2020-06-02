@@ -27,12 +27,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
     public class ControlGroupEditorController
     {
+        public static readonly Bitmap StandardConditionIcon = Resources.standardcondition;
         private static readonly ILog log = LogManager.GetLogger(typeof(ControlGroupEditorController));
         private static bool adjustingConnectionInDomain;
         private static bool refreshingConnections;
-        private static readonly Bitmap TimeConditionIcon = Resources.timecondition;
-        private static readonly Bitmap DirectionalConditionIcon = Resources.directionalcondition;
-        private static readonly Bitmap StandardConditionIcon = Resources.standardcondition;
+        private static readonly Bitmap timeConditionIcon = Resources.timecondition;
+        private static readonly Bitmap directionalConditionIcon = Resources.directionalcondition;
 
         private ControlGroup controlGroup;
 
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             get => controlGroup;
             set
             {
-                DesubscribeControlGroupEvents();
+                UnsubscribeControlGroupEvents();
                 controlGroup = value;
                 InitialGraphFill();
                 SubscribeControlGroupEvents();
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 if (graphControl != null)
                 {
-                    DesubscribeGraphControlEvents();
+                    UnsubscribeGraphControlEvents();
                 }
 
                 graphControl = value;
@@ -95,8 +95,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                                                     IList<SignalBase> signals, IList<MathematicalExpression> mathExpressions,
                                                     Point mea)
         {
-            DesubscribeControlGroupEvents();
-            DesubscribeGraphControlEvents();
+            UnsubscribeControlGroupEvents();
+            UnsubscribeGraphControlEvents();
             if (controlGroup != null && graphControl != null)
             {
                 controlGroup.Inputs.AddRange(inputs);
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             if (skipValidation)
             {
-                DesubscribeGraphControlEvents(); // Bypass OnGraphControlConnectionAdded event
+                UnsubscribeGraphControlEvents(); // Bypass OnGraphControlConnectionAdded event
             }
 
             if (controlGroup != null && graphControl != null)
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 return;
             }
 
-            DesubscribeControlGroupEvents();
+            UnsubscribeControlGroupEvents();
 
             object tag = shape.Tag;
             switch (tag)
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public RuleBase ConvertRuleTypeTo(RuleBase oldRule, Type toType)
         {
-            DesubscribeControlGroupEvents();
+            UnsubscribeControlGroupEvents();
 
             ShapeBase shape = FindShapeByObject(oldRule);
 
@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public ConditionBase ConvertConditionTypeTo(ConditionBase oldCondition, Type toType)
         {
-            DesubscribeControlGroupEvents();
+            UnsubscribeControlGroupEvents();
             ShapeBase shape = FindShapeByObject(oldCondition);
 
             var newCondition = (ConditionBase) Activator.CreateInstance(toType);
@@ -314,273 +314,80 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         /// <summary>
         /// Test if new connection meets the constraints set fow RTC.
         /// </summary>
-        /// <param name="connection"> </param>
-        /// <param name="from"> </param>
-        /// <param name="fromConnector"> </param>
-        /// <param name="to"> </param>
-        /// <param name="toConnector"> </param>
+        /// <param name="source">The source object.</param>
+        /// <param name="sourceConnector">The connector type of the origin.</param>
+        /// <param name="target">The target object.</param>
+        /// <param name="targetConnector">The connector type of the target.</param>
         /// <returns> </returns>
-        public static bool IsConnectionAllowed(object from, ConnectorType fromConnector, object to,
-                                               ConnectorType toConnector)
+        public static bool IsConnectionAllowed(object source, ConnectorType sourceConnector,
+                                               object target, ConnectorType targetConnector)
         {
             if (refreshingConnections)
             {
                 return true;
             }
 
-            if (to is Input)
+            if (!ValidateTargetIsNotInput(target))
             {
-                log.Error("Input can only be connected from.");
                 return false;
             }
 
-            if (from is Output)
+            if (!ValidateSourceInputOutput(source, sourceConnector, target, targetConnector))
             {
-                log.Error("Output can only be connected to.");
                 return false;
             }
 
-            if (from is Input)
+            if (!ValidateSource(source, sourceConnector, target, targetConnector))
             {
-                if (fromConnector != ConnectorType.Bottom)
-                {
-                    log.Error("Input can only be connected at the lowest connection point.");
-                    return false;
-                }
-
-                if (to is Output)
-                {
-                    log.Error("Input can only be connected to a rule, condition or signal.");
-                    return false;
-                }
-
-                if (to is LookupSignal)
-                {
-                    var lookupSignal = (LookupSignal) to;
-                    if (lookupSignal.Inputs.Any())
-                    {
-                        log.Error("Lookup signal can only have 1 input.");
-                        return false;
-                    }
-                }
-
-                if (to is SignalBase && toConnector != ConnectorType.Top && toConnector != ConnectorType.Left)
-                {
-                    log.Error("Input can only be connected to the left or top connection point.");
-                    return false;
-                }
-
-                if (to is ConditionBase conditionBase && conditionBase.Input != null)
-                {
-                    log.Error("Condition can only have 1 input.");
-                    return false;
-                }
-            }
-
-            if (from is IInput)
-            {
-                if (to is RuleBase ruleBase && ruleBase.Inputs.Any())
-                {
-                    log.Error("Rule can only have 1 input.");
-                    return false;
-                }
-
-                if (to is ConditionBase conditionBase && conditionBase.Input is Input)
-                {
-                    log.Error("Condition can only have 1 input.");
-                    return false;
-                }
-            }
-
-            if (from is SignalBase)
-            {
-                if (fromConnector != ConnectorType.Right)
-                {
-                    log.Error("Signal can only be connected at the right connection point.");
-                    return false;
-                }
-            }
-
-            // Multiple connections to 1 output are allowed. During runtime only 1 can be active!
-            if (from is RuleBase)
-            {
-                if (fromConnector != ConnectorType.Right)
-                {
-                    log.Error("Rule can only be connected at the right connection point.");
-                    return false;
-                }
-
-                var ruleBase = (RuleBase) from;
-                if (ruleBase.Outputs.Count > 0)
-                {
-                    log.Error("Can only connect to 1 output.");
-                    return false;
-                }
-            }
-
-            if (from is ConditionBase)
-            {
-                if (fromConnector == ConnectorType.Left || fromConnector == ConnectorType.Top)
-                {
-                    log.Error("Condition can only be connected at the right or bottom connection point.");
-                    return false;
-                }
-
-                if (to is Output)
-                {
-                    log.Error("Can not connect condition to output; Output can only be set by rule.");
-                    return false;
-                }
-
-                var conditionBase = (ConditionBase) from;
-                if (fromConnector == ConnectorType.Right && conditionBase.TrueOutputs.Count > 0)
-                {
-                    log.Error("True output of a condition can only connect to 1 other condition or a rule.");
-                    return false;
-                }
-
-                if (fromConnector == ConnectorType.Right && conditionBase.FalseOutputs.Contains((RtcBaseObject) to))
-                {
-                    log.Error("Condition is already connected to false of same condition.");
-                    return false;
-                }
-
-                if (fromConnector == ConnectorType.Bottom && conditionBase.FalseOutputs.Count > 0)
-                {
-                    log.Error("True output of a condition can only connect to 1 other condition or a rule.");
-                    return false;
-                }
-
-                if (fromConnector == ConnectorType.Bottom && conditionBase.TrueOutputs.Contains((RtcBaseObject) to))
-                {
-                    log.Error("Condition is already connected to true of same condition.");
-                    return false;
-                }
-
-                if (to is ConditionBase)
-                {
-                    if (toConnector == ConnectorType.Top)
-                    {
-                        log.Error("Can only connect a condition to the left of another condition; top is for input.");
-                        return false;
-                    }
-                }
-
-                if (to is RuleBase)
-                {
-                    if (toConnector == ConnectorType.Top)
-                    {
-                        log.Error("Can only connect a condition to the left of a rule; top is for input.");
-                        return false;
-                    }
-                }
-            }
-
-            if (to is ConditionBase)
-            {
-                if (from is Input && toConnector != ConnectorType.Top)
-                {
-                    log.Error("Can only connect an input to the top of a condition; left is for another condition.");
-                    return false;
-                }
-
-                if (from is ConditionBase && toConnector != ConnectorType.Left)
-                {
-                    log.Error("Can only connect a condition to the left of a condition; top is for input.");
-                    return false;
-                }
-            }
-
-            if (to is RuleBase)
-            {
-                if (from is Input && toConnector != ConnectorType.Top)
-                {
-                    log.Error("Can only connect an input to the top of a rule; left is for condition.");
-                    return false;
-                }
-
-                if (from is ConditionBase && toConnector != ConnectorType.Left)
-                {
-                    log.Error("Can only connect a condition to the left of a rule; top is for input.");
-                    return false;
-                }
-            }
-
-            if (from == to)
-            {
-                log.Error("Can not connect entity to itself.");
                 return false;
             }
 
-            if (to is Output)
+            if (!ValidateTarget(source, target, targetConnector))
             {
-                if (toConnector != ConnectorType.Left)
-                {
-                    log.Error("Can only connect to the left of output.");
-                    return false;
-                }
-            }
-
-            if (from is RuleBase && to is ConditionBase)
-            {
-                log.Error("Can not connect rule to condition; rule can only connect to output.");
                 return false;
             }
 
-            if (from is RuleBase && to is SignalBase)
+            if (!ValidateSourceDoesNotEqualTarget(source, target))
             {
-                log.Error("Can not connect rule to signal; rule can only connect to output.");
                 return false;
             }
 
-            if (from is RuleBase && to is RuleBase)
+            if (!ValidateTargetConnector(target, targetConnector))
             {
-                log.Error("Can not connect rule to rule; rule can only connect to output.");
                 return false;
             }
 
-            if (to is SignalBase && !(from is Input))
+            if (!ValidateSourceRuleBase(source, target))
             {
-                log.Error("Only input allowed to connect to signal.");
                 return false;
             }
 
-            if (from is SignalBase && !(to is RuleBase))
+            if (!ValidateSignalInput(source, target))
             {
-                log.Error("Signal can only be connected to PIDrule or IntervalRule.");
                 return false;
             }
 
-            if (from is SignalBase && to is RuleBase && !((RuleBase) to).CanBeLinkedFromSignal())
+            if (!ValidateSourceSignalBase(source, target))
             {
-                log.Error("Signal can only be connected to PIDrule or IntervalRule.");
                 return false;
             }
 
-            if (from is MathematicalExpression && !(to is MathematicalExpression ||
-                                                    to is ConditionBase ||
-                                                    to is RuleBase))
+            if (!(target is MathematicalExpression))
             {
-                log.Error("Expression can only connect to conditions, rules and other expressions.");
-                return false;
+                return true;
             }
 
-            if (to is MathematicalExpression)
+            switch (targetConnector)
             {
-                if (toConnector == ConnectorType.Top && !(from is IInput))
-                {
+                case ConnectorType.Top when !(source is IInput):
                     log.Error("Only inputs and other expressions can connect to the top an expression.");
                     return false;
-                }
-
-                if (toConnector == ConnectorType.Left && !(from is ConditionBase))
-                {
+                case ConnectorType.Left when !(source is ConditionBase):
                     log.Error("Only conditions can connect to the left of an expression.");
                     return false;
-                }
+                default:
+                    return true;
             }
-
-            return true;
         }
 
         public static bool ConnectionIs(IConnection connection)
@@ -617,43 +424,45 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 toSignal.Inputs.Add(fromInput);
             }
 
-            if (from is IInput fromIInput)
+            switch (from)
             {
-                if (to is RuleBase toRule)
+                case IInput fromIInput:
                 {
-                    toRule.Inputs.Add(fromIInput);
-                }
+                    switch (to)
+                    {
+                        case RuleBase toRule:
+                            toRule.Inputs.Add(fromIInput);
+                            break;
+                        case ConditionBase toCondition:
+                            toCondition.Input = fromIInput;
+                            break;
+                        case MathematicalExpression toMathematicalExpression:
+                            toMathematicalExpression.Inputs.Add(fromIInput);
+                            break;
+                    }
 
-                if (to is ConditionBase toCondition)
-                {
-                    toCondition.Input = fromIInput;
+                    break;
                 }
+                case ConditionBase fromCondition when to is RuleBase || to is ConditionBase || to is MathematicalExpression:
+                {
+                    var obj = (RtcBaseObject) to;
+                    if (fromConnector == ConnectorType.Right)
+                    {
+                        fromCondition.TrueOutputs.Add(obj);
+                    }
+                    else
+                    {
+                        fromCondition.FalseOutputs.Add(obj);
+                    }
 
-                if (to is MathematicalExpression toMathematicalExpression)
-                {
-                    toMathematicalExpression.Inputs.Add(fromIInput);
+                    break;
                 }
-            }
-
-            else if (from is ConditionBase fromCondition && (to is RuleBase || to is ConditionBase || to is MathematicalExpression))
-            {
-                var obj = (RtcBaseObject) to;
-                if (fromConnector == ConnectorType.Right)
-                {
-                    fromCondition.TrueOutputs.Add(obj);
-                }
-                else
-                {
-                    fromCondition.FalseOutputs.Add(obj);
-                }
-            }
-            else if (from is RuleBase fromRule && to is Output toOutput)
-            {
-                fromRule.Outputs.Add(toOutput);
-            }
-            else if (from is SignalBase fromSignal && to is RuleBase toRule)
-            {
-                fromSignal.RuleBases.Add(toRule);
+                case RuleBase fromRule when to is Output toOutput:
+                    fromRule.Outputs.Add(toOutput);
+                    break;
+                case SignalBase fromSignal when to is RuleBase toRule:
+                    fromSignal.RuleBases.Add(toRule);
+                    break;
             }
 
             adjustingConnectionInDomain = false;
@@ -665,19 +474,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             if (from is Input fromInput)
             {
-                if (to is RuleBase toRule)
+                switch (to)
                 {
-                    toRule.Inputs.Remove(fromInput);
-                }
-
-                if (to is SignalBase toSignal)
-                {
-                    toSignal.Inputs.Remove(fromInput);
-                }
-
-                if (to is ConditionBase toCondition)
-                {
-                    toCondition.Input = null;
+                    case RuleBase toRule:
+                        toRule.Inputs.Remove(fromInput);
+                        break;
+                    case SignalBase toSignal:
+                        toSignal.Inputs.Remove(fromInput);
+                        break;
+                    case ConditionBase toCondition:
+                        toCondition.Input = null;
+                        break;
                 }
             }
 
@@ -721,9 +528,239 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             MoveShape(shape, x, y);
         }
 
+        private static bool ValidateTargetConnector(object target, ConnectorType targetConnector)
+        {
+            if (target is Output && targetConnector != ConnectorType.Left)
+            {
+                log.Error("Can only connect to the left of output.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateSignalInput(object source, object target)
+        {
+            if (target is SignalBase && !(source is Input))
+            {
+                log.Error("Only input allowed to connect to signal.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateSourceDoesNotEqualTarget(object source, object target)
+        {
+            if (source == target)
+            {
+                log.Error("Can not connect entity to itself.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateTarget(object source, object target, ConnectorType targetConnector)
+        {
+            switch (target)
+            {
+                case ConditionBase _ when source is Input && targetConnector != ConnectorType.Top:
+                    log.Error("Can only connect an input to the top of a condition; left is for another condition.");
+                    return false;
+                case ConditionBase _ when source is ConditionBase && targetConnector != ConnectorType.Left:
+                    log.Error("Can only connect a condition to the left of a condition; top is for input.");
+                    return false;
+                case RuleBase _ when source is Input && targetConnector != ConnectorType.Top:
+                    log.Error("Can only connect an input to the top of a rule; left is for condition.");
+                    return false;
+                case RuleBase _ when source is ConditionBase && targetConnector != ConnectorType.Left:
+                    log.Error("Can only connect a condition to the left of a rule; top is for input.");
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateSource(object source, ConnectorType sourceConnector, object target, ConnectorType targetConnector)
+        {
+            switch (source)
+            {
+                case IInput _ when target is RuleBase ruleBase && ruleBase.Inputs.Any():
+                    log.Error("Rule can only have 1 input.");
+                    return false;
+                case IInput _ when target is ConditionBase conditionBase && conditionBase.Input is Input:
+                    log.Error("Condition can only have 1 input.");
+                    return false;
+                case SignalBase _ when sourceConnector != ConnectorType.Right:
+                    log.Error("Signal can only be connected at the right connection point.");
+                    return false;
+                case RuleBase _ when sourceConnector != ConnectorType.Right:
+                    log.Error("Rule can only be connected at the right connection point.");
+                    return false;
+                case RuleBase fromRuleBase:
+                    // Multiple connections to 1 output are allowed. During runtime only 1 can be active!
+                    if (fromRuleBase.Outputs.Count > 0)
+                    {
+                        log.Error("Can only connect to 1 output.");
+                        return false;
+                    }
+
+                    break;
+                case ConditionBase _ when sourceConnector == ConnectorType.Left || sourceConnector == ConnectorType.Top:
+                    log.Error("Condition can only be connected at the right or bottom connection point.");
+                    return false;
+                case ConditionBase _ when target is Output:
+                    log.Error("Can not connect condition to output; Output can only be set by rule.");
+                    return false;
+                case ConditionBase fromConditionBase:
+                    if (!ValidateSourceConditionBaseConnector(sourceConnector, target, fromConditionBase))
+                    {
+                        return false;
+                    }
+
+                    if (!ValidateTargetConditionBaseConnector(target, targetConnector))
+                    {
+                        return false;
+                    }
+
+                    break;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateSourceSignalBase(object source, object target)
+        {
+            switch (source)
+            {
+                case SignalBase _ when !(target is RuleBase):
+                    log.Error("Signal can only be connected to PIDRule or IntervalRule.");
+                    return false;
+                case SignalBase _ when !((RuleBase) target).CanBeLinkedFromSignal():
+                    log.Error("Signal can only be connected to PIDRule or IntervalRule.");
+                    return false;
+                case MathematicalExpression _ when !(target is MathematicalExpression ||
+                                                     target is ConditionBase ||
+                                                     target is RuleBase):
+                    log.Error("Expression can only connect to conditions, rules and other expressions.");
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateSourceRuleBase(object source, object target)
+        {
+            switch (source)
+            {
+                case RuleBase _ when target is ConditionBase:
+                    log.Error("Can not connect rule to condition; rule can only connect to output.");
+                    return false;
+                case RuleBase _ when target is SignalBase:
+                    log.Error("Can not connect rule to signal; rule can only connect to output.");
+                    return false;
+                case RuleBase _ when target is RuleBase:
+                    log.Error("Can not connect rule to rule; rule can only connect to output.");
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateTargetConditionBaseConnector(object target, ConnectorType targetConnector)
+        {
+            switch (target)
+            {
+                case ConditionBase _ when targetConnector == ConnectorType.Top:
+                    log.Error("Can only connect a condition to the left of another condition; top is for input.");
+                    return false;
+                case RuleBase _ when targetConnector == ConnectorType.Top:
+                    log.Error("Can only connect a condition to the left of a rule; top is for input.");
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateSourceConditionBaseConnector(ConnectorType sourceConnector, object target, ConditionBase fromConditionBase)
+        {
+            switch (sourceConnector)
+            {
+                case ConnectorType.Right when fromConditionBase.TrueOutputs.Count > 0:
+                    log.Error("True output of a condition can only connect to 1 other condition or a rule.");
+                    return false;
+                case ConnectorType.Right when fromConditionBase.FalseOutputs.Contains((RtcBaseObject) target):
+                    log.Error("Condition is already connected to false of same condition.");
+                    return false;
+                case ConnectorType.Bottom when fromConditionBase.FalseOutputs.Count > 0:
+                    log.Error("True output of a condition can only connect to 1 other condition or a rule.");
+                    return false;
+                case ConnectorType.Bottom when fromConditionBase.TrueOutputs.Contains((RtcBaseObject) target):
+                    log.Error("Condition is already connected to true of same condition.");
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateSourceInputOutput(object source, ConnectorType sourceConnector, object target, ConnectorType targetConnector)
+        {
+            switch (source)
+            {
+                case Output _:
+                    log.Error("Output can only be connected to.");
+                    return false;
+                case Input _ when sourceConnector != ConnectorType.Bottom:
+                    log.Error("Input can only be connected at the lowest connection point.");
+                    return false;
+                case Input _ when target is Output:
+                    log.Error("Input can only be connected to a rule, condition or signal.");
+                    return false;
+                case Input _:
+                    if (!ValidateTargetForSourceInput(target, targetConnector))
+                    {
+                        return false;
+                    }
+
+                    break;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateTargetForSourceInput(object target, ConnectorType targetConnector)
+        {
+            switch (target)
+            {
+                case LookupSignal lookupSignal when lookupSignal.Inputs.Any():
+                    log.Error("Lookup signal can only have 1 input.");
+                    return false;
+                case SignalBase _ when targetConnector != ConnectorType.Top && targetConnector != ConnectorType.Left:
+                    log.Error("Input can only be connected to the left or top connection point.");
+                    return false;
+                case ConditionBase conditionBase when conditionBase.Input != null:
+                    log.Error("Condition can only have 1 input.");
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateTargetIsNotInput(object target)
+        {
+            if (target is Input)
+            {
+                log.Error("Input can only be connected from.");
+                return false;
+            }
+
+            return true;
+        }
+
         private void InitialGraphFill()
         {
-            DesubscribeGraphControlEvents();
+            UnsubscribeGraphControlEvents();
             CleanGraphControl();
             if (controlGroup != null)
             {
@@ -783,12 +820,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 UiConnect(input, "Bottom", signalBase, "Top");
             }
 
-            foreach (RuleBase rulebase in signalBase.RuleBases.ToList())
+            foreach (RuleBase ruleBase in signalBase.RuleBases.Where(ruleBase => ruleBase.CanBeLinkedFromSignal()))
             {
-                if (rulebase.CanBeLinkedFromSignal())
-                {
-                    UiConnect(signalBase, "Right", rulebase, "Bottom");
-                }
+                UiConnect(signalBase, "Right", ruleBase, "Bottom");
             }
         }
 
@@ -826,13 +860,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         /// The object where the connection starts
         /// </param>
         /// <param name="sourceConnector">
-        /// The connector in the source shape where connnection starts
+        /// The connector in the source shape where connection starts
         /// </param>
         /// <param name="target">
         /// The object where the connection ends
         /// </param>
         /// <param name="targetConnector">
-        /// The connector in the target shape where connnection ends
+        /// The connector in the target shape where connection ends
         /// </param>
         private void UiConnect(object source, string sourceConnector, object target, string targetConnector)
         {
@@ -854,7 +888,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private void DesubscribeControlGroupEvents()
+        private void UnsubscribeControlGroupEvents()
         {
             if (controlGroup != null)
             {
@@ -917,7 +951,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 object removedOrAddedItem = e.GetRemovedOrAddedItem();
                 if (e.Action == NotifyCollectionChangedAction.Add)
                 {
-                    DesubscribeGraphControlEvents();
+                    UnsubscribeGraphControlEvents();
 
                     ShapeBase shape = ObjectToShape(removedOrAddedItem);
                     graphControl.AddShape(shape);
@@ -926,7 +960,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
-                    DesubscribeGraphControlEvents();
+                    UnsubscribeGraphControlEvents();
                     ShapeBase shape = FindShapeByObject(removedOrAddedItem);
                     graphControl.Shapes.Remove(shape);
                     SubscribeGraphControlEvents();
@@ -971,7 +1005,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             refreshingConnections = false;
         }
 
-        private void RemoveAllConnections(ConnectionCollection connectionCollection)
+        private static void RemoveAllConnections(ConnectionCollection connectionCollection)
         {
             //make copy of list, and then remove each individual item.
             List<Netron.GraphLib.Connection> connections =
@@ -993,7 +1027,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private void DesubscribeGraphControlEvents()
+        private void UnsubscribeGraphControlEvents()
         {
             if (graphControl != null)
             {
@@ -1012,24 +1046,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             string oldTypeTitle = RuleProvider.GetTitle(oldType);
 
-            if (oldTypeTitle == oldName)
-            {
-                return RuleProvider.GetTitle(newType);
-            }
-
-            return oldName;
+            return oldTypeTitle == oldName ? RuleProvider.GetTitle(newType) : oldName;
         }
 
         private static string CopyOldNameOrGenerateNameForCondition(Type oldType, Type newType, string oldName)
         {
             string oldTypeTitle = ConditionProvider.GetTitle(oldType);
 
-            if (oldTypeTitle == oldName)
-            {
-                return ConditionProvider.GetTitle(newType);
-            }
-
-            return oldName;
+            return oldTypeTitle == oldName ? ConditionProvider.GetTitle(newType) : oldName;
         }
 
         private void ReconnectRtcBaseObject(RtcBaseObject oldRtcObject, RtcBaseObject newRtcObject)
@@ -1070,9 +1094,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private static void FillConditionDescription(ShapeBase shape, ConditionBase condition)
         {
-            if (shape is ConditionShape)
+            if (shape is ConditionShape conditionShape)
             {
-                var conditionShape = shape as ConditionShape;
                 conditionShape.Image = GetIconForCondition(condition);
                 conditionShape.GetDescriptionDelegate = condition.GetDescription;
                 if (condition is TimeCondition)
@@ -1091,9 +1114,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             switch (conditionBase)
             {
                 case TimeCondition _:
-                    return TimeConditionIcon;
+                    return timeConditionIcon;
                 case DirectionalCondition _:
-                    return DirectionalConditionIcon;
+                    return directionalConditionIcon;
                 case StandardCondition _:
                     return StandardConditionIcon;
                 default:
@@ -1101,7 +1124,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private bool OnGraphControlConnectionRemoved(object sender, ConnectionEventArgs e)
+        private static bool OnGraphControlConnectionRemoved(object sender, ConnectionEventArgs e)
         {
             Netron.GraphLib.Connection connection = e.Connection;
             object from = connection.From.BelongsTo.Tag;
@@ -1112,13 +1135,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         /// <summary>
         /// Validate if a newly added connection is allowed.
-        /// Some options like a connection starts from an ouotput item are prevented in the Connectors in
+        /// Some options like a connection starts from an output item are prevented in the Connectors in
         /// the shape.
         /// </summary>
         /// <param name="sender"> </param>
         /// <param name="e"> </param>
         /// <returns> </returns>
-        private bool OnGraphControlConnectionAdded(object sender, ConnectionEventArgs e)
+        private static bool OnGraphControlConnectionAdded(object sender, ConnectionEventArgs e)
         {
             Netron.GraphLib.Connection connection = e.Connection;
             object from = connection.From.BelongsTo.Tag;
@@ -1158,14 +1181,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             connection.Text = "";
             if (connection.From.BelongsTo.Tag is ConditionBase)
             {
-                if (ConnectionIs(connection))
-                {
-                    connection.Text = "T";
-                }
-                else
-                {
-                    connection.Text = "F";
-                }
+                connection.Text = ConnectionIs(connection) ? "T" : "F";
             }
         }
     }

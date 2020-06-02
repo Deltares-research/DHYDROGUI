@@ -53,7 +53,7 @@ using SharpMapTestUtils;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
     [TestFixture]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategory.Wpf)]
     public class HydroModelGuiIntegrationTest
     {
         private DeltaShellGui gui;
@@ -73,15 +73,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        public void ShowFMModelRunCoupledToRTC()
+        public void ShowFmModelRunCoupledToRtc()
         {
-            WaterFlowFMModel flow;
-            RealTimeControlModel rtc;
-            HydroModel hydroModel = CreateFMRTCModel(out rtc, out flow, app);
+            HydroModel hydroModel = CreateFmRtcModel(out RealTimeControlModel _, out WaterFlowFMModel flow, app);
             var mainWindow = (MainWindow) gui.MainWindow;
 
             // wait until gui starts
-            Action mainWindowShown = delegate
+            void MainWindowShown()
             {
                 ActivityRunner.RunActivity(hydroModel);
                 gui.Selection = flow;
@@ -97,13 +95,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 }
 
                 Console.WriteLine("1");
-            };
-            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
+            }
+
+            WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void Add2D3DIntegratedModelAddFMModelRemoveIntegratedModel()
+        [Category(TestCategory.Wpf)]
+        public void Add2D3DIntegratedModelAddFmModelRemoveIntegratedModel()
         {
             var mainWindow = (MainWindow) gui.MainWindow;
 
@@ -112,37 +111,39 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 gui.DocumentViewsResolver.DefaultViewTypes.Add(typeof(WaterFlowFMModel), typeof(WaterFlowFMFileStructureView));
             }
 
-            Action mainWindowShown = delegate
+            void MainWindowShown()
             {
                 var hydroModelBuilder = new HydroModelBuilder();
                 using (HydroModel integratedModel2D3D = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels))
                 {
-                    using (var waterFlowFMModel = new WaterFlowFMModel())
+                    using (var waterFlowFmModel = new WaterFlowFMModel())
                     {
                         gui.CommandHandler.AddItemToProject(integratedModel2D3D);
                         gui.Selection = integratedModel2D3D;
                         gui.CommandHandler.OpenViewForSelection();
-                        gui.CommandHandler.AddItemToProject(waterFlowFMModel);
-                        gui.Selection = waterFlowFMModel;
+                        gui.CommandHandler.AddItemToProject(waterFlowFmModel);
+                        gui.Selection = waterFlowFmModel;
                         gui.CommandHandler.OpenViewForSelection();
                         gui.Application.Project.RootFolder.Items.Remove(integratedModel2D3D);
-                        Assert.IsTrue(gui.Application.Project.RootFolder.GetAllModelsRecursive().SequenceEqual(new[]
-                        {
-                            waterFlowFMModel
-                        }));
+                        Assert.IsTrue(gui.Application.Project.RootFolder.GetAllModelsRecursive()
+                                         .SequenceEqual(new[]
+                                         {
+                                             waterFlowFmModel
+                                         }));
                     }
                 }
-            };
-            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
+            }
+
+            WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void GivenAnIntegratedModelWithFMModelInItWhenOpeningGridInRGFGridAndClosingItThenItShouldNotThowAnException()
+        [Category(TestCategory.Wpf)]
+        public void GivenAnIntegratedModelWithFmModelInItWhenOpeningGridInRgfGridAndClosingItThenItShouldNotThrowAnException()
         {
             var mainWindow = (MainWindow) gui.MainWindow;
 
-            Action mainWindowShown = delegate
+            void MainWindowShown()
             {
                 var hydroModelBuilder = new HydroModelBuilder();
                 using (HydroModel integratedModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels))
@@ -150,14 +151,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     gui.CommandHandler.AddItemToProject(integratedModel);
                     gui.Selection = integratedModel;
                     gui.CommandHandler.OpenViewForSelection();
-                    WaterFlowFMModel waterFlowFMModel = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().First();
-                    waterFlowFMModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(50, 50, 20, 20);
-                    waterFlowFMModel.ReloadGrid();
-                    gui.Selection = waterFlowFMModel.Grid;
+                    WaterFlowFMModel waterFlowFmModel = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().First();
+                    waterFlowFmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(50, 50, 20, 20);
+                    waterFlowFmModel.ReloadGrid();
+                    gui.Selection = waterFlowFmModel.Grid;
                     PerformActionWithCancellationThread(60000, () => gui.CommandHandler.OpenViewForSelection());
                 }
-            };
-            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
+            }
+
+            WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
         }
 
         [Test]
@@ -168,7 +170,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 const string modelName = "har";
                 string mduPath = Path.Combine(tempDir, $"{modelName}.mdu");
-                var fmModel = new WaterFlowFMModel(mduPath);
+
+                var fmModel = new WaterFlowFMModel();
+                fmModel.ImportFromMdu(mduPath);
+
                 fmModel.ExportTo(mduPath, false, false, false);
 
                 /* create a integrated model */
@@ -181,7 +186,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 var mainWindow = (MainWindow) gui.MainWindow;
 
                 // wait until gui starts
-                Action mainWindowShown = delegate
+                void MainWindowShown()
                 {
                     /* get the water flow fm model */
                     WaterFlowFMModel waterFlowFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
@@ -195,8 +200,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     WaterFlowFMModel targetFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetFmModel);
                     Assert.That(targetFmModel.Name, Is.StringContaining(modelName));
-                };
-                WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
+                }
+
+                WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
             });
         }
 
@@ -217,7 +223,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var mainWindow = (MainWindow) gui.MainWindow;
 
             // wait until gui starts
-            Action mainWindowShown = delegate
+            void MainWindowShown()
             {
                 /* get the wave model */
                 WaveModel waveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
@@ -231,8 +237,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 WaveModel targetWaveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
                 Assert.IsNotNull(targetWaveModel);
                 Assert.That(targetWaveModel.Name, Is.StringContaining("te0"));
-            };
-            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
+            }
+
+            WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
         }
 
         private void InitializeGui()
@@ -276,7 +283,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void PerformActionWithCancellationThread(int timeout, Action action)
         {
-            // Action waits for rgfgrid to close, we do this manually from another thread
+            // Action waits for rgf grid to close, we do this manually from another thread
             var cancellationThread = new Thread(() => CloseRgfGrid(timeout));
             cancellationThread.Start();
 
@@ -314,7 +321,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static HydroModel CreateFMRTCModel(out RealTimeControlModel rtc, out WaterFlowFMModel flow, IApplication application)
+        private static HydroModel CreateFmRtcModel(out RealTimeControlModel rtc, out WaterFlowFMModel flow, IApplication application)
         {
             flow = new WaterFlowFMModel {Name = "flow"};
             rtc = new RealTimeControlModel("rtc");

@@ -15,9 +15,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons
 {
     public static class SetCoordinateSystemButton
     {
-        public static string ToolTip = "Set model coordinate system (does not adjust model coordinates, but can affect rendering and model results)";
-        public static string Label = "Coordinate system";
-        public static Bitmap ButtonImage = Resources.set_coordinate_system;
+        public const string ToolTip = "Set model coordinate system (does not adjust model coordinates, but can affect rendering and model results)";
+        public const string Label = "Coordinate system";
+        public static readonly Bitmap ButtonImage = Resources.set_coordinate_system;
 
         public static void ButtonAction(object inputObject, IGui gui, Func<ICoordinateSystem, bool> CoordinateSystemFilter)
         {

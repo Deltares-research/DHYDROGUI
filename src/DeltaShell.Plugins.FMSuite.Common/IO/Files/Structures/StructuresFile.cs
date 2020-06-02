@@ -9,9 +9,9 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 using GeoAPI.Geometries;
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
     /// <summary>
     /// A file containing structure definitions following the 3Di 'delft .ini' format.
     /// </summary>
-    public class StructuresFile : FMSuiteFileBase, IFeature2DFileBase<IStructure>
+    public class StructuresFile : NGHSFileBase, IFeature2DFileBase<IStructure>
     {
         private const string StructureCategoryName = "structure";
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresFile));

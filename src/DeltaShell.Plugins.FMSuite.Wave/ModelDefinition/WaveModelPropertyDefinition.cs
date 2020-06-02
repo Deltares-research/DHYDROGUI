@@ -76,6 +76,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string StartCoordinateY = "StartCoordY";
         public const string EndCoordinateY = "EndCoordY";
         public const string SpectrumSpec = "SpectrumSpec";
+        public const string Orientation = "Orientation";
+        public const string DistanceDir = "DistanceDir";
 
         public const string ShapeType = "SpShapeType";
         public const string PeriodType = "PeriodType";

@@ -26,19 +26,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             {"Embankments", "_emb"},
             {"Dry areas", "_dryarea"},
             {"Enclosures", "_enc"},
-            {"Sources", "_src"},
+            {"Sources", "_src"}
         };
 
         private readonly string modelOutputSnappedFeaturesPath;
         private readonly string modelMduFilePath;
-        public ICoordinateSystem coordinateSystem;
 
         public FMOutputSnappedFeaturesGroupLayerData(WaterFlowFMModel model)
         {
             modelOutputSnappedFeaturesPath = model.OutputSnappedFeaturesPath;
             modelMduFilePath = model.MduFilePath;
-            coordinateSystem = model.CoordinateSystem;
+            CoordinateSystem = model.CoordinateSystem;
         }
+
+        public ICoordinateSystem CoordinateSystem { get; set; }
 
         public IList<ILayer> CreateLayers()
         {
@@ -78,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             }
 
             layers.ForEach(l => l.Name = layerName);
-            layers.ForEach(l => l.DataSource.CoordinateSystem = coordinateSystem);
+            layers.ForEach(l => l.DataSource.CoordinateSystem = CoordinateSystem);
 
             return layers;
         }

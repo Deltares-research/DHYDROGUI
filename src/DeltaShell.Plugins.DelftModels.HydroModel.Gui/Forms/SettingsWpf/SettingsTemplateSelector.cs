@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {typeof(bool), checkboxTemplateKey},
             {typeof(TimeSpan), timeSpanTemplateKey},
             {typeof(IList<double>), listTemplateKey},
-            {typeof(Enum), comboBoxTemplateKey},
+            {typeof(Enum), comboBoxTemplateKey}
         };
 
         /// <summary>

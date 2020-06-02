@@ -173,8 +173,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
         {
             UnstructuredGrid grid = gridLayer.Grid;
 
-            segmentIndex = Math.Min(Math.Max(segmentIndex, 0), gridCellMapper.Grid.Cells.Count - 1);
-
             Cell gridCell = gridCellMapper.GetCellFromWaqSegmentId(segmentIndex);
 
             chosenCellPolygon = gridCell.ToPolygon(grid);

@@ -15,10 +15,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        public Func<string> WorkingDirectoryPathFunc =
-            () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
 
-        private string currentOutputDirectoryPath;
         private string outputSnappedFeaturesPath;
 
         private CacheFile cacheFile = null;

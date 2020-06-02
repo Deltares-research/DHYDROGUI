@@ -4,11 +4,11 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
-using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
-    internal class QhFile : FMSuiteFileBase
+    internal class QhFile : NGHSFileBase
     {
         public void Write(string filePath, IFunction data)
         {

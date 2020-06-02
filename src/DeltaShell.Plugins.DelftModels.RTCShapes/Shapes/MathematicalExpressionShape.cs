@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
                 new PointF(x + width, y + height),
 
                 // left
-                new PointF(x, y + (height / 2)),
+                new PointF(x, y + (height / 2))
             };
 
             Pen pen = Pens.Black;

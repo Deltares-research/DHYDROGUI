@@ -6,9 +6,9 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
@@ -254,7 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                      ISpatialOperation spatialOperation,
                                                      KeyValuePair<string, IList<ISpatialOperation>> operations)
         {
-            var samplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
+            var samplesOperation = spatialOperation as ImportSamplesSpatialOperation;
             if (samplesOperation != null)
             {
                 WriteXYZIfDirectoryExists(sedimentModelData, sedFilePath, spatialOperation,
@@ -473,7 +473,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-            var operation = new ImportSamplesSpatialOperationExtension
+            var operation = new ImportSamplesSpatialOperation
             {
                 Name = dataItemName,
                 FilePath = xyzFilePath,

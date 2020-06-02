@@ -25,11 +25,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             //Given
             string mduFilePath = GetMduFilePathWithoutGrid();
-            var model = new WaterFlowFMModel(mduFilePath)
-            {
-                ValidateBeforeRun = false,
-                Status = ActivityStatus.None
-            };
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduFilePath);
+
+            model.ValidateBeforeRun = false;
+            model.Status = ActivityStatus.None;
 
             //When
             ValidationReport result = model.Validate();
@@ -46,11 +47,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             //Given
             string mduFilePath = GetMduFilePathWithoutGrid();
-            var model = new WaterFlowFMModel(mduFilePath)
-            {
-                ValidateBeforeRun = false,
-                Status = ActivityStatus.Initializing
-            };
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduFilePath);
+
+            model.ValidateBeforeRun = false;
+            model.Status = ActivityStatus.Initializing;
 
             //When
             ValidationReport result = model.Validate();
@@ -95,7 +97,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             FileUtils.CopyFile(originalNetFilePath, Path.Combine(workDir, "grid.nc"));
 
-            var model = new WaterFlowFMModel(mduFilePath);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduFilePath);
+
             ICoordinateSystem originalCoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(originalEpsg);
 
             Assert.IsTrue(model.CoordinateSystem.EqualsTo(originalCoordinateSystem));

@@ -6,13 +6,11 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Editing;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
@@ -24,7 +22,6 @@ using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
-using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
@@ -36,7 +33,6 @@ using SharpMap.Styles;
 using SharpMap.UI.Forms;
 using SharpMap.UI.Helpers;
 using SharpMap.UI.Tools;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
@@ -99,9 +95,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
         private readonly List<IMapTool> mapTools = new List<IMapTool>();
-
-        private Coordinate contextMenuWorldPosition;
-
+        
         private IMap map;
 
         private INetworkCoverageGroupLayer activeNetworkCoverageGroupLayer;
@@ -198,23 +192,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             get { return true; }
             set { }
         }
-
-        public void ReverseBranch(IChannel branch)
-        {
-            if (branch.BranchFeatures.OfType<IStructure1D>().Any(IsOriented))
-            {
-                DialogResult result = MessageBox.Show(
-                    "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
-                    "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result != DialogResult.Yes)
-                {
-                    return;
-                }
-            }
-            HydroNetworkHelper.ReverseBranch(branch);
-            MapControl.Refresh();
-        }
-
+        
         // TODO: currently interactor is always active, should be removed after "Edit Network ..." menu or toolbar will be added to activate interactor for a selected network
 
         public override void OnMouseDown(Coordinate worldPosition, MouseEventArgs e)
@@ -232,123 +210,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
             // select the nearest object, maybe this is redundant and select tool should always do it?
             MapControl.SelectTool.OnMouseDown(worldPosition, e);
-        }
-
-        public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
-        {
-            // HydroNetworkEditorMapTool is alwas added to a map, even if there is no network.
-            if (!Map.GetAllVisibleLayers(true).Any(HydroNetworkFilter))
-            {
-                yield break;
-            }
-
-            contextMenuWorldPosition = worldPosition;
-
-            INetworkCoverageGroupLayer firstDiscretizationLayer = MapControl.Map.GetAllLayers(true)
-                                                                            .OfType<INetworkCoverageGroupLayer>()
-                                                                            .FirstOrDefault(cl => cl.Coverage is IDiscretization);
-
-            IDiscretization discretization = (IDiscretization) firstDiscretizationLayer?.NetworkCoverage;
-            if (discretization != null)
-            {
-                if (discretization.Locations.Values.Count > 0)
-                {
-                    yield return new MapToolContextMenuItem
-                    {
-                        Priority = 4,
-                        MenuItem = new ToolStripMenuItem("Remove computational grid nodes", null, (s, e) =>
-                            {
-                                RemoveNetworkSegments(discretization);
-                                firstDiscretizationLayer.Visible = true;
-                            })
-                    };
-                }
-
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 4,
-                        MenuItem = new ToolStripMenuItem("Generate computational grid nodes", null, (s, e) =>
-                            {
-                                GenerateBranchSegments(discretization, null);
-                                firstDiscretizationLayer.Visible = true;
-                            })
-                    };
-            }
-
-            if (MapControl.SelectedFeatures == null)
-            {
-                yield break;
-            }
-
-            List<IChannel> channels = MapControl.SelectedFeatures.OfType<IChannel>().ToList();
-            if (channels.Count > 0)
-            {
-                if (discretization != null)
-                {
-                    if (discretization.Locations.Values.Any(nl => channels.Contains(nl.Branch)))
-                    {
-                        yield return new MapToolContextMenuItem
-                            {
-                                Priority = 3,
-                                MenuItem = new ToolStripMenuItem("Remove computational grid nodes in selected branch(es)", null,
-                                    (sender, args) =>
-                                        {
-                                            RemoveBranchSegments(discretization, channels);
-                                            firstDiscretizationLayer.Visible = true;
-                                        })
-                            };
-                    }
-
-                    yield return new MapToolContextMenuItem
-                        {
-                            Priority = 3,
-                            MenuItem = new ToolStripMenuItem("Generate computational grid nodes in selected branch(es)", null,
-                                (s, e) =>
-                                    {
-                                        GenerateBranchSegments(discretization, channels);
-                                        firstDiscretizationLayer.Visible = true;
-                                    })
-                        };
-                }
-
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Insert Node", null, (s, e) => InsertNode(channels))
-                    };
-                
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Reverse direction", null, (s,e) => ReverseBranch(channels))
-                    };
-            }
-
-            List<INetworkLocation> networkLocations = MapControl.SelectedFeatures.OfType<INetworkLocation>().ToList();
-            if (networkLocations.Count > 0)
-            {
-                if (discretization != null && discretization.Locations.Values.Any(networkLocations.Contains))
-                {
-                    yield return new MapToolContextMenuItem
-                        {
-                            Priority = 3,
-                            MenuItem = new ToolStripMenuItem("Fixed gridpoint", null, (s, e) => ToggleFixedGridPoint(discretization, networkLocations))
-                                {
-                                    Checked = networkLocations.Any(discretization.IsFixedPoint)
-                                }
-                        };
-                }
-            }
-
-            List<ICrossSection> crossSections = MapControl.SelectedFeatures.OfType<ICrossSection>().ToList();
-            if (crossSections.Count > 0)
-            {
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Shift Level...", null, (s, e) => LevelShift(crossSections))
-                    };
-            }
         }
 
         private IMapTool NetworkLocationTool { get; set; }
@@ -476,44 +337,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             AddMapTool(newLinkTool);
 
-            // TODO: merge the tools below into the hydro network editor map tool?! (context menus only)
-            var importBranchesMapTool = new ImportBranchesFromSelectionMapTool(FeatureTypeLayerFilter<Channel>)
-                                            {
-                                                Name = "import branches"
-                                            };
-            AddMapTool(importBranchesMapTool);
-
-            var importStructuresMapTool = new ImportBranchFeaturesFromSelectedFeaturesMapTool(HydroNetworkFilter)
-                                              {
-                                                  Name = "import structures",
-                      
-                                              };
-            AddMapTool(importStructuresMapTool);
-            
-            var importCrossSectionFromCsvMapTool = new ImportCrossSectionsFromCsvMapTool(HydroNetworkFilter)
-                                                       {
-                                                           Name = "Import cross sections from csv"
-                                                       };
-            AddMapTool(importCrossSectionFromCsvMapTool);
-
-            var exportCrossSectionToCsvMapTool = new ExportCrossSectionToCsvMapTool(HydroNetworkFilter)
-                                                     {
-                                                         Name = "Export cross sections to csv"
-                                                     };
-            AddMapTool(exportCrossSectionToCsvMapTool);
-
-            AddMapTool(new Feature2DLineTool(HydroArea.ThinDamsPluralName, ThinDamToolName, Resources.thindam));
-            AddMapTool(new Feature2DLineTool(HydroArea.FixedWeirsPluralName, FixedWeirToolName, Resources.fixedweir));
-            AddMapTool(new Feature2DPointTool(HydroArea.ObservationPointsPluralName, ObservationPointToolName, Resources.Observation));
-            AddMapTool(new Feature2DLineTool(HydroArea.ObservationCrossSectionsPluralName, ObservationCrossSectionToolName, Resources.observationcs2d));
-            AddMapTool(new Feature2DLineTool(HydroArea.PumpsPluralName, PumpToolName, Resources.pump));
-            AddMapTool(new Feature2DLineTool(HydroArea.WeirsPluralName, WeirToolName, Resources.Weir) { MaxPoints = 2 });
-            AddMapTool(new Feature2DLineTool(HydroArea.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
-            AddMapTool(new Feature2DPointTool(HydroArea.DryPointsPluralName, DryPointToolName, Resources.dry_point));
-            AddMapTool(new Feature2DLineTool(HydroArea.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
-            AddMapTool(new Feature2DLineTool(HydroArea.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
-            AddMapTool(new SingleFeature2DLineTool(HydroArea.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
-            AddMapTool(new Feature2DLineTool(HydroArea.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ThinDamsPluralName, ThinDamToolName, Resources.thindam));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.FixedWeirsPluralName, FixedWeirToolName, Resources.fixedweir));
+            AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.ObservationPointsPluralName, ObservationPointToolName, Resources.Observation));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ObservationCrossSectionsPluralName, ObservationCrossSectionToolName, Resources.observationcs2d));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.PumpsPluralName, PumpToolName, Resources.pump));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.WeirsPluralName, WeirToolName, Resources.Weir) { MaxPoints = 2 });
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
+            AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.DryPointsPluralName, DryPointToolName, Resources.dry_point));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
+            AddMapTool(new SingleFeature2DLineTool(HydroAreaLayerNames.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
 
             var addInterpolatedCrossSectionTool = new NewPointFeatureTool(FeatureTypeLayerFilter<CrossSection>, AddInterpolatedCrossSectionToolName) { Cursor = AddInterpolatedCrossSectionToolCursor };
             AddMapTool(addInterpolatedCrossSectionTool);
@@ -533,16 +368,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             ICoordinateTransformation transformation = coordinateSystemFactory.CreateTransformation(sourceCoordinateSystem, targetCoordinateSystem);
 
             return GeometryTransform.TransformGeometry(geometry, transformation.MathTransform);
-        }
-
-        private static bool HydroNetworkFilter(ILayer layer)
-        {
-            var hydroRegionLayer = layer as HydroRegionMapLayer;
-            if (hydroRegionLayer != null)
-            {
-                return hydroRegionLayer.Region is IHydroNetwork;
-            }
-            return false;
         }
 
         private void MapControlKeyDown(object sender, KeyEventArgs e)
@@ -645,20 +470,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                         break;
                 }
             }
-            if (removedOrAddedItem is ILayer && HydroNetworkFilter((ILayer)removedOrAddedItem))
-            {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Replace:
-                        throw new NotImplementedException();
-
-                    case NotifyCollectionChangedAction.Add:
-                        break;
-
-                    case NotifyCollectionChangedAction.Remove:
-                        break;
-                }
-            }
         }
 
         private void SetCoverageLayerTheme(INetworkCoverageGroupLayer networkCoverageGroupLayer)
@@ -720,126 +531,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             if (networkCoverageGroupLayer.LocationLayer.DataSource != null)
             {
                 networkCoverageGroupLayer.LocationLayer.DataSource.AddNewFeatureFromGeometryDelegate = null;
-            }
-        }
-
-        private void RemoveBranchSegments(IDiscretization discretization, IEnumerable<IChannel> channels)
-        {
-            foreach (IChannel channel in channels)
-            {
-                NetworkHelper.ClearLocations(discretization, channel);
-            }
-            MapControl.SelectTool.RefreshSelection();
-            MapControl.Refresh();
-        }
-
-        private void GenerateBranchSegments(IDiscretization discretization, IEnumerable<IChannel> channels)
-        {
-            HydroNetworkEditorMapToolHelper.RunCalculationGridWizard(channels?.ToList(), discretization);
-            MapControl.SelectTool.RefreshSelection();
-            MapControl.Refresh();
-        }
-
-        private void RemoveNetworkSegments(IDiscretization discretization)
-        {
-            if (discretization == null)
-            {
-                return;
-            }
-
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
-            discretization.Clear();
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered;
-            MapControl.SelectTool.RefreshSelection();
-            MapControl.Refresh();
-        }
-
-        private void InsertNode(IList<IChannel> channels)
-        {
-            if (contextMenuWorldPosition == null)
-            {
-                return;
-            }
-
-            if (channels == null || !channels.Any())
-            {
-                return;
-            }
-
-            IChannel branch;
-            if (channels.Count == 1)
-            {
-                branch = channels.First();
-            }
-            else
-            {
-                var point = new Point(contextMenuWorldPosition);
-                Dictionary<IChannel, double> distanceLookup = channels.ToDictionary(c => c, c => c.Geometry.Distance(point));
-                double lowestDistance = distanceLookup.Min(kvp => kvp.Value);
-
-                branch = distanceLookup.First(kvp => Math.Abs(kvp.Value - lowestDistance) < 0.000000001).Key;
-            }
-            
-            HydroNetworkHelper.SplitChannelAtNode(branch, contextMenuWorldPosition);
-            MapControl.SelectTool.RefreshSelection();
-            MapControl.Refresh();
-        }
-
-        private static bool IsOriented(IBranchFeature branchFeature)
-        {
-            if (branchFeature is ICompositeBranchStructure)
-            {
-                return ((ICompositeBranchStructure) branchFeature).Structures.Any(IsOriented);
-            }
-            if (branchFeature is BranchStructure)
-            {
-                return true;
-            }
-            var crossSection = branchFeature as ICrossSection;
-            if (crossSection != null)
-            {
-                return crossSection.CrossSectionType == CrossSectionType.YZ ||
-                       crossSection.CrossSectionType == CrossSectionType.GeometryBased;
-            }
-            return false;
-        }
-
-        private void ReverseBranch(IEnumerable<IChannel> channels)
-        {
-            if (channels.Any(c => c.BranchFeatures.Any(IsOriented)))
-            {
-                DialogResult result = MessageBox.Show(
-                    "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
-                    "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result != DialogResult.Yes)
-                {
-                    return;
-                }
-            }
-            foreach (IChannel channel in channels)
-            {
-                HydroNetworkHelper.ReverseBranch(channel);
-            }
-            MapControl.Refresh();
-        }
-
-        private static void ToggleFixedGridPoint(IDiscretization discretization, IEnumerable<INetworkLocation> networkLocations)
-        {
-            foreach (INetworkLocation networkLocation in networkLocations)
-            {
-                discretization.ToggleFixedPoint(networkLocation);
-            }
-        }
-
-        private void LevelShift(IEnumerable<ICrossSection> crossSections)
-        {
-            var formLevelShift = new FormLevelShift();
-            if (formLevelShift.ShowDialog() == DialogResult.OK)
-            {
-                foreach (ICrossSection crossSection in crossSections)
-                {
-                    crossSection.Definition.ShiftLevel(formLevelShift.Shift);
-                }
             }
         }
     }

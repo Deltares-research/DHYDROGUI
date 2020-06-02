@@ -409,7 +409,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 {
                     Name = "feature2",
                     Geometry = new Point(200, 200)
-                },
+                }
             };
 
             var coverage = new FeatureCoverage();
@@ -523,7 +523,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 {
                     Name = "feature2",
                     Geometry = new Point(200, 200)
-                },
+                }
             };
 
             var coverage = new FeatureCoverage();
@@ -585,7 +585,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 {
                     Name = "feature2",
                     Geometry = new Point(200, 200)
-                },
+                }
             };
 
             var coverage = new FeatureCoverage();

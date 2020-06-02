@@ -311,7 +311,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 model.Loads.AddRange(new[]
                 {
                     new WaterQualityLoad {Z = loadHeight},
-                    new WaterQualityLoad {Z = loadHeight},
+                    new WaterQualityLoad {Z = loadHeight}
                 });
 
                 new SubFileImporter().Import(model.SubstanceProcessLibrary,

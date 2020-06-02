@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
                 "1",
                 "2",
                 "3",
-                "5",
+                "5"
             };
 
             CollectionAssert.AreEquivalent(expected, result);
@@ -63,14 +63,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
                     "1",
                     "2",
                     "3",
-                    "5",
+                    "5"
                 },
                 new List<string>()
                 {
                     "first",
                     "second",
                     "third",
-                    "fifth",
+                    "fifth"
                 });
         }
 

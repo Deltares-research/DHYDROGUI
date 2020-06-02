@@ -6,6 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override string Description => "A 2D/3D Wave module";
 
-        public override string Version => GetType().Assembly.GetName().Version.ToString();
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         public override string FileFormatVersion => "1.1.0.0";
 
@@ -58,7 +59,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             yield return new WaveGridFileImporter(Name, GetModels);
             yield return new WaveDepthFileImporter(Name, GetModels);
             yield return new WaveBoundaryFileImporter();
-            yield return new WaveSpectralFileImporter(GetModels);
             yield return new WavmFileImporter();
         }
 

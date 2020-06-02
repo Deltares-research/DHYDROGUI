@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -13,12 +10,17 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -36,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
     public class WaveGuiPlugin : GuiPlugin
     {
         private static Func<MapView> getActiveMapViewFunc;
-        private WaveModelMapLayerProvider mapLayerProvider;
+        private IMapLayerProvider mapLayerProvider;
         private string _wavesSettings = " (Waves settings)";
 
         public WaveGuiPlugin()
@@ -50,22 +52,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         public override string Description => "A 2D/3D Waves module";
 
-        public override string Version => GetType().Assembly.GetName().Version.ToString();
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         public override string FileFormatVersion => "1.1.0.0";
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get
-            {
-                return mapLayerProvider ?? (mapLayerProvider = new WaveModelMapLayerProvider
-                                               {
-                                                   GetWaveModels = () =>
-                                                       Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ??
-                                                       Enumerable.Empty<WaveModel>()
-                                               });
-            }
-        }
+        public override IMapLayerProvider MapLayerProvider =>
+            mapLayerProvider
+            ?? (mapLayerProvider = WaveMapLayerProviderFactory.ConstructMapLayerProvider(GetWaveModels));
 
         public override IRibbonCommandHandler RibbonCommandHandler => new Ribbon.Ribbon();
 
@@ -117,7 +110,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Description = "Wave settings",
                 GetViewName = (v, o) => o.Name + _wavesSettings,
-                AfterCreate = ConfigureWpfSettingsView
+                AfterCreate = (v, o) =>
+                {
+                    //Set the properties.
+                    v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o, Gui);
+                    v.GetChangedPropertyName = (sender, propertyName) =>
+                        (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+                }
             };
 
             // observation points
@@ -165,10 +164,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 {
                     WaveModel model = WaveModels.First(m => Equals(o, m.TimePointData));
                     v.ImportFileIntoModelDirectory = model.ImportIntoModelDirectory;
-                    v.ExportToBoundaryConditions =
-                        () => ExportTimesToBoundaryConditions(WaveModels.First(m => Equals(o, m.TimePointData)));
-                    v.ImportFromBoundaryCondition =
-                        () => ImportTimesFromBoundaryCondition(WaveModels.First(m => Equals(o, m.TimePointData)));
                 }
             };
             yield return timePointViewInfo;
@@ -179,55 +174,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             yield return fromTreeShortcut;
 
-            // boundary table view
-            var boundaryListView = new ViewInfo<WaveModel, WaveBoundaryConditionListView>()
+            // Spatially varying boundary editor
+            var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorView>()
             {
-                Description = "Boundary Conditions",
-                GetViewName = (v, o) => "Boundary Conditions (" + o.Name + ")",
-                CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => o
-            };
-            yield return ViewInfoWrapper<IEventedList<WaveBoundaryCondition>>.Create(boundaryListView,
-                                                                                     o => WaveModels.First(
-                                                                                         m => m.BoundaryConditions
-                                                                                               .Equals(o)),
-                                                                                     o => WaveModels.Any(
-                                                                                         m => m.BoundaryConditions
-                                                                                               .Equals(o)));
-
-            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(boundaryListView, o => o.Model,
-                                                                       o =>
-                                                                           o.WaveModel.BoundaryConditions
-                                                                            .Equals(o.Data) &&
-                                                                           o.ShortCutType == ShortCutType.FeatureSet);
-
-            // boundary condition editor
-            var boundaryConditionViewInfo = new ViewInfo<WaveBoundaryCondition, WaveBoundaryConditionEditor>()
-            {
-                Description = "Boundary Condition Editor",
-                GetViewName = (v, o) => "Boundary Condition (" + o.Name + ")",
-                AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryConditions.Contains(o)),
-                AfterCreate = (v, o) =>
+                Description = Properties.Resources.WaveGuiPlugin_Spatially_Varying_Boundary_Editor,
+                GetViewName = (v, o) =>
+                    string.Format(Properties.Resources.WaveGuiPlugin_Boundary_Editor____0___, o.Name),
+                AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryContainer.Boundaries.Contains(o)),
+                AfterCreate = (view, data) =>
                 {
-                    WaveModel model = WaveModels.First(m => m.BoundaryConditions.Contains(o));
-                    v.BoundaryConditionEditor.BoundaryConditionFactory = new WaveBoundaryConditionFactory();
+                    WaveModel model =
+                        WaveModels.FirstOrDefault(m => m.BoundaryContainer.Boundaries.Contains(data));
 
-                    var controller = new WaveBoundaryConditionEditorController
+                    if (model == null)
                     {
-                        ImportIntoModelDirectory = model.ImportIntoModelDirectory,
-                        Model = model
-                    };
-                    v.BoundaryConditionEditor.Controller = controller;
-                    v.BoundaryConditionEditor.BoundaryConditionPropertiesControl =
-                        new WaveBoundaryConditionPropertiesControl {Controller = controller};
+                        return;
+                    }
 
-                    v.BoundaryConditionEditor.ShowSupportPointChainages = true;
+                    var geometryFactory = new WaveBoundaryGeometryFactory(model.BoundaryContainer,
+                                                                          model.BoundaryContainer);
+                    var referenceDateTimeProvider = new ModelDefinitionReferenceDateTimeProvider(model.ModelDefinition);
+
+                    var geometryPreviewConfigurator = new GeometryPreviewMapConfigurator(geometryFactory,
+                                                                                         new WaveLayerFactory(),
+                                                                                         model.CoordinateSystem);
+
+                    view.DataContext = new WaveBoundaryConditionEditorViewModel(data,
+                                                                                geometryPreviewConfigurator,
+                                                                                referenceDateTimeProvider);
                 },
                 CloseForData = (v, o) => v.Data.Equals(o)
             };
-            yield return boundaryConditionViewInfo;
-            yield return ViewInfoWrapper<Feature2D>.Create(boundaryConditionViewInfo, FindBoundaryConditionForFeature,
-                                                           IsModelBoundary);
+
+            yield return boundaryViewInfo;
+            yield return ViewInfoWrapper<BoundaryLineFeature>.Create(boundaryViewInfo,
+                                                                     f => f.ObservedWaveBoundary);
 
             // obstacles
             var obstacleViewInfo = new ViewInfo<IEventedList<WaveObstacle>, WaveObstacleListView>()
@@ -271,7 +252,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
                     v.EnsureVisible(shortcut.Data);
                 },
-                AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.WaveModel)
+                AfterCreate = (v, o) =>
+                {
+                    //Set the properties.
+                    v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o.WaveModel, Gui);
+                    v.GetChangedPropertyName = (sender, propertyName) =>
+                        (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+                }
             };
 
             yield return new ViewInfo<WaveValidationShortcut, WaveModel, WpfSettingsView>
@@ -289,7 +276,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
                     v.EnsureVisible(shortcut.TabName);
                 },
-                AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.WaveModel)
+                AfterCreate = (v, o) =>
+                {
+                    //Set the properties.
+                    v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o.WaveModel, Gui);
+                    v.GetChangedPropertyName = (sender, propertyName) =>
+                        (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+                }
             };
 
             yield return new ViewInfo<WaveModel, ValidationView>
@@ -303,8 +296,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     v.OnValidate = d => new WaveModelValidator().Validate(d as WaveModel, d as WaveModel);
                 }
             };
-
-            yield return new ViewInfo<WaveSpectralFileImporter, BoundaryConditionImportDialog>();
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
@@ -315,15 +306,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
-            Func<BoundaryCondition, WaveModel> getModelFromBoundaryConditionFunc =
-                bc => WaveModels.FirstOrDefault(m => m.BoundaryConditions.Contains(bc));
-
             yield return new WaveModelNodePresenter(this);
             yield return new WaveDomainNodePresenter(
                 d => WaveModels.FirstOrDefault(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(d)));
-            yield return new WaveBoundaryNodePresenter(getModelFromBoundaryConditionFunc) {GuiPlugin = this};
             yield return new WavmFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new WaveModelTreeShortcutNodePresenter {GuiPlugin = this};
+
+            IBoundaryContainer GetBoundaryContainerFromBoundaryFunc(IWaveBoundary boundary) =>
+                WaveModels.Select(wm => wm.BoundaryContainer)
+                          .FirstOrDefault(bc => bc.Boundaries.Contains(boundary));
+
+            yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
         }
 
         public override void OnActiveViewChanged(IView view)
@@ -344,74 +337,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                          ? Gui.Application.GetAllModelsInProject().OfType<WaveModel>()
                                                          : Enumerable.Empty<WaveModel>();
 
-        private void ConfigureWpfSettingsView(WpfSettingsView view, WaveModel waveModel)
-        {
-            ObservableCollection<WpfGuiCategory> wpfGuiCategories = WaveSettingsHelper.GetWpfGuiCategories(waveModel, Gui);
-
-            // Look for the time properties to synchronize the model updates with
-            IEnumerable<WpfGuiProperty> guiProperties = wpfGuiCategories.SelectMany(gp => gp.Properties).ToArray();
-
-            WpfGuiProperty[] propertiesToSynchronize =
-            {
-                guiProperties.Single(prop => string.Equals(prop.Label, Properties.Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step)),
-                guiProperties.Single(prop => string.Equals(prop.Label, Properties.Resources.WaveSettingsHelper_GetWaveSettings_Coupling_start_time)),
-                guiProperties.Single(prop => string.Equals(prop.Label, Properties.Resources.WaveSettingsHelper_GetWaveSettings_Coupling_stop_time))
-            };
-
-            using (var synchronizer = new NotifyPropertyChangedWpfGuiPropertySynchronizer(waveModel))
-            {
-                synchronizer.SynchronizeProperties(propertiesToSynchronize);
-
-                view.SettingsCategories = wpfGuiCategories;
-                view.GetChangedPropertyName = (sender, propertyName) =>
-                    (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
-            }
-        }
-
-        private static void ImportTimesFromBoundaryCondition(WaveModel model)
-        {
-            var dialog = new WaveBoundaryTimeSelectionDialog
-            {
-                Data = model.BoundaryConditions,
-                Text = "Select support point"
-            };
-            if (dialog.ShowDialog() == DialogResult.Cancel)
-            {
-                return;
-            }
-
-            IList<DateTime> selectedTimePoints = dialog.SelectedDateTimes;
-            IEnumerable<DateTime> uniqueTimePionts = selectedTimePoints.Except(model.TimePointData.TimePoints);
-
-            model.TimePointData.InputFields.Arguments[0].AddValues(uniqueTimePionts);
-        }
-
-        private static void ExportTimesToBoundaryConditions(WaveModel model)
-        {
-            IList<DateTime> timepoints = model.TimePointData.TimePoints;
-            if (!timepoints.Any())
-            {
-                return;
-            }
-
-            IEnumerable<WaveBoundaryCondition> timeDepBoundaries =
-                model.BoundaryConditions.Where(
-                    bc => bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
-
-            foreach (WaveBoundaryCondition boundary in timeDepBoundaries)
-            {
-                foreach (IFunction timeSeries in boundary.PointData)
-                {
-                    List<DateTime> uniqueValues =
-                        timepoints.Except(timeSeries.Arguments[0].GetValues<DateTime>()).ToList();
-                    if (uniqueValues.Any())
-                    {
-                        timeSeries.Arguments[0].AddValues(uniqueValues);
-                    }
-                }
-            }
-        }
-
         private bool IsModelObstacle(Feature2D f)
         {
             return WaveModels.FirstOrDefault(m => m.Obstacles.Contains(f)) != null;
@@ -424,16 +349,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                        : null;
         }
 
-        private bool IsModelBoundary(Feature2D f)
-        {
-            return WaveModels.FirstOrDefault(m => m.Boundaries.Contains(f)) != null;
-        }
-
-        private WaveBoundaryCondition FindBoundaryConditionForFeature(Feature2D f)
-        {
-            WaveModel model = WaveModels.FirstOrDefault(m => m.Boundaries.Contains(f));
-            return model != null ? model.BoundaryConditions.FirstOrDefault(bc => bc.Feature.Equals(f)) : null;
-        }
+        private IEnumerable<WaveModel> GetWaveModels() =>
+            Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ??
+            Enumerable.Empty<WaveModel>();
 
         private MapView GetActiveMapView()
         {

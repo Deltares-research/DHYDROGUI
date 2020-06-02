@@ -649,7 +649,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                         {
                             Name = InitialValueOperationName,
                             Value = WaterQualityFunctionFactory.GetDefaultValue(unstructuredGridCoverage),
-                            OperationType = PointwiseOperationType.OverwriteWhereMissing,
+                            OperationType = PointwiseOperationType.OverwriteWhereMissing
                         };
 
                         // set the input mask of the set value operation

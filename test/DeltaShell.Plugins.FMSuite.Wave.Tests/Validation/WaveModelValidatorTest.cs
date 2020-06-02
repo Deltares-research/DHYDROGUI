@@ -28,6 +28,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
+        public void GivenWaveModel_WhenValidatingModel_ThenBoundariesValidationReportIsGenerated()
+        {
+            // Given
+            var waveModel = new WaveModel();
+
+            // When
+            ValidationReport validationReport = new WaveModelValidator().Validate(waveModel);
+
+            // Then
+            bool boundariesReportIncluded = validationReport.SubReports.Any(report => report.Category == "Waves Model Boundaries");
+            Assert.IsTrue(boundariesReportIncluded);
+        }
+
+        [Test]
         public void CheckWaveDomainValidation()
         {
             var model = new WaveModel();

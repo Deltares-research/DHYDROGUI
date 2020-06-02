@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:forms="clr-namespace:DeltaShell.Plugins.SharpMapGis.Gui.Forms;assembly=DeltaShell.Plugins.SharpMapGis.Gui"
              xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor"
+             xmlns:modelFeatureCoordinateDataEditor="clr-namespace:DeltaShell.Plugins.FMSuite.Common.Gui.Editors.ModelFeatureCoordinateDataEditor;assembly=DeltaShell.Plugins.FMSuite.Common.Gui"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
@@ -59,9 +60,9 @@
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 
         <WindowsFormsHost Grid.Column="2" Background="White"
-                          local:BoundaryGeometryPreviewWindowsFormsHostMap.Feature="{Binding ModelFeatureCoordinateData.Feature}"
-                          local:BoundaryGeometryPreviewWindowsFormsHostMap.FeatureGeometry="{Binding ModelFeatureCoordinateData.Feature.Geometry}"
-                          local:BoundaryGeometryPreviewWindowsFormsHostMap.SelectedIndex="{Binding SelectedCoordinateIndex}">
+                          modelFeatureCoordinateDataEditor:BoundaryGeometryPreviewWindowsFormsHostMap.Feature="{Binding ModelFeatureCoordinateData.Feature}"
+                          modelFeatureCoordinateDataEditor:BoundaryGeometryPreviewWindowsFormsHostMap.FeatureGeometry="{Binding ModelFeatureCoordinateData.Feature.Geometry}"
+                          modelFeatureCoordinateDataEditor:BoundaryGeometryPreviewWindowsFormsHostMap.SelectedIndex="{Binding SelectedCoordinateIndex}">
             <WindowsFormsHost.Child>
                 <forms:BoundaryGeometryPreview x:Name="BoundaryGeometryPreview" />
             </WindowsFormsHost.Child>

@@ -95,52 +95,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
-        public void TestEnsureCompositeBranchStructureNamesAreUniqueWithRealNetwork()
-        {
-            var network = (HydroNetwork) HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            IBranch branch = network.Branches.FirstOrDefault();
-            Assert.NotNull(branch);
-
-            var weir1 = new Weir
-            {
-                Name = "Weir1",
-                Chainage = branch.Length / 3
-            };
-            var weir2 = new Weir
-            {
-                Name = "Weir2",
-                Chainage = branch.Length / 3
-            };
-            var weir3 = new Weir
-            {
-                Name = "Weir3",
-                Chainage = (branch.Length / 3) * 2
-            };
-            var weir4 = new Weir
-            {
-                Name = "Weir5",
-                Chainage = (branch.Length / 3) * 2
-            };
-
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(weir1, branch);
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(weir2, branch);
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(weir3, branch);
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(weir4, branch);
-
-            network.CompositeBranchStructures.ForEach(cbs => cbs.Name = "CompositeBranchStructure");
-
-            Assert.IsFalse(network.CompositeBranchStructures.Select(cbs => cbs.Name).HasUniqueValues());
-
-            // Make unique and check messages
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => network.MakeNamesUnique<ICompositeBranchStructure>(),
-                Resources.HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_);
-
-            Assert.IsTrue(network.CompositeBranchStructures.Select(cbs => cbs.Name).HasUniqueValues());
-        }
-
-        [Test]
         [Category(TestCategory.Performance)]
         public void EnsureCompositeBranchStructureNamesAreUniqueShouldBeFast()
         {

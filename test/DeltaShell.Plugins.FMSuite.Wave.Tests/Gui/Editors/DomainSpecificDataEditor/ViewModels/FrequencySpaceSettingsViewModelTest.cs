@@ -70,8 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.NrOfFrequencies = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.NrOfFrequencies));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.NrOfFrequencies));
             Assert.That(domainData.NFreq, Is.EqualTo(setValue));
         }
 
@@ -86,8 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.StartFrequency = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.StartFrequency));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.StartFrequency));
             Assert.That(domainData.FreqMin, Is.EqualTo(setValue));
         }
 
@@ -102,8 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.EndFrequency = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.EndFrequency));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.EndFrequency));
             Assert.That(domainData.FreqMax, Is.EqualTo(setValue));
         }
     }

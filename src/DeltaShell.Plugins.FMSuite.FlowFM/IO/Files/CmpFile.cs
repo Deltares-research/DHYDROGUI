@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
-    public class CmpFile : FMSuiteFileBase
+    public class CmpFile : NGHSFileBase
     {
         private readonly ILog log = LogManager.GetLogger(typeof(CmpFile));
 

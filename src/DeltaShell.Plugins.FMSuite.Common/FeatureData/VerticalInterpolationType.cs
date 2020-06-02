@@ -9,6 +9,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         Uniform,
         Step,
         Linear,
-        Logarithmic,
+        Logarithmic
     }
 }

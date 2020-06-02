@@ -384,7 +384,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return new Dictionary<string, string>
                 {
                     {"NrOfVertices", Grid.Vertices.Count.ToString(CultureInfo.InvariantCulture)},
-                    {"NrOfEdges", Grid.Edges.Count.ToString(CultureInfo.InvariantCulture)},
+                    {"NrOfEdges", Grid.Edges.Count.ToString(CultureInfo.InvariantCulture)}
                     // todo
                 };
             }
@@ -456,8 +456,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     // serializable
     public class StateInfo
     {
-        public string Name;
-        public string ZipPath;
+        public string Name { get; set; }
+
+        public string ZipPath { get; set; }
 
         public StateInfo(string name, string zipPath)
         {

@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
                     {"unstructured", HydroDynamicModelType.Unstructured},
                     {"curvilinear-grid", HydroDynamicModelType.Curvilinear},
                     {"finite-elements", HydroDynamicModelType.FiniteElements},
-                    {"network", HydroDynamicModelType.HydroNetwork},
+                    {"network", HydroDynamicModelType.HydroNetwork}
                 };
 
         private static readonly IDictionary<string, LayerType> HydFileLayerTypeMapping = new Dictionary
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
             {
                 {"", LayerType.Sigma},
                 {"sigma", LayerType.Sigma},
-                {"z-layers", LayerType.ZLayer},
+                {"z-layers", LayerType.ZLayer}
             };
 
         public static T Parse<T>(string textToParse, CultureInfo culture = null)

@@ -60,7 +60,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithNoSedimentFractions()
         {
             string mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
-            var fmModel = new WaterFlowFMModel(mduPath) {ModelDefinition = {UseMorphologySediment = true}};
+
+            var fmModel = new WaterFlowFMModel();
+            fmModel.ImportFromMdu(mduPath);
+
+            fmModel.ModelDefinition.UseMorphologySediment = true;
+
             IEnumerable<ValidationIssue> issues = GetValidationIssuesWithMessages(fmModel, new List<string>() {Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness});
             Assert.AreEqual(0, issues.Count());
         }
@@ -217,22 +222,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         private static WaterFlowFMModel GetFMModelWithDefaultSandAndMudFractions()
         {
-            string mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
-            var fmModel = new WaterFlowFMModel(mduPath)
+            var mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
+
+            var fmModel = new WaterFlowFMModel();
+            fmModel.ImportFromMdu(mduPath);
+
+            fmModel.ModelDefinition.UseMorphologySediment = true;
+            fmModel.SedimentFractions = new EventedList<ISedimentFraction>
             {
-                ModelDefinition = {UseMorphologySediment = true},
-                SedimentFractions = new EventedList<ISedimentFraction>()
+                new SedimentFraction
                 {
-                    new SedimentFraction
-                    {
-                        Name = "Sand",
-                        CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes().FirstOrDefault(st => st.Name == "Sand"),
-                    },
-                    new SedimentFraction
-                    {
-                        Name = "Mud",
-                        CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes().FirstOrDefault(st => st.Name == "Mud"),
-                    }
+                    Name = "Sand",
+                    CurrentSedimentType = SedimentFractionHelper
+                                          .GetSedimentationTypes().FirstOrDefault(st => st.Name == "Sand"),
+                },
+                new SedimentFraction
+                {
+                    Name = "Mud",
+                    CurrentSedimentType = SedimentFractionHelper
+                                          .GetSedimentationTypes().FirstOrDefault(st => st.Name == "Mud"),
                 }
             };
 
@@ -242,7 +250,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         private static WaterFlowFMModel GetFmModelWithSedimentFraction(IEventedList<ISedimentProperty> sedimentProperties)
         {
             string mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
-            var fmModel = new WaterFlowFMModel(mduPath) {ModelDefinition = {UseMorphologySediment = true}};
+
+            var fmModel = new WaterFlowFMModel();
+            fmModel.ImportFromMdu(mduPath);
+
+            fmModel.ModelDefinition.UseMorphologySediment = true;
+
             var sedimentFraction = new SedimentFraction
             {
                 Name = "Sand",

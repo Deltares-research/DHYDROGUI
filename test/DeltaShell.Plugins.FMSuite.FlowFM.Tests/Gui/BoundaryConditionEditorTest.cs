@@ -28,7 +28,6 @@ using Control = System.Windows.Controls.Control;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
-    [Category(TestCategory.WindowsForms)]
     public class BoundaryConditionEditorTest
     {
         [Test]
@@ -234,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         new WaterFlowFMModel
                         {
                             StartTime = new DateTime(2000, 1, 1),
-                            StopTime = new DateTime(2000, 1, 10),
+                            StopTime = new DateTime(2000, 1, 10)
                         }
                 },
                 Data =
@@ -296,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                             new WaterFlowFMModel
                             {
                                 StartTime = new DateTime(2000, 1, 1),
-                                StopTime = new DateTime(2000, 1, 10),
+                                StopTime = new DateTime(2000, 1, 10)
                             }
                     },
                 Data =
@@ -304,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     {
                         Feature = bc.Feature,
                         BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
-                    },
+                    }
             };
 
             WindowsFormsTestHelper.ShowModal(view);
@@ -362,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                             new WaterFlowFMModel
                             {
                                 StartTime = new DateTime(2000, 1, 1),
-                                StopTime = new DateTime(2000, 1, 10),
+                                StopTime = new DateTime(2000, 1, 10)
                             }
                     },
                 Data =
@@ -370,7 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     {
                         Feature = bc.Feature,
                         BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
-                    },
+                    }
             };
 
             WindowsFormsTestHelper.ShowModal(view);
@@ -434,7 +433,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         new WaterFlowFMModel
                         {
                             StartTime = new DateTime(2000, 1, 1),
-                            StopTime = new DateTime(2000, 1, 10),
+                            StopTime = new DateTime(2000, 1, 10)
                         }
                 },
                 Data =
@@ -492,7 +491,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         new WaterFlowFMModel
                         {
                             StartTime = new DateTime(2000, 1, 1),
-                            StopTime = new DateTime(2000, 1, 10),
+                            StopTime = new DateTime(2000, 1, 10)
                         }
                 },
                 Data =
@@ -500,7 +499,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     {
                         Feature = vectorBc.Feature,
                         BoundaryConditions = new EventedList<IBoundaryCondition> {vectorBc}
-                    },
+                    }
             };
 
             WindowsFormsTestHelper.ShowModal(view);
@@ -532,7 +531,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         new WaterFlowFMModel
                         {
                             StartTime = new DateTime(2000, 1, 1),
-                            StopTime = new DateTime(2000, 1, 10),
+                            StopTime = new DateTime(2000, 1, 10)
                         }
                 },
                 Data =
@@ -540,20 +539,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     {
                         Feature = waterLeveBc.Feature,
                         BoundaryConditions = new EventedList<IBoundaryCondition> {waterLeveBc}
-                    },
+                    }
             };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void ShowBoundaryConditionsFromGuiForBoundaryCondition()
         {
             string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -583,13 +584,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void ShowBoundaryConditionsFromGuiForBoundary()
         {
             string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {

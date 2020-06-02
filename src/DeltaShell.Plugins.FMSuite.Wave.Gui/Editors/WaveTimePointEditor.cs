@@ -49,8 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         }
 
         public Func<string, string> ImportFileIntoModelDirectory { private get; set; }
-        public Action ExportToBoundaryConditions { private get; set; }
-        public Action ImportFromBoundaryCondition { private get; set; }
 
         public object Data
         {
@@ -161,16 +159,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                 windDirectionBox.DataBindings.Add(new Binding("Text", inputFieldData,
                                                               nameof(inputFieldData.WindDirectionConstant)));
             }
-        }
-
-        private void exportToBoundaryButton_Click(object sender, EventArgs e)
-        {
-            ExportToBoundaryConditions();
-        }
-
-        private void importFromBoundaryBtn_Click(object sender, EventArgs e)
-        {
-            ImportFromBoundaryCondition();
         }
     }
 }

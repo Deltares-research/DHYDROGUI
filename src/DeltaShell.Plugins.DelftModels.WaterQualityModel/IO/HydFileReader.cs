@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 {
                     "chezy-coefficients-file", new KeyValueElement<string>((hydFileData, value) =>
                                                                                hydFileData.ChezyCoefficientsRelativePath = value)
-                },
+                }
             };
         }
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
@@ -19,6 +18,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 
@@ -192,25 +192,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new WindItemNodePresenter {GuiPlugin = this};
 
             yield return new Feature2DPolygonTreeViewNodePresenter {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroArea.LandBoundariesPluralName, Properties.Resources.landboundary) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<GroupablePointFeature>(HydroArea.DryPointsPluralName, Properties.Resources.dry_point) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<ThinDam2D>(HydroArea.ThinDamsPluralName, Properties.Resources.thindam) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<FixedWeir>(HydroArea.FixedWeirsPluralName, Properties.Resources.fixedweir) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroArea.ObservationPointsPluralName, Properties.Resources.Observation) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroArea.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<Pump2D>(HydroArea.PumpsPluralName, Properties.Resources.Pump) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<Weir2D>(HydroArea.WeirsPluralName, Properties.Resources.Weir) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroArea.EmbankmentsPluralName, Properties.Resources.Embankment) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroArea.BridgePillarsPluralName, Properties.Resources.BridgeSmall) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroAreaLayerNames.LandBoundariesPluralName, Properties.Resources.landboundary) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<GroupablePointFeature>(HydroAreaLayerNames.DryPointsPluralName, Properties.Resources.dry_point) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<ThinDam2D>(HydroAreaLayerNames.ThinDamsPluralName, Properties.Resources.thindam) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<FixedWeir>(HydroAreaLayerNames.FixedWeirsPluralName, Properties.Resources.fixedweir) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroAreaLayerNames.ObservationPointsPluralName, Properties.Resources.Observation) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroAreaLayerNames.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<Pump2D>(HydroAreaLayerNames.PumpsPluralName, Properties.Resources.Pump) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<Weir2D>(HydroAreaLayerNames.WeirsPluralName, Properties.Resources.Weir) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroAreaLayerNames.EmbankmentsPluralName, Properties.Resources.Embankment) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroAreaLayerNames.BridgePillarsPluralName, Properties.Resources.BridgeSmall) {GuiPlugin = this};
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
+            Func<object, string, string> FmSettingsPropertyChanged = (object sender, string propertyName) =>
+            {
+                var property = sender as WaterFlowFMProperty;
+                if (property != null)
+                {
+                    return property.PropertyDefinition.MduPropertyName;
+                }
+
+                var model = sender as WaterFlowFMModel;
+                if (model != null)
+                {
+                    if (propertyName == nameof(model.CoordinateSystem))
+                    {
+                        return "CoordinateSystem";
+                    }
+                }
+
+                return null;
+            };
+
             yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>
             {
                 Description = "FM Settings",
                 GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
-                AfterCreate = ConfigureWpfSettingsView
+                AfterCreate = (v, o) =>
+                {
+                    //Set the properties.
+                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o, Gui);
+                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
+                }
             };
 
             yield return new ViewInfo<FmModelTreeShortcut, WaterFlowFMModel, WpfSettingsView>
@@ -229,7 +254,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                     v.EnsureVisible(shortcut.Data);
                 },
-                AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.FlowFmModel)
+                AfterCreate = (v, o) =>
+                {
+                    //Set the properties.
+                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o.FlowFmModel, Gui);
+                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
+                }
             };
 
             yield return new ViewInfo<FmValidationShortcut, WaterFlowFMModel, WpfSettingsView>
@@ -247,7 +277,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                     v.EnsureVisible(shortcut.TabName);
                 },
-                AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.FlowFmModel)
+                AfterCreate = (v, o) =>
+                {
+                    //Set the properties.
+                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o.FlowFmModel, Gui);
+                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
+                }
             };
 
             yield return new ViewInfo<WaterFlowFMModel, WaterFlowFMFileStructureView> {Description = "File tree"};
@@ -454,12 +489,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return new ViewInfo<GriddedWindField, GriddedWindView>
             {
-                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null,
+                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null
             };
 
             yield return new ViewInfo<SpiderWebWindField, GriddedWindView>
             {
-                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null,
+                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null
             };
 
             // Importers and exporters
@@ -556,46 +591,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             get
             {
                 return Gui == null ? Enumerable.Empty<WaterFlowFMModel>() : Gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>();
-            }
-        }
-
-        private void ConfigureWpfSettingsView(WpfSettingsView view, WaterFlowFMModel flowFmModel)
-        {
-            Func<object, string, string> fmSettingsPropertyChanged = (sender, propertyName) =>
-            {
-                var property = sender as WaterFlowFMProperty;
-                if (property != null)
-                {
-                    return property.PropertyDefinition.MduPropertyName;
-                }
-
-                var model = sender as WaterFlowFMModel;
-                if (model != null && propertyName == nameof(model.CoordinateSystem))
-                {
-                    return "CoordinateSystem";
-                }
-
-                return null;
-            };
-
-            ObservableCollection<WpfGuiCategory> wpfGuiCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(flowFmModel, Gui);
-
-            // Look for the time properties to synchronize the model updates with
-            IEnumerable<WpfGuiProperty> guiProperties = wpfGuiCategories.SelectMany(gp => gp.Properties).ToArray();
-
-            WpfGuiProperty[] propertiesToSynchronize =
-            {
-                guiProperties.Single(prop => string.Equals(prop.Name, KnownProperties.DtUser, StringComparison.OrdinalIgnoreCase)),
-                guiProperties.Single(prop => string.Equals(prop.Name, GuiProperties.StopTime, StringComparison.OrdinalIgnoreCase)),
-                guiProperties.Single(prop => string.Equals(prop.Name, GuiProperties.StartTime, StringComparison.OrdinalIgnoreCase))
-            };
-
-            using (var synchronizer = new NotifyPropertyChangedWpfGuiPropertySynchronizer(flowFmModel))
-            {
-                synchronizer.SynchronizeProperties(propertiesToSynchronize);
-
-                view.SettingsCategories = wpfGuiCategories;
-                view.GetChangedPropertyName = fmSettingsPropertyChanged;
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.TestUtils
 {
@@ -9,17 +10,15 @@ namespace DeltaShell.NGHS.IO.TestUtils
     public static class NotifyPropertyChangedTestHelper
     {
         /// <summary>
-        /// Counts the number of times <see cref="INotifyPropertyChanged.PropertyChanged"/> is fired when the specified
+        /// Asserts the number of times <see cref="INotifyPropertyChanged.PropertyChanged"/> is fired when the specified
         /// <paramref name="action"/> is performed.
         /// </summary>
         /// <param name="npc">The notify property changed object.</param>
         /// <param name="action">The action to perform.</param>
+        /// <param name="expectedCount">Expected number of times property changed is fired.</param>
         /// <param name="propertyName">Name of the property.</param>
-        /// <returns>
-        /// The number of times <see cref="INotifyPropertyChanged.PropertyChanged"/> is fired with the specified
-        /// <paramref name="propertyName"/>
-        /// </returns>
-        public static int CountPropertyChangedFired(this INotifyPropertyChanged npc, Action action, string propertyName = null)
+        /// <param name="validateEventArgs">Action to validate the <see cref="PropertyChangedEventArgs"/>.</param>
+        public static void AssertPropertyChangedFired(this INotifyPropertyChanged npc, Action action, int expectedCount, string propertyName = null, Action<PropertyChangedEventArgs> validateEventArgs = null)
         {
             var propertyChangedCount = 0;
 
@@ -33,9 +32,11 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 {
                     propertyChangedCount++;
                 }
+
+                validateEventArgs?.Invoke(e);
             }
 
-            return propertyChangedCount;
+            Assert.That(propertyChangedCount, Is.EqualTo(expectedCount), "Property changed count");
         }
     }
 }

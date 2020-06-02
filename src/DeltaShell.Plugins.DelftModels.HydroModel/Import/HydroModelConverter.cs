@@ -8,7 +8,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.xsd;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
 using Newtonsoft.Json;

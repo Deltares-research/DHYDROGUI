@@ -1421,7 +1421,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                                                                        .Select(cg => cg.Conditions.Count)
                                                                        .Aggregate("", (current, conditionsCount) => current + conditionsCount + ",")
                     },
-                    {"ConditionTypesPerControlGroup", conditionTypesPerControlGroup},
+                    {"ConditionTypesPerControlGroup", conditionTypesPerControlGroup}
                 };
             }
 

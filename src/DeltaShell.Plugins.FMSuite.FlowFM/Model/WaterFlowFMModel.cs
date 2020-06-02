@@ -6,7 +6,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -48,38 +47,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     {
         private const string HydroAreaTag = "hydro_area_tag";
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModel));
-        private readonly IList<IDisposable> syncers = new List<IDisposable>();
         private readonly DimrRunner runner;
         private WaterFlowFMModelDefinition modelDefinition;
 
-        public WaterFlowFMModel() : this(null)
-        {
-            // Create model definition
-            ModelDefinition = new WaterFlowFMModelDefinition();
-            ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
-
-            SynchronizeModelDefinitions();
-
-            Grid = new UnstructuredGrid();
-            InitializeUnstructuredGridCoverages();
-
-            AddSpatialDataItems();
-            RenameSubFilesIfApplicable();
-        }
-
         /// <summary>
-        /// Constructor for existing mdu file
+        /// Creates a new instance of the <see cref="WaterFlowFMModel"/>.
         /// </summary>
-        public WaterFlowFMModel(string mduFilePath, ImportProgressChangedDelegate progressChanged = null) :
-            base("FlowFM")
+        public WaterFlowFMModel() : base("FlowFM")
         {
             runner = new DimrRunner(this);
-            ImportProgressChanged = progressChanged;
 
-            //Create Sediment mode data item
+            // Create sediment model data item
             SedimentModelDataItem = new SedimentModelDataItem();
 
-            // set default settings
+            // Set default settings
             SnapVersion = 0;
             ValidateBeforeRun = true;
             DisableFlowNodeRenumbering = false;
@@ -90,9 +71,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
 
-            // DELFT3DFM-371: Disable Model Inspection
-            // ModelInspection = true;
-
             var area = new HydroArea();
             AddDataItem(area, DataItemRole.Input, HydroAreaTag);
             areaDataItem = GetDataItemByTag(HydroAreaTag);
@@ -102,17 +80,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ((INotifyPropertyChange) this).PropertyChanged += (s, e) => { MarkDirty(); };
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
 
-            // Load mdu model settings
-            if (string.IsNullOrEmpty(mduFilePath))
-            {
-                return;
-            }
+            ModelDefinition = new WaterFlowFMModelDefinition();
+            ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
 
-            LoadStateFromMdu(mduFilePath);
+            SynchronizeModelDefinitions();
 
-            FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
+            Grid = new UnstructuredGrid();
+
+            InitializeUnstructuredGridCoverages();
+
             AddSpatialDataItems();
-            ImportSpatialOperationsAfterCreating();
+
+            RenameSubFilesIfApplicable();
+
+            InitializeSyncers();
         }
 
         public Type SupportedRegionType => typeof(HydroArea);
@@ -207,11 +188,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             DepthLayerDefinition = ModelDefinition.Kmx == 0
                                        ? new DepthLayerDefinition(DepthLayerType.Single)
                                        : new DepthLayerDefinition(ModelDefinition.Kmx);
-
-            syncers.Add(
-                new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(Boundaries, BoundaryConditionSets,
-                                                                       CreateBoundaryCondition));
-            syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(Pipes, SourcesAndSinks, CreateSourceAndSink));
         }
 
         private void AddTracerToSourcesAndSink(string name)
@@ -317,18 +293,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void AddOrRenameDataItem(ICoverage coverage, string name)
         {
-            IDataItem existingDataItem = GetDataItemByValue(coverage);
-            if (existingDataItem == null)
+            IDataItem existingDataItemByValue = GetDataItemByValue(coverage);
+            IDataItem existingDataItemByName = GetDataItemByName(name);
+
+            if (existingDataItemByValue != null && existingDataItemByName != null)
             {
-                DataItems.Add(new DataItem(coverage, name) {Role = DataItemRole.Input});
+                return;
+            }
+
+            if (existingDataItemByValue != null)
+            {
+                existingDataItemByValue.Name = name;
+            }
+            else if (existingDataItemByName != null)
+            {
+                existingDataItemByName.Value = coverage;
             }
             else
             {
-                if (existingDataItem.Name != name)
-                {
-                    existingDataItem.Name = name;
-                }
+                DataItems.Add(new DataItem(coverage, name) { Role = DataItemRole.Input });
             }
+        }
+
+        private IDataItem GetDataItemByName(string dataItemName)
+        {
+            return AllDataItems.FirstOrDefault(di => di.Name == dataItemName);
         }
 
         private void AddOrRenameDataItems(CoverageDepthLayersList coverageDepthLayersList, string name)
@@ -341,16 +330,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 string numberedName = uniform ? name : name + "_" + i++;
                 AddOrRenameDataItem(coverage, numberedName);
             }
-        }
-
-        private static BoundaryConditionSet CreateBoundaryCondition(Feature2D feature)
-        {
-            return new BoundaryConditionSet {Feature = feature};
-        }
-
-        private static SourceAndSink CreateSourceAndSink(Feature2D feature)
-        {
-            return new SourceAndSink {Feature = feature};
         }
 
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)
@@ -382,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems =
             new Dictionary<IFeature, List<IDataItem>>();
 
-        private Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties =
+        private readonly Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties =
             new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
         public IEventedList<ISedimentFraction> SedimentFractions
@@ -397,6 +376,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
 
                 sedimentFractions = value;
+
                 if (sedimentFractions != null)
                 {
                     ((INotifyPropertyChanged) SedimentFractions).PropertyChanged += SedimentFractionPropertyChanged;
@@ -484,7 +464,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             get => ModelDefinition.UseMorphologySediment;
             private set
             {
-                // empty, but just used for event bubbling                
+                // empty, but just used for event bubbling
             }
         }
 
@@ -493,7 +473,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             get => ModelDefinition.WriteSnappedFeatures;
             private set
             {
-                // empty, but just used for event bubbling                
+                // empty, but just used for event bubbling
             }
         }
 
@@ -624,12 +604,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        public bool HydFileOutput { get; set; } // always on ??
-
         private int CdType
         {
             get => Convert.ToInt32(ModelDefinition.GetModelProperty(KnownProperties.ICdtyp).Value);
-            set {}
+            set
+            {
+                // empty, but just used for event bubbling
+            }
         }
 
         #region IHasCoordinateSystem
@@ -665,7 +646,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 {
                     OutputMapFileStore.SetCoordinateSystem(value);
                 }
-                // coverages are handled via the feature collections.
+
+                // Note: coverages are handled via the feature collections.
 
                 InvalidateSnapping();
             }
@@ -872,7 +854,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
                                               new PointCloudFeatureProvider
                                               {
-                                                  PointCloud = coverage.ToPointCloud(0, true),
+                                                  PointCloud = coverage.ToPointCloud(0, true)
                                               });
 
                     spatialOperationsLookupTable.Add(dataItem.Name, new[]
@@ -899,87 +881,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
             Grid = null;
             DisposeSnapApi();
-            syncers.ForEach(s => s.Dispose());
-            syncers.Clear();
+            ClearSyncers();
 
             fixedWeirProperties.Values.ForEach(d => d.Dispose());
             fixedWeirProperties.Clear();
             BridgePillarsDataModel.ForEach(d => d.Dispose());
-        }
-
-        #endregion
-
-        #region NHibernate
-
-        private int dirtyCounter; //tells NHibernate we need to be saved
-
-        private void MarkDirty()
-        {
-            unchecked
-            {
-                dirtyCounter++;
-            } //unchecked is default, but its here to declare intent
-        }
-
-        #endregion
-
-        #region WaterFlowFMFeatureValueConverter
-
-        public double GetValueFromModelApi(IFeature feature, string parameterName)
-        {
-            string featureCategory = GetFeatureCategory(feature);
-            if (featureCategory == null)
-            {
-                return double.NaN;
-            }
-
-            // temporary fix for DELFT3DFM-1302 (this should be done in Dimr)
-            if (featureCategory == "weirs" && parameterName == "crest_level")
-            {
-                var weir = (Weir) feature;
-                if (!weir.UseCrestLevelTimeSeries)
-                {
-                    return weir.CrestLevel;
-                }
-
-                if (weir.CrestLevelTimeSeries.GetValues<double>().Any())
-                {
-                    return weir.CrestLevelTimeSeries.GetValues<double>().FirstOrDefault();
-                }
-            }
-
-            if (runner.Api == null)
-            {
-                return double.NaN;
-            }
-
-            var nameable = feature as INameable;
-            if (nameable == null)
-            {
-                return double.NaN;
-            }
-
-            return ((double[]) GetVar(featureCategory, nameable.Name, parameterName))[0];
-        }
-
-        public void SetToModelApi(IFeature feature, string parameterName, double value)
-        {
-            string featureCategory = GetFeatureCategory(feature);
-            if (featureCategory == null)
-            {
-                return;
-            }
-
-            var nameable = feature as INameable;
-            if (nameable == null)
-            {
-                return;
-            }
-
-            SetVar(new[]
-            {
-                value
-            }, featureCategory, nameable.Name, parameterName);
         }
 
         #endregion

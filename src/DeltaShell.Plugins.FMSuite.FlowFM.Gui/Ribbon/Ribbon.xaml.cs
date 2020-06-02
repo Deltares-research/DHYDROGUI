@@ -26,32 +26,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
 
             mapTab.Group = geospatialContextualGroup;
 
-            buttonCommands.Add(ButtonAddBoundary, new MapToolCommand(FlowFMMapViewDecorator.BoundaryToolName) {LayerType = typeof(AreaLayer)});
-            buttonCommands.Add(ButtonAddSourceSink, new MapToolCommand(FlowFMMapViewDecorator.SourceAndSinkToolName) {LayerType = typeof(AreaLayer)});
-            buttonCommands.Add(ButtonAddSource, new MapToolCommand(FlowFMMapViewDecorator.SourceToolName) {LayerType = typeof(AreaLayer)});
+            buttonCommands.Add(ButtonAddBoundary, new MapToolCommand(FlowFMMapViewDecorator.BoundaryToolName) {LayerType = typeof(HydroAreaLayer)});
+            buttonCommands.Add(ButtonAddSourceSink, new MapToolCommand(FlowFMMapViewDecorator.SourceAndSinkToolName) {LayerType = typeof(HydroAreaLayer)});
+            buttonCommands.Add(ButtonAddSource, new MapToolCommand(FlowFMMapViewDecorator.SourceToolName) {LayerType = typeof(HydroAreaLayer)});
             buttonCommands.Add(ButtonReverseLine, new MapToolCommand(FlowFMMapViewDecorator.Reverse2DLineToolName)
             {
-                LayerType = typeof(AreaLayer),
+                LayerType = typeof(HydroAreaLayer),
                 ToolAction = ToolAction.Execute
             });
             buttonCommands.Add(ButtonGenerateEmbankments, new MapToolCommand(FlowFMMapViewDecorator.GenerateEmbankmentsToolName)
             {
-                LayerType = typeof(AreaLayer),
+                LayerType = typeof(HydroAreaLayer),
                 ToolAction = ToolAction.Execute
             });
             buttonCommands.Add(ButtonMergeEmbankments, new MapToolCommand(FlowFMMapViewDecorator.MergeEmbankmentsToolName)
             {
-                LayerType = typeof(AreaLayer),
+                LayerType = typeof(HydroAreaLayer),
                 ToolAction = ToolAction.Execute
             });
-            buttonCommands.Add(ButtonGridWizard, new MapToolCommand(FlowFMMapViewDecorator.GridWizardToolName) {LayerType = typeof(AreaLayer)});
+            buttonCommands.Add(ButtonGridWizard, new MapToolCommand(FlowFMMapViewDecorator.GridWizardToolName) {LayerType = typeof(HydroAreaLayer)});
 
             ButtonReverseLine.ToolTip = new ScreenTip
             {
                 Title = "Reverse line(s)",
                 Text = "Reverses the selected poly-line features.",
                 DisableReason = "Required to have exclusively 2D/3D oriented polyline features selected.",
-                MaxWidth = 250,
+                MaxWidth = 250
             };
         }
 

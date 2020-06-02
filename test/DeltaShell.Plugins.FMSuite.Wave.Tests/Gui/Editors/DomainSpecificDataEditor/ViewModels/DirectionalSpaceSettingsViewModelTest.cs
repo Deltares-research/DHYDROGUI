@@ -106,8 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.Type = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.Type));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.Type));
             Assert.That(domainData.DirectionalSpaceType, Is.EqualTo(expectedFileType));
         }
 
@@ -123,8 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.NrOfDirections = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.NrOfDirections));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.NrOfDirections));
             Assert.That(domainData.NDir, Is.EqualTo(setValue));
         }
 
@@ -139,8 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.StartDirection = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.StartDirection));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.StartDirection));
             Assert.That(domainData.StartDir, Is.EqualTo(setValue));
         }
 
@@ -155,8 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.EndDirection = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.EndDirection));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.EndDirection));
             Assert.That(domainData.EndDir, Is.EqualTo(setValue));
         }
     }

@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
     [Category(NghsTestCategory.AcceptanceTests)]
     [Category(TestCategory.Slow)]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategory.Wpf)]
     [TestFixture]
     public class AcceptanceModelsTest
     {
@@ -394,7 +394,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void ImportFlowFMModelAndAddToProject(IApplication app, string mduPath)
         {
-            var fmModel = new WaterFlowFMModel(mduPath);
+            var fmModel = new WaterFlowFMModel();
+            fmModel.ImportFromMdu(mduPath);
+
             app.Project.RootFolder.Items.Add(fmModel);
         }
 

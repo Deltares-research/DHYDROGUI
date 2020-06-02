@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 {
                     id = elementId,
                     OpenMIExchangeItem = new OpenMIExchangeItemXML {elementId = isEmpty ? null : "not_empty"}
-                },
+                }
             };
             return timeSeriesElements;
         }

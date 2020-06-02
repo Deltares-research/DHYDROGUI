@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
@@ -10,7 +11,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
-    public class PolFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : Feature2DPolygon, new()
+    public class PolFile<T> : NGHSFileBase, IFeature2DFileBase<T> where T : Feature2DPolygon, new()
     {
         public const string Extension = "pol";
         private static readonly ILog Log = LogManager.GetLogger(typeof(T));

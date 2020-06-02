@@ -484,7 +484,7 @@ namespace DelftTools.Hydro.Structures
                     crossSectionDefinition =
                         new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound
                         {
-                            Diameter = Diameter,
+                            Diameter = Diameter
                         }) {Name = Name};
                     break;
                 case CulvertGeometryType.Ellipse:

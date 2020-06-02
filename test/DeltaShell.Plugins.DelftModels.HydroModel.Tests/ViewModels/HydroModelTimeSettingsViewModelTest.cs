@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.WindowsForms)]
+        [NUnit.Framework.Category(TestCategory.Wpf)]
         public void TestHydroModelTimeSettingsVisible()
         {
             var hydroModel = new HydroModel();

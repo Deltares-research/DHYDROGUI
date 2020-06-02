@@ -1,0 +1,450 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?include RGFGridDefines.wxi?>
+    <Fragment>
+        <DirectoryRef Id="RGFGridLibDir">
+            <Component Id="cmpCA4FE67CF4DF84E2846C220829DBA099" Guid="*">
+                <File Id="filC6345A797CCDE7FBAF1AD5D3DEE14744" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\rgfgrid.cmd" />
+            </Component>
+            <Directory Id="dirE9E813C546BD6D86C35F9DEFC4C0F628" Name=".svn">
+                <Directory Id="dir4BA688313DDA68559792AC44CB471686" Name="tmp">
+                    <Component Id="cmpFB71ABEE85729BC0A2BF341E772A9BDC" Guid="*">
+                        <File Id="filFCEC133E82C89E61BA16BDCA4F8A3CE1" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\.svn\tmp\_._" />
+                    </Component>
+                </Directory>
+            </Directory>
+            <Directory Id="dirF7E3D12E704E9D276FFEFF3B97467608" Name="bin">
+                <Component Id="cmpE19D0638E140A778D5F961F38C8979EE" Guid="*">
+                    <File Id="filC13EEC4BE11FCBDA545D3E0B0421DE31" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\freeglut.dll" />
+                </Component>
+                <Component Id="cmp73B4E870E3767DC66EF0AB078C96A8B5" Guid="*">
+                    <File Id="fil77194719AE13F02D7352C05FAB0FE5C8" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\glut32.dll" />
+                </Component>
+                <Component Id="cmpCD2794B3CEFD7A310E7C8344AB5950E6" Guid="*">
+                    <File Id="fil4F958B4E01F6433B93DE6FF6CB25A18C" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\glut64.dll" />
+                </Component>
+                <Component Id="cmpFE4A1972F1195DF2230C8F76A277E2F1" Guid="*">
+                    <File Id="fil9CF90C351F60653CBC3009F463E339C1" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\hdf5.dll" />
+                </Component>
+                <Component Id="cmp7B820DD01E5CC0290511808D870FD824" Guid="*">
+                    <File Id="fil332E2653330785BAB4664C01FC7BA810" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\hdf5_hl.dll" />
+                </Component>
+                <Component Id="cmp13A981CAED2AE897785ECEF7802319A9" Guid="*">
+                    <File Id="fil3DCA37E6C6B3D913CA45D84BBD1C2DCB" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\libifcoremd.dll" />
+                </Component>
+                <Component Id="cmp76CF3C7A76524F703539B5385D38D4FE" Guid="*">
+                    <File Id="fil856AF31CB7C3A8DE35D4C5FAEAE33450" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\libifportmd.dll" />
+                </Component>
+                <Component Id="cmp36BA7237A5C3FDB5E7919E11EC2F0841" Guid="*">
+                    <File Id="fil26813E563B5949AD816EE75A4908175A" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\libmmd.dll" />
+                </Component>
+                <Component Id="cmp1B44F8A0F9EC6C6210AEB1A8B2B85A21" Guid="*">
+                    <File Id="filFCAC6181DE03C205516C85507550D68A" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\mfe_app.exe" />
+                </Component>
+                <Component Id="cmp717E741E12EABA18B8BB4BF7CCD5642A" Guid="*">
+                    <File Id="filC833FCF5949D3BC0A97181DB2160D3B4" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\msvcp140.dll" />
+                </Component>
+                <Component Id="cmp3B320B778281D1AE946D91E12CFAF1A6" Guid="*">
+                    <File Id="filDF0AE009E61177CF6ACBF7B97989C6E6" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\netcdf.dll" />
+                </Component>
+                <Component Id="cmp24D540F860DCC2A38B1A0ACB9E213CE5" Guid="*">
+                    <File Id="fil826073FEF0A154854D4C8F15B4B2073E" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\pthreadVC2.dll" />
+                </Component>
+                <Component Id="cmpD40D2ACB775B4AF63B637950CD03C6C0" Guid="*">
+                    <File Id="fil30B5BFC882603DAAF82CDEB40965C523" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_canvas_window.dll" />
+                </Component>
+                <Component Id="cmp704CDCEC8EBB730467C621089EC89953" Guid="*">
+                    <File Id="fil0EEF1CB78057D1932F85ED559BD80F5D" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_commands_dialog.dll" />
+                </Component>
+                <Component Id="cmp7605CB75525ACE1D07846C1CAAD6C833" Guid="*">
+                    <File Id="fil720C7B27B4A94A21816E3912F4C00412" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_common_dialogs.dll" />
+                </Component>
+                <Component Id="cmpB76C2764DB13697189810332CE7C5AF2" Guid="*">
+                    <File Id="filAAD29BB16122A7A1AA3AB253EF6F6C15" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_common_utils.dll" />
+                </Component>
+                <Component Id="cmp7EF6C5D2E02234675C49A9D2D5E4F745" Guid="*">
+                    <File Id="filAB0073AB7962E1FB835534E31B0251BD" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_cpp_java.dll" />
+                </Component>
+                <Component Id="cmp9A22437BA50DB9BD729C56BFC6B91960" Guid="*">
+                    <File Id="filC63701F8EB2FD9220824F420B6E87FFE" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_glut_window.dll" />
+                </Component>
+                <Component Id="cmp95055441BFEE26DD107E5A9A000E8D2E" Guid="*">
+                    <File Id="fil1AB1386EAB5777E0CA705A078D83268F" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_gui_api.dll" />
+                </Component>
+                <Component Id="cmp629C07254EE1EDF135643885EADA747D" Guid="*">
+                    <File Id="fil30973E4CF14CB5B81EEB5A9717D272DB" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_ml_support.dll" />
+                </Component>
+                <Component Id="cmpD9E991D9E7B60AFF7DBF773938F3AC72" Guid="*">
+                    <File Id="fil47CB904528E6CBE38ACF3B98DD21AEE9" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_plugin_shared_mem_def.dll" />
+                </Component>
+                <Component Id="cmpDCDA790DA18182C30E651E5B5914A8AA" Guid="*">
+                    <File Id="filEA9ACAAF37033BB0EFBAB8D349265F59" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_property_editor.dll" />
+                </Component>
+                <Component Id="cmp11AACC847271F367FC930164EA8CED28" Guid="*">
+                    <File Id="fil887325F3FE1B8057ED041DCF18B0D43F" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\qt512_win32_process.dll" />
+                </Component>
+                <Component Id="cmp5ED657266569D85455B1659D40FA9B18" Guid="*">
+                    <File Id="filC9DB084C4B2DE82B3F7E71A249FDF457" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\Qt5Core.dll" />
+                </Component>
+                <Component Id="cmp2BB7959ECFE10E5D74E69A1B1A6E0000" Guid="*">
+                    <File Id="fil42FFF45577B37C6E80B656E8E76FA4FF" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\Qt5Gui.dll" />
+                </Component>
+                <Component Id="cmp791D363E257CE488E45D196FEEC53BF4" Guid="*">
+                    <File Id="filC29EE9E03884D46F310408C7A40861D9" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\Qt5PrintSupport.dll" />
+                </Component>
+                <Component Id="cmp8BE41380C3F82931E4F34FA0F4FFF65D" Guid="*">
+                    <File Id="filE3915302A5B2358F1C29F3C3CEB974C7" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\Qt5Widgets.dll" />
+                </Component>
+                <Component Id="cmp48774927BABF92B16193E5541ED45091" Guid="*">
+                    <File Id="fil879DBD63FD785114E01B8987DF8CF5B3" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\rgfgrid.dll" />
+                </Component>
+                <Component Id="cmpE73E933875E10EA97F81E923783A3210" Guid="*">
+                    <File Id="fil8BBC46C29DB8FB141770632E0F30622F" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\svml_dispmd.dll" />
+                </Component>
+                <Component Id="cmp6B0170DA85FD487699912E65C0F9FDF4" Guid="*">
+                    <File Id="fil434BA35E76184418C387A1053975DCA9" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\vcruntime140.dll" />
+                </Component>
+                <Component Id="cmpA18343F4A7A7B5344E5FF72511247C02" Guid="*">
+                    <File Id="fil0267F6BD4E65C51A98E8051A5D324877" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\zlib1.dll" />
+                </Component>
+                <Directory Id="dir7CF1965BA0AA5225CF522C5DC8FE5BFC" Name="platforms">
+                    <Component Id="cmp3131011FBFC4AB28F6C3BEAE4EB60133" Guid="*">
+                        <File Id="filECD9B9A9FF9A1D72540E7E83E55D51E3" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\platforms\qminimal.dll" />
+                    </Component>
+                    <Component Id="cmpF0EF253F84F3AEF4449F04C83850A8F7" Guid="*">
+                        <File Id="fil24EEBE48FFF4A46771584C0841EA7053" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\platforms\qoffscreen.dll" />
+                    </Component>
+                    <Component Id="cmpAB26A956C623FBC3319FF11A4319199C" Guid="*">
+                        <File Id="fil39797DFF27CE170F5C1790F334EF4693" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\bin\platforms\qwindows.dll" />
+                    </Component>
+                </Directory>
+            </Directory>
+            <Directory Id="dir4524AF421AE9B52BD84096870E696403" Name="colormaps">
+                <Component Id="cmp6CF65B84F54BA960A6349395D531EAED" Guid="*">
+                    <File Id="fil186D5845BE79BF16B96B0DDEAAF2945C" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\autumn.clrmap" />
+                </Component>
+                <Component Id="cmpADB4897B6CA5AD1BEA6A4BD71F4D7B0F" Guid="*">
+                    <File Id="filB8BD5D9AA8D71EEBD0DE2C6D6680A93A" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\bathy.clrmap" />
+                </Component>
+                <Component Id="cmpD8D4B5C017E253993B186368528E56A6" Guid="*">
+                    <File Id="filE2F994BD24C54EE28D735C8BBF587BED" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\bluemap.clrmap" />
+                </Component>
+                <Component Id="cmp12BE699CFF2359EE4B9CF139FDC9EA5D" Guid="*">
+                    <File Id="fil8B52887E09C4933001DAF52728C58056" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\bone.clrmap" />
+                </Component>
+                <Component Id="cmp7CE38474AA132C684654CDE380D92BE2" Guid="*">
+                    <File Id="filE97553F63FBF578588A9A7E023836177" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\cool.clrmap" />
+                </Component>
+                <Component Id="cmp21523AF18855E0D2E561F309B6DF0E87" Guid="*">
+                    <File Id="fil8FCCF07089A8A94AE851CB3B13CEC57E" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\copper.clrmap" />
+                </Component>
+                <Component Id="cmp20FC13C76387122803962B8C0683E1BE" Guid="*">
+                    <File Id="filE7CF665A6C9FB854E87A9046B91C39F7" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\depth.clrmap" />
+                </Component>
+                <Component Id="cmp9557995E3D2F0B838C7FA123D778490E" Guid="*">
+                    <File Id="fil57D9926A29DB1704D5433BE2C9808732" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\earth1.clrmap" />
+                </Component>
+                <Component Id="cmp396F1A596533800BE7A7435B24AB01A1" Guid="*">
+                    <File Id="fil65CB0FE76033561A2E0D015E3A0E8636" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\earth2.clrmap" />
+                </Component>
+                <Component Id="cmp81B9FCFB5F91ADB7FAC8C0C36BBCD577" Guid="*">
+                    <File Id="fil570603750838499F3BA773689D966CDC" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\earthsurface.clrmap" />
+                </Component>
+                <Component Id="cmp1AE178800842FB9AC11D1A31DE78A0C3" Guid="*">
+                    <File Id="filA1F56DCFF7388494C3E979E641C97262" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\gray.clrmap" />
+                </Component>
+                <Component Id="cmp52CD9B49B9F286E01E69C8FE1A819429" Guid="*">
+                    <File Id="fil6584B706896534D92DEE3F6F14BE40DB" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\hot.clrmap" />
+                </Component>
+                <Component Id="cmp99AC31DB5B7D805229A9F48D778819BA" Guid="*">
+                    <File Id="fil7E45B142E45A6820511C271CA22C103F" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\hsv.clrmap" />
+                </Component>
+                <Component Id="cmpCD8093D8A650E29C1D36A3AC3DDDD0E1" Guid="*">
+                    <File Id="fil606F7460E6BE5B9E62C391B0E9C889BD" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\jet.clrmap" />
+                </Component>
+                <Component Id="cmp94285622451D345EA669883BC5AFB7CE" Guid="*">
+                    <File Id="filF7F3DA2620B0CEB1C48AA4309296844C" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\jet_white_5.clrmap" />
+                </Component>
+                <Component Id="cmpBEB48216C7487636F7F6C38D501CD1EA" Guid="*">
+                    <File Id="filCEE92DB991100CD4CAB21C36A86716D7" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\pastel.clrmap" />
+                </Component>
+                <Component Id="cmpA832A404F9AAB8267E06723F03945CB2" Guid="*">
+                    <File Id="filFAF7F7DB842561B62F4D2958C5DC1DB0" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\pink.clrmap" />
+                </Component>
+                <Component Id="cmp0A21CA78E86E4CE6D763DBE3E4D8B42C" Guid="*">
+                    <File Id="fil8A81B26188150C1A07E2DD05DE12457A" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\qncmap.clrmap" />
+                </Component>
+                <Component Id="cmp937ECA960FDF8BAD908D85DC69BD63C3" Guid="*">
+                    <File Id="filAEA4D2F1137F75BBA22F3FC50E89430B" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\revbluemap.clrmap" />
+                </Component>
+                <Component Id="cmp3859CA131CA4FFEE688C97F467044A19" Guid="*">
+                    <File Id="fil51D0D775B388E20CE7B38A3D8F6C88D1" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\sedconc.clrmap" />
+                </Component>
+                <Component Id="cmpEC0D7315BCE4A93708FD32D3CDD242D4" Guid="*">
+                    <File Id="fil1AA58B9DE2B42191A7CA8711B8523499" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\spring.clrmap" />
+                </Component>
+                <Component Id="cmp6D94F6A500E093D94399CF4D4C6B292C" Guid="*">
+                    <File Id="filFFB0022C0F0C0AEEDC1B993CD6E9FDE8" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\summer.clrmap" />
+                </Component>
+                <Component Id="cmp73BFA5EDBFD28543EE6A0F0D5521C489" Guid="*">
+                    <File Id="fil2BECC3983D5CFEEE5C3B144039715567" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\winter.clrmap" />
+                </Component>
+                <Component Id="cmp5D905DBAFF7792A89E47007EB7620D97" Guid="*">
+                    <File Id="fil5A3415AEC84ABF022CE79E1EC2A01C05" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\colormaps\xhsv.clrmap" />
+                </Component>
+            </Directory>
+            <Directory Id="dir3FABF5CDA4DD623B4CCCF1A442988F3A" Name="icons">
+                <Component Id="cmp6E7D8D11A884830122BB4D461A0752FC" Guid="*">
+                    <File Id="fil8D74F9FA45499273028411E259807F63" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\anchor.png" />
+                </Component>
+                <Component Id="cmpF1838846D95D3C513133731BEA82D381" Guid="*">
+                    <File Id="fil842C3294C22D2D946C71C83EC392B580" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\arrow_curved_black.png" />
+                </Component>
+                <Component Id="cmp95B556F2F4D77BE768D9BE64B6BB28BB" Guid="*">
+                    <File Id="fil8C6FBD5E6FE3BBFE3BCD54B9D1DAF643" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\centre.png" />
+                </Component>
+                <Component Id="cmpAC41E396C3BB27E5EDF58737A9475CDB" Guid="*">
+                    <File Id="filFD6E71C249AE7FC0074039030DF9DA9D" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\delete_exterior.png" />
+                </Component>
+                <Component Id="cmp0425A7FC432DE0FC7D4AB481F7D45AFB" Guid="*">
+                    <File Id="fil7F4930297B2BF54AA1C9FFB11C5391B1" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\delete_interior.png" />
+                </Component>
+                <Component Id="cmp69AD27AC7C283D0ED4C19901EFD69987" Guid="*">
+                    <File Id="filF819EBFEF7874760CC494573C2969218" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\deltares.ico" />
+                </Component>
+                <Component Id="cmp3BDC70B8992B8297C0768E4E7486B90C" Guid="*">
+                    <File Id="fil4FD1D8C4406EE6EF0B4A56B1A2F0E1E7" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\edit_depth.png" />
+                </Component>
+                <Component Id="cmpC251E857D96B57A448F370A9889038D1" Guid="*">
+                    <File Id="filC67DB7189AF2CF6E41716C47EC7D6094" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\file_new.png" />
+                </Component>
+                <Component Id="cmpB3550B857D5ABD049C50514B21A10B45" Guid="*">
+                    <File Id="filF31D85A31CD7A7678F17145A58FBE1B7" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\file_open.png" />
+                </Component>
+                <Component Id="cmpD220636160CAB989211CED296F047456" Guid="*">
+                    <File Id="fil3A45219037EBEBCA0D0FC4F029A1932E" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\file_save.png" />
+                </Component>
+                <Component Id="cmpDDEAFC1AC381D47EF0F4381966E1B78D" Guid="*">
+                    <File Id="filBDD2C8E1F2B1E7972F2308EC1D1A7CE7" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\full_extend.xpm" />
+                </Component>
+                <Component Id="cmp5D1B2E6150347FCEF0D92B24F3F361EB" Guid="*">
+                    <File Id="fil14097C36154FE8AEA58B6A95EAE20D37" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\grid_delete_point.png" />
+                </Component>
+                <Component Id="cmp551D2409A10FB306FA4C11DD2C0DE09C" Guid="*">
+                    <File Id="filE69194FFDA11A51C6E2BE07538B21A17" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\grid_insert_point.png" />
+                </Component>
+                <Component Id="cmp8E233A857EEE41754AE233B81A7EDE42" Guid="*">
+                    <File Id="fil1EA2236DA83004B944ABF7F8A4255F0A" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\grid_move_point.png" />
+                </Component>
+                <Component Id="cmp11166CA1C60FB55DB1C9B32C6B6FC343" Guid="*">
+                    <File Id="filCF4C5813683668DE03CF1463EBB6A1EF" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\legend.png" />
+                </Component>
+                <Component Id="cmp44C026C346FE0B66CD31E63E7F43E66A" Guid="*">
+                    <File Id="filCBCEF18E7567AF69C8670BAEE9CC9D9F" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\loadshapefile.png" />
+                </Component>
+                <Component Id="cmpCF533637AB7E4B8FE75B696A268F2CC5" Guid="*">
+                    <File Id="filF0E317D4AA43C643E735240B96A77CFE" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\media_forward.png" />
+                </Component>
+                <Component Id="cmp9E96CD4640CC629EE40560978693597F" Guid="*">
+                    <File Id="filE2F4FAB39FA4F65672E372209B8E8B59" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\media_forward_next.png" />
+                </Component>
+                <Component Id="cmp473E030E4E65D2C7B7B9E99343FE9B69" Guid="*">
+                    <File Id="fil78F7A7A2AEF7AFC20E07C55F7ED5B76F" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\media_next.png" />
+                </Component>
+                <Component Id="cmpE4357B24547868B073351591D6119848" Guid="*">
+                    <File Id="fil5E85EEECF54CEFEBB90DA0DD8AA5A5AC" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\media_pause.png" />
+                </Component>
+                <Component Id="cmp9746C7BCEAFA779415BB95FA89BDBF1D" Guid="*">
+                    <File Id="fil51989A66CA9386FE04C59F4ABD6E8E95" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\menu_to_toolbar.xpm" />
+                </Component>
+                <Component Id="cmp17B5693E8248641D8F1FF0908A2C9A2D" Guid="*">
+                    <File Id="fil0327150E257783570B920C87675AC229" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\multiselect_domain.png" />
+                </Component>
+                <Component Id="cmpE60E9C7A5ED16E8B7AE31238B7734D32" Guid="*">
+                    <File Id="filA373C23EDEEF44616DFB404C1E7151C0" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\orthogonalise.png" />
+                </Component>
+                <Component Id="cmp696367640B0C17270223A3E3BD819B08" Guid="*">
+                    <File Id="filCACCE241A9BA92AC85FA2AB66900489F" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\polygon_delete.png" />
+                </Component>
+                <Component Id="cmp9DA330CD321E0C7A3915B3BDB435B801" Guid="*">
+                    <File Id="filDBC58E849D6F96B650AD9B8A364EEC7F" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\polygon_delete_point.png" />
+                </Component>
+                <Component Id="cmp7EE94626BCB5A0303EDEAE571DFE44BB" Guid="*">
+                    <File Id="fil704C900F32E51EFD9F1A5BEBF728A84E" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\polygon_insert_point.png" />
+                </Component>
+                <Component Id="cmpA9D9A0B542D33DD72FB51EC35B9F8BF0" Guid="*">
+                    <File Id="fil5D6E1B5CF60C8D4842FA2E464A5E4D52" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\polygon_move_point.png" />
+                </Component>
+                <Component Id="cmpCBE5F55EAE0B6EE34AF1C2C96E78911B" Guid="*">
+                    <File Id="filA51750EA3D0AD2329AE9B641C4BEFDE3" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\polygon_new.png" />
+                </Component>
+                <Component Id="cmpDA94A3DC2D61A2A4167FD72E25F227C0" Guid="*">
+                    <File Id="filC3352984F885108F6AC84D39EA03B8BC" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\print_small.xpm" />
+                </Component>
+                <Component Id="cmpEF3B2F38BA611FB09FF2D5F84C080A8C" Guid="*">
+                    <File Id="filAE2694E71DD31A7385155B688CF21DC8" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\properties.png" />
+                </Component>
+                <Component Id="cmpCA98DA0D4D7021F72C33D40E3557C5F2" Guid="*">
+                    <File Id="fil8A4178E3581B50062FECCC9FE0A707E7" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\refresh.png" />
+                </Component>
+                <Component Id="cmp361637321A18AD7EE1DE8CF13D6B3C5F" Guid="*">
+                    <File Id="fil555B05B93D09A9677D0E138EEDFA9E32" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\repeat.png" />
+                </Component>
+                <Component Id="cmp29159F36F89EABD0C0E10C72D771BB8C" Guid="*">
+                    <File Id="filD3DC8240294D693EEA4DCB70D4E82055" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\rgfgrid_icon.ico" />
+                </Component>
+                <Component Id="cmpCBB0E1521F0E81DCEB59303F5FC03A4A" Guid="*">
+                    <File Id="fil9801355E99F34DD4DE9DA54E0FD4AD18" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\rgfgrid_icon.png" />
+                </Component>
+                <Component Id="cmp9D85BAB503BCCDB0A33B7E905E8BC0E1" Guid="*">
+                    <File Id="fil8907C25F73AF2A9004EDA8D68651AF18" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\select_domain.png" />
+                </Component>
+                <Component Id="cmp34F6DC348F152CD85164641A7B95DB94" Guid="*">
+                    <File Id="fil9ABAFEB09F5A3031136EB1BE4A6E58F3" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\splines_to_grid.png" />
+                </Component>
+                <Component Id="cmp5DD0F48489DB9074A67E077CBB279D82" Guid="*">
+                    <File Id="filA7603AA4F7AC170093E7E85B717101B4" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\spline_delete.png" />
+                </Component>
+                <Component Id="cmp57FB59BE1ADD3A24BD1EA55F07457272" Guid="*">
+                    <File Id="filCE7B06DBAE3CD6C4B138E02319CDBC50" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\spline_delete_point.png" />
+                </Component>
+                <Component Id="cmp946A1641CA8EC3501B83C81A3DF411B1" Guid="*">
+                    <File Id="fil047692D52A319632413503861FA56148" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\spline_insert_point.png" />
+                </Component>
+                <Component Id="cmp91D30F999FCCB654ABB32EAC10B2259D" Guid="*">
+                    <File Id="filDD046D959F22FAED386D9CD610EC6AA5" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\spline_move_point.png" />
+                </Component>
+                <Component Id="cmpC17481371D9F4C601E6CC75E7FD17AD7" Guid="*">
+                    <File Id="fil64637C193867F5BB5E2E64AAC040ECB8" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\spline_new.png" />
+                </Component>
+                <Component Id="cmpF442A97FBB44EE090E46863FA9E40C68" Guid="*">
+                    <File Id="filF1AEF22432444C03C48E189C6AEFE299" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\vectors.png" />
+                </Component>
+                <Component Id="cmp2C263072B556B872F40F5B9ACCD1CF3E" Guid="*">
+                    <File Id="fil5351C41DFD63331FA26179C87293AABF" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\zoom_in.xpm" />
+                </Component>
+                <Component Id="cmp3B3ECD18901539B645A58E246B357C8C" Guid="*">
+                    <File Id="fil8F3F3440BAE43154E8C1CF32A919C138" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\zoom_out.xpm" />
+                </Component>
+                <Component Id="cmp15B761B6AF509EA0A165F346BC494A7D" Guid="*">
+                    <File Id="fil65179066B5400782E0B7560ED2BBCDFD" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\icons\zoom_to_region.xpm" />
+                </Component>
+            </Directory>
+            <Directory Id="dir36118B63C212E19A0FF0D042C36D9A60" Name="target">
+                <Component Id="cmp23F0B7F589255F90423F61614292E050" Guid="*">
+                    <File Id="fil45D0A965E3D5CA059C62C56097CC0BB1" KeyPath="yes" Source="$(var.RGFGrid_kernels_lib_dir)\target\_._" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="RGFGridLibs">
+            <ComponentRef Id="cmpCA4FE67CF4DF84E2846C220829DBA099" />
+            <ComponentRef Id="cmpFB71ABEE85729BC0A2BF341E772A9BDC" />
+            <ComponentRef Id="cmpE19D0638E140A778D5F961F38C8979EE" />
+            <ComponentRef Id="cmp73B4E870E3767DC66EF0AB078C96A8B5" />
+            <ComponentRef Id="cmpCD2794B3CEFD7A310E7C8344AB5950E6" />
+            <ComponentRef Id="cmpFE4A1972F1195DF2230C8F76A277E2F1" />
+            <ComponentRef Id="cmp7B820DD01E5CC0290511808D870FD824" />
+            <ComponentRef Id="cmp13A981CAED2AE897785ECEF7802319A9" />
+            <ComponentRef Id="cmp76CF3C7A76524F703539B5385D38D4FE" />
+            <ComponentRef Id="cmp36BA7237A5C3FDB5E7919E11EC2F0841" />
+            <ComponentRef Id="cmp1B44F8A0F9EC6C6210AEB1A8B2B85A21" />
+            <ComponentRef Id="cmp717E741E12EABA18B8BB4BF7CCD5642A" />
+            <ComponentRef Id="cmp3B320B778281D1AE946D91E12CFAF1A6" />
+            <ComponentRef Id="cmp24D540F860DCC2A38B1A0ACB9E213CE5" />
+            <ComponentRef Id="cmpD40D2ACB775B4AF63B637950CD03C6C0" />
+            <ComponentRef Id="cmp704CDCEC8EBB730467C621089EC89953" />
+            <ComponentRef Id="cmp7605CB75525ACE1D07846C1CAAD6C833" />
+            <ComponentRef Id="cmpB76C2764DB13697189810332CE7C5AF2" />
+            <ComponentRef Id="cmp7EF6C5D2E02234675C49A9D2D5E4F745" />
+            <ComponentRef Id="cmp9A22437BA50DB9BD729C56BFC6B91960" />
+            <ComponentRef Id="cmp95055441BFEE26DD107E5A9A000E8D2E" />
+            <ComponentRef Id="cmp629C07254EE1EDF135643885EADA747D" />
+            <ComponentRef Id="cmpD9E991D9E7B60AFF7DBF773938F3AC72" />
+            <ComponentRef Id="cmpDCDA790DA18182C30E651E5B5914A8AA" />
+            <ComponentRef Id="cmp11AACC847271F367FC930164EA8CED28" />
+            <ComponentRef Id="cmp5ED657266569D85455B1659D40FA9B18" />
+            <ComponentRef Id="cmp2BB7959ECFE10E5D74E69A1B1A6E0000" />
+            <ComponentRef Id="cmp791D363E257CE488E45D196FEEC53BF4" />
+            <ComponentRef Id="cmp8BE41380C3F82931E4F34FA0F4FFF65D" />
+            <ComponentRef Id="cmp48774927BABF92B16193E5541ED45091" />
+            <ComponentRef Id="cmpE73E933875E10EA97F81E923783A3210" />
+            <ComponentRef Id="cmp6B0170DA85FD487699912E65C0F9FDF4" />
+            <ComponentRef Id="cmpA18343F4A7A7B5344E5FF72511247C02" />
+            <ComponentRef Id="cmp3131011FBFC4AB28F6C3BEAE4EB60133" />
+            <ComponentRef Id="cmpF0EF253F84F3AEF4449F04C83850A8F7" />
+            <ComponentRef Id="cmpAB26A956C623FBC3319FF11A4319199C" />
+            <ComponentRef Id="cmp6CF65B84F54BA960A6349395D531EAED" />
+            <ComponentRef Id="cmpADB4897B6CA5AD1BEA6A4BD71F4D7B0F" />
+            <ComponentRef Id="cmpD8D4B5C017E253993B186368528E56A6" />
+            <ComponentRef Id="cmp12BE699CFF2359EE4B9CF139FDC9EA5D" />
+            <ComponentRef Id="cmp7CE38474AA132C684654CDE380D92BE2" />
+            <ComponentRef Id="cmp21523AF18855E0D2E561F309B6DF0E87" />
+            <ComponentRef Id="cmp20FC13C76387122803962B8C0683E1BE" />
+            <ComponentRef Id="cmp9557995E3D2F0B838C7FA123D778490E" />
+            <ComponentRef Id="cmp396F1A596533800BE7A7435B24AB01A1" />
+            <ComponentRef Id="cmp81B9FCFB5F91ADB7FAC8C0C36BBCD577" />
+            <ComponentRef Id="cmp1AE178800842FB9AC11D1A31DE78A0C3" />
+            <ComponentRef Id="cmp52CD9B49B9F286E01E69C8FE1A819429" />
+            <ComponentRef Id="cmp99AC31DB5B7D805229A9F48D778819BA" />
+            <ComponentRef Id="cmpCD8093D8A650E29C1D36A3AC3DDDD0E1" />
+            <ComponentRef Id="cmp94285622451D345EA669883BC5AFB7CE" />
+            <ComponentRef Id="cmpBEB48216C7487636F7F6C38D501CD1EA" />
+            <ComponentRef Id="cmpA832A404F9AAB8267E06723F03945CB2" />
+            <ComponentRef Id="cmp0A21CA78E86E4CE6D763DBE3E4D8B42C" />
+            <ComponentRef Id="cmp937ECA960FDF8BAD908D85DC69BD63C3" />
+            <ComponentRef Id="cmp3859CA131CA4FFEE688C97F467044A19" />
+            <ComponentRef Id="cmpEC0D7315BCE4A93708FD32D3CDD242D4" />
+            <ComponentRef Id="cmp6D94F6A500E093D94399CF4D4C6B292C" />
+            <ComponentRef Id="cmp73BFA5EDBFD28543EE6A0F0D5521C489" />
+            <ComponentRef Id="cmp5D905DBAFF7792A89E47007EB7620D97" />
+            <ComponentRef Id="cmp6E7D8D11A884830122BB4D461A0752FC" />
+            <ComponentRef Id="cmpF1838846D95D3C513133731BEA82D381" />
+            <ComponentRef Id="cmp95B556F2F4D77BE768D9BE64B6BB28BB" />
+            <ComponentRef Id="cmpAC41E396C3BB27E5EDF58737A9475CDB" />
+            <ComponentRef Id="cmp0425A7FC432DE0FC7D4AB481F7D45AFB" />
+            <ComponentRef Id="cmp69AD27AC7C283D0ED4C19901EFD69987" />
+            <ComponentRef Id="cmp3BDC70B8992B8297C0768E4E7486B90C" />
+            <ComponentRef Id="cmpC251E857D96B57A448F370A9889038D1" />
+            <ComponentRef Id="cmpB3550B857D5ABD049C50514B21A10B45" />
+            <ComponentRef Id="cmpD220636160CAB989211CED296F047456" />
+            <ComponentRef Id="cmpDDEAFC1AC381D47EF0F4381966E1B78D" />
+            <ComponentRef Id="cmp5D1B2E6150347FCEF0D92B24F3F361EB" />
+            <ComponentRef Id="cmp551D2409A10FB306FA4C11DD2C0DE09C" />
+            <ComponentRef Id="cmp8E233A857EEE41754AE233B81A7EDE42" />
+            <ComponentRef Id="cmp11166CA1C60FB55DB1C9B32C6B6FC343" />
+            <ComponentRef Id="cmp44C026C346FE0B66CD31E63E7F43E66A" />
+            <ComponentRef Id="cmpCF533637AB7E4B8FE75B696A268F2CC5" />
+            <ComponentRef Id="cmp9E96CD4640CC629EE40560978693597F" />
+            <ComponentRef Id="cmp473E030E4E65D2C7B7B9E99343FE9B69" />
+            <ComponentRef Id="cmpE4357B24547868B073351591D6119848" />
+            <ComponentRef Id="cmp9746C7BCEAFA779415BB95FA89BDBF1D" />
+            <ComponentRef Id="cmp17B5693E8248641D8F1FF0908A2C9A2D" />
+            <ComponentRef Id="cmpE60E9C7A5ED16E8B7AE31238B7734D32" />
+            <ComponentRef Id="cmp696367640B0C17270223A3E3BD819B08" />
+            <ComponentRef Id="cmp9DA330CD321E0C7A3915B3BDB435B801" />
+            <ComponentRef Id="cmp7EE94626BCB5A0303EDEAE571DFE44BB" />
+            <ComponentRef Id="cmpA9D9A0B542D33DD72FB51EC35B9F8BF0" />
+            <ComponentRef Id="cmpCBE5F55EAE0B6EE34AF1C2C96E78911B" />
+            <ComponentRef Id="cmpDA94A3DC2D61A2A4167FD72E25F227C0" />
+            <ComponentRef Id="cmpEF3B2F38BA611FB09FF2D5F84C080A8C" />
+            <ComponentRef Id="cmpCA98DA0D4D7021F72C33D40E3557C5F2" />
+            <ComponentRef Id="cmp361637321A18AD7EE1DE8CF13D6B3C5F" />
+            <ComponentRef Id="cmp29159F36F89EABD0C0E10C72D771BB8C" />
+            <ComponentRef Id="cmpCBB0E1521F0E81DCEB59303F5FC03A4A" />
+            <ComponentRef Id="cmp9D85BAB503BCCDB0A33B7E905E8BC0E1" />
+            <ComponentRef Id="cmp34F6DC348F152CD85164641A7B95DB94" />
+            <ComponentRef Id="cmp5DD0F48489DB9074A67E077CBB279D82" />
+            <ComponentRef Id="cmp57FB59BE1ADD3A24BD1EA55F07457272" />
+            <ComponentRef Id="cmp946A1641CA8EC3501B83C81A3DF411B1" />
+            <ComponentRef Id="cmp91D30F999FCCB654ABB32EAC10B2259D" />
+            <ComponentRef Id="cmpC17481371D9F4C601E6CC75E7FD17AD7" />
+            <ComponentRef Id="cmpF442A97FBB44EE090E46863FA9E40C68" />
+            <ComponentRef Id="cmp2C263072B556B872F40F5B9ACCD1CF3E" />
+            <ComponentRef Id="cmp3B3ECD18901539B645A58E246B357C8C" />
+            <ComponentRef Id="cmp15B761B6AF509EA0A165F346BC494A7D" />
+            <ComponentRef Id="cmp23F0B7F589255F90423F61614292E050" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

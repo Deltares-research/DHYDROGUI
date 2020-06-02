@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
@@ -21,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     [Extension(typeof(IPlugin))]
     public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
-        public static int MainThreadId;
+        public static int MainThreadId { get; set; }
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelApplicationPlugin));
 
         public HydroModelApplicationPlugin()
@@ -57,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 
@@ -107,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             var modelGroupNameLookUp = new Dictionary<ModelGroup, string>
             {
                 {ModelGroup.Empty, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model},
-                {ModelGroup.FMWaveRtcModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__2D_3D_Integrated_Model},
+                {ModelGroup.FMWaveRtcModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__2D_3D_Integrated_Model}
             };
 
             foreach (ModelGroup modelGroup in Enum.GetValues(typeof(ModelGroup)))

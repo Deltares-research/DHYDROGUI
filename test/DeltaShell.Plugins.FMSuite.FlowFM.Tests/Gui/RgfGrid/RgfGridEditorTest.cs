@@ -32,7 +32,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduPath);
 
             PerformActionWithCancellationThread(MaxTimeOut, () =>
                                                     RgfGridEditor.OpenGrid(model.NetFilePath));
@@ -63,7 +65,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         {
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduPath);
 
             PerformActionWithCancellationThread(MaxTimeOut, () =>
                                                     RgfGridEditor.OpenGrid(model.NetFilePath, false, new[]
@@ -113,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 {
                     X = 10,
                     Y = 10
-                },
+                }
             };
 
             var polygons = new List<IPolygon> {new Polygon(new LinearRing(pointList))};
@@ -177,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 {
                     X = 110,
                     Y = 10
-                },
+                }
             };
             var polygons = new List<IPolygon> {new Polygon(new LinearRing(pointList))};
             string gridPath = TestHelper.GetTestFilePath(@"grid_generation\existing_grid.nc");

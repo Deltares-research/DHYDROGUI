@@ -331,6 +331,11 @@ namespace DeltaShell.NGHS.IO
                     continue;
                 }
 
+                if (ExcludeEqualsIdentifier && c == '=')
+                {
+                    break;
+                }
+
                 if (c == '#' || c == '!' || c == '*')
                 {
                     break;
@@ -453,5 +458,7 @@ namespace DeltaShell.NGHS.IO
 
             return doWriteLine;
         }
+
+        protected virtual bool ExcludeEqualsIdentifier => true;
     }
 }

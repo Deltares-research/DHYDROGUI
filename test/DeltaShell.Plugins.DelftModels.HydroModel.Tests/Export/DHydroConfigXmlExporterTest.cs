@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             var controlGroup = new ControlGroup
             {
                 Name = "test",
-                Rules = {rule},
+                Rules = {rule}
             };
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);
@@ -263,7 +263,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             var controlGroup = new ControlGroup
             {
                 Name = "test",
-                Rules = {rule},
+                Rules = {rule}
             };
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);

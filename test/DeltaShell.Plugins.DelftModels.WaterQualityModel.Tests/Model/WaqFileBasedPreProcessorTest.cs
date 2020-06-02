@@ -438,7 +438,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     BoundaryDataManager = boundaryDataManager,
                     LoadsDataManager = loadsManager, // same data for loads as for boundary data
                     LoadsAliases = new Dictionary<string, IList<string>>(),
-                    BoundaryAliases = new Dictionary<string, IList<string>>(),
+                    BoundaryAliases = new Dictionary<string, IList<string>>()
                 };
 
                 waqInitializationSettings.Settings.WorkDirectory.Returns(workingDirectory);
@@ -553,7 +553,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 PointersFile = @"dir1\dir2\pointersfile.inc",
                 SurfacesFile = @"dir1\dir2\parametersfile.inc",
                 VerticalDiffusionFile = @"dir1\dir2\verticaldiffusionfile.inc",
-                UseAdditionalVerticalDiffusion = true,
+                UseAdditionalVerticalDiffusion = true
             };
 
             IWaterQualityModelSettings settings = waqInitializationSettings.Settings;

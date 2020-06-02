@@ -10,7 +10,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
@@ -42,6 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             wpfGuiCategories.SelectMany(gp => gp.Properties).Distinct()
                             .ForEach(p => p.GetModel = () => model);
+
             SetFlowFmExtraSettings(model, gui, wpfGuiCategories);
 
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     Label = EditDepthLayersHelper.Label,
                     ValueType = typeof(string),
                     HasMaxValue = false,
-                    HasMinValue = false,
+                    HasMinValue = false
                 });
 
                 depthlayers.CustomCommand.TextBoxEnabled = false;
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     Label = SetCoordinateSystemButton.Label,
                     ValueType = typeof(string),
                     HasMaxValue = false,
-                    HasMinValue = false,
+                    HasMinValue = false
                 });
 
                 coordSys.CustomCommand.TextBoxEnabled = false;
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     Label = EditCoverageLayersHelper.Label,
                     ValueType = typeof(string),
                     HasMaxValue = false,
-                    HasMinValue = false,
+                    HasMinValue = false
                 });
                 coverageLayers.CustomCommand.TextBoxEnabled = false;
                 coverageLayers.CustomCommand.ButtonFunction = (o) => EditCoverageLayersHelper.ButtonAction(o);
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             processesCategory?.SubCategories.Add(tracersCategory);
         }
 
-        /*Extracted from WaterFlowFMModelView.cs */
+        /*Extraced from WaterFlowFMModelView.cs */
         private static ObjectUIDescription ExtendedUiProperties(WaterFlowFMModel data, ObjectUIDescription objectDescription)
         {
             if (data == null)
@@ -160,16 +160,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 return objectDescription;
             }
 
-            // Cache the fieldDescriptions before returning
-            FieldUIDescription[] cachedFieldDescriptions = objectDescription.FieldDescriptions.ToArray();
-
-            // Map description to the model
-            MapDataOntoProperty(o => data.StopTime, (o, v) => data.StopTime = (DateTime) v, cachedFieldDescriptions, GuiProperties.StopTime);
-            MapDataOntoProperty(o => data.StartTime, (o, v) => data.StartTime = (DateTime) v, cachedFieldDescriptions, GuiProperties.StartTime);
-            MapDataOntoProperty(o => data.TimeStep, (o, v) => data.TimeStep = (TimeSpan) v, cachedFieldDescriptions, KnownProperties.DtUser);
-
-            // Restore the fieldDescription
-            objectDescription.FieldDescriptions = cachedFieldDescriptions;
+            objectDescription.FieldDescriptions
+                // add to begin:
+                = objectDescription.FieldDescriptions
+                    // add to end:
+                    /*.Concat(new[]
+                    {
+                        // Disabled toolbox tab see issue : DELFT3DFM-500
+                        /*new FieldUIDescription(d => data, null)
+                        {
+                            Category = "Toolboxes",
+                            CustomControlHelper = new FMToolboxesPanel(),
+                        },#1#
+                        new FieldUIDescription(d => data.TracerDefinitions, null)
+                        {
+                            Category = "Processes",
+                            SubCategory = "Tracers",
+                            CustomControlHelper = new EditTracersControlHelper(),
+                        },
+                    })*/.ToList();
 
             objectDescription.FieldDescriptions.First(f => f.Name == "StopTime").ValidationMethod =
                 (m, t) =>
@@ -183,37 +192,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             objectDescription.FieldDescriptions.First(f => f.Name == "AngLon").VisibilityMethod =
                 o => data.CoordinateSystem == null || !data.CoordinateSystem.IsGeographic;
             return objectDescription;
-        }
-
-        /// <summary>
-        /// Maps a <see cref="FieldUIDescription"/> parameter with a custom get and set value function.
-        /// </summary>
-        /// <param name="getValueFunc">The function to retrieve the value from the description.</param>
-        /// <param name="setValueAction">The action to set the value to the description</param>
-        /// <param name="fieldDescriptions">The collection of <see cref="FieldUIDescription"/>.</param>
-        /// <param name="parameterName">The name of the parameter to map.</param>
-        /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="fieldDescriptions"/>
-        /// has no or multiple definitions of <paramref name="parameterName"/>.
-        /// </exception>
-        private static void MapDataOntoProperty(Func<object, object> getValueFunc,
-                                                Action<object, object> setValueAction,
-                                                FieldUIDescription[] fieldDescriptions,
-                                                string parameterName)
-        {
-            // Check if it is present. Do a dual lookup as the field description should replace the original definition.
-            int descriptionIndex = Array.FindIndex(fieldDescriptions, f => string.Equals(f.Name, parameterName, StringComparison.OrdinalIgnoreCase));
-            int secondDescriptionIndex = Array.FindLastIndex(fieldDescriptions, f => string.Equals(f.Name, parameterName, StringComparison.OrdinalIgnoreCase));
-
-            if (descriptionIndex == -1 || descriptionIndex != secondDescriptionIndex)
-            {
-                throw new ArgumentException($"Could not find {parameterName} or multiple definitions found.");
-            }
-
-            FieldUIDescription currentFieldDescription = fieldDescriptions[descriptionIndex];
-            FieldUIDescription newFieldDescription = FieldUIDescriptionHelper.CreateFieldDescription(currentFieldDescription, getValueFunc, setValueAction);
-
-            fieldDescriptions[descriptionIndex] = newFieldDescription;
         }
     }
 }

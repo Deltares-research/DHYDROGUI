@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
                         new Coordinate(50, 0)
                     }),
                 Source = node1,
-                Target = node2,
+                Target = node2
             };
 
             network.Nodes.Add(node1);
@@ -319,7 +319,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
                 {
                     new Coordinate(0, 0),
                     new Coordinate(50, 0)
-                }),
+                })
             };
 
             var interactor = new ChannelInteractor(null, channel, null, null);
@@ -361,7 +361,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
                     new Coordinate(50, 0)
                 }),
                 Source = hydroNode1,
-                Target = hydroNode2,
+                Target = hydroNode2
             };
             hydroNetwork.Branches.Add(channel1);
 
@@ -390,7 +390,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
                     new Coordinate(50, 0)
                 }),
                 Source = hydroNode3,
-                Target = hydroNode2b,
+                Target = hydroNode2b
             };
 
             var interactor = new ChannelInteractor(null, channel2, null, null);
@@ -503,7 +503,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
                     new Coordinate(50, 0)
                 }),
                 Source = hydroNode1,
-                Target = hydroNode2,
+                Target = hydroNode2
             };
             hydroNetwork.Branches.Add(channel1);
 
@@ -532,7 +532,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
                     new Coordinate(50, 0)
                 }),
                 Source = hydroNode3,
-                Target = hydroNode2b,
+                Target = hydroNode2b
             };
             IHydroNode hydroNode4 = new HydroNode
             {

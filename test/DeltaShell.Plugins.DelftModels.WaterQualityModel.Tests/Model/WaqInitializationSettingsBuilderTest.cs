@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     1,
                     1,
                     1
-                },
+                }
             };
 
             var hydroData = new TestHydroDataStub(hydFileData)
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 StartTime = DateTime.Now,
                 StopTime = DateTime.Now.AddDays(2),
                 TimeStep = new TimeSpan(0, 1, 0, 0),
-                UseRestart = true,
+                UseRestart = true
             };
 
             model.ImportHydroData(hydroData);
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     X = 1.1,
                     Y = 2.2,
                     Z = (model.ZBot + model.ZTop) / 2.0,
-                    LocationAliases = "measurePoint 1, measurePoint 2 , measurePoint 3",
+                    LocationAliases = "measurePoint 1, measurePoint 2 , measurePoint 3"
                 },
                 new WaterQualityLoad
                 {
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     X = 9.8,
                     Y = 4.6,
                     Z = (model.ZBot + model.ZTop) / 2.0,
-                    LocationAliases = ", measurePoint 2 , measurePoint 3",
+                    LocationAliases = ", measurePoint 2 , measurePoint 3"
                 },
                 new WaterQualityLoad
                 {
@@ -120,8 +120,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     X = 15.6,
                     Y = 12.56,
                     Z = (model.ZBot + model.ZTop) / 2.0,
-                    LocationAliases = "measurePoint 1, , measurePoint 3",
-                },
+                    LocationAliases = "measurePoint 1, , measurePoint 3"
+                }
             });
             model.LoadsDataManager.CreateNewDataTable("A", "b", "c", "d"); // required to output aliases
             model.ObservationAreas.SetValuesAsLabels(new[]
@@ -139,22 +139,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     ObservationPointType = ObservationPointType.SinglePoint,
                     X = 1.1,
                     Y = 2.2,
-                    Z = (model.ZBot + model.ZTop) / 2.0,
+                    Z = (model.ZBot + model.ZTop) / 2.0
                 },
                 new WaterQualityObservationPoint()
                 {
                     Name = "obspoint2",
                     ObservationPointType = ObservationPointType.Average,
                     X = 9.8,
-                    Y = 4.6,
+                    Y = 4.6
                 },
                 new WaterQualityObservationPoint()
                 {
                     Name = "obspoint3",
                     ObservationPointType = ObservationPointType.OneOnEachLayer,
                     X = 15.6,
-                    Y = 12.56,
-                },
+                    Y = 12.56
+                }
             });
 
             // call
@@ -305,7 +305,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     1,
                     1,
                     1
-                },
+                }
             };
 
             var hydroData = new TestHydroDataStub(hydFileData)
@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 StartTime = DateTime.Now,
                 StopTime = DateTime.Now.AddDays(2),
                 TimeStep = new TimeSpan(0, 1, 0, 0),
-                UseRestart = true,
+                UseRestart = true
             };
             //model.ModelSettings.WorkDirectory = Path.Combine(Directory.GetCurrentDirectory(), "mdl");
 
@@ -347,8 +347,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     LoadType = "Test",
                     X = 1.1,
                     Y = 2.2,
-                    Z = (model.ZBot + model.ZTop) / 2.0,
-                },
+                    Z = (model.ZBot + model.ZTop) / 2.0
+                }
             });
             model.LoadsDataManager.CreateNewDataTable("myloads", "A", "b.usefor", "use");
 

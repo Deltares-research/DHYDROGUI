@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed,
             FlowBoundaryQuantityType.MorphologyBedLoadTransport,
             FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint,
-            FlowBoundaryQuantityType.MorphologyBedLevelFixed,
+            FlowBoundaryQuantityType.MorphologyBedLevelFixed
         };
 
         private readonly int columnWidth = RecordsInTableKey.Length + 1; /* Largest string length */

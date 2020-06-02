@@ -286,38 +286,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.buttonMenuBranchAddWeir.Text = "Add &Weir";
             this.buttonMenuBranchAddWeir.Click += new System.EventHandler(this.handleButtonAddWeir_Click);
             // 
-            // buttonMenuBranchAddPump
-            // 
-            this.buttonMenuBranchAddPump.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.PumpSmall;
-            this.buttonMenuBranchAddPump.Name = "buttonMenuBranchAddPump";
-            this.buttonMenuBranchAddPump.Size = new System.Drawing.Size(196, 22);
-            this.buttonMenuBranchAddPump.Text = "Add &Pump";
-            this.buttonMenuBranchAddPump.Click += new System.EventHandler(this.handleButtonAddPump_Click);
-            // 
-            // buttonMenuBranchCulvert
-            // 
-            this.buttonMenuBranchCulvert.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.CulvertSmall;
-            this.buttonMenuBranchCulvert.Name = "buttonMenuBranchCulvert";
-            this.buttonMenuBranchCulvert.Size = new System.Drawing.Size(196, 22);
-            this.buttonMenuBranchCulvert.Text = "Add C&ulvert";
-            this.buttonMenuBranchCulvert.Click += new System.EventHandler(this.handleButtonAddCulvert_Click);
-            // 
-            // buttonMenuBranchAddBridge
-            // 
-            this.buttonMenuBranchAddBridge.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.BridgeSmall;
-            this.buttonMenuBranchAddBridge.Name = "buttonMenuBranchAddBridge";
-            this.buttonMenuBranchAddBridge.Size = new System.Drawing.Size(196, 22);
-            this.buttonMenuBranchAddBridge.Text = "Add &Bridge";
-            this.buttonMenuBranchAddBridge.Click += new System.EventHandler(this.handleButtonAddBridge_Click);
-            // 
-            // buttonMenuBranchAddExtraResistance
-            // 
-            this.buttonMenuBranchAddExtraResistance.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.ExtraResistanceSmall;
-            this.buttonMenuBranchAddExtraResistance.Name = "buttonMenuBranchAddExtraResistance";
-            this.buttonMenuBranchAddExtraResistance.Size = new System.Drawing.Size(196, 22);
-            this.buttonMenuBranchAddExtraResistance.Text = "Add Extra &Resistance";
-            this.buttonMenuBranchAddExtraResistance.Click += new System.EventHandler(this.handleButtonAddExtraResistance_Click);
-            // 
             // buttonMenuBranchAddLateralSource
             // 
             this.buttonMenuBranchAddLateralSource.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.LateralSourceSmall;
@@ -398,14 +366,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.addRouteToolStripMenuItem});
             this.contextMenuRoutes.Name = "contextMenuRoutes";
             this.contextMenuRoutes.Size = new System.Drawing.Size(153, 48);
-            // 
-            // addRouteToolStripMenuItem
-            // 
-            this.addRouteToolStripMenuItem.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.route;
-            this.addRouteToolStripMenuItem.Name = "addRouteToolStripMenuItem";
-            this.addRouteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.addRouteToolStripMenuItem.Text = "Add Route";
-            this.addRouteToolStripMenuItem.Click += new System.EventHandler(this.AddRouteToolStripMenuItemClick);
+           
             // 
             // HydroRegionTreeView
             // 

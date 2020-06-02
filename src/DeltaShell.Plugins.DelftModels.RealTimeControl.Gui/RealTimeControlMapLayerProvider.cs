@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                             ThemeItems =
                             {
                                 CreateEnumCategorialThemeItem(ConnectionType.Input, Resources.input),
-                                CreateEnumCategorialThemeItem(ConnectionType.Output, Resources.output),
+                                CreateEnumCategorialThemeItem(ConnectionType.Output, Resources.output)
                             }
                         }
                     },
@@ -139,6 +139,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                     }
                 }
             }
+        }
+
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            // Nothing needs to be done after creation
         }
 
         private static CategorialThemeItem CreateEnumCategorialThemeItem<T>(T enumValue, Image image) where T : struct, IConvertible

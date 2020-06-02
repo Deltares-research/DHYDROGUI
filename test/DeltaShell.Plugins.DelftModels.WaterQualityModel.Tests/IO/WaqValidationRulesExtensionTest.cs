@@ -468,7 +468,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 MaxValue = maxValue.ToString(),
                 MinValue = minValue.ToString(),
                 ParameterName = parameterName,
-                ValueType = typeof(double),
+                ValueType = typeof(double)
             };
 
             Assert.AreEqual(rule.ValueType, value.GetType());

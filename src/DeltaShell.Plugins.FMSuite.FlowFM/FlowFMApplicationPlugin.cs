@@ -13,6 +13,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override string Description => Properties.Resources.FlowFMApplicationPlugin_Description;
 
-        public override string Version => GetType().Assembly.GetName().Version.ToString();
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         public override string FileFormatVersion => "1.2.0.0";
 
@@ -89,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     !(owner is ICompositeActivity) // Allow "standalone" flow models
                     || !((ICompositeActivity) owner).Activities.OfType<WaterFlowFMModel>().Any() &&
                     owner is IHydroModel, // Don't allow multiple flow models in one composite activity
-                CreateModel = owner => new WaterFlowFMModel() {WorkingDirectoryPathFunc = () => Application.WorkDirectory}
+                CreateModel = owner => new WaterFlowFMModel {WorkingDirectoryPathFunc = () => Application.WorkDirectory}
             };
         }
 
@@ -125,9 +126,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return new Embankment
                     {
                         Name = name,
-                        Geometry = PliFile<Embankment>.CreatePolyLineGeometry(points)
+                        Geometry = LineStringCreator.CreateLineString(points)
                     };
-                },
+                }
             };
 
             yield return new PlizFileImporterExporter<FixedWeir, FixedWeir>
@@ -138,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var feature1 = new FixedWeir
                     {
                         Name = name1,
-                        Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1)
+                        Geometry = LineStringCreator.CreateLineString(points1)
                     };
                     feature1.InitializeAttributes();
                     return feature1;
@@ -284,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var pump2D = new Pump2D(true)
                     {
                         Name = name1,
-                        Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1)
+                        Geometry = LineStringCreator.CreateLineString(points1)
                     };
                     return pump2D;
                 },
@@ -317,7 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             : new Feature2D
                             {
                                 Name = name,
-                                Geometry = PliFile<Feature2D>.CreatePolyLineGeometry(points)
+                                Geometry = LineStringCreator.CreateLineString(points)
                             }
             };
             yield return new PliFileImporterExporter<BoundaryConditionSet, Feature2D>
@@ -356,7 +357,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 WindFileImporter = false,
                 GetModelForSourceAndSink = GetModelForSourceAndSink,
-                GetModelForHeatFluxModel = GetModelForHeatFluxModel,
+                GetModelForHeatFluxModel = GetModelForHeatFluxModel
             };
             yield return new TimFileImporter
             {
@@ -487,7 +488,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
 
                     MduFile.CleanBridgePillarAttributes(bridgePillars);
-                },
+                }
             };
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> {Mode = Feature2DImportExportMode.Export};
             yield return

@@ -74,7 +74,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //reload
             model.ExportTo("tracertest/simplebox.mdu", false);
-            var newModel = new WaterFlowFMModel("tracertest/simplebox.mdu");
+
+            var newModel = new WaterFlowFMModel();
+            newModel.ImportFromMdu("tracertest/simplebox.mdu");
+
             Assert.AreEqual(new[]
             {
                 "substance_1"
@@ -146,7 +149,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // reload
             model.ExportTo("tracertest/simplebox.mdu", false);
-            var newModel = new WaterFlowFMModel("tracertest/simplebox.mdu");
+
+            var newModel = new WaterFlowFMModel();
+            newModel.ImportFromMdu("tracertest/simplebox.mdu");
+
             Assert.AreEqual(new[]
             {
                 "substance_1"
@@ -215,7 +221,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //reload
             model.ExportTo("tracertest/simplebox.mdu", false);
-            var newModel = new WaterFlowFMModel("tracertest/simplebox.mdu");
+
+            var newModel = new WaterFlowFMModel();
+            newModel.ImportFromMdu("tracertest/simplebox.mdu");
+
             Assert.AreEqual(new[]
             {
                 "substance_1"
@@ -303,7 +312,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //reload
             model.ExportTo("tracertest/simplebox.mdu", false);
-            var newModel = new WaterFlowFMModel("tracertest/simplebox.mdu");
+
+            var newModel = new WaterFlowFMModel();
+            newModel.ImportFromMdu("tracertest/simplebox.mdu");
+
             Assert.AreEqual(new[]
             {
                 "substance_1",
@@ -342,7 +354,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string mduPath = TestHelper.GetTestFilePath(@"simpleBox\simplebox.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            return new WaterFlowFMModel(mduPath);
+            var waterFlowFmModel = new WaterFlowFMModel();
+            waterFlowFmModel.ImportFromMdu(mduPath);
+
+            return waterFlowFmModel;
         }
     }
 }

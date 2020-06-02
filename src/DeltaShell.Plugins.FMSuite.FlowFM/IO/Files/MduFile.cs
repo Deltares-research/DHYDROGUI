@@ -12,8 +12,9 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
@@ -37,7 +38,7 @@ using SharpMap.Api.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
-    public class MduFile : FMSuiteFileBase
+    public class MduFile : NGHSFileBase
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MduFile));
 
@@ -61,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             KnownProperties.LandBoundaryFile,
             KnownProperties.DryPointsFile,
             KnownProperties.RestartFile,
-            KnownProperties.StructuresFile,
+            KnownProperties.StructuresFile
         };
 
         private static readonly Dictionary<string, string> MduFilePropertyDescriptionDictionary =
@@ -75,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {KnownProperties.BridgePillarFile, "PillarFile"},
                 {KnownProperties.StructuresFile, "StructureFile"},
                 {KnownProperties.ObsFile, "ObsFile"},
-                {KnownProperties.ObsCrsFile, "CrsFile"},
+                {KnownProperties.ObsCrsFile, "CrsFile"}
             };
 
         private int propertyKeyAlignmentLength;
@@ -892,7 +893,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     var feature = new FixedWeir
                     {
                         Name = name,
-                        Geometry = PlizFile<FixedWeir>.CreatePolyLineGeometry(points)
+                        Geometry = LineStringCreator.CreateLineString(points)
                     };
                     feature.InitializeAttributes();
                     return feature;
@@ -919,7 +920,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         internal static BridgePillar CreateDelegateBridgePillar(string name, List<Coordinate> points)
         {
             var feature = new BridgePillar {Name = name};
-            feature.Geometry = PlizFile<BridgePillar>.CreatePolyLineGeometry(points);
+            feature.Geometry = LineStringCreator.CreateLineString(points);
             feature.InitializeAttributes();
             return feature;
         }

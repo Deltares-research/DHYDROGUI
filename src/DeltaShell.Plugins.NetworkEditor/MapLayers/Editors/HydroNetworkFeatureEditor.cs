@@ -13,7 +13,6 @@ using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Editors;
@@ -62,13 +61,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 
         public override IFeature AddNewFeatureByGeometry(ILayer layer, IGeometry geometry)
         {
-            // exceptional case for nodes
-            if (layer.DataSource.FeatureType == typeof(HydroNode))
-            {
-                var branch = (IChannel) NetworkHelper.GetNearestBranch(Network.Branches, geometry, 0.1);
-                return HydroNetworkHelper.SplitChannelAtNode(branch, geometry.Coordinate);
-            }
-
             IFeature newFeature = layer.FeatureEditor.CreateNewFeature != null
                                       ? CreateNewFeature(layer)
                                       : (IFeature) Activator.CreateInstance(layer.DataSource.FeatureType);
@@ -133,22 +125,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             {
                 featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
             }
-            else if (feature is IWeir)
-            {
-                featureInteractor = new StructureInteractor<Weir>(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is ICulvert)
-            {
-                featureInteractor = new StructureInteractor<Culvert>(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is IBridge)
-            {
-                featureInteractor = new StructureInteractor<Bridge>(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is IPump)
-            {
-                featureInteractor = new StructureInteractor<Pump>(layer, feature, vectorStyle, Network);
-            }
             else if (feature is ICrossSection)
             {
                 featureInteractor = new CrossSectionInteractor(layer, feature, vectorStyle, Network) {SnapRules = {}};
@@ -178,10 +154,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             else if (feature is ObservationPoint)
             {
                 featureInteractor = new BranchFeatureInteractor<ObservationPoint>(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is IExtraResistance)
-            {
-                featureInteractor = new StructureInteractor<ExtraResistance>(layer, feature, vectorStyle, Network);
             }
 
             if (featureInteractor is INetworkFeatureInteractor)

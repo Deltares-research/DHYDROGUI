@@ -38,7 +38,6 @@
                 <!-- branches / nodes -->
                 <fluent:ToggleButton x:Name="ButtonAddNewBranch" Header="Add Branch" ToolTip="Add new branch" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches1.png" Click="ButtonAddNewBranch_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="B" />
                 <fluent:ToggleButton x:Name="ButtonAddNewBranchScribble" Header="Add Branch (Freeform)" ToolTip="Add new branch (Freeform)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches11.png" Click="ButtonAddNewBranchScribble_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="F" />
-                <fluent:ToggleButton x:Name="ButtonInsertNewNode" Header="Split Branch" ToolTip="Split branch" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NodeOnMultipleBranches.png" Click="ButtonInsertNewNode_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="N" />
                 <Separator />
 
                 <!-- cross-sections -->
@@ -60,9 +59,6 @@
                 <fluent:ToggleButton x:Name="ButtonAddNewRetention" Header="Add Retention" ToolTip="Add Retention" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Retention.png" Click="ButtonAddNewRetention_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewObservationPoint" Header="Add Observation Point" ToolTip="Add Observation Point" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Observation.png" Click="ButtonAddNewObservationPoint_Click" SizeDefinition="Small,Small,Small" />
                 <Separator />
-
-                <!-- others -->
-                <fluent:ToggleButton x:Name="ButtonAddNewRoute" Header="Add Route" ToolTip="Add Route" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\routes.png" Click="ButtonAddNewRoute_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="R" />
             </fluent:RibbonGroupBox>
 
             <fluent:RibbonGroupBox Header="Basin" x:Name="DrainageBasin" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
@@ -105,7 +101,7 @@
             </fluent:RibbonGroupBox>
 
             <fluent:RibbonGroupBox Header="Analysis" x:Name="Analysis" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\AnalysisGroup.png">
-                <fluent:Button x:Name="ButtonShowSideView" Header="Show Side View" ToolTip="Show Side View" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\sideview.png" Click="ButtonShowSideView_Click" SizeDefinition="Middle,Small,Small" />
+                
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
 

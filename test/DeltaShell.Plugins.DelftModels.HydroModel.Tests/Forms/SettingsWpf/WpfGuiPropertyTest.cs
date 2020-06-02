@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             var dummyField = new FieldUIDescription(null, null)
             {
-                Label = "dummyName",
+                Label = "dummyName"
             };
 
             var property = new WpfGuiProperty(dummyField);
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var dummyField = new FieldUIDescription((o) => integerValue, (o, o1) => integerValue = (int) o1)
             {
                 Label = "dummyName",
-                ValueType = typeof(int),
+                ValueType = typeof(int)
             };
 
             var prop = new WpfGuiProperty(dummyField) {GetModel = () => true};
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var dummyField = new FieldUIDescription((o) => doubleList, (o, o1) => doubleList = o1 as List<double>)
             {
                 Label = "dummyName",
-                ValueType = typeof(IList<double>),
+                ValueType = typeof(IList<double>)
             };
 
             var prop = new WpfGuiProperty(dummyField);
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var dummyField = new FieldUIDescription((o) => timeSpanInput, (o, o1) => timeSpanInput = (TimeSpan) o1)
             {
                 Label = "dummyName",
-                ValueType = typeof(TimeSpan),
+                ValueType = typeof(TimeSpan)
             };
 
             var prop = new WpfGuiProperty(dummyField);
@@ -144,6 +144,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             dummyField.UnitSymbol = "m/s";
 
             Assert.AreEqual("[m/s]", property.UnitSymbol);
+        }
+
+        [Test]
+        [TestCase(true, true, false)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, true)]
+        [TestCase(false, false, true)]
+        public void Test_WpfGuiProperty_IsReadOnlyHasCorrectValue(bool isEnabled, bool textBoxEnabled, bool expectedIsReadOnly)
+        {
+            var dummyField = new FieldUIDescription(null, null, o => isEnabled) {Label = "dummyName"};
+
+            var property = new WpfGuiProperty(dummyField) {CustomCommand = new CommandHelper(() => {}) {TextBoxEnabled = textBoxEnabled}};
+
+            Assert.That(property.IsReadOnly, Is.EqualTo(expectedIsReadOnly));
         }
     }
 }

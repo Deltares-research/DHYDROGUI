@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 175,
                     Y = 75
-                },
+                }
             };
 
             var testEmbankment1 = new Embankment
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 80,
                     Y = 130
-                },
+                }
             };
 
             var testEmbankment2 = new Embankment
@@ -323,7 +323,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 20,
                     Y = 20
-                },
+                }
             };
 
             var testEmbankment1 = new Embankment
@@ -358,7 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 100,
                     Y = 120
-                },
+                }
             };
 
             var testEmbankment2 = new Embankment
@@ -432,7 +432,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 20,
                     Y = 20
-                },
+                }
             };
 
             var testEmbankment1 = new Embankment
@@ -477,7 +477,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     X = 40,
                     Y = 140
-                },
+                }
             };
 
             var testEmbankment2 = new Embankment

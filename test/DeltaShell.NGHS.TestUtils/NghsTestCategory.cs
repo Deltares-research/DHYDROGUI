@@ -11,5 +11,10 @@
         /// Tests that should not run in the Code coverage run.
         /// </summary>
         public const string DoNotRunForCodeCoverage = "DoNotRunForCodeCoverage";
+
+        /// <summary>
+        /// Tests that run performance tests by using dotTrace.
+        /// </summary>
+        public const string PerformanceDotTrace = "Build.PerformanceDotTrace";
     }
 }

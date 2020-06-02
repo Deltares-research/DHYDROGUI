@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         [Category("Tracer")]
         [Description("Tracer")]
-        Tracer,
+        Tracer
     }
 
     [Entity]
@@ -558,12 +558,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             #endregion
         };
 
-        public static readonly IList<FlowBoundaryQuantityType> AlwaysAllowedQuantities =
-            Enum.GetValues(typeof(FlowBoundaryQuantityType))
-                .Cast<FlowBoundaryQuantityType>()
-                .Except(ValidBoundaryConditionCombinations.SelectMany(l => l).Distinct())
-                .ToList();
-
         private VerticalInterpolationType verticalInterpolationType;
         private string tracerName;
 
@@ -678,6 +672,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 return true;
             }
         }
+
+        public static IList<FlowBoundaryQuantityType> AlwaysAllowedQuantities { get; } =
+            Enum.GetValues(typeof(FlowBoundaryQuantityType))
+                .Cast<FlowBoundaryQuantityType>()
+                .Except(ValidBoundaryConditionCombinations.SelectMany(l => l).Distinct())
+                .ToList();
 
         public FlowBoundaryQuantityType FlowQuantity { get; private set; }
 

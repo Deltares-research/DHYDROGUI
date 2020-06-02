@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         public override void Execute()
         {
-            ILayer embankmentDefinitionsLayer = Layers.FirstOrDefault(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Embankment) && l.Name == HydroArea.EmbankmentsPluralName);
+            ILayer embankmentDefinitionsLayer = Layers.FirstOrDefault(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Embankment) && l.Name == HydroAreaLayerNames.EmbankmentsPluralName);
             if (embankmentDefinitionsLayer == null)
             {
                 throw new InvalidOperationException("Embankment definition layer not found.");
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private IList<Embankment> GetAllEmbankments()
         {
-            ILayer embankmentsLayer = Layers.FirstOrDefault(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Embankment) && l.Name == HydroArea.EmbankmentsPluralName);
+            ILayer embankmentsLayer = Layers.FirstOrDefault(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Embankment) && l.Name == HydroAreaLayerNames.EmbankmentsPluralName);
             return embankmentsLayer != null
                        ? (IList<Embankment>) embankmentsLayer.DataSource.Features
                        : new List<Embankment>();

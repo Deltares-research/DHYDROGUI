@@ -4,8 +4,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
 {
     public class BcQuantityData
     {
-        public IList<string> Values;
-
         public BcQuantityData()
         {
             Values = new List<string>();
@@ -15,5 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
         public string Unit { get; set; }
         public string VerticalPosition { get; set; }
         public string TracerName { get; set; }
+
+        public IList<string> Values { get; set; }
     }
 }

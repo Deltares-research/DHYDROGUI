@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             {
                 var parallelActivityShape = new ParallelActivityShape(graphControl)
                 {
-                    Activity = activity,
+                    Activity = activity
                 };
                 parallelActivityShape.ShapeColor = CreateDefaultColorFromActivityShape(parallelActivityShape);
                 parallelActivityShape.Inflate();
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             {
                 var sequentialActivityShape = new SequentialActivityShape(graphControl)
                 {
-                    Activity = activity,
+                    Activity = activity
                 };
                 sequentialActivityShape.ShapeColor = CreateDefaultColorFromActivityShape(sequentialActivityShape);
                 sequentialActivityShape.Inflate();
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             {
                 var compositeActivityShape = new CompositeActivityShape(graphControl)
                 {
-                    Activity = activity,
+                    Activity = activity
                 };
                 compositeActivityShape.ShapeColor = CreateDefaultColorFromActivityShape(compositeActivityShape);
                 compositeActivityShape.Inflate();

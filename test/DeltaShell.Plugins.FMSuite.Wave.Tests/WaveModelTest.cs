@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -10,6 +11,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -27,6 +29,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
     [TestFixture]
     public class WaveModelTest
     {
+        [Test]
+        public void Constructor_SetsCorrectBoundaryContainer()
+        {
+            // Call
+            using (var model = new WaveModel())
+            {
+                // Assert
+                Assert.That(model.BoundaryContainer, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public void Constructor_AddingABoundaryToTheBoundaryContainerShouldFireCollectionChangedEvent()
+        {
+            // Call
+            using (var model = new WaveModel())
+            {
+                var waveBoundary = Substitute.For<IWaveBoundary>();
+
+                var counter = 0;
+
+                ((INotifyCollectionChanged) model).CollectionChanged += delegate { counter = 1; };
+
+                model.BoundaryContainer.Boundaries.Add(waveBoundary);
+
+                Assert.AreEqual(1, counter);
+            }
+        }
+
         [Test]
         public void DefaultConstructor_SetsCorrectTimeProperties()
         {
@@ -603,6 +634,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             {
                 waveModel.IsCoupledToFlow = isCoupledToFlow;
                 Assert.AreEqual(!isCoupledToFlow, waveModel.IsMasterTimeStep);
+            }
+        }
+
+        [Test]
+        public void GetDirectChildren_ContainsBoundaries()
+        {
+            // Setup
+            var model = new WaveModel();
+
+            IWaveBoundary[] boundaries = Enumerable.Range(0, 10).Select(_ => Substitute.For<IWaveBoundary>()).ToArray();
+            model.BoundaryContainer.Boundaries.AddRange(boundaries);
+
+            // Call
+            IEnumerable<object> result = model.GetDirectChildren();
+
+            // Assert
+            foreach (IWaveBoundary waveBoundary in boundaries)
+            {
+                Assert.That(result, Has.Member(waveBoundary));
             }
         }
     }

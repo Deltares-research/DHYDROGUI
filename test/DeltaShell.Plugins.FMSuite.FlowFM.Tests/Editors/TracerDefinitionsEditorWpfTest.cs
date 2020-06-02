@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
     public class TracerDefinitionsEditorWpfTest
     {
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void ShowTracerDefinitionsEditorWpfWithData()
         {
             var editor = new TracerDefinitionsEditorWpf

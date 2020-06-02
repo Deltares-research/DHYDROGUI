@@ -6,9 +6,9 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <ReleaseVersion>1.6.2</ReleaseVersion>
+    <ReleaseVersion>1.6.3</ReleaseVersion>
     <!-- This is the product name -->
-    <ProductName>D-HYDRO Suite 2020.03</ProductName>
+    <ProductName>D-HYDRO Suite 2020.04</ProductName>
     <ProjectGuid>{5725d793-35b5-48a1-bb6a-2291df6c2980}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
@@ -55,12 +55,6 @@
     </Content>
     <Content Include="..\Scripts\FMScripts.wxi">
       <Link>Scripts\FMScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Scripts\HydroModelScripts.wxi">
-      <Link>Scripts\HydroModelScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Scripts\NetworkEditorScripts.wxi">
-      <Link>Scripts\NetworkEditorScripts.wxi</Link>
     </Content>
     <Content Include="..\Scripts\RealTimeControlScripts.wxi">
       <Link>Scripts\RealTimeControlScripts.wxi</Link>
@@ -130,6 +124,7 @@
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
     <Compile Include="Product.wxs" />
+    <Compile Include="WixUI\FM_SetupTypeDialog.wxs" />
     <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +169,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Framework\DefaultDeltaresDialogs\DefaultDeltaresDialogs.wixproj">
       <Name>DefaultDeltaresDialogs</Name>
-      <Project>{f30c1a46-d283-484e-aabe-ef52f9168e08}</Project>
+      <Project>{211886f5-cf84-4a3a-abfc-2758337943ea}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>

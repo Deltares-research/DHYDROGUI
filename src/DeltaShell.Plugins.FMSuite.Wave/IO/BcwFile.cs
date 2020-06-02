@@ -5,16 +5,17 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
-    public class BcwFile : FMSuiteFileBase
+    public class BcwFile : NGHSFileBase
     {
         public const string TimeFunctionAttributeName = "time_function";
         public const string RefDateAttributeName = "reference_date";
@@ -29,6 +30,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private const string InterpolPattern = @"(interpolation\s+\'(?'value'.+)\')";
 
         private const string ParameterPattern = @"(parameter\s+\'(?'parname'.+)\'\s+unit\s+\'(?'unit'.+)\')";
+
+        private const string timeVariableName = "Time";
+        private const string heightVariableName = "Hs";
+        private const string periodVariableName = "Tp";
+        private const string directionVariableName = "Dir";
+        private const string spreadingVariableName = "Spreading";
+        private const string degreesUnitName = "degrees";
+        private const string degreesUnitSymbol = "deg";
+        private const string waveQuantityName = "wave_energy_density";
         private static readonly ILog Log = LogManager.GetLogger(typeof(BcwFile));
 
         /// <summary>
@@ -259,7 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             for (var i = 0; i < waveHeights.Count; ++i)
             {
-                IFunction func = WaveBoundaryCondition.CreateEmptyWaveEnergyFunction();
+                IFunction func = CreateEmptyWaveEnergyFunction();
 
                 func.Arguments[0].SetValues(dateTimes);
                 func.Arguments[0].Unit = null;
@@ -280,6 +290,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             return functions;
+        }
+
+        private static IFunction CreateEmptyWaveEnergyFunction()
+        {
+            var function = new Function(waveQuantityName);
+            function.Arguments.Add(new Variable<DateTime>(timeVariableName));
+            function.Components.Add(new Variable<double>(heightVariableName, new Unit("meter", "m")));
+            function.Components.Add(new Variable<double>(periodVariableName, new Unit("second", "s")));
+            function.Components.Add(
+                new Variable<double>(directionVariableName, new Unit(degreesUnitName, degreesUnitSymbol)));
+            function.Components.Add(new Variable<double>(spreadingVariableName, new Unit("", "-")));
+
+            function.Attributes[TimeFunctionAttributeName] = "non-equidistant";
+            function.Attributes[RefDateAttributeName] = new DateTime().ToString(DateFormatString);
+            function.Attributes[TimeUnitAttributeName] = "minutes";
+
+            return function;
         }
 
         private static bool IsNewParameter(string line)

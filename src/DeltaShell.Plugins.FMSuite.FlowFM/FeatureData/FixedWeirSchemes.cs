@@ -14,6 +14,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         Scheme8 = 8,
 
         [Description("Villemonte")]
-        Scheme9 = 9,
+        Scheme9 = 9
     }
 }

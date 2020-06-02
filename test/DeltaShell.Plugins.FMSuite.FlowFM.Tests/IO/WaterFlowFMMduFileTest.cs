@@ -180,14 +180,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string group1NameWE = string.Concat("Group1", FileConstants.ObsPointFileExtension);
             string fileObsPointsDefault = Path.Combine(mduDir, defaultNameWE);
             string fileObsPointsGroup1 = Path.Combine(mduDir, group1NameWE);
-            using (var model = new WaterFlowFMModel(mduFilePath) {Area = new HydroArea()})
+            using (var model = new WaterFlowFMModel())
             {
+                model.ImportFromMdu(mduFilePath);
+
+                model.Area = new HydroArea();
+
                 HydroArea area = model.Area;
                 /*Observation points, we create 2 with keys and one default. Thus, three expected output files*/
                 area.ObservationPoints.AddRange(
                     new[]
                     {
-                        WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(string.Empty, "Feature1"), /*Default group expected*/
+                        WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(string.Empty, "Feature1") /*Default group expected*/
                     }
                 );
                 GroupableFeature2DPoint defaultFeature = area.ObservationPoints.FirstOrDefault(o => o.Name == "Feature1");

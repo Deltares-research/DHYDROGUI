@@ -105,9 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             return model.ObservationPoints.OfType<IFeature>()
                         .Concat(model.ObservationCrossSections)
-                        .Concat(model.Obstacles)
-                        .Concat(model.Boundaries)
-                        .Concat(model.Sp2Boundaries);
+                        .Concat(model.Obstacles);
         }
 
         private static bool CanConvertModel(WaveModel model, ICoordinateTransformation transformation)

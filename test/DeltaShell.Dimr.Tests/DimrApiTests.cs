@@ -63,8 +63,10 @@ namespace DeltaShell.Dimr.Tests
             string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            using (var model = new WaterFlowFMModel())
             {
+                model.ImportFromMdu(localCopy);
+
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.

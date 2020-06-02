@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -14,7 +15,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
-    public class PliFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : IFeature, INameable, new()
+    public class PliFile<T> : NGHSFileBase, IFeature2DFileBase<T> where T : IFeature, INameable, new()
     {
         public const string Extension = "pli";
 
@@ -39,22 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         };
 
         public Func<List<Coordinate>, string, T> CreateDelegate { private get; set; }
-
-        /// <summary>
-        /// Creates and returns a <see cref="LineString"/> object with the provided coordinates.
-        /// </summary>
-        /// <param name="coordinates"> The collection of coordinates to put into the <see cref="LineString"/> object. </param>
-        /// <returns> An <see cref="IGeometry"/> object with the provided collection of coordinates. </returns>
-        /// <exception cref="ArgumentException"> Thrown when the amount of coordinates is smaller than 2. </exception>
-        public static IGeometry CreatePolyLineGeometry(IList<Coordinate> coordinates)
-        {
-            if (coordinates.Count < 2)
-            {
-                throw new ArgumentException($"Cannot create polyline for {typeof(T).Name} with less than 2 points.");
-            }
-
-            return new LineString(coordinates.ToArray());
-        }
 
         /// <summary>
         /// Reads a polyline file and creates a collection of features of type <typeparamref name="T"/> and optionally
@@ -93,15 +78,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     lineCount++;
                     if (line == null)
                     {
-                        throw new FormatException(
-                            $"Unexpected end of file; Expected number of points and columns on line {LineNumber} in file {filePath}");
+                        throw new FormatException($"Unexpected end of file; Expected number of points and columns on line {LineNumber} in file {filePath}");
                     }
 
                     var lineFields = (IList<string>) SplitLine(line).ToList();
                     if (lineFields.Count < 2)
                     {
-                        throw new FormatException(
-                            $"Invalid numpoints/numcolums on line {LineNumber} in file {filePath}");
+                        throw new FormatException($"Invalid numpoints/numcolums on line {LineNumber} in file {filePath}");
                     }
 
                     int numPoints = GetInt(lineFields[0], "value for nr of points");
@@ -124,8 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                         lineCount++;
                         if (line == null)
                         {
-                            throw new FormatException(
-                                $"Unexpected end of file; Expected more data (attempting to read point {i + 1} out of {numPoints}) on line {LineNumber} in file {filePath}");
+                            throw new FormatException($"Unexpected end of file; Expected more data (attempting to read point {i + 1} out of {numPoints}) on line {LineNumber} in file {filePath}");
                         }
 
                         lineFields = SplitLine(line).ToList();
@@ -134,8 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                             lineFields.Count >= MaximumAmountOfNumericValuesInPliFile &&
                             lineFields.Count > numColumns + 1)
                         {
-                            throw new FormatException(
-                                $"Invalid point row (expected {numColumns} columns, but was {lineFields.Count}) on line {LineNumber} in file {filePath}");
+                            throw new FormatException($"Invalid point row (expected {numColumns} columns, but was {lineFields.Count}) on line {LineNumber} in file {filePath}");
                         }
 
                         double x = GetDouble(lineFields[0]);
@@ -153,8 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                             }
                             catch (Exception e)
                             {
-                                throw new FormatException(
-                                    $"Failed feature construction for {featureName} on line {LineNumber} in file {filePath}: {e.Message}");
+                                throw new FormatException($"Failed feature construction for {featureName} on line {LineNumber} in file {filePath}: {e.Message}");
                             }
 
                             points.Clear();
@@ -184,8 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                                 }
                                 catch (Exception e)
                                 {
-                                    throw new FormatException(
-                                        $"Invalid placement of string value '{lineFields[j]}' on line {LineNumber} in file {filePath}: {e.Message}");
+                                    throw new FormatException($"Invalid placement of string value '{lineFields[j]}' on line {LineNumber} in file {filePath}: {e.Message}");
                                 }
                             }
 
@@ -211,8 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                         }
                         catch (Exception e)
                         {
-                            throw new FormatException(
-                                $"Failed feature construction for {actualFeatureName} on line {LineNumber} in file {filePath}: {e.Message}");
+                            throw new FormatException($"Failed feature construction for {actualFeatureName} on line {LineNumber} in file {filePath}: {e.Message}");
                         }
 
                         points.Clear();
@@ -313,10 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         /// </summary>
         /// <param name="filePath"> File path to the .pli file that is being read. </param>
         /// <returns> A collection of features of type <typeparamref name="T"/>. </returns>
-        public virtual IList<T> Read(string filePath)
-        {
-            return Read(filePath, null);
-        }
+        public virtual IList<T> Read(string filePath) => Read(filePath, null);
 
         protected static void AssignDoubleValuesToAttribute(IList<double> columnValues, IFeature feature, string key)
         {
@@ -356,10 +331,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        private T CreateFeature2D(string name, List<Coordinate> points, int numColumns,
-                                  IList<IList<double>> columnNumericalValueLists,
-                                  IList<IList<string>> columnStringValueLists,
-                                  IDictionary<int, string> locationNames, string pliFilePath)
+        private T CreateFeature2D(string name,
+                                  List<Coordinate> points,
+                                  int numColumns,
+                                  IEnumerable<IList<double>> columnNumericalValueLists,
+                                  IEnumerable<IList<string>> columnStringValueLists,
+                                  IDictionary<int, string> locationNames,
+                                  string pliFilePath)
         {
             T feature = CreateDelegate != null
                             ? CreateDelegate(points, name)
@@ -367,12 +345,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                             {
                                 Name = name,
                                 Geometry = points.Count != 1
-                                               ? CreatePolyLineGeometry(points)
+                                               ? (IGeometry) LineStringCreator.CreateLineString(points)
                                                : new Point(points.FirstOrDefault())
                             };
 
             feature.TrySetGroupName(pliFilePath);
 
+            SetFeatureAttributes(numColumns, columnNumericalValueLists, columnStringValueLists, locationNames, feature);
+
+            return feature;
+        }
+
+        private void SetFeatureAttributes(int numColumns,
+                                          IEnumerable<IList<double>> columnNumericalValueLists,
+                                          IEnumerable<IList<string>> columnStringValueLists,
+                                          IDictionary<int, string> locationNames,
+                                          T feature)
+        {
             if (numColumns >= 2)
             {
                 if (feature.Attributes == null)
@@ -380,50 +369,66 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     feature.Attributes = new DictionaryFeatureAttributeCollection();
                 }
 
-                var j = 0;
-                foreach (IList<double> columnValueList in columnNumericalValueLists)
-                {
-                    if (j < NumericColumnAttributesKeys.Length)
-                    {
-                        AssignDoubleValuesToAttribute(columnValueList, feature, NumericColumnAttributesKeys[j++]);
-                    }
-                }
-
-                j = 0;
-                foreach (IList<string> stringValueList in columnStringValueLists)
-                {
-                    if (j < StringColumnAttributesKeys.Length)
-                    {
-                        AssignStringValuesToAttribute(stringValueList, feature, StringColumnAttributesKeys[j++]);
-                    }
-                }
+                AssignDoubleAttributes(columnNumericalValueLists, feature);
+                AssignStringAttributes(columnStringValueLists, feature);
             }
 
-            if (locationNames.Any())
-            {
-                if (feature.Attributes == null)
-                {
-                    feature.Attributes = new DictionaryFeatureAttributeCollection();
-                }
-
-                var syncedList = new GeometryPointsSyncedList<string>
-                {
-                    CreationMethod = BoundaryConditionSet.DefaultLocationName,
-                    Feature = feature
-                };
-                foreach (KeyValuePair<int, string> locationName in locationNames)
-                {
-                    syncedList[locationName.Key] = locationName.Value;
-                }
-
-                feature.Attributes[Feature2D.LocationKey] = syncedList;
-            }
-
-            return feature;
+            AssignLocationAttributes(locationNames, feature);
         }
 
-        private void BuildColumnValuesFromFeature<TS>(T feature2D, List<IList<TS>> columnValues,
-                                                      string[] columnAttributeKeys, ref int numColumns)
+        private static void AssignLocationAttributes(IDictionary<int, string> locationNames, T feature)
+        {
+            if (!locationNames.Any())
+            {
+                return;
+            }
+
+            if (feature.Attributes == null)
+            {
+                feature.Attributes = new DictionaryFeatureAttributeCollection();
+            }
+
+            var syncedList = new GeometryPointsSyncedList<string>
+            {
+                CreationMethod = BoundaryConditionSet.DefaultLocationName,
+                Feature = feature
+            };
+            foreach (KeyValuePair<int, string> locationName in locationNames)
+            {
+                syncedList[locationName.Key] = locationName.Value;
+            }
+
+            feature.Attributes[Feature2D.LocationKey] = syncedList;
+        }
+
+        private void AssignStringAttributes(IEnumerable<IList<string>> columnStringValueLists, T feature)
+        {
+            var j = 0;
+            foreach (IList<string> stringValueList in columnStringValueLists)
+            {
+                if (j < StringColumnAttributesKeys.Length)
+                {
+                    AssignStringValuesToAttribute(stringValueList, feature, StringColumnAttributesKeys[j++]);
+                }
+            }
+        }
+
+        private static void AssignDoubleAttributes(IEnumerable<IList<double>> columnNumericalValueLists, T feature)
+        {
+            var j = 0;
+            foreach (IList<double> columnValueList in columnNumericalValueLists)
+            {
+                if (j < NumericColumnAttributesKeys.Length)
+                {
+                    AssignDoubleValuesToAttribute(columnValueList, feature, NumericColumnAttributesKeys[j++]);
+                }
+            }
+        }
+
+        private static void BuildColumnValuesFromFeature<TS>(T feature2D,
+                                                             ICollection<IList<TS>> columnValues,
+                                                             IEnumerable<string> columnAttributeKeys,
+                                                             ref int numColumns)
         {
             foreach (string key in columnAttributeKeys)
             {
@@ -432,8 +437,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     continue;
                 }
 
-                var valueList = feature2D.Attributes[key] as IList<TS>;
-                if (valueList != null)
+                if (feature2D.Attributes[key] is IList<TS> valueList)
                 {
                     columnValues.Add(valueList);
                     numColumns++; // add value columns
@@ -441,8 +445,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        private void ConstructLineContent<TS>(int lineNumber, List<IList<TS>> columnValues, TS defaultValue,
-                                              string[] columnAttributeKeys, ref string lineContent, string featureName)
+        private void ConstructLineContent<TS>(int lineNumber,
+                                              IList<IList<TS>> columnValues,
+                                              TS defaultValue,
+                                              IReadOnlyList<string> columnAttributeKeys,
+                                              ref string lineContent,
+                                              string featureName)
         {
             foreach (IList<TS> columnValueList in columnValues)
             {
@@ -452,10 +460,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                 }
                 else
                 {
-                    Log.WarnFormat(
-                        "Feature {0} has a smaller number of attribute values than geometry points for {1}; filling up remaining entries with zero",
-                        featureName,
-                        columnAttributeKeys[columnValues.IndexOf(columnValueList)]);
+                    Log.WarnFormat("Feature {0} has a smaller number of attribute values than geometry points for {1}; filling up remaining entries with zero",
+                                   featureName,
+                                   columnAttributeKeys[columnValues.IndexOf(columnValueList)]);
 
                     lineContent += $"  {defaultValue:E15}";
                 }

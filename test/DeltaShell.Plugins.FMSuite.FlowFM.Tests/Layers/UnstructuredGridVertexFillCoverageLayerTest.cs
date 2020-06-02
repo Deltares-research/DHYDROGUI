@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
             {
                 Coverage = bathymetry,
-                RenderMode = RenderModeVertex.FillSmooth,
+                RenderMode = RenderModeVertex.FillSmooth
             };
 
             var map = new Map
@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
             {
                 Coverage = bathymetry,
-                RenderMode = RenderModeVertex.FillSmooth,
+                RenderMode = RenderModeVertex.FillSmooth
             };
             //gridLayer, 
             var map = new Map
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
             {
                 Coverage = bathymetry,
-                RenderMode = RenderModeVertex.FillSmooth,
+                RenderMode = RenderModeVertex.FillSmooth
             };
             //gridLayer, 
             var map = new Map
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
             {
                 Coverage = bathymetry,
-                RenderMode = RenderModeVertex.FillSmooth,
+                RenderMode = RenderModeVertex.FillSmooth
             };
             var map = new Map
             {
@@ -298,7 +298,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             {
                 Coverage = bathymetry,
                 RenderTechnology = PrimitivesRenderer.Software,
-                RenderMode = RenderModeVertex.Point,
+                RenderMode = RenderModeVertex.Point
             };
             var map = new Map
             {

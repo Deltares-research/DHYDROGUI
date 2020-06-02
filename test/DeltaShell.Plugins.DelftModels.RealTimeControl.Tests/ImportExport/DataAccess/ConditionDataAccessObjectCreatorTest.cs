@@ -341,7 +341,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
             {
                 Name = conditionName,
                 Reference = reference,
-                Operation = operation,
+                Operation = operation
             };
             var expectedConditionDataAccessObject = new ConditionDataAccessObject(id, standardCondition);
             expectedConditionDataAccessObject.TrueOutputReferences.AddRange(trueRefs);

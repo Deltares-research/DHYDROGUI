@@ -220,7 +220,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 "hihi",
                 "not a number",
-                nameof(WaterQualityModelSettings.OutputDirectory),
+                nameof(WaterQualityModelSettings.OutputDirectory)
             };
 
             // call

@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public const string Delayed = "[Delayed]";
         public const string Signal = "[Signal]";
 
-        public static readonly IList<string> ComponentTags = new List<string>()
+        public static readonly IList<string> ComponentTags = new List<string>
         {
             DirectionalCondition,
             FactorRule,

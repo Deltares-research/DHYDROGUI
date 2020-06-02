@@ -16,10 +16,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 {
     [TestFixture]
+    [Category(TestCategory.Wpf)]
     public class WaveModelNodePresenterTest
     {
         [Test]
-        [Category(TestCategory.WindowsForms)]
         public void ShowWaveProjectExplorer()
         {
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
@@ -48,7 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
         public void FmModelShouldBeReplacedWhenImportedInRootFolder()
         {
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
@@ -91,7 +90,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
         public void FmModelShouldBeReplacedWhenImportedInFolder()
         {
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");

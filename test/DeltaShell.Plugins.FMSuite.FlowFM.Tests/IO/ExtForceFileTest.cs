@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string newPath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewExtFile");
             string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewMduFile");
 
-            extForceFile.Write(newPath, def); // write loaded definition to new location
+            extForceFile.Write(newPath, def, true, true); // write loaded definition to new location
 
             //Check
             Assert.That(File.Exists(Path.Combine(Path.GetDirectoryName(newPath), def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName)));
@@ -247,11 +247,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile)
-                {
-                    ModelDefinition = {UseMorphologySediment = true},
-                    Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2)
-                };
+                var fmModel = new WaterFlowFMModel();
+                fmModel.ImportFromMdu(sedFile);
+
+                fmModel.ModelDefinition.UseMorphologySediment = true;
+                fmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
 
                 /* Define test properties */
                 var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false)
@@ -387,7 +387,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 /* Save ext file */
                 var extFile = new ExtForceFile();
-                extFile.Write(extForceFile, fmModel.ModelDefinition);
+                extFile.Write(extForceFile, fmModel.ModelDefinition, true, true);
                 Assert.IsTrue(File.Exists(extForceFile));
 
                 /* Check SedConc has generated only one Xyz File and one entry in the Ext file
@@ -428,11 +428,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-                var fmModel = new WaterFlowFMModel(sedFile)
-                {
-                    ModelDefinition = {UseMorphologySediment = true},
-                    Grid = grid
-                };
+
+                var fmModel = new WaterFlowFMModel();
+                fmModel.ImportFromMdu(sedFile);
+
+                fmModel.ModelDefinition.UseMorphologySediment = true;
+                fmModel.Grid = grid;
 
                 var fraction = new SedimentFraction {Name = "Frac1"};
                 fmModel.SedimentFractions.Add(fraction);
@@ -440,7 +441,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Save ext file */
                 var extFile = new ExtForceFile();
                 //Save SedFile with no fractions. No warnings should be given.
-                TestHelper.AssertLogMessagesCount(() => extFile.Write(extForceFile, fmModel.ModelDefinition), 0);
+                TestHelper.AssertLogMessagesCount(() => extFile.Write(extForceFile, fmModel.ModelDefinition, true, true), 0);
 
                 //Update model , we need to force it as we are not saving directly from the model but from the ModelDefinition
                 ISpatiallyVaryingSedimentProperty sedConcProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name == "SedConc");
@@ -448,7 +449,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //Add another spatially varying prop -> Warning should be given.
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
                 TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => extFile.Write(extForceFile, fmModel.ModelDefinition),
+                    () => extFile.Write(extForceFile, fmModel.ModelDefinition, true, true),
                     string.Format(
                         Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_,
                         sedConcProp.SpatiallyVaryingName));
@@ -493,7 +494,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
                 //New warning should be given.
                 TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => extFile.Write(extForceFile, fmModel.ModelDefinition),
+                    () => extFile.Write(extForceFile, fmModel.ModelDefinition, true, true),
                     string.Format(
                         Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
                         sedConcProp.SpatiallyVaryingName));
@@ -530,7 +531,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             const string newPath = "local.ext";
             string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(newPath), "chezy_A.mdu");
-            extForceFile.Write(newPath, def); // write loaded definition to new location
+            extForceFile.Write(newPath, def, true, true); // write loaded definition to new location
 
             var newExtFile = new ExtForceFile();
             var newDef = new WaterFlowFMModelDefinition();
@@ -605,7 +606,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string newExtPath = "test.ext";
             string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(newExtPath), "test.mdu");
 
-            extForceFile.Write(newExtPath, def);
+            extForceFile.Write(newExtPath, def, true, true);
 
             var newDef = new WaterFlowFMModelDefinition();
             var newExtFile = new ExtForceFile();
@@ -665,7 +666,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             model.ExportTo(mduPath);
 
-            var importedModel = new WaterFlowFMModel(mduPath);
+            var importedModel = new WaterFlowFMModel();
+            importedModel.ImportFromMdu(mduPath);
+
             IEventedList<Feature2D> boundaries = importedModel.Boundaries;
             Assert.AreEqual(1, boundaries.Count);
             Assert.AreEqual(feature.Geometry, boundaries.First().Geometry);
@@ -762,7 +765,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             model.ExportTo(mduPath);
 
-            var importedModel = new WaterFlowFMModel(mduPath);
+            var importedModel = new WaterFlowFMModel();
+            importedModel.ImportFromMdu(mduPath);
+
             IEventedList<Feature2D> boundaries = importedModel.Boundaries;
             Assert.AreEqual(1, boundaries.Count);
             Assert.AreEqual(feature.Geometry, boundaries.First().Geometry);
@@ -905,12 +910,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var extForceFile = new ExtForceFile();
             extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
 
-            Assert.AreEqual(6, def.Pipes.Count);
-            Assert.AreEqual(6, def.SourcesAndSinks.Count);
+            Assert.AreEqual(7, def.Pipes.Count);
+            Assert.AreEqual(7, def.SourcesAndSinks.Count);
 
             Assert.AreEqual(1.5d, def.SourcesAndSinks[0].Area);
 
-            extForceFile.Write("sourcesink.ext", def);
+            extForceFile.Write("sourcesink.ext", def, true, true);
 
             Assert.IsTrue(File.Exists("sourcesink.ext"));
 
@@ -968,7 +973,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.CreateDirectoryIfNotExists(saveDirectory);
 
                 // When
-                extForceFile.Write(savedExtFile, def);
+                extForceFile.Write(savedExtFile, def, true, true);
 
                 // Then
                 foreach (string file in saveLocations)
@@ -1018,7 +1023,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 // When
                 string newExtForceFilePath = Path.Combine(temporaryDirectory.Path, Path.GetFileName(relativeExtForceFilePath));
-                extForceFile.Write(newExtForceFilePath, modelDefinition);
+                extForceFile.Write(newExtForceFilePath, modelDefinition, true, true);
 
                 // Assert
                 string extForceFileContent = File.ReadAllText(newExtForceFilePath);

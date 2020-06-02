@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
@@ -30,38 +30,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private bool isLoading;
         private const int TotalImportSteps = 10;
+        private ImportProgressChangedDelegate importProgressChanged;
 
-        /// <summary> Import the WaterFlowFMModel described by the specified mdu file path. </summary>
-        /// <param name="mduFilePath"> The mdu file path. </param>
-        /// <param name="progressChanged"> The progressChanged delegate provided by the importer. </param>
-        /// <returns>
-        /// A WaterFlowFMModel describing the mdu defined at the <paramref name="mduFilePath"/>
-        /// </returns>
-        public static WaterFlowFMModel Import(string mduFilePath, ImportProgressChangedDelegate progressChanged)
+        /// <summary>
+        /// Loads data from the provided <paramref name="mduFilePath"/>.
+        /// </summary>
+        /// <param name="mduFilePath">The path to the mdu file.</param>
+        public void LoadFromMdu(string mduFilePath)
         {
-            var model = new WaterFlowFMModel(mduFilePath, progressChanged)
-            {
-                ImportProgressChanged = null,
-            };
-            model.ClearOutputDirAndWaqDirProperty();
+            ClearSyncers();
+            TracerDefinitions.Clear();
 
-            return model;
+            LoadStateFromMdu(mduFilePath);
+            ImportSpatialOperationsAfterLoading();
+
+            InitializeSyncers();
         }
 
-        private void OnLoad(string mduPath)
+        /// <summary>
+        /// Imports data from the provided <paramref name="mduFilePath"/>.
+        /// </summary>
+        /// <param name="mduFilePath">The path to the mdu file.</param>
+        /// <param name="clearOutputDirectories">Whether or not output directories need to be cleared (optional).</param>
+        /// <param name="progressChanged">A handle for notifying progress changes (optional).</param>
+        public void ImportFromMdu(string mduFilePath, bool clearOutputDirectories = false, ImportProgressChangedDelegate progressChanged = null)
         {
-            LoadStateFromMdu(mduPath);
-            ImportSpatialOperationsAfterLoading();
+            importProgressChanged = progressChanged;
+
+            ClearSyncers();
+            TracerDefinitions.Clear();
+
+            LoadStateFromMdu(mduFilePath);
+            AddSpatialDataItems();
+            ImportSpatialOperationsAfterCreating();
+
+            if (clearOutputDirectories)
+            {
+                ClearOutputDirAndWaqDirProperty();
+            }
+
+            InitializeSyncers();
+
+            importProgressChanged = null;
         }
 
         private void LoadStateFromMdu(string mduFilePath)
         {
-            // in case we're reloading into an existing flow model instance..cleanup first
-            syncers.ForEach(s => s.Dispose());
-            syncers.Clear();
-
-            TracerDefinitions.Clear();
-
             LoadModelFromMdu(mduFilePath);
 
             SynchronizeModelDefinitions();
@@ -77,16 +91,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 SedimentFile.LoadSediments(SedFilePath, this);
             }
 
-            FireImportProgressChanged(this, "Reading grid", 4, TotalImportSteps);
+            FireImportProgressChanged("Reading grid", 4, TotalImportSteps);
             Grid = ReadGridFromNetFile(NetFilePath) ?? new UnstructuredGrid();
 
             UnstructuredGridFileHelper.DoIfUgrid(NetFilePath,
                                                  uGridAdaptor => { bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue; });
 
-            FireImportProgressChanged(this, "Renaming sub files", 5, TotalImportSteps);
+            FireImportProgressChanged("Renaming sub files", 5, TotalImportSteps);
             RenameSubFilesIfApplicable();
 
-            FireImportProgressChanged(this, "Initialize input spatial data", 6, TotalImportSteps);
+            FireImportProgressChanged("Initialize input spatial data", 6, TotalImportSteps);
             InitializeUnstructuredGridCoverages();
 
             CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(NetFilePath);
@@ -116,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 sourceAndSink.PopulateFunctionValuesFromAttributes(componentSettings);
             });
 
-            FireImportProgressChanged(this, "Reading model output", 8, TotalImportSteps);
+            FireImportProgressChanged("Reading model output", 8, TotalImportSteps);
 
             LoadRestartFile(mduFilePath);
 
@@ -189,6 +203,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void ImportSpatialOperationsAfterCreating()
         {
+            FireImportProgressChanged("Reading spatial operations", 9, TotalImportSteps);
+
             foreach (KeyValuePair<string, IList<ISpatialOperation>> spatialOperation in ModelDefinition
                 .SpatialOperations)
             {
@@ -224,13 +240,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 foreach (ISpatialOperation operation in spatialOperationList)
                 {
                     // samples should directly be applied to the coverage with an interpolate operation
-                    var importSamplesSpatialOperationExtension = operation as ImportSamplesSpatialOperationExtension;
-                    if (importSamplesSpatialOperationExtension != null)
+                    var importSamplesSpatialOperation = operation as ImportSamplesSpatialOperation;
+                    if (importSamplesSpatialOperation != null)
                     {
                         Tuple<ImportSamplesOperation, InterpolateOperation> operations =
-                            importSamplesSpatialOperationExtension.CreateOperations();
-                        valueConverter.SpatialOperationSet.AddOperation(operations.First);
-                        valueConverter.SpatialOperationSet.AddOperation(operations.Second);
+                            importSamplesSpatialOperation.CreateOperations();
+                        valueConverter.SpatialOperationSet.AddOperation(operations.Item1);
+                        valueConverter.SpatialOperationSet.AddOperation(operations.Item2);
                     }
                     else
                     {
@@ -239,8 +255,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
         }
-
-        public ImportProgressChangedDelegate ImportProgressChanged { get; set; }
 
         private void LoadModelFromMdu(string mduFilePath)
         {
@@ -255,7 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 isLoading = true;
                 MduFile.Read(mduFilePath, ModelDefinition, Area, fixedWeirProperties,
                              (name, current, total) =>
-                                 FireImportProgressChanged(this, "Reading mdu - " + name, current, total),
+                                 FireImportProgressChanged("Reading mdu - " + name, current, total),
                              BridgePillarsDataModel);
                 isLoading = false;
                 SyncModelTimesWithBase();
@@ -269,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 netFileProperty.Value = Name + NetFile.FullExtension;
             }
 
-            FireImportProgressChanged(this, "Loading restart", 2, TotalImportSteps);
+            FireImportProgressChanged("Loading restart", 2, TotalImportSteps);
             LoadRestartInfo(mduFilePath);
 
             // sync the heat flux model, because events are off during reading
@@ -283,15 +297,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             base.TimeStep = TimeStep;
         }
 
-        private static void FireImportProgressChanged(WaterFlowFMModel model, string currentStepName, int currentStep,
-                                                      int totalSteps)
+        private void FireImportProgressChanged(string currentStepName, int currentStep, int totalSteps)
         {
-            if (model.ImportProgressChanged == null)
+            if (importProgressChanged == null)
             {
                 return;
             }
 
-            model.ImportProgressChanged(currentStepName, currentStep, totalSteps);
+            importProgressChanged(currentStepName, currentStep, totalSteps);
         }
 
         private void AssembleTracerDefinitions()

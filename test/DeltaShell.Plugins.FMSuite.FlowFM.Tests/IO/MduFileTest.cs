@@ -10,6 +10,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -256,6 +257,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(NghsTestCategory.PerformanceDotTrace)]
+        public void Read_MduFileWithBridgePillars_ShouldBeWithinExecutionTime()
+        {
+            string testDataFilePath = TestHelper.GetTestFilePath(@"ImportMDUFile\bridge-1.mdu");
+            string testFilePath = TestHelper.CreateLocalCopy(testDataFilePath);
+
+            try
+            {
+                var mduFile = new MduFile();
+                var area = new HydroArea();
+
+                TimerMethod_ReadMduFileWithBridgePillars(mduFile, testFilePath, area);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testFilePath);
+            }
+        }
+
+        /// <summary>
+        /// Method to test by dot Trace. Should be public for setting thresholds.
+        /// </summary>
+        /// <param name="mduFile"> The Mdu file. </param>
+        /// <param name="testFilePath">The Mdu file path. </param>
+        /// <param name="area"> The area of the model. </param>
+        public static void TimerMethod_ReadMduFileWithBridgePillars(MduFile mduFile, string testFilePath, HydroArea area)
+        {
+            mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
+        }
+
+        [Test]
         public void Test_MduFile_Write_Writes_BridgePillars_Entry()
         {
             var testFile = "mduBridgePillars.mdu";
@@ -296,7 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(140.0, 8.0, 1.0),
                         new Coordinate(180.0, 4.0, 2.0),
                         new Coordinate(260.0, 0.0, 3.0)
-                    }),
+                    })
             };
             hydroArea.BridgePillars.Add(pillar);
 
@@ -329,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(40.0, 80.0, 10.0),
                         new Coordinate(80.0, 40.0, 20.0),
                         new Coordinate(160.0, 0.0, 30.0)
-                    }),
+                    })
             };
             var modelFeatureCoordinateDatas = new List<ModelFeatureCoordinateData<BridgePillar>>();
 
@@ -417,7 +449,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(40.0, 80.0, 10.0),
                         new Coordinate(80.0, 40.0, 20.0),
                         new Coordinate(160.0, 0.0, 30.0)
-                    }),
+                    })
             };
 
             var listofDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();

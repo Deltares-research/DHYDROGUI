@@ -119,14 +119,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 WidthRightSideOfStructure = double.NaN,
                 WidthStructureCentre = double.NaN,
                 WidthStructureLeftSide = double.NaN,
-                WidthStructureRightSide = double.NaN,
+                WidthStructureRightSide = double.NaN
             };
 
             var generalStructure = new Weir2D(weirName)
             {
                 WeirFormula = generalStructureFormula,
                 CrestWidth = double.NaN,
-                Geometry = new Point(0.0, 0.0),
+                Geometry = new Point(0.0, 0.0)
             };
             return generalStructure;
         }
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 WeirFormula = new GatedWeirFormula(true),
                 CrestWidth = double.NaN,
-                Geometry = new Point(0.0, 0.0),
+                Geometry = new Point(0.0, 0.0)
             };
             return gatedWeir;
         }
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 WeirFormula = new SimpleWeirFormula(),
                 CrestWidth = double.NaN,
-                Geometry = new Point(0.0, 0.0),
+                Geometry = new Point(0.0, 0.0)
             };
             return simpleWeir;
         }
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var structuresFile = new StructuresFile()
             {
-                StructureSchema = schema,
+                StructureSchema = schema
             };
             return structuresFile;
         }

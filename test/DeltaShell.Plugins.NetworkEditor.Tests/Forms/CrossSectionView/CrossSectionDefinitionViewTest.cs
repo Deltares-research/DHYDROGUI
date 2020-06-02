@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                                                          "0\t1\t1",
                                                          "33.33\t1\t1",
                                                          "50.0\t1\t1",
-                                                         "100.0\t1\t1",
+                                                         "100.0\t1\t1"
                                                      }));
 
                 Assert.AreEqual(0.0, (double) crossSection.YZDataTable.Rows[0][0], 0.001);
@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                                 "0",
                                 "1",
                                 "2",
-                                "3",
+                                "3"
                             });
                     }
                 );
@@ -344,7 +344,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                                 "0",
                                 "1",
                                 "2",
-                                "3",
+                                "3"
                             });
                     }
                 );
@@ -391,7 +391,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                             "150\t0\t0",
                             "20\t0\t0",
                             "40\t0\t0",
-                            "60\t0\t0",
+                            "60\t0\t0"
                         });
                 });
                 Assert.AreEqual(7, crossSection.YZDataTable.Rows.Count, "something should be pasted");
@@ -447,7 +447,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                         {
                             "150\t10\t0",
                             "20\t0\t0",
-                            "50\t25\t0",
+                            "50\t25\t0"
                         });
                 });
                 Assert.AreEqual(new[]
@@ -502,7 +502,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                                                          "0\t1\t2",
                                                          "-10\t1\t2",
                                                          "50.0\t1\t1", //valid row
-                                                         "100.0\t1\t2",
+                                                         "100.0\t1\t2"
                                                      }));
 
                 Assert.AreEqual(3, crossSection.ZWDataTable.Count);
@@ -548,7 +548,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                                                          "100.0\t1\t1",
                                                          "50.0\t1\t1",
                                                          "0\t1\t1",
-                                                         "33.33\t1\t1",
+                                                         "33.33\t1\t1"
                                                      }));
 
                 Assert.AreEqual(0.0, (double) crossSection.YZDataTable.Rows[0][0], 0.001);

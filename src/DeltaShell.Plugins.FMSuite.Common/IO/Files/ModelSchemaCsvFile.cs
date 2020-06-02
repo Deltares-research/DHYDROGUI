@@ -4,11 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
-    public class ModelSchemaCsvFile : FMSuiteFileBase
+    public class ModelSchemaCsvFile : NGHSFileBase
     {
         private const int descriptionIndex = 15;
         private const int unitIndex = 16;

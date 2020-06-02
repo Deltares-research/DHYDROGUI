@@ -10,8 +10,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
     [TestFixture]
     public class SedimentFractionsEditorTest
     {
-        [Category(TestCategory.WindowsForms)]
         [Test]
+        [Category(TestCategory.Wpf)]
         public void ShowUserControl()
         {
             IEventedList<ISedimentFraction> sedimentFractions = SedimentFractionsEditorTestHelper.GetExampleSedimentFractions(3);

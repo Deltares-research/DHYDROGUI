@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:viewModels="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels"
-             xmlns:converters="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Converters"
+             xmlns:converters="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Converters"
              mc:Ignorable="d">
 
     <UserControl.Resources>

@@ -5,6 +5,6 @@ namespace DelftTools.Hydro
         Both = 0,
         Positive = 1,
         Negative = 2,
-        None = 3,
+        None = 3
     }
 }

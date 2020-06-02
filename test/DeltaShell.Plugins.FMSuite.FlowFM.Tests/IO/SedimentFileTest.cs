@@ -8,9 +8,9 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -66,7 +66,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
 
             // When
-            var importedModel = new WaterFlowFMModel(mduFilePath);
+            var importedModel = new WaterFlowFMModel();
+            importedModel.ImportFromMdu(mduFilePath);
 
             // Then
             Assert.NotNull(importedModel, "Model was not imported.");
@@ -84,7 +85,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When
                 new MduFile().Write(mduFilePath, modelDefinition, importedModel.Area, importedModel.FixedWeirsProperties, sedimentModelData: importedModel);
-                importedModel = new WaterFlowFMModel(mduFilePath);
+                importedModel = new WaterFlowFMModel();
+                importedModel.ImportFromMdu(mduFilePath);
 
                 // Then
                 Assert.NotNull(importedModel);
@@ -349,7 +351,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel();
+                fmModel.ImportFromMdu(sedFile);
+
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 //Area 
@@ -459,7 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
                 var extFile = new ExtForceFile();
-                extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false, false);
+                extFile.Write(sedFile, fmModel.ModelDefinition, false, false);
                 Assert.IsTrue(File.Exists(generatedXyzFile));
 
                 List<IPointValue> xyzFileValues = XyzFile.Read(generatedXyzFile).ToList();
@@ -496,7 +500,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel();
+                fmModel.ImportFromMdu(sedFile);
+
                 fmModel.ModelDefinition.UseMorphologySediment = true;
                 UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
@@ -546,9 +552,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                 X = fmModel.Grid.Cells[2].CenterX,
                                 Y = fmModel.Grid.Cells[2].CenterY,
                                 Value = 31
-                            },
-                        },
-                    },
+                            }
+                        }
+                    }
                 });
                 ISpatialOperation sp = valueConverter.SpatialOperationSet.AddOperation(samples);
                 valueConverter.SpatialOperationSet.Execute();
@@ -580,7 +586,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel();
+                fmModel.ImportFromMdu(sedFile);
+
                 fmModel.ModelDefinition.UseMorphologySediment = true;
                 UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
@@ -644,9 +652,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                 X = fmModel.Grid.Cells[2].CenterX,
                                 Y = fmModel.Grid.Cells[2].CenterY,
                                 Value = 31
-                            },
-                        },
-                    },
+                            }
+                        }
+                    }
                 });
                 valueConverter.SpatialOperationSet.AddOperation(samples);
                 valueConverter.SpatialOperationSet.Execute();
@@ -678,7 +686,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                  */
                 Assert.IsFalse(File.Exists(generatedXyzFile));
                 var extFile = new ExtForceFile();
-                extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false, false);
+                extFile.Write(sedFile, fmModel.ModelDefinition, false, false);
                 Assert.IsTrue(File.Exists(generatedXyzFile));
             }
             finally
@@ -696,8 +704,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string mduPath = TestHelper.GetTestFilePath(@"SpatiallyVarying_MudFraction\FlowFM.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            using (var model = new WaterFlowFMModel())
             {
+                model.ImportFromMdu(localCopy);
+
                 ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "mudFraction");
                 Assert.IsNotNull(fraction);
                 var spatvaryingProp = fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as ISpatiallyVaryingSedimentProperty;
@@ -769,8 +779,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            using (var model = new WaterFlowFMModel())
             {
+                model.ImportFromMdu(localCopy);
+
                 ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
                 Assert.IsNotNull(fraction);
                 var spatvaryingProp = fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as
@@ -806,7 +818,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel();
+                fmModel.ImportFromMdu(sedFile);
+
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /* Define test properties */
@@ -844,7 +858,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem,
                                                                                                     "mysedimentName_IniSedThick");
 
-                valueConverter.SpatialOperationSet.AddOperation(new ImportSamplesSpatialOperationExtension()
+                valueConverter.SpatialOperationSet.AddOperation(new ImportSamplesSpatialOperation()
                 {
                     Name = "mysedimentName_IniSedThick",
                     FilePath = Path.GetFullPath(fileName)
@@ -883,8 +897,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var orgModel = new WaterFlowFMModel(localCopy))
+            using (var orgModel = new WaterFlowFMModel())
             {
+                orgModel.ImportFromMdu(localCopy);
+
                 CheckModelCoverageValues(orgModel);
                 using (var model = (WaterFlowFMModel) orgModel.DeepClone())
                 {

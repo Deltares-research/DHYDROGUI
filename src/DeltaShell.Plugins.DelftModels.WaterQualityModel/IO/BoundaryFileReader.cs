@@ -200,8 +200,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             return double.Parse(match.Groups[groupname].Value, CultureInfo.InvariantCulture);
         }
-        //private int expectedNumberOfBoundaries, readNumberOfBoundaries;
-        //private string currectReadingBoundary;
 
         #region Regex capture group name constants
 

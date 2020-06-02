@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             {
                 Name = GetXmlNameWithoutTag(prefix),
                 LocationId = GetXmlNameWithTag(prefix),
-                ParameterId = "t",
+                ParameterId = "t"
             };
             return xmlTimeSeries;
         }

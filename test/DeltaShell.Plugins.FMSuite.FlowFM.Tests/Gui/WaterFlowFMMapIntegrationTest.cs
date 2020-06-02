@@ -5,11 +5,13 @@ using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -55,7 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.MainWindow.Show();
 
-                var model = new WaterFlowFMModel(mduPath);
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(mduPath);
 
                 app.Project.RootFolder.Add(model);
 
@@ -70,18 +73,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 }
 
                 stopwatch.Stop();
-                Assert.Less(stopwatch.ElapsedMilliseconds, 50000);
+                Assert.Less(stopwatch.ElapsedMilliseconds, 53000);
                 Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "The model run did not finish successfully.");
             }
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(NghsTestCategory.PerformanceDotTrace)]
+        public void RunFMModelWithGUIVisible_ShouldBeWithinExecutionTime()
+        {
+            string mduPath = TestHelper.GetTestFilePath(@"smallModelWithManyTimeSteps\r01.mdu");
+
+            using (var gui = new DeltaShellGui())
+            {
+                IApplication app = gui.Application;
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                gui.MainWindow.Show();
+
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(mduPath);
+
+                app.Project.RootFolder.Add(model);
+
+                TimerMethod_RunFMModelWithGUIVisible(gui, model);
+
+                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "The model run did not finish successfully.");
+            }
+        }
+
+        /// <summary>
+        /// Method to test by dot Trace. Should be public for setting thresholds.
+        /// </summary>
+        /// <param name="gui"> DeltaShell application. </param>
+        /// <param name="model"> The model which should be run. </param>
+        public static void TimerMethod_RunFMModelWithGUIVisible(IGui gui, IActivity model)
+        {
+            gui.Application.ActivityRunner.Enqueue(model);
+
+            while (gui.Application.IsActivityRunningOrWaiting(model))
+            {
+                Application.DoEvents();
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Wpf)]
         public void ShowCentralMapForFMModel()
         {
             string mduPath = GetBendProfPath();
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -110,12 +165,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void OpenCloseCentralMapForFMModelCheckEventLeaks()
         {
             string mduPath = GetBendProfPath();
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -154,13 +211,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.WorkInProgress)] // fails on build server
         public void OpenCloseCentralMapForFMModelCheckLayerDoesNotLinger()
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -209,8 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.WorkInProgress)]
         public void ReloadCentralMapAfterModelWithOutputSaved()
         {
@@ -235,7 +293,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Action mainWindowShown = () =>
                 {
                     Project project = app.Project;
-                    var model = new WaterFlowFMModel(mduPath);
+
+                    var model = new WaterFlowFMModel();
+                    model.ImportFromMdu(mduPath);
+
                     project.RootFolder.Add(model);
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
                     ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
@@ -251,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.WorkInProgress)] // about 7 paths hold references the model after it is deleted
         public void ShowCentralMapForFMModelRemoveModelCheckMemoryLeaks()
         {
@@ -298,7 +359,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void ImportHarlingenShowVelocityOutput()
         {
@@ -319,7 +380,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Action mainWindowShown = () =>
                 {
                     Project project = app.Project;
-                    var model = new WaterFlowFMModel(mduPath);
+
+                    var model = new WaterFlowFMModel();
+                    model.ImportFromMdu(mduPath);
+
                     project.RootFolder.Add(model);
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
                     ProjectItemMapView view = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
@@ -338,7 +402,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void ImportHarlingenRunShowVelocityOutput()
         {
@@ -359,7 +423,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Action mainWindowShown = () =>
                 {
                     Project project = app.Project;
-                    var model = new WaterFlowFMModel(mduPath);
+
+                    var model = new WaterFlowFMModel();
+                    model.ImportFromMdu(mduPath);
+
                     ActivityRunner.RunActivity(model);
                     project.RootFolder.Add(model);
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
@@ -391,7 +458,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private static WeakReference AddMduToProject(Project project, string mduPath)
         {
-            var model = new WaterFlowFMModel(mduPath);
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduPath);
+
             var weakRef = new WeakReference(model);
             project.RootFolder.Add(model);
             return weakRef;

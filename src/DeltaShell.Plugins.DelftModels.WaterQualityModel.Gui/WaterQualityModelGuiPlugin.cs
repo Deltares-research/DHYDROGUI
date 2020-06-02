@@ -22,6 +22,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         [ExcludeFromCodeCoverage]
         public override string Description => "Allows to simulate water quality in rivers and channels.";
 
-        public override string Version => GetType().Assembly.GetName().Version.ToString();
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         [ExcludeFromCodeCoverage]
         public override string FileFormatVersion => "1.1.0.0";
@@ -223,7 +224,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     {
                         FunctionListViewExtraActions(Gui.SelectedModel as WaterQualityModel, v);
                     }
-                },
+                }
             };
 
             yield return new
@@ -242,7 +243,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                         {
                             v.DataOwner = Gui.SelectedModel as WaterQualityModel;
                         }
-                    },
+                    }
                 };
 
             yield return new ViewInfo<WaterQualityFunctionWrapper, IFunction, FunctionView>
@@ -251,7 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 AdditionalDataCheck = o => o.Function.IsTimeSeries(),
                 GetViewData = o => o.Function,
                 GetViewName = (v, o) => o.Name,
-                Image = Properties.Resources.TimeSeries,
+                Image = Properties.Resources.TimeSeries
             };
             yield return new ViewInfo<WaterQualityFunctionWrapper, ICoverage, CoverageTableView>
             {
@@ -298,7 +299,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     {
                         v.WaterQualityModel = Gui.SelectedModel as WaterQualityModel;
                     }
-                },
+                }
             };
 
             yield return new ViewInfo<BoundaryDataTableImporter, BoundaryDataWizard>

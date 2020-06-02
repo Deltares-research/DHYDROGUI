@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             {
                 Name = RtcXmlTag.Status + GetXmlNameWithoutTag(prefix),
                 LocationId = GetXmlNameWithTag(prefix),
-                ParameterId = "Status",
+                ParameterId = "Status"
             };
 
             return xmlTimeSeries;

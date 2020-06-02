@@ -14,12 +14,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         {
             "neubcmud",
             "neubcsand",
-            "eqmbc",
+            "eqmbc"
         };
 
         public IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; } = new Dictionary<string, string>()
         {
-            {"bslhd", "Bshld"},
+            {"bslhd", "Bshld"}
         };
 
         public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; } = new Dictionary<string, string>();

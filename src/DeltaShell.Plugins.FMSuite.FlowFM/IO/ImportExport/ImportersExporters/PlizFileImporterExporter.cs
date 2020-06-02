@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         {
             var reader = new TFileType
             {
-                CreateDelegate = CreateDelegate,
+                CreateDelegate = CreateDelegate
             };
             return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
         }
@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         {
             var writer = new TFileType
             {
-                CreateDelegate = CreateDelegate,
+                CreateDelegate = CreateDelegate
             };
             writer.Write(path, features);
         }

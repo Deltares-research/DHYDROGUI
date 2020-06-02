@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
     public class CulvertViewTest
     {
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void ShowEmpty()
         {
             var view = new CulvertViewWpf() {Data = null};
@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void ShowCulvertViewWpf()
         {
             var culvert = new Culvert();
@@ -33,7 +33,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
         public void CulvertViewWpfVisibilitesAreToggledCorrectly()
         {
             var culvert = new Culvert();

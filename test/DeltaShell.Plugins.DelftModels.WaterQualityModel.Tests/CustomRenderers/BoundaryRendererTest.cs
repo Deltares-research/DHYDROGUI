@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.CustomRenderers
                     {
                         new Coordinate(0.1, 0.1, double.NaN),
                         new Coordinate(0.1, 0.1, double.NaN)
-                    }),
+                    })
                 })
             };
 
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.CustomRenderers
                     {
                         new Coordinate(0.1, 0.1, double.NaN),
                         new Coordinate(0.2, 0.2, double.NaN)
-                    }),
+                    })
                 })
             };
 
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.CustomRenderers
                         new Coordinate(0.3, 0.2, double.NaN),
                         new Coordinate(0.2, 0.2, double.NaN),
                         new Coordinate(0.1, 0.1, double.NaN)
-                    }),
+                    })
                 })
             };
 

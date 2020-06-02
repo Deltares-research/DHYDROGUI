@@ -4,7 +4,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using GeoAPI.CoordinateSystems;
 using NUnit.Framework;
 using SharpMap;
@@ -28,13 +28,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             string localPath = WaveTestHelper.CreateLocalCopy(mdwPath);
             var model = new WaveModel(localPath) {CoordinateSystem = UTM16CS};
 
-            var provider = new WaveModelMapLayerProvider
+            IMapLayerProvider provider = WaveMapLayerProviderFactory.ConstructMapLayerProvider(() => new[]
             {
-                GetWaveModels = () => new[]
-                {
-                    model
-                }
-            };
+                model
+            });
 
             var modelLayer = (ModelGroupLayer) MapLayerProviderHelper.CreateLayersRecursive(model, null, new[]
             {

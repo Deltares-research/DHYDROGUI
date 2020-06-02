@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             sourceAndSinkFeatureAttributes.RemoveAllWhere(a => a.Key.StartsWith(TimFileColumnAttributePrefix));
 
-            for (var i = 0; i < allVariables.Count(); i++)
+            for (var i = 0; i < allVariables.Count; i++)
             {
                 sourceAndSinkFeatureAttributes.Add(
                     new KeyValuePair<string, object>(TimFileColumnAttributePrefix + i, allVariables[i].Values));

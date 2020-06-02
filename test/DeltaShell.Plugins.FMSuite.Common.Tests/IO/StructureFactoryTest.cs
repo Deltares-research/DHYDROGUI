@@ -60,14 +60,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 [KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription()] = 524288.0,
                 [KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription()] = 1048576.0,
                 [KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription()] = 2097152.0,
-                [KnownGeneralStructureProperties.ExtraResistance.GetDescription()] = 41927.0,
+                [KnownGeneralStructureProperties.ExtraResistance.GetDescription()] = 41927.0
             };
 
             timeSeriesLookUpTable = new Dictionary<string, string>()
             {
                 [KnownStructureProperties.CrestLevel] = $"weir_{KnownStructureProperties.CrestLevel}.tim",
                 [KnownStructureProperties.GateLowerEdgeLevel] = $"Gate02_{KnownStructureProperties.GateLowerEdgeLevel}.tim",
-                [KnownStructureProperties.GateOpeningWidth] = $"Gate02_{KnownStructureProperties.GateOpeningWidth}.tim",
+                [KnownStructureProperties.GateOpeningWidth] = $"Gate02_{KnownStructureProperties.GateOpeningWidth}.tim"
             };
 
             propertyNameMap = new Dictionary<string, Dictionary<string, string>>()
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 [StructureRegion.StructureTypeName.Weir] = new Dictionary<string, string>()
                 {
                     [KnownStructureProperties.CrestLevel] = KnownStructureProperties.CrestLevel,
-                    [KnownStructureProperties.CrestWidth] = KnownStructureProperties.CrestWidth,
+                    [KnownStructureProperties.CrestWidth] = KnownStructureProperties.CrestWidth
                 },
                 [StructureRegion.StructureTypeName.Gate] = new Dictionary<string, string>()
                 {
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     [KnownStructureProperties.GateLowerEdgeLevel] = KnownStructureProperties.GateLowerEdgeLevel,
                     [KnownStructureProperties.GateHeight] = KnownStructureProperties.GateHeight,
                     [KnownStructureProperties.GateOpeningHorizontalDirection] =
-                        KnownStructureProperties.GateOpeningHorizontalDirection,
+                        KnownStructureProperties.GateOpeningHorizontalDirection
                 },
                 [StructureRegion.StructureTypeName.GeneralStructure] = new Dictionary<string, string>()
                 {
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     [KnownStructureProperties.GateOpeningWidth] = KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
                     [KnownStructureProperties.GateLowerEdgeLevel] = KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
                     [KnownStructureProperties.GateHeight] = KnownGeneralStructureProperties.GateHeight.GetDescription(),
-                    [KnownStructureProperties.GateOpeningHorizontalDirection] = KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription(),
+                    [KnownStructureProperties.GateOpeningHorizontalDirection] = KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription()
                 }
             };
 
@@ -627,7 +627,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription(),
                 KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription(),
                 KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription(),
-                KnownGeneralStructureProperties.ExtraResistance.GetDescription(),
+                KnownGeneralStructureProperties.ExtraResistance.GetDescription()
             };
 
             foreach (string generalStructureProperty in generalStructureProperties)

@@ -1,22 +1,17 @@
 using System;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
-using SharpMap.Api.Editors;
 using SharpMap.Editors.FallOff;
-using SharpMap.Editors.Interactors.Network;
 using SharpMap.UI.Forms;
 using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
@@ -73,63 +68,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
             }
         }
 
-        // HACK: this method looks like a total hack, getting plugin instance, creating editors without layers. It does not use a "normal" way to edit features.
-        public static void MoveBranchFeatureTo(IBranchFeature branchFeature, double chainage, bool forceMaintainBranch = true)
-        {
-            object selection = NetworkEditorGuiPlugin.Instance == null ? null : NetworkEditorGuiPlugin.Instance.Gui.Selection;
-            chainage = BranchFeature.SnapChainage(branchFeature.Branch.Length, chainage);
-            ValidateChainage(chainage, branchFeature);
-
-            branchFeature.Network.BeginEdit(string.Format("Move branchfeature {0}", branchFeature));
-            // moving branchFeature will remove it from and add it to collection; save selection and restore 
-            // when done.
-            try
-            {
-                var e = new HydroNetworkFeatureEditor(branchFeature.Network);
-
-                IFeatureInteractor interactor = e.CreateInteractor(null, branchFeature);
-                interactor.Tolerance = 0.5;
-
-                var oldCoordinate = (Coordinate) branchFeature.Geometry.Coordinates[0].Clone();
-                Coordinate newCoordinate = GetCoordinateForBranchFeature(branchFeature, chainage);
-
-                double deltaX = newCoordinate.X - oldCoordinate.X;
-                double deltaY = newCoordinate.Y - oldCoordinate.Y;
-                interactor.Start();
-                TrackerFeature tracker = interactor.Trackers.FirstOrDefault(); // Not OK: what about extended, deformable branch features?
-                if (tracker != null)
-                {
-                    interactor.MoveTracker(tracker, deltaX, deltaY);
-                }
-
-                var snapResult = new SnapResult(interactor.TargetFeature.Geometry.Coordinate, branchFeature.Branch, interactor.Layer, branchFeature.Branch.Geometry, 0, 0);
-                //if the interactor can maintain the interactor we want that (when only changing offset)
-                if (interactor is IBranchMaintainableInteractor)
-                {
-                    (interactor as IBranchMaintainableInteractor).Stop(snapResult, forceMaintainBranch);
-                }
-                else
-                {
-                    interactor.Stop(snapResult);
-                }
-
-                // Ensure offset is as specified (Unaffected by rounding), especially noticeable for integer 'chainage'
-                EnsureInputChainageIsAsExpected(branchFeature, chainage);
-
-                if (NetworkEditorGuiPlugin.Instance != null)
-                {
-                    NetworkEditorGuiPlugin.Instance.Gui.Selection = selection;
-                }
-            }
-            finally
-            {
-                if (branchFeature.Network != null)
-                {
-                    branchFeature.Network.EndEdit();
-                }
-            }
-        }
-
         public static void UpdateBranchFeatureGeometry(IBranchFeature branchFeature, double calculationLength)
         {
             object selection = NetworkEditorGuiPlugin.Instance == null || NetworkEditorGuiPlugin.Instance.Gui == null ? null : NetworkEditorGuiPlugin.Instance.Gui.Selection;
@@ -175,11 +113,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
         public static IHydroRegion RootGetHydroRegion(MapView view)
         {
             return view.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region).FirstOrDefault(r => r != null && r.Parent == null);
-        }
-
-        public static INetwork GetNetwork(MapView view)
-        {
-            return view.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region).OfType<INetwork>().FirstOrDefault();
         }
 
         /// <summary>
@@ -229,63 +162,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
             {
                 node.Network.EndEdit();
             }
-        }
-
-        /// <summary>
-        /// Changes <c>Offset</c> of <paramref name="branchFeature"/> and related features as
-        /// <see cref="GeometryHelper.Distance(ILineString , ICoordinate )"/>
-        /// produces rounded results. Editors, like 'BranchFeatureInteractor', set <paramref name="branchFeature"/> <c>Offset</c>
-        /// to this rounded value, resulting in
-        /// integer values as <paramref name="chainage"/> to end up as doubles, which is unwanted behavior.
-        /// </summary>
-        /// <param name="branchFeature"></param>
-        /// <param name="chainage"></param>
-        private static void EnsureInputChainageIsAsExpected(IBranchFeature branchFeature, double chainage)
-        {
-            branchFeature.Chainage = chainage;
-
-            if (branchFeature is ICompositeBranchStructure)
-            {
-                foreach (IStructure1D structure in ((ICompositeBranchStructure) branchFeature).Structures)
-                {
-                    structure.Chainage = chainage;
-                }
-            }
-
-            if (branchFeature is IStructure1D && ((IStructure1D) branchFeature).ParentStructure != null)
-            {
-                ((IStructure1D) branchFeature).ParentStructure.Chainage = chainage;
-            }
-        }
-
-        private static void ValidateChainage(double chainage, IBranchFeature branchFeature)
-        {
-            if (chainage < 0)
-            {
-                throw new ArgumentException("Chainage can not be negative.", "chainage");
-            }
-
-            //if (chainage > branchFeature.Branch.Geometry.Length)
-            if (chainage > branchFeature.Branch.Length)
-            {
-                throw new ArgumentException("Chainage can not exceed the length of the channel.", "chainage");
-            }
-
-            if (chainage + branchFeature.Length > branchFeature.Branch.Length)
-            {
-                throw new ArgumentException("Combined length and chainage can not exceed the length of the channel.", "chainage");
-            }
-        }
-
-        private static Coordinate GetCoordinateForBranchFeature(IBranchFeature branchFeature, double offset)
-        {
-            if (branchFeature.Branch.IsLengthCustom)
-            {
-                offset *= branchFeature.Branch.Geometry.Length / branchFeature.Branch.Length;
-            }
-
-            return GeometryHelper.LineStringCoordinate((ILineString) branchFeature.Branch.Geometry,
-                                                       offset);
         }
     }
 }

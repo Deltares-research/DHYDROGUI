@@ -11,6 +11,8 @@
 
   <?define noDeltaShellFrameworkManual="true"?>
 
+  <?define excludeBuildNumberFromVersion="true"?>
+
   <?ifdef var.RWS?>
   <?define Delft3DPackageName="D-HYDRO"?>
   <?define registrationFeature="D-HYDRO"?>

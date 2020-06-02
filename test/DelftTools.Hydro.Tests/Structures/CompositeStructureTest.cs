@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using ValidationAspects;
 
@@ -115,78 +113,6 @@ namespace DelftTools.Hydro.Tests.Structures
 
             ValidationResult validationResult = compositeBranchStructure.Validate();
             Assert.AreEqual(true, validationResult.IsValid);
-        }
-
-        [Test]
-        public void ChangingChildBranchStructureChainageWillUpdateParentAndSubsequentChildren() // Issue#: SOBEK3-638
-        {
-            // Setup
-            const double compositeStructureOriginalChainage = 300.0d;
-            var compositeBranchStructure = new CompositeBranchStructure()
-            {
-                Chainage = compositeStructureOriginalChainage,
-                Branch = new Channel()
-            };
-
-            IWeir weir1 = new Weir("test");
-            IPump pump1 = new Pump("test");
-
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir1);
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump1);
-
-            Assert.AreEqual(compositeStructureOriginalChainage, compositeBranchStructure.Chainage,
-                            "Adding child BranchStructures to a CompositeBranchStructure should not change Chainage");
-            foreach (IStructure1D structure in compositeBranchStructure.Structures)
-            {
-                Assert.AreEqual(compositeBranchStructure.Chainage, structure.Chainage,
-                                "CompositeBranchStructure should always overwrite Chainage in child BranchStructure");
-            }
-
-            // Update Child BranchStructure
-            const double updatedWeirChainage = 200.0d;
-            weir1.Chainage = updatedWeirChainage;
-
-            Assert.AreEqual(updatedWeirChainage, compositeBranchStructure.Chainage,
-                            "Changing Chainage in a child BranchStructures should update CompositeBranchStructure Chainage");
-            foreach (IStructure1D structure in compositeBranchStructure.Structures)
-            {
-                Assert.AreEqual(compositeBranchStructure.Chainage, structure.Chainage,
-                                "Changing Chainage in CompositeBranchStructure should always update all child BranchStructure");
-            }
-
-            // Update Child BranchStructure
-            const double updatedPumpChainage = 100.0d;
-            pump1.Chainage = updatedPumpChainage;
-
-            Assert.AreEqual(updatedPumpChainage, compositeBranchStructure.Chainage,
-                            "Changing Chainage in a child BranchStructures should update CompositeBranchStructure Chainage");
-            foreach (IStructure1D structure in compositeBranchStructure.Structures)
-            {
-                Assert.AreEqual(compositeBranchStructure.Chainage, structure.Chainage,
-                                "Changing Chainage in CompositeBranchStructure should always update all child BranchStructure");
-            }
-        }
-
-        [Test]
-        public void CompositeBranchStructureOnlyFiresOnePropertyChangedEventEachTimeChainageUpdated()
-        {
-            var branch = new Branch();
-            var compositeBranchStructure = new CompositeBranchStructure();
-            branch.BranchFeatures.Add(compositeBranchStructure);
-
-            IWeir weir = new Weir("test");
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
-
-            var numEvents = 0;
-            compositeBranchStructure.PropertyChanged += (s, e) => { numEvents++; };
-
-            compositeBranchStructure.Chainage = 0.6;
-            Assert.AreEqual(1, numEvents,
-                            "Composite branch structure should only fire one property changed event when chainage is updated");
-
-            weir.Chainage = 0.4;
-            Assert.AreEqual(2, numEvents,
-                            "Child of composite branch structure should only fire one property changed event when chainage is updated");
         }
     }
 }

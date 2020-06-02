@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                                                                            rootObject.SaveStateStopTime,
                                                                            rootObject.SaveStateTimeStep,
                                                                            rootObject),
-                ValidateRestartInputState(rootObject),
+                ValidateRestartInputState(rootObject)
             };
             validationReports.AddRange(
                 rootObject.ControlGroups.Select(cg => new ControlGroupValidator().Validate(rootObject, cg)));

@@ -6,8 +6,8 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public class UGrid : AGrid<IUGridApi>
     {
-        public int nNodes;
-        public Dictionary<int, Dictionary<GridApiDataSet.LocationType, int[]>> VarNameIdsByLocationTypeByMeshId;
+
+        public Dictionary<int, Dictionary<GridApiDataSet.LocationType, int[]>> VarNameIdsByLocationTypeByMeshId { get; set; }
 
         public UGrid(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, mode)
         {

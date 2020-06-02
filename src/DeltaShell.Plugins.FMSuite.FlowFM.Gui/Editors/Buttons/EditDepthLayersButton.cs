@@ -10,9 +10,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
 {
     public static class EditDepthLayersHelper
     {
-        public static string ToolTip = "Adjust layers";
-        public static string Label = "Layer";
-        public static Bitmap ButtonImage = Resources.waterLayers;
+        public const string ToolTip = "Adjust layers";
+        public const string Label = "Layer";
+        public static readonly Bitmap ButtonImage = Resources.waterLayers;
 
         public static void ButtonAction(object inputObject)
         {
