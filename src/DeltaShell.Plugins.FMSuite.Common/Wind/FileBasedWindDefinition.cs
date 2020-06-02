@@ -203,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Wind
                     WindFiles.TryGetValue(FileBasedWindQuantity.SpiderWeb, out result);
                 }
 
-                return result == null ? null : result.FilePathHandler.FilePath;
+                return result?.FilePathHandler.FilePath;
             }
         }
 

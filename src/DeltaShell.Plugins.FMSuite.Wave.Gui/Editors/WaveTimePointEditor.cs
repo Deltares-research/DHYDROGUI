@@ -70,9 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
                 UpdateBindings(data);
 
-                waveMeteoDataEditor1.Data = data != null
-                                                ? data.MeteoData
-                                                : null;
+                waveMeteoDataEditor1.Data = data?.MeteoData;
                 waveMeteoDataEditor1.ImportFileIntoModelDirectory = s => ImportFileIntoModelDirectory(s);
 
                 if (data != null)

@@ -544,7 +544,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             var compositeView = activeView as ICompositeView;
 
             //todo: recursion
-            return compositeView != null ? compositeView.ChildViews.OfType<MapView>().FirstOrDefault() : null;
+            return compositeView?.ChildViews.OfType<MapView>().FirstOrDefault();
         }
 
         [InvokeRequired]
@@ -771,9 +771,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             if (subFileImporter != null)
             {
                 SubstanceProcessLibrary substanceProcessLibrary =
-                    fileImportActivity.ImportedItemOwner is IDataItem
-                        ? ((IDataItem) fileImportActivity.ImportedItemOwner).Value as SubstanceProcessLibrary
-                        : null;
+                    (fileImportActivity.ImportedItemOwner as IDataItem)?.Value as SubstanceProcessLibrary;
                 if (substanceProcessLibrary != null)
                 {
                     gui.DocumentViews

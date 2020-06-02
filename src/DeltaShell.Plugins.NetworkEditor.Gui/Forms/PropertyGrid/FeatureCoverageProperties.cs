@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get
             {
-                return data.FeatureVariable != null ? data.FeatureVariable.Values.Count : 0;
+                return data.FeatureVariable?.Values.Count ?? 0;
             }
         }
 

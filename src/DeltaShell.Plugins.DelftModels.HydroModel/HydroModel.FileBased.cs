@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get
             {
-                return couplingFile != null ? couplingFile.FilePath : null;
+                return couplingFile?.FilePath;
             }
         }
 

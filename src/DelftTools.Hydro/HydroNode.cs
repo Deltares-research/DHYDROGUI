@@ -28,7 +28,7 @@ namespace DelftTools.Hydro
             get
             {
                 var point = Geometry as IPoint;
-                return point != null ? point.Y : 0;
+                return point?.Y ?? 0;
             }
         }
 
@@ -39,7 +39,7 @@ namespace DelftTools.Hydro
             get
             {
                 var point = Geometry as IPoint;
-                return point != null ? point.X : 0;
+                return point?.X ?? 0;
             }
         }
 

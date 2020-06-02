@@ -30,8 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 return new ValidationResult(false, "The value of this parameter must be a double precision number.");
             }
 
-            bool minOp = MinIsOpened != null ? MinIsOpened.Value : false;
-            bool maxOp = MaxIsOpened != null ? MaxIsOpened.Value : false;
+            bool minOp = MinIsOpened?.Value ?? false;
+            bool maxOp = MaxIsOpened?.Value ?? false;
 
             if (minOp && maxOp)
             {

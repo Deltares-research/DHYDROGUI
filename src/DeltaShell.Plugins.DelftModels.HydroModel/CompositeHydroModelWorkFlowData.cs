@@ -34,11 +34,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
             set
             {
-                hydroModelWorkFlowDataLookUp = value != null
-                                                   ? value.ToDictionary(kvp => kvp.Key, kvp => string.Join(",", kvp.Value))
-                                                   : null;
+                hydroModelWorkFlowDataLookUp = value?.ToDictionary(kvp => kvp.Key, kvp => string.Join(",", kvp.Value));
 
-                workFlowDatas = value == null ? null : value.Keys.ToList();
+                workFlowDatas = value?.Keys.ToList();
             }
         }
 

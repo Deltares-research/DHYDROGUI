@@ -293,7 +293,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 if (coverage.Time.Values.Count > 0)
                 {
-                    return (INetworkCoverage) coverage.Filter(new VariableValueFilter<DateTime>(coverage.Time, time == null ? coverage.Time.Values[0] : time.Value));
+                    return (INetworkCoverage) coverage.Filter(new VariableValueFilter<DateTime>(coverage.Time, time ?? coverage.Time.Values[0]));
                 }
             }
 
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 if (coverage.Time.Values.Count > 0)
                 {
-                    IFeatureCoverage filteredCoverage = coverage.FilterAsFeatureCoverage(new VariableValueFilter<DateTime>(coverage.Time, time == null ? coverage.Time.Values[0] : time.Value));
+                    IFeatureCoverage filteredCoverage = coverage.FilterAsFeatureCoverage(new VariableValueFilter<DateTime>(coverage.Time, time ?? coverage.Time.Values[0]));
                     return filteredCoverage;
                 }
             }

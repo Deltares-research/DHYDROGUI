@@ -1500,7 +1500,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </summary>
         public bool CopyFromWorkingDirectory { get; }
 
-        public virtual string MdwFilePath => mdwFile != null ? mdwFile.MdwFilePath : null;
+        public virtual string MdwFilePath => mdwFile?.MdwFilePath;
 
         void IFileBased.CreateNew(string mdwPath)
         {

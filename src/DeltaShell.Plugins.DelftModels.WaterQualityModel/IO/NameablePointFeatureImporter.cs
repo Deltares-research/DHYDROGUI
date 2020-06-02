@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private double TryGetDefaultZValue()
         {
-            return GetDefaultZValue == null ? double.NaN : GetDefaultZValue();
+            return GetDefaultZValue?.Invoke() ?? double.NaN;
         }
     }
 }

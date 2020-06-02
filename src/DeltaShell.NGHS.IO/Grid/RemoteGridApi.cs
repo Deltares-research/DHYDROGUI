@@ -42,19 +42,17 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public int CreateFile(string filePath, UGridGlobalMetaData uGridGlobalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
-            return api != null
-                       ? api.CreateFile(filePath, uGridGlobalMetaData, mode)
-                       : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            return api?.CreateFile(filePath, uGridGlobalMetaData, mode) ?? GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int Open(string filePath, GridApiDataSet.NetcdfOpenMode mode)
         {
-            return api != null ? api.Open(filePath, mode) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            return api?.Open(filePath, mode) ?? GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int Close()
         {
-            return api != null ? api.Close() : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            return api?.Close() ?? GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int GetMeshCount(out int numberOfMeshes)
@@ -71,17 +69,17 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public GridApiDataSet.DataSetConventions GetConvention()
         {
-            return api != null ? api.GetConvention() : GridApiDataSet.DataSetConventions.CONV_NULL;
+            return api?.GetConvention() ?? GridApiDataSet.DataSetConventions.CONV_NULL;
         }
 
         public double GetVersion()
         {
-            return api != null ? api.GetVersion() : double.NaN;
+            return api?.GetVersion() ?? double.NaN;
         }
 
         public int Initialize()
         {
-            return api != null ? api.Initialize() : 0;
+            return api?.Initialize() ?? 0;
         }
 
         public int GetNumberOfNetworks(out int numberOfNetworks)

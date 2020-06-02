@@ -1031,7 +1031,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             get
             {
-                return structureViewData != null ? structureViewData.HydroNetwork : null;
+                return structureViewData?.HydroNetwork;
             }
         }
 
@@ -1039,7 +1039,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             get
             {
-                return structureViewData != null ? structureViewData.CompositeBranchStructure : null;
+                return structureViewData?.CompositeBranchStructure;
             }
         }
 

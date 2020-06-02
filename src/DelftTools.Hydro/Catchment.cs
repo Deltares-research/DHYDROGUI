@@ -55,7 +55,7 @@ namespace DelftTools.Hydro
 
         public virtual IPoint InteriorPoint => interiorPointCache ?? (interiorPointCache = CalculateInteriorPoint());
 
-        public virtual double AreaSize => Geometry != null ? Geometry.Area : 0.0;
+        public virtual double AreaSize => Geometry?.Area ?? 0.0;
 
         [Aggregation]
         public virtual IDrainageBasin Basin { get; set; }
@@ -212,7 +212,7 @@ namespace DelftTools.Hydro
         {
             var clone = new Catchment
             {
-                Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null,
+                Geometry = (IGeometry) Geometry?.Clone(),
                 IsGeometryDerivedFromAreaSize = IsGeometryDerivedFromAreaSize,
                 Name = Name,
                 Attributes = (IFeatureAttributeCollection) Attributes.Clone(),

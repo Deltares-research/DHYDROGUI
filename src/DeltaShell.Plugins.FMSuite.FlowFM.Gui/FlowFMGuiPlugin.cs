@@ -1120,7 +1120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var compositeView = activeView as ICompositeView;
 
             //todo: recursion
-            return compositeView != null ? compositeView.ChildViews.OfType<MapView>().FirstOrDefault() : null;
+            return compositeView?.ChildViews.OfType<MapView>().FirstOrDefault();
         }
 
         private static PropertyInfo CreatePropertyInfoDynamic<T>()

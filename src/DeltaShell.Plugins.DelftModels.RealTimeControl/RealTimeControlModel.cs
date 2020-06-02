@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return TimeProvider != null ? TimeProvider.StartTime : base.StartTime;
+                return TimeProvider?.StartTime ?? base.StartTime;
             }
             set
             {
@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return TimeProvider != null ? TimeProvider.StopTime : base.StopTime;
+                return TimeProvider?.StopTime ?? base.StopTime;
             }
             set
             {
@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return TimeProvider != null ? TimeProvider.TimeStep : base.TimeStep;
+                return TimeProvider?.TimeStep ?? base.TimeStep;
             }
             set
             {

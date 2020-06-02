@@ -202,8 +202,8 @@ namespace DelftTools.Hydro
             var clone = (HydroRegion) base.Clone();
             clone.Initialize();
             clone.Name = Name;
-            clone.Geometry = (IGeometry) (Geometry != null ? Geometry.Clone() : null);
-            clone.Attributes = (IFeatureAttributeCollection) (Attributes != null ? Attributes.Clone() : null);
+            clone.Geometry = (IGeometry) Geometry?.Clone();
+            clone.Attributes = (IFeatureAttributeCollection) Attributes?.Clone();
 
             clone.isCloning = true;
             CloneAndAddLinks(this, clone);

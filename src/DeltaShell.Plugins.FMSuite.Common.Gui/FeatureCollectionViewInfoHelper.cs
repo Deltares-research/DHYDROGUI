@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                         getGui()
                             .DocumentViews.OfType<ProjectItemMapView>()
                             .FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
-                    return centralMap == null ? null : centralMap.MapView.GetLayerForData(o);
+                    return centralMap?.MapView.GetLayerForData(o);
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o => getGui().Application.GetAllModelsInProject().OfType<TModel>().FirstOrDefault(m => Equals(o, getCollection(m))),

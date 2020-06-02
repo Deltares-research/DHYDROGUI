@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
                         getGui()
                             .DocumentViews.OfType<ProjectItemMapView>()
                             .FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
-                    return centralMap == null ? null : centralMap.MapView.GetLayerForData(o);
+                    return centralMap?.MapView.GetLayerForData(o);
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData =

@@ -589,11 +589,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 return;
             }
 
-            verticalProfileControl.VerticalProfileDefinition = SelectedBoundaryCondition == null
-                                                                   ? null
-                                                                   : SelectedBoundaryCondition
-                                                                       .GetDepthLayerDefinitionAtPoint(
-                                                                           SelectedSupportPointIndex);
+            verticalProfileControl.VerticalProfileDefinition = SelectedBoundaryCondition?.GetDepthLayerDefinitionAtPoint(
+                SelectedSupportPointIndex);
         }
 
         private void ExtractDepthLayerControlData(VerticalProfileDefinition depthLayerDefinition)

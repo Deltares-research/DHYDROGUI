@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                                                                             .OfType<INetworkCoverageGroupLayer>()
                                                                             .FirstOrDefault(cl => cl.Coverage is IDiscretization);
 
-            IDiscretization discretization = firstDiscretizationLayer != null ? (IDiscretization)firstDiscretizationLayer.NetworkCoverage : null;
+            IDiscretization discretization = (IDiscretization) firstDiscretizationLayer?.NetworkCoverage;
             if (discretization != null)
             {
                 if (discretization.Locations.Values.Count > 0)
