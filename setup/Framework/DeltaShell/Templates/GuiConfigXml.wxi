@@ -5,13 +5,29 @@
     ElementPath="/configuration/appSettings/add[\[]@key=&quot;applicationName&quot;[\]]/@value"
     File="[#$(var.GUICONFIGFILE)]"
     Value="$(var.ProductName)"/>
-
-  <util:XmlFile Id="SetKey4$(var.GUICONFIGFILE)"
-    Action="setValue"
-    ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
-    File="[#$(var.GUICONFIGFILE)]"
-    Value="$(var.FullProductVersion)"/>
   
+  <?ifdef excludeBuildNumberFromVersion ?>
+  <?ifdef env.BUILD_NUMBER ?>
+  <util:XmlFile Id="SetKey4$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.FullProductVersion).$(env.BUILD_NUMBER)"/>
+  <?else?>  
+  <util:XmlFile Id="SetKey4$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.FullProductVersion)"/>
+  <?endif?>
+  <?else?>
+  <util:XmlFile Id="SetKey4$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.FullProductVersion)"/>
+  <?endif?>
+
   <util:XmlFile Id="SetKey6$(var.GUICONFIGFILE)"
     Action="setValue"
     ElementPath="/configuration/appSettings/add[\[]@key=&quot;copyright&quot;[\]]/@value"

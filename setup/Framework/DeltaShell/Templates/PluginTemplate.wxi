@@ -99,11 +99,20 @@
   
   <?ifdef excludeBuildNumberFromVersion ?>
   <?define FullProductVersion="$(var.ReleaseVersion).0" ?>
+
+  <?ifdef env.BUILD_NUMBER ?>
+  <?define FullProductName="$(var.ProductName) ($(var.FullProductVersion).$(env.BUILD_NUMBER))" ?>
+  <?else?>
+  <?define FullProductName="$(var.ProductName) ($(var.FullProductVersion))" ?>
+  <?endif?>
+
   <?else?>
   <?ifdef env.BUILD_NUMBER ?>
   <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
+  <?define FullProductName="$(var.ProductName) ($(var.FullProductVersion))" ?>
   <?else?>
   <?define FullProductVersion="$(var.ReleaseVersion).0" ?>
+  <?define FullProductName="$(var.ProductName) ($(var.FullProductVersion))" ?>
   <?endif?>
   <?endif?>
   
@@ -147,7 +156,7 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="DeltaresDir" Name="Deltares">
-          <Directory Id="INSTALLDIR" Name="$(var.ProductName) ($(var.FullProductVersion))">
+          <Directory Id="INSTALLDIR" Name="$(var.FullProductName)">
             <Directory Id="BINDIR" Name="bin">
               <?ifdef customizationwxi?>
                 <?include $(var.customizationwxi)?>
@@ -196,12 +205,12 @@
 
               <?if $(var.explicitX86desktopshortcut)=true?>
               <Component Id="DeltaShellx86DesktopShortcut" Guid="AF591184-73FF-457A-92A6-C3BB65B29893">
-                <Shortcut Id="desktopDeltaShellx86" Directory="DesktopFolder" Name="$(var.ProductName) ($(var.FullProductVersion))" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.x86.exe"/>
+                <Shortcut Id="desktopDeltaShellx86" Directory="DesktopFolder" Name="$(var.FullProductName)" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.x86.exe"/>
                 <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDesktopShortcutx86" Type="integer" Value="1" KeyPath="yes" />
               </Component>
 
               <Component Id="DeltaShellx86StartMenuShortcut" Guid="06989698-DE28-4925-BF13-9A8C68C5F5BE">
-                <Shortcut Id="startmenuDeltaShellx86" Directory="ProgramGroupMenuDir" Name="$(var.ProductName) ($(var.FullProductVersion))" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.x86.exe"/>
+                <Shortcut Id="startmenuDeltaShellx86" Directory="ProgramGroupMenuDir" Name="$(var.FullProductName)" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.x86.exe"/>
                 <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedStartMenuShortcutx86" Type="integer" Value="1" KeyPath="yes"/>
               </Component>
               <?endif?>
@@ -224,12 +233,12 @@
               </Component>
               
               <Component Id="DeltaShellAnyCPUDesktopShortcut" Guid="$(var.DesktopShortcutAnyCPUGuid)">
-                <Shortcut Id="desktopDeltaShellAnyCPU" Directory="DesktopFolder" Name="$(var.ProductName) ($(var.FullProductVersion))" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.exe"/>
+                <Shortcut Id="desktopDeltaShellAnyCPU" Directory="DesktopFolder" Name="$(var.FullProductName)" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.exe"/>
                 <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
               </Component>
 
               <Component Id="DeltaShellAnyCPUStartMenuShortcut" Guid="{5808856E-CC71-4E29-9999-8299D56E044B}">
-                <Shortcut Id="startmenuDeltaShell" Directory="ProgramGroupMenuDir" Name="$(var.ProductName) ($(var.FullProductVersion))" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.exe"/>
+                <Shortcut Id="startmenuDeltaShell" Directory="ProgramGroupMenuDir" Name="$(var.FullProductName)" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.exe"/>
                 <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedStartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
               </Component>
               
@@ -375,7 +384,7 @@
       <!-- add appdata directory structure here -->
       <Directory Id="APPDATAFOLDER">
         <!-- add company name as sub directory -->
-        <Directory Id="AppDataFolderCompany" Name="$(var.ProductName) ($(var.FullProductVersion))">
+        <Directory Id="AppDataFolderCompany" Name="$(var.FullProductName)">
           <!--add productname x.x as sub directory -->
         </Directory>
       </Directory>
@@ -507,7 +516,7 @@
      <UIRef Id="$(var.plugin_wixUIDeltares)" />
     <?else?>
     <!--jk added properties which are necessary for peruser and permachine installation.-->
-    <Property Id="ApplicationFolderName" Value="$(var.ProductName) ($(var.FullProductVersion))"/>
+    <Property Id="ApplicationFolderName" Value="$(var.FullProductName)"/>
     <Property Id="DeltaresWixAppFolder" Value="WixPerMachineFolder"/>
     <Property Id="WixAppFolder" Value="WixPerMachineFolder"/>
     <Property Id="DELTARES_WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
