@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -18,6 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     /// </summary>
     public static class ChannelInitialConditionDefinitionFileReader
     {
+        private static ILog Log = LogManager.GetLogger(typeof(ChannelInitialConditionDefinitionFileReader));
         private static InitialConditionQuantity readQuantity;
 
         /// <summary>
@@ -130,16 +132,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void SetGlobalDefinition(DelftIniCategory globalCategory, WaterFlowFMModelDefinition modelDefinition, string filePath)
         {
             var globalValue = globalCategory.ReadProperty<string>(InitialConditionRegion.Value.Key);
-            var globalQuantityString = globalCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
-
-            if (string.IsNullOrWhiteSpace(globalValue) || Enum.TryParse(globalQuantityString, out InitialConditionQuantity globalQuantity) == false)
+            if (string.IsNullOrWhiteSpace(globalValue))
             {
-                throw new FileReadingException(string.Format(Resources.ChannelInitialConditionDefinitionFileReader_ReadFile_Could_not_read__0__properly__1__is_not_a_valid_quantity, filePath, globalQuantityString));
+                Log.Warn("No global value is specified. Using default value.");
+            }
+            else
+            {
+                modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalValue1D, globalValue);
             }
 
-            modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, $"{ (int)globalQuantity }");
-            modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalValue1D, globalValue);
+            var globalQuantityString = globalCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
+            var globalQuantity = InitialConditionQuantityTypeConverter.ConvertStringToInitialConditionQuantity(globalQuantityString);
 
+            modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, $"{ (int)globalQuantity }");
+            
             readQuantity = globalQuantity;
         }
 
