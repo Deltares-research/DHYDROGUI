@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DelftTools.Hydro.SewerFeatures
+﻿namespace DelftTools.Hydro.SewerFeatures
 {
     public interface ISewerFeature
     {

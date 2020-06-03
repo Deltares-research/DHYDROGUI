@@ -1,6 +1,4 @@
-﻿using System;
-using DelftTools.Hydro;
-using DelftTools.Hydro.SewerFeatures;
+﻿using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.ImportExport.GWSW;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;

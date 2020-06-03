@@ -1,5 +1,4 @@
-﻿using DelftTools.Hydro;
-using DelftTools.Hydro.SewerFeatures;
+﻿using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.ImportExport.GWSW;
 using NetTopologySuite.Geometries;
 

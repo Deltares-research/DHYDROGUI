@@ -1,12 +1,11 @@
-﻿using DelftTools.Hydro;
+﻿using System.IO;
+using System.Linq;
+using DelftTools.Hydro;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
-using System.IO;
-using System.Linq;
-using NetTopologySuite.Extensions.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

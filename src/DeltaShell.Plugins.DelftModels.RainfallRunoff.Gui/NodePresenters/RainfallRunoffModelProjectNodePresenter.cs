@@ -10,7 +10,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;

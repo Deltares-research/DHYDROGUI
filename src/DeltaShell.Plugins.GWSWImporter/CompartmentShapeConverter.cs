@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW

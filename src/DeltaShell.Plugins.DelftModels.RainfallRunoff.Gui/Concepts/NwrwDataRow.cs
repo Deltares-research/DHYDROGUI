@@ -1,11 +1,11 @@
-﻿using DelftTools.Controls;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 {

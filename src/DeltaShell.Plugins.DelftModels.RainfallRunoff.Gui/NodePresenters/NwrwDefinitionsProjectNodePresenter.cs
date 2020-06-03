@@ -1,7 +1,5 @@
-﻿using System.Drawing;
-using DelftTools.Controls;
+﻿using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
-using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 

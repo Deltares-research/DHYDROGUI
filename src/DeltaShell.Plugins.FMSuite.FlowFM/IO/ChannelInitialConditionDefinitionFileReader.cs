@@ -1,4 +1,8 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Hydro;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -6,10 +10,6 @@ using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO

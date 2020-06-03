@@ -1,8 +1,8 @@
-﻿using DelftTools.Utils.RegularExpressions;
-using DeltaShell.NGHS.IO.Helpers;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO
 {

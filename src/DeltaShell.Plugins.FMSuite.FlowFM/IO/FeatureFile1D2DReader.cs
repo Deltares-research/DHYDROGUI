@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
+using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Roughness;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
-using System.IO;
-using System.Linq;
-using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
-using GeoAPI.Extensions.Networks;
-using NetTopologySuite.Extensions.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

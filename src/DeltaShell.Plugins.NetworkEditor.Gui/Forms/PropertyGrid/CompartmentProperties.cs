@@ -1,12 +1,12 @@
-﻿using DelftTools.Hydro;
+﻿using System.ComponentModel;
+using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
+using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
-using System.ComponentModel;
-using DelftTools.Hydro.Structures;
-using DelftTools.Utils.ComponentModel;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {

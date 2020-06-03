@@ -1,9 +1,14 @@
-﻿using DelftTools.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.FeatureCoverageProviders;
@@ -20,11 +25,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using DelftTools.Utils.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 {

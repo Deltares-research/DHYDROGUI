@@ -5,7 +5,6 @@ using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     /// <summary>

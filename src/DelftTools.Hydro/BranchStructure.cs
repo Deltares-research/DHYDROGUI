@@ -1,11 +1,11 @@
+using System;
+using System.ComponentModel;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Geometries;
-using System;
-using System.ComponentModel;
 
 namespace DelftTools.Hydro
 {

@@ -1,6 +1,4 @@
-﻿using DeltaShell.NGHS.IO.Grid;
-
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
+﻿namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class WaterFlowFMModelWriterData
     {

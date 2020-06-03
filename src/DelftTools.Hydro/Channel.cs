@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -7,10 +11,6 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.IO;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 
 namespace DelftTools.Hydro
 {

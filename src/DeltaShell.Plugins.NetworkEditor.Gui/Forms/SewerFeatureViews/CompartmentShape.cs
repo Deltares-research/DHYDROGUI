@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 

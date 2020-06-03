@@ -1,4 +1,5 @@
-﻿using DelftTools.Controls;
+﻿using System.Collections.Generic;
+using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -13,7 +14,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses;
 using Mono.Addins;
-using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 {

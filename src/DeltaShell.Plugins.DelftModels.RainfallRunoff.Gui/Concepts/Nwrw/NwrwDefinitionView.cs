@@ -1,12 +1,12 @@
 ﻿using System;
-using DelftTools.Controls;
-using DelftTools.Controls.Swf.Table;
-using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using DelftTools.Controls;
+using DelftTools.Controls.Swf.Table;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Threading;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 {

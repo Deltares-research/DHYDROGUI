@@ -6,12 +6,10 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Properties;
 using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DelftTools.Hydro.CrossSections

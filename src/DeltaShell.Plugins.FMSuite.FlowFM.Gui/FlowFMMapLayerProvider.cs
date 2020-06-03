@@ -39,6 +39,7 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
@@ -50,8 +51,6 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using NetTopologySuite.Extensions.Coverages;
-using Orientation = SharpMap.Rendering.Orientation;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {

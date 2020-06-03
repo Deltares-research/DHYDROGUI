@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
