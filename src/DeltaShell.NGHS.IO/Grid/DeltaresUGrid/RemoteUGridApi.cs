@@ -40,9 +40,9 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         }
 
         /// <inheritdoc/>
-        public void Open(string filePath, OpenMode openMode)
+        public void Open(string filePath, OpenMode mode = OpenMode.Reading)
         {
-            api.Open(filePath, openMode);
+            api.Open(filePath, mode);
         }
 
         /// <inheritdoc/>

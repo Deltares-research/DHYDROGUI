@@ -6,10 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
-using DelftTools.Controls.Wpf.ValueConverters;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -30,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
     public class WaterFlowFMModelNodePresenter : ModelNodePresenterBase<WaterFlowFMModel>
     {
-        public static Bitmap UnstrucModelIcon;
+        internal static Bitmap UnstrucModelIcon;
         public static readonly Bitmap ThinDamIcon = new Bitmap(Resources.thindam, 16, 16);
         public static readonly Bitmap FixedWeirIcon = new Bitmap(Resources.fixedweir, 16, 16);
         public static readonly Bitmap LeveeBreachIcon = new Bitmap(Resources.DamBreak, 16, 16);

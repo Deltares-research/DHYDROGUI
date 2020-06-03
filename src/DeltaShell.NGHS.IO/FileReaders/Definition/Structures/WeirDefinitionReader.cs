@@ -203,9 +203,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 
                     return generalStructureWeirFormula;
 
-
                 default:
-                    throw new ArgumentOutOfRangeException("Weir type expected.");
+                    throw new ArgumentOutOfRangeException(nameof(type), type, "Weir type expected.");
             }
         }
     }

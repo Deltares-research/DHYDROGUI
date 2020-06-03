@@ -101,7 +101,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             var file = NetCdfFile.OpenExisting(netFilePath);
             try
             {
-                var branchIds = file.GetVariableByName($"network_{UGridConstants.Naming.BranchIds}"); ;
+                var branchIds = file.GetVariableByName($"network_{UGridConstants.Naming.BranchIds}");
                 if (branchIds == null) return propertiesPerBranch;
                 var branchTypes = file.GetVariableByName($"network_{UGridConstants.Naming.BranchType}");
                 if (branchTypes == null) return propertiesPerBranch;

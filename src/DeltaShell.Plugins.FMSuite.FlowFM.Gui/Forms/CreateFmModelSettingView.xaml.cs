@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Shell.Core;
@@ -10,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
     /// <summary>
     /// Interaction logic for CreateFmModelSettingView.xaml
     /// </summary>
-    public partial class CreateFmModelSettingView : UserControl, IProjectTemplateSettingsView
+    public sealed partial class CreateFmModelSettingView : UserControl, IProjectTemplateSettingsView
     {
         public CreateFmModelSettingView()
         {

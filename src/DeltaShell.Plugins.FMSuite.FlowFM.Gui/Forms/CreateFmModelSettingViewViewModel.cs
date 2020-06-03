@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
     {
         private readonly ICommand applyTemplateCommand;
         private readonly ICommand cancelTemplateCommand;
-        private CollectionView coordinateSystemsView;
+        private readonly CollectionView coordinateSystemsView;
         private string filterText;
         private ProjectTemplate projectTemplate;
 

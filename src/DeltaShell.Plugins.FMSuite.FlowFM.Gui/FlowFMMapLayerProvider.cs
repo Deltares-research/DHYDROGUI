@@ -10,10 +10,8 @@ using System.Runtime.CompilerServices;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
-using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
-using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -39,10 +37,8 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using GeoAPI.Extensions.CoordinateSystems;
-using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Algorithm;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
@@ -182,25 +178,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
-            if (parent is FMMapFileFunctionStore mapFileFunctionStore)
+            if (parent is FMMapFileFunctionStore mapFileFunctionStore && data is IEventedList<ILink1D2D> linksMapfile)
             {
-                if (data is IEventedList<ILink1D2D> linksMapfile)
-                {
-                    var coordinateSystem = mapFileFunctionStore.Grid.CoordinateSystem;
-                    var theme = Create1D2DLinksTheme();
+                var coordinateSystem = mapFileFunctionStore.Grid.CoordinateSystem;
+                var theme = Create1D2DLinksTheme();
 
-                    return new VectorLayer(LayerName1D2DLinks)
-                    {
-                        DataSource = new WaterFlowFmModelFeature2DCollection().Init(linksMapfile, "1d2dLink", ModelName, coordinateSystem),
-                        CanBeRemovedByUser = false,
-                        SmoothingMode = SmoothingMode.AntiAlias,
-                        Opacity = 0.7f,
-                        Theme = theme,
-                        Style = (VectorStyle)theme.DefaultStyle,
-                        Selectable = true,
-                        NameIsReadOnly = true,
-                    };
-                }
+                return new VectorLayer(LayerName1D2DLinks)
+                {
+                    DataSource = new WaterFlowFmModelFeature2DCollection().Init(linksMapfile, "1d2dLink", ModelName, coordinateSystem),
+                    CanBeRemovedByUser = false,
+                    SmoothingMode = SmoothingMode.AntiAlias,
+                    Opacity = 0.7f,
+                    Theme = theme,
+                    Style = (VectorStyle)theme.DefaultStyle,
+                    Selectable = true,
+                    NameIsReadOnly = true,
+                };
             }
 
             if (data is FMMapFileFunctionStore)

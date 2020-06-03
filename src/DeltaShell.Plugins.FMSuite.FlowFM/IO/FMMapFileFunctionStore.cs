@@ -27,8 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class FMMapFileFunctionStore : FMNetCdfFileFunctionStore
     {
-        private readonly WaterFlowFMModel waterFlowFmModel;
-
         #region Map file constants
         private const string FlowLinkNrsName = "1d2d_flowlinknrs";
         private const string FlowLinkName = "FlowLink";
@@ -74,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IHydroNetwork network;
         private IDiscretization discretization;
         private readonly Dictionary<IVariable, IMultiDimensionalArray> argumentVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
-        private NetworkLocationTypeConverter networkLocationTypeConverter = new NetworkLocationTypeConverter();
+        private readonly NetworkLocationTypeConverter networkLocationTypeConverter = new NetworkLocationTypeConverter();
         private List<FeatureCoverage> linkCoverages;
 
         // nhib
@@ -84,7 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public FMMapFileFunctionStore(WaterFlowFMModel waterFlowFmModel)
         {
-            this.waterFlowFmModel = waterFlowFmModel;
             linkCoverages = new List<FeatureCoverage>();
             DisableCaching = true;
         }

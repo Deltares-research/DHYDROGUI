@@ -13,7 +13,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 {
-    public class Generate1D2DLinksHelper
+    public static class Generate1D2DLinksHelper
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Generate1D2DLinksHelper));
 

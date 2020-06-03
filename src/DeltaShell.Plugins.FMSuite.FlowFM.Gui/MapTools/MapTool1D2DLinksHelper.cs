@@ -2,10 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
-using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.IO.Grid.GridGeomApi;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;

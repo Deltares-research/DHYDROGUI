@@ -1,5 +1,4 @@
-﻿using Deltares.UGrid.Api;
-using ProtoBuf;
+﻿using ProtoBuf;
 
 namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 {

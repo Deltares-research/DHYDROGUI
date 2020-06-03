@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
     /// </summary>
     public class RRFlowDimrConfigModelCoupler : IDimrConfigModelCoupler
     {
-        private IList<DimrCoupleInfo> coupleInfos = new List<DimrCoupleInfo>();
+        private readonly IList<DimrCoupleInfo> coupleInfos = new List<DimrCoupleInfo>();
 
         public RRFlowDimrConfigModelCoupler(IModel source, IModel target, ICompositeActivity sourceCoupler, ICompositeActivity targetCoupler)
         {

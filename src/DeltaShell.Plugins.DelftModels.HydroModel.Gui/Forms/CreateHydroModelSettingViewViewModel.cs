@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
     {
         private readonly ICommand applyTemplateCommand;
         private readonly ICommand cancelTemplateCommand;
-        private CollectionView coordinateSystemsView;
+        private readonly CollectionView coordinateSystemsView;
         private string filterText;
         private ProjectTemplate projectTemplate;
 
