@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         }
 
         [DynamicReadOnly]
-        [DisplayName("Discharge coefficient")]
+        [DisplayName("Correction coefficient")]
         [DisplayFormat("0.00")]
         public double SDischargeCoefficient
         {
