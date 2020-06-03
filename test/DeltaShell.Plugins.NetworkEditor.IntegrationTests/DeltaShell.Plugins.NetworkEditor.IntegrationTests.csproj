@@ -173,7 +173,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
@@ -191,11 +190,6 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj">
-      <Project>{19EC5699-52F8-4AD8-A888-C7B65F8F045B}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.FlowFM.Tests</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

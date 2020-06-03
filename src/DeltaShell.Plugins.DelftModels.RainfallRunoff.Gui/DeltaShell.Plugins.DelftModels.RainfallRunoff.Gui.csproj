@@ -120,7 +120,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="SharpMap">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50719-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>

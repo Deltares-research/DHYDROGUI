@@ -245,11 +245,6 @@
       <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
-      <Project>{33e367f7-fc78-4e22-8213-4374cbfb86cb}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
       <Project>{56103155-e7a6-45d7-ba64-50a6f9d81b94}</Project>
       <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
