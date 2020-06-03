@@ -46,9 +46,14 @@ namespace DeltaShell.Dimr
                 {
                     if (api != null)
                     {
+                        if (RemoteInstanceContainer.IsProcessAlive(api))
+                        {
+                            api.Dispose(); 
+                        }
+
                         // connection will be broken because remote process is killed => results in InvalidOperationException
                         RemoteInstanceContainer.RemoveInstance(api);
-                        //api.Dispose(); 
+                        
                         Thread.Sleep(100); // wait for process to truly exit
                     }
                     api = null;

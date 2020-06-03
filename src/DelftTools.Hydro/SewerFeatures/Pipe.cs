@@ -37,10 +37,6 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             get { return Profile?.ShapeType; }
         }
-        /*public virtual CrossSectionStandardShapeType CrossSectionStandardShapeType
-        {
-            get { return Profile?.ShapeType ?? default(CrossSectionStandardShapeType); }
-        }*/
 
         [FeatureAttribute(Order = 31)]
         public virtual double Width

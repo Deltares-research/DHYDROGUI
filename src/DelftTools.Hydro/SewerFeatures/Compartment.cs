@@ -7,7 +7,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using log4net;
 
 namespace DelftTools.Hydro.SewerFeatures
 {
@@ -16,8 +15,7 @@ namespace DelftTools.Hydro.SewerFeatures
     {
         private IManhole parentManhole;
         private string name;
-        private static ILog Log = LogManager.GetLogger(typeof(Compartment));
-
+        
         public Compartment() : this("compartment")
         {
             
@@ -157,7 +155,6 @@ namespace DelftTools.Hydro.SewerFeatures
 
             if (manhole != null)
             {
-                //Log.Info("replacing compartments");
                 var existingCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(Name,StringComparison.InvariantCultureIgnoreCase));
                 CopyToExistingCompartmentPropertyValues(existingCompartment);
                 ReplaceCompartmentInManhole(existingCompartment, manhole, helper);

@@ -96,7 +96,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
         {
             if (feature is IPump)
             {
-                return Model1DParametersCategories.Pumps;;
+                return Model1DParametersCategories.Pumps;
             }
             if (feature is IWeir)
             {

@@ -20,8 +20,7 @@ namespace DelftTools.Hydro.Structures
         {
             Name = DefaultProfileDefinitionName
         };
-        private static readonly ICrossSection DefaultSewerCrossSection = new CrossSection(DefaultSewerProfile);
-
+        
         private static readonly Dictionary<Type, Func<ISewerConnection, ISewerConnection>> SewerConnectionStructureCreators = new Dictionary<Type, Func<ISewerConnection, ISewerConnection>>
         {
             { typeof(Orifice), CreateOrificeConnection},

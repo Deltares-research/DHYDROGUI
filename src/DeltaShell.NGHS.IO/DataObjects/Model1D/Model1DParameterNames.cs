@@ -9,7 +9,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         public const string LocationWaterLevel = "Water level";
         public const string LocationWaterDepth = "Water depth";
         public const string LocationSurfaceArea = "Surface area";
-        //public const string LocationFreeboard = "Freeboard";
+        
         public const string LocationVolume = "Water volume";
         public const string LocationTotalArea = "Total area";
         public const string LocationTotalWidth = "Total width";

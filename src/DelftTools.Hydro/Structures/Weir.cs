@@ -7,22 +7,17 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
-using log4net;
 
 namespace DelftTools.Hydro.Structures
 {
     [Entity(FireOnCollectionChange=false)]
     public class Weir : BranchStructure, IWeir
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(Weir));
-
         private double crestLevel;
         private double crestWidth;
         private bool canBeTimedependent;
         private bool useCrestLevelTimeSeries;
-        private bool useCrestWidthTimeSeries;
-        private bool useVelocityHeight;
-
+        
         public Weir() : this("Weir")
         {
         }
