@@ -76,6 +76,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
             public const string Retention = "retentions";
             public const string StorageNodes = "storageNodes";
             public const string InitialConditionQuantity = "1dField";
+            public const string InitialFields = "iniField";
         }
 
         public static readonly ConfigurationSetting FileVersion = new ConfigurationSetting(key:"fileVersion", description: "#File version. Do not edit this.");

@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.InitialConditionDataMajorVersion,
                     GeneralRegion.InitialConditionDataMinorVersion,
-                    GeneralRegion.FileTypeName.InitialConditionQuantity),
+                    GeneralRegion.FileTypeName.InitialFields),
             };
 
             categories.Add(CreateInitialConditionQuantityCategory(globalInitialConditionQuantity));
