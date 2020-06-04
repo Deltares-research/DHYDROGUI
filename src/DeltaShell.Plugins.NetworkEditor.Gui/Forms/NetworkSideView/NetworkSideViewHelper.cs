@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Charting.Series;
@@ -6,6 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Binding;
 using DelftTools.Hydro;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
@@ -165,6 +167,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
 
             ThrowWhenFunctionVariableNamesAreInvalid(xArgument.Name, yComponent.Name);
+        }
+
+        public static IEnumerable<Tuple<T, double>> GetNodesInRouteWithChainage<T>(Route route) where T : INode
+        {
+            var currentChainage = 0.0;
+
+            for (int i = 1; i < route.Segments.Values.Count; i++)
+            {
+                var previousSegment = route.Segments.Values[i - 1];
+                var currentSegment = route.Segments.Values[i];
+
+                currentChainage += previousSegment.Length;
+
+                if (previousSegment.Branch == currentSegment.Branch)
+                    continue;
+
+                var previousNode = previousSegment.DirectionIsPositive
+                    ? previousSegment.Branch.Target
+                    : previousSegment.Branch.Source;
+
+                var currentNode = currentSegment.DirectionIsPositive
+                    ? currentSegment.Branch.Source
+                    : currentSegment.Branch.Target;
+
+                if (currentNode == previousNode && currentNode is T typedNode)
+                {
+                    yield return new Tuple<T, double>(typedNode, currentChainage);
+                }
+            }
         }
     }
 }

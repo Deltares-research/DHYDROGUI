@@ -2518,6 +2518,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/ImportBranchFeatureDialog.resx -t
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/CompositeStructureViewDataController.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/INetworkSideView.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/INetworkSideViewData.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/ManHoleSideViewShape.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideView.Designer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideView.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideView.resx -text
@@ -37389,6 +37390,7 @@ test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideVie
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewDataTestHelper.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewFunctionTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewFunctionTestHelper.cs -text
+test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewHelperTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewTestHelper.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/SewerFeatureViews/LeveeBreachViewModelTest.cs -text

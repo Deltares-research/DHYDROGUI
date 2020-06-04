@@ -33,6 +33,7 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Networks;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
@@ -401,6 +402,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             
             UpdateCrossSectionShapes();
             UpdateStructureShapes();
+            UpdateCompartmentShapes();
             UpdateTitle();
         }
 
@@ -717,6 +719,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             chartView.Chart.RightAxis.Title = "Value";
         }
 
+        private void UpdateCompartmentShapes()
+        {
+            if (networkSideViewDataController == null)
+            {
+                // do not remove; see comment in Data set
+                return;
+            }
+
+            var manHolesInRoute = networkSideViewDataController.ActiveManholes;
+
+            foreach (var tuple in manHolesInRoute)
+            {
+                var manhole = tuple.Item1;
+                var offset = tuple.Item2;
+
+                AddManholeShape(data, manhole, offset);
+            }
+        }
+
         private void UpdateCrossSectionShapes()
         {
             if (networkSideViewDataController == null)
@@ -948,6 +969,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             shapeModifyTool.AddShape(crossSectionShape);
             Structures2Shape[crossSection] = crossSectionShape;
             Shapes2Structures[crossSectionShape] = crossSection;
+        }
+
+        private void AddManholeShape(Route route, IManhole manhole, double offset)
+        {
+            var compartmentShape = new ManHoleSideViewShape(chart, offset, 5, manhole)
+            {
+                HorizontalShapeAlignment = HorizontalShapeAlignment.Center,
+                VerticalShapeAlignment = VerticalShapeAlignment.Top,
+            };
+
+            compartmentShape.AddHover(new HoverRectangle(compartmentShape, Color.LightGray));
+            compartmentShape.AddHover(new HoverText("ManHole:" + manhole.Name,"",
+                compartmentShape, Color.Black, HoverPosition.Top, ArrowHeadPosition.LeftRight));
+
+            shapeModifyTool.AddShape(compartmentShape);
         }
 
         private void TimeNavigatorPropertyChanged(object sender, EventArgs e)

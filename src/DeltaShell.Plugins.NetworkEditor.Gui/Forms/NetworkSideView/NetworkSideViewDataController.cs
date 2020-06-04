@@ -267,6 +267,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
+        /// <summary>
+        /// Returns the <see cref="IManhole"/>s in the route with there chainage relative to the route
+        /// </summary>
+        public IEnumerable<System.Tuple<IManhole, double>> ActiveManholes
+        {
+            get { return NetworkSideViewHelper.GetNodesInRouteWithChainage<IManhole>(route); }
+        }
+
         public IList<IBranchFeature> ActiveBranchFeatures
         {
             get
@@ -830,8 +838,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 CompositeStructureViewHelper.UpdateMinMaxForBranchFeatures(ActiveBranchFeatures, ref min, ref max);
             }
+
+            if (ActiveManholes.Any())
+            {
+                var allCompartments = ActiveManholes
+                    .Select(t => t.Item1)
+                    .SelectMany(m => m.Compartments)
+                    .ToList();
+
+                if (allCompartments.Count > 0)
+                {
+                    var minManholes = allCompartments.Min(c => c.BottomLevel);
+                    var maxManholes = allCompartments.Max(c => c.SurfaceLevel);
+
+                    if (minManholes < min)
+                    {
+                        min = minManholes;
+                    }
+
+                    if (maxManholes > max)
+                    {
+                        max = maxManholes;
+                    }
+                }
+            }
+
             if (double.IsNaN(min)) min = -1.0d;
             if (double.IsNaN(max)) max = 1.0d;
+
             minValue = min;
             maxValue = max;
         }

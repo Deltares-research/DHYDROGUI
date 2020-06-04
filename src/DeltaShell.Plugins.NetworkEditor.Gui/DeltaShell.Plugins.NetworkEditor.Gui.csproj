@@ -215,6 +215,7 @@
     </Compile>
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
     <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionDefinitionStandardViewModel.cs" />
+    <Compile Include="Forms\NetworkSideView\ManHoleSideViewShape.cs" />
     <Compile Include="Forms\ProjectExplorer\RoughnessSectionNodePresenter.cs" />
     <Compile Include="Forms\PropertyGrid\CompartmentProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
