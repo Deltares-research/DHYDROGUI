@@ -275,6 +275,7 @@
       <DependentUpon>CreateFmModelSettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\CrossSectionViewModel.cs" />
+    <Compile Include="Forms\DuplicateCalculationPointsViewModel.cs" />
     <Compile Include="Forms\FMModelInspectionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -367,9 +368,13 @@
     <Compile Include="Forms\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionsForm.Designer.cs">
       <DependentUpon>ConstantSpatialChannelInitialConditionDefinitionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\RemoveDuplicateCalculationPointsDialog.xaml.cs">
+      <DependentUpon>RemoveDuplicateCalculationPointsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Forms\RefreshMainSectionWidthsDialog.xaml.cs">
       <DependentUpon>RefreshMainSectionWidthsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\RemoveDuplicateCalculationPointsDialogViewModel.cs" />
     <Compile Include="Forms\RefreshMainSectionWidthsDialogViewModel.cs" />
     <Compile Include="GraphicsProviders\FMGuiGraphicsProvider.cs" />
     <Compile Include="MapTools\Add1D2DLinkMapTool.cs" />
@@ -679,6 +684,10 @@
     <Page Include="Forms\CreateFmModelSettingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\RemoveDuplicateCalculationPointsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="GraphicsProviders\FMGuiGraphics.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -1727,6 +1727,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CreateFmModelSettingViewViewMode
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CrossSectionViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/DataImportPointsListBox.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/DataImportPointsListBox.resx -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/DuplicateCalculationPointsViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/FMModelInspectionWindow.Designer.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/FMModelInspectionWindow.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/FMModelInspectionWindow.resx -text
@@ -1759,6 +1760,9 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialog.x
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialog.xaml.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialogViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RemoveBoundaryPointDialog.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RemoveDuplicateCalculationPointsDialog.xaml -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RemoveDuplicateCalculationPointsDialog.xaml.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RemoveDuplicateCalculationPointsDialogViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/WindSelectionDialog.Designer.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/WindSelectionDialog.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/WindSelectionDialog.resx -text

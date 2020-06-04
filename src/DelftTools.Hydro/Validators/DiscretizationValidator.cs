@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro.Validators
@@ -62,6 +63,11 @@ namespace DelftTools.Hydro.Validators
 
                     issues.AddRange(CheckBranchStructureLocations(networkDiscretization, branch, branchLocations));
                 }
+            }
+
+            if (networkDiscretization.Locations.Values.GroupBy(lv => lv.Geometry.Coordinate).Any(grp => grp.Count() > 1))
+            {
+                issues.Add(new ValidationIssue("Duplicate network calculation points found at same locations", ValidationSeverity.Error, $"There are duplicate calculation points at same the location. Kernel cannot handle this. Please remove one of the points.", networkDiscretization.Locations.Values.GroupBy(lv => lv.Geometry.Coordinate).Where(grp => grp.Count() > 1)));
             }
 
             var subReports = ValidateIds(networkDiscretization);

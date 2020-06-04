@@ -1,0 +1,108 @@
+﻿<Window x:Class="DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.RemoveDuplicateCalculationPointsDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms"
+             xmlns:gui="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui"
+             xmlns:valueConverters="clr-namespace:DelftTools.Controls.Wpf.ValueConverters;assembly=DelftTools.Controls.Wpf"
+             xmlns:geometries="clr-namespace:GeoAPI.Geometries;assembly=GeoAPI"
+             xmlns:coverages="clr-namespace:GeoAPI.Extensions.Coverages;assembly=GeoAPI.Extensions"
+             mc:Ignorable="d" 
+             ShowInTaskbar="False"
+             AllowsTransparency="True" 
+             WindowStyle="None" 
+             Background="Transparent" 
+             Title="Refresh main sections" 
+             Height="500" Width="400" 
+             WindowStartupLocation="CenterScreen" 
+             ResizeMode="CanResizeWithGrip" 
+             Topmost="True">
+    <Window.DataContext>
+        <local:RemoveDuplicateCalculationPointsDialogViewModel x:Name="ViewModel"/>
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DelftTools.Controls.Wpf;component/ResourceStyles.xaml" />
+                <ResourceDictionary>
+                    <valueConverters:ImageToBitmapSourceConverter x:Key="ImageToBitmapSourceConverter"/>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border Style="{StaticResource DialogBorderStyle}">
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="5" TextWrapping="Wrap">
+            Do you want to remove duplicate calculation locations from the discretisation and only keep the first location?
+            </TextBlock>
+
+            <Grid Grid.Row="1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <DataGrid Grid.Row="0" AutoGenerateColumns="False" Margin="5"
+                      ItemsSource="{Binding DuplicateCalculationPointsViewModels}"
+                      GridLinesVisibility="None"
+                      HeadersVisibility="Column"
+                      AlternatingRowBackground="AliceBlue">
+                    <DataGrid.Columns>
+                        <!--<DataGridTextColumn Header="Network Location" Binding="{Binding MainNetworkLocation.Name}" />-->
+                        <!--<DataGridTextColumn Header="Duplicates" Binding="{Binding DuplicateNames}" />-->
+                        <DataGridTemplateColumn Header="Network Location" IsReadOnly="True" Width="*" SortMemberPath="Name" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate DataType="local:DuplicateCalculationPointsViewModel">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Name}" Margin="0,0,5,0" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding MainNetworkLocation.Branch.Name, StringFormat=(\{0\}, TargetNullValue=( }" FontSize="8" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding MainNetworkLocation.Chainage, StringFormat=\ - \{0\})}" FontSize="8" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Duplicates" IsReadOnly="True" Width="*" SortMemberPath="Name" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate DataType="local:DuplicateCalculationPointsViewModel">
+                                    <ListBox ItemsSource="{Binding DuplicateNetworkLocations}" BorderThickness="0" Background="#FFFFFFFF">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBlock Text="{Binding Name}" Margin="0,0,5,0" />
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Branch.Name, StringFormat=(\{0\}, TargetNullValue=( }" FontSize="8" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding Chainage, StringFormat=\ - \{0\})}" FontSize="8" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <Grid Grid.Row="2" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" IsDefault="True" MinWidth="60" Command="{Binding RemoveDuplicateCalculationPointsCommand}" Content="Remove" HorizontalAlignment="Right" Margin="5"/>
+                <Button Grid.Column="1" IsCancel="True" MinWidth="60" Content="Cancel" HorizontalAlignment="Center" Margin="5"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

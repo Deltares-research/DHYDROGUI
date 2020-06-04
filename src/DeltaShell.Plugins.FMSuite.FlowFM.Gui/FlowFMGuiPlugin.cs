@@ -230,7 +230,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
             yield return new ViewInfo<IEnumerable<ICrossSection>, RefreshMainSectionWidthsDialog>
             {
-                Description = "Refresh Main Section Width View (Cross sections in Flow1D)"
+                Description = "Refresh Main Section Width View (Cross sections in FlowFM 1D)"
+            };
+            yield return new ViewInfo<IEnumerable<IGrouping<Coordinate, INetworkLocation>>, RemoveDuplicateCalculationPointsDialog>
+            {
+                Description = "Remove duplicate calculation points view (multiple location points at same location)",
+                AfterCreate = (dialog, grp) => dialog.ViewModel.NetworkDiscretization = FlowModels.FirstOrDefault(m => m.NetworkDiscretization.Locations.Values.Any(l => Equals(l, grp.First().First()))).NetworkDiscretization
             };
 
             // Boundary conditions
