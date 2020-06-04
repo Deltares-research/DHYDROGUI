@@ -170,6 +170,20 @@ namespace DeltaShell.Sobek.Readers.Readers
             return false;
         }
 
+        protected bool TryGetIntegerString(string label, string record, out string intString, bool reportError = true)
+        {
+            intString = null;
+            var pattern = RegularExpression.GetInteger(label);
+            var matches = RegularExpression.GetMatches(pattern, record);
+            if (matches.Count == 1)
+            {
+                intString = matches[0].Groups[label].Value;
+                return true;
+            }
+            if (reportError) ReportParseError(label, record);
+            return false;
+        }
+
         protected virtual void ReportParseError(string label, string record)
         {
             // override for error report

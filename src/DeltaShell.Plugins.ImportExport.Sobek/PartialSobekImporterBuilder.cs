@@ -210,6 +210,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 new SobekRRSacramentoImporter(),
                 new SobekRRMeteoDataImporter(),
                 new SobekRRBoundaryConditionsImporter(),
+                new SobekRRNwrwImporter()
             };
         }
     }

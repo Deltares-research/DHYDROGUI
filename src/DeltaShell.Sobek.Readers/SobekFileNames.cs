@@ -51,6 +51,7 @@
         public string SobekRRLinkFileName { get { return SobekType == SobekType.Sobek212 ? "3B_LINK.TP" : ""; } }
         public string SobekRRPavedFileName { get { return SobekType == SobekType.Sobek212 ? "PAVED.3B" : ""; } }
         public string SobekRRUnpavedFileName { get { return SobekType == SobekType.Sobek212 ? "UNPAVED.3B" : ""; } }
+        public string SobekRRRunoffNodesFileName { get { return SobekType == SobekType.Sobek212 ? "3BRUNOFF.TP" : ""; } }
 
         public string SobekRRNwrwFileName { get { return SobekType == SobekType.Sobek212 ? "PLUVIUS.3B" : ""; } }
         public string SobekRRNwrwSettingsFileName { get { return SobekType == SobekType.Sobek212 ? "PLUVIUS.ALG" : ""; } }

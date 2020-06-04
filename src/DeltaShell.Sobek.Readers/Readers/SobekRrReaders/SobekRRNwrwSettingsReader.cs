@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using NetTopologySuite.GeometriesGraph;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
@@ -11,8 +13,48 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
             //PLVG id '-1' rf 0.5 0.2 0.1 0.5 0.2 0.1 0.5 0.2 0.1 0.5 0.2 0.1 ms 0 0.5 1 0 0.5 1 0 2 4 2 4 6 ix 0 2 0 5 im 0 0.5 0 1 ic 0 3 0 3 dc 0 0.1 0 0.1 od 1 or 0 plvg
 
+            string stringValue;
+            if (TryGetStringParameter("id", text, out stringValue)) sobekRrNwrwSettings.Id = stringValue;
+            if (TryGetStringParameter("nm", text, out stringValue)) sobekRrNwrwSettings.Name = stringValue;
+
+            double[] doubleArray;
+
+            // RF is current tag for run off factors. RU is old the tag according to manual.
+            var hasRFTag = TryGetArrayOfNumbers("rf", text, 12, out doubleArray);
+            if (hasRFTag)
+            {
+                sobekRrNwrwSettings.RunoffDelayFactors = doubleArray;
+            }
+            else
+            {
+                if (TryGetArrayOfNumbers("ru", text, 3, out doubleArray)) sobekRrNwrwSettings.RunoffDelayFactorsOldTag = doubleArray;
+            }
+
+            if (TryGetArrayOfNumbers("ms", text, 12, out doubleArray)) sobekRrNwrwSettings.MaximumStorages = doubleArray;
+            if (TryGetArrayOfNumbers("ix", text, 4, out doubleArray)) sobekRrNwrwSettings.MaximumInfiltrationCapcaties = doubleArray;
+            if (TryGetArrayOfNumbers("im", text, 4, out doubleArray)) sobekRrNwrwSettings.MinimumInfiltrationCapcaties = doubleArray;
+            if (TryGetArrayOfNumbers("ic", text, 4, out doubleArray)) sobekRrNwrwSettings.InfiltrationCapacityDecreases = doubleArray;
+            if (TryGetArrayOfNumbers("dc", text, 4, out doubleArray)) sobekRrNwrwSettings.InfiltrationCapacityIncreases = doubleArray;
+            
+            if (TryGetIntegerString("od", text, out stringValue)) sobekRrNwrwSettings.InfiltrationFromDepressions = ParseBooleanTag(stringValue);
+            if (TryGetIntegerString("or", text, out stringValue)) sobekRrNwrwSettings.InfiltrationFromRunoff = ParseBooleanTag(stringValue);
 
             yield return sobekRrNwrwSettings;
+        }
+
+        private bool ParseBooleanTag(string value)
+        {
+            if (value == "1")
+            {
+                return true;
+            }
+
+            if (value == "0")
+            {
+                return false;
+            }
+
+            throw new ArgumentException();
         }
     }
 }

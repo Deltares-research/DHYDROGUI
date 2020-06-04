@@ -1081,7 +1081,6 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWe
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWeatherFlowDefinition.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDwfComponentFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwEnums.cs -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileReader.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwKeywords.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwModelFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.cs -text
@@ -10953,6 +10952,7 @@ test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekLateral
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekLinkageNodeImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekMeasurementStationsImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRDrainageBasinImporterTest.cs -text
+test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRNwrwImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRSacramentoImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRSettingsImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRetentionImporterTest.cs -text
@@ -37736,6 +37736,7 @@ test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRIniSettingsRea
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRLinkReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRNodeReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRNwrwReaderTest.cs -text
+test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRNwrwSettingsReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRROpenWaterFromRationalMethodReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRROpenWaterReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRPavedReaderTest.cs -text

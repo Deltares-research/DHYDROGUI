@@ -6,9 +6,11 @@
         public double Area { get; set; }
         public double SurfaceLevel { get; set; }
         public double[] Areas { get; set; }
-        public string DwaId { get; set; }
+        public string InhabitantDwaId { get; set; }
+        public string CompanyDwaId { get; set; }
         public string MeteoStationId { get; set; }
         public int NumberOfPeople { get; set; }
+        public int NumberOfUnits { get; set; }
         public string[] SpecialAreaNames { get; set; }
         public double[] SpecialAreaValues { get; set; }
     }

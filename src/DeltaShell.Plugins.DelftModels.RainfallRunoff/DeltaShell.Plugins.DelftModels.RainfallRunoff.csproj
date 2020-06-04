@@ -65,7 +65,6 @@
     <Compile Include="Domain\Concepts\Nwrw\NwrwData.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwDwfComponentFileWriter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwEnums.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwFileReader.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwModelFileWriter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwKeywords.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwSpecialArea.cs" />
