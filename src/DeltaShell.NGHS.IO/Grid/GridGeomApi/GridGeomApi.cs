@@ -68,7 +68,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 if (DoWithApi(() => Make1D2DLinks(linkType, selectedArea, filter1DMesh, geometryGullies)))
                     return null;
 
-                return GetLinkInformation(linkType == LinkType.Lateral ? linkType : LinkType.EmbeddedOneToOne);
+                return GetLinkInformation(linkType);
 
             }
             catch (Exception)
