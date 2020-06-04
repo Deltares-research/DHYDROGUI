@@ -1081,6 +1081,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWe
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWeatherFlowDefinition.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDwfComponentFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwEnums.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileReader.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwKeywords.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwModelFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.cs -text

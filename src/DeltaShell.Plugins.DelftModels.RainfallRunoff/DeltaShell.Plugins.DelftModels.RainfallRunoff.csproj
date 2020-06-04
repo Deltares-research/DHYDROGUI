@@ -55,6 +55,7 @@
     <Compile Include="Domain\Concepts\Nwrw\DryweatherFlowDistributionTypeConverter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\INwrwComponentFileWriterBase.cs" />
     <Compile Include="Domain\Concepts\Nwrw\INwrwFeature.cs" />
+    <Compile Include="Domain\Concepts\Nwrw\NwrwFileReader.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwSurfaceTypeHelper.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwTpComponentFileWriter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\Nwrw3BComponentFileWriter.cs" />

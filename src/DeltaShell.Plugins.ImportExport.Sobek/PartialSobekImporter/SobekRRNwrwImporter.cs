@@ -330,15 +330,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             nwrwData.NodeOrBranchId = nodeId;
             var catchment = nwrwData.Catchment;
 
-            // var catchment = Catchment.CreateDefault();
-            // catchment.CatchmentType = CatchmentType.NWRW;
-            // catchment.Name = nodeId;
             catchment.IsGeometryDerivedFromAreaSize = true;
             catchment.Geometry = nodeDictionary[nodeId].Geometry;
-            // var nwrwData = new NwrwData(catchment) {NodeOrBranchId = nodeId};
-            //
-            // rrModel.Basin.Catchments.Add(catchment);
-            // retrieve added ModelData
 
             SetNwrwCatchmentData(readDefinition, nwrwData);
             AddNwrwCatchmentLinkToFmModel(catchment, lateralSourceDictionary);
