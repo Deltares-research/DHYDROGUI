@@ -154,7 +154,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
 
         public void ResumeUpdates()
         {
-            throw new NotImplementedException();
+            SubscribeViewEvents();
+            SubscribeDataEvents();
+
+            // Reset original layer
+            vectorLayerAttributeTableView.Data = data;
+
+            UpdateTableView();
         }
 
         protected override void Dispose(bool disposing)
