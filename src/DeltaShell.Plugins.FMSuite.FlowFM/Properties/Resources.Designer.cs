@@ -570,6 +570,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File at location &apos;{0}&apos; is referenced in structures file &apos;{1}&apos;, but does not exist..
+        /// </summary>
+        public static string MduFile_FilePath_0_referenced_in_StructuresFile_1_does_not_exist {
+            get {
+                return ResourceManager.GetString("MduFile_FilePath_0_referenced_in_StructuresFile_1_does_not_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Based on the Bridge Pillar file {0}, there are not enough column(s) defined for {1}. The last {2} column(s) have been generated using default values.
         /// </summary>
         public static string MduFile_Read_Based_on_the_Bridge_Pillar_file__0___there_are_not_enough_column_s__defined_for__1___The_last__2__column_s__have_been_generated_using_default_values {
@@ -662,30 +671,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File at location &apos;{0}&apos; is referenced in structures file &apos;{1}&apos;, but does not exist..
-        /// </summary>
-        public static string MduFile_RemoveAllStructuresFilesWithBadReferencesShortVersion_ {
-            get {
-                return ResourceManager.GetString("MduFile_RemoveAllStructuresFilesWithBadReferencesShortVersion_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to File at location &apos;{0}&apos; does not exist, but is defined in MDU file at &apos;{1}&apos;
         ///at property &apos;{2}&apos;. Model information may have been lost while loading model &apos;{3}&apos;..
         /// </summary>
         public static string MduFile_RemoveNonExistentFilePaths_ {
             get {
                 return ResourceManager.GetString("MduFile_RemoveNonExistentFilePaths_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Something went wrong during the import of the structures file. .
-        /// </summary>
-        public static string MduFile_SomethingWentWrongHeader_ {
-            get {
-                return ResourceManager.GetString("MduFile_SomethingWentWrongHeader_", resourceCulture);
             }
         }
         

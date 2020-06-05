@@ -1503,9 +1503,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     StructureSchema = modelDefinition.StructureSchema,
                     ReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
                 };
-                List<Structure2D> featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
+
                 var referencesToNonExistentFilesExist = false;
 
+                List<Structure2D> featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
+                var hasBadFileReferences = false;
                 featuresToAdd.ForEach(f =>
                 {
                     string featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
@@ -1514,22 +1516,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     if (!File.Exists(featureFilePath))
                     {
-                        referencesToNonExistentFilesExist = true;
+                        hasBadFileReferences = true;
+                        logHandler.ReportErrorFormat(Resources.MduFile_FilePath_0_referenced_in_StructuresFile_1_does_not_exist, featureFilePath,
+                                                     structureFilePath);
+                        logHandler.LogReport();
                     }
                 });
 
-                if (referencesToNonExistentFilesExist)
+                if (hasBadFileReferences)
                 {
                     structureFilesWithBadReferences.Add(structureFilePath);
-                    featuresToAdd.ForEach(f =>
-                    {
-                        string featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
-                        string featureFilePath =
-                            System.IO.Path.Combine(System.IO.Path.GetDirectoryName(structuresSubFilesReferenceFilePath), featureFileName);
-                        logHandler.ReportErrorFormat(Resources.MduFile_RemoveAllStructuresFilesWithBadReferencesShortVersion_, featureFilePath,
-                                                     structureFilePath);
-                    });
-                    logHandler.LogReport();
                 }
             }
 
