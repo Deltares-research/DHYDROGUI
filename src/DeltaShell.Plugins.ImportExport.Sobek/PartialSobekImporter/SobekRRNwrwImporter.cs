@@ -169,8 +169,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private static void UpdateMaximumStorages(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
+        private void UpdateMaximumStorages(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
         {
+            if (readSettings.MaximumStorages == null)
+            {
+                listOfWarnings.Add("No settings found for maximum storages.");
+                return;
+            }
+            
             for (int i = 0; i < readSettings.MaximumStorages.Length; i++)
             {
                 nwrwDefinitionArray[i].SurfaceStorage = readSettings.MaximumStorages[i];
@@ -179,6 +185,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void UpdateMaximumInfiltrationCapacities(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
         {
+            if (readSettings.MaximumInfiltrationCapcaties == null)
+            {
+                listOfWarnings.Add("No settings found for maximum infiltration capacities.");
+                return;
+            }
+
             for (int i = 0; i < readSettings.MaximumInfiltrationCapcaties.Length; i++)
             {
                 nwrwDefinitionArray[i].InfiltrationCapacityMax = readSettings.MaximumInfiltrationCapcaties[i];
@@ -189,6 +201,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void UpdateMinimumInfiltrationCapacities(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
         {
+            if (readSettings.MinimumInfiltrationCapcaties == null)
+            {
+                listOfWarnings.Add("No settings found for minimum infiltration capacities.");
+                return;
+            }
+
             for (int i = 0; i < readSettings.MinimumInfiltrationCapcaties.Length; i++)
             {
                 nwrwDefinitionArray[i].InfiltrationCapacityMin = readSettings.MinimumInfiltrationCapcaties[i];
@@ -199,6 +217,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void UpdateInfiltrationCapacityDecrease(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
         {
+            if (readSettings.InfiltrationCapacityDecreases == null)
+            {
+                listOfWarnings.Add("No settings found for infiltration capacity reduction.");
+                return;
+            }
+
             for (int i = 0; i < readSettings.InfiltrationCapacityDecreases.Length; i++)
             {
                 nwrwDefinitionArray[i].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[i];
@@ -209,6 +233,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void UpdateInfiltrationCapacityIncrease(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
         {
+            if (readSettings.InfiltrationCapacityIncreases == null)
+            {
+                listOfWarnings.Add("No settings found for infiltration capacity recovery.");
+                return;
+            }
+
             for (int i = 0; i < readSettings.InfiltrationCapacityIncreases.Length; i++)
             {
                 nwrwDefinitionArray[i].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[i];
