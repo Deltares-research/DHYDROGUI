@@ -9,14 +9,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
     {
         private readonly double offsetInSideView;
         private readonly IManhole manhole;
-
-        public ManHoleSideViewShape(IChart chart, double offsetInSideView, int width, IManhole manhole) : base(chart)
+        
+        public ManHoleSideViewShape(IChart chart, double offsetInSideView, IManhole manhole) : base(chart)
         {
             this.offsetInSideView = offsetInSideView;
             this.manhole = manhole;
-            WidthIsWorld = false;
-            HeightIsWorld = true; 
-            Width = width;
+            WidthIsWorld = true;
+            HeightIsWorld = true;
         }
 
         public override double X
@@ -32,7 +31,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// </summary>
         public override double Y
         {
-            get { return manhole.Compartments.Max(c => c.SurfaceLevel); }
+            get
+            {
+                return manhole.Compartments.Count != 0 
+                    ? manhole.Compartments.Max(c => c.SurfaceLevel) 
+                    : 0;
+            }
             set { }
         }
 
@@ -48,7 +52,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return Y - manhole.Compartments.Min(c => c.BottomLevel);
+                return manhole.Compartments.Count != 0 ? 
+                    Y - manhole.Compartments.Min(c => c.BottomLevel) 
+                    : 0;
+            }
+            set { }
+        }
+
+        public override double Width
+        {
+            get
+            {
+                return manhole.Compartments.Count > 0
+                    ? manhole.Compartments.Sum(c => c.ManholeWidth)
+                    : 0;
             }
             set { }
         }

@@ -143,8 +143,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private NetworkSideViewDataController networkSideViewDataController;
         private readonly IList<SideViewChartData> bottomProfileChartData = new List<SideViewChartData>();
         private readonly IList<SideViewChartData> renderedCoveragesChartData = new List<SideViewChartData>();
-        private readonly IDictionary<IBranchFeature, IShapeFeature> Structures2Shape = new Dictionary<IBranchFeature, IShapeFeature>();
-        private readonly IDictionary<IShapeFeature, IBranchFeature> Shapes2Structures = new Dictionary<IShapeFeature, IBranchFeature>();
+        private readonly IDictionary<IFeature, IShapeFeature> FeatureToShape = new Dictionary<IFeature, IShapeFeature>();
+        private readonly IDictionary<IShapeFeature, IFeature> ShapesToFeature = new Dictionary<IShapeFeature, IFeature>();
 
         private bool allowFeatureVisibilityChanges;
         private readonly StructurePresenter structurePresenter;
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return null != shapeModifyTool.SelectedShape ? Shapes2Structures[shapeModifyTool.SelectedShape] : null;
+                return null != shapeModifyTool.SelectedShape ? ShapesToFeature[shapeModifyTool.SelectedShape] : null;
             }
             set
             {
@@ -324,7 +324,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         public void UpdateStyles(IBranchFeature branchFeature, VectorStyle normalStyle, VectorStyle selectedStyle)
         {
             IShapeFeature shapeFeature;
-            Structures2Shape.TryGetValue(branchFeature, out shapeFeature);
+            FeatureToShape.TryGetValue(branchFeature, out shapeFeature);
             if (shapeFeature != null)
             {
                 shapeFeature.NormalStyle = normalStyle;
@@ -583,11 +583,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             TimeNavigatorTimesChanged(); //we're new, so times have changed
         }
 
-        private void UpdateShapeSelection(IFeature value)
+        private void UpdateShapeSelection(IFeature feature)
         {
-            var branchFeature = value as IBranchFeature;
             //TODO: clean up refactor etc..this code is repeated all over.
-            if (branchFeature == null)
+            if (feature == null)
             {
                 shapeModifyTool.SelectionChanged -= ShapeModifyToolSelectionChanged;
                 shapeModifyTool.SelectedShape = null;
@@ -595,10 +594,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
             else
             {
-                if (Structures2Shape.ContainsKey(branchFeature))
+                if (FeatureToShape.ContainsKey(feature))
                 {
                     shapeModifyTool.SelectionChanged -= ShapeModifyToolSelectionChanged;
-                    shapeModifyTool.SelectedShape = Structures2Shape[branchFeature];
+                    shapeModifyTool.SelectedShape = FeatureToShape[feature];
                     shapeModifyTool.SelectionChanged += ShapeModifyToolSelectionChanged;
                 }
             }
@@ -614,9 +613,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void ShapeModifyToolSelectionChanged(object sender, ShapeEventArgs e)
         {
-            if ((null != e.ShapeFeature) && (Shapes2Structures.ContainsKey(e.ShapeFeature)))
+            if ((null != e.ShapeFeature) && (ShapesToFeature.ContainsKey(e.ShapeFeature)))
             {
-                SelectedFeature = Shapes2Structures[e.ShapeFeature];
+                SelectedFeature = ShapesToFeature[e.ShapeFeature];
                 OnSelectedFeatureChanged();
             }
             else
@@ -898,8 +897,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 hoverText.BackColor = Color.Thistle;
             }
             shapeModifyTool.AddShape(symbolShapeFeature);
-            Structures2Shape[structure] = symbolShapeFeature;
-            Shapes2Structures[symbolShapeFeature] = structure;
+            FeatureToShape[structure] = symbolShapeFeature;
+            ShapesToFeature[symbolShapeFeature] = structure;
         }
 
         private void AddImageShape(Image image, IBranchFeature structure, double minY)
@@ -916,8 +915,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                                           HoverPosition.Bottom, ArrowHeadPosition.None) { BackColor = Color.WhiteSmoke };
             symbolShapeFeature.AddHover(hoverText);
 
-            Structures2Shape[structure] = symbolShapeFeature;
-            Shapes2Structures[symbolShapeFeature] = structure;
+            FeatureToShape[structure] = symbolShapeFeature;
+            ShapesToFeature[symbolShapeFeature] = structure;
         }
 
         private void AddDiffuseLateralSourceShape(IBranchFeature structure, double minY)
@@ -948,8 +947,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                                           HoverPosition.Bottom, ArrowHeadPosition.None) { BackColor = Color.WhiteSmoke };
             symbolShapeFeature.AddHover(hoverText);
 
-            Structures2Shape[structure] = symbolShapeFeature;
-            Shapes2Structures[symbolShapeFeature] = structure;
+            FeatureToShape[structure] = symbolShapeFeature;
+            ShapesToFeature[symbolShapeFeature] = structure;
         }
 
         private void AddCrossSectionShape(Route route, ICrossSection crossSection)
@@ -967,23 +966,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             crossSectionShape.AddHover(new HoverText(crossSection.Name, null, crossSectionShape, Color.Black,
                                                      HoverPosition.Top, ArrowHeadPosition.LeftRight) { BackColor = Color.LightCyan });
             shapeModifyTool.AddShape(crossSectionShape);
-            Structures2Shape[crossSection] = crossSectionShape;
-            Shapes2Structures[crossSectionShape] = crossSection;
+            FeatureToShape[crossSection] = crossSectionShape;
+            ShapesToFeature[crossSectionShape] = crossSection;
         }
 
         private void AddManholeShape(Route route, IManhole manhole, double offset)
         {
-            var compartmentShape = new ManHoleSideViewShape(chart, offset, 5, manhole)
+            var compartmentShape = new ManHoleSideViewShape(chart, offset, manhole)
             {
                 HorizontalShapeAlignment = HorizontalShapeAlignment.Center,
                 VerticalShapeAlignment = VerticalShapeAlignment.Top,
+                SelectedStyle = selectedCrossSectionStyle
             };
 
             compartmentShape.AddHover(new HoverRectangle(compartmentShape, Color.LightGray));
             compartmentShape.AddHover(new HoverText("ManHole:" + manhole.Name,"",
-                compartmentShape, Color.Black, HoverPosition.Top, ArrowHeadPosition.LeftRight));
+                compartmentShape, Color.Black, HoverPosition.Top, ArrowHeadPosition.None));
 
             shapeModifyTool.AddShape(compartmentShape);
+            FeatureToShape[manhole] = compartmentShape;
+            ShapesToFeature[compartmentShape] = manhole;
         }
 
         private void TimeNavigatorPropertyChanged(object sender, EventArgs e)
@@ -1095,7 +1097,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 var structure = (IBranchFeature) sender;
 
-                if (Structures2Shape.ContainsKey(structure))
+                if (FeatureToShape.ContainsKey(structure))
                 {
                     if(e.PropertyName=="Name")
                     {
@@ -1112,7 +1114,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             if (sender is ICrossSectionDefinition)
             {
-                foreach(var structure in Structures2Shape.Keys.OfType<ICrossSection>())
+                foreach(var structure in FeatureToShape.Keys.OfType<ICrossSection>())
                 {
                     var crossSectionDefinition = structure.Definition;
                     if(Equals(sender, crossSectionDefinition))
@@ -1130,7 +1132,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             if(sender is CrossSectionStandardShapeBase)
             {
-                foreach (var structure in Structures2Shape.Keys.OfType<ICrossSection>())
+                foreach (var structure in FeatureToShape.Keys.OfType<ICrossSection>())
                 {
                     var crossSectionDefinition = (structure.Definition.IsProxy
                                                      ? ((CrossSectionDefinitionProxy)structure.Definition).

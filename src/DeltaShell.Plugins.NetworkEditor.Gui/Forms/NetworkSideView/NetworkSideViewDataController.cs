@@ -309,7 +309,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
                 branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.LateralSources.Cast<IBranchFeature>(), route));
                 branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.Retentions.Cast<IBranchFeature>(), route));
-                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.CrossSections.Concat(hydroNetwork.Pipes.Select(p => p.CrossSection)).Cast<IBranchFeature>(), route));
+                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.CrossSections.Cast<IBranchFeature>(), route));
                 branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.ObservationPoints.Cast<IBranchFeature>(), route));
 
                 return branchFeatures;
