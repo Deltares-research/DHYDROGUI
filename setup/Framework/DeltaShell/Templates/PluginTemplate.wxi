@@ -48,6 +48,7 @@
       
                         
   Optional variables:
+  - excludeBuildNumberFromVersion:  Enable to remove the env.BUILD_NUMBER from the var.FullProductVersion, and include it in the var.FullProductName instead
   - customizationwxi:               If you want to add extra files to the bin folder where Deltashell.Gui.exe is located, add them here.
                                     It has the same layout as manualswxi.
   - plugin_wixUIDeltares:           You can include your own wixUIDeltares by overriding the default UI dialogs.
@@ -97,24 +98,17 @@
   <!--Include the guids that should be regenerated regularly-->
   <?include "ApplicationGUIDs.wxi"?>
   
-  <?ifdef excludeBuildNumberFromVersion ?>
   <?define FullProductVersion="$(var.ReleaseVersion).0" ?>
+  <?define FullProductNameVersion="$(var.ReleaseVersion).0" ?>
 
   <?ifdef env.BUILD_NUMBER ?>
-  <?define FullProductName="$(var.ProductName) ($(var.FullProductVersion).$(env.BUILD_NUMBER))" ?>
-  <?else?>
-  <?define FullProductName="$(var.ProductName) ($(var.FullProductVersion))" ?>
-  <?endif?>
-
-  <?else?>
-  <?ifdef env.BUILD_NUMBER ?>
+  <?define FullProductNameVersion="$(var.FullProductVersion).$(env.BUILD_NUMBER)" ?>
+  <?ifndef excludeBuildNumberFromVersion ?>
   <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
-  <?define FullProductName="$(var.ProductName) ($(var.FullProductVersion))" ?>
-  <?else?>
-  <?define FullProductVersion="$(var.ReleaseVersion).0" ?>
-  <?define FullProductName="$(var.ProductName) ($(var.FullProductVersion))" ?>
   <?endif?>
   <?endif?>
+
+  <?define FullProductName="$(var.ProductName) ($(var.FullProductNameVersion))" ?>
   
   <?define ShortProductVersion="$(var.ReleaseVersion)"?>
     
@@ -341,11 +335,11 @@
       <Component Id="UninstallShortcutComponent" Guid="$(var.UninstallShortcutComponentGuid)">
         <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="InstalledUninstallerShortcut" Type="integer" Value="1" KeyPath="yes" />
         <Shortcut Id="UninstallProduct"
-                  Name="Uninstall $(var.ProductName) $(var.FullProductVersion)"
+                  Name="Uninstall $(var.FullProductName)"
                   Target="[System64Folder]msiexec.exe"
                   Arguments="/x [ProductCode]"
                   Directory="ProgramGroupMenuDir"
-                  Description="Uninstalls $(var.ProductName) $(var.FullProductVersion)"/>
+                  Description="Uninstalls $(var.FullProductName)"/>
       </Component>
 
       <!-- Add shortcuts in the start menu here -->
