@@ -21,15 +21,16 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
             double[] doubleArray;
 
-            // RF is current tag for run off factors. RU is old the tag according to manual.
             var hasRFTag = TryGetArrayOfNumbers("rf", text, 12, out doubleArray);
             if (hasRFTag)
             {
                 sobekRrNwrwSettings.RunoffDelayFactors = doubleArray;
+                sobekRrNwrwSettings.IsOldFormatData = false;
             }
             else
             {
-                if (TryGetArrayOfNumbers("ru", text, 3, out doubleArray)) sobekRrNwrwSettings.RunoffDelayFactorsOldTag = doubleArray;
+                if (TryGetArrayOfNumbers("ru", text, 3, out doubleArray)) sobekRrNwrwSettings.RunoffDelayFactors = doubleArray;
+                sobekRrNwrwSettings.IsOldFormatData = true;
             }
 
             if (TryGetArrayOfNumbers("ms", text, 12, out doubleArray)) sobekRrNwrwSettings.MaximumStorages = doubleArray;
