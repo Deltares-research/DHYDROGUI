@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Charting.Series;
+using DelftTools.Controls.Swf.Charting.Tools;
 using DelftTools.Functions;
 using DelftTools.Functions.Binding;
 using DelftTools.Functions.Filters;
@@ -131,7 +132,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             Line = new Pen(Color.Black)
         };
 
-        
+        private readonly Color pipeColor = Color.Beige;
+
         /// <summary>
         /// Holds a list of function pointers (lambda's) with a fixed time parameter to access the coverage (key). 
         /// The time parameter is taken from the time navigator.
@@ -150,11 +152,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private readonly StructurePresenter structurePresenter;
         private TimeArgumentNavigatable timeNavigator;
         private ShapeModifyTool shapeModifyTool;
+        private ISeriesBandTool pipeSeriesBandTool;
         private readonly IChart chart;
         private Dictionary<IChartSeries, bool> seriesActiveCache;
 
         private readonly IEventedList<IView> childViews = new EventedList<IView>();
-        
+
         public NetworkSideView()
         {
             InitializeComponent();
@@ -396,7 +399,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 chart.Series.Add(CreateSeries(d));
                 renderedCoveragesChartData.Add(d);
             });
-            
+
+            var pipeSeries = CreatePipeChartData().Select(CreateSeries).ToList();
+            chart.Series.AddRange(pipeSeries);
+
+            if (pipeSeries.Count > 1)
+            {
+                chartView.Tools.Remove(pipeSeriesBandTool);
+                pipeSeriesBandTool = chartView.NewSeriesBandTool(pipeSeries[0], pipeSeries[1], pipeColor);
+                chartView.Tools.Add(pipeSeriesBandTool);
+            }
+
             chart.Legend.ShowCheckBoxes = true;
             chart.Series.ForEach(s => s.Visible = !seriesActiveCache.ContainsKey(s) || seriesActiveCache[s]);
             
@@ -404,6 +417,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             UpdateStructureShapes();
             UpdateCompartmentShapes();
             UpdateTitle();
+        }
+
+        private IEnumerable<SideViewChartData> CreatePipeChartData()
+        {
+            var functions = networkSideViewDataController?.PipeSideViewFunctions;
+
+            foreach (var function in functions)
+            {
+                yield return new SideViewChartData(function, Color.Black, ChartSeriesType.LineSeries)
+                {
+                    FunctionBindingList = {SynchronizeInvoke = chartView},
+                    LineStyleCustomizer = (ls)=>
+                    {
+                        ls.DashStyle = DashStyle.Solid;
+                        ls.Width = 2;
+                    }
+                };
+            }
         }
 
         private IEnumerable<SideViewChartData> CreateRenderedCoverageChartData()
@@ -448,8 +479,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             var profileSideViewFunctions = networkSideViewDataController.ProfileSideViewFunctions.ToList();
 
-            var bottomLevelSideViewFunction =
-                profileSideViewFunctions.FirstOrDefault(psvf => psvf.Name == "Bed level");
+            var bottomLevelSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => psvf.Name == "Bed level");
             if (bottomLevelSideViewFunction != null)
             {
                 var bottomLevelChartData = new SideViewChartData(bottomLevelSideViewFunction,

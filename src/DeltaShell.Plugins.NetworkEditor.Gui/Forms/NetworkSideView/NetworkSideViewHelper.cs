@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Charting.Series;
 using DelftTools.Functions;
 using DelftTools.Functions.Binding;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Units;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
@@ -196,6 +200,95 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     yield return new Tuple<T, double>(typedNode, currentChainage);
                 }
             }
+        }
+
+        public static IEnumerable<IFunction> GetPipeSideViewFunctions(Route route)
+        {
+            if (route == null)
+                yield break;
+
+            var xValues = new List<double>();
+            var yValuesTop = new List<double>();
+            var yValuesBottom = new List<double>();
+
+            var currentChainage = 0.0;
+            IBranch previousPipe = null;
+
+            for (int i = 0; i < route.Segments.Values.Count; i++)
+            {
+                var segment = route.Segments.Values[i];
+
+                if (!(segment.Branch is IPipe pipe))
+                    continue;
+
+                if (previousPipe == pipe)
+                {
+                    currentChainage += segment.Length;
+                    continue;
+                }
+
+                previousPipe = pipe;
+
+                var levelSource = segment.DirectionIsPositive ? pipe.LevelSource : pipe.LevelTarget;
+                var levelTarget = segment.DirectionIsPositive ? pipe.LevelTarget : pipe.LevelSource;
+                var pipeLength = pipe.Length;
+
+                if (i == 0)
+                {
+                    levelSource = GetLevelAtChainage(segment.Chainage, pipe);
+                    pipeLength = segment.DirectionIsPositive
+                        ? pipeLength - segment.Chainage
+                        : segment.Chainage;
+                }
+
+                if (i == route.Segments.Values.Count - 1)
+                {
+                    levelTarget = GetLevelAtChainage(segment.EndChainage, pipe);
+                    pipeLength = segment.DirectionIsPositive 
+                        ? segment.EndChainage 
+                        : pipeLength - segment.EndChainage;
+                }
+
+                var crossSectionHeight = pipe.CrossSectionDefinition.HighestPoint;
+
+                xValues.Add(currentChainage);
+                yValuesTop.Add(levelSource + crossSectionHeight);
+                yValuesBottom.Add(levelSource);
+
+                xValues.Add(currentChainage + pipeLength);
+                yValuesTop.Add(levelTarget + crossSectionHeight);
+                yValuesBottom.Add(levelTarget);
+
+                currentChainage += segment.Length;
+            }
+
+            yield return CreateFunction(new Unit("meter", "m AD"), xValues, yValuesTop, "Pipe top");
+            yield return CreateFunction(new Unit("meter", "m AD"), xValues, yValuesBottom, "Pipe bottom");
+        }
+
+        private static double GetLevelAtChainage(double chainage, IPipe pipe)
+        {
+            var heightDiff = pipe.LevelSource - pipe.LevelTarget;
+            var ratio = heightDiff / pipe.Length;
+
+            var newPipeLength = pipe.Length - chainage;
+            return (ratio * newPipeLength) + Math.Min(pipe.LevelSource, pipe.LevelTarget);
+        }
+
+        private static IFunction CreateFunction(IUnit yUnit, List<double> xValues, List<double> yValues, string name)
+        {
+            var chainages = new Variable<double>("Chainage") {Unit = new Unit("Chainage", "m")};
+            var yVar = new Variable<double>(name) {Unit = yUnit};
+
+            FunctionHelper.SetValuesRaw<double>(chainages, xValues);
+            FunctionHelper.SetValuesRaw<double>(yVar, yValues);
+
+            IFunction function = new Function(name);
+            
+            function.Arguments.Add(chainages);
+            function.Components.Add(yVar);
+            
+            return function;
         }
     }
 }

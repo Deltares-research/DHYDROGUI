@@ -8,6 +8,7 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Units;
 using DelftTools.Utils;
@@ -605,6 +606,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 return ProfileNetworkCoverages.Select(cov => CreateRouteFunctionFromNetworkCoverage(route, cov, new Unit(cov.Name, "m AD"))); 
             }
+        }
+
+        public IEnumerable<IFunction> PipeSideViewFunctions
+        {
+            get { return NetworkSideViewHelper.GetPipeSideViewFunctions(route); }
         }
 
         public IList<INetworkCoverage> RenderedNetworkCoverages

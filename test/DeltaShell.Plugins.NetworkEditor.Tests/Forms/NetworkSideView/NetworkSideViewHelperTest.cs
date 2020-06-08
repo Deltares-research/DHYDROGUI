@@ -61,5 +61,74 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             Assert.AreEqual(manholes[2], nodesAndOffset[1].Item1);
             Assert.AreEqual(180, nodesAndOffset[1].Item2);
         }
+
+        [Test]
+        public void GivenNetworkSideViewHelper_GettingFunctionsForPipes_ShouldWork()
+        {
+            //Arrange
+            var network = new HydroNetwork();
+
+            var numberOfPipes = 5;
+            var manholes = Enumerable.Range(1, numberOfPipes + 1)
+                .Select(i => new Manhole($"Manhole{i}")
+                {
+                    Geometry = new Point(i * 100, 0),
+                    Compartments = new EventedList<ICompartment>
+                    {
+                        new Compartment{Name = $"Compartment{i}" }
+                    }
+                }).ToArray();
+
+            var pipes = Enumerable.Range(1, numberOfPipes)
+                .Select(i =>
+                {
+                    var pipe = new Pipe
+                    {
+                        Name = $"Pipe{i}",
+                        Source = manholes[i - 1],
+                        SourceCompartment = manholes[i - 1].Compartments[0],
+                        Target = manholes[i],
+                        TargetCompartment = manholes[i].Compartments[0],
+                        Length = (i + 1) * 20,
+                        LevelTarget = 2,
+                        LevelSource = 4
+                    };
+                    pipe.CrossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2);
+                    return pipe;
+                }).ToArray();
+
+            network.Nodes.AddRange(manholes);
+            network.Branches.AddRange(pipes);
+
+            var route = RouteHelper.CreateRoute(new NetworkLocation(pipes[0], 10), new NetworkLocation(pipes[0], 15), new NetworkLocation(pipes[2], 40));
+
+            // Act
+            var functions = NetworkSideViewHelper.GetPipeSideViewFunctions(route).ToList();
+
+            // Assert
+            Assert.AreEqual(2, functions.Count);
+            var top = functions[0];
+            var bottom = functions[1];
+
+            var topXValues = top.Arguments[0].Values;
+            var bottomXValues = bottom.Arguments[0].Values;
+
+            var topYValues = top.Components[0].Values;
+            var bottomYValues = bottom.Components[0].Values;
+
+            Assert.AreEqual(topXValues.Count, bottomXValues.Count,
+                "Number of Top and Bottom values should be the same");
+
+            Assert.AreEqual(topXValues, bottomXValues,
+                "X locations should be the same (begin and end for each pipe in route)");
+
+            var defaultCrossSectionHeight = CrossSectionDefinitionStandard.CreateDefault().HighestPoint;
+
+            var expectedYValuesBottom = new double[] { 3.5, 2, 4, 2, 4, 3 };
+            var expectedYValuesTop = expectedYValuesBottom.Select(v => v + defaultCrossSectionHeight).ToArray();
+
+            Assert.AreEqual(expectedYValuesBottom, bottomYValues);
+            Assert.AreEqual(expectedYValuesTop, topYValues);
+        }
     }
 }
