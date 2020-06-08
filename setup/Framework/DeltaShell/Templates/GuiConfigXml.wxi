@@ -7,16 +7,16 @@
     Value="$(var.ProductName)"/>
 
   <util:XmlFile Id="SetKey4$(var.GUICONFIGFILE)"
-    Action="setValue"
-    ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
-    File="[#$(var.GUICONFIGFILE)]"
-    Value="$(var.FullProductVersion)"/>
-  
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.FullProductNameVersion)"/>
+
   <util:XmlFile Id="SetKey6$(var.GUICONFIGFILE)"
-    Action="setValue"
-    ElementPath="/configuration/appSettings/add[\[]@key=&quot;copyright&quot;[\]]/@value"
-    File="[#$(var.GUICONFIGFILE)]"
-    Value="© Deltares 2008-2015"/>
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;copyright&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="© Deltares 2008-2015"/>
   
   <util:XmlFile Id="SetKey7$(var.GUICONFIGFILE)"
     Action="setValue"
