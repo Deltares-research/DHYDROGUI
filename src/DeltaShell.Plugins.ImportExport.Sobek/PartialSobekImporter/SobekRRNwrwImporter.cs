@@ -139,6 +139,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             if (readNwrwSetting == null)
             {
                 Log.WarnFormat($"No nwrw settings were found.");
+                return;
             }
 
             if (readNwrwSettings.Count() > 1)
