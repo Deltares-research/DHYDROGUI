@@ -73,8 +73,8 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
             double numberValue;
             if (TryGetDoubleParameter("sl", line, out numberValue)) nwrwData.SurfaceLevel = numberValue;
-            if (TryGetDoubleParameter("np", line, out numberValue)) nwrwData.NumberOfPeople = (int) numberValue;
-            if (TryGetDoubleParameter("np2", line, out numberValue)) nwrwData.NumberOfUnits = (int) numberValue;
+            if (TryGetDoubleParameter("np", line, out numberValue)) nwrwData.NumberOfPeople = numberValue;
+            if (TryGetDoubleParameter("np2", line, out numberValue)) nwrwData.NumberOfUnits = numberValue;
 
             return nwrwData;
         }

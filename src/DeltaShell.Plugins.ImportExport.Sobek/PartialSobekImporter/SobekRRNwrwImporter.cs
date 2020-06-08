@@ -430,7 +430,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void SetDryweatherFlows(NwrwData data, 
             Func<SobekRRNwrw, string> getDwaIdFunc,
-            Func<SobekRRNwrw, int> getNumberFunc,
+            Func<SobekRRNwrw, double> getNumberFunc,
             SobekRRNwrw dataToSetFrom,
             int index)
         {

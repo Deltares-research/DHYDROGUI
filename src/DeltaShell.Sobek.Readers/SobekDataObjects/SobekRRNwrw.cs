@@ -9,8 +9,8 @@
         public string InhabitantDwaId { get; set; }
         public string CompanyDwaId { get; set; }
         public string MeteoStationId { get; set; }
-        public int NumberOfPeople { get; set; }
-        public int NumberOfUnits { get; set; }
+        public double NumberOfPeople { get; set; }
+        public double NumberOfUnits { get; set; }
         public string[] SpecialAreaNames { get; set; }
         public double[] SpecialAreaValues { get; set; }
     }
