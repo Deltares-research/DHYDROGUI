@@ -2518,7 +2518,6 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/ImportBranchFeatureDialog.cs -tex
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/ImportBranchFeatureDialog.resx -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/CompositeStructureViewDataController.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/INetworkSideView.cs -text
-src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/INetworkSideViewData.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/ManHoleSideViewShape.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideView.Designer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideView.cs -text

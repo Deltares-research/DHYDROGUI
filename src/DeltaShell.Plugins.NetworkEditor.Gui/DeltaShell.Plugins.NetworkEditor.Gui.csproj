@@ -564,7 +564,6 @@
     </Compile>
     <Compile Include="Forms\NetworkSideView\CompositeStructureViewDataController.cs" />
     <Compile Include="Forms\NetworkSideView\INetworkSideView.cs" />
-    <Compile Include="Forms\NetworkSideView\INetworkSideViewData.cs" />
     <Compile Include="Forms\NetworkSideView\NetworkSideView.cs">
       <SubType>UserControl</SubType>
     </Compile>
