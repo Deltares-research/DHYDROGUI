@@ -426,14 +426,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 guiProperties.Single(prop => string.Equals(prop.Label, Properties.Resources.WaveSettingsHelper_GetWaveSettings_Coupling_stop_time))
             };
 
-            using (var synchronizer = new NotifyPropertyChangedWpfGuiPropertySynchronizer(waveModel))
-            {
-                synchronizer.SynchronizeProperties(propertiesToSynchronize);
-
-                view.SettingsCategories = wpfGuiCategories;
-                view.GetChangedPropertyName = (sender, propertyName) =>
-                    (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
-            }
+            view.SettingsCategories = wpfGuiCategories;
+            view.SetSynchronizedProperties(propertiesToSynchronize);
+            view.GetChangedPropertyName = (sender, propertyName) =>
+                (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -9,6 +10,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
@@ -105,6 +107,133 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             // viewmodel should NOT trigger any CollectionChangedEvents.
             Assert.That(isCollectionChanged, Is.False);
             CollectionAssert.IsEmpty(view.SettingsCategories);
+        }
+
+        [Test]
+        public void SetSynchronizedProperties_PropertiesNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            using (var view = new WpfSettingsView())
+            {
+                // Call
+                TestDelegate call = () => view.SetSynchronizedProperties(null);
+
+                // Assert
+                Assert.That(call, Throws.TypeOf<ArgumentNullException>()
+                                        .With.Property(nameof(ArgumentNullException.ParamName))
+                                        .EqualTo("properties"));
+            }
+        }
+
+        [Test]
+        public void GivenViewWithNoDataSet_WhenSetSynchronizedPropertiesCalled_ThenInvalidOperationExceptionThrown()
+        {
+            // Given
+            using (var view = new WpfSettingsView())
+            {
+                // Call
+                TestDelegate call = () => view.SetSynchronizedProperties(Enumerable.Empty<WpfGuiProperty>());
+
+                // Then
+                Assert.That(call, Throws.TypeOf<InvalidOperationException>()
+                                        .With.Message
+                                        .EqualTo("Cannot synchronize properties when private field synchronizer is null."));
+            }
+        }
+
+        [Test]
+        public void GivenViewWithDataAndSynchronizedProperties_WhenDataNotifyPropertyEventChangedFired_ThenPropertiesNotified()
+        {
+            // Given
+            INotifyPropertyChanged observable = Substitute.For<INotifyPropertyChanged, IHydroModel>();
+
+            var propertyOneNotified = false;
+            var propertyOne = new WpfGuiProperty(new FieldUIDescription(null, null));
+            propertyOne.PropertyChanged += (sender, args) =>
+            {
+                propertyOneNotified = true;
+            };
+
+            var propertyTwoNotified = false;
+            var propertyTwo = new WpfGuiProperty(new FieldUIDescription(null, null));
+            propertyTwo.PropertyChanged += (sender, args) =>
+            {
+                propertyTwoNotified = true;
+            };
+
+            using (var view = new WpfSettingsView
+            {
+                Data = observable,
+                GetChangedPropertyName = (sender, args) => string.Empty
+            })
+            {
+                view.SetSynchronizedProperties(new[]
+                {
+                    propertyOne,
+                    propertyTwo
+                });
+
+                // When
+                observable.PropertyChanged += Raise.Event<PropertyChangedEventHandler>(this, new PropertyChangedEventArgs(string.Empty));
+
+                // Then
+                Assert.That(propertyOneNotified, Is.True);
+                Assert.That(propertyTwoNotified, Is.True);
+            }
+        }
+
+        [Test]
+        public void GivenViewWithDataAndSynchronizedProperties_WhenDisposedAndDataNotifyPropertyEventChangedFired_ThenPropertiesNotified()
+        {
+            // Given
+            INotifyPropertyChanged observable = Substitute.For<INotifyPropertyChanged, IHydroModel>();
+
+            var propertyOneNotified = false;
+            var propertyOne = new WpfGuiProperty(new FieldUIDescription(null, null));
+            propertyOne.PropertyChanged += (sender, args) =>
+            {
+                propertyOneNotified = true;
+            };
+
+            var propertyTwoNotified = false;
+            var propertyTwo = new WpfGuiProperty(new FieldUIDescription(null, null));
+            propertyTwo.PropertyChanged += (sender, args) =>
+            {
+                propertyTwoNotified = true;
+            };
+
+            var view = new WpfSettingsView
+            {
+                Data = observable,
+                GetChangedPropertyName = (sender, args) => string.Empty
+            };
+
+            view.SetSynchronizedProperties(new[]
+            {
+                propertyOne,
+                propertyTwo
+            });
+
+            // When
+            view.Dispose();
+            observable.PropertyChanged += Raise.Event<PropertyChangedEventHandler>(this, new PropertyChangedEventArgs(string.Empty));
+
+            // Then
+            Assert.That(propertyOneNotified, Is.False);
+            Assert.That(propertyTwoNotified, Is.False);
+        }
+
+        [Test]
+        public void GivenViewWithoutDataAndSynchronizer_WhenDisposing_ThenNoExceptionThrown()
+        {
+            // Given
+            var view = new WpfSettingsView();
+
+            // When
+            TestDelegate call = () => view.Dispose();
+
+            // Then
+            Assert.That(call, Throws.Nothing);
         }
     }
 }

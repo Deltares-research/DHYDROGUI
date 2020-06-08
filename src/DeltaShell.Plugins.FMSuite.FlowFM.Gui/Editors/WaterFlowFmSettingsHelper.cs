@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             processesCategory?.SubCategories.Add(tracersCategory);
         }
 
-        /*Extraced from WaterFlowFMModelView.cs */
+        /*Extracted from WaterFlowFMModelView.cs */
         private static ObjectUIDescription ExtendedUiProperties(WaterFlowFMModel data, ObjectUIDescription objectDescription)
         {
             if (data == null)

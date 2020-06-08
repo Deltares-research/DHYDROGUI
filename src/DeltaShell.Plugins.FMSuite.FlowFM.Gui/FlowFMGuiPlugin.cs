@@ -1114,13 +1114,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 guiProperties.Single(prop => string.Equals(prop.Name, GuiProperties.StartTime, StringComparison.OrdinalIgnoreCase))
             };
 
-            using (var synchronizer = new NotifyPropertyChangedWpfGuiPropertySynchronizer(flowFmModel))
-            {
-                synchronizer.SynchronizeProperties(propertiesToSynchronize);
-
-                view.SettingsCategories = wpfGuiCategories;
-                view.GetChangedPropertyName = fmSettingsPropertyChanged;
-            }
+            view.SettingsCategories = wpfGuiCategories;
+            view.SetSynchronizedProperties(propertiesToSynchronize);
+            view.GetChangedPropertyName = fmSettingsPropertyChanged;
         }
     }
 }
