@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private WaterFlowFMModel fmModel;
         private Dictionary<string, NwrwDryWeatherFlowDefinition> dryweatherFlowDefinitions;
         private Dictionary<string, INode> nodeDictionary;
+        private HashSet<string> singleUnitDryweatherFlowDefinitions = new HashSet<string>();
         private List<string> listOfWarnings = new List<string>();
         
         public override string DisplayName => "Rainfall Runoff NWRW data";
@@ -74,6 +75,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     continue;
                 }
 
+                if (readDefinition.Value.ComputationOption == DWAComputationOption.UseTable)
+                {
+                    listOfWarnings.Add($"Using tables for dryweather flow definitions is currently not supported. Skipping import of '{readDefinition.Key}'.");
+                    continue;
+                }
+
                 existingDefinitions.Add(CreateNewNwrwDryWeatherFlowDefinition(readDefinition.Value));
             }
 
@@ -88,6 +95,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private NwrwDryWeatherFlowDefinition CreateNewNwrwDryWeatherFlowDefinition(SobekRRDryWeatherFlow readDefinition)
         {
             var readComputationOption = readDefinition.ComputationOption;
+            if (readComputationOption == DWAComputationOption.ConstantDWAPerHour || readComputationOption == DWAComputationOption.VariablePerHour)
+            {
+                singleUnitDryweatherFlowDefinitions.Add(readDefinition.Id);
+            }
 
             var newDefinition = new NwrwDryWeatherFlowDefinition
             {
@@ -114,11 +125,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             switch (computationOption)
             {
                 case DWAComputationOption.NrPeopleTimesConstantPerHour:
+                case DWAComputationOption.ConstantDWAPerHour:
                     return DryweatherFlowDistributionType.Constant;
                 case DWAComputationOption.NrPeopleTimesVariablePerHour:
-                    return DryweatherFlowDistributionType.Daily;
-                case DWAComputationOption.ConstantDWAPerHour:
                 case DWAComputationOption.VariablePerHour:
+                    return DryweatherFlowDistributionType.Daily;
                 case DWAComputationOption.UseTable:
                 default:
                     throw new NotSupportedException($"{computationOption} is not a valid computation option.");
@@ -429,11 +440,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (!dryweatherFlowDefinitions.ContainsKey(dwaId))
                 {
                     listOfWarnings.Add($"Could not add dryweather flow definition {dwaId} to nwrw catchment, because it is not defined.");
+                    return;
                 }
 
                 var dwfDefintion = new DryWeatherFlow(dwaId) { NumberOfUnits = getNumberFunc(dataToSetFrom)};
                 data.DryWeatherFlows[index] = dwfDefintion;
+
+                if (singleUnitDryweatherFlowDefinitions.Contains(dwaId))
+                {
+                    dwfDefintion.NumberOfUnits = 1;
+                }
             }
+
+            
         }
 
         private void SetSurfaceTypes(NwrwData nwrwData, SobekRRNwrw readDefinition)
