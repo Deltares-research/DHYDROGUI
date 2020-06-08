@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
         private const int ButtonColumnIndex = 3;
 
         private ILayer data;
-        private WaterFlowFMModel waterFlowFmModel;
+        private static WaterFlowFMModel waterFlowFmModel;
         private Action openGlobalInitialConditionSettings;
         public event EventHandler SelectedFeaturesChanged;
         private static IDictionary<InitialConditionQuantity, IEnumerable<ChannelInitialConditionDefinition>> initialConditionValuesByQuantity = new Dictionary<InitialConditionQuantity, IEnumerable<ChannelInitialConditionDefinition>>();
@@ -117,11 +117,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
 
         public void SetWaterFlowFmModel(WaterFlowFMModel model)
         {
-            waterFlowFmModel = model;
-
+            if (waterFlowFmModel != model)
+            {
+                waterFlowFmModel = model;
+                initialConditionValuesByQuantity = new Dictionary<InitialConditionQuantity, IEnumerable<ChannelInitialConditionDefinition>>();
+            }
+            
             UpdateTableView();
 
             SubscribeDataEvents();
+        }
+
+        public void SetInitialConditionValuesByQuantity()
+        {
+            if (initialConditionValuesByQuantity.Count > 0)
+            {
+                return;
+            }
+
+            InitialConditionQuantity quantity = GetModelSettingsQuantity();
+            foreach (var channelInitialConditionDefinition in waterFlowFmModel.ChannelInitialConditionDefinitions)
+            {
+                var constantDefinition = channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition;
+                var spatialDefinition = channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition;
+                if (constantDefinition != null)
+                {
+                    quantity = constantDefinition.Quantity;
+                    break;
+                }
+                else if (spatialDefinition != null)
+                {
+                    quantity = spatialDefinition.Quantity;
+                    break;
+                }
+            }
+            var copyOfCurrentValues = new List<ChannelInitialConditionDefinition>();
+            waterFlowFmModel.ChannelInitialConditionDefinitions.ForEach(definition => copyOfCurrentValues.Add((ChannelInitialConditionDefinition)definition.Clone()));
+            initialConditionValuesByQuantity.Add(quantity, copyOfCurrentValues);
         }
 
         public void SetCurrentQuantity()
@@ -156,10 +188,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
         {
             SubscribeViewEvents();
             SubscribeDataEvents();
-
+            
             // Reset original layer
             vectorLayerAttributeTableView.Data = data;
-
+            
             UpdateTableView();
         }
 

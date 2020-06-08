@@ -254,7 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public IEventedList<ChannelFrictionDefinition> ChannelFrictionDefinitions { get; private set; }
         public IEventedList<PipeFrictionDefinition> PipeFrictionDefinitions { get; private set; }
 
-        public IEventedList<ChannelInitialConditionDefinition> ChannelInitialConditionDefinitions { get; set; }
+        public IEventedList<ChannelInitialConditionDefinition> ChannelInitialConditionDefinitions { get; private set; }
 
         public bool UseReverseRoughness { get; set; }
         public bool UseReverseRoughnessInCalculation { get; set; }

@@ -568,6 +568,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         .First(waterFlowFmModel => Equals(channelInitialConditionDefinitionsWrapper.WrappedData, waterFlowFmModel.ChannelInitialConditionDefinitions));
 
                     view.SetWaterFlowFmModel(flowFmModel);
+                    view.SetInitialConditionValuesByQuantity();
                     view.SetCurrentQuantity();
 
                     view.SetOpenGlobalInitialConditionSettingsMethod(() =>
