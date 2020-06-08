@@ -160,7 +160,7 @@ namespace DelftTools.Hydro.Link1d2d
         {
             return GetTimeSeries(feature, LinkIndexVariableName, (dIndex, fIndex) => links.First(l => l.DiscretisationPointIndex == dIndex && l.FaceIndex == fIndex).Link1D2DIndex);
         }
-        protected IFunction GetTimeSeries(int discretisationPointIndex, int faceIndex, int variableIndex, LinkType featureType, string indexVariableName, Func<int, int, int> getVariableIndexFromGridFeatureIndex = null)
+        protected IFunction GetTimeSeries(int discretisationPointIndex, int faceIndex, int variableIndex, LinkStorageType featureType, string indexVariableName, Func<int, int, int> getVariableIndexFromGridFeatureIndex = null)
         {
             return Grid != null && Discretization != null && Links?.Count == 0
                 ? GetTimeSeries(new Link1D2D(discretisationPointIndex, faceIndex, indexVariableName)

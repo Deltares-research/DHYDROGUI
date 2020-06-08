@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         public void Get_1DPointsMask_HWA()
         {
             var discretisation = GetTestDiscretization();
-            var filter1DPoints = Generate1D2DLinksHelper.GetMesh1DFilter(discretisation, LinkType.GullySewer);
+            var filter1DPoints = Generate1D2DLinksHelper.GetMesh1DFilter(discretisation, LinkGeneratingType.GullySewer);
 
             Assert.AreEqual(2, filter1DPoints.Count(p => p));
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         [Category("Quarantine")]
         public void Get_Lateral1D2DLinks() 
         {
-            var linkType = LinkType.Lateral;
+            var linkType = LinkGeneratingType.Lateral;
             var discretisation = GetTestDiscretization();
 
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath("dummy.mdu"));
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         [Category("Quarantine")]
         public void Get_Gully1D2DLinks()
         {
-            var linkType = LinkType.GullySewer;
+            var linkType = LinkGeneratingType.GullySewer;
             var discretisation = GetTestDiscretization();
 
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath("dummy.mdu"));
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         [Category("Quarantine")]
         public void Get_EmbeddedOneToOneLinks()
         {
-            var linkType = LinkType.EmbeddedOneToOne;
+            var linkType = LinkGeneratingType.EmbeddedOneToOne;
             var discretisation = GetTestDiscretization();
 
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath("dummy.mdu"))
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         [Category("Quarantine")]
         public void Get_EmbeddedOneToManyLinks()
         {
-            var linkType = LinkType.EmbeddedOneToOne;
+            var linkType = LinkGeneratingType.EmbeddedOneToOne;
             var discretisation = GetTestDiscretization();
 
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath("dummy.mdu"))

@@ -28,7 +28,7 @@ namespace DelftTools.Hydro.Link1d2d
 
         [DisplayName("Type of link")]
         [FeatureAttribute(Order = 3, ExportName = "Type")]
-        LinkType TypeOfLink { get; set; }
+        LinkStorageType TypeOfLink { get; set; }
 
         [DisplayName("Point index")]
         [FeatureAttribute(Order = 4, ExportName = "Point index")]

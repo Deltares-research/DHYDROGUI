@@ -24,18 +24,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private static readonly ILog log = LogManager.GetLogger(typeof(MapTool1D2DLinksHelper));    
         private const double SNAP_DISTANCE = 10.0; //
 
-        public static IEnumerable<ILink1D2D> Generate1D2DLinks(IPolygon selectedArea, LinkType linkType, UnstructuredGrid grid, IEventedList<Gully> gullies, IDiscretization discretization)
+        public static IEnumerable<ILink1D2D> Generate1D2DLinks(IPolygon selectedArea, LinkGeneratingType linkType, UnstructuredGrid grid, IEventedList<Gully> gullies, IDiscretization discretization)
         {
             return Generate1D2DLinksHelper.Generate1D2DLinks(selectedArea, linkType, grid, gullies, discretization);
         }
 
-        public static bool AddNew1D2DLink(WaterFlowFMModel fmModel, LinkType linkType, Coordinate startPoint, Coordinate endPoint, double snapTolerance = 0.0)
+        public static bool AddNew1D2DLink(WaterFlowFMModel fmModel, LinkGeneratingType linkType, Coordinate startPoint, Coordinate endPoint, double snapTolerance = 0.0)
         {
             var link = GetNewLink(fmModel, startPoint, endPoint, linkType, snapTolerance);
             if (link == null) 
                 return false;
 
-            if (linkType != LinkType.GullySewer || IsLinkConnectedToAGully(link, fmModel))
+            if (linkType != LinkGeneratingType.GullySewer || IsLinkConnectedToAGully(link, fmModel))
             {
                 fmModel.Links.Add(link);
             }
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return true;
         }
 
-        private static Link1D2D GetNewLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, LinkType linkType, double snapTolerance = SNAP_DISTANCE)
+        private static Link1D2D GetNewLink(WaterFlowFMModel fmModel, Coordinate startCoordinate, Coordinate endCoordinate, LinkGeneratingType linkType, double snapTolerance = SNAP_DISTANCE)
         {
             var startPoint = new Point(startCoordinate);
             var endPoint = new Point(endCoordinate);
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 {
                     var link = new Link1D2D(networkLocationId, cellId)
                     {
-                        TypeOfLink = linkType,
+                        TypeOfLink = linkType.GetLinkStorageType(),
                         Geometry = new LineString(new[] { exactStartCoordinate, endPoint.Coordinate }),
                         SnapToleranceUsed = snapTolerance
                     };

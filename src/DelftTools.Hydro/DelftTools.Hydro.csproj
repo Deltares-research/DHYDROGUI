@@ -203,6 +203,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="DrainageBasin.cs" />
     <Compile Include="Embankment.cs" />
+    <Compile Include="LinkStorageType.cs" />
     <Compile Include="ModelSettings.cs" />
     <Compile Include="GroupableFeature2D.cs" />
     <Compile Include="GroupableFeature2DPoint.cs" />
@@ -220,7 +221,7 @@
     <Compile Include="Link1d2d\Link1D2D.cs" />
     <Compile Include="Link1d2d\Link1D2DCoverage.cs" />
     <Compile Include="Link1d2d\Link1D2DCoverageLayer.cs" />
-    <Compile Include="LinkType.cs" />
+    <Compile Include="LinkGeneratingType.cs" />
     <Compile Include="Roughness\IModelWithRoughnessSections.cs" />
     <Compile Include="Roughness\ReverseRoughnessSection.cs" />
     <Compile Include="Roughness\RoughnessDataSet.cs" />

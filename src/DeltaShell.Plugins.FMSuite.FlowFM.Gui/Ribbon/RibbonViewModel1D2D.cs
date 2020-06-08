@@ -46,25 +46,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
                 {
                     Name = "Embedded 1-to-1",
                     ToolTipText = "Embedded 1D2D links for polder one to one",
-                    Type = LinkType.EmbeddedOneToOne
+                    Type = LinkGeneratingType.EmbeddedOneToOne
                 },
                 new RibbonLink
                 {
                     Name = "Embedded 1-to-n",
                     ToolTipText = "Embedded 1D2D links for polder one to many",
-                    Type = LinkType.EmbeddedOneToMany
+                    Type = LinkGeneratingType.EmbeddedOneToMany
                 },
                 new RibbonLink
                 {
                     Name = "Lateral",
                     ToolTipText = "Lateral 1D2D links for rivers",
-                    Type = LinkType.Lateral
+                    Type = LinkGeneratingType.Lateral
                 },
                 new RibbonLink
                 {
                     Name = "Gully-sewer",
                     ToolTipText = "Gully-sewer links for street in/outlet",
-                    Type = LinkType.GullySewer
+                    Type = LinkGeneratingType.GullySewer
                 }
             };
 
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             {
             }
 
-            public LinkType LinkType
+            public LinkGeneratingType LinkType
             {
                 set
                 {
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
 
         public string ToolTipText { get; set; }
 
-        public LinkType Type { get; set; }
+        public LinkGeneratingType Type { get; set; }
     }
 }
 

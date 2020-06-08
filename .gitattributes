@@ -348,7 +348,8 @@ src/DelftTools.Hydro/Link1d2d/Link1D2D.cs -text
 src/DelftTools.Hydro/Link1d2d/Link1D2DCoverage.cs -text
 src/DelftTools.Hydro/Link1d2d/Link1D2DCoverage.hbm.xml -text
 src/DelftTools.Hydro/Link1d2d/Link1D2DCoverageLayer.cs -text
-src/DelftTools.Hydro/LinkType.cs -text
+src/DelftTools.Hydro/LinkGeneratingType.cs -text
+src/DelftTools.Hydro/LinkStorageType.cs -text
 src/DelftTools.Hydro/ModelSettings.cs -text
 src/DelftTools.Hydro/NameableFeatureComparer.cs -text
 src/DelftTools.Hydro/ObservationCrossSection2D.cs -text

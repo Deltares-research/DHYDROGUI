@@ -17,11 +17,11 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Generate1D2DLinksHelper));
 
-        public static IEnumerable<ILink1D2D> Generate1D2DLinks(IPolygon selectedArea, LinkType linkType, UnstructuredGrid grid, IEventedList<Gully> gullies, IDiscretization discretization)
+        public static IEnumerable<ILink1D2D> Generate1D2DLinks(IPolygon selectedArea, LinkGeneratingType linkType, UnstructuredGrid grid, IEventedList<Gully> gullies, IDiscretization discretization)
         {
             var generate1D2DLinks = Enumerable.Empty<ILink1D2D>();
 
-            var mustHaveTwoPoints = linkType != LinkType.GullySewer;
+            var mustHaveTwoPoints = linkType != LinkGeneratingType.GullySewer;
             if (mustHaveTwoPoints && discretization.Locations.Values.Count < 2)
             {
                 return generate1D2DLinks;
@@ -45,7 +45,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             using (var gGeomApi = new GridGeomApi())
             {
                 LinkInformation linkInformation = null;
-                if (linkType == LinkType.GullySewer)
+                if (linkType == LinkGeneratingType.GullySewer)
                 {
                     var geometryGullies = gullies
                         .Where(r => r.Geometry.Intersects(selectedArea))
@@ -79,7 +79,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             }
         }
 
-        private static IList<Link1D2D> Creates1d2dLinks(LinkInformation linkInformation, UnstructuredGrid grid, IDiscretization networkDiscretization, LinkType linkType)
+        private static IList<Link1D2D> Creates1d2dLinks(LinkInformation linkInformation, UnstructuredGrid grid, IDiscretization networkDiscretization, LinkGeneratingType linkType)
         {
             var lstNewLinks = new List<Link1D2D>();
             for (int i = 0; i < linkInformation.FromIndices.Length; i++)
@@ -93,14 +93,14 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 var link = new Link1D2D(pointIndex, cellIndex)
                 {
                     Geometry = new LineString(new[] { node.Geometry.Coordinate, cell.Center }),
-                    TypeOfLink = linkType
+                    TypeOfLink = linkType.GetLinkStorageType()
                 };
                 lstNewLinks.Add(link);
             }
             return lstNewLinks;
         }
 
-        public static bool[] GetMesh1DFilter(IDiscretization networkDiscretization, LinkType linkType, IPolygon selectedArea = null)
+        public static bool[] GetMesh1DFilter(IDiscretization networkDiscretization, LinkGeneratingType linkType, IPolygon selectedArea = null)
         {
             var discretisationPoints = networkDiscretization.Locations.Values;
             var filterList = new bool[discretisationPoints.Count];
@@ -115,16 +115,16 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
                     switch (linkType)
                     {
-                        case LinkType.Lateral:
+                        case LinkGeneratingType.Lateral:
                             isAvailableMesh1DPoint = sewerConnection == null;
                             break;
-                        case LinkType.EmbeddedOneToOne: //go to next case
-                        case LinkType.EmbeddedOneToMany:
+                        case LinkGeneratingType.EmbeddedOneToOne: //go to next case
+                        case LinkGeneratingType.EmbeddedOneToMany:
                             isAvailableMesh1DPoint = sewerConnection == null ||
                                                      sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
                                                      sewerConnection.WaterType == SewerConnectionWaterType.StormWater;
                             break;
-                        case LinkType.GullySewer:
+                        case LinkGeneratingType.GullySewer:
                             isAvailableMesh1DPoint = sewerConnection != null &&
                                                      (sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
                                                       sewerConnection.WaterType == SewerConnectionWaterType.StormWater);

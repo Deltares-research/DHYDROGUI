@@ -5,7 +5,7 @@
                     xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro">
     <Style x:Key="LinkTypeStyle" TargetType="Rectangle">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding}" Value="{x:Static hydro:LinkType.EmbeddedOneToOne}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static hydro:LinkGeneratingType.EmbeddedOneToOne}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -119,7 +119,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static hydro:LinkType.EmbeddedOneToMany}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static hydro:LinkGeneratingType.EmbeddedOneToMany}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -223,7 +223,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static hydro:LinkType.Lateral}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static hydro:LinkGeneratingType.Lateral}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">
@@ -297,7 +297,7 @@
                     </Setter.Value>
                 </Setter>
             </DataTrigger>
-            <DataTrigger Binding="{Binding}" Value="{x:Static hydro:LinkType.GullySewer}">
+            <DataTrigger Binding="{Binding}" Value="{x:Static hydro:LinkGeneratingType.GullySewer}">
                 <Setter Property="Fill">
                     <Setter.Value>
                         <DrawingBrush Stretch="Uniform">

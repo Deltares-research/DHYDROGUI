@@ -11,7 +11,6 @@ using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
@@ -435,7 +434,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
         public void GivenUGridMeshAdapterTest_DoingCreateLinks_ShouldCreateValidLinks()
         {
            //Arrange
-           var oneToOne = (int) LinkType.EmbeddedOneToOne;
+           var oneToOne = (int) LinkStorageType.Embedded;
 
            var linkGeometry = new DisposableLinksGeometry
             {
@@ -455,7 +454,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual("link1_long", links[0].LongName);
             Assert.AreEqual(2, links[0].FaceIndex);
             Assert.AreEqual(0, links[0].DiscretisationPointIndex);
-            Assert.AreEqual(LinkType.EmbeddedOneToOne, links[0].TypeOfLink);
+            Assert.AreEqual(LinkStorageType.Embedded, links[0].TypeOfLink);
         }
 
         [Test]
@@ -466,7 +465,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                 .Select(i => new Link1D2D(i, 5 - i, $"link{i}")
                 {
                     LongName = $"link{i}_long",
-                    TypeOfLink = LinkType.EmbeddedOneToOne
+                    TypeOfLink = LinkStorageType.Embedded
                 })
                 .Cast<ILink1D2D>()
                 .ToList();
@@ -480,7 +479,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual("link2_long", disposableLinksGeometry.LinkLongName[2]);
             Assert.AreEqual(2, disposableLinksGeometry.Mesh1DFrom[2]);
             Assert.AreEqual(3, disposableLinksGeometry.Mesh2DTo[2]);
-            Assert.AreEqual((int)LinkType.EmbeddedOneToOne, disposableLinksGeometry.LinkType[2]);
+            Assert.AreEqual((int)LinkStorageType.Embedded, disposableLinksGeometry.LinkType[2]);
         }
 
         private static IHydroNetwork CreateTestNetwork()

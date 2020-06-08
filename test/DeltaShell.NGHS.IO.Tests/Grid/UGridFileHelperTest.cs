@@ -228,7 +228,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             var link1D2Ds = new List<ILink1D2D>()
             {
-                {new Link1D2D(1, 1, "my link") {TypeOfLink = LinkType.EmbeddedOneToOne}}
+                {new Link1D2D(1, 1, "my link") {TypeOfLink = LinkStorageType.Embedded}}
             };
 
             var zValues = Enumerable.Range(1, unstructuredGrid.Vertices.Count).Select(Convert.ToDouble).ToArray();

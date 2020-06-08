@@ -55,7 +55,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             GC.SuppressFinalize(this);
         }
 
-        public LinkInformation GetLinkInformation(DisposableMeshGeometryGridGeom mesh2D, Mesh1DGeometry mesh1D, GeometriesData selectedArea, bool[] filter1DMesh, LinkType linkType, GeometriesData geometryGullies = null)
+        public LinkInformation GetLinkInformation(DisposableMeshGeometryGridGeom mesh2D, Mesh1DGeometry mesh1D, GeometriesData selectedArea, bool[] filter1DMesh, LinkGeneratingType linkType, GeometriesData geometryGullies = null)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             }
         }
 
-        private int Make1D2DLinks(LinkType linkType, GeometriesData selectedArea, bool[] filterMesh1DPoints, GeometriesData gullies)
+        private int Make1D2DLinks(LinkGeneratingType linkType, GeometriesData selectedArea, bool[] filterMesh1DPoints, GeometriesData gullies)
         {
             var filterMesh1DPointsArray = filterMesh1DPoints.Select(b => b ? 1 : 0).ToArray();
             var pinnedFilterMesh1DPointsArray = GCHandle.Alloc(filterMesh1DPointsArray, GCHandleType.Pinned);
@@ -97,17 +97,17 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
                 switch (linkType)
                 {
-                    case LinkType.EmbeddedOneToOne:
+                    case LinkGeneratingType.EmbeddedOneToOne:
                         ierr = geomWrapper.Make1D2DEmbeddedOneToOneLinks(ref nCoordinates, ref intPtrXValuesSelectedArea, ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                         break;
-                    case LinkType.EmbeddedOneToMany:
+                    case LinkGeneratingType.EmbeddedOneToMany:
                         ierr = geomWrapper.Make1D2DEmbeddedOneToManyLinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
                             ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                         break;
-                    case LinkType.Lateral:
+                    case LinkGeneratingType.Lateral:
                         ierr = geomWrapper.Make1D2DLateralLinks(ref nCoordinates, ref intPtrXValuesSelectedArea, ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                         break;
-                    case LinkType.GullySewer:
+                    case LinkGeneratingType.GullySewer:
                         int nCoordinatesGullies = gullies.XValues.Length;
                         var intPtrXValuesGullies = gullies.GetPinnedObjectPointer(gullies.XValues);
                         var intPtrYValuesGullies = gullies.GetPinnedObjectPointer(gullies.YValues);
@@ -162,12 +162,12 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 ref native.nBranches, ref native.nMeshPoints);
         }
 
-        private LinkInformation GetLinkInformation(LinkType linkType)
+        private LinkInformation GetLinkInformation(LinkGeneratingType linkType)
         {
             var linkInformation = new LinkInformation();
 
             var linksCount = 0;
-            var linkTypeNumber = GetLinkTypeNumber(linkType);
+            var linkTypeNumber = (int) linkType.GetLinkStorageType();
             
             if (DoWithApi(() => geomWrapper.GetLinkCount(ref linksCount, ref linkTypeNumber)))
                 return linkInformation;
@@ -190,21 +190,6 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             toArrayHandle.Free();
 
             return linkInformation;
-        }
-
-        private int GetLinkTypeNumber(LinkType linkType)
-        {
-            switch (linkType)
-            {
-                case LinkType.EmbeddedOneToOne:
-                case LinkType.EmbeddedOneToMany:
-                case LinkType.Lateral:
-                    return 3;
-                case LinkType.GullySewer:
-                    return 5;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(linkType), linkType, null);
-            }
         }
 
         private static int[] CreateValueArray(IntPtr pointer, int size)

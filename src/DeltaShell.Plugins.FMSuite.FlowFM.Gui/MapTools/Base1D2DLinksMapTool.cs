@@ -14,10 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         public Base1D2DLinksMapTool()
         {
-            LinkType = LinkType.EmbeddedOneToOne;
+            LinkType = LinkGeneratingType.EmbeddedOneToOne;
         }
 
-        public LinkType LinkType { get; set; }
+        public LinkGeneratingType LinkType { get; set; }
 
         public override bool Enabled
         {

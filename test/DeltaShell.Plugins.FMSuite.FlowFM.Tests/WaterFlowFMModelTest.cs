@@ -1160,9 +1160,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(model.Links.Count, Is.Not.EqualTo(0));
         }
         
-        [TestCase(LinkType.EmbeddedOneToOne)]
-        [TestCase(LinkType.EmbeddedOneToMany, Ignore = true, IgnoreReason = "Buizen hebben iets van een mask nodig want zijn dicht en kunnen niet halverwege uit stromen naar een grid! Tjitske en ArthurvD weten meer")]
-        public void Generate1D2DLinksAutomaticallyWhenExistsBoth1DUrban2DGrids(LinkType linkType)
+        [TestCase(LinkGeneratingType.EmbeddedOneToOne)]
+        [TestCase(LinkGeneratingType.EmbeddedOneToMany, Ignore = true, IgnoreReason = "Buizen hebben iets van een mask nodig want zijn dicht en kunnen niet halverwege uit stromen naar een grid! Tjitske en ArthurvD weten meer")]
+        public void Generate1D2DLinksAutomaticallyWhenExistsBoth1DUrban2DGrids(LinkGeneratingType linkType)
         {
             var model = new WaterFlowFMModel();
 
@@ -1365,9 +1365,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(model.Links.Count, Is.EqualTo(0));
             Assert.That(model.NetworkDiscretization.Locations.Values.Count, Is.EqualTo(2));
         }
-        [TestCase(LinkType.EmbeddedOneToOne)]
-        [TestCase(LinkType.EmbeddedOneToMany, Ignore = true, IgnoreReason = "Snap ik echt helemaal niks van...")]
-        public void Generate1D2DLinksAutomaticallyWhenExistsBoth1DRural2DGrids(LinkType linkType)
+        [TestCase(LinkGeneratingType.EmbeddedOneToOne)]
+        [TestCase(LinkGeneratingType.EmbeddedOneToMany, Ignore = true, IgnoreReason = "Snap ik echt helemaal niks van...")]
+        public void Generate1D2DLinksAutomaticallyWhenExistsBoth1DRural2DGrids(LinkGeneratingType linkType)
         {
             var model = new WaterFlowFMModel();
 

@@ -766,7 +766,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 link1D2Ds.Add(new Link1D2D(linksGeometry.Mesh1DFrom[i], linksGeometry.Mesh2DTo[i], linksGeometry.LinkId[i])
                 {
                     LongName = linksGeometry.LinkLongName[i],
-                    TypeOfLink = (LinkType) linksGeometry.LinkType[i]
+                    TypeOfLink = (LinkStorageType) linksGeometry.LinkType[i]
                 });
             }
         }
