@@ -266,13 +266,41 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             yield return CreateFunction(new Unit("meter", "m AD"), xValues, yValuesBottom, "Pipe bottom");
         }
 
+        public static void AddRouteSurfaceLevels(Route route, INetworkCoverage coverage)
+        {
+            foreach (var pipe in route.Network.Branches.OfType<IPipe>())
+            {
+                var startLocationPipe = new NetworkLocation(pipe, 0);
+                var endLocationPipe = new NetworkLocation(pipe, pipe.Length);
+
+                coverage[startLocationPipe] = pipe.SourceCompartment.SurfaceLevel;
+                coverage[endLocationPipe] = pipe.TargetCompartment.SurfaceLevel;
+            }
+
+            var startLocationRoute = route.Locations.Values[0];
+            var endLocationRoute = route.Locations.Values[route.Locations.Values.Count - 1];
+
+            coverage[startLocationRoute] = GetSurfaceLevelAtChainage(startLocationRoute.Chainage, (IPipe)startLocationRoute.Branch);
+            coverage[endLocationRoute] = GetSurfaceLevelAtChainage(endLocationRoute.Chainage, (IPipe)endLocationRoute.Branch);
+        }
+
+        private static double GetSurfaceLevelAtChainage(double chainage, IPipe pipe)
+        {
+            return GetPipeLevelAtChainage(pipe, chainage, pipe.SourceCompartment.SurfaceLevel, pipe.TargetCompartment.SurfaceLevel);
+        }
+
         private static double GetLevelAtChainage(double chainage, IPipe pipe)
         {
-            var heightDiff = pipe.LevelSource - pipe.LevelTarget;
+            return GetPipeLevelAtChainage(pipe, chainage, pipe.LevelSource, pipe.LevelTarget);
+        }
+
+        private static double GetPipeLevelAtChainage(IPipe pipe, double chainage, double sourceLevel, double targetLevel)
+        {
+            var heightDiff = sourceLevel - targetLevel;
             var ratio = heightDiff / pipe.Length;
 
             var newPipeLength = pipe.Length - chainage;
-            return (ratio * newPipeLength) + Math.Min(pipe.LevelSource, pipe.LevelTarget);
+            return (ratio * newPipeLength) + Math.Min(sourceLevel, targetLevel);
         }
 
         private static IFunction CreateFunction(IUnit yUnit, List<double> xValues, List<double> yValues, string name)

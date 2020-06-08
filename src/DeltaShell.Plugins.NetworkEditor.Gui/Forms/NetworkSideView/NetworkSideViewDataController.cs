@@ -798,10 +798,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private IEnumerable<INetworkCoverage> CreateProfileNetworkCoverages()
         {
-            yield return BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(route);
+            yield return GetBuildBedLevelCoverage();
             yield return BedLevelNetworkCoverageBuilder.BuildLeftEmbankmentCoverage(route);
             yield return BedLevelNetworkCoverageBuilder.BuildRightEmbankmentCoverage(route);
             yield return BedLevelNetworkCoverageBuilder.BuildLowestEmbankmentCoverage(route);
+        }
+
+        private INetworkCoverage GetBuildBedLevelCoverage()
+        {
+            var buildBedLevelCoverage = BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(route);
+
+            NetworkSideViewHelper.AddRouteSurfaceLevels(route, buildBedLevelCoverage);
+
+            return buildBedLevelCoverage;
         }
 
         // Update minValue and maxValue with minimum and maximum values from function values, NaN-safe.

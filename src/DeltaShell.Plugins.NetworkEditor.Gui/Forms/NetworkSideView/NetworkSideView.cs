@@ -483,7 +483,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             if (bottomLevelSideViewFunction != null)
             {
                 var bottomLevelChartData = new SideViewChartData(bottomLevelSideViewFunction,
-                                                                      Color.YellowGreen,
+                                                                      Color.FromArgb(72, Color.YellowGreen),
                                                                       ChartSeriesType.AreaSeries);
                 bottomLevelChartData.FunctionBindingList.SynchronizeInvoke = chartView;
                 bottomLevelChartData.AreaStyleCustomizer = (acs) => acs.LineVisible = false;
