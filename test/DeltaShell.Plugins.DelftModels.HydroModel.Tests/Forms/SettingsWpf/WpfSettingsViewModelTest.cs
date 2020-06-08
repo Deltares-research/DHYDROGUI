@@ -31,10 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             using (var viewModel = new WpfSettingsViewModel())
             {
                 var wpfGuiCategoryVisible = new WpfGuiCategory("cat", null);
-                var wpfGuiCategoryHidden = new WpfGuiCategory("cat2", null)
-                {
-                    CategoryVisibility = () => false
-                };
+                var wpfGuiCategoryHidden = new WpfGuiCategory("cat2", null) {CategoryVisibility = () => false};
 
                 // Call
                 viewModel.SettingsCategories = new ObservableCollection<WpfGuiCategory>
@@ -146,6 +143,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
                 Assert.That(isCollectionChanged, Is.True);
                 CollectionAssert.IsEmpty(viewModel.SettingsCategories);
             }
+        }
+
+        [Test]
+        public void GivenViewModelWithCategories_WhenDisposedAndCategoryTriggersPropertyChangedEvent_ThenViewModelNotNotified()
+        {
+            // Given
+            var category = new WpfGuiCategory("category", new[]
+            {
+                new FieldUIDescription(null, (o, v) => {}) {ValueType = typeof(object)}
+            }) {CategoryVisibility = () => true};
+
+            var viewModel = new WpfSettingsViewModel
+            {
+                SettingsCategories = new ObservableCollection<WpfGuiCategory>(new[]
+                {
+                    category
+                })
+            };
+
+            // Precondition
+            WpfGuiProperty property = category.Properties.Single(); // Cache the property as with a proper disposal, the category will clear its properties
+            Assert.That(viewModel.SettingsCategories.Single(), Is.SameAs(category));
+            Assert.That(category.IsVisible, Is.True); // Ensure that the category is visible when test starts to ensure that the NotifyPropertyChanged event was subscribed
+
+            // When
+            viewModel.Dispose();
+
+            var isCollectionChanged = false;
+            viewModel.SettingsCategories.CollectionChanged += (sender, args) => isCollectionChanged = true;
+
+            category.CategoryVisibility = () => false; // Make the category invisible to make sure collection changed event would be triggered if its still subscribed
+            property.RaisePropertyChangedEvents();
+
+            // Then
+            // The property changed event of a category triggers a CollectionChangedEvent
+            // to add visible or remove invisible items. As the viewmodel is disposed, the 
+            // viewmodel should NOT trigger any CollectionChangedEvents.
+            Assert.That(isCollectionChanged, Is.False);
+            CollectionAssert.IsEmpty(viewModel.SettingsCategories);
         }
     }
 }
