@@ -266,8 +266,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             yield return CreateFunction(new Unit("meter", "m AD"), xValues, yValuesBottom, "Pipe bottom");
         }
 
-        public static void AddRouteSurfaceLevels(Route route, INetworkCoverage coverage)
+        public static void AddPipeSurfaceLevelsInRoute(Route route, INetworkCoverage coverage)
         {
+            if (!route.Locations.Values.Any()) return;
+
             foreach (var pipe in route.Network.Branches.OfType<IPipe>())
             {
                 var startLocationPipe = new NetworkLocation(pipe, 0);
@@ -277,11 +279,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 coverage[endLocationPipe] = pipe.TargetCompartment.SurfaceLevel;
             }
 
+
             var startLocationRoute = route.Locations.Values[0];
             var endLocationRoute = route.Locations.Values[route.Locations.Values.Count - 1];
 
-            coverage[startLocationRoute] = GetSurfaceLevelAtChainage(startLocationRoute.Chainage, (IPipe)startLocationRoute.Branch);
-            coverage[endLocationRoute] = GetSurfaceLevelAtChainage(endLocationRoute.Chainage, (IPipe)endLocationRoute.Branch);
+            if (startLocationRoute.Branch is IPipe startLocationRoutePipe)
+                coverage[startLocationRoute] = GetSurfaceLevelAtChainage(startLocationRoute.Chainage, startLocationRoutePipe);
+
+            if (endLocationRoute.Branch is IPipe endLocationRoutePipe)
+                coverage[endLocationRoute] = GetSurfaceLevelAtChainage(endLocationRoute.Chainage, endLocationRoutePipe);
         }
 
         private static double GetSurfaceLevelAtChainage(double chainage, IPipe pipe)
