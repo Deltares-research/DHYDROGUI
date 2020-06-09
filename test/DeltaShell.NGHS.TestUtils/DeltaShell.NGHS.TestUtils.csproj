@@ -55,8 +55,7 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.Core, Version=1.4.0.50708, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="DeltaShell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50749-beta\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
