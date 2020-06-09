@@ -52,6 +52,11 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50749-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Shell.Core, Version=1.5.0.50749-beta, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50749-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DeltaShell.TestProject.1.5.0.50749-beta\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
