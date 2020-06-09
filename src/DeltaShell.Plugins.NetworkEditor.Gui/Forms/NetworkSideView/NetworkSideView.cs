@@ -34,7 +34,6 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
@@ -422,6 +421,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private IEnumerable<SideViewChartData> CreatePipeChartData()
         {
             var functions = networkSideViewDataController?.PipeSideViewFunctions;
+            if (functions == null) 
+                    yield break;
 
             foreach (var function in functions)
             {
@@ -763,7 +764,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 var manhole = tuple.Item1;
                 var offset = tuple.Item2;
 
-                AddManholeShape(data, manhole, offset);
+                AddManholeShape(manhole, offset);
             }
         }
 
@@ -1000,7 +1001,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             ShapesToFeature[crossSectionShape] = crossSection;
         }
 
-        private void AddManholeShape(Route route, IManhole manhole, double offset)
+        private void AddManholeShape(IManhole manhole, double offset)
         {
             var compartmentShape = new ManHoleSideViewShape(chart, offset, manhole)
             {

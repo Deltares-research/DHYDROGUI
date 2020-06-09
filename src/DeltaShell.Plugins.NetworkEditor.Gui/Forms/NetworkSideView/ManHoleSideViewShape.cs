@@ -21,7 +21,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         public override double X
         {
             get { return offsetInSideView; }
-            set { }
+            set
+            {
+                // specified in constructor can not be changed
+            }
         }
 
         /// <summary>
@@ -37,7 +40,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     ? manhole.Compartments.Max(c => c.SurfaceLevel) 
                     : 0;
             }
-            set { }
+            set
+            {
+                // derived, can not be changed
+            }
         }
 
         ///// <summary>
@@ -56,7 +62,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     Y - manhole.Compartments.Min(c => c.BottomLevel) 
                     : 0;
             }
-            set { }
+            set
+            {
+                // derived, can not be changed
+            }
         }
 
         public override double Width
@@ -67,7 +76,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     ? manhole.Compartments.Sum(c => c.ManholeWidth)
                     : 0;
             }
-            set { }
+            set
+            {
+                // derived, can not be changed
+            }
         }
     }
 }

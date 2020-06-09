@@ -8,7 +8,6 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Units;
 using DelftTools.Utils;
