@@ -1504,8 +1504,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     ReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
                 };
 
-                var referencesToNonExistentFilesExist = false;
-
                 List<Structure2D> featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
                 var hasBadFileReferences = false;
                 featuresToAdd.ForEach(f =>
@@ -1519,13 +1517,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         hasBadFileReferences = true;
                         logHandler.ReportErrorFormat(Resources.MduFile_FilePath_0_referenced_in_StructuresFile_1_does_not_exist, featureFilePath,
                                                      structureFilePath);
-                        logHandler.LogReport();
                     }
                 });
 
                 if (hasBadFileReferences)
                 {
                     structureFilesWithBadReferences.Add(structureFilePath);
+                    logHandler.LogReport();
                 }
             }
 
