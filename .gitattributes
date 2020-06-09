@@ -37384,6 +37384,7 @@ test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/GridProperties/WeirPropertiesT
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/ImportBranchFeatureDialogTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkLocationEditorMapControlTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/BedLevelNetworkCoverageBuilderTest.cs -text
+test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/ManHoleSideViewShapeTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewCoverageManagerTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewDataControllerTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewDataTest.cs -text
