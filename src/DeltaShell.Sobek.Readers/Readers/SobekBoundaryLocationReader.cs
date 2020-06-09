@@ -30,6 +30,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                 @"(FLBR (?'text'.*?)\sflbr)|" +
                 @"(FLNO (?'text'.*?)\sflno)|" +
                 @"(FLDI (?'text'.*?)\sfldi)|" +
+                @"(FLNX (?'text'.*?)\sflnx)|" +
                 @"(FLBX (?'text'.*?)\sflbx)";
 
 
@@ -69,7 +70,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             {
                 sobekBoundaryLocation.SobekBoundaryLocationType = SobekBoundaryLocationType.Node;
             }
-            else if (record.StartsWith("FLNO"))
+            else if (record.StartsWith("FLNO") || record.StartsWith("FLNX"))
             {
                 sobekBoundaryLocation.SobekBoundaryLocationType = SobekBoundaryLocationType.LateralAtNode;
             }
@@ -109,6 +110,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             yield return "flno";
             yield return "fldi";
             yield return "flbx";
+            yield return "flnx";
             if (SobekType == SobekType.SobekRE)
             {
                 yield return "stbo";

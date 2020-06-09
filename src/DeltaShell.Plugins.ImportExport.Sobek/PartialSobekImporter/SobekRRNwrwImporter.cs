@@ -20,8 +20,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private RainfallRunoffModel rrModel;
         private WaterFlowFMModel fmModel;
+
         private Dictionary<string, NwrwDryWeatherFlowDefinition> dryweatherFlowDefinitions;
         private Dictionary<string, INode> nodeDictionary;
+        private Dictionary<string, IBranch> branchDictionary;
         private HashSet<string> singleUnitDryweatherFlowDefinitions = new HashSet<string>();
         private List<string> listOfWarnings = new List<string>();
         
@@ -47,10 +49,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            nodeDictionary = fmModel.Network.Nodes.ToDictionary(node => node.Name, StringComparer.InvariantCultureIgnoreCase);
-            if (nodeDictionary == null || nodeDictionary.Count == 0)
+            if (!CreateNodeAndBranchDictionary())
             {
-                Log.Warn("Can't import Nwrw catchments, no existing nodes found.");
                 return;
             }
 
@@ -58,6 +58,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             if (listOfWarnings.Any())
                 Log.Warn($"While importing nwrw we encountered the following {listOfWarnings.Count} warnings: {Environment.NewLine}{string.Join(Environment.NewLine, listOfWarnings)}");
+        }
+
+        private bool CreateNodeAndBranchDictionary()
+        {
+            nodeDictionary = fmModel.Network.Nodes.ToDictionary(node => node.Name, StringComparer.InvariantCultureIgnoreCase);
+            if (nodeDictionary == null || nodeDictionary.Count == 0)
+            {
+                Log.Warn("Can't import Nwrw catchments, no existing nodes found.");
+                return false;
+            }
+            branchDictionary = fmModel.Network.Branches.ToDictionary(branch => branch.Name, StringComparer.InvariantCultureIgnoreCase);
+            if (branchDictionary == null || branchDictionary.Count == 0)
+            {
+                Log.Warn("Can't import Nwrw catchments, no existing branches found.");
+                return false;
+            }
+            return true;
         }
 
 
@@ -302,8 +319,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var filteredReadSobekRRNodeDictionary = FilterSobekRRNodes(readSobekRRNodeDictionary);
             var catchmentModelData = GetNwrwCatchmentModelData();
 
-            NwrwImporterHelper helper = new NwrwImporterHelper();
-            helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId = new ConcurrentDictionary<string, NwrwData>(catchmentModelData);
+            NwrwImporterHelper helper = new NwrwImporterHelper
+            {
+                CurrentNwrwCatchmentModelDataByNodeOrBranchId =
+                    new ConcurrentDictionary<string, NwrwData>(catchmentModelData)
+            };
 
             var readNwrwDefinitions = ReadNwrwDefinitions(GetFilePath(SobekFileNames.SobekRRNwrwFileName));
 
@@ -311,13 +331,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 if (!filteredReadSobekRRNodeDictionary.ContainsKey(readNwrwDefinition.Id))
                 {
-                    listOfWarnings.Add($"Could not import nwrw catchment, target node {readNwrwDefinition.Id} was not found in the network.");
+                    listOfWarnings.Add($"Could not import nwrw catchment, target node or branch '{readNwrwDefinition.Id}' was not found in the network.");
                     continue;
                 }
 
                 if (!lateralSourceDictionary.ContainsKey(readNwrwDefinition.Id))
                 {
-                    listOfWarnings.Add($"Could not import nwrw catchment, no lateral was found for the nwrw catchment.");
+                    listOfWarnings.Add($"Could not import nwrw catchment, no lateral was found for the nwrw catchment '{readNwrwDefinition.Id}.");
                     continue;
                 }
 
@@ -327,7 +347,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
                 else
                 {
-                    AddNwrwCatchmentDataToModel(readNwrwDefinition, lateralSourceDictionary, helper);
+                    var targetLateralSource = lateralSourceDictionary[readNwrwDefinition.Id];
+                    AddNwrwCatchmentDataToModel(readNwrwDefinition, targetLateralSource, helper);
                 }
             }
         }
@@ -340,21 +361,35 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private Dictionary<string, SobekRRNode> FilterSobekRRNodes(Dictionary<string, SobekRRNode> readSobekRRNodeDictionary)
         {
             var filteredReadSobekRRNodeDictionary = new Dictionary<string, SobekRRNode>();
+            var pipeIdentifier = "SBK_PIPE";
+            var nodeIdentifier = "SBK_CONN";
 
             foreach (var readSobekRRNodeKeyValuePair in readSobekRRNodeDictionary)
             {
-                var targetNodeName = readSobekRRNodeKeyValuePair.Key;
+                var targetName = readSobekRRNodeKeyValuePair.Key;
                 var sobekRRNode = readSobekRRNodeKeyValuePair.Value;
-                if (sobekRRNode.NodeType != SobekRRNodeType.NWRW) continue;
+                var objectTypeName = sobekRRNode.ObjectTypeName;
+                
+                if (sobekRRNode.NodeType != SobekRRNodeType.NWRW) continue; // filter out non-nwrw node types
 
-                if (nodeDictionary.ContainsKey(targetNodeName))
+                if (objectTypeName.Contains(nodeIdentifier)) // check if target is node
                 {
-                    filteredReadSobekRRNodeDictionary.Add(targetNodeName, sobekRRNode);
+                    if (nodeDictionary.ContainsKey(targetName))
+                    {
+                        filteredReadSobekRRNodeDictionary[targetName] = sobekRRNode;
+                    }
+                }
+                else if (objectTypeName.Contains(pipeIdentifier)) // check if target is branch
+                {
+                    if (branchDictionary.ContainsKey(sobekRRNode.ReachId))
+                    {
+                        filteredReadSobekRRNodeDictionary[sobekRRNode.ReachId] = sobekRRNode; // find by branchId
+                        filteredReadSobekRRNodeDictionary[targetName] = sobekRRNode; // find by targetIdentifier
+                    }
                 }
                 else
                 {
-                    listOfWarnings.Add(
-                        $"Could not import nwrw catchment, target node {targetNodeName} was not found in the network.");
+                    listOfWarnings.Add($"Could not import nwrw catchment, target node or branch '{targetName}' was not found in the network.");
                 }
             }
 
@@ -379,32 +414,24 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             SetNwrwCatchmentData(nwrwData, readDefinition);
         }
 
-        private void AddNwrwCatchmentDataToModel(SobekRRNwrw readDefinition, Dictionary<string, LateralSource> lateralSourceDictionary, NwrwImporterHelper helper)
+        private void AddNwrwCatchmentDataToModel(SobekRRNwrw readDefinition, LateralSource lateralSource, NwrwImporterHelper helper)
         {
-            var nodeId = readDefinition.Id;
+            var nodeOrBranchId = lateralSource.Name;
 
-            NwrwData.CreateNewNwrwDataWithCatchment(rrModel, nodeId, helper);
-            var nwrwData = helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId[nodeId];
-            nwrwData.NodeOrBranchId = nodeId;
+            NwrwData.CreateNewNwrwDataWithCatchment(rrModel, nodeOrBranchId, helper);
+            var nwrwData = helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId[nodeOrBranchId];
+            nwrwData.NodeOrBranchId = nodeOrBranchId;
             
             var catchment = nwrwData.Catchment;
             catchment.IsGeometryDerivedFromAreaSize = true;
-            catchment.Geometry = nodeDictionary[nodeId].Geometry;
+            catchment.Geometry = lateralSource.Geometry;
 
             SetNwrwCatchmentData(nwrwData, readDefinition);
-            AddNwrwCatchmentLinkToFmModel(catchment, lateralSourceDictionary);
+            AddNwrwCatchmentLinkToFmModel(catchment, lateralSource);
         }
 
-        private void AddNwrwCatchmentLinkToFmModel(Catchment catchment, Dictionary<string, LateralSource> lateralSourceDictionary)
+        private void AddNwrwCatchmentLinkToFmModel(Catchment catchment, LateralSource lateralSource)
         {
-            var catchmentName = catchment.Name;
-            if (!lateralSourceDictionary.ContainsKey(catchmentName))
-            {
-                listOfWarnings.Add($"Could not import nwrw catchment. Corresponding lateral source was not found.");
-            }
-
-            var lateralSource = lateralSourceDictionary[catchmentName];
-
             var hydroLink = catchment.LinkTo(lateralSource);
             if (hydroLink != null)
             {

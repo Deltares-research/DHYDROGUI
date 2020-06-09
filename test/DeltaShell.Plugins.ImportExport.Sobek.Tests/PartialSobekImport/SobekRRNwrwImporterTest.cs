@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -60,16 +61,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             AssertNwrwDryweatherFlowDefinitionsAreCorrect(rrModel.NwrwDryWeatherFlowDefinitions);
 
             var nwrwDatas = rrModel.ModelData.OfType<NwrwData>();
+            var lateralSourceDictionary = fmModel.LateralSourcesData.Select(lsd => lsd.Feature)
+                .ToDictionary(lateral => lateral.Name, StringComparer.InvariantCultureIgnoreCase);
+
             Assert.That(nwrwDatas.Count(), Is.EqualTo(75));
             foreach (var nwrwData in nwrwDatas)
             {
+                var nodeOrBranchId = nwrwData.NodeOrBranchId;
+
                 Assert.That(nwrwData.Catchment, Is.Not.Null);
                 Assert.That(nwrwData.Catchment.Geometry, Is.Not.Null);
-                Assert.That(string.IsNullOrWhiteSpace(nwrwData.NodeOrBranchId), Is.False);
+                Assert.That(string.IsNullOrWhiteSpace(nodeOrBranchId), Is.False);
                 Assert.That(nwrwData.SurfaceLevelDict.Count(), Is.EqualTo(12));
+                Assert.That(lateralSourceDictionary.ContainsKey(nodeOrBranchId), Is.True);
             }
         }
-
 
         private void AssertNwrwDryweatherFlowDefinitionsAreCorrect(
             IList<NwrwDryWeatherFlowDefinition> rrModelNwrwDryWeatherFlowDefinitions)
