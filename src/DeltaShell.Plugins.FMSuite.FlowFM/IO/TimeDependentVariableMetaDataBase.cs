@@ -1,13 +1,6 @@
-﻿namespace DeltaShell.NGHS.IO.Store1D
+﻿namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public interface ITimeDependentVariableMetaDataBase
-    {
-        string Name { get; set; }
-        string LongName { get; set; }
-        string Unit { get; set; }
-    }
-
-    public class TimeDependentVariableMetaDataBase : ITimeDependentVariableMetaDataBase
+    public class TimeDependentVariableMetaDataBase
     {
         public TimeDependentVariableMetaDataBase()
         {

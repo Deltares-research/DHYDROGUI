@@ -168,11 +168,14 @@
     <Compile Include="IO\InitialConditionInitialFieldsFileReader.cs" />
     <Compile Include="IO\InitialConditionInitialFieldsFileWriter.cs" />
     <Compile Include="IO\InitialConditionRegion.cs" />
+    <Compile Include="IO\LocationMetaData.cs" />
     <Compile Include="IO\MeteoExtForceFile.cs" />
     <Compile Include="IO\NetworkDataLocation.cs" />
+    <Compile Include="IO\OutputFile1DMetaData.cs" />
     <Compile Include="IO\StructureFile.cs" />
     <Compile Include="IO\Importers\GisToFeature2DImporter.cs" />
     <Compile Include="IO\Links1D2DHelper.cs" />
+    <Compile Include="IO\TimeDependentVariableMetaDataBase.cs" />
     <Compile Include="IO\WaterFlowFMModelWriterData.cs" />
     <Compile Include="ModelDefinition\ICoordinateSystemExtensions.cs" />
     <Compile Include="EmbankmentGenerator.cs" />

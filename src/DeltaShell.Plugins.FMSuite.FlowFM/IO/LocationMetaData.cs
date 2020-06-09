@@ -1,4 +1,4 @@
-﻿namespace DeltaShell.NGHS.IO.Store1D
+﻿namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class LocationMetaData
     {

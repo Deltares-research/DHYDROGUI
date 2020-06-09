@@ -304,12 +304,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Steerable.cs" />
-    <Compile Include="Store1D\IOutput1DFileReader.cs" />
-    <Compile Include="Store1D\LocationMetaData.cs" />
-    <Compile Include="Store1D\NetCdfFunctionStore1DBase.cs" />
-    <Compile Include="Store1D\Output1DFileReader.cs" />
-    <Compile Include="Store1D\OutputFile1DMetaData.cs" />
-    <Compile Include="Store1D\TimeDependentVariableMetaDataBase.cs" />
     <Compile Include="TimFile.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -365,7 +359,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Store1D\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
