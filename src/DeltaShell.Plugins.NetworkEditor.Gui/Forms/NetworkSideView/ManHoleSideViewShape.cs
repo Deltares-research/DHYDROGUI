@@ -46,11 +46,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        ///// <summary>
-        ///// Width of the shape either in world coordinates (WidthIsWorld == true) of device coordinates (WidthIsWorld == false) 
-        ///// </summary>
-        //public override double Width { get; set; }
-
         /// <summary>
         /// Height of the shape either in world coordinates (HeightIsWorld == true) of device coordinates (HeightIsWorld == false) 
         /// </summary>
