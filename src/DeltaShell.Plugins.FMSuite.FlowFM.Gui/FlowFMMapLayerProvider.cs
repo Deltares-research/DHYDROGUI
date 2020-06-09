@@ -686,8 +686,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static IEnumerable<object> GetMapOutputFunctions(FMMapFileFunctionStore mapStore)
         {
             yield return mapStore.Grid;
-            if(mapStore.Links1D2D != null)
-                yield return mapStore.Links1D2D;
             
             var functionGrouping = mapStore.GetFunctionGrouping();
             foreach (IGrouping<string, IFunction> group in functionGrouping)

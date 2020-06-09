@@ -33,6 +33,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
@@ -1109,14 +1110,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
         {
-            if (Map.CoordinateSystemFactory == null)
-            {
-                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
-            }
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"flow1d2dLinks\FlowFM.mdu"));
+            var model = new WaterFlowFMModel();
+            TypeUtils.SetField(model, "outputMapFileStore", new FMMapFileFunctionStore());
             var timeSeries = model.GetVar(WaterFlowFMModel.CellsToFeaturesName) as ITimeSeries[];
-            Assert.IsNotNull(timeSeries);
-            Assert.That(timeSeries.Length, Is.EqualTo(9)) ;
+
+            Assert.IsNotNull(timeSeries,
+                "Time series was not expected to be null");
+            Assert.That(timeSeries.Length, Is.EqualTo(0),
+                "Time series was expected to be empty.");
         }
         
         [Test]

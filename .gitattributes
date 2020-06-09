@@ -3308,6 +3308,7 @@ test/DeltaShell.NGHS.IO.TestUtils/ModelFileNames.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/NetworkAndGridReaderTestHelper.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/Properties/AssemblyInfo.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/StructureFileWriterTestHelper.cs -text
+test/DeltaShell.NGHS.IO.TestUtils/TemporaryDirectory.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/packages.config -text
 test/DeltaShell.NGHS.IO.Tests/DataObjects/Friction/ChannelFrictionDefinitionTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DataObjects/Friction/ConstantChannelFrictionDefinitionTest.cs -text
@@ -10354,12 +10355,6 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/leveeBrea
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/pump_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/sfbay_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/FlowFM_map.nc -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/bendprof_map.nc -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/boundcond_test_map.nc -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/my_map.nc -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/sedimentation_map.nc -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/simplebox_hex7_map.nc -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/zm_dfm_map.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/partitionexporter/CanTho.pli -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/partitionexporter/DaiNgai.pli -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/partitionexporter/Grid_040test_net.nc -text

@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -42,7 +43,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         public void TestExportNetFileWritesZValuesAtNodes(string netFile, string zValueVariableName)
         {
             const string testDir = "TestExport";
-            if (Directory.Exists(testDir)) Directory.Delete(testDir, true);
+            if (Directory.Exists(testDir))
+            {
+                Directory.Delete(testDir, true);
+            }
 
             // get running DeltaShell application
             using (var app = new DeltaShellApplication())
@@ -57,24 +61,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
                 fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
 
-                var importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
+                FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(importer);
-                var path = TestHelper.GetTestFilePath(Path.Combine("output_mapfiles", netFile));
 
-                // import netfile into Unstructured Grid
-                importer.ImportItem(path, fmModel.Grid);
+                string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+                var zmDfmZipFileName = "zm_dfm_map.zip";
+                string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
-                exporter.GetModelForGrid = g => fmModel;
-                var outputFilePath = Path.Combine(testDir, "outputNetFile.nc");
-
-                // exporting UnstructuredGrid should be successful
-                Assert.IsTrue(exporter.Export(fmModel.Grid, outputFilePath));
-
-                using (var ncFile = new NetCdfFileWrapper(outputFilePath))
+                TestHelper.PerformActionInTemporaryDirectory(tempDir =>
                 {
-                    // exported grid should contain zValue variable
-                    Assert.NotNull(ncFile.GetValues1D<double>(zValueVariableName));
-                }
+                    FileUtils.CopyDirectory(testDataFilePath, tempDir);
+                    ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
+
+                    string mapFilePath = Path.Combine(tempDir, netFile);
+
+                    // import netfile into Unstructured Grid
+                    importer.ImportItem(mapFilePath, fmModel.Grid);
+
+                    exporter.GetModelForGrid = g => fmModel;
+                    string outputFilePath = Path.Combine(testDir, "outputNetFile.nc");
+
+                    // exporting UnstructuredGrid should be successful
+                    Assert.IsTrue(exporter.Export(fmModel.Grid, outputFilePath));
+
+                    using (var ncFile = new NetCdfFileWrapper(outputFilePath))
+                    {
+                        // exported grid should contain zValue variable
+                        Assert.NotNull(ncFile.GetValues1D<double>(zValueVariableName));
+                    }
+                });
             }
         }
 
@@ -136,16 +151,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenImportedFMNetFileWhenExportingWithDifferentPathThenCreateFileCopyAndReturnTrue()
         {
-            var fileFolder = "output_mapfiles";
-            var originalFilePath = TestHelper.GetTestFilePath(Path.Combine(fileFolder, "simplebox_hex7_map.nc"));
-            var dummyFilePath = TestHelper.GetTestFilePath(Path.Combine(fileFolder, "dummy.nc"));
-            Assert.That(File.Exists(dummyFilePath), Is.False);
-            
-            var netFile = new ImportedFMNetFile(originalFilePath);
-            var result = exporter.Export(netFile, dummyFilePath);
-            Assert.IsTrue(result);
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var zmDfmZipFileName = "zm_dfm_map.zip";
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
-            CheckIfFileExistsAndDeleteTheFile(dummyFilePath);
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                FileUtils.CopyDirectory(testDataFilePath, tempDir);
+                ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
+
+                var simpleBoxMapFileName = "simplebox_hex7_map.nc";
+                string mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
+                string dummyFilePath = Path.Combine(testDataFilePath, "dummy.nc");
+
+                var netFile = new ImportedFMNetFile(mapFilePath);
+                bool result = exporter.Export(netFile, dummyFilePath);
+                Assert.IsTrue(result);
+
+                CheckIfFileExistsAndDeleteTheFile(dummyFilePath);
+            });
         }
 
         [Test]
