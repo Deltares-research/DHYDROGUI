@@ -808,7 +808,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             var buildBedLevelCoverage = BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(route);
 
-            NetworkSideViewHelper.AddRouteSurfaceLevels(route, buildBedLevelCoverage);
+            NetworkSideViewHelper.AddPipeSurfaceLevelsInRoute(route, buildBedLevelCoverage);
 
             return buildBedLevelCoverage;
         }
