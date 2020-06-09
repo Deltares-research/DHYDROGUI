@@ -591,6 +591,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
+            var output1dStore = data as FM1DFileFunctionStore;
+            if (output1dStore != null)
+            {
+                yield return output1dStore.OutputNetwork;
+                yield return output1dStore.OutputDiscretization;
+            }
+
             var outputStore = data as FMNetCdfFileFunctionStore;
             if (outputStore != null)
             {
@@ -606,18 +613,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         yield return output;
                 }
             }
-
-            var output1dStore = data as FM1DFileFunctionStore;
-            if (output1dStore != null)
-            {
-                yield return output1dStore.OutputNetwork;
-                yield return output1dStore.OutputDiscretization;
-
-                foreach (var output in output1dStore.Functions)
-                    yield return output;
-
-            }
-
+            
             // groupings currently used by FMMapFileFunctionStore (for sedimentation outputs)
             var grouping = data as IGrouping<string, IFunction>;
             if (grouping != null)

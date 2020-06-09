@@ -37,22 +37,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return new OutputFile1DMetaData(times, locationMetaData, timeDependentVariableMetaData);
         }
 
-        public double[,] GetAllVariableData(string path, string variableName, OutputFile1DMetaData metaData)
+        public T[,] GetAllVariableData<T>(string path, string variableName, OutputFile1DMetaData metaData)
         {
             using (var netCdfFileWrapper = new NetCdfFileWrapper(path))
             {
-                return netCdfFileWrapper.GetValues2D<double>(variableName) ?? new double[0, 0];
+                return netCdfFileWrapper.GetValues2D<T>(variableName) ?? new T[0, 0];
             }
         }
 
-        public IList<double> GetSelectionOfVariableData(string path, string variableName, int[] origin, int[] shape)
+        public IList<T> GetSelectionOfVariableData<T>(string path, string variableName, int[] origin, int[] shape)
         {
             return DoWithNetCdfFile(path, (outputFile, timeDependentVariables) =>
             {
                 var fileVariable = outputFile.GetVariableByName(variableName);
 
                 var locationData = outputFile.Read(fileVariable, origin, shape);
-                return Enumerable.OfType<object>(locationData).Select(Convert.ToDouble).ToList();
+                return Enumerable.OfType<object>(locationData).Cast<T>().ToList();
             });
         }
 
