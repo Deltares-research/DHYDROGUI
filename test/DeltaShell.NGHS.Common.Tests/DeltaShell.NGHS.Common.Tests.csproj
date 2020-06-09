@@ -46,27 +46,22 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=1.5.0.50749-beta, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Shell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50749-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Gui.Swf, Version=1.4.0.50708, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Shell.Gui, Version=1.5.0.50749, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50749-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Shell.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50749-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
     </Reference>
+    <Reference Include="DelftTools.Shell.Gui.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50749-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+    </Reference>
     <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.TestProject.1.5.0.50749-beta\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
+      <HintPath>..\..\packages\DeltaShell.TestProject.1.5.0.50749-beta\lib\net40\DelftTools.TestUtils.dll</HintPath>
     </Reference>
     <Reference Include="DelftTools.Utils">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50749-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
