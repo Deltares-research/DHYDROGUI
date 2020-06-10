@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Script.Serialization;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 using FlowFMResources = DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources;
@@ -120,7 +123,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenRoughnessChannelsFile_WhenReading_ThenSetsCorrectChannelFrictionDefinitions()
+        public void GivenValidFile_WhenCallingReadFile_ThenCorrectlySetsModelGlobalProperties()
+        {
+            // Given
+            var filePath = TestHelper.GetTestFilePath($"IO\\{FlowFMResources.Roughness_Main_Channels_Filename}");
+            var tempFolder = FileUtils.CreateTempDirectory();
+
+            try
+            {
+                var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+                using (var fmModel = new WaterFlowFMModel { MduFilePath = mduFilePath })
+                {
+                    var modelDefinition = fmModel.ModelDefinition;
+
+                    // Fill the network with channels listed in the roughness file
+                    for (var i = 0; i < 14; i++)
+                    {
+                        var channelName = $"Channel{i}";
+                        var channel = new Channel { Name = channelName };
+                        fmModel.Network.Branches.Add(channel);
+                    }
+
+                    // When
+                    ChannelFrictionDefinitionFileReader.ReadFile(filePath, modelDefinition, fmModel.Network,
+                        fmModel.ChannelFrictionDefinitions);
+
+                    // Then
+                    var actualGlobalValue = (double) modelDefinition.GetModelProperty(GuiProperties.UnifFrictCoefChannels).Value;
+                    var actualGlobalType = (RoughnessType) (int) modelDefinition.GetModelProperty(GuiProperties.UnifFrictTypeChannels).Value;
+
+                    Assert.That(actualGlobalType, Is.EqualTo(RoughnessType.WallLawNikuradse));
+                    Assert.That(actualGlobalValue, Is.EqualTo(1.2));
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempFolder);
+            }
+        }
+
+        [Test]
+        public void GivenValidFile_WhenCallingReadFile_ThenCorrectlySetsChannelFrictionDefinitions()
         {
             // Given
             var channelsRoughnessFile = TestHelper.GetTestFilePath($"IO\\{FlowFMResources.Roughness_Main_Channels_Filename}");

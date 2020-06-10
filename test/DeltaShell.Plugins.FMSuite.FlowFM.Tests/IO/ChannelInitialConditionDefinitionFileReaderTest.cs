@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [TestCase(InitialConditionQuantity.WaterLevel, 123, "InitialWaterLevel_expected.ini")]
         [TestCase(InitialConditionQuantity.WaterDepth, 456, "InitialWaterDepth_expected.ini")]
-        public void GivenInitialConditionFile_WhenCallingReadFile_ThenCorrectlySetsModelGlobalProperties(
+        public void GivenValidFile_WhenCallingReadFile_ThenCorrectlySetsModelGlobalProperties(
             InitialConditionQuantity expectedQuantity,
             double expectedValue,
             string filename)
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 {
                     var modelDefinition = fmModel.ModelDefinition;
 
-                    // Fill the branchDictionary with branches listed in the initial conditions file
+                    // Fill the branchDictionary with channels listed in the initial conditions file
                     var branchDictionary = new Dictionary<string, IBranch>();
                     for (var i = 0; i < 5; i++)
                     {
@@ -148,13 +148,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     }
 
                     // When
-                    ChannelInitialConditionDefinitionFileReader.ReadFile(filePath, modelDefinition, branchDictionary,
-                        fmModel.ChannelInitialConditionDefinitions);
+                    ChannelInitialConditionDefinitionFileReader.ReadFile(filePath, modelDefinition, branchDictionary, fmModel.ChannelInitialConditionDefinitions);
 
                     // Then
                     var actualGlobalValue = (double) modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalValue1D).Value;
-                    var actualGlobalQuantity = (InitialConditionQuantity) (int) modelDefinition
-                        .GetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D).Value;
+                    var actualGlobalQuantity = (InitialConditionQuantity) (int) modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D).Value;
 
                     Assert.That(actualGlobalQuantity, Is.EqualTo(expectedQuantity));
                     Assert.That(actualGlobalValue, Is.EqualTo(expectedValue).Within(Epsilon));
