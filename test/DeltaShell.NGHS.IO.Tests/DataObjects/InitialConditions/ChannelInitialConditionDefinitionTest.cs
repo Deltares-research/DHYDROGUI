@@ -68,7 +68,6 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
             Assert.IsNull(channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition);
         }
 
-
         [Test] // Test related to marking model dirty
         public void SpecificationType_SetValue_NotifiesPropertyChanged()
         {
@@ -76,7 +75,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
             var channelInitialConditionDefinition = new ChannelInitialConditionDefinition(new Channel());
 
             var counter = 0;
-            ((INotifyPropertyChanged)channelInitialConditionDefinition).PropertyChanged += (sender, args) =>
+            ((INotifyPropertyChanged) channelInitialConditionDefinition).PropertyChanged += (sender, args) =>
             {
                 if (ReferenceEquals(sender, channelInitialConditionDefinition) &&
                     args.PropertyName == nameof(ChannelInitialConditionDefinition.SpecificationType))
@@ -100,7 +99,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
             var channelInitialConditionDefinition = new ChannelInitialConditionDefinition(channel);
 
             var counter = 0;
-            ((INotifyPropertyChanged)channelInitialConditionDefinition).PropertyChanged += (sender, args) =>
+            ((INotifyPropertyChanged) channelInitialConditionDefinition).PropertyChanged += (sender, args) =>
             {
                 if (ReferenceEquals(sender, channel) && args.PropertyName == nameof(IChannel.Name))
                 {
@@ -125,7 +124,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
             };
 
             var counter = 0;
-            ((INotifyPropertyChanged)channelInitialConditionDefinition).PropertyChanged += (sender, args) =>
+            ((INotifyPropertyChanged) channelInitialConditionDefinition).PropertyChanged += (sender, args) =>
             {
                 if (ReferenceEquals(sender, channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition))
                 {
@@ -150,7 +149,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
             };
 
             var counter = 0;
-            ((INotifyPropertyChanged)channelInitialConditionDefinition).PropertyChanged += (sender, args) =>
+            ((INotifyPropertyChanged) channelInitialConditionDefinition).PropertyChanged += (sender, args) =>
             {
                 if (ReferenceEquals(sender, channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition))
                 {
@@ -175,7 +174,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
             };
 
             var counter = 0;
-            ((INotifyCollectionChanged)channelInitialConditionDefinition).CollectionChanged += (sender, args) =>
+            ((INotifyCollectionChanged) channelInitialConditionDefinition).CollectionChanged += (sender, args) =>
             {
                 counter++;
             };
