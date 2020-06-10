@@ -140,9 +140,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 {
                     var modelDefinition = fmModel.ModelDefinition;
 
-                    // Fill the branchDictionary with channels listed in the initial conditions file
                     var branchDictionary = new Dictionary<string, IBranch>();
-                    for (var i = 0; i < 6; i++)
+                    for (var i = 0; i < 5; i++)
                     {
                         var channelName = $"Channel{i}";
                         var channel = new Channel {Name = channelName};
@@ -165,6 +164,108 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 FileUtils.DeleteIfExists(tempFolder);
             }
+        }
+
+        [Test]
+        [TestCase(InitialConditionQuantity.WaterLevel, "InitialWaterLevel_expected.ini")]
+        [TestCase(InitialConditionQuantity.WaterDepth, "InitialWaterDepth_expected.ini")]
+        public void GivenValidFile_WhenCallingReadFile_ThenCorrectlySetsChannelInitialConditionDefinitions(
+            InitialConditionQuantity expectedQuantity,
+            string filename)
+        {
+            // Given
+            var filePath = TestHelper.GetTestFilePath($"IO\\{filename}");
+
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var modelDefinition = fmModel.ModelDefinition;
+                var network = fmModel.Network;
+                var channelInitialConditionDefinitions = fmModel.ChannelInitialConditionDefinitions;
+
+                const int numberOfChannels = 5;
+
+                var branchDictionary = new Dictionary<string, IBranch>();
+                for (var i = 0; i < numberOfChannels; i++)
+                {
+                    var channelName = $"Channel{i}";
+                    var channel = new Channel { Name = channelName };
+                    fmModel.Network.Branches.Add(channel);
+                    branchDictionary.Add(channelName, channel);
+                }
+
+                // Preconditions
+                Assert.That(fmModel.ChannelInitialConditionDefinitions.Count, Is.EqualTo(numberOfChannels));
+
+                var expectedChannelInitialConditionDefinitions = GetExpectedChannelInitialConditionDefinitions(network.Branches, expectedQuantity);
+
+                // When
+                ChannelInitialConditionDefinitionFileReader.ReadFile(filePath, modelDefinition, branchDictionary, channelInitialConditionDefinitions);
+
+                // Then
+                CompareChannelInitialConditionDefinitions(expectedChannelInitialConditionDefinitions.ToList(), channelInitialConditionDefinitions.ToList());
+            }
+        }
+
+        private static IEnumerable<ChannelInitialConditionDefinition> GetExpectedChannelInitialConditionDefinitions(IEnumerable<IBranch> branches, InitialConditionQuantity expectedQuantity)
+        {
+            var channelInitialConditionDefinitions = new List<ChannelInitialConditionDefinition>();
+
+            var branchesList = branches.ToList();
+            var branch0 = branchesList.First(b => b.Name.Equals("Channel0"));
+            var cfd0 = new ChannelInitialConditionDefinition((Channel) branch0);
+            cfd0.SpecificationType = ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition;
+            cfd0.ConstantChannelInitialConditionDefinition.Quantity = expectedQuantity;
+            cfd0.ConstantChannelInitialConditionDefinition.Value = 123;
+            channelInitialConditionDefinitions.Add(cfd0);
+
+            var branch1 = branchesList.First(b => b.Name.Equals("Channel1"));
+            var cfd1 = new ChannelInitialConditionDefinition((Channel) branch1);
+            cfd1.SpecificationType = ChannelInitialConditionSpecificationType.ModelSettings;
+            channelInitialConditionDefinitions.Add(cfd1);
+
+            var branch2 = branchesList.First(b => b.Name.Equals("Channel2"));
+            var cfd2 = new ChannelInitialConditionDefinition((Channel) branch2);
+            cfd2.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
+            cfd2.SpatialChannelInitialConditionDefinition.Quantity = expectedQuantity;
+            cfd2.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(
+                new ConstantSpatialChannelInitialConditionDefinition
+                {
+                    Chainage = 0.0,
+                    Value = 11.0
+                });
+            cfd2.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(
+                new ConstantSpatialChannelInitialConditionDefinition
+                {
+                    Chainage = 2.33,
+                    Value = 12.22
+                });
+            cfd2.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(
+                new ConstantSpatialChannelInitialConditionDefinition
+                {
+                    Chainage = 1.0,
+                    Value = 4.0
+                });
+            channelInitialConditionDefinitions.Add(cfd2);
+
+            var branch3 = branchesList.First(b => b.Name.Equals("Channel3"));
+            var cfd3 = new ChannelInitialConditionDefinition((Channel) branch3);
+            cfd3.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
+            cfd3.SpatialChannelInitialConditionDefinition.Quantity = expectedQuantity;
+            cfd3.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(
+                new ConstantSpatialChannelInitialConditionDefinition
+                {
+                    Chainage = 88.123,
+                    Value = 99.98765
+                });
+            channelInitialConditionDefinitions.Add(cfd3);
+
+            var branch4 = branchesList.First(b => b.Name.Equals("Channel4"));
+            var cfd4 = new ChannelInitialConditionDefinition(branch4 as Channel);
+            cfd4.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
+            cfd4.SpatialChannelInitialConditionDefinition.Quantity = expectedQuantity;
+            channelInitialConditionDefinitions.Add(cfd4);
+
+            return channelInitialConditionDefinitions;
         }
 
         private static void CompareChannelInitialConditionDefinitions(

@@ -136,12 +136,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 {
                     var modelDefinition = fmModel.ModelDefinition;
 
-                    // Fill the network with channels listed in the roughness file
                     for (var i = 0; i < 14; i++)
                     {
-                        var channelName = $"Channel{i}";
-                        var channel = new Channel { Name = channelName };
-                        fmModel.Network.Branches.Add(channel);
+                        fmModel.Network.Branches.Add(new Channel { Name = $"Channel{i}" });
                     }
 
                     // When
@@ -166,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenValidFile_WhenCallingReadFile_ThenCorrectlySetsChannelFrictionDefinitions()
         {
             // Given
-            var channelsRoughnessFile = TestHelper.GetTestFilePath($"IO\\{FlowFMResources.Roughness_Main_Channels_Filename}");
+            var filePath = TestHelper.GetTestFilePath($"IO\\{FlowFMResources.Roughness_Main_Channels_Filename}");
 
             using (var fmModel = new WaterFlowFMModel())
             {
@@ -174,20 +171,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var network = fmModel.Network;
                 var channelFrictionDefinitions = fmModel.ChannelFrictionDefinitions;
 
-                const int numberOfBranches = 14;
+                const int numberOfChannels = 14;
                 
-                for (var i = 0; i < numberOfBranches; i++)
+                for (var i = 0; i < numberOfChannels; i++)
                 {
                     network.Branches.Add(new Channel { Name = $"Channel{i}" });
                 }
 
                 // Preconditions
-                Assert.That(fmModel.ChannelFrictionDefinitions.Count, Is.EqualTo(numberOfBranches));
+                Assert.That(fmModel.ChannelFrictionDefinitions.Count, Is.EqualTo(numberOfChannels));
 
                 var expectedChannelFrictionDefinitions = GetExpectedChannelFrictionDefinitions(network.Branches);
 
                 // When
-                ChannelFrictionDefinitionFileReader.ReadFile(channelsRoughnessFile, modelDefinition, network, channelFrictionDefinitions);
+                ChannelFrictionDefinitionFileReader.ReadFile(filePath, modelDefinition, network, channelFrictionDefinitions);
 
                 // Then
                 CompareChannelFrictionDefinitions(expectedChannelFrictionDefinitions.ToList(), channelFrictionDefinitions.ToList());
@@ -200,35 +197,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var branchesList = branches.ToList();
             var branch0 = branchesList.First(b => b.Name.Equals("Channel0"));
-            var cfd0 = new ChannelFrictionDefinition(branch0 as Channel);
+            var cfd0 = new ChannelFrictionDefinition((Channel) branch0);
             cfd0.SpecificationType = ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition;
             cfd0.ConstantChannelFrictionDefinition.Value = 123;
             channelFrictionDefinitions.Add(cfd0);
 
             var branch1 = branchesList.First(b => b.Name.Equals("Channel1"));
-            var cfd1 = new ChannelFrictionDefinition(branch1 as Channel);
+            var cfd1 = new ChannelFrictionDefinition((Channel) branch1);
             cfd1.SpecificationType = ChannelFrictionSpecificationType.ModelSettings;
             channelFrictionDefinitions.Add(cfd1);
 
             var branch2 = branchesList.First(b => b.Name.Equals("Channel2"));
-            var cfd2 = new ChannelFrictionDefinition(branch2 as Channel);
+            var cfd2 = new ChannelFrictionDefinition((Channel) branch2);
             cfd2.SpecificationType = ChannelFrictionSpecificationType.ModelSettings;
             channelFrictionDefinitions.Add(cfd2);
 
             var branch3 = branchesList.First(b => b.Name.Equals("Channel3"));
-            var cfd3 = new ChannelFrictionDefinition(branch3 as Channel);
+            var cfd3 = new ChannelFrictionDefinition((Channel) branch3);
             cfd3.SpecificationType = ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition;
             cfd3.ConstantChannelFrictionDefinition.Value = 3;
             cfd3.ConstantChannelFrictionDefinition.Type = RoughnessType.DeBosBijkerk;
             channelFrictionDefinitions.Add(cfd3);
 
             var branch4 = branchesList.First(b => b.Name.Equals("Channel4"));
-            var cfd4 = new ChannelFrictionDefinition(branch4 as Channel);
+            var cfd4 = new ChannelFrictionDefinition((Channel) branch4);
             cfd4.SpecificationType = ChannelFrictionSpecificationType.ModelSettings;
             channelFrictionDefinitions.Add(cfd4);
 
             var branch5 = branchesList.First(b => b.Name.Equals("Channel5"));
-            var cfd5 = new ChannelFrictionDefinition(branch5 as Channel);
+            var cfd5 = new ChannelFrictionDefinition((Channel) branch5);
             cfd5.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd5.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant;
             cfd5.SpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.Add(
@@ -238,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             channelFrictionDefinitions.Add(cfd5);
 
             var branch6 = branchesList.First(b => b.Name.Equals("Channel6"));
-            var cfd6 = new ChannelFrictionDefinition(branch6 as Channel);
+            var cfd6 = new ChannelFrictionDefinition((Channel) branch6);
             cfd6.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd6.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfH;
             cfd6.SpatialChannelFrictionDefinition.Function.Arguments[0].SetValues(new double[] { 1, 2 }); // chainage
@@ -247,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             channelFrictionDefinitions.Add(cfd6);
 
             var branch7 = branchesList.First(b => b.Name.Equals("Channel7"));
-            var cfd7 = new ChannelFrictionDefinition(branch7 as Channel);
+            var cfd7 = new ChannelFrictionDefinition((Channel) branch7);
             cfd7.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd7.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfQ;
             cfd7.SpatialChannelFrictionDefinition.Function.Arguments[0].SetValues(new double[] {1, 2, 3});
@@ -257,7 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             channelFrictionDefinitions.Add(cfd7);
 
             var branch8 = branchesList.First(b => b.Name.Equals("Channel8"));
-            var cfd8 = new ChannelFrictionDefinition(branch8 as Channel);
+            var cfd8 = new ChannelFrictionDefinition((Channel) branch8);
             cfd8.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd8.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfH;
             cfd8.SpatialChannelFrictionDefinition.Type = RoughnessType.StricklerNikuradse;
@@ -267,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             channelFrictionDefinitions.Add(cfd8);
 
             var branch9 = branchesList.First(b => b.Name.Equals("Channel9"));
-            var cfd9 = new ChannelFrictionDefinition(branch9 as Channel);
+            var cfd9 = new ChannelFrictionDefinition((Channel) branch9);
             cfd9.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd9.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfH;
             cfd9.SpatialChannelFrictionDefinition.Type = RoughnessType.Strickler;
@@ -277,7 +274,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             channelFrictionDefinitions.Add(cfd9);
 
             var branch10 = branchesList.First(b => b.Name.Equals("Channel10"));
-            var cfd10 = new ChannelFrictionDefinition(branch10 as Channel);
+            var cfd10 = new ChannelFrictionDefinition((Channel) branch10);
             cfd10.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd10.SpatialChannelFrictionDefinition.Type = RoughnessType.WallLawNikuradse;
             cfd10.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant;
@@ -286,21 +283,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             channelFrictionDefinitions.Add(cfd10);
 
             var branch11 = branchesList.First(b => b.Name.Equals("Channel11"));
-            var cfd11 = new ChannelFrictionDefinition(branch11 as Channel);
+            var cfd11 = new ChannelFrictionDefinition((Channel) branch11);
             cfd11.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd11.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfH;
             cfd11.SpatialChannelFrictionDefinition.Function.Arguments[0].SetValues(new double[] { 1 }); // no H value and no friction value is set
             channelFrictionDefinitions.Add(cfd11);
 
             var branch12 = branchesList.First(b => b.Name.Equals("Channel12"));
-            var cfd12 = new ChannelFrictionDefinition(branch12 as Channel);
+            var cfd12 = new ChannelFrictionDefinition((Channel) branch12);
             cfd12.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd12.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfQ;
             cfd12.SpatialChannelFrictionDefinition.Function.Arguments[0].SetValues(new double[] { 1, 2 }); // no H value and no friction value is set
             channelFrictionDefinitions.Add(cfd12);
 
             var branch13 = branchesList.First(b => b.Name.Equals("Channel13"));
-            var cfd13 = new ChannelFrictionDefinition(branch13 as Channel);
+            var cfd13 = new ChannelFrictionDefinition((Channel) branch13);
             cfd13.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd13.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant; // no ConstantSpatialChannelFrictionDefinitions added to list
             channelFrictionDefinitions.Add(cfd13);
