@@ -203,6 +203,8 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="DrainageBasin.cs" />
     <Compile Include="Embankment.cs" />
+    <Compile Include="Helpers\DiscretizationComparer.cs" />
+    <Compile Include="Helpers\HydroNetworkComparer.cs" />
     <Compile Include="LinkStorageType.cs" />
     <Compile Include="ModelSettings.cs" />
     <Compile Include="GroupableFeature2D.cs" />

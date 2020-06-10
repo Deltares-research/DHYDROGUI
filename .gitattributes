@@ -293,6 +293,8 @@ src/DelftTools.Hydro/Helpers/CrossSectionConverter.cs -text
 src/DelftTools.Hydro/Helpers/CrossSectionHelper.cs -text
 src/DelftTools.Hydro/Helpers/CrossSectionValidator.cs -text
 src/DelftTools.Hydro/Helpers/DefaultConveyanceCalculator.cs -text
+src/DelftTools.Hydro/Helpers/DiscretizationComparer.cs -text
+src/DelftTools.Hydro/Helpers/HydroNetworkComparer.cs -text
 src/DelftTools.Hydro/Helpers/HydroNetworkHelper.cs -text
 src/DelftTools.Hydro/Helpers/IConveyanceCalculator.cs -text
 src/DelftTools.Hydro/Helpers/ICoordinateSystemExtensions.cs -text
@@ -6141,6 +6143,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Exporters/TimFileExporterTest.cs
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Exporters/WaterFlowFMFileExporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ExtForceFileHelperTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ExtForceFileTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FM1DFileFunctionStoreTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMHisFileFunctionStoreTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMMapFileFunctionStoreTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMModelSchemaCsvFileTest.cs -text
@@ -10355,6 +10358,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/leveeBrea
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/pump_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/sfbay_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/FM_model_map.nc -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/FM_model_map.zip -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/FlowFM_map.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/map3D.zip -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/zm_dfm_map.zip -text

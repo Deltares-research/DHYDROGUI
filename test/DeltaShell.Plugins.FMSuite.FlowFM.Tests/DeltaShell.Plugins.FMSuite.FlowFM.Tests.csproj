@@ -230,6 +230,7 @@
     <Compile Include="IO\ChannelFrictionDefinitionFileWriterTest.cs" />
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionExporterTest.cs" />
     <Compile Include="IO\FeatureFile1D2DWriterTest.cs" />
+    <Compile Include="IO\FM1DFileFunctionStoreTest.cs" />
     <Compile Include="IO\Importers\RasterFileImporterTest.cs" />
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
     <Compile Include="Api\GridHelperTest.cs" />
