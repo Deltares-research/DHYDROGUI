@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
@@ -413,6 +417,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string srcPath = TestHelper.GetTestFilePath(relPath);
 
             ZipFileUtils.Extract(srcPath, tempDir.Path);
+        }
+
+        [Test]
+        public void GivenFMMapFileFunctionStore_Reading1D2DFunctions_ShouldGiveCorrectData()
+        {
+            //Arrange
+            var path = TestHelper.GetTestFilePath(@"output_mapfiles\FM_model_map.nc");
+            Assert.IsTrue(File.Exists(path));
+
+            // Act
+            var store = new FMMapFileFunctionStore { Path = path };
+
+            // Assert
+            Assert.AreEqual(9, store.Functions.OfType<UnstructuredGridCoverage>().Count());
+            
+            var linkCoverages = store.Functions.OfType<IFeatureCoverage>().ToList();
+            Assert.AreEqual(2, linkCoverages.Count);
+
+            var featureCoverage = linkCoverages[0];
+
+            var numberOfLinks = 67;
+            var numberOfTimeSteps = 4;
+            var firstTimeStep = new DateTime(2020, 06, 10);
+            var secondTimeStep = new DateTime(2020, 06, 10, 00, 20, 00);
+            var expectedValueFirstLinkSecondTimeStep = 3.771207220762112E-9;
+
+            // check links
+            Assert.AreEqual(numberOfLinks,featureCoverage.Features.Count);
+            Assert.AreEqual(numberOfLinks, featureCoverage.FeatureVariable.Values.Count);
+            Assert.AreEqual(store.Links[0], featureCoverage.FeatureVariable.Values[0]);
+            
+            // check times
+            Assert.AreEqual(numberOfTimeSteps, featureCoverage.Time.Values.Count);
+            Assert.AreEqual(firstTimeStep, featureCoverage.Time.Values[0]);
+
+            // check values
+            var allValues = featureCoverage.GetValues<double>();
+            Assert.AreEqual(numberOfTimeSteps * numberOfLinks, allValues.Count);
+            Assert.AreEqual(expectedValueFirstLinkSecondTimeStep, allValues[67]);
+
+            // check filtering on time
+            var secondTimeSlice = (IList<double>) featureCoverage[secondTimeStep];
+
+            Assert.AreEqual(numberOfLinks, secondTimeSlice.Count);
+            Assert.AreEqual(expectedValueFirstLinkSecondTimeStep, secondTimeSlice[0]);
+
+            // check filtering on link and on link + time
+            var linkFilter = new VariableValueFilter<ILink1D2D>(featureCoverage.FeatureVariable,store.Links[0]);
+            var timeFilter = new VariableValueFilter<DateTime>(featureCoverage.Time, secondTimeStep);
+            
+            var featureSlice = (IList<double>)featureCoverage.GetValues<double>(linkFilter);
+            
+            Assert.AreEqual(numberOfTimeSteps, featureSlice.Count);
+            Assert.AreEqual(expectedValueFirstLinkSecondTimeStep, featureSlice[1]);
+
+            var featureValue = (IList<double>)featureCoverage.GetValues<double>(linkFilter, timeFilter);
+            Assert.AreEqual(1, featureValue.Count);
+            Assert.AreEqual(expectedValueFirstLinkSecondTimeStep, featureValue[0]);
         }
     }
 }
