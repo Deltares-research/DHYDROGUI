@@ -8,10 +8,6 @@
         public double XCoordinate { get; set; }
         public double YCoordinate { get; set; }
 
-        public LocationMetaData()
-        {
-            
-        }
         public LocationMetaData(string id, int branchId, double chainage, double xCoordinate, double yCoordinate)
         {
             Id = id;

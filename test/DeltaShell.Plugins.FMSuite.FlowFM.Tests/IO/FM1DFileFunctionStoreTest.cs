@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var store = InitializeFM1DStore(tempDir);
 
-                Assert.AreEqual(16, store.Functions.Count);
+                Assert.AreEqual(16, store.Functions.OfType<INetworkCoverage>().Count());
             });
         }
 

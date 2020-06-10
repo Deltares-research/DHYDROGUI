@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var location = netCdfFile.GetDimensionName(netCdfFile.GetDimensions(netcdfVariable).ToArray()[1]);//netCdfFile.GetAttributeValue(netcdfVariable, UGridConstants.Naming.LocationAttributeName);
             var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
 
-            coverage = CreateNetworkCoverage(coverageLongName, unitSymbol, netCdfVariableName, MetaData, location, timeDependentVariable.ReferenceDate);
+            coverage = CreateNetworkCoverage(coverageLongName, unitSymbol, netCdfVariableName, location, timeDependentVariable.ReferenceDate);
 
             yield return coverage;
         }
@@ -209,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public ICoordinateSystem CoordinateSystem { get; set; }
         
         private NetworkCoverage CreateNetworkCoverage(string coverageLongName, string unitSymbol,
-            string netCdfVariableName, OutputFile1DMetaData data, string location, string refDate, int number = -1)
+            string netCdfVariableName, string location, string refDate, int number = -1)
         {
             var suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
             var coverageName = coverageLongName + suffix;
@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var convertedList = (List<INetworkLocation>)TypeUtils.CreateGeneric(typeof(List<>),
                     networkLocationTypeConverter.ConvertedType);
 
-                var shape = netCdfFile.GetShape(netCdfFile.GetVariableByName(GetNetCdfVariableName(GetCoverage(function))))[1];
+                var shape = MetaData.NumLocationsForFunctionId(GetNetCdfVariableName(GetCoverage(function)));//netCdfFile.GetShape(netCdfFile.GetVariableByName(GetNetCdfVariableName(GetCoverage(function))))[1];
                 var timeDependentVariableMetaData = MetaData.TimeDependentVariables.FirstOrDefault(tdv => Equals(tdv.Name, GetNetCdfVariableName(GetCoverage(function))));
                 if (timeDependentVariableMetaData != null && MetaData.Locations.ContainsKey(timeDependentVariableMetaData))
                 {
@@ -336,12 +336,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     networkLocationTypeConverter.Network = networkCoverage.Network;
                     networkLocationTypeConverter.Coverage = networkCoverage;
                 }
-            }
-
-            if (Functions.Any(f => f is IFeatureCoverage))
-            {
-                var featureCoverage = Functions.OfType<IFeatureCoverage>().FirstOrDefault(f => f.Arguments.Contains(function));
-                if (featureTypeConverter != null) featureTypeConverter.FeatureCoverage = featureCoverage;
             }
         }
         private ICoverage GetCoverage(IVariable variable)

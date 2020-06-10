@@ -36,25 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return new OutputFile1DMetaData(times, locationMetaData, timeDependentVariableMetaData);
         }
-
-        public T[,] GetAllVariableData<T>(string path, string variableName, OutputFile1DMetaData metaData)
-        {
-            using (var netCdfFileWrapper = new NetCdfFileWrapper(path))
-            {
-                return netCdfFileWrapper.GetValues2D<T>(variableName) ?? new T[0, 0];
-            }
-        }
-
-        public IList<T> GetSelectionOfVariableData<T>(string path, string variableName, int[] origin, int[] shape)
-        {
-            return DoWithNetCdfFile(path, (outputFile, timeDependentVariables) =>
-            {
-                var fileVariable = outputFile.GetVariableByName(variableName);
-
-                var locationData = outputFile.Read(fileVariable, origin, shape);
-                return Enumerable.OfType<object>(locationData).Cast<T>().ToList();
-            });
-        }
+        
 
         private V DoWithNetCdfFile<V>(string path, Func<NetCdfFile, IList<TimeDependentVariableMetaDataBase>, V> function, IList<TimeDependentVariableMetaDataBase> timeDependentVariableMetaData = null)
         {
@@ -152,13 +134,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return locationIds.Where((s, i) => branchIds[i] != int.MinValue + 1).Select((id, index) =>
                     new LocationMetaData
-                    {
-                        Id = id,
-                        BranchId = branchIds == null ? 0 : branchIds[index],
-                        Chainage = chainages == null ? 0.0 : chainages[index],
-                        XCoordinate = xCoordinates == null ? 0.0 : xCoordinates[index],
-                        YCoordinate = yCoordinates == null ? 0.0 : yCoordinates[index]
-                    })
+                    (
+                        id,
+                        branchIds[index],
+                        chainages[index],
+                        xCoordinates[index],
+                         yCoordinates[index]
+                    ))
                 .ToList();
         }
 
@@ -245,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var unit = attributes.FirstOrDefault(a => a.Key == unitsAttributeKeyNameInNetCdfFile).Value;
             var unitString = unit == null ? string.Empty : unit.ToString();
 
-            return new TimeDependentVariableMetaDataBase { Name = variableName, LongName  = longNameString, Unit = unitString};
+            return new TimeDependentVariableMetaDataBase(variableName, longNameString, unitString );
         }
 
         private class LocationVariableNames

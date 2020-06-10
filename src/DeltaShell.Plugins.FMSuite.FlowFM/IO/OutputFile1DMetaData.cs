@@ -10,8 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public IDictionary<TimeDependentVariableMetaDataBase, IList<LocationMetaData>> Locations { get; private set; }
         public IList<TimeDependentVariableMetaDataBase> TimeDependentVariables { get; private set; }
 
-        public int NumTimes { get { return Times.Count; } }
-        
         public OutputFile1DMetaData(IList<DateTime> times = null, IDictionary<TimeDependentVariableMetaDataBase, IList<LocationMetaData>> locations = null, IList<TimeDependentVariableMetaDataBase> timeDependentVariables = null) 
         {
             Times = times ?? new List<DateTime>();

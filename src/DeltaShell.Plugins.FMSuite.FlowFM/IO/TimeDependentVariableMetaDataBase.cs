@@ -2,10 +2,6 @@
 {
     public class TimeDependentVariableMetaDataBase
     {
-        public TimeDependentVariableMetaDataBase()
-        {
-            
-        }
         public TimeDependentVariableMetaDataBase(string name, string longName, string unit)
         {
             Name = name;
