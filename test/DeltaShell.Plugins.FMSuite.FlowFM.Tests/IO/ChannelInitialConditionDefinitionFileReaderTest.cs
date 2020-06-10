@@ -19,14 +19,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenInvalidPath_WhenCallingReadFile_ThenThrowsException()
         {
+            // Given
             const string invalidPath = "invalidPath";
+
             using (var fmModel = new WaterFlowFMModel())
             {
                 var modelDefinition = fmModel.ModelDefinition;
 
+                // When
                 TestDelegate action = () =>
                     ChannelInitialConditionDefinitionFileReader.ReadFile(invalidPath, modelDefinition, null, null);
 
+                // Then
                 var exception = Assert.Throws<FileReadingException>(action);
                 Assert.AreEqual($"Could not read file {invalidPath} properly, it doesn't exist.", exception.Message);
             }
@@ -35,14 +39,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenFileWithNoCategories_WhenCallingReadFile_ThenThrowsException()
         {
+            // Given
             var noCategoriesFile = TestHelper.GetTestFilePath(@"IO\noCategories.ini");
+
             using (var fmModel = new WaterFlowFMModel())
             {
                 var modelDefinition = fmModel.ModelDefinition;
 
+                // When
                 TestDelegate action = () =>
                     ChannelInitialConditionDefinitionFileReader.ReadFile(noCategoriesFile, modelDefinition, null, null);
 
+                // Then
                 var exception = Assert.Throws<FileReadingException>(action);
                 Assert.AreEqual($"Could not read file {noCategoriesFile} properly, it seems empty.", exception.Message);
             }
@@ -51,14 +59,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenFileWithMissingGlobalCategory_WhenCallingReadFile_ThenThrowsException()
         {
+            // Given
             var missingGlobalCategoryFile = TestHelper.GetTestFilePath(@"IO\missingGlobalCategory.ini");
+
             using (var fmModel = new WaterFlowFMModel())
             {
                 var modelDefinition = fmModel.ModelDefinition;
 
+                // When
                 TestDelegate action = () =>
                     ChannelInitialConditionDefinitionFileReader.ReadFile(missingGlobalCategoryFile, modelDefinition, null, null);
 
+                // Then
                 var exception = Assert.Throws<FileReadingException>(action);
                 Assert.AreEqual($"Could not read file {missingGlobalCategoryFile} properly, no global property was found.", exception.Message);
             }
@@ -67,14 +79,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenFileWithOnlyInvalidCategories_WhenCallingReadFile_ThenThrowsException()
         {
+            // Given
             var invalidCategoriesOnlyFile = TestHelper.GetTestFilePath(@"IO\invalidCategoriesOnly.ini");
+
             using (var fmModel = new WaterFlowFMModel())
             {
                 var modelDefinition = fmModel.ModelDefinition;
 
+                // When
                 TestDelegate action = () =>
                     ChannelInitialConditionDefinitionFileReader.ReadFile(invalidCategoriesOnlyFile, modelDefinition, null, null);
 
+                // Then
                 var exception = Assert.Throws<FileReadingException>(action);
                 Assert.AreEqual($"Could not read file {invalidCategoriesOnlyFile} properly, no global property was found.", exception.Message);
             }
@@ -83,6 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenInitialConditionQuantityFileWithBranchThatDoesNotExistOnModel_WhenCallingReadFile_ThenThrowsException()
         {
+            // Given
             var filePath = TestHelper.GetTestFilePath(@"IO\InitialWaterDepth_expected.ini");
 
             using (var fmModel = new WaterFlowFMModel())
@@ -91,9 +108,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var branchDictionary = new Dictionary<string, IBranch>();
 
+                // When
                 TestDelegate action = () => ChannelInitialConditionDefinitionFileReader.ReadFile(filePath,
                     modelDefinition, branchDictionary, fmModel.ChannelInitialConditionDefinitions);
 
+                // Then
                 var exception = Assert.Throws<FileReadingException>(action, "");
                 Assert.AreEqual("Branch (Channel0) where the initial condition should be put on is not available in the model.", exception.Message);
             }
@@ -107,8 +126,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             double expectedValue,
             string filename)
         {
+            // Given
             var filePath = TestHelper.GetTestFilePath($"IO\\{filename}");
             var tempFolder = FileUtils.CreateTempDirectory();
+
             try
             {
                 var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
@@ -126,9 +147,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         branchDictionary.Add(channelName, channel);
                     }
 
+                    // When
                     ChannelInitialConditionDefinitionFileReader.ReadFile(filePath, modelDefinition, branchDictionary,
                         fmModel.ChannelInitialConditionDefinitions);
 
+                    // Then
                     var actualGlobalValue = (double) modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalValue1D).Value;
                     var actualGlobalQuantity = (InitialConditionQuantity) (int) modelDefinition
                         .GetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D).Value;
