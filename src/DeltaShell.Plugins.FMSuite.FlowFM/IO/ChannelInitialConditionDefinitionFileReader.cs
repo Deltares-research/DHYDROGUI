@@ -103,29 +103,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static bool IsSpatialDefinition(IDelftIniCategory channelInitialConditionDefinitionsCategory)
         {
-            return channelInitialConditionDefinitionsCategory.Properties.Any(p => p.Name.Equals(InitialConditionRegion.Chainage.Key));
+            return channelInitialConditionDefinitionsCategory.Properties.Any(p => p.Name.Equals(InitialConditionRegion.NumLocations.Key));
         }
 
         private static void ReadConstantDefinition(
             IDelftIniCategory channelInitialConditionDefinitionsCategory, 
             ChannelInitialConditionDefinition channelInitialConditionDefinition)
         {
-            var value = channelInitialConditionDefinitionsCategory.ReadProperty<double>(InitialConditionRegion.Values.Key);
-
             channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition;
-            channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value = value;
             channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Quantity = readQuantity;
+
+            var value = channelInitialConditionDefinitionsCategory.ReadProperty<double>(InitialConditionRegion.Values.Key);
+            channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value = value;
         }
 
         private static void ReadSpatialDefinition(
             IDelftIniCategory channelInitialConditionDefinitionsCategory, 
             ChannelInitialConditionDefinition channelInitialConditionDefinition)
         {
+            channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
+            channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.Quantity = readQuantity;
+
             var numLocations = channelInitialConditionDefinitionsCategory.ReadProperty<int>(InitialConditionRegion.NumLocations.Key);
+            if (numLocations == 0) return;
+
             var chainages = channelInitialConditionDefinitionsCategory.ReadPropertiesToListOfType<double>(InitialConditionRegion.Chainage.Key);
             var values = channelInitialConditionDefinitionsCategory.ReadPropertiesToListOfType<double>(InitialConditionRegion.Values.Key);
-
-            channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
 
             for (var i = 0; i < numLocations; i++)
             {
