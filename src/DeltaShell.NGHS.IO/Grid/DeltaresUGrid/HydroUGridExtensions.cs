@@ -793,7 +793,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 var link1D2D = links1D2D[i];
                 linksGeometry.LinkId[i] = link1D2D.Name;
-                linksGeometry.LinkLongName[i] = link1D2D.LongName;
+                linksGeometry.LinkLongName[i] = link1D2D.LongName ?? "";
                 linksGeometry.LinkType[i] = (int) link1D2D.TypeOfLink;
                 linksGeometry.Mesh1DFrom[i] = link1D2D.DiscretisationPointIndex;
                 linksGeometry.Mesh2DTo[i] = link1D2D.FaceIndex;
