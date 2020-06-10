@@ -357,7 +357,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (NetworkDiscretization == null || Grid == null) return;
             Links1D2DHelper.SetGeometry1D2DLinks(loadedLinks, NetworkDiscretization.Locations, Grid.Cells);
             Links = new EventedList<ILink1D2D>(loadedLinks);
-            RefreshMappings();
         }
 
         public override IBasicModelInterface BMIEngine
