@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
@@ -16,6 +17,108 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class ChannelFrictionDefinitionFileReaderTest
     {
+        [Test]
+        public void GivenInvalidPath_WhenCallingReadFile_ThenThrowsException()
+        {
+            // Given
+            const string invalidPath = "invalidPath";
+
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var modelDefinition = fmModel.ModelDefinition;
+
+                // When
+                TestDelegate action = () =>
+                    ChannelFrictionDefinitionFileReader.ReadFile(invalidPath, modelDefinition, null, null);
+
+                // Then
+                var exception = Assert.Throws<FileReadingException>(action);
+                Assert.AreEqual($"Could not read file {invalidPath} properly, it doesn't exist.", exception.Message);
+            }
+        }
+
+        [Test]
+        public void GivenFileWithNoCategories_WhenCallingReadFile_ThenThrowsException()
+        {
+            // Given
+            var noCategoriesFile = TestHelper.GetTestFilePath(@"IO\noCategories.ini");
+
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var modelDefinition = fmModel.ModelDefinition;
+
+                // When
+                TestDelegate action = () =>
+                    ChannelFrictionDefinitionFileReader.ReadFile(noCategoriesFile, modelDefinition, null, null);
+
+                // Then
+                var exception = Assert.Throws<FileReadingException>(action);
+                Assert.AreEqual($"Could not read file {noCategoriesFile} properly, it seems empty.", exception.Message);
+            }
+        }
+
+        [Test]
+        public void GivenFileWithMissingGlobalCategory_WhenCallingReadFile_ThenThrowsException()
+        {
+            // Given
+            var missingGlobalCategoryFile = TestHelper.GetTestFilePath(@"IO\missingGlobalCategory.ini");
+
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var modelDefinition = fmModel.ModelDefinition;
+
+                // When
+                TestDelegate action = () =>
+                    ChannelFrictionDefinitionFileReader.ReadFile(missingGlobalCategoryFile, modelDefinition, null, null);
+
+                // Then
+                var exception = Assert.Throws<FileReadingException>(action);
+                Assert.AreEqual($"Could not read file {missingGlobalCategoryFile} properly, no global property was found.", exception.Message);
+            }
+        }
+
+        [Test]
+        public void GivenFileWithOnlyInvalidCategories_WhenCallingReadFile_ThenThrowsException()
+        {
+            // Given
+            var invalidCategoriesOnlyFile = TestHelper.GetTestFilePath(@"IO\invalidCategoriesOnly.ini");
+
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var modelDefinition = fmModel.ModelDefinition;
+
+                // When
+                TestDelegate action = () =>
+                    ChannelFrictionDefinitionFileReader.ReadFile(invalidCategoriesOnlyFile, modelDefinition, null, null);
+
+                // Then
+                var exception = Assert.Throws<FileReadingException>(action);
+                Assert.AreEqual($"Could not read file {invalidCategoriesOnlyFile} properly, no global property was found.", exception.Message);
+            }
+        }
+
+        [Test]
+        public void GivenFileWithChannelThatDoesNotExistOnModel_WhenCallingReadFile_ThenThrowsException()
+        {
+            // Given
+            var filePath = TestHelper.GetTestFilePath($"IO\\{FlowFMResources.Roughness_Main_Channels_Filename}");
+
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var modelDefinition = fmModel.ModelDefinition;
+
+                var network = new HydroNetwork();
+
+                // When
+                TestDelegate action = () => ChannelFrictionDefinitionFileReader.ReadFile(filePath,
+                    modelDefinition, network, fmModel.ChannelFrictionDefinitions);
+
+                // Then
+                var exception = Assert.Throws<FileReadingException>(action, "");
+                Assert.AreEqual("Branch (Channel0) where the roughness should be put on is not available in the model.", exception.Message);
+            }
+        }
+
         [Test]
         public void GivenRoughnessChannelsFile_WhenReading_ThenSetsCorrectChannelFrictionDefinitions()
         {

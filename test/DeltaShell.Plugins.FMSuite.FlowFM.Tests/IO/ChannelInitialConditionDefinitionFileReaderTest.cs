@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenInitialConditionQuantityFileWithBranchThatDoesNotExistOnModel_WhenCallingReadFile_ThenThrowsException()
+        public void GivenFileWithChannelThatDoesNotExistOnModel_WhenCallingReadFile_ThenThrowsException()
         {
             // Given
             var filePath = TestHelper.GetTestFilePath(@"IO\InitialWaterDepth_expected.ini");
