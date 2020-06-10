@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using DelftTools.Hydro;
 
 namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
 {
