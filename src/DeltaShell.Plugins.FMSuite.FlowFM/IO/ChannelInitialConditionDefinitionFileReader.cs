@@ -52,6 +52,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadChannelInitialConditionDefinitions(branchDictionary, channelInitialConditionDefinitionDictionary, channelInitialConditionDefinitionsCategories);
         }
 
+        private static void SetGlobalDefinition(IDelftIniCategory globalCategory, WaterFlowFMModelDefinition modelDefinition)
+        {
+            var globalValue = globalCategory.ReadProperty<string>(InitialConditionRegion.Value.Key);
+            if (string.IsNullOrWhiteSpace(globalValue))
+            {
+                Log.Warn("No global value is specified. Using default value.");
+            }
+            else
+            {
+                modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalValue1D, globalValue);
+            }
+
+            var globalQuantityString = globalCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
+            var globalQuantity = InitialConditionQuantityTypeConverter.ConvertStringToInitialConditionQuantity(globalQuantityString);
+
+            modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, $"{ (int) globalQuantity }");
+            
+            readQuantity = globalQuantity;
+        }
+
         private static void ReadChannelInitialConditionDefinitions(
             IReadOnlyDictionary<string, IBranch> branchDictionary,
             IReadOnlyDictionary<string, ChannelInitialConditionDefinition> channelInitialConditionDefinitionDictionary, 
@@ -79,6 +99,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     ReadConstantDefinition(channelInitialConditionDefinitionsCategory, channelInitialConditionDefinition);
                 }
             }
+        }
+
+        private static bool IsSpatialDefinition(IDelftIniCategory channelInitialConditionDefinitionsCategory)
+        {
+            return channelInitialConditionDefinitionsCategory.Properties.Any(p => p.Name.Equals(InitialConditionRegion.Chainage.Key));
         }
 
         private static void ReadConstantDefinition(
@@ -112,31 +137,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(constantDefinition);
             }
-        }
-
-        private static bool IsSpatialDefinition(IDelftIniCategory channelInitialConditionDefinitionsCategory)
-        {
-            return channelInitialConditionDefinitionsCategory.Properties.Any(p => p.Name.Equals(InitialConditionRegion.Chainage.Key));
-        }
-
-        private static void SetGlobalDefinition(IDelftIniCategory globalCategory, WaterFlowFMModelDefinition modelDefinition)
-        {
-            var globalValue = globalCategory.ReadProperty<string>(InitialConditionRegion.Value.Key);
-            if (string.IsNullOrWhiteSpace(globalValue))
-            {
-                Log.Warn("No global value is specified. Using default value.");
-            }
-            else
-            {
-                modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalValue1D, globalValue);
-            }
-
-            var globalQuantityString = globalCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
-            var globalQuantity = InitialConditionQuantityTypeConverter.ConvertStringToInitialConditionQuantity(globalQuantityString);
-
-            modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, $"{ (int)globalQuantity }");
-            
-            readQuantity = globalQuantity;
         }
     }
 }
