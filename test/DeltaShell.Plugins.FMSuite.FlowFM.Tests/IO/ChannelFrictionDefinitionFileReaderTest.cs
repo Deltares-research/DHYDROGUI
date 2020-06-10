@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var network = fmModel.Network;
                 var channelFrictionDefinitions = fmModel.ChannelFrictionDefinitions;
 
-                var numberOfBranches = 14;
+                const int numberOfBranches = 14;
                 
                 for (var i = 0; i < numberOfBranches; i++)
                 {
@@ -182,7 +182,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
 
                 // Preconditions
-                Assert.That(network.Branches.Count, Is.EqualTo(numberOfBranches));
                 Assert.That(fmModel.ChannelFrictionDefinitions.Count, Is.EqualTo(numberOfBranches));
 
                 var expectedChannelFrictionDefinitions = GetExpectedChannelFrictionDefinitions(network.Branches);
@@ -313,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IReadOnlyCollection<ChannelFrictionDefinition> expectedChannelFrictionDefinitions,
             IReadOnlyCollection<ChannelFrictionDefinition> actualChannelFrictionDefinitions)
         {
-            Assert.That(expectedChannelFrictionDefinitions.Count, Is.EqualTo(actualChannelFrictionDefinitions.Count));
+            Assert.That(actualChannelFrictionDefinitions.Count, Is.EqualTo(expectedChannelFrictionDefinitions.Count));
 
             var serializer = new JavaScriptSerializer();
 
@@ -323,21 +322,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var actualChannelFrictionDefinition = actualChannelFrictionDefinitions.FirstOrDefault(cfd => cfd.Channel.Name.Equals(branchName));
 
                 Assert.That(actualChannelFrictionDefinition, Is.Not.Null);
-                Assert.That(expectedChannelFrictionDefinition.SpecificationType, Is.EqualTo(actualChannelFrictionDefinition.SpecificationType));
-                Assert.That(serializer.Serialize(expectedChannelFrictionDefinition.ConstantChannelFrictionDefinition), Is.EqualTo(serializer.Serialize(actualChannelFrictionDefinition.ConstantChannelFrictionDefinition)));
+                Assert.That(actualChannelFrictionDefinition.SpecificationType, Is.EqualTo(expectedChannelFrictionDefinition.SpecificationType));
+                Assert.That(serializer.Serialize(actualChannelFrictionDefinition.ConstantChannelFrictionDefinition), Is.EqualTo(serializer.Serialize(expectedChannelFrictionDefinition.ConstantChannelFrictionDefinition)));
 
                 var expectedSpatialChannelFrictionDefinition = expectedChannelFrictionDefinition.SpatialChannelFrictionDefinition;
                 if (expectedSpatialChannelFrictionDefinition != null)
                 {
                     var actualSpatialChannelFrictionDefinition = actualChannelFrictionDefinition.SpatialChannelFrictionDefinition;
 
-                    Assert.That(expectedSpatialChannelFrictionDefinition.Type, Is.EqualTo(actualSpatialChannelFrictionDefinition.Type));
-                    Assert.That(expectedSpatialChannelFrictionDefinition.FunctionType, Is.EqualTo(actualSpatialChannelFrictionDefinition.FunctionType));
-                    Assert.That(serializer.Serialize(expectedSpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions), Is.EqualTo(serializer.Serialize(actualSpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions)));
+                    Assert.That(actualSpatialChannelFrictionDefinition.Type, Is.EqualTo(expectedSpatialChannelFrictionDefinition.Type));
+                    Assert.That(actualSpatialChannelFrictionDefinition.FunctionType, Is.EqualTo(expectedSpatialChannelFrictionDefinition.FunctionType));
+                    Assert.That(serializer.Serialize(actualSpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions), Is.EqualTo(serializer.Serialize(expectedSpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions)));
 
                     if (expectedSpatialChannelFrictionDefinition.Function != null)
                     {
-                        Assert.That(expectedSpatialChannelFrictionDefinition.Function.GetAllComponentValues(), Is.EqualTo(actualSpatialChannelFrictionDefinition.Function.GetAllComponentValues()));
+                        Assert.That(actualSpatialChannelFrictionDefinition.Function.GetAllComponentValues(), Is.EqualTo(expectedSpatialChannelFrictionDefinition.Function.GetAllComponentValues()));
                     }
                 }
             }
