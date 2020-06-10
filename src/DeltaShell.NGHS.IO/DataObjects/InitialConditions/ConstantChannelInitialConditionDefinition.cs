@@ -10,7 +10,6 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
     public class ConstantChannelInitialConditionDefinition
     {
         public InitialConditionQuantity Quantity { get; set; }
-
         public double Value { get; set; }
     }
 }

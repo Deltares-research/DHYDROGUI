@@ -8,7 +8,7 @@ using GeoAPI.Geometries;
 namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
 {
     /// <summary>
-    /// Initial condition definition for a <see cref="IChannel"/>.
+    /// Initial Condition definition for a <see cref="IChannel"/>.
     /// </summary>
     [Entity]
     public class ChannelInitialConditionDefinition : Unique<long>, IFeature
@@ -18,8 +18,9 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
         public ChannelInitialConditionDefinition(IChannel channel)
         {
             Channel = channel;
-
-            SpecificationType = ChannelInitialConditionSpecificationType.ModelSettings;
+        }
+        public ChannelInitialConditionDefinition()
+        {
         }
 
         public IChannel Channel { get; private set; }
@@ -30,7 +31,6 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
             set
             {
                 specificationType = value;
-
                 ConstantChannelInitialConditionDefinition = null;
                 SpatialChannelInitialConditionDefinition = null;
 
@@ -45,20 +45,26 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
                     case ChannelInitialConditionSpecificationType.ModelSettings:
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new InvalidOperationException();
                 }
             }
         }
 
         public ConstantChannelInitialConditionDefinition ConstantChannelInitialConditionDefinition { get; private set; }
-
         public SpatialChannelInitialConditionDefinition SpatialChannelInitialConditionDefinition { get; private set; }
 
         #region Implementation of ICloneable
 
         public object Clone()
         {
-            throw new NotImplementedException();
+            var clone = (ChannelInitialConditionDefinition)Activator.CreateInstance(this.GetType());
+            clone.Channel = Channel;
+            clone.SpecificationType = specificationType;
+            clone.ConstantChannelInitialConditionDefinition = ConstantChannelInitialConditionDefinition;
+            clone.SpatialChannelInitialConditionDefinition = SpatialChannelInitialConditionDefinition;
+            clone.Geometry = Geometry;
+            clone.Attributes = Attributes;
+            return clone;
         }
 
         # endregion
