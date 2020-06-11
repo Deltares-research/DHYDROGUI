@@ -130,14 +130,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
 
         public void SetInitialConditionValuesByQuantity()
         {
-            if (initialConditionValuesByQuantity.Count > 0)
-            {
-                return;
-            }
-
             InitialConditionQuantity quantity = GetModelSettingsQuantity();
+            
             foreach (var channelInitialConditionDefinition in waterFlowFmModel.ChannelInitialConditionDefinitions)
             {
+                if (channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ModelSettings) continue;
+            
                 var constantDefinition = channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition;
                 var spatialDefinition = channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition;
                 if (constantDefinition != null)
@@ -151,9 +149,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
                     break;
                 }
             }
+            
             var copyOfCurrentValues = new List<ChannelInitialConditionDefinition>();
             waterFlowFmModel.ChannelInitialConditionDefinitions.ForEach(definition => copyOfCurrentValues.Add((ChannelInitialConditionDefinition)definition.Clone()));
-            initialConditionValuesByQuantity.Add(quantity, copyOfCurrentValues);
+            initialConditionValuesByQuantity[quantity] = copyOfCurrentValues;
         }
 
         public void SetCurrentQuantity()
@@ -351,7 +350,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
             AddValueColumn(tableView);
             UpdateQuantityColumnName(GetModelSettingsQuantity());
             AddButtonColumn(tableView);
-
         }
 
         private static void AddChannelColumn(TableView tableView)
@@ -452,7 +450,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
         private void ChannelInitialConditionDefinitionsCollectionChanged(object sender, EventArgs e)
         {
             vectorLayerAttributeTableView.TableView.BestFitColumns();
-            Refresh();
+            RefreshData();
         }
 
         private void ChannelInitialConditionDefinitionsPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -479,7 +477,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
                 currentQuantity = newQuantity;
             }
 
-            Refresh();
+            RefreshData();
         }
 
         private void SetCorrectDefinitionsOnModelBasedOnSelectedGlobalQuantity(InitialConditionQuantity quantity)
@@ -528,7 +526,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
 
         private void InitialConditionModelSettingPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Refresh();
+            RefreshData();
         }
 
         private void UpdateQuantityColumnName(InitialConditionQuantity quantity)
@@ -538,7 +536,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
         }
 
         [InvokeRequired]
-        private void Refresh()
+        private void RefreshData()
         {
             vectorLayerAttributeTableView.TableView.RefreshData();
             vectorLayerAttributeTableView.TableView.BestFitColumns();

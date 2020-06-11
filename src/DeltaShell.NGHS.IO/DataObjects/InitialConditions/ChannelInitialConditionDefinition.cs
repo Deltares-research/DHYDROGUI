@@ -19,7 +19,9 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
         {
             Channel = channel;
         }
-        public ChannelInitialConditionDefinition()
+
+        // required for clone
+        protected ChannelInitialConditionDefinition()
         {
         }
 
@@ -57,7 +59,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
 
         public object Clone()
         {
-            var clone = (ChannelInitialConditionDefinition)Activator.CreateInstance(this.GetType());
+            var clone = (ChannelInitialConditionDefinition)Activator.CreateInstance(this.GetType(), true);
             clone.Channel = Channel;
             clone.SpecificationType = specificationType;
             clone.ConstantChannelInitialConditionDefinition = ConstantChannelInitialConditionDefinition;
@@ -85,9 +87,24 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
 
         #endregion
 
+        /// <summary>
+        /// Copies the properties from another definition to this definition.
+        /// </summary>
+        /// <param name="otherDefinition">The definition to copy from.</param>
+        public void CopyFrom(ChannelInitialConditionDefinition otherDefinition)
+        {
+            Channel = otherDefinition.Channel;
+            SpecificationType = otherDefinition.SpecificationType;
+            Attributes = otherDefinition.Attributes;
+            ConstantChannelInitialConditionDefinition?.CopyFrom(otherDefinition.ConstantChannelInitialConditionDefinition);
+            SpatialChannelInitialConditionDefinition?.CopyFrom(otherDefinition.SpatialChannelInitialConditionDefinition);
+        }
+
         public override string ToString()
         {
             return "1D Initial Conditions";
         }
+
+        
     }
 }
