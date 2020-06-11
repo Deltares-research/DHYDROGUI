@@ -16,27 +16,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders
 
         public bool CanProvideDrawingGroupFor(object item)
         {
-            if (item is Type type && type == typeof(WaterFlowFMModel))
+            switch (item)
             {
-                return true;
+                case Type type when type == typeof(WaterFlowFMModel):
+                    return true;
+                case ModelInfo modelInfo:
+                    return modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName;
+                case ProjectTemplate projectTemplate:
+                    return projectTemplate.Id == "FMModel";
+                case FlowFMApplicationPlugin _:
+                    return true;
+                case FlowFMGuiPlugin _:
+                    return true;
+                default:
+                    return item is WaterFlowFMFileImporter;
             }
-            
-            if (item is ModelInfo modelInfo)
-            {
-                return modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName;
-            }
-
-            if (item is ProjectTemplate projectTemplate)
-            {
-                return projectTemplate.Id == "FMModel";
-            }
-
-            if (item is WaterFlowFMFileImporter)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         public DrawingGroup CreateDrawingGroupFor(object item)
@@ -44,6 +38,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders
             if ((item is ModelInfo modelInfo && modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName) ||
                 (item is ProjectTemplate projectTemplate && projectTemplate.Id == "FMModel") ||
                 item is WaterFlowFMFileImporter ||
+                item is FlowFMApplicationPlugin ||
+                item is FlowFMGuiPlugin ||
                 (item is Type type && type== typeof(WaterFlowFMModel)))
             {
                 return (DrawingGroup) resources["FMModelDrawingGroup"];
