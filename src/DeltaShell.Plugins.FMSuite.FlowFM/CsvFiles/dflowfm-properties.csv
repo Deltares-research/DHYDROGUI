@@ -100,12 +100,12 @@ physics,UnifFrictType,physics,Roughness,Uniform friction type:Chezy|Manning|Whit
 physics,UnifFrictCoef1D,physics,Roughness,Uniform 1D friction coefficient,Double,2.3d-2,0,,TRUE,,,,,,Uniform friction coefficient in 1D links (0: no friction),
 physics,UnifFrictCoefLin,physics,Roughness,Uniform linear friction coefficient,Double,0,0,,FALSE,,,,,,Uniform linear friction coefficient for ocean models (0: no friction),  
 physics,Umodlin,physics,Roughness,Linear friction Umod,Double,0,0,1,FALSE,,,,,,"Linear friction umod, for ifrctyp=4,5,6",-
-physics,Vicouv,physics,Viscosity,Uniform horizontal eddy viscosity,Double,1,0,,FALSE,,,,,,Uniform horizontal eddy viscosity, m2/s
-physics,Dicouv,physics,Viscosity,Uniform horizontal eddy diffusivity,Double,1,0,,FALSE,,,,,,Uniform horizontal eddy diffusivity, m2/s
+physics,Vicouv,physics,Viscosity,Uniform horizontal eddy viscosity,Double,0.1,0,,FALSE,,,,,,Uniform horizontal eddy viscosity, m2/s
+physics,Dicouv,physics,Viscosity,Uniform horizontal eddy diffusivity,Double,0.1,0,,FALSE,,,,,,Uniform horizontal eddy diffusivity, m2/s
 physics,Vicoww,physics,Viscosity,Uniform vertical eddy viscosity,Double,5.d-5,0,,FALSE,kmx>0,,,,,Uniform vertical eddy viscosity, m2/s
 physics,Dicoww,physics,Viscosity,Uniform vertical eddy diffusivity,Double,5.d-5,0,,FALSE,kmx>0,,,,,Uniform vertical eddy diffusivity, m2/s
 physics,Vicwminb,physics,Viscosity,Minimum buoyancy viscosity,Double,0,0,,TRUE,,,,,,Minimum viscosity in prod and buoyancy term, m2/s
-physics,Smagorinsky,physics,Viscosity,Smagorinsky factor,Double,0,0,,FALSE,,,,,,Smagorinsky factor in horizontal turbulence,-
+physics,Smagorinsky,physics,Viscosity,Smagorinsky factor,Double,0.2,0,,FALSE,,,,,,Smagorinsky factor in horizontal turbulence,-
 physics,Elder,advanced,Advanced,Elder factor,Double,0,0,,FALSE,,,,,,Elder factor in horizontal turbulence,-
 physics,Irov,physics,Roughness,Wall behaviour:Free-slip|Partial-slip|No-slip,0|1|2,0,0,2,FALSE,,,,,,"Wall roughness type (0: free-slip, 1: partial-slip using wall_ks, 2: no-slip)"
 physics,wall_ks,physics,Roughness,Wall ks for partial slip,Double,0,0,,FALSE,Irov=1,,,,,"Nikuradse roughness for side walls",m
