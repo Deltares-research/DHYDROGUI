@@ -10,6 +10,7 @@ namespace DeltaShell.Sobek.Readers.Readers
 {
     public class InitalFlowConditionsReader : SobekReader<FlowInitialCondition>
     {
+        #region example data
         // from Sobek online help
         // ifl-file (initial conditions layer)
 
@@ -40,6 +41,7 @@ namespace DeltaShell.Sobek.Readers.Readers
         // lv ll 2 = table as function of the location op de branch
         // column 1 = location, 
         // column 2 = water depth or water level
+        #endregion
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(InitalFlowConditionsReader));
 

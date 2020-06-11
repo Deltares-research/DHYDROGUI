@@ -1,191 +1,77 @@
+using DelftTools.Hydro;
+using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
+using GeoAPI.Extensions.Networks;
+using log4net;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
-using DeltaShell.Sobek.Readers.SobekDataObjects;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Networks;
-using log4net;
-using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
     /// <summary>
-    /// Class builds initial depth coverage based on the following data:
-    /// 1) Initial conditions read from initial.dat
-    /// 2) List of crosssection needed to convert from depth to level and vice versa
+    /// Creates <see cref="ChannelInitialConditionDefinition"/> from Sobek data.
     /// </summary>
     public class InitialConditionsBuilder
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(InitialConditionsBuilder));
+        private const double Tolerance = 0.00001;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(InitialConditionsBuilder));
 
         private IList<FlowInitialCondition> flowInitialConditions;
-        
         private readonly IHydroNetwork network;
-        private double globalFlow;
-        private double globalInitialDepth;
-        private double globalInitialWaterLevel;
-        private INetworkCoverage bedLevelNetworkCoverage;
-        private bool waterLevelIsLeading;
-        
+        private List<string> listOfWarnings = new List<string>();
+        private Dictionary<string, IBranch> branchesDict;
+
         public InitialConditionsBuilder(IEnumerable<FlowInitialCondition> flowInitialConditions,
             IHydroNetwork network)
         {
             this.flowInitialConditions = flowInitialConditions.ToList();
             this.network = network;
+            ChannelInitialConditionDefinitionsDict = new Dictionary<string, ChannelInitialConditionDefinition>(StringComparer.InvariantCultureIgnoreCase);
         }
+
+        public Dictionary<string, ChannelInitialConditionDefinition> ChannelInitialConditionDefinitionsDict { get; private set; }
+        public InitialConditionQuantity GlobalQuantity { get; private set; }
+        public double GlobalValue { get; private set; }
+        public bool GlobalsHaveBeenSet { get; private set; }
         
-        public double GlobalInitialWaterLevel
-        {
-            get { return globalInitialWaterLevel; }
-        }
-        public double GlobalInitialDepth
-        {
-            get { return globalInitialDepth; }
-        }
 
         public void Build()
         {
-            RemoveAndWarnForUnusedConditions();
-            
-            //define the global definition 
             ReadAndRemoveGlobalDefinition();
+            GenerateBranchesDict();
+            if (branchesDict == null || branchesDict.Count == 0)
+            {
+                return;
+            }
 
-            CreateBedLevelCoverage();
+            RemoveAndWarnForUnusedConditions();
+            CreateChannelInitialConditionDefinitions();
 
-            CreateInitialFlowCoverage();
+            RemoveAndWarnForUnusedDefinitions();
 
-            CreateInitialDepthCoverage();
+            if (listOfWarnings.Any())
+                Log.Warn($"While importing initial conditions we encountered the following {listOfWarnings.Count} warnings: {Environment.NewLine}{string.Join(Environment.NewLine, listOfWarnings)}");
         }
 
-        private void CreateInitialDepthCoverage()
+        private void GenerateBranchesDict()
         {
-            var interpolationHasBeenSet = false;
-
-            InitialDepth = new NetworkCoverage
-                               {
-                                   Network = network, 
-                                   DefaultValue = globalInitialDepth
-                               };
-
-            var bedLevelCoverage = new NetworkCoverage("bed level coverage for branch", false)
-                {
-                    Network = bedLevelNetworkCoverage.Network,
-                };
-            bedLevelCoverage.Locations.InterpolationType = InterpolationType.Linear;
-            bedLevelCoverage.Locations.SetValues(bedLevelNetworkCoverage.Locations.Values); 
-            bedLevelCoverage.Components[0].SetValues(bedLevelNetworkCoverage.Locations.Values.Select(bedLevelNetworkCoverage.Evaluate));
-
-            foreach (var branch in network.Branches)
-            {
-                var bedLevelLocations = bedLevelCoverage.GetLocationsForBranch(branch);
-
-                var firstLevelBoundaryCondition = flowInitialConditions.FirstOrDefault(c => c.IsLevelBoundary && c.BranchID == branch.Name.ToString());
-                
-                if (firstLevelBoundaryCondition != null)
-                {
-                    if (firstLevelBoundaryCondition.WaterLevelType == FlowInitialCondition.FlowConditionType.WaterDepth)
-                    {
-                        AddInitialConditionToNetworkCoverage(firstLevelBoundaryCondition.Level, InitialDepth, branch);
-                    }
-                    else
-                    {
-                        //no crossection could be found for the current branch so no conversion 
-                        //to depth can be made...let's skip this condition)
-                        if (!bedLevelLocations.Any())
-                        {
-                            log.WarnFormat("Initial condition with ID {0} skipped because no crossections are defined on branch {1} and no conversion to depth could be made",
-                                                            firstLevelBoundaryCondition.ID, firstLevelBoundaryCondition.BranchID);
-                            continue;//next condition
-                        }
-
-                        InitialCondition level = firstLevelBoundaryCondition.Level;
-                        var waterLevelLocations = level.IsConstant
-                                            ? new INetworkLocation[] {new NetworkLocation(branch, branch.Length/2)}
-                                            : level.Data.Rows.OfType<DataRow>().Select(
-                                                dr => new NetworkLocation(branch, (double) dr[0])).OfType<INetworkLocation>();
-
-                        var waterLevelValues = level.IsConstant ? new[] { level.Constant } : level.Data.Rows.OfType<DataRow>().Select(row => (double)row[1]).ToArray();
-
-                        var allLocations = waterLevelLocations.Concat(bedLevelLocations).Distinct();
-
-                        var waterLevelForBranch = new NetworkCoverage("water level coverage for branch", false);
-                        waterLevelForBranch.Locations.InterpolationType = InterpolationType.Linear;
-                        waterLevelForBranch.Network = branch.Network;
-                        waterLevelForBranch.Locations.SetValues(waterLevelLocations);
-                        waterLevelForBranch.Components[0].SetValues(waterLevelValues);
-
-                        foreach (var location in allLocations)
-                        {
-                            InitialDepth[location] = waterLevelForBranch.Evaluate(location) -
-                                                        bedLevelCoverage.Evaluate(location);
-                        }
-
-                        waterLevelForBranch.Clear();
-                        waterLevelForBranch.Network = null; // clean up events
-
-                        SetAndCheckInterpolationNetworkCoverage(firstLevelBoundaryCondition.Level, InitialDepth, branch, ref interpolationHasBeenSet);
-                    }
-                }
-                else
-                {
-                    if (waterLevelIsLeading)
-                    {
-                        if (!bedLevelLocations.Any())
-                        {
-                            log.WarnFormat("No crosssections are defined on branch {0}, so no conversion from level to depth could be made", branch.Name);
-                            continue;
-                        }
-                        foreach (var loc in bedLevelLocations)
-                        {
-                            InitialDepth[loc] = globalInitialWaterLevel - (double)bedLevelCoverage[loc];
-                        }
-                    }
-                }
-            }
-        }
-
-        private void CreateInitialFlowCoverage()
-        {
-            var interpolationHasBeenSet = false;
-
-            InitialFlow = new NetworkCoverage
-                              {
-                                  Network = network, 
-                                  DefaultValue = globalFlow
-                              };
-
-
-            //handle Q-boundaries
-            foreach (var condition in flowInitialConditions.Where(c=>c.IsQBoundary))
-            {
-                var branch = network.Branches.FirstOrDefault(b => b.Name.ToString() == condition.BranchID);
-                if (branch != null)
-                {
-                    AddInitialConditionToNetworkCoverage(condition.Discharge, InitialFlow, branch);
-
-                    SetAndCheckInterpolationNetworkCoverage(condition.Discharge, InitialFlow, branch, ref interpolationHasBeenSet);
-                }
-            }
+            branchesDict = network.Branches.ToDictionary(branch => branch.Name, StringComparer.InvariantCultureIgnoreCase);
         }
 
         private void RemoveAndWarnForUnusedConditions()
         {
-            var conditionsWithoutBranch = flowInitialConditions.Where(c=>!c.IsGlobalDefinition) //non globals
-                .Where(c => (c.IsLevelBoundary || c.IsQBoundary) && !network.Branches.Any(b => b.Name.ToString() == c.BranchID)).ToList();
+            var conditionsWithoutBranch = flowInitialConditions.Where(c => !c.IsGlobalDefinition) //non globals
+                .Where(c => (c.IsLevelBoundary || c.IsQBoundary) && !branchesDict.ContainsKey(c.BranchID)).ToList();
             foreach (var condition in conditionsWithoutBranch)
             {
-                log.WarnFormat("Channel {0} for initial condition {1} not found; skipped",
-                                   condition.BranchID, condition.ID);
+                Log.WarnFormat("Channel {0} for initial condition {1} not found; skipped",
+                    condition.BranchID, condition.ID);
             }
             //exclude the 'bad' conditions
             flowInitialConditions = flowInitialConditions.Except(conditionsWithoutBranch).ToList();
-        }
-
-        private void CreateBedLevelCoverage()
-        {
-            bedLevelNetworkCoverage = BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(network);
         }
 
         private void ReadAndRemoveGlobalDefinition()
@@ -193,85 +79,133 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             var globalDefinition = flowInitialConditions.FirstOrDefault(ic => ic.IsGlobalDefinition);
             if (globalDefinition == null)
             {
-                log.WarnFormat("globally defined flow conditions are not imported yet");
+                Log.WarnFormat("Globally defined flow conditions are not imported yet.");
             }
             else
             {
                 if (globalDefinition.WaterLevelType == FlowInitialCondition.FlowConditionType.WaterDepth)
                 {
-                    globalInitialDepth = globalDefinition.Level.Constant;    
+                    GlobalValue = globalDefinition.Level.Constant;
+                    GlobalQuantity = InitialConditionQuantity.WaterDepth;
                 }
                 else
                 {
-                    waterLevelIsLeading = true;
-                    globalInitialWaterLevel = globalDefinition.Level.Constant;
+                    GlobalQuantity = InitialConditionQuantity.WaterLevel;
+                    GlobalValue = globalDefinition.Level.Constant;
                 }
-                
-                globalFlow = globalDefinition.Discharge.Constant;
+
+                GlobalsHaveBeenSet = true;
                 //remove it so we don't parse it later on
                 flowInitialConditions.Remove(globalDefinition);
-                //TODO: where is the global depth ??? Or how do we know which one was defined..
             }
         }
 
-        public void AddInitialConditionToNetworkCoverage(InitialCondition flowInitialCondition, INetworkCoverage networkCoverage, IBranch branch)
+        private void CreateChannelInitialConditionDefinitions()
         {
-            AddInitialConditionToNetworkCoverage(flowInitialCondition, networkCoverage, branch, 1.0);
-        }
-
-        public static void AddInitialConditionToNetworkCoverage(InitialCondition flowInitialCondition, INetworkCoverage networkCoverage, IBranch branch, double correctionFactor)
-        {
-            if (flowInitialCondition.IsConstant)
+            foreach (var initialCondition in flowInitialConditions)
             {
-                networkCoverage[new NetworkLocation(branch, branch.Length / 2)] = flowInitialCondition.Constant;
-            }
-            else
-            {
-                //In sobek you can define two values at one point ( 0 = 5.0, 2500 = 5.0, 2500 = 3.0, 5000 = 3.0)
-                //In this case we add 0.01 to the second definition
-                var lastOffset = -1.0;
-                foreach (DataRow row in flowInitialCondition.Data.Rows)
+                if (initialCondition.IsLevelBoundary == false)
                 {
-                    var offset = (double)row[0];
-                    if(lastOffset == offset)
+                    Log.WarnFormat($"Cannot import {initialCondition.ID}. Only WaterDepth and WaterLevel initial conditions are currently supported.");
+                    continue;
+                } 
+
+                var branchName = initialCondition.BranchID;
+                if (!branchesDict.ContainsKey(branchName))
+                {
+                    listOfWarnings.Add($"Could not find branch {branchName}. Skipping import of this initial condition.");
+                    continue;
+                }
+
+                var branch = branchesDict[branchName];
+                var channel = branch as Channel;
+                if (channel == null) throw new ArgumentException();
+                
+                var channelInitialConditionDefinition = new ChannelInitialConditionDefinition(channel);
+                var quantity = GetInitialConditionQuantity(initialCondition.WaterLevelType);
+
+                if (initialCondition.Level.IsConstant)
+                {
+                    channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition;
+                    channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Quantity = quantity;
+                    channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value = initialCondition.Level.Constant;
+                }
+                else
+                {
+                    channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
+                    channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.Quantity = quantity;
+
+                    //In sobek you can define two values at one point ( 0 = 5.0, 2500 = 5.0, 2500 = 3.0, 5000 = 3.0)
+                    //In this case we add 0.01 to the second definition
+                    var lastOffset = -1.0;
+                    foreach (DataRow row in initialCondition.Level.Data.Rows)
                     {
-                        offset += 0.01;
+                        var offset = (double) row[0];
+                        if (Math.Abs(lastOffset - offset) < Tolerance)
+                        {
+                            offset += 0.01;
+                        }
+
+                        lastOffset = offset;
+                        var value = (double) row[1]; //* correctionFactor?;
+                        var constantSpatialChannelInitialConditionDefinition = new ConstantSpatialChannelInitialConditionDefinition()
+                        {
+                            Chainage = offset,
+                            Value = value
+                        };
+                        channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(constantSpatialChannelInitialConditionDefinition);
                     }
-                    lastOffset = offset;
-                    var value = (double)row[1] * correctionFactor;
-                    networkCoverage[new NetworkLocation(branch, offset)] = value;
+                }
+                ChannelInitialConditionDefinitionsDict.Add(branchName, channelInitialConditionDefinition);
+            }
+        }
+
+        private InitialConditionQuantity GetInitialConditionQuantity(FlowInitialCondition.FlowConditionType initialConditionWaterLevelType)
+        {
+            switch (initialConditionWaterLevelType)
+            {
+                case FlowInitialCondition.FlowConditionType.WaterDepth:
+                    return InitialConditionQuantity.WaterDepth;
+                case FlowInitialCondition.FlowConditionType.WaterLevel:
+                    return InitialConditionQuantity.WaterLevel;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+        private void RemoveAndWarnForUnusedDefinitions()
+        {
+            var keysToRemove = new List<string>();
+            foreach (var channelInitialConditionDefinition in ChannelInitialConditionDefinitionsDict.Values)
+            {
+                InitialConditionQuantity quantity;
+                var constantDefinition = channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition;
+                var spatialDefinition = channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition;
+                if (constantDefinition != null)
+                {
+                    quantity = constantDefinition.Quantity;
+                }
+                else if (spatialDefinition != null)
+                {
+                    quantity = spatialDefinition.Quantity;
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (quantity != GlobalQuantity)
+                {
+                    var channelName = channelInitialConditionDefinition.Channel.Name;
+                    keysToRemove.Add(channelName);
                 }
             }
-        }
 
-        public INetworkCoverage InitialFlow { get; private set; }
-
-        public INetworkCoverage InitialDepth { get; private set; }
-
-        private void SetAndCheckInterpolationNetworkCoverage(InitialCondition initialCondition, INetworkCoverage networkCoverage, IBranch branch, ref bool interpolationHasBeenSet)
-        {
-            var channel = (IChannel)branch;
-
-            var coverageName = networkCoverage == InitialDepth ? "Initial waterdepth" : "Initial waterlevel";
-
-            if (!interpolationHasBeenSet && initialCondition.Interpolation != InitialCondition.InterpolationNotSetValue)
+            foreach (var keyToRemove in keysToRemove)
             {
-                networkCoverage.Arguments[0].InterpolationType = initialCondition.Interpolation;
-                interpolationHasBeenSet = true;
-                log.WarnFormat("Interpolation {0} (of channel {1} ({2})) has been set as network-wide interpolation for '{3}'. Only a single interpolation type for entire network is supported.",
-                    initialCondition.Interpolation, channel.Name, channel.LongName, coverageName);
-            }
-
-            if (initialCondition.Interpolation != networkCoverage.Arguments[0].InterpolationType &&
-                initialCondition.Interpolation != InitialCondition.InterpolationNotSetValue)
-            {
-                log.WarnFormat("Interpolation {0} of channel {1} ({2}) cannot be set for {3}. Only one interpolation type supported for entire network. Interpolation is {4}.", 
-                    initialCondition.Interpolation, channel.Name, channel.LongName, coverageName,
-                    networkCoverage.Arguments[0].InterpolationType);
+                ChannelInitialConditionDefinitionsDict.Remove(keyToRemove);
+                Log.WarnFormat($"Initial condition definition for '{keyToRemove}' does match the global quantity {GlobalQuantity}. Skipping import.");
             }
         }
-
-
-        
     }
 }

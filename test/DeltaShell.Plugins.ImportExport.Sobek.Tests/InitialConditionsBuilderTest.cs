@@ -1,285 +1,507 @@
-﻿using System;
-using System.Data;
-using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
+﻿using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net.Core;
-using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.IO;
+using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {
     [TestFixture]
     public class InitialConditionsBuilderTest
     {
-        
         [Test]
-        public void GlobalDefinitions()
+        public void Constructor_ExpectedValues()
         {
+            // Setup
+            var network = new HydroNetwork();
+
+            // Call
+            var builder = new InitialConditionsBuilder(new List<FlowInitialCondition>(), network);
+
+            // Assert
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict, Is.Not.Null);
+            Assert.That(builder.GlobalsHaveBeenSet, Is.False);
+            Assert.That(builder.GlobalValue, Is.EqualTo(default(double)));
+            Assert.That(builder.GlobalQuantity, Is.EqualTo(default(InitialConditionQuantity)));
+        }
+
+        [Test]
+        [TestCase(FlowInitialCondition.FlowConditionType.WaterDepth, InitialConditionQuantity.WaterDepth, 10)]
+        [TestCase(FlowInitialCondition.FlowConditionType.WaterLevel, InitialConditionQuantity.WaterLevel, 8.5)]
+        public void GivenACollectionOfFlowInitialConditionsWithGlobalDefinition_WhenCallingBuild_ThenCorrectlySetsGlobalProperties(
+            FlowInitialCondition.FlowConditionType flowConditionType,
+            InitialConditionQuantity expectedQuantity,
+            double expectedValue)
+        {
+            // Given
             var definition = new FlowInitialCondition
-                                 {
-                                     WaterLevelType = FlowInitialCondition.FlowConditionType.WaterDepth,
-                                     IsGlobalDefinition = true,
-                                     Level =
-                                         {
-                                             Constant = 10
-                                         }
-                                     ,
-                                     Discharge =
-                                         {
-                                             Constant = 4
-                                         }
-                                 };
-
-            var builder = new InitialConditionsBuilder(new[] {definition}, new HydroNetwork());
-            builder.Build();
-            
-            Assert.AreEqual(10, builder.InitialDepth.DefaultValue);
-            Assert.AreEqual(4, builder.InitialFlow.DefaultValue);
-        }
-
-        [Test]
-        public void ConstantInitialConditionsAreRead()
-        {
-            //a level of 4 is defined on branch 0
-            var waterLevelDefinition = new FlowInitialCondition
-                                           {
-                                               WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel,
-                                               IsLevelBoundary = true,
-
-                                               Level =
-                                                   {
-                                                       IsConstant = true,
-                                                       Constant = 4
-                                                   }
-                                               ,
-                                               BranchID = "1"
-                                           };
-
-            var depthDefinition = new FlowInitialCondition
-                                      {
-                                          WaterLevelType = FlowInitialCondition.FlowConditionType.WaterDepth,
-                                          IsLevelBoundary = true,
-                                          Level =
-                                              {
-                                                  IsConstant = true,
-                                                  Constant = 21
-                                              }
-                                          ,
-                                          BranchID = "2"
-                                      };
-
-            //create network of 2 branches 1,2
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(2, true);
-            //fix the names so the builder can match the channels and the initial conditions
-            hydroNetwork.Branches[0].Name = "1";
-            hydroNetwork.Branches[1].Name = "2";
-
-            //add a crossection to make conversion to deptp possible.
-            CrossSectionHelper.AddCrossSection((IChannel) hydroNetwork.Branches[0], 10, -20);
-            CrossSectionHelper.AddCrossSection((IChannel) hydroNetwork.Branches[1], 10, -20);
-
-
-            var builder = new InitialConditionsBuilder(new[] {waterLevelDefinition, depthDefinition}, hydroNetwork);
-
-            builder.Build();
-
-            //should result in a depth coverage
-            var initialDepth = builder.InitialDepth;
-            //should have a single location halfway the branch
-            //crossection has -20 and a level of 4 is defined ..hence the depth should be 24
-            Assert.AreEqual(3, initialDepth.Components[0].Values.Count);
-            
-            //use evaluate cause we might be off by a bit..
-            Assert.AreEqual(initialDepth.Evaluate(new NetworkLocation(hydroNetwork.Branches[0], 50)), 24);
-            Assert.AreEqual(initialDepth.Evaluate(new NetworkLocation(hydroNetwork.Branches[1], 50)), 21);
-        }
-
-        [Test]
-        public void InterpolationConditionsAreRead()
-        {
-            //a level of 4 is defined on branch 0
-            var waterLevelDefinition = new FlowInitialCondition
-                                           {
-                                               WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel,
-                                               Level =
-                                                   {
-                                                       IsConstant = true,
-                                                       Constant = 45.12
-                                                    },
-
-                                               IsQBoundary = true,
-                                               Discharge = 
-                                               {
-                                                   IsConstant = false,
-                                                   Data = new DataTable(),
-                                                   Interpolation = InterpolationType.Constant
-                                               },
-                BranchID = "1"
+            {
+                WaterLevelType = flowConditionType,
+                IsGlobalDefinition = true,
+                Level =
+                {
+                    Constant = expectedValue
+                }
             };
 
-            var depthDefinition = new FlowInitialCondition
+            // When
+            var builder = new InitialConditionsBuilder(new[] { definition }, new HydroNetwork());
+            builder.Build();
+
+            // Then
+            Assert.That(builder.GlobalQuantity, Is.EqualTo(expectedQuantity));
+            Assert.That(builder.GlobalValue, Is.EqualTo(expectedValue));
+            Assert.That(builder.GlobalsHaveBeenSet, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void GivenACollectionOfFlowInitialConditionsWithoutGlobalDefinition_WhenCallingBuild_ThenProvidesWarning()
+        {
+            // Given
+            var network = new HydroNetwork();
+            var listWithoutGlobal = new List<FlowInitialCondition>
+            {
+                new FlowInitialCondition
+                {
+                    WaterLevelType = FlowInitialCondition.FlowConditionType.WaterDepth,
+                    IsGlobalDefinition = false,
+                }
+            };
+
+            // When
+            var builder = new InitialConditionsBuilder(listWithoutGlobal, network);
+            Action action = () => builder.Build();
+
+            // Then
+            TestHelper.AssertLogMessageIsGenerated(action, "Globally defined flow conditions are not imported yet.");
+            Assert.That(builder.GlobalValue, Is.EqualTo(default(double)));
+            Assert.That(builder.GlobalQuantity, Is.EqualTo(default(InitialConditionQuantity)));
+            Assert.That(builder.GlobalsHaveBeenSet, Is.False);
+        }
+
+        [Test]
+        public void GivenANetworkWithoutBranches_WhenCallingBuild_ThenNoInitialConditionsDefinitionsAreGenerated()
+        {
+            // Given
+            var listOfInitialConditions = GenerateFlowInitialConditions(CreateDataTable);
+            var network = new HydroNetwork();
+            Assert.That(network.Branches.Count, Is.EqualTo(0));
+
+            // When
+            var builder = new InitialConditionsBuilder(listOfInitialConditions, network);
+            builder.Build();
+
+            // Then
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict, Is.Not.Null);
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GivenAFlowInitialConditionForDischarge_WhenCallingBuild_ThenNoDefinitionsAreCreatedButWarningIsGiven()
+        {
+            // Given
+            var initialConditionId = "InitialCondition1";
+            var listOfInitialConditions = new List<FlowInitialCondition>
+            {
+                new FlowInitialCondition
+                {
+                    WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel,
+                    IsGlobalDefinition = false,
+                    IsLevelBoundary = false,
+                    ID = initialConditionId
+                }
+            };
+            var network = new HydroNetwork();
+            network.Branches.Add(new Channel());
+
+            // When
+            var builder = new InitialConditionsBuilder(listOfInitialConditions, network);
+            Action action = () => builder.Build();
+
+            // Then
+            TestHelper.AssertLogMessageIsGenerated(action, $"Cannot import {initialConditionId}. Only WaterDepth and WaterLevel initial conditions are currently supported.");
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict, Is.Not.Null);
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GivenAFlowInitialConditionThatTargetsANonExistingBranch_WhenCallingBuild_ThenNoInitialConditionDefinitionIsGenerated()
+        {
+            // Given
+            var listOfInitialConditions = new List<FlowInitialCondition>();
+
+            var nonExistingName = "NonExistingName";
+            var initialConditionId = "InitialCondition1";
+            listOfInitialConditions.Add(new FlowInitialCondition
+            {
+                WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel,
+                IsGlobalDefinition = false,
+                IsLevelBoundary = true,
+                Level =
+                {
+                    Constant = 10
+                },
+                Discharge =
+                {
+                    Constant = 4
+                },
+                BranchID = nonExistingName,
+                ID = initialConditionId
+            });
+
+            var network = new HydroNetwork();
+            network.Branches.Add(new Channel(){Name = "Channel1"});
+
+            // When
+            var builder = new InitialConditionsBuilder(listOfInitialConditions, network);
+            Action action = () => builder.Build();
+
+            // Then
+            TestHelper.AssertLogMessageIsGenerated(action, $"Channel {nonExistingName} for initial condition {initialConditionId} not found; skipped");
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict, Is.Not.Null);
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GivenACollectionOfFlowInitialConditions_WhenCallingBuild_ThenCorrectlyCreatesChannelInitialConditionDefinitions()
+        {
+            // Given
+            var listOfInitialConditions = GenerateFlowInitialConditions(CreateDataTable);
+
+            // set all initial condition to be WaterLevel, otherwise they will be filtered out due to being different from global quantity
+            foreach (var inititialCondition in listOfInitialConditions) 
+            {
+                inititialCondition.WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel;
+            }
+
+            var listOfBranches = new List<IBranch>
+            {
+                new Channel() {Name = "Branch1"},
+                new Channel() {Name = "Branch2"},
+                new Channel() {Name = "Branch3"},
+                new Channel() {Name = "Branch4"}
+            };
+
+            var network = new HydroNetwork();
+            network.Branches.AddRange(listOfBranches);
+            Assert.That(network.Branches.Count, Is.EqualTo(4));
+
+            // When
+            var builder = new InitialConditionsBuilder(listOfInitialConditions, network);
+            builder.Build();
+
+            // Then
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(4));
+            AssertThatDefinitionsAreCorrect(builder, listOfBranches);
+        }
+
+        [Test]
+        public void GivenACollectionOfFlowInitialConditionsWithDuplicateOffset_WhenCallingBuild_ThenCorrectlyCreatesChannelInitialConditionDefinitions()
+        {
+            // Given
+            var listOfInitialConditions = GenerateFlowInitialConditions(CreateDataTableWithDuplicateOffset);
+
+            // set all initial condition to be WaterLevel, otherwise they will be filtered out due to being different from global quantity
+            foreach (var inititialCondition in listOfInitialConditions)
+            {
+                inititialCondition.WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel;
+            }
+
+            var listOfBranches = new List<IBranch>
+            {
+                new Channel() {Name = "Branch1"},
+                new Channel() {Name = "Branch2"},
+                new Channel() {Name = "Branch3"},
+                new Channel() {Name = "Branch4"}
+            };
+
+            var network = new HydroNetwork();
+            network.Branches.AddRange(listOfBranches);
+            Assert.That(network.Branches.Count, Is.EqualTo(4));
+
+            // When
+            var builder = new InitialConditionsBuilder(listOfInitialConditions, network);
+            builder.Build();
+
+            // Then
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(4));
+            
+            var branch3 = builder.ChannelInitialConditionDefinitionsDict["Branch3"];
+            Assert.That(branch3.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions[1].Chainage, Is.EqualTo(2500));
+            Assert.That(branch3.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions[2].Chainage, Is.EqualTo(2500.01)); // 2500 + 0.01 offset
+        }
+
+
+        [Test]
+        [TestCase(FlowInitialCondition.FlowConditionType.WaterLevel, InitialConditionQuantity.WaterLevel, new [] {"Branch2", "Branch4"})]
+        [TestCase(FlowInitialCondition.FlowConditionType.WaterDepth, InitialConditionQuantity.WaterDepth, new[] { "Branch1", "Branch3" })]
+        public void GivenACollectionOfFlowInitialConditions_WhenCallingBuild_ThenCorrectlyFiltersChannelInitialConditionDefinitionsBasedOnGlobalQuantity(
+            FlowInitialCondition.FlowConditionType globalQuantity,
+            InitialConditionQuantity expectedQuantity,
+            string[] invalidBranches)
+        {
+            // Given
+            var listOfInitialConditions = GenerateFlowInitialConditions(CreateDataTable);
+            var globalInitialCondition = listOfInitialConditions.First();
+            globalInitialCondition.WaterLevelType = globalQuantity;
+            
+            var network = new HydroNetwork();
+            network.Branches.AddRange(new[]
+            {
+                new Channel(){Name="Branch1"},
+                new Channel(){Name="Branch2"},
+                new Channel(){Name="Branch3"},
+                new Channel(){Name="Branch4"},
+            });
+            Assert.That(network.Branches.Count, Is.EqualTo(4));
+
+            // When
+            var builder = new InitialConditionsBuilder(listOfInitialConditions, network);
+            Action action = () => builder.Build();
+
+            // Then
+            var expectedLogMessages = new[]
+            {
+                $"Initial condition definition for '{invalidBranches[0]}' does match the global quantity {globalQuantity}. Skipping import.",
+                $"Initial condition definition for '{invalidBranches[1]}' does match the global quantity {globalQuantity}. Skipping import.",
+            };
+            TestHelper.AssertLogMessagesAreGenerated(action, expectedLogMessages);
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(2));
+            foreach (var channelInitialConditionDefinition in builder.ChannelInitialConditionDefinitionsDict.Values)
+            {
+                InitialConditionQuantity quantity;
+                if (channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition != null)
+                {
+                    quantity = channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Quantity;
+                }
+                else
+                {
+                    quantity = channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.Quantity;
+                }
+                Assert.That(quantity, Is.EqualTo(expectedQuantity));
+            }
+
+        }
+
+
+
+        /// <summary>
+        /// Creates a collection of FlowInitialCondition, containing:
+        /// A global initial condition.
+        /// A constant WaterLevel initial condition.
+        /// A constant WaterDepth initial condition.
+        /// A spatial WaterLevel initial condition.
+        /// A spatial WaterDepth initial condition.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<FlowInitialCondition> GenerateFlowInitialConditions(Func<DataTable> createDataTable)
+        {
+            var listOfInitialConditions = new List<FlowInitialCondition>();
+
+            var globalDefinition = new FlowInitialCondition
             {
                 WaterLevelType = FlowInitialCondition.FlowConditionType.WaterDepth,
+                IsGlobalDefinition = true,
+                Level =
+                {
+                    Constant = 10
+                }
+            };
+            listOfInitialConditions.Add(globalDefinition);
+
+            var constantWaterLevelDefinition = new FlowInitialCondition
+            {
+                WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel,
+                IsGlobalDefinition = false,
+                IsLevelBoundary = true,
+                Level =
+                {
+                    IsConstant = true,
+                    Constant = 88
+                },
+                BranchID = "Branch1",
+                ID = "InitialCondition1"
+            };
+            listOfInitialConditions.Add(constantWaterLevelDefinition);
+
+            var constantWaterDepthDefinition = new FlowInitialCondition
+            {
+                WaterLevelType = FlowInitialCondition.FlowConditionType.WaterDepth,
+                IsGlobalDefinition = false,
+                IsLevelBoundary = true,
+                Level =
+                {
+                    IsConstant = true,
+                    Constant = 77
+                },
+                BranchID = "Branch2",
+                ID = "InitialCondition2"
+            };
+            listOfInitialConditions.Add(constantWaterDepthDefinition);
+
+            var spatialWaterLevelDefinition = new FlowInitialCondition
+            {
+                WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel,
+                IsLevelBoundary = true,
+                IsGlobalDefinition = false,
+                Level =
+                {
+                    IsConstant = false,
+                    Data = createDataTable.Invoke()
+                },
+                BranchID = "Branch3",
+                ID = "InitialCondition3"
+            };
+            listOfInitialConditions.Add(spatialWaterLevelDefinition);
+
+            var spatialWaterDepthDefinition = new FlowInitialCondition
+            {
+                WaterLevelType = FlowInitialCondition.FlowConditionType.WaterDepth,
+                IsGlobalDefinition = false,
                 IsLevelBoundary = true,
                 Level =
                 {
                     IsConstant = false,
-                    Data = new DataTable(),
-                    Interpolation = InterpolationType.Linear
-                }
-                ,
-                BranchID = "2"
+                    Data = createDataTable.Invoke()
+                },
+                BranchID = "Branch4",
+                ID = "InitialCondition4"
             };
-
-            //create network of 2 branches 1,2
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(2, true);
-            //fix the names so the builder can match the channels and the initial conditions
-            hydroNetwork.Branches[0].Name = "1";
-            hydroNetwork.Branches[1].Name = "2";
-
-            //add a crossection to make conversion to deptp possible.
-            CrossSectionHelper.AddCrossSection((IChannel)hydroNetwork.Branches[0], 10, -20);
-            CrossSectionHelper.AddCrossSection((IChannel)hydroNetwork.Branches[1], 10, -20);
-
-            var builder = new InitialConditionsBuilder(new[] { waterLevelDefinition, depthDefinition }, hydroNetwork);
-
-            builder.Build();
-
-            var initialDepth = builder.InitialDepth;
-            var initialFlow = builder.InitialFlow;
-
-            Assert.IsNotNull(initialDepth);
-            Assert.AreEqual(InterpolationType.Linear, initialDepth.Arguments[0].InterpolationType);
-
-            Assert.IsNotNull(initialFlow);
-            Assert.AreEqual(InterpolationType.Constant, initialFlow.Arguments[0].InterpolationType);
-
+            listOfInitialConditions.Add(spatialWaterDepthDefinition);
+            
+            Assert.That(listOfInitialConditions.Count(), Is.EqualTo(5));
+            return listOfInitialConditions;
         }
 
-        [Test]
-        public void WarnForUnusedConditions()
+        /// <summary>
+        /// Creates spatial data with a duplicate offset value.
+        /// </summary>
+        /// <returns></returns>
+        private DataTable CreateDataTableWithDuplicateOffset()
+         {
+             var dataTable = new DataTable();
+             dataTable.Columns.Add(new DataColumn("offset", typeof(double)));
+             dataTable.Columns.Add(new DataColumn("value", typeof(double)));
+
+             var row = dataTable.NewRow();
+             row[0] = 0.0;
+             row[1] = 5.0;
+             dataTable.Rows.Add(row);
+
+             row = dataTable.NewRow();
+             row[0] = 2500.0;
+             row[1] = 5.0;
+             dataTable.Rows.Add(row);
+
+             row = dataTable.NewRow();
+             row[0] = 2500.0;
+             row[1] = 3.0;
+             dataTable.Rows.Add(row);
+
+             row = dataTable.NewRow();
+             row[0] = 5000.0;
+             row[1] = 3.0;
+             dataTable.Rows.Add(row);
+
+             return dataTable;
+         }
+        
+        /// <summary>
+        /// Creates spatial data.
+        /// </summary>
+        /// <returns></returns>
+        private DataTable CreateDataTable()
+         {
+             var dataTable = new DataTable();
+             dataTable.Columns.Add(new DataColumn("offset", typeof(double)));
+             dataTable.Columns.Add(new DataColumn("value", typeof(double)));
+
+             var row = dataTable.NewRow();
+             row[0] = 0.0;
+             row[1] = 5.0;
+             dataTable.Rows.Add(row);
+
+             row = dataTable.NewRow();
+             row[0] = 2500.0;
+             row[1] = 5.0;
+             dataTable.Rows.Add(row);
+
+             row = dataTable.NewRow();
+             row[0] = 3500.0;
+             row[1] = 3.0;
+             dataTable.Rows.Add(row);
+
+             row = dataTable.NewRow();
+             row[0] = 5000.0;
+             row[1] = 3.0;
+             dataTable.Rows.Add(row);
+
+             return dataTable;
+         }
+
+        private void AssertThatDefinitionsAreCorrect(InitialConditionsBuilder builder, ICollection<IBranch> branches)
         {
-            //create a level condition for a branch that is not in the network
-            var builder = new InitialConditionsBuilder(new[]
-                                                           {
-                                                               new FlowInitialCondition
-                                                                   {
-                                                                       IsLevelBoundary = true,
-                                                                       ID = "kees",
-                                                                       BranchID = "truusje"
-                                                                   },
-                                                           }, new HydroNetwork());
-            const string message = "Channel truusje for initial condition kees not found; skipped";
+            var branch = branches.FirstOrDefault(b => string.Equals(b.Name, "Branch1"));
+            Assert.That(branch, Is.Not.Null);
+            var branchName = branch.Name;
+            var buildDefinition = builder.ChannelInitialConditionDefinitionsDict[branchName];
+            Assert.That(buildDefinition, Is.Not.Null);
+            Assert.That(buildDefinition.Channel, Is.EqualTo(branch));
+            Assert.That(buildDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition);
+            Assert.That(buildDefinition.SpatialChannelInitialConditionDefinition, Is.Null);
+            Assert.That(buildDefinition.ConstantChannelInitialConditionDefinition.Value, Is.EqualTo(88));
+            Assert.That(buildDefinition.ConstantChannelInitialConditionDefinition.Quantity, Is.EqualTo(InitialConditionQuantity.WaterLevel));
 
-            LogHelper.SetLoggingLevel(Level.Debug);
-            TestHelper.AssertLogMessageIsGenerated(builder.Build,message);
-            LogHelper.SetLoggingLevel(Level.Error);
-        }
+            branch = branches.FirstOrDefault(b => string.Equals(b.Name, "Branch2"));
+            branchName = branch.Name;
+            buildDefinition = builder.ChannelInitialConditionDefinitionsDict[branchName];
+            Assert.That(buildDefinition, Is.Not.Null);
+            Assert.That(buildDefinition.Channel, Is.EqualTo(branch));
+            Assert.That(buildDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition);
+            Assert.That(buildDefinition.SpatialChannelInitialConditionDefinition, Is.Null);
+            Assert.That(buildDefinition.ConstantChannelInitialConditionDefinition.Value, Is.EqualTo(77));
+            Assert.That(buildDefinition.ConstantChannelInitialConditionDefinition.Quantity, Is.EqualTo(InitialConditionQuantity.WaterLevel));
 
-        [Test]
-        public void WarnIfConditionIsSkippedDueToMissingCrossSection()
-        {
-            var hydroNetwork = new HydroNetwork();
-            string branchId = "BranchID";
-            hydroNetwork.Branches.Add(new Channel { Name = branchId, Geometry = new WKTReader().Read("LINESTRING (0 0, 100 0)") });
-            //create a builder with a waterlevel constant condition on the branch..
-            var flowInitialCondition = new FlowInitialCondition
-                                           {
-                                               IsLevelBoundary = true,
-                                               WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel,
-                                               ID = "kees",
-                                               BranchID = branchId,
-                                               Level =
-                                                   {
-                                                       IsConstant = true
-                                                   }
-                                           };
-            
-            
-            var builder = new InitialConditionsBuilder(new[]
-                                                           {
-                                                               flowInitialCondition,
-                                                           }, hydroNetwork);
+            branch = branches.FirstOrDefault(b => string.Equals(b.Name, "Branch3"));
+            branchName = branch.Name;
+            buildDefinition = builder.ChannelInitialConditionDefinitionsDict[branchName];
+            Assert.That(buildDefinition, Is.Not.Null);
+            Assert.That(buildDefinition.Channel, Is.EqualTo(branch));
+            Assert.That(buildDefinition.SpecificationType == ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition);
+            Assert.That(buildDefinition.ConstantChannelInitialConditionDefinition, Is.Null);
+            var spatialDefinition = buildDefinition.SpatialChannelInitialConditionDefinition;
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions.Count, Is.EqualTo(4));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[0].Chainage, Is.EqualTo(0.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[1].Chainage, Is.EqualTo(2500.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[2].Chainage, Is.EqualTo(3500.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[3].Chainage, Is.EqualTo(5000.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[0].Value, Is.EqualTo(5.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[1].Value, Is.EqualTo(5.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[2].Value, Is.EqualTo(3.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[3].Value, Is.EqualTo(3.0));
 
-
-            string message = String.Format("Initial condition with ID {0} skipped because no crossections are defined on branch {1} and no conversion to depth could be made",
-                "kees",branchId);
-
-
-            LogHelper.ConfigureLogging();
-            LogHelper.SetLoggingLevel(Level.Debug);
-            TestHelper.AssertLogMessageIsGenerated(builder.Build, message);
-            LogHelper.SetLoggingLevel(Level.Error);
-        }
-
-        [Test]
-        public void InitialConditionsDefinedAtOnePoint()
-        {
-            var dataTable = new DataTable();
-            dataTable.Columns.Add(new DataColumn("offset", typeof(double)));
-            dataTable.Columns.Add(new DataColumn("value", typeof(double)));
-
-            var row = dataTable.NewRow();
-            row[0] = 0.0;
-            row[1] = 5.0;
-            dataTable.Rows.Add(row);
-
-            row = dataTable.NewRow();
-            row[0] = 2500.0;
-            row[1] = 5.0;
-            dataTable.Rows.Add(row);
-
-            row = dataTable.NewRow();
-            row[0] = 2500.0;
-            row[1] = 3.0;
-            dataTable.Rows.Add(row);
-
-            row = dataTable.NewRow();
-            row[0] = 5000.0;
-            row[1] = 3.0;
-            dataTable.Rows.Add(row);
-
-            string branchId = "BranchID";
-            var hydroNetwork = new HydroNetwork();
-            hydroNetwork.Branches.Add(new Channel { Name = branchId, Geometry = new WKTReader().Read("LINESTRING (0 0, 5000 0)") });
-            
-
-            //create a level condition for a branch that is not in the network
-            var builder = new InitialConditionsBuilder(new[]
-                                                           {
-                                                               new FlowInitialCondition
-                                                                   {
-                                                                       IsLevelBoundary = true,
-                                                                       ID = "1",
-                                                                       BranchID = branchId, 
-                                                                       Level = 
-                                                                           {
-                                                                               IsConstant = false,
-                                                                               Data = dataTable,
-                                                                               Interpolation = InterpolationType.Linear
-                                                                           }
-                                                                   },
-                                                           }, hydroNetwork);
-            builder.Build();
-            Assert.AreEqual(dataTable.Rows.Count, builder.InitialDepth.Locations.Values.Count);
-
-            Assert.AreEqual(0.0, builder.InitialDepth.Locations.Values[0].Chainage);
-            Assert.AreEqual(5.0, (double)builder.InitialDepth[builder.InitialDepth.Locations.Values[0]]);
-
-            Assert.AreEqual(2500.0, builder.InitialDepth.Locations.Values[1].Chainage);
-            Assert.AreEqual(5.0, (double)builder.InitialDepth[builder.InitialDepth.Locations.Values[1]]);
-
-            Assert.AreEqual(2500.01, builder.InitialDepth.Locations.Values[2].Chainage);
-            Assert.AreEqual(3.0, (double)builder.InitialDepth[builder.InitialDepth.Locations.Values[2]]);
-
-            Assert.AreEqual(5000.0, builder.InitialDepth.Locations.Values[3].Chainage);
-            Assert.AreEqual(3.0, (double)builder.InitialDepth[builder.InitialDepth.Locations.Values[3]]);
-
-
+            branch = branches.FirstOrDefault(b => string.Equals(b.Name, "Branch4"));
+            branchName = branch.Name;
+            buildDefinition = builder.ChannelInitialConditionDefinitionsDict[branchName];
+            Assert.That(buildDefinition, Is.Not.Null);
+            Assert.That(buildDefinition.Channel, Is.EqualTo(branch));
+            Assert.That(buildDefinition.SpecificationType == ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition);
+            Assert.That(buildDefinition.ConstantChannelInitialConditionDefinition, Is.Null);
+            spatialDefinition = buildDefinition.SpatialChannelInitialConditionDefinition;
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions.Count, Is.EqualTo(4));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[0].Chainage, Is.EqualTo(0.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[1].Chainage, Is.EqualTo(2500.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[2].Chainage, Is.EqualTo(3500.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[3].Chainage, Is.EqualTo(5000.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[0].Value, Is.EqualTo(5.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[1].Value, Is.EqualTo(5.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[2].Value, Is.EqualTo(3.0));
+            Assert.That(spatialDefinition.ConstantSpatialChannelInitialConditionDefinitions[3].Value, Is.EqualTo(3.0));
         }
     }
 }

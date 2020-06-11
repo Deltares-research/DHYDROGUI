@@ -204,9 +204,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (branches.ContainsKey(saltInitialCondition.BranchId))
                     {
                         var branch = branches[saltInitialCondition.BranchId];
-                        InitialConditionsBuilder.AddInitialConditionToNetworkCoverage(saltInitialCondition.Salt,
-                                                                                      saltInitial,
-                                                                                      branch, saltCorrectionFactor);
+                        // InitialConditionsBuilder.AddInitialConditionToNetworkCoverage(saltInitialCondition.Salt,
+                        //                                                               saltInitial,
+                        //                                                               branch, saltCorrectionFactor);
                     }
                     else
                     {
