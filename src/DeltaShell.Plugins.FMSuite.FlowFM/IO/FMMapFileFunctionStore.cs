@@ -338,13 +338,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             using (ReconnectToMapFile())
             {
                 var mesh2DVariables = timeDepVariables
-                    .Where(v => netCdfFile.GetAttributeValue(v.NetCdfDataVariable, "mesh") == "Mesh2d").ToList();
+                    .Where(v =>
+                    {
+                        var attributeValue = netCdfFile.GetAttributeValue(v.NetCdfDataVariable, "mesh");
+                        return string.IsNullOrEmpty(attributeValue) || // backward compatibility => no mesh attribute, so assume 2d mesh
+                               string.Equals(attributeValue, "Mesh2d", StringComparison.InvariantCultureIgnoreCase);
+                    })
+                    .ToList();
 
                 var mesh1DVariables = timeDepVariables
-                    .Where(v => netCdfFile.GetAttributeValue(v.NetCdfDataVariable, "mesh") == "mesh1d").ToList();
+                    .Where(v => string.Equals(netCdfFile.GetAttributeValue(v.NetCdfDataVariable, "mesh"), "mesh1d", StringComparison.InvariantCultureIgnoreCase))
+                    .ToList();
                 
                 var linkVariables = timeDepVariables
-                    .Where(v => netCdfFile.GetAttributeValue(v.NetCdfDataVariable, "mesh") == "links").ToList();
+                    .Where(v => string.Equals(netCdfFile.GetAttributeValue(v.NetCdfDataVariable, "mesh"), "links", StringComparison.InvariantCultureIgnoreCase))
+                    .ToList();
                 
                 return GetUnstructuredGridCoverages(mesh2DVariables)
                     .Concat(Get1D2DLinksCoverages(linkVariables));
