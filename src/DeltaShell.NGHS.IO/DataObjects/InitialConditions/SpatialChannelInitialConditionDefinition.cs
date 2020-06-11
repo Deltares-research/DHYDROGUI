@@ -18,5 +18,15 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
         public InitialConditionQuantity Quantity { get; set; }
 
         public IEventedList<ConstantSpatialChannelInitialConditionDefinition> ConstantSpatialChannelInitialConditionDefinitions { get; private set; }
+
+        /// <summary>
+        /// Copies the properties from another definition to this definition.
+        /// </summary>
+        /// <param name="otherDefinition">The definition to copy from.</param>
+        public void CopyFrom(SpatialChannelInitialConditionDefinition otherDefinition)
+        {
+            Quantity = otherDefinition.Quantity;
+            ConstantSpatialChannelInitialConditionDefinitions = otherDefinition.ConstantSpatialChannelInitialConditionDefinitions;
+        }
     }
 }

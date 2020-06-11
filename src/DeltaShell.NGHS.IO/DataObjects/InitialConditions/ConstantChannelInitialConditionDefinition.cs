@@ -11,5 +11,15 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
     {
         public InitialConditionQuantity Quantity { get; set; }
         public double Value { get; set; }
+
+        /// <summary>
+        /// Copies the properties from another definition to this definition.
+        /// </summary>
+        /// <param name="otherDefinition">The definition to copy from.</param>
+        public void CopyFrom(ConstantChannelInitialConditionDefinition otherDefinition)
+        {
+            Quantity = otherDefinition.Quantity;
+            Value = otherDefinition.Value;
+        }
     }
 }

@@ -1,7 +1,12 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
@@ -185,6 +190,28 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
 
             // Assert
             Assert.AreEqual(1, counter);
+        }
+
+        [Test]
+        [TestCase(ChannelInitialConditionSpecificationType.ModelSettings)]
+        [TestCase(ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition)]
+        [TestCase(ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition)]
+        public void CopyFrom_CorrectlyCopiesProperties(ChannelInitialConditionSpecificationType specificationType)
+        {
+            var channelToCopyFrom = new Channel{Name = "CopyMe!"};
+            var definitionToCopyFrom = new ChannelInitialConditionDefinition(channelToCopyFrom) {SpecificationType = specificationType};
+            definitionToCopyFrom.Attributes = new DictionaryFeatureAttributeCollection();
+            definitionToCopyFrom.Attributes.Add(new KeyValuePair<string, object>("key", "value"));
+            definitionToCopyFrom.Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) });
+
+            var newChannel = new Channel {Name = "newChannel"};
+            var newDefinition = new ChannelInitialConditionDefinition(newChannel);
+            newDefinition.CopyFrom(definitionToCopyFrom);
+
+            Assert.That(newDefinition.Attributes, Is.EquivalentTo(definitionToCopyFrom.Attributes));
+            Assert.That(newDefinition.Geometry, Is.EqualTo(definitionToCopyFrom.Geometry));
+            Assert.That(newDefinition.Channel.Name, Is.EqualTo(definitionToCopyFrom.Channel.Name));
+            Assert.That(newDefinition.SpecificationType, Is.EqualTo(definitionToCopyFrom.SpecificationType));
         }
     }
 }

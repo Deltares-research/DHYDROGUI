@@ -63,5 +63,19 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
             // Assert
             Assert.AreEqual(1, counter);
         }
+
+        [Test]
+        [TestCase(InitialConditionQuantity.WaterLevel, 123)]
+        [TestCase(InitialConditionQuantity.WaterDepth, 456)]
+        public void CopyFrom_CorrectlyCopiesQuantityAndValue(InitialConditionQuantity quantity, double value)
+        {
+            var definitionToCopyFrom = new ConstantChannelInitialConditionDefinition { Quantity = quantity, Value = value};
+
+            var newDefinition = new ConstantChannelInitialConditionDefinition();
+            newDefinition.CopyFrom(definitionToCopyFrom);
+
+            Assert.That(newDefinition.Quantity, Is.EqualTo(definitionToCopyFrom.Quantity));
+            Assert.That(newDefinition.Value, Is.EqualTo(definitionToCopyFrom.Value));
+        }
     }
 }

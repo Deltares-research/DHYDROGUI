@@ -66,5 +66,39 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.InitialConditions
             Assert.AreEqual(1, counter);
         }
 
+        [Test]
+        [TestCase(InitialConditionQuantity.WaterLevel)]
+        [TestCase(InitialConditionQuantity.WaterDepth)]
+        public void CopyFrom_CorrectlyCopiesQuantityAndConstantSpatialDefinitionToNewDefinition(InitialConditionQuantity quantity)
+        {
+            var definitionToCopyFrom = new SpatialChannelInitialConditionDefinition { Quantity = quantity };
+            definitionToCopyFrom.ConstantSpatialChannelInitialConditionDefinitions.Add(new ConstantSpatialChannelInitialConditionDefinition{Chainage = 0.123, Value = 456});
+            definitionToCopyFrom.ConstantSpatialChannelInitialConditionDefinitions.Add(new ConstantSpatialChannelInitialConditionDefinition{Chainage = 147, Value = 987});
+
+            var newDefinition = new SpatialChannelInitialConditionDefinition();
+            newDefinition.CopyFrom(definitionToCopyFrom);
+
+            Assert.That(newDefinition.Quantity, Is.EqualTo(definitionToCopyFrom.Quantity));
+            Assert.That(newDefinition.ConstantSpatialChannelInitialConditionDefinitions, Is.EquivalentTo(definitionToCopyFrom.ConstantSpatialChannelInitialConditionDefinitions));
+        }
+
+        [Test]
+        [TestCase(InitialConditionQuantity.WaterLevel)]
+        [TestCase(InitialConditionQuantity.WaterDepth)]
+        public void CopyFrom_CorrectlyCopiesQuantityAndConstantSpatialDefinitionToExistingDefinition(InitialConditionQuantity quantity)
+        {
+            var existingDefinition = new SpatialChannelInitialConditionDefinition();
+            existingDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(new ConstantSpatialChannelInitialConditionDefinition { Chainage = 0.123, Value = 456 });
+            existingDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(new ConstantSpatialChannelInitialConditionDefinition { Chainage = 147, Value = 987 });
+
+            var definitionToCopyFrom = new SpatialChannelInitialConditionDefinition { Quantity = quantity };
+            definitionToCopyFrom.ConstantSpatialChannelInitialConditionDefinitions.Add(new ConstantSpatialChannelInitialConditionDefinition { Chainage = 80085, Value = 707 });
+
+            existingDefinition.CopyFrom(definitionToCopyFrom);
+
+            Assert.That(existingDefinition.Quantity, Is.EqualTo(definitionToCopyFrom.Quantity));
+            Assert.That(existingDefinition.ConstantSpatialChannelInitialConditionDefinitions, Is.EquivalentTo(definitionToCopyFrom.ConstantSpatialChannelInitialConditionDefinitions));
+        }
+
     }
 }
