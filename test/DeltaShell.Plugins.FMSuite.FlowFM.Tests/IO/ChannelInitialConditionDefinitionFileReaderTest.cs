@@ -215,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var cfd0 = new ChannelInitialConditionDefinition((Channel) branch0);
             cfd0.SpecificationType = ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition;
             cfd0.ConstantChannelInitialConditionDefinition.Quantity = expectedQuantity;
-            cfd0.ConstantChannelInitialConditionDefinition.Value = 123;
+            cfd0.ConstantChannelInitialConditionDefinition.Value = 789;
             channelInitialConditionDefinitions.Add(cfd0);
 
             var branch1 = branchesList.First(b => b.Name.Equals("Channel1"));

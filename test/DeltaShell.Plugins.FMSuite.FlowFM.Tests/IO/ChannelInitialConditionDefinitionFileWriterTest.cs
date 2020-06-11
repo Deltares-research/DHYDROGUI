@@ -125,11 +125,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions,
             InitialConditionQuantity globalQuantity)
         {
-            // Channel0 --> Use constant value: 123
+            // Channel0 --> Use constant value: 789
             ChannelInitialConditionDefinition definition0 = channelInitialConditionDefinitions.First(definition =>
                 definition.Channel.Name.Equals("Channel0", StringComparison.InvariantCultureIgnoreCase));
             definition0.SpecificationType = ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition;
-            definition0.ConstantChannelInitialConditionDefinition.Value = 123;
+            definition0.ConstantChannelInitialConditionDefinition.Value = 789;
             definition0.ConstantChannelInitialConditionDefinition.Quantity = globalQuantity;
 
             // Channel1 --> Use global value
