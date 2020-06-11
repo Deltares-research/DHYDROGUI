@@ -423,7 +423,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFMMapFileFunctionStore_Reading1D2DFunctions_ShouldGiveCorrectData()
         {
             //Arrange
-            var path = TestHelper.GetTestFilePath(@"output_mapfiles\FM_model_map.nc");
+            var path = TestHelper.GetTestFilePath(@"output_mapfiles\1D2DWithLinks.nc");
             Assert.IsTrue(File.Exists(path));
 
             // Act

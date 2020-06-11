@@ -10357,7 +10357,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/har_his.n
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/leveeBreach_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/pump_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/sfbay_his.nc -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/FM_model_map.nc -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/1D2DWithLinks.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/FM_model_map.zip -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/FlowFM_map.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/map3D.zip -text
