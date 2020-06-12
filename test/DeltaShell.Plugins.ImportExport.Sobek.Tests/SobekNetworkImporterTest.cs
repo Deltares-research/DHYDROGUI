@@ -665,8 +665,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered, waterFlowFmModel.NetworkDiscretization.SegmentGenerationMethod);
 
             var branchCount = network.Branches.Count;
-
-            Assert.AreEqual(10, branchCount);
+            //linkage nodes are not imported anymore, so we only import the branches
+            //maybe this test is useless now....
+            Assert.AreEqual(6, branchCount); // with linkage nodes expected is 10
 
             Thread.CurrentThread.CurrentCulture = oldCulture;
         }
