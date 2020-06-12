@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
@@ -44,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             WriteStructuresFiles(targetMduFilePath, modelDefinition, network, area);
             WriteRoughnessFiles(targetMduFilePath, modelDefinition, roughnessSections, channelFrictionDefinitions);
-            WriteInitialConditionFiles(targetMduFilePath, modelDefinition, channelInitialConditionDefinitions);
+            WriteInitialConditionFiles(targetMduFilePath, modelDefinition, channelInitialConditionDefinitions, network);
         }
 
         private static void WriteObservationPointsFiles(string targetMduFilePath,
@@ -207,11 +208,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             
         }
 
-        private static void WriteInitialConditionFiles(
-            string targetMduFilePath,
+        private static void WriteInitialConditionFiles(string targetMduFilePath,
             WaterFlowFMModelDefinition modelDefinition,
-            IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
+            IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions, IHydroNetwork network)
         {
+            if (network == null
+                || network.IsEdgesEmpty
+                || network.IsVerticesEmpty) return;
+
             var directoryName = Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
 
