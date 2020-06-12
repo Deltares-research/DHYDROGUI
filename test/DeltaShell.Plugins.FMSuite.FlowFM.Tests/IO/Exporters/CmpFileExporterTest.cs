@@ -15,6 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
     {
         private MockRepository mocks;
         private CmpFileExporter exporter;
+        private readonly string dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("cmpFiles", "dummy.cmp"));
 
         [SetUp]
         public void Setup()
@@ -27,6 +28,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         public void TearDown()
         {
             mocks.VerifyAll();
+
+            File.Delete(dummyFilePath);
         }
 
         [Test]
@@ -72,8 +75,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenABoundaryConditionWhenExportingWithValidFilePathThenWritesCmpFileAndReturnFalse()
         {
-            string dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("cmpFiles", "dummy.cmp"));
-
             var boundaryCondition = mocks.DynamicMock<IBoundaryCondition>();
             boundaryCondition.Expect(bc => bc.DataType).Return(BoundaryConditionDataType.AstroComponents).Repeat.Any();
             mocks.ReplayAll();
