@@ -6,6 +6,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Gui;
+using DeltaShell.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;

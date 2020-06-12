@@ -6,7 +6,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils.Aop;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -21,7 +20,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     {
         #region Overrides of TimeDependentModelBase
 
-        [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
             get => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
@@ -41,7 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        [NoNotifyPropertyChange]
         public override DateTime StopTime
         {
             get => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value;

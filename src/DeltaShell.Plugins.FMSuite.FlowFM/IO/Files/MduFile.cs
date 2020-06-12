@@ -1492,6 +1492,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var structureFilesWithBadReferences = new List<string>();
             foreach (string filePath in featureFilePaths)
             {
+                var logHandler = new LogHandler("import of the structure file: " + filePath);
+
                 string structureFilePath = System.IO.Path.GetFullPath(filePath);
 
                 string structuresSubFilesReferenceFilePath = pathsRelativeToParent ? filePath : mduFilePath;
@@ -1501,8 +1503,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     StructureSchema = modelDefinition.StructureSchema,
                     ReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
                 };
+
                 List<Structure2D> featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
-                var referencesToNonExistentFilesExist = false;
+                var hasBadFileReferences = false;
                 featuresToAdd.ForEach(f =>
                 {
                     string featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
@@ -1511,14 +1514,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     if (!File.Exists(featureFilePath))
                     {
-                        referencesToNonExistentFilesExist = true;
-                        Log.ErrorFormat(Resources.MduFile_RemoveAllStructuresFilesWithBadReferences_, featureFilePath,
-                                        structureFilePath);
+                        hasBadFileReferences = true;
+                        logHandler.ReportErrorFormat(Resources.MduFile_FilePath_0_referenced_in_StructuresFile_1_does_not_exist, featureFilePath,
+                                                     structureFilePath);
                     }
                 });
-                if (referencesToNonExistentFilesExist)
+
+                if (hasBadFileReferences)
                 {
                     structureFilesWithBadReferences.Add(structureFilePath);
+                    logHandler.LogReport();
                 }
             }
 

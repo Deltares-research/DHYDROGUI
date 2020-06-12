@@ -54,6 +54,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
             string errorMessage =
                 string.Format("Value must be a whole number in the range [{0}, {1}]", 1, maximumGridCellId);
             errorProvider.SetError(gridIndexTextBox, hasValidIndex ? "" : errorMessage);
+
+            OkButton.Enabled = hasValidIndex;
             GridCellId = parsedIndex;
         }
 

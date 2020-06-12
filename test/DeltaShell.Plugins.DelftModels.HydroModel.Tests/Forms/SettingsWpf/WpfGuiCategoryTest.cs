@@ -161,6 +161,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         }
 
         [Test]
+        public void GivenCategoryWithProperties_WhenDisposedAndNotifyPropertyChangedEventFired_ThenCategoryNotNotified()
+        {
+            // Given
+            var guiProperty = new WpfGuiProperty(new FieldUIDescription(null, (o, v) => {}));
+
+            var isPropertyChangedEventFired = false;
+            var category = new WpfGuiCategory(string.Empty, null);
+            category.PropertyChanged += (sender, args) => isPropertyChangedEventFired = true;
+            category.AddWpfGuiProperty(guiProperty);
+
+            // Precondition
+            Assert.That(category.Properties.Single(), Is.SameAs(guiProperty));
+
+            // When
+            category.Dispose();
+            guiProperty.RaisePropertyChangedEvents(); // Trigger PropertyChangedEvent
+
+            // Then
+            Assert.That(isPropertyChangedEventFired, Is.False);
+        }
+
+        [Test]
         public void GivenCategory_WhenAddingWpfGuiPropertyAndPropertyFiresEvent_ThenCategoryRaisesPropertyChangedEvent()
         {
             // Given

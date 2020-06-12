@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -16,10 +17,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// </summary>
     /// <seealso cref="System.Windows.Controls.UserControl"/>
     /// <seealso cref="System.Windows.Markup.IComponentConnector"/>
-    /// <seealso cref="DelftTools.Controls.IView"/>
+    /// <seealso cref="IView"/>
     public sealed partial class WpfSettingsView : IAdditionalView
     {
         private bool disposed = false;
+        private NotifyPropertyChangedWpfGuiPropertySynchronizer synchronizer;
 
         public WpfSettingsView()
         {
@@ -55,13 +57,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 if (ViewModel.DataModel != null)
                 {
                     ((INotifyPropertyChanged) ViewModel.DataModel).PropertyChanged -= OnDataPropertyChanged;
+                    synchronizer = null;
                 }
 
                 ViewModel.DataModel = (IHydroModel) value;
 
                 if (ViewModel.DataModel != null)
                 {
-                    ((INotifyPropertyChanged) ViewModel.DataModel).PropertyChanged += OnDataPropertyChanged;
+                    var observable = (INotifyPropertyChanged) ViewModel.DataModel;
+                    observable.PropertyChanged += OnDataPropertyChanged;
+                    synchronizer = new NotifyPropertyChangedWpfGuiPropertySynchronizer(observable);
                 }
             }
         }
@@ -87,6 +92,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
+        /// <summary>
+        /// Sets the collection of <see cref="WpfGuiProperty"/> properties to synchronize with state changes in <see cref="Data"/>.
+        /// </summary>
+        /// <param name="properties">The collection of <see cref="WpfGuiProperty"/> to synchronise.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="properties"/> is <c>null</c>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the synchronizer is not set due to incompatible values of <see cref="Data"/>.</exception>
+        public void SetSynchronizedProperties(IEnumerable<WpfGuiProperty> properties)
+        {
+            if (properties == null)
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+
+            if (synchronizer == null)
+            {
+                throw new InvalidOperationException("Cannot synchronize properties when private field synchronizer is null.");
+            }
+
+            synchronizer.SynchronizeProperties(properties);
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -107,6 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                     ((INotifyPropertyChanged) ViewModel.DataModel).PropertyChanged -= OnDataPropertyChanged;
                 }
 
+                synchronizer?.Dispose();
                 ViewModel?.Dispose();
             }
 

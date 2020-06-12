@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames.Where(
                     sp => sp.EndsWith(ExtForceFileConstants.SedimentConcentrationPostfix));
 
-            var logHandler = new LogHandler("Ext force warning handler");
+            var logHandler = new LogHandler("import of data from the External Forcing file");
 
             foreach (string spatiallyVaryingSedimentPropertyName in sedimentConcentrationSpatiallyVarying)
             {

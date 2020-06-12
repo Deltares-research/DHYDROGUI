@@ -278,10 +278,12 @@
     <Compile Include="Forms\DHydroExporterDialogTest.cs" />
     <Compile Include="Forms\HydroModelSettingsTest.cs" />
     <Compile Include="Forms\SettingsWpf\DateTimeFormatsTest.cs" />
+    <Compile Include="Forms\SettingsWpf\FieldUIDescriptionHelperTest.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelectorTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfCustomTimeSpanTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfEnumConverterTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiCategoryTest.cs" />
+    <Compile Include="Forms\SettingsWpf\NotifyPropertyChangedWpfGuiPropertySynchronizerTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiPropertyTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiSubCategoryTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfSettingsViewModelTest.cs" />

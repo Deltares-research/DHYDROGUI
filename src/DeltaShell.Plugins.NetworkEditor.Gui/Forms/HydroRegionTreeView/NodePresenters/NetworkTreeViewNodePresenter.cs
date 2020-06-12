@@ -54,7 +54,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         protected override void OnPropertyChanged(INetwork netWork, ITreeNode node, PropertyChangedEventArgs e)
         {
-            if (!e.PropertyName.Equals("Name")) return;
+            if (!e.PropertyName.Equals("Name"))
+            {
+                return;
+            }
 
             UpdateNode(null, TreeView.GetNodeByTag(netWork), netWork);
         }

@@ -315,6 +315,9 @@ Change this group name and save the project again to write these features to a s
     <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.
 File import of structures file '{1}' has failed.</value>
   </data>
+  <data name="MduFile_FilePath_0_referenced_in_StructuresFile_1_does_not_exist" xml:space="preserve">
+    <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.</value>
+  </data>
   <data name="GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_" xml:space="preserve">
     <value>Not possible to import {0}</value>
   </data>

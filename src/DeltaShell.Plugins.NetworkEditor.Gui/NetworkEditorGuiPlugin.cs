@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private const string RemoveGroupToolStripMenuKey = "RemoveGroup";
         private const string RemoveUngroupedToolStripMenuKey = "RemoveUngrouped";
         private const string SeparatorToolStripMenuKey = "Separator";
+        private readonly IMapLayerProvider networkEditorMapLayerProvider;
         private HydroRegionTreeView hydroRegionTreeView;
         private bool settingGuiSelection;
         private ClonableToolStripMenuItem convertCoordinateSystemToolStripMenuItem;

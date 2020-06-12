@@ -28,6 +28,7 @@ using NUnit.Framework;
 using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.Enums;
+using SharpMap.Api.Layers;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
@@ -547,7 +548,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(bridge.PillarWidth, retrievedBridge.PillarWidth);
             Assert.AreEqual(bridge.ShapeFactor, retrievedBridge.ShapeFactor);
         }
-        
+
         [Test]
         public void MoveCulvertToOtherBranch2Issue4237()
         {

@@ -17,7 +17,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui.Editors.ModelFeatureCoordi
     [TestFixture]
     public class BoundaryGeometryPreviewWindowsFormsHostMapTest
     {
-        [Test, NUnit.Framework.Category(TestCategory.Integration)]
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void SettingFeatureGeometrySetsFeatureGeometryDataOnBoundaryGeometryPreview()
         {
             var lineGeomery = new LineString(new[]
@@ -48,7 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui.Editors.ModelFeatureCoordi
             Assert.AreEqual(0, selectedPoints[0]);
         }
 
-        [Test, NUnit.Framework.Category(TestCategory.Integration)]
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void SettingFeatureSetsFeatureDataOnBoundaryGeometryPreview()
         {
             var lineGeomery = new LineString(new[]
@@ -82,7 +84,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui.Editors.ModelFeatureCoordi
             mocks.VerifyAll();
         }
 
-        [Test, NUnit.Framework.Category(TestCategory.Integration)]
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void SettingSelectedIndexSetsIndexOnDataOnBoundaryGeometryPreview()
         {
             var lineGeomery = new LineString(new[]

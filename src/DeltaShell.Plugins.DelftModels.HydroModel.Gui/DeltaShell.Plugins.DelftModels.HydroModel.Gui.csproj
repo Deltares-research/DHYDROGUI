@@ -178,11 +178,13 @@
     <Compile Include="Forms\SettingsWpf\DateTimeFormats.cs" />
     <Compile Include="Forms\SettingsWpf\DoubleToStringConverter.cs" />
     <Compile Include="Forms\SettingsWpf\DoubleWrapper.cs" />
+    <Compile Include="Forms\SettingsWpf\FieldUIDescriptionHelper.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelector.cs" />
     <Compile Include="Forms\SettingsWpf\WpfCustomTimeSpan.cs" />
     <Compile Include="Forms\SettingsWpf\WpfEnumConverter.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiCategory.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiProperty.cs" />
+    <Compile Include="Forms\SettingsWpf\NotifyPropertyChangedWpfGuiPropertySynchronizer.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiSubCategory.cs" />
     <Compile Include="Forms\SettingsWpf\WpfSettingsView.xaml.cs">
       <DependentUpon>WpfSettingsView.xaml</DependentUpon>
