@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -30,6 +31,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.RestartInput = (FileBasedRestartState) restartOutputStates.First().Clone();
             Assert.NotNull(model.RestartInput);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        [TestCase("bendprof_20080905_040000_rst.nc", 4)]
+        [TestCase("bendprof_20080905_120000_rst.nc", 12)]
+        [TestCase("bendprof_20080905_220000_rst.nc", 22)]
+        public void GivenRestartFile_WhenImported_ThenCorrectDataSetOnModel(string restartFile, int expectedHour)
+        {
+            WaterFlowFMModel model = LoadBendProfModelWithWriteRestart();
+
+            model.ImportRestartFile(TestHelper.GetTestFilePath(Path.Combine(nameof(WaterFlowFMModelRestartTest), restartFile)));
+
+            Assert.That(model.RestartInput.SimulationTime, Is.EqualTo(new DateTime(2008, 9, 5, expectedHour,0,0)));
         }
 
         private static WaterFlowFMModel LoadBendProfModelWithWriteRestart()

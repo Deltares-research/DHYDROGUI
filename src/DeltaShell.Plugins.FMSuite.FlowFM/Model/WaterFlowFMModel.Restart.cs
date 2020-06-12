@@ -119,13 +119,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (splitFileName.Last() != "nc")
             {
-                throw new ArgumentException(string.Format("Invalid restart file {0}: not a NetCDF file.", fileName));
+                throw new ArgumentException($"Invalid restart file {fileName}: not a NetCDF file.");
             }
 
             string dateTimeString = string.Concat(splitFileName[length - 4], splitFileName[length - 3]);
-            DateTime dateTime;
-            if (!DateTime.TryParseExact(dateTimeString, "yyyyMMddhhmmss", CultureInfo.InvariantCulture,
-                                        DateTimeStyles.None, out dateTime))
+            if (!DateTime.TryParseExact(dateTimeString, "yyyyMMddHHmmss", CultureInfo.InvariantCulture,
+                                        DateTimeStyles.None, out DateTime dateTime))
             {
                 throw new ArgumentException(
                     string.Format(Resources.WaterFlowFMModel_ImportRestartFile_Invalid_restart_file_name__0___your_file_should_be_formatted_as__name__yyyyMMdd_HHmmss_1_, fileName,
@@ -170,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ModelFileBasedStateHandler modelFileBasedStateHandler = ModelStateHandler;
 
             // modify Out filename list to account for CurrentTime (instance is same as used inside ModelStateHandler)
-            string restartFileName = $"{Name}_{CurrentTime.ToString("yyyyMMdd_HHmmss")}{FileConstants.RestartFileExtension}";
+            string restartFileName = $"{Name}_{CurrentTime:yyyyMMdd_HHmmss}{FileConstants.RestartFileExtension}";
             outAndInFileNames[0].First = Path.Combine(ModelDefinition.OutputDirectoryName, restartFileName);
             outAndInFileNames[0].Second = restartFileName; //out and in is the same
 
@@ -389,8 +388,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 };
             }
 
-            throw new NotImplementedException(string.Format("Meta data version {0} for model type {1} is not supported",
-                                                            version, ModelTypeId));
+            throw new NotImplementedException($"Meta data version {version} for model type {ModelTypeId} is not supported");
         }
 
         #region Implementation of IDimrStateAwareModel
