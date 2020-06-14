@@ -19,148 +19,176 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(InitialConditionsBuilder));
 
-        private IList<FlowInitialCondition> flowInitialConditions;
+        private readonly ICollection<FlowInitialCondition> flowInitialConditions;
         private readonly IHydroNetwork network;
-        private List<string> listOfWarnings = new List<string>();
-        private Dictionary<string, IBranch> branchesDict;
+        private readonly List<string> listOfWarnings = new List<string>();
 
         public InitialConditionsBuilder(IEnumerable<FlowInitialCondition> flowInitialConditions,
             IHydroNetwork network)
         {
+            if (flowInitialConditions == null || network == null) throw new ArgumentNullException();
+
             this.flowInitialConditions = flowInitialConditions.ToList();
             this.network = network;
             ChannelInitialConditionDefinitionsDict = new Dictionary<string, ChannelInitialConditionDefinition>(StringComparer.InvariantCultureIgnoreCase);
+            HasSetGlobals = false;
         }
 
         public Dictionary<string, ChannelInitialConditionDefinition> ChannelInitialConditionDefinitionsDict { get; private set; }
         public InitialConditionQuantity GlobalQuantity { get; private set; }
         public double GlobalValue { get; private set; }
-        public bool GlobalsHaveBeenSet { get; private set; }
+        public bool HasSetGlobals { get; private set; }
         
 
         public void Build()
         {
-            ReadAndRemoveGlobalDefinition();
-            GenerateBranchesDict();
-            if (branchesDict == null || branchesDict.Count == 0)
+            ProcessGlobalDefinition();
+
+            var branchesDictionary = GenerateBranchesDict();
+            if (branchesDictionary == null || branchesDictionary.Count == 0)
             {
                 return;
             }
 
-            RemoveAndWarnForUnusedConditions();
-            CreateChannelInitialConditionDefinitions();
+            FilterUnusedFlowInitialConditions(branchesDictionary);
+            CreateChannelInitialConditionDefinitions(branchesDictionary);
 
-            RemoveAndWarnForUnusedDefinitions();
+            FilterInvalidChannelInitialConditionDefinitions();
 
             if (listOfWarnings.Any())
                 Log.Warn($"While importing initial conditions we encountered the following {listOfWarnings.Count} warnings: {Environment.NewLine}{string.Join(Environment.NewLine, listOfWarnings)}");
         }
 
-        private void GenerateBranchesDict()
+        private Dictionary<string, IBranch> GenerateBranchesDict()
         {
-            branchesDict = network.Branches.ToDictionary(branch => branch.Name, StringComparer.InvariantCultureIgnoreCase);
+            return network.Branches?.ToDictionary(branch => branch.Name, StringComparer.InvariantCultureIgnoreCase);
         }
 
-        private void RemoveAndWarnForUnusedConditions()
+        private void FilterUnusedFlowInitialConditions(IDictionary<string, IBranch> branchesDictionary)
         {
-            var conditionsWithoutBranch = flowInitialConditions.Where(c => !c.IsGlobalDefinition) //non globals
-                .Where(c => (c.IsLevelBoundary || c.IsQBoundary) && !branchesDict.ContainsKey(c.BranchID)).ToList();
-            foreach (var condition in conditionsWithoutBranch)
+            var conditionsWithoutBranch = flowInitialConditions.Where(c => IsUnusedCondition(c, branchesDictionary));
+            foreach (var condition in conditionsWithoutBranch.ToArray())
             {
                 Log.WarnFormat("Channel {0} for initial condition {1} not found; skipped",
                     condition.BranchID, condition.ID);
+
+                flowInitialConditions.Remove(condition);
             }
-            //exclude the 'bad' conditions
-            flowInitialConditions = flowInitialConditions.Except(conditionsWithoutBranch).ToList();
+        }
+        
+        private static bool IsUnusedCondition(FlowInitialCondition initialCondition, IDictionary<string, IBranch> branchesDictionary)
+        {
+            return !initialCondition.IsGlobalDefinition
+                   && ((initialCondition.IsLevelBoundary || initialCondition.IsQBoundary) && !branchesDictionary.ContainsKey(initialCondition.BranchID));
         }
 
-        private void ReadAndRemoveGlobalDefinition()
+        /// <summary>
+        /// Processes the initial conditions to determine if there are global definitions present.
+        /// </summary>
+        private void ProcessGlobalDefinition()
         {
             var globalDefinition = flowInitialConditions.FirstOrDefault(ic => ic.IsGlobalDefinition);
             if (globalDefinition == null)
             {
                 Log.WarnFormat("Globally defined flow conditions are not imported yet.");
+                return;
+            }
+
+            if (globalDefinition.WaterLevelType == FlowInitialCondition.FlowConditionType.WaterDepth)
+            {
+                GlobalValue = globalDefinition.Level.Constant;
+                GlobalQuantity = InitialConditionQuantity.WaterDepth;
             }
             else
             {
-                if (globalDefinition.WaterLevelType == FlowInitialCondition.FlowConditionType.WaterDepth)
-                {
-                    GlobalValue = globalDefinition.Level.Constant;
-                    GlobalQuantity = InitialConditionQuantity.WaterDepth;
-                }
-                else
-                {
-                    GlobalQuantity = InitialConditionQuantity.WaterLevel;
-                    GlobalValue = globalDefinition.Level.Constant;
-                }
-
-                GlobalsHaveBeenSet = true;
-                //remove it so we don't parse it later on
-                flowInitialConditions.Remove(globalDefinition);
+                GlobalQuantity = InitialConditionQuantity.WaterLevel;
+                GlobalValue = globalDefinition.Level.Constant;
             }
+
+            HasSetGlobals = true;
+
+            // Remove it so we don't parse it later on
+            flowInitialConditions.Remove(globalDefinition);
         }
 
-        private void CreateChannelInitialConditionDefinitions()
+        private void CreateChannelInitialConditionDefinitions(IDictionary<string, IBranch> branchesDictionary)
         {
             foreach (var initialCondition in flowInitialConditions)
             {
-                if (initialCondition.IsLevelBoundary == false)
+                if (!initialCondition.IsLevelBoundary)
                 {
                     Log.WarnFormat($"Cannot import {initialCondition.ID}. Only WaterDepth and WaterLevel initial conditions are currently supported.");
                     continue;
                 } 
-
+                
                 var branchName = initialCondition.BranchID;
-                if (!branchesDict.ContainsKey(branchName))
+                if (!branchesDictionary.ContainsKey(branchName))
                 {
                     listOfWarnings.Add($"Could not find branch {branchName}. Skipping import of this initial condition.");
                     continue;
                 }
 
-                var branch = branchesDict[branchName];
+                var branch = branchesDictionary[branchName];
                 var channel = branch as Channel;
-                if (channel == null) throw new ArgumentException();
+                if (channel == null) throw new ArgumentException(); 
                 
-                var channelInitialConditionDefinition = new ChannelInitialConditionDefinition(channel);
-                var quantity = GetInitialConditionQuantity(initialCondition.WaterLevelType);
+                var channelInitialConditionDefinition = initialCondition.Level.IsConstant 
+                    ? CreateConstantChannelInitialConditionDefinition(channel, initialCondition)
+                    : CreateSpatialChannelInitialConditionDefinition(channel, initialCondition);
 
-                if (initialCondition.Level.IsConstant)
-                {
-                    channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition;
-                    channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Quantity = quantity;
-                    channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value = initialCondition.Level.Constant;
-                }
-                else
-                {
-                    channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
-                    channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.Quantity = quantity;
-
-                    //In sobek you can define two values at one point ( 0 = 5.0, 2500 = 5.0, 2500 = 3.0, 5000 = 3.0)
-                    //In this case we add 0.01 to the second definition
-                    var lastOffset = -1.0;
-                    foreach (DataRow row in initialCondition.Level.Data.Rows)
-                    {
-                        var offset = (double) row[0];
-                        if (Math.Abs(lastOffset - offset) < Tolerance)
-                        {
-                            offset += 0.01;
-                        }
-
-                        lastOffset = offset;
-                        var value = (double) row[1]; //* correctionFactor?;
-                        var constantSpatialChannelInitialConditionDefinition = new ConstantSpatialChannelInitialConditionDefinition()
-                        {
-                            Chainage = offset,
-                            Value = value
-                        };
-                        channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(constantSpatialChannelInitialConditionDefinition);
-                    }
-                }
                 ChannelInitialConditionDefinitionsDict.Add(branchName, channelInitialConditionDefinition);
             }
         }
 
-        private InitialConditionQuantity GetInitialConditionQuantity(FlowInitialCondition.FlowConditionType initialConditionWaterLevelType)
+        private ChannelInitialConditionDefinition CreateConstantChannelInitialConditionDefinition(Channel channel,
+            FlowInitialCondition initialCondition)
+        {
+            return new ChannelInitialConditionDefinition(channel)
+            {
+                SpecificationType = ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition,
+                ConstantChannelInitialConditionDefinition =
+                {
+                    Quantity = ConvertInitialConditionQuantity(initialCondition.WaterLevelType),
+                    Value = initialCondition.Level.Constant
+                }
+            };
+        }
+
+        private ChannelInitialConditionDefinition CreateSpatialChannelInitialConditionDefinition(Channel channel,
+            FlowInitialCondition initialCondition)
+        {
+            var channelInitialConditionDefinition = new ChannelInitialConditionDefinition(channel);
+            channelInitialConditionDefinition.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
+            channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.Quantity = ConvertInitialConditionQuantity(initialCondition.WaterLevelType);
+
+            //In sobek you can define two values at one point ( 0 = 5.0, 2500 = 5.0, 2500 = 3.0, 5000 = 3.0)
+            //In this case we add 0.01 to the second definition
+            var lastOffset = -1.0;
+            foreach (DataRow row in initialCondition.Level.Data.Rows)
+            {
+                var offset = (double) row[0];
+                if (Math.Abs(lastOffset - offset) < Tolerance)
+                {
+                    offset += 0.01;
+                }
+
+                lastOffset = offset;
+                var value = (double) row[1]; //* correctionFactor?;
+                var constantSpatialChannelInitialConditionDefinition =
+                    new ConstantSpatialChannelInitialConditionDefinition
+                    {
+                        Chainage = offset,
+                        Value = value
+                    };
+                channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition
+                    .ConstantSpatialChannelInitialConditionDefinitions
+                    .Add(constantSpatialChannelInitialConditionDefinition);
+            }
+
+            return channelInitialConditionDefinition;
+        }
+
+        private InitialConditionQuantity ConvertInitialConditionQuantity(FlowInitialCondition.FlowConditionType initialConditionWaterLevelType)
         {
             switch (initialConditionWaterLevelType)
             {
@@ -173,7 +201,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
 
-        private void RemoveAndWarnForUnusedDefinitions()
+        private void FilterInvalidChannelInitialConditionDefinitions()
         {
             var keysToRemove = new List<string>();
             foreach (var channelInitialConditionDefinition in ChannelInitialConditionDefinitionsDict.Values)

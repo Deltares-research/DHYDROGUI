@@ -18,10 +18,10 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
         public ChannelInitialConditionDefinition(IChannel channel)
         {
             Channel = channel;
+            SpecificationType = ChannelInitialConditionSpecificationType.ModelSettings;
         }
 
-        // required for clone
-        protected ChannelInitialConditionDefinition()
+        private ChannelInitialConditionDefinition()
         {
         }
 
@@ -59,16 +59,13 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
 
         public object Clone()
         {
-            var clone = (ChannelInitialConditionDefinition)Activator.CreateInstance(this.GetType(), true);
+            var clone = new ChannelInitialConditionDefinition();
             clone.Channel = Channel;
             clone.SpecificationType = specificationType;
             clone.ConstantChannelInitialConditionDefinition = ConstantChannelInitialConditionDefinition;
             clone.SpatialChannelInitialConditionDefinition = SpatialChannelInitialConditionDefinition;
-            clone.Geometry = Geometry;
-            clone.Attributes = Attributes;
             return clone;
         }
-
         # endregion
 
         #region Implementation of IFeature

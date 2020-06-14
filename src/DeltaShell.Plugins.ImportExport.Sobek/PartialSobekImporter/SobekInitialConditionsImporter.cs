@@ -32,16 +32,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
             
-            var initalFlowConditionsReader = new InitalFlowConditionsReader();
-            var flowInitialConditions = initalFlowConditionsReader.Read(initialPath);
+            var initialFlowConditionsReader = new InitalFlowConditionsReader();
+            var flowInitialConditions = initialFlowConditionsReader.Read(initialPath);
 
             var builder = new InitialConditionsBuilder(flowInitialConditions, HydroNetwork);
             builder.Build();
 
-            var channelInitialConditionDefinitions = fmModel.ChannelInitialConditionDefinitions;
-            UpdateChannelInitialConditions(builder.ChannelInitialConditionDefinitionsDict, channelInitialConditionDefinitions);
+            UpdateChannelInitialConditions(fmModel.ChannelInitialConditionDefinitions, builder.ChannelInitialConditionDefinitionsDict);
 
-            if (builder.GlobalsHaveBeenSet)
+            if (builder.HasSetGlobals)
             {
                 UpdateInitialConditionGlobalSettings(fmModel.ModelDefinition, builder.GlobalQuantity, builder.GlobalValue);
             }
@@ -55,8 +54,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         }
 
         private void UpdateChannelInitialConditions(
-            Dictionary<string, ChannelInitialConditionDefinition> builderChannelInitialConditionDefinitionsDict, 
-            ICollection<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
+            ICollection<ChannelInitialConditionDefinition> channelInitialConditionDefinitions,
+            Dictionary<string, ChannelInitialConditionDefinition> builderChannelInitialConditionDefinitionsDict)
         {
             var channelInitialConditionDict =
                 channelInitialConditionDefinitions.ToDictionary(definition => definition.Channel.Name, StringComparer.InvariantCultureIgnoreCase);

@@ -21,11 +21,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var network = new HydroNetwork();
 
             // Call
-            var builder = new InitialConditionsBuilder(new List<FlowInitialCondition>(), network);
+            var builder = new InitialConditionsBuilder(Enumerable.Empty<FlowInitialCondition>(), network);
 
             // Assert
             Assert.That(builder.ChannelInitialConditionDefinitionsDict, Is.Not.Null);
-            Assert.That(builder.GlobalsHaveBeenSet, Is.False);
+            Assert.That(builder.HasSetGlobals, Is.False);
             Assert.That(builder.GlobalValue, Is.EqualTo(default(double)));
             Assert.That(builder.GlobalQuantity, Is.EqualTo(default(InitialConditionQuantity)));
         }
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             // Then
             Assert.That(builder.GlobalQuantity, Is.EqualTo(expectedQuantity));
             Assert.That(builder.GlobalValue, Is.EqualTo(expectedValue));
-            Assert.That(builder.GlobalsHaveBeenSet, Is.EqualTo(true));
+            Assert.That(builder.HasSetGlobals, Is.EqualTo(true));
         }
 
         [Test]
@@ -64,45 +64,47 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             // Given
             var network = new HydroNetwork();
-            var listWithoutGlobal = new List<FlowInitialCondition>
+            var collectionWithoutGlobal = new []
             {
                 new FlowInitialCondition
                 {
                     WaterLevelType = FlowInitialCondition.FlowConditionType.WaterDepth,
-                    IsGlobalDefinition = false,
+                    IsGlobalDefinition = false
                 }
             };
 
             // When
-            var builder = new InitialConditionsBuilder(listWithoutGlobal, network);
+            var builder = new InitialConditionsBuilder(collectionWithoutGlobal, network);
             Action action = () => builder.Build();
 
             // Then
             TestHelper.AssertLogMessageIsGenerated(action, "Globally defined flow conditions are not imported yet.");
             Assert.That(builder.GlobalValue, Is.EqualTo(default(double)));
             Assert.That(builder.GlobalQuantity, Is.EqualTo(default(InitialConditionQuantity)));
-            Assert.That(builder.GlobalsHaveBeenSet, Is.False);
+            Assert.That(builder.HasSetGlobals, Is.False);
         }
 
         [Test]
         public void GivenANetworkWithoutBranches_WhenCallingBuild_ThenNoInitialConditionsDefinitionsAreGenerated()
         {
             // Given
-            var listOfInitialConditions = GenerateFlowInitialConditions(CreateDataTable);
+            var initialConditions = GenerateFlowInitialConditions(CreateDataTable);
             var network = new HydroNetwork();
-            Assert.That(network.Branches.Count, Is.EqualTo(0));
+
+            // Precondition
+            Assert.That(network.Branches, Has.Count.EqualTo(0));
 
             // When
-            var builder = new InitialConditionsBuilder(listOfInitialConditions, network);
+            var builder = new InitialConditionsBuilder(initialConditions, network);
             builder.Build();
 
             // Then
             Assert.That(builder.ChannelInitialConditionDefinitionsDict, Is.Not.Null);
-            Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(0));
+            Assert.That(builder.ChannelInitialConditionDefinitionsDict, Is.Empty);
         }
 
         [Test]
-        public void GivenAFlowInitialConditionForDischarge_WhenCallingBuild_ThenNoDefinitionsAreCreatedButWarningIsGiven()
+        public void GivenFlowInitialConditionForDischarge_WhenCallingBuild_ThenNoDefinitionsAreCreatedButWarningIsGiven()
         {
             // Given
             var initialConditionId = "InitialCondition1";
@@ -207,9 +209,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var listOfInitialConditions = GenerateFlowInitialConditions(CreateDataTableWithDuplicateOffset);
 
             // set all initial condition to be WaterLevel, otherwise they will be filtered out due to being different from global quantity
-            foreach (var inititialCondition in listOfInitialConditions)
+            foreach (var initialCondition in listOfInitialConditions)
             {
-                inititialCondition.WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel;
+                initialCondition.WaterLevelType = FlowInitialCondition.FlowConditionType.WaterLevel;
             }
 
             var listOfBranches = new List<IBranch>
@@ -352,7 +354,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 Level =
                 {
                     IsConstant = false,
-                    Data = createDataTable.Invoke()
+                    Data = createDataTable()
                 },
                 BranchID = "Branch3",
                 ID = "InitialCondition3"
@@ -367,7 +369,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 Level =
                 {
                     IsConstant = false,
-                    Data = createDataTable.Invoke()
+                    Data = createDataTable()
                 },
                 BranchID = "Branch4",
                 ID = "InitialCondition4"
