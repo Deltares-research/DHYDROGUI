@@ -12,6 +12,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         private LeveeBreach leveeBreach;
         private bool useSnapping;
+        private bool leveeBreachWaterLevelFlowLocationsActive;
+
         public LeveeBreach LeveeBreach
         {
             get { return leveeBreach; }
@@ -68,6 +70,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             if (e.PropertyName == nameof(ILeveeBreach.WaterLevelDownstreamLocationY))
                 OnPropertyChanged(nameof(WaterLevelDownstreamLocationY));
+
+            if (e.PropertyName == nameof(ILeveeBreach.WaterLevelFlowLocationsActive))
+                OnPropertyChanged(nameof(UseWaterLevelFlowLocation));
+
+            if (e.PropertyName == nameof(ILeveeBreach.LeveeBreachFormula))
+                OnPropertyChanged(nameof(SelectedGrowthFormula));
         }
 
         public LeveeBreachGrowthFormula SelectedGrowthFormula
@@ -95,10 +103,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         }
         public bool UseWaterLevelFlowLocation
         {
-            get { return LeveeBreach?.WaterLevelFlowLocationsActive ?? false; }
+            get
+            {
+                leveeBreachWaterLevelFlowLocationsActive = LeveeBreach?.WaterLevelFlowLocationsActive ?? false;
+                if (leveeBreachWaterLevelFlowLocationsActive)
+                {
+                    if (Equals(LeveeBreach.WaterLevelUpstreamLocationX, default(double)))
+                    {
+                        LeveeBreach.WaterLevelUpstreamLocationX = LeveeBreach.BreachLocationX;
+                        OnPropertyChanged(nameof(WaterLevelUpstreamLocationX));
+                    }
+
+                    if (Equals(LeveeBreach.WaterLevelUpstreamLocationY, default(double)))
+                    {
+                        LeveeBreach.WaterLevelUpstreamLocationY = LeveeBreach.BreachLocationY;
+                        OnPropertyChanged(nameof(WaterLevelUpstreamLocationY));
+                    }
+
+                    if (Equals(LeveeBreach.WaterLevelDownstreamLocationX, default(double)))
+                    {
+                        LeveeBreach.WaterLevelDownstreamLocationX = LeveeBreach.BreachLocationX;
+                        OnPropertyChanged(nameof(WaterLevelDownstreamLocationX));
+                    }
+
+                    if (Equals(LeveeBreach.WaterLevelDownstreamLocationY, default(double)))
+                    {
+                        LeveeBreach.WaterLevelDownstreamLocationY = LeveeBreach.BreachLocationY;
+                        OnPropertyChanged(nameof(WaterLevelDownstreamLocationY));
+                    }
+                }
+                return leveeBreachWaterLevelFlowLocationsActive;
+            }
             set
             {
-                if (LeveeBreachSettings == null) return;
+                if (LeveeBreach == null) return;
                 if (Equals(LeveeBreach.WaterLevelUpstreamLocationX, default(double)))
                     LeveeBreach.WaterLevelUpstreamLocationX = LeveeBreach.BreachLocationX;
                 if (Equals(LeveeBreach.WaterLevelUpstreamLocationY, default(double)))
@@ -118,10 +156,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public LeveeBreachSettings LeveeBreachSettings
         {
             get { return LeveeBreach?.GetActiveLeveeBreachSettings(); }
-            set { }
         }
 
         public double BreachLocationX
@@ -169,6 +207,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public double WaterLevelUpstreamLocationX
         {
             get { return LeveeBreach.WaterLevelUpstreamLocationX; }
@@ -180,6 +219,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             }
         }
+        [ExcludeFromCodeCoverage]
         public double WaterLevelUpstreamLocationY
         {
             get { return LeveeBreach.WaterLevelUpstreamLocationY; }
@@ -188,6 +228,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 OnPropertyChanged();
             }
         }
+        [ExcludeFromCodeCoverage]
         public double WaterLevelDownstreamLocationX
         {
             get { return LeveeBreach.WaterLevelDownstreamLocationX; }
@@ -198,6 +239,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 OnPropertyChanged();
             }
         }
+        [ExcludeFromCodeCoverage]
         public double WaterLevelDownstreamLocationY
         {
             get { return LeveeBreach.WaterLevelDownstreamLocationY; }

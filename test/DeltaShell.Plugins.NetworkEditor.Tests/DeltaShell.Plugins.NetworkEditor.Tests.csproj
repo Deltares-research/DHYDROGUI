@@ -231,6 +231,7 @@
     <Compile Include="Forms\GridProperties\HydroNodePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\HydroRegionPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\LateralSourcePropertiesTest.cs" />
+    <Compile Include="Forms\GridProperties\LeveeBreachPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\NetworkCoveragePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\NetworkLocationPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\NetworkPropertiesTest.cs" />

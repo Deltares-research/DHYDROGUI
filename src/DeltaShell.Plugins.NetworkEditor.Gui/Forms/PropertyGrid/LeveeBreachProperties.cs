@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Shell.Gui;
@@ -20,6 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         public override object Data
         {
+            [ExcludeFromCodeCoverage]
             get { return leveeBreach; }
             set
             {
@@ -32,18 +34,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Name")]
         [PropertyOrder(1)]
+        [ExcludeFromCodeCoverage]
         public string Name
         {
             get { return leveeBreach.Name; }
             set { leveeBreach.Name = value; }
         }
+
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Use Breach Location snapping")]
         [PropertyOrder(2)]
         public bool UseBreachLocationSnapping
         {
             get { return useBreachLocationSnapping; }
-            set { useBreachLocationSnapping = value; }
+            set
+            {
+                useBreachLocationSnapping = value;
+                BreachLocationX = BreachLocationX;
+            }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -94,6 +102,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Levee Breach Formula")]
         [DynamicVisible]
         [PropertyOrder(5)]
+        [ExcludeFromCodeCoverage]
         public LeveeBreachGrowthFormula LeveeBreachFormula
         {
             get { return leveeBreach.LeveeBreachFormula; }
@@ -136,6 +145,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Use Waterlevelstream")]
         [PropertyOrder(8)]
+        [ExcludeFromCodeCoverage]
         public bool WaterLevelFlowLocationsActive
         {
             get { return leveeBreach.WaterLevelFlowLocationsActive; }
@@ -146,6 +156,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Waterlevelstream up x-location")]
         [DynamicVisible]
         [PropertyOrder(9)]
+        [ExcludeFromCodeCoverage]
         public double WaterLevelUpstreamLocationX
         {
             get { return leveeBreach.WaterLevelUpstreamLocationX; }
@@ -156,6 +167,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Waterlevelstream up y-location")]
         [DynamicVisible]
         [PropertyOrder(10)]
+        [ExcludeFromCodeCoverage]
         public double WaterLevelUpstreamLocationY
         {
             get { return leveeBreach.WaterLevelUpstreamLocationY; }
@@ -180,6 +192,55 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get { return leveeBreach.WaterLevelDownstreamLocationY; }
             set { leveeBreach.WaterLevelDownstreamLocationY = value; }
+        }
+
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Levee start x-location")]
+        [PropertyOrder(13)]
+        [ExcludeFromCodeCoverage]
+        public double LeveeStartLocationX
+        {
+            get { return leveeBreach.Geometry.Coordinates[0].X; }
+            set { leveeBreach.Geometry.Coordinates[0].X = value; }
+        }
+
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Levee start y-location")]
+        [PropertyOrder(14)]
+        [ExcludeFromCodeCoverage]
+        public double LeveeStartLocationY
+        {
+            get { return leveeBreach.Geometry.Coordinates[0].Y; }
+            set { leveeBreach.Geometry.Coordinates[0].Y = value; }
+        }
+
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Levee end x-location")]
+        [PropertyOrder(15)]
+        [ExcludeFromCodeCoverage]
+        public double LeveeEndLocationX
+        {
+            get { return leveeBreach.Geometry.Coordinates[1].X; }
+            set { leveeBreach.Geometry.Coordinates[1].X = value; }
+        }
+
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Levee end x-location")]
+        [PropertyOrder(16)]
+        [ExcludeFromCodeCoverage]
+        public double LeveeEndLocationY
+        {
+            get { return leveeBreach.Geometry.Coordinates[1].Y; }
+            set { leveeBreach.Geometry.Coordinates[1].Y = value; }
+        }
+
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Levee Geometry length")]
+        [PropertyOrder(17)]
+        [ExcludeFromCodeCoverage]
+        public double LeveeGeometryLength
+        {
+            get { return leveeBreach.Geometry.Length; }
         }
 
         [DynamicVisibleValidationMethod]

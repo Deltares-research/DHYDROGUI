@@ -289,6 +289,7 @@ src/DelftTools.Hydro/Gully.cs -text
 src/DelftTools.Hydro/Helpers/ActivitiesExtensions.cs -text
 src/DelftTools.Hydro/Helpers/ActivityExtensions.cs -text
 src/DelftTools.Hydro/Helpers/ConveyanceCalculatorBase.cs -text
+src/DelftTools.Hydro/Helpers/CoordinateConverter.cs -text
 src/DelftTools.Hydro/Helpers/CrossSectionConverter.cs -text
 src/DelftTools.Hydro/Helpers/CrossSectionHelper.cs -text
 src/DelftTools.Hydro/Helpers/CrossSectionValidator.cs -text
@@ -37600,6 +37601,7 @@ test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/GridProperties/HydroLinkProper
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/GridProperties/HydroNodePropertiesTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/GridProperties/HydroRegionPropertiesTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/GridProperties/LateralSourcePropertiesTest.cs -text
+test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/GridProperties/LeveeBreachPropertiesTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/GridProperties/NetworkCoveragePropertiesTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/GridProperties/NetworkLocationPropertiesTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/GridProperties/NetworkPropertiesTest.cs -text

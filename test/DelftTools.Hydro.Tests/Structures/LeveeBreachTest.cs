@@ -25,7 +25,7 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(expectedBreachLocationX, damBreak.BreachLocationX);
             Assert.AreEqual(expectedBreachLocationY, damBreak.BreachLocationY);
         }
-
+        
         [Test]
         public void BreachLocationXandY_ShouldBeSameAsBreachLocation()
         {
