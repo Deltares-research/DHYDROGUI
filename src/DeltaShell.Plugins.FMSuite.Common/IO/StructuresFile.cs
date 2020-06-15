@@ -320,6 +320,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             properties.Add(ConstructProperty(KnownStructureProperties.StartTimeBreachGrowth, secondsSinceRefDate, structureType));
             properties.Add(ConstructProperty(KnownStructureProperties.BreachGrowthActivated, settings.BreachGrowthActive, structureType));
 
+            //ZUCHT WELKE EIKEL VERKLOOT DE BEDACHTE ARCHITECTUUR!!! 
+            properties.Add(ConstructProperty(StructureRegion.UseWaterLevelStream.Key, leveeBreach.WaterLevelFlowLocationsActive, structureType));
+            properties.Add(ConstructProperty(StructureRegion.WaterLevelUpstreamLocationX.Key, leveeBreach.WaterLevelUpstreamLocationX, structureType));
+            properties.Add(ConstructProperty(StructureRegion.WaterLevelUpstreamLocationY.Key, leveeBreach.WaterLevelUpstreamLocationY, structureType));
+            properties.Add(ConstructProperty(StructureRegion.WaterLevelDownstreamLocationX.Key, leveeBreach.WaterLevelDownstreamLocationX, structureType));
+            properties.Add(ConstructProperty(StructureRegion.WaterLevelDownstreamLocationY.Key, leveeBreach.WaterLevelDownstreamLocationY, structureType));
+        
+            
             if (!settings.BreachGrowthActive) return properties;
             
             // specific properties

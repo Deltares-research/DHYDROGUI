@@ -200,11 +200,13 @@
     <Compile Include="Import\FeatureFromGisImporterBase.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroLinkInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroObjectToHydroLinkRelationInteractor.cs" />
+    <Compile Include="MapLayers\Editors\Interactors\LeveeBreachPointInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\ManholeInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\RunoffBoundaryFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\SewerConnectionInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\SubCatchmentRelationInteractor.cs" />
     <Compile Include="MapLayers\Editors\RunoffBoundaryFeatureEditor.cs" />
+    <Compile Include="MapLayers\Editors\Snapping\LeveeBreachSnapRule.cs" />
     <Compile Include="MapLayers\HydroLinkFeatureEditor.cs" />
     <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
     <Compile Include="MapLayers\Editors\WasteWaterTreatmentPlantFeatureEditor.cs" />

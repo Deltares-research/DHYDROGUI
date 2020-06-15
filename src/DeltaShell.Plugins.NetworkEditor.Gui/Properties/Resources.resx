@@ -629,4 +629,7 @@
   <data name="CompartmentProperties_DisplayName" xml:space="preserve">
     <value>Compartment</value>
   </data>
+  <data name="LeveeBreachProperties_DisplayName" xml:space="preserve">
+    <value>Dambreach</value>
+  </data>
 </root>

@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Geometries;
+using log4net;
+using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface ILeveeBreach : IStructure2D
-    {
-        double BreachLocationX { get; set; }
-        double BreachLocationY { get; set; }
-        IPoint BreachLocation { get; }
-        LeveeBreachGrowthFormula LeveeBreachFormula { get; set; }
-        LeveeBreachSettings GetActiveLeveeBreachSettings();
-        void SetBaseLeveeBreachSettings(DateTime startTime, bool breachGrowthActive);
-    }
-
     [Entity]
     public class LeveeBreach : GroupableFeature2D, ILeveeBreach
     {
+        public const string LEVEE_BREACH_FEATURE = "LeveeBreachFeature";
+        public const string LEVEE_BREACH_POINT_LOCATION_TYPE = "LeveeBreachPointLocationType";
+        private static readonly ILog log = LogManager.GetLogger(typeof(LeveeBreach));
         private double breachLocationX;
         private double breachLocationY;
         private bool isLocationSet;
@@ -50,7 +46,6 @@ namespace DelftTools.Hydro.Structures
                 }
             }
         }
-
         public double BreachLocationX
         {
             get { return breachLocationX; }
@@ -58,6 +53,12 @@ namespace DelftTools.Hydro.Structures
             {
                 breachLocationX = value;
                 isLocationSet = true;
+                /*if (BreachLocation != null && Geometry != null && 
+                    !GeometryHelper.PointIsOnLineBetweenPreviousAndNext(
+                        Geometry.Coordinates.First(),
+                        BreachLocation.Coordinate,
+                        Geometry.Coordinates.Last()))
+                    log.Warn($"breach location is not set on levee");*/
             }
         }
 
@@ -68,6 +69,13 @@ namespace DelftTools.Hydro.Structures
             {
                 breachLocationY = value;
                 isLocationSet = true;
+                /*if (BreachLocation != null && Geometry != null && 
+                    !GeometryHelper.PointIsOnLineBetweenPreviousAndNext(
+                        Geometry.Coordinates.First(),
+                        BreachLocation.Coordinate, 
+                        Geometry.Coordinates.Last()))
+                    log.Warn($"breach location is not set on levee");*/
+
             }
         }
 
@@ -134,5 +142,25 @@ namespace DelftTools.Hydro.Structures
         {
             get { return Structure2DType.LeveeBreach; }
         }
+
+        public double WaterLevelUpstreamLocationX { get; set; }
+        public double WaterLevelUpstreamLocationY { get; set; }
+        public IPoint WaterLevelUpstreamLocation
+        {
+            get
+            {
+                return new Point(WaterLevelUpstreamLocationX, WaterLevelUpstreamLocationY);
+            }
+        }
+        public double WaterLevelDownstreamLocationX { get; set; }
+        public double WaterLevelDownstreamLocationY { get; set; }
+        public IPoint WaterLevelDownstreamLocation
+        {
+            get
+            {
+                return new Point(WaterLevelDownstreamLocationX, WaterLevelDownstreamLocationY);
+            }
+        }
+        public bool WaterLevelFlowLocationsActive { get; set; } = false;
     }
 }

@@ -205,6 +205,7 @@
     <Compile Include="Embankment.cs" />
     <Compile Include="Helpers\DiscretizationComparer.cs" />
     <Compile Include="Helpers\HydroNetworkComparer.cs" />
+    <Compile Include="Helpers\LeveeBreachPointLocationType.cs" />
     <Compile Include="LinkStorageType.cs" />
     <Compile Include="ModelSettings.cs" />
     <Compile Include="GroupableFeature2D.cs" />
@@ -250,6 +251,7 @@
     <Compile Include="Structures\ICompartment.cs" />
     <Compile Include="Structures\ICompositeNetworkPointFeature.cs" />
     <Compile Include="SewerFeatures\IOrifice.cs" />
+    <Compile Include="Structures\ILeveeBreach.cs" />
     <Compile Include="Structures\IStructureWithCrossSectionDefinition.cs" />
     <Compile Include="Structures\LeveeBreach.cs" />
     <Compile Include="Structures\LeveeBreachFormula\LeveeBreachGrowthFormula.cs" />

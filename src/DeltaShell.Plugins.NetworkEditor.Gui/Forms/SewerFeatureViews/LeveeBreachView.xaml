@@ -63,9 +63,15 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="140"/>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="*"/>
@@ -84,23 +90,39 @@
                 <TextBlock Grid.Column="2" Grid.Row="2" Text="[m]" />
 
                 <!-- Row 3 -->
-                <TextBlock Grid.Column="0" Grid.Row="3" Text="Breach x-location"/>
-                <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding LeveeBreach.BreachLocationX, StringFormat={}{0:F2}}"/>
-
+                <CheckBox Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Content="Use breach location snapping" IsChecked="{Binding UseSnapping}" VerticalAlignment="Center" Margin="0,3,0,3"/>
+                
                 <!-- Row 4 -->
-                <TextBlock Grid.Column="0" Grid.Row="4" Text="Breach y-location"/>
-                <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding LeveeBreach.BreachLocationY, StringFormat={}{0:F2}}"/>
-
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="Breach x-location"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding BreachLocationX, StringFormat={}{0:F2}}"/>
+                <TextBlock Grid.Column="2" Grid.Row="4" Text="Breach y-location"/>
+                <TextBox Grid.Column="3" Grid.Row="4" Text="{Binding BreachLocationY, StringFormat={}{0:F2}}"/>
+                
                 <!-- Row 5 -->
                 <CheckBox Grid.Column="0" Grid.Row="5" Content="Active breach growth" IsChecked="{Binding UseActive}" VerticalAlignment="Center" Margin="0,3,0,3"/>
 
                 <!-- Row 6 -->
+                <CheckBox Grid.Column="0" Grid.Row="6" Content="Use waterlevel stream" IsChecked="{Binding UseWaterLevelFlowLocation}" VerticalAlignment="Center" Margin="0,3,0,3"/>
+
+                <!-- Row 7 -->
+                <TextBlock Grid.Column="0" Grid.Row="7" Text="Upstream x-location" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding WaterLevelUpstreamLocationX, StringFormat={}{0:F2}}" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBlock Grid.Column="2" Grid.Row="7" Text="Upstream y-location" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBox Grid.Column="3" Grid.Row="7" Text="{Binding WaterLevelUpstreamLocationY, StringFormat={}{0:F2}}" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+
+                <!-- Row 8 -->
+                <TextBlock Grid.Column="0" Grid.Row="8" Text="Downstream x-location" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBox Grid.Column="1" Grid.Row="8" Text="{Binding WaterLevelDownstreamLocationX, StringFormat={}{0:F2}}" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBlock Grid.Column="2" Grid.Row="8" Text="Downstream y-location" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBox Grid.Column="3" Grid.Row="8" Text="{Binding WaterLevelDownstreamLocationY, StringFormat={}{0:F2}}" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+
+                <!-- Row 9 -->
                 <TextBlock 
-                    Grid.Column="0" Grid.Row="6" 
+                    Grid.Column="0" Grid.Row="9" 
                     Text="Start breach growth"
                     Visibility="{Binding UseActive, Converter={StaticResource BooleanVisibilityConverter}}"/>
                 <StackPanel 
-                    Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2"
+                    Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="3"
                     Orientation="Horizontal"
                     Visibility="{Binding UseActive, Converter={StaticResource BooleanVisibilityConverter}}">
                     <!-- Note: The converter is in the DateTimePicker Value is required in order to bypass a bug. 
@@ -120,13 +142,13 @@
                         Visibility="{Binding UseActive, Converter={StaticResource BooleanVisibilityConverter}}"/>
                 </StackPanel>
 
-                <!-- Row 6 -->
+                <!-- Row 10 -->
                 <TextBlock 
-                    Grid.Column="0" Grid.Row="7" 
+                    Grid.Column="0" Grid.Row="10" 
                     Text="Growth formula"
                     Visibility="{Binding UseActive, Converter={StaticResource BooleanVisibilityConverter}}"/>
                 <ComboBox 
-                    Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="2" 
+                    Grid.Column="1" Grid.Row="10" Grid.ColumnSpan="2" 
                     Width="160" HorizontalAlignment="Left" 
                     ItemsSource="{Binding Source={StaticResource GrowthFormulas}}" SelectedItem="{Binding SelectedGrowthFormula}"
                     Visibility="{Binding UseActive, Converter={StaticResource BooleanVisibilityConverter}}">

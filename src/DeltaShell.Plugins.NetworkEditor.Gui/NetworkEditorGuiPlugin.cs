@@ -192,6 +192,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<VisibilityVectorLayer, VisibilityVectorLayerProperties>();
             yield return new PropertyInfo<SewerConnection, SewerConnectionProperties>();
             yield return new PropertyInfo<ICompartment, CompartmentProperties>();
+            yield return new PropertyInfo<ILeveeBreach, LeveeBreachProperties>();
         }
 
 

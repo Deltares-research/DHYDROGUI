@@ -300,4 +300,7 @@
   <data name="CompartmentProperties_DisplayName" xml:space="preserve">
     <value>#Compartiment</value>
   </data>
+  <data name="LeveeBreachProperties_DisplayName" xml:space="preserve">
+    <value>#Dambreuk</value>
+  </data>
 </root>

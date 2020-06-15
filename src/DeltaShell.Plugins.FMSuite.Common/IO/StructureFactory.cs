@@ -393,13 +393,29 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var breachLocationX = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationX, 0.0);
             var breachLocationY = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationY, 0.0);
+            //FUCK!
+            var isWaterLevelStreamActive = GetPropertyValue(structure2D, StructureRegion.UseWaterLevelStream.Key, false);
+
+            var waterLevelUpstreamLocationX = GetPropertyValue(structure2D, StructureRegion.WaterLevelUpstreamLocationX.Key, 0.0);
+            var waterLevelUpstreamLocationY = GetPropertyValue(structure2D, StructureRegion.WaterLevelUpstreamLocationY.Key, 0.0);
+            var waterLevelDownstreamLocationX = GetPropertyValue(structure2D, StructureRegion.WaterLevelDownstreamLocationX.Key, 0.0);
+            var waterLevelDownstreamLocationY = GetPropertyValue(structure2D, StructureRegion.WaterLevelDownstreamLocationY.Key, 0.0);
 
             var leveeBreach = new LeveeBreach
             {
                 BreachLocationX = breachLocationX,
                 BreachLocationY = breachLocationY,
-
             };
+
+            if (isWaterLevelStreamActive)
+            {
+                //FUCK!
+                leveeBreach.WaterLevelFlowLocationsActive = true;
+                leveeBreach.WaterLevelUpstreamLocationX = waterLevelUpstreamLocationX;
+                leveeBreach.WaterLevelUpstreamLocationY = waterLevelUpstreamLocationY;
+                leveeBreach.WaterLevelDownstreamLocationX = waterLevelDownstreamLocationX;
+                leveeBreach.WaterLevelDownstreamLocationY = waterLevelDownstreamLocationY;
+            }
 
             return leveeBreach;
         }

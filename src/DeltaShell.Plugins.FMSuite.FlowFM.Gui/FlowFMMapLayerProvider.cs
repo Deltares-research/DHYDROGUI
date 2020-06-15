@@ -250,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     if (snappedFeatures.LayerName == FMSnappedFeaturesGroupLayerData.SNAPPED_LEVEE_BREACH_LAYER_NAME)
                     {
                         layer.Style = null;
-                        layer.CustomRenderers = new List<IFeatureRenderer>(new[] { new LeveeBreachRenderer(AreaLayerStyles.LeveeSnappedStyle, AreaLayerStyles.BreachSnappedStyle)});
+                        layer.CustomRenderers = new List<IFeatureRenderer>(new[] { new LeveeBreachRenderer(AreaLayerStyles.LeveeSnappedStyle, AreaLayerStyles.BreachSnappedStyle, AreaLayerStyles.WaterLevelStreamSnappedStyle)});
                     }
                     groupLayer.Layers.Add(layer);
                     snappedFeatures.Layer = layer;

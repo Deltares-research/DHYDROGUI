@@ -22,6 +22,7 @@ using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Api.Editors;
@@ -83,7 +84,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
                    || (data is IEventedList<Embankment> && parentObject is HydroArea)
                    || (data is IEventedList<BridgePillar> && parentObject is HydroArea)
-                   || (data is IEventedList<LeveeBreach> && parentObject is HydroArea) //levee breach
                    || (data is IEventedList<Gully> && parentObject is HydroArea) //gullies
                    || (data is IEventedList<RoofArea> && parentObject is HydroArea) //roofareas;
                    || data is IEventedList<RoughnessSection>
@@ -594,20 +594,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                 "BridgePillar_2D_", modelName,
                                 area2DParent.CoordinateSystem)
                     };
-                case IEventedList<LeveeBreach> damBreaks
+                case IEventedList<Feature2D> damBreaks
                     when Equals(damBreaks, area2DParent.LeveeBreaches):
-                    return new VectorLayer(HydroArea.LeveeBreachName)
+                    var leveeBreachLayer = new VectorLayer(HydroArea.LeveeBreachName)
                     {
                         NameIsReadOnly = true,
                         CanBeRemovedByUser = true,
-                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        FeatureEditor = new HydroAreaFeatureEditor(area2DParent),
                         DataSource =
                             new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches,
                                 "LeveeBreach_2D_", modelName,
                                 area2DParent.CoordinateSystem),
+                        
                         CustomRenderers = new List<IFeatureRenderer>(new[]
-                            {new LeveeBreachRenderer(AreaLayerStyles.LeveeStyle, AreaLayerStyles.BreachStyle)})
+                            {new LeveeBreachRenderer(AreaLayerStyles.LeveeStyle, AreaLayerStyles.BreachStyle, AreaLayerStyles.WaterLevelStreamSnappedStyle)})
                     };
+                    return (VectorLayer)AddSnappingRulesToLayer<ILeveeBreach>(leveeBreachLayer);
                 default:
                     return null;
                     //throw new Exception($"Can not create layer for hydro area object {data.GetType()}");
@@ -1007,6 +1009,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                        Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
                                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
                                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                                       NewFeatureLayer = vectorLayer,
+                                       SnapRole = SnapRole.FreeAtObject,
+                                       Obligatory = true,
+                                       PixelGravity = 40
+                                   }
+                           };
+            }
+            if (type == typeof(ILeveeBreach))
+            {
+                return new List<ISnapRule>
+                           {
+                               new LeveeBreachSnapRule
+                                   {
+                                       /*Criteria = (layer, feature) => feature is LeveeBreach leveeBreach && 
+                                                                      GeometryHelper.PointIsOnLineBetweenPreviousAndNext(
+                                                                          leveeBreach.Geometry.Coordinates.First(),
+                                                                          leveeBreach.BreachLocation.Coordinate, 
+                                                                          leveeBreach.Geometry.Coordinates.Last()),*/
                                        NewFeatureLayer = vectorLayer,
                                        SnapRole = SnapRole.FreeAtObject,
                                        Obligatory = true,

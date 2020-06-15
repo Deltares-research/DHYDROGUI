@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using GeoAPI.Geometries;
 using SharpMap.Styles;
 
@@ -288,6 +289,17 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 return new VectorStyle
                 {
                     Line = new Pen(Color.FromArgb(128, Color.LawnGreen), 3f) ,
+                    GeometryType = typeof(ILineString)
+                };
+            }
+        }
+        public static VectorStyle WaterLevelStreamSnappedStyle
+        {
+            get
+            {
+                return new VectorStyle
+                {
+                    Line = new Pen(Color.FromArgb(128, Color.DarkRed), 2f){StartCap = LineCap.RoundAnchor, EndCap = LineCap.ArrowAnchor, DashStyle = DashStyle.Dot},
                     GeometryType = typeof(ILineString)
                 };
             }

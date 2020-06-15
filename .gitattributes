@@ -298,6 +298,7 @@ src/DelftTools.Hydro/Helpers/HydroNetworkComparer.cs -text
 src/DelftTools.Hydro/Helpers/HydroNetworkHelper.cs -text
 src/DelftTools.Hydro/Helpers/IConveyanceCalculator.cs -text
 src/DelftTools.Hydro/Helpers/ICoordinateSystemExtensions.cs -text
+src/DelftTools.Hydro/Helpers/LeveeBreachPointLocationType.cs -text
 src/DelftTools.Hydro/Helpers/StandardCrossSectionsFactory.cs -text
 src/DelftTools.Hydro/Helpers/ThreadingHelper.cs -text
 src/DelftTools.Hydro/HydroArea.cs -text
@@ -433,6 +434,7 @@ src/DelftTools.Hydro/Structures/IFrictionData.cs -text
 src/DelftTools.Hydro/Structures/IGate.cs -text
 src/DelftTools.Hydro/Structures/IGroundLayer.cs -text
 src/DelftTools.Hydro/Structures/IGully.cs -text
+src/DelftTools.Hydro/Structures/ILeveeBreach.cs -text
 src/DelftTools.Hydro/Structures/IManhole.cs -text
 src/DelftTools.Hydro/Structures/IPump.cs -text
 src/DelftTools.Hydro/Structures/IRetention.cs -text
@@ -2549,6 +2551,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/HydroNetworkProperti
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/HydroNodeProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/HydroRegionProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/LateralSourceProperties.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/LeveeBreachProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/ManholeProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/ModelRoughnessProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/NetworkCoverageProperties.cs -text
@@ -2922,6 +2925,7 @@ src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/HydroLinkInte
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/HydroNodeInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/HydroObjectToHydroLinkRelationInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/LateralSourceInteractor.cs -text
+src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/LeveeBreachPointInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/ManholeInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/RunoffBoundaryFeatureInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/SewerConnectionInteractor.cs -text
@@ -2935,6 +2939,7 @@ src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Snapping/BranchSnapRule.c
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Snapping/CrossSectionSnapRule.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Snapping/HydroLinkSnapRule.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Snapping/HydroNodeSnapRule.cs -text
+src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Snapping/LeveeBreachSnapRule.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Snapping/StructureSnapRule.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/WasteWaterTreatmentPlantFeatureEditor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/HydroLinkFeatureEditor.cs -text

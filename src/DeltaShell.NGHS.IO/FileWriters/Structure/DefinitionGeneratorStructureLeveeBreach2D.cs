@@ -33,6 +33,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 IniCategory.AddProperty(StructureRegion.StartTimeBreachGrowth.Key, secondsSinceRefDate, StructureRegion.StartTimeBreachGrowth.Description);
             }
 
+            IniCategory.AddProperty(StructureRegion.UseWaterLevelStream, leveeBreach.WaterLevelFlowLocationsActive ? "1" : "0");
+            AddPropertyToIniCategory(leveeBreach.WaterLevelUpstreamLocationX, StructureRegion.WaterLevelUpstreamLocationX);
+            AddPropertyToIniCategory(leveeBreach.WaterLevelUpstreamLocationY, StructureRegion.WaterLevelUpstreamLocationY);
+            AddPropertyToIniCategory(leveeBreach.WaterLevelDownstreamLocationX, StructureRegion.WaterLevelDownstreamLocationX);
+            AddPropertyToIniCategory(leveeBreach.WaterLevelDownstreamLocationY, StructureRegion.WaterLevelDownstreamLocationY);
+        
+
             IniCategory.AddProperty(StructureRegion.BreachGrowthActivated.Key, leveeBreachSettings.BreachGrowthActive ? "1" : "0", StructureRegion.BreachGrowthActivated.Description);
 
             if (!leveeBreachSettings.BreachGrowthActive) return IniCategory;

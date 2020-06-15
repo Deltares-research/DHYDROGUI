@@ -70,6 +70,11 @@ dambreak,TimeToBreachToMaximumDepth, Time to reach maximum breach depth,Double,,
 dambreak,F1,Factor 1,Double,,,,FALSE,Factor 1, Alfa [-]
 dambreak,F2,Factor 2,Double,,,,FALSE,Factor 2, Beta [-]
 dambreak,Ucrit,Critical flow velocity,Double,,,,FALSE,Critical flow velocity [m/s]
+dambreak,UseWaterLevelStream,Use the water level stream from ,1|0,,,,FALSE,0 = off 1 = on (Gui trash)
+dambreak,waterLevelUpstreamLocationX,Water Level Upstream start location-X,Double,,,,FALSE,X-position of the upstream point of the water level stream to the breach point
+dambreak,waterLevelUpstreamLocationY,Water Level Upstream start location-Y,Double,,,,FALSE,Y-position of the upstream point of the water level stream to the breach point
+dambreak,waterLevelDownstreamLocationX,Water Level Downstream start location-X,Double,,,,FALSE,X-position of the downstream point of the water level stream from the breach point
+dambreak,waterLevelDownstreamLocationY,Water Level Downstream start location-Y,Double,,,,FALSE,Y-position of the downstream point of the water level stream from the breach point
 dambreak,T0,Breach start time,Double,,,,FALSE,Start time of the breach (in seconds) [s]
 dambreak,State,State of the growth,1|0,,,,FALSE,0 = off 1 = on (typically set via BMI)
 dambreak,DambreakLevelsAndWidths,Path to the user defined breach,String,,,,FALSE,Path to the user defined breach

@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
 namespace DelftTools.Hydro
@@ -42,7 +43,7 @@ namespace DelftTools.Hydro
             DryAreas = new EventedList<GroupableFeature2DPolygon>();
             ThinDams = new EventedList<ThinDam2D>();
             FixedWeirs = new EventedList<FixedWeir>();
-            LeveeBreaches = new EventedList<LeveeBreach>();
+            LeveeBreaches = new EventedList<Feature2D>();
             ObservationPoints = new EventedList<GroupableFeature2DPoint>();
             ObservationCrossSections = new EventedList<ObservationCrossSection2D>();
             DumpingLocations = new EventedList<GroupableFeature2D>();
@@ -64,7 +65,7 @@ namespace DelftTools.Hydro
         public virtual IEventedList<GroupableFeature2DPolygon> DryAreas { get; protected set; }
         public virtual IEventedList<ThinDam2D> ThinDams { get; protected set; }
         public virtual IEventedList<FixedWeir> FixedWeirs { get; protected set; }
-        public virtual IEventedList<LeveeBreach> LeveeBreaches { get; protected set; }
+        public virtual IEventedList<Feature2D> LeveeBreaches { get; protected set; }
         public virtual IEventedList<GroupableFeature2DPoint> ObservationPoints { get; protected set; }
         public virtual IEventedList<ObservationCrossSection2D> ObservationCrossSections { get; protected set; }
         public virtual IEventedList<GroupableFeature2D> DumpingLocations { get; protected set; }
@@ -85,7 +86,7 @@ namespace DelftTools.Hydro
 
         public virtual IEnumerable<IHydroObject> AllHydroObjects
         {
-            get { return Pumps.OfType<IHydroObject>().Concat(Weirs).Concat(Gates).Concat(LeveeBreaches); }
+            get { return Pumps.OfType<IHydroObject>().Concat(Weirs).Concat(Gates).Concat(LeveeBreaches.OfType<IHydroObject>()); }
         }
 
         public virtual IEventedList<HydroLink> Links { get; set; }
