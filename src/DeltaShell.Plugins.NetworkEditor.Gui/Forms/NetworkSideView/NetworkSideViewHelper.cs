@@ -12,12 +12,74 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Units;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
     public static class NetworkSideViewHelper
     {
+        private enum ValueLocation
+        {
+            AbovePipe,
+            InsidePipe,
+            BelowPipe
+        }
+
+        private class PipeWaterLevelData
+        {
+            private double pipeBottomLevel;
+
+            public IPipe Pipe { get; set; }
+
+            public double RelativeOffset { get; set; }
+
+            public ValueLocation ValueLocation { get; set; }
+
+            public INetworkSegment Segment { get; set; }
+
+            public double PipeBottomLevel
+            {
+                get { return pipeBottomLevel; }
+                set
+                {
+                    pipeBottomLevel = value;
+                    
+                    if (Pipe != null)
+                    {
+                        PipeTopLevel = pipeBottomLevel + Pipe.CrossSectionDefinition.HighestPoint;
+                    }
+                }
+            }
+
+            public double PipeTopLevel { get; private set; }
+
+            public double ValueInPipe { get; private set; }
+
+            public double Value { get; set; }
+            
+            public void SetValueInPipe(double value)
+            {
+                if (value > PipeTopLevel)
+                {
+                    ValueLocation = ValueLocation.AbovePipe;
+                    ValueInPipe = PipeTopLevel;
+                    return;
+                }
+
+                if (value < PipeBottomLevel)
+                {
+                    ValueLocation = ValueLocation.BelowPipe;
+                    ValueInPipe = pipeBottomLevel;
+                    return;
+                }
+
+                ValueLocation = ValueLocation.InsidePipe;
+                ValueInPipe = value;
+            }
+        }
+
         public static bool GetReversed(Route route, IStructure1D structure)
         {
             INetworkSegment segment = RouteHelper.GetSegmentForNetworkLocation(route,
@@ -266,6 +328,139 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             yield return CreateFunction(new Unit("meter", "m AD"), xValues, yValuesBottom, "Pipe bottom");
         }
 
+        public static IFunction GetWaterLevelInPipeFunction(Route route, IFunction waterLevelInSideView)
+        {
+            var xValues = new List<double>();
+            var yValues = new List<double>();
+
+            var relativeOffsets = waterLevelInSideView.Arguments[0].GetValues<double>();
+            var values = waterLevelInSideView.Components[0].GetValues<double>();
+            
+            PipeWaterLevelData previousData = null;
+
+            for (int i = 0; i < relativeOffsets.Count; i++)
+            {
+                var relativeOffset = relativeOffsets[i];
+                var value = values[i];
+                var segmentChainage = GetBranchChainageFromRelativeLength(route, relativeOffset);
+                var segment = segmentChainage?.Item1;
+                var chainage = segmentChainage?.Item2;
+
+                if (segment == null || !(segment.Branch is IPipe pipe))
+                    continue;
+                
+                var currentData = new PipeWaterLevelData
+                {
+                    Pipe = pipe,
+                    Value = value,
+                    RelativeOffset = relativeOffset,
+                    Segment = segment,
+                    PipeBottomLevel = GetLevelAtChainage(chainage.Value, pipe)
+                };
+
+                currentData.SetValueInPipe(value);
+
+                if (previousData != null)
+                {
+                    var coordinatesToAdd = GetExtraCoordinates(previousData, currentData).Where(c => c != null);
+
+                    foreach (var coordinate in coordinatesToAdd.OrderBy(c => c.X))
+                    {
+                        xValues.Add(coordinate.X);
+                        yValues.Add(coordinate.Y);
+                    }
+                }
+
+                xValues.Add(currentData.RelativeOffset);
+                yValues.Add(currentData.ValueInPipe);
+
+                previousData = currentData;
+            }
+
+            return CreateFunction(new Unit("meter", "m AD"), xValues, yValues, "Waterlevel in pipe");
+        }
+
+        private static Tuple<INetworkSegment, double> GetBranchChainageFromRelativeLength(Route route, double relativeOffset)
+        {
+            var currentLength = 0.0;
+
+            foreach (var segment in route.Segments.Values)
+            {
+                currentLength += segment.Length;
+
+                if (relativeOffset <= currentLength)
+                {
+                                        currentLength -= segment.Length;
+
+                    var segmentOffset = relativeOffset - currentLength;
+
+                    var chainage = segment.DirectionIsPositive 
+                        ? segment.Chainage +  segmentOffset
+                        : segment.Chainage - segmentOffset;
+
+                    return new Tuple<INetworkSegment, double>(segment, chainage);
+                }
+            }
+
+            return null;
+        }
+
+        private static IEnumerable<Coordinate> GetExtraCoordinates(PipeWaterLevelData previousData, PipeWaterLevelData currentData)
+        {
+            var previousLocation = previousData.ValueLocation;
+            var location = currentData.ValueLocation;
+
+            var crossedTop = false;
+            var crossedBottom = false;
+
+            switch (previousLocation)
+            {
+                case ValueLocation.AbovePipe when location != ValueLocation.AbovePipe:
+                    crossedTop = true;
+                    crossedBottom = location == ValueLocation.BelowPipe;
+                    break;
+                case ValueLocation.InsidePipe when location != ValueLocation.InsidePipe:
+                    crossedTop = location == ValueLocation.AbovePipe;
+                    crossedBottom = location == ValueLocation.BelowPipe;
+                    break;
+                case ValueLocation.BelowPipe when location != ValueLocation.BelowPipe:
+                    crossedTop = location == ValueLocation.AbovePipe;
+                    crossedBottom = true;
+                    break;
+            }
+
+            if (crossedTop || crossedBottom)
+            {
+                var topLine = new LineString(new[]
+                {
+                    new Coordinate(previousData.RelativeOffset, previousData.PipeTopLevel),
+                    new Coordinate(currentData.RelativeOffset, currentData.PipeTopLevel),
+                });
+
+                var bottomLine = new LineString(new[]
+                {
+                    new Coordinate(previousData.RelativeOffset, previousData.PipeBottomLevel),
+                    new Coordinate(currentData.RelativeOffset, currentData.PipeBottomLevel),
+                });
+
+                var valueLine = new LineString(new[]
+                {
+                    new Coordinate(previousData.RelativeOffset, previousData.Value),
+                    new Coordinate(currentData.RelativeOffset, currentData.Value),
+                });
+
+                if (crossedTop)
+                {
+                    yield return topLine.Intersection(valueLine).Coordinate;
+                }
+
+                if (crossedBottom)
+                {
+                    yield return bottomLine.Intersection(valueLine).Coordinate;
+                }
+            }
+        }
+
         public static void AddPipeSurfaceLevelsInRoute(Route route, INetworkCoverage coverage)
         {
             if (!route.Locations.Values.Any()) return;
@@ -278,7 +473,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 coverage[startLocationPipe] = pipe.SourceCompartment.SurfaceLevel;
                 coverage[endLocationPipe] = pipe.TargetCompartment.SurfaceLevel;
             }
-
 
             var startLocationRoute = route.Locations.Values[0];
             var endLocationRoute = route.Locations.Values[route.Locations.Values.Count - 1];

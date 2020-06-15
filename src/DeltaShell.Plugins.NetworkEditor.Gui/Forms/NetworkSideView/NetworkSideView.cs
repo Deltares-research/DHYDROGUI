@@ -152,6 +152,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private TimeArgumentNavigatable timeNavigator;
         private ShapeModifyTool shapeModifyTool;
         private ISeriesBandTool pipeSeriesBandTool;
+        private ISeriesBandTool waterLevelPipesSeriesBandTool;
         private readonly IChart chart;
         private Dictionary<IChartSeries, bool> seriesActiveCache;
 
@@ -393,11 +394,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 chart.Series.Add(CreateSeries(d));
                 bottomProfileChartData.Add(d);
             });
-            CreateRenderedCoverageChartData().ForEach(d =>
-            {
-                chart.Series.Add(CreateSeries(d));
-                renderedCoveragesChartData.Add(d);
-            });
 
             var pipeSeries = CreatePipeChartData().Select(CreateSeries).ToList();
             chart.Series.AddRange(pipeSeries);
@@ -409,6 +405,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 chartView.Tools.Add(pipeSeriesBandTool);
             }
 
+            chartView.Tools.Remove(waterLevelPipesSeriesBandTool);
+
+            var waterLevelChartData = CreateWaterLevelChartData();
+            if (waterLevelChartData != null)
+            {
+                chart.Series.Add(CreateSeries(waterLevelChartData));
+                bottomProfileChartData.Add(waterLevelChartData);
+            }
+
+            var waterLevelInPipeChartData = CreateWaterLevelInPipeChartData();
+            if (waterLevelInPipeChartData != null)
+            {
+                var waterLevelInPipeSeries = CreateSeries(waterLevelInPipeChartData);
+                chart.Series.Add(waterLevelInPipeSeries);
+                waterLevelPipesSeriesBandTool = chartView.NewSeriesBandTool(waterLevelInPipeSeries, pipeSeries[1], Color.FromArgb(72, Color.RoyalBlue));
+                chartView.Tools.Add(waterLevelPipesSeriesBandTool);
+            }
+
+            CreateRenderedCoverageChartData().ForEach(d =>
+            {
+                chart.Series.Add(CreateSeries(d));
+                renderedCoveragesChartData.Add(d);
+            });
+
             chart.Legend.ShowCheckBoxes = true;
             chart.Series.ForEach(s => s.Visible = !seriesActiveCache.ContainsKey(s) || seriesActiveCache[s]);
             
@@ -416,6 +436,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             UpdateStructureShapes();
             UpdateCompartmentShapes();
             UpdateTitle();
+        }
+
+        private SideViewChartData CreateWaterLevelInPipeChartData()
+        {
+            var waterLevelInSideView = networkSideViewDataController.WaterLevelSideViewFunction;
+            
+            if (waterLevelInSideView == null) return null;
+
+            var waterLevelInPipeFunction = NetworkSideViewHelper.GetWaterLevelInPipeFunction(data, waterLevelInSideView);
+            return new SideViewChartData(waterLevelInPipeFunction, Color.RoyalBlue, ChartSeriesType.LineSeries)
+            {
+                FunctionBindingList = { SynchronizeInvoke = chartView },
+                LineStyleCustomizer = (ls) =>
+                {
+                    ls.DashStyle = DashStyle.Dot;
+                }
+            };
         }
 
         private IEnumerable<SideViewChartData> CreatePipeChartData()
@@ -465,19 +502,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        private IEnumerable<SideViewChartData> CreateBedLevelChartData()
+        private SideViewChartData CreateWaterLevelChartData()
         {
             var waterLevelSideViewFunction = networkSideViewDataController.WaterLevelSideViewFunction;
             if (waterLevelSideViewFunction != null)
             {
                 var waterLevelChartData = new SideViewChartData(waterLevelSideViewFunction,
-                                                                      Color.DeepSkyBlue,
-                                                                      ChartSeriesType.AreaSeries);
+                    Color.RoyalBlue,
+                    ChartSeriesType.LineSeries);
                 waterLevelChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                waterLevelChartData.AreaStyleCustomizer = (acs) => acs.LineColor = Color.RoyalBlue;
-                yield return waterLevelChartData;
+                waterLevelChartData.LineStyleCustomizer = (lcs) =>
+                {
+                    lcs.Color = Color.RoyalBlue;
+                    lcs.DashStyle = DashStyle.Solid;
+                    lcs.Width = 2;
+                };
+
+                return waterLevelChartData;
             }
 
+            return null;
+        }
+
+        private IEnumerable<SideViewChartData> CreateBedLevelChartData()
+        {
             var profileSideViewFunctions = networkSideViewDataController.ProfileSideViewFunctions.ToList();
 
             var bottomLevelSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => psvf.Name == "Bed level");
