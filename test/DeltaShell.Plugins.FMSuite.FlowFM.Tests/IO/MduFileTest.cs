@@ -310,6 +310,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [TestCase(false, "")]
+        [TestCase(true, "output")]
+        [Category(TestCategory.Integration)]
+        public void Test_GivenFmModelWithRunsInIntegratedModel_WhenMduFileWrite_ThenOutputDirIs_Expected(bool runsInIntegratedModel, string expectedOutputDirValue)
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                // Given
+                var fmModel = new WaterFlowFMModel();
+                fmModel.RunsInIntegratedModel = runsInIntegratedModel;
+                string testFile = Path.Combine(tempDir, "runsInIntegratedModel.mdu");
+
+                // When
+                fmModel.ExportTo(testFile);
+
+                // Then
+                Assert.That(File.Exists(testFile));
+                IEnumerable<string> lines = File.ReadLines(testFile);
+                string outputDir = lines.SingleOrDefault(l => l.StartsWith("OutputDir"));
+                Assert.That(outputDir, Is.Not.Null);
+                string[] fields = outputDir.Trim().Split('=');
+                // Remove the comments (if there are).
+                string outputDirValue = fields[1].Split('#')[0].Trim();
+                Assert.That(outputDirValue, Is.EqualTo(expectedOutputDirValue));
+            });
+        }
+
+        [Test]
         public void Test_MduFile_Write_WithBridgePillars_Writes_BridgePillars_Entry_AndFile()
         {
             string tempFileName = Path.GetTempFileName();
