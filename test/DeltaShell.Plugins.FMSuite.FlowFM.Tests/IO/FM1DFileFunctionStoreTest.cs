@@ -18,7 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
-    [Category(TestCategory.Slow)]
     public class FM1DFileFunctionStoreTest
     {
         [Test]
