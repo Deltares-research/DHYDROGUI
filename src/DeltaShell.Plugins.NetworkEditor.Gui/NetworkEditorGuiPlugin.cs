@@ -56,7 +56,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private const string RemoveGroupToolStripMenuKey = "RemoveGroup";
         private const string RemoveUngroupedToolStripMenuKey = "RemoveUngrouped";
         private const string SeparatorToolStripMenuKey = "Separator";
-        private readonly IMapLayerProvider networkEditorMapLayerProvider;
         private HydroRegionTreeView hydroRegionTreeView;
         private bool settingGuiSelection;
         private ClonableToolStripMenuItem convertCoordinateSystemToolStripMenuItem;
@@ -532,10 +531,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 List<string> groups = groupableList.Distinct().ToList();
                 foreach (string groupName in groups)
                 {
-                    var groupMenuItem = new ToolStripMenuItem
-                    {
-                        Text = groupName
-                    };
+                    var groupMenuItem = new ToolStripMenuItem {Text = groupName};
 
                     groupMenuItem.Click += (s, e) => eventedList.RemoveGroup(groupName);
                     removeAreaItemsGroup.DropDownItems.Add(groupMenuItem);
@@ -603,9 +599,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 Name = "convertCoordinateSystemToolStripMenuItem",
                 Text = "Convert to Coordinate System..."
             };
-            
+
             convertCoordinateSystemToolStripMenuItem.Click += ConvertCoordinateSystemToolStripMenuItemClick;
-            
+
             hydroRegionContextMenu = new ContextMenuStrip
             {
                 Name = "addNewHydroRegion",
@@ -613,12 +609,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             };
 
             convertCoordinateSystemContextMenu = new ContextMenuStrip {Name = "convertCoordinateSystemMenu"};
-            convertCoordinateSystemContextMenu.Items.AddRange(new ToolStripItem[]
-            {
-                convertCoordinateSystemToolStripMenuItem
-            });
+            convertCoordinateSystemContextMenu.Items.AddRange(new ToolStripItem[] {convertCoordinateSystemToolStripMenuItem});
         }
-        
+
         private void ApplicationProjectOpened(Project project)
         {
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
@@ -918,7 +911,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             //open view for selected object
             Gui.CommandHandler.OpenViewForSelection();
         }
-        
+
         private void ConvertCoordinateSystemToolStripMenuItemClick(object sender, EventArgs e)
         {
             var network = ((ToolStripMenuItem) sender).Tag as INetwork;
