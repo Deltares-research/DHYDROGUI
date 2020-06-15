@@ -206,6 +206,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             leveeBreach.Expect(lb => lb.Name).Return("lb_01").Repeat.Any();
             leveeBreach.Expect(lb => lb.BreachLocationX).Return(125).Repeat.Any();
             leveeBreach.Expect(lb => lb.BreachLocationY).Return(250).Repeat.Any();
+            leveeBreach.Expect(lb => lb.WaterLevelUpstreamLocationX).Return(125).Repeat.Any();
+            leveeBreach.Expect(lb => lb.WaterLevelUpstreamLocationY).Return(250).Repeat.Any();
+            leveeBreach.Expect(lb => lb.WaterLevelDownstreamLocationX).Return(125).Repeat.Any();
+            leveeBreach.Expect(lb => lb.WaterLevelDownstreamLocationY).Return(250).Repeat.Any();
+            leveeBreach.Expect(lb => lb.WaterLevelFlowLocationsActive).Return(false).Repeat.Any();
+            
             leveeBreach.Expect(lb => lb.Geometry).Return(new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 10) })).Repeat.Any();
             leveeBreach.Expect(lb => lb.LeveeBreachFormula).Return(LeveeBreachGrowthFormula.VerheijvdKnaap2002).Repeat.Any();
 
@@ -250,6 +256,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                  "    StartLocationY        = 250                 # Y-position of the breach growth" + Environment.NewLine +
                  "    T0                    = 31622400            # Start time of the breach (in seconds) [s]" + Environment.NewLine +
                  "    State                 = 1                   # 0 = off 1 = on (typically set via BMI)" + Environment.NewLine +
+                 "    UseWaterLevelStream   = 0                   # 0 = off 1 = on (Gui trash)" + Environment.NewLine +
+                 "    waterLevelUpstreamLocationX= 125                 # X-position of the upstream point of the water level stream to the breach point" + Environment.NewLine +
+                 "    waterLevelUpstreamLocationY= 250                 # Y-position of the upstream point of the water level stream to the breach point" + Environment.NewLine +
+                 "    waterLevelDownstreamLocationX= 125                 # X-position of the downstream point of the water level stream from the breach point" + Environment.NewLine +
+                 "    waterLevelDownstreamLocationY= 250                 # Y-position of the downstream point of the water level stream from the breach point" + Environment.NewLine +
                  "    Algorithm             = 2                   # 0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined" + Environment.NewLine +
                  "    CrestLevelIni         = 2.25                # Initial crest level [m]" + Environment.NewLine +
                  "    CrestLevelMin         = 0.69                # Minimum crest level [m]" + Environment.NewLine +

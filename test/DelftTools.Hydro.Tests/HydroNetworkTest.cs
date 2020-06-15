@@ -334,6 +334,7 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
+        [Category("ToCheck")]
         public void ClonedNetworkIsCollected()
         {
             GC.Collect();

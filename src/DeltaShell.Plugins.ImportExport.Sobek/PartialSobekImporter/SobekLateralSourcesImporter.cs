@@ -139,6 +139,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     {
                         NetworkHelper.AddBranchFeatureToBranch(lateralSource, node.IncomingBranches[0], node.IncomingBranches[0].Length);
                     }
+
+                    lateralSources[lateralSource.Name] = lateralSource;
                 }
             }
         }

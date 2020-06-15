@@ -473,7 +473,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
                 Assert.IsNotNull(structureCategory);
-                Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(14));
 
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
@@ -539,7 +539,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
                 Assert.IsNotNull(structureCategory);
-                Assert.That(structureCategory.Properties.Count, Is.EqualTo(17));
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(22));
 
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationX.Key, expectedBreachLocationX);
                 CheckKeyValuePair(structureCategory, StructureRegion.BreachLocationY.Key, expectedBreachLocationY);
@@ -596,7 +596,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
                 Assert.IsNotNull(structureCategory);
-                Assert.That(structureCategory.Properties.Count, Is.EqualTo(11));
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(16));
 
                 CheckKeyValuePair(structureCategory, StructureRegion.Algorithm.Key, expectedAlgorithmValue);
                 CheckKeyValuePair(structureCategory, StructureRegion.TimeFileName.Key, timeSeriesFileName);

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -38,15 +39,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 {
                     SetGlobalQuantity(fmModel.ModelDefinition, globalQuantity);
                     SetGlobalValue(fmModel.ModelDefinition, globalValue);
-
-                    var network = fmModel.Network;
+                    
                     const int numberOfBranches = 6;
-
-                    for (var i = 0; i < numberOfBranches; i++)
-                    {
-                        network.Branches.Add(new Channel { Name = $"Channel{i}" });
-                    }
-
+                    var network = HydroNetworkHelper.GetSnakeHydroNetwork(numberOfBranches);
+                    fmModel.Network.Branches.AddRange(network.Branches);
+                    fmModel.Network.Nodes.AddRange(network.Nodes);
                     // Preconditions
                     Assert.That(fmModel.ChannelInitialConditionDefinitions.Count, Is.EqualTo(numberOfBranches));
 
@@ -56,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                     // When
                     FeatureFile1D2DWriter.Write1D2DFeatures(mduFilePath, fmModel.ModelDefinition,
-                        network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, channelInitialConditionDefinitions);
+                        fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions, channelInitialConditionDefinitions);
 
                     // Then
                     Assert.That(File.Exists(actualFieldsFile), Is.True);
@@ -125,18 +122,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions,
             InitialConditionQuantity globalQuantity)
         {
-            // Channel0 --> Use constant value: 789
+            // branch1 --> Use constant value: 789
             ChannelInitialConditionDefinition definition0 = channelInitialConditionDefinitions.First(definition =>
-                definition.Channel.Name.Equals("Channel0", StringComparison.InvariantCultureIgnoreCase));
+                definition.Channel.Name.Equals("branch1", StringComparison.InvariantCultureIgnoreCase));
             definition0.SpecificationType = ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition;
             definition0.ConstantChannelInitialConditionDefinition.Value = 789;
             definition0.ConstantChannelInitialConditionDefinition.Quantity = globalQuantity;
 
-            // Channel1 --> Use global value
+            // branch2 --> Use global value
 
-            // Channel2 --> Use branch chainage: [0, 2.33, 1] [11, 12.22, 4]
+            // branch3 --> Use branch chainage: [0, 2.33, 1] [11, 12.22, 4]
             ChannelInitialConditionDefinition definition2 = channelInitialConditionDefinitions.First(definition =>
-                definition.Channel.Name.Equals("Channel2", StringComparison.InvariantCultureIgnoreCase));
+                definition.Channel.Name.Equals("branch3", StringComparison.InvariantCultureIgnoreCase));
             definition2.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
             definition2.SpatialChannelInitialConditionDefinition.Quantity = globalQuantity;
             definition2.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(
@@ -146,17 +143,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             definition2.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(
                 new ConstantSpatialChannelInitialConditionDefinition { Chainage = 1, Value = 4 });
 
-            // Channel3 --> Use branch chainage: [88.12345] [99.98765]
+            // branch4 --> Use branch chainage: [88.12345] [99.98765]
             ChannelInitialConditionDefinition definition3 = channelInitialConditionDefinitions.First(definition =>
-                definition.Channel.Name.Equals("Channel3", StringComparison.InvariantCultureIgnoreCase));
+                definition.Channel.Name.Equals("branch4", StringComparison.InvariantCultureIgnoreCase));
             definition3.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
             definition3.SpatialChannelInitialConditionDefinition.Quantity = globalQuantity;
             definition3.SpatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions.Add(
                 new ConstantSpatialChannelInitialConditionDefinition() { Chainage = 88.12345, Value = 99.98765 });
 
-            // Channel4 --> Use branch chainage: <no definitions>
+            // branch5 --> Use branch chainage: <no definitions>
             ChannelInitialConditionDefinition definition4 = channelInitialConditionDefinitions.First(definition =>
-                definition.Channel.Name.Equals("Channel4", StringComparison.InvariantCultureIgnoreCase));
+                definition.Channel.Name.Equals("branch5", StringComparison.InvariantCultureIgnoreCase));
             definition4.SpecificationType = ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
             definition4.SpatialChannelInitialConditionDefinition.Quantity = globalQuantity;
         }

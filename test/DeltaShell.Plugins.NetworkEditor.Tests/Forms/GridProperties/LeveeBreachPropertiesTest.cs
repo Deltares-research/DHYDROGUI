@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
         [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new LeveeBreachProperties { Data = new LeveeBreach() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new LeveeBreachProperties { Data = new LeveeBreach() { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 200), }) }});
         }
 
         [Test]
