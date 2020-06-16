@@ -9,6 +9,102 @@ using NetTopologySuite.Extensions.Geometries;
 
 namespace DelftTools.Hydro.Helpers
 {
+    public class NetworkStructureComparer : IEqualityComparer<INetwork>
+    {
+        public bool Equals(INetwork primaryNetwork, INetwork secondaryNetwork)
+        {
+            if (!NetworksEqual(primaryNetwork, secondaryNetwork))
+                return false;
+            return true;
+        }
+       
+
+        private bool NetworksEqual(INetwork primaryNetwork, INetwork secondaryNetwork, Func<INetwork, INode[]> getNodes = null, Func<INetwork, IBranch[]> getBranches = null)
+        {
+            if (!Equals(primaryNetwork.Name, secondaryNetwork.Name)) return false;
+            if (!Equals(primaryNetwork.CoordinateSystem.AuthorityCode, secondaryNetwork.CoordinateSystem.AuthorityCode)) return false;
+
+            if (getNodes == null)
+            {
+                getNodes = (n) => n.Nodes.ToArray();
+            }
+
+            if (getBranches == null)
+            {
+                getBranches = (n) => n.Branches.ToArray();
+            }
+
+            var primaryNodes = getNodes(primaryNetwork);
+            var secondaryNodes = getNodes(secondaryNetwork);
+            var primaryBranches = getBranches(primaryNetwork);
+            var secondaryBranches = getBranches(secondaryNetwork);
+
+            if (!Equals(primaryNodes.Length, secondaryNodes.Length)) return false;
+            if (!Equals(primaryBranches.Length, secondaryBranches.Length)) return false;
+
+            // loop over the nodes and assert each item
+            for (var i = 0; i < primaryNodes.Length; ++i)
+            {
+                var primaryNode = primaryNodes[i];
+                var secondaryNode = secondaryNodes[i];
+
+                if (!NodesEqual(primaryNode, secondaryNode))
+                    return false;
+            }
+
+            // loop over the branches and assert each item
+            for (var i = 0; i < primaryBranches.Length; ++i)
+            {
+                var primaryBranch = primaryBranches[i];
+                var secondaryBranch = secondaryBranches[i];
+
+                if (!BranchesEqual(primaryBranch, secondaryBranch))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool BranchesEqual(IBranch primaryBranch, IBranch secondaryBranch)
+        {
+            //if (!Equals(primaryBranch.Name, secondaryBranch.Name)) return false;
+            //if (!Equals(primaryBranch.Description, secondaryBranch.Description)) return false;
+            if (!Equals(primaryBranch.Length, secondaryBranch.Length)) return false;
+
+            // Compare nodes
+            if (!NodesEqual(primaryBranch.Source, secondaryBranch.Source)) return false;
+            if (!NodesEqual(primaryBranch.Target, secondaryBranch.Target)) return false;
+
+            // Compare geometries
+            if (!BranchesGeometriesEqual(primaryBranch.Geometry, secondaryBranch.Geometry)) return false;
+            return true;
+        }
+
+        private bool BranchesGeometriesEqual(IGeometry primaryBranchGeometry, IGeometry secondaryBranchGeometry)
+        {
+            if (!Equals(primaryBranchGeometry.Coordinates.Length, secondaryBranchGeometry.Coordinates.Length)) return false;
+            var comparator = new CoordinateComparison2D();
+            for (int i = 0; i < primaryBranchGeometry.Coordinates.Length; i++)
+            {
+                if (!comparator.Equals(primaryBranchGeometry.Coordinates[i], secondaryBranchGeometry.Coordinates[i])) return false;
+            }
+            return true;
+        }
+
+        private bool NodesEqual(INode primaryNode, INode secondaryNode)
+        {
+            //if (!Equals(primaryNode.Name, secondaryNode.Name)) return false;
+            if (!Equals(primaryNode.Geometry.Coordinate.X, secondaryNode.Geometry.Coordinate.X)) return false;
+            if (!Equals(primaryNode.Geometry.Coordinate.Y, secondaryNode.Geometry.Coordinate.Y)) return false;
+            return true;
+        }
+
+        public int GetHashCode(INetwork obj)
+        {
+            return obj.GetType().GetHashCode();
+        }
+    }
+
     public class HydroNetworkComparer : IEqualityComparer<IHydroNetwork>
     {
         public bool Equals(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)

@@ -65,6 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public void SubscribeToNetwork(IHydroNetwork network)
         {
+            ((INotifyCollectionChanging) network).CollectionChanging += NetworkCollectionChanging;
             ((INotifyCollectionChanged) network).CollectionChanged += NetworkCollectionChanged;
             ((INotifyPropertyChanged) network).PropertyChanged += NetworkPropertyChanged;
             ((INotifyPropertyChanged) network).PropertyChanged += NetworkCoordinateSystemPropertyChanged;
@@ -76,9 +77,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UpdateRoughnessSections();
         }
 
+        private void NetworkCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            //uitzonderingen voor route
+            if (sender is IEventedList<Route>) return;
+            if (!OutputIsEmpty)
+            {
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangeAction.Add:
+                        return;
+
+                    case NotifyCollectionChangeAction.Remove:
+                        /*WIP
+                         switch (e.Item)
+                        {
+                            case IBranch branch:
+                                if (!Output1DFileStore.OutputNetwork.Branches.Any(b =>
+                                    b.Name.StartsWith(branch.Name, StringComparison.InvariantCultureIgnoreCase)))
+                                    return;
+                                break;
+                            case INode node:
+                                if (!Output1DFileStore.OutputNetwork.Nodes.Any(n =>
+                                    n.Name.StartsWith(node.Name, StringComparison.InvariantCultureIgnoreCase)))
+                                    return;
+                                break;
+                            default:
+                                return;
+                            
+                        }*/
+
+                        break;
+                    /*Output1DFileStore?.Functions.OfType<INetworkCoverage>().ForEach(nc =>
+                                {
+                                    nc.Store = new MemoryFunctionStore(nc.Store);
+                                });*/
+
+                }
+                OnClearOutput();
+            }
+
+        }
+
         public virtual void UnSubscribeFromNetwork(IHydroNetwork network)
         {
-
+            ((INotifyCollectionChanging)network).CollectionChanging -= NetworkCollectionChanging;
             ((INotifyCollectionChanged) network).CollectionChanged -= NetworkCollectionChanged;
             ((INotifyPropertyChanged) network).PropertyChanged -= NetworkPropertyChanged;
             ((INotifyPropertyChanged) network).PropertyChanged -= NetworkCoordinateSystemPropertyChanged;
@@ -355,7 +398,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             break;
                         }
                     }
-                    ClearOutput();
                 }
             }
             else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection sewerConnection && !isLoading)

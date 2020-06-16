@@ -1794,7 +1794,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OutputMapFileStore = null;
             }
             if (Output1DFileStore != null)
-            {            
+            {
+                Output1DFileStore.Functions.OfType<INetworkCoverage>().ForEach(nc => nc.Network = null);
                 Output1DFileStore.Functions.Clear();
                 Output1DFileStore.Close();
                 Output1DFileStore = null;

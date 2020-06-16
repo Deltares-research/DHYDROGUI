@@ -10,6 +10,7 @@ using DelftTools.Controls.Swf;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -346,7 +347,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                     OnRouteRemoved = () => Gui.DocumentViews.Remove(v)
                                 };
                             v.DataController = new NetworkSideViewDataController(o, manager, GetModelNameForCoverage);
-                        }
+                        },
+                    /*WIP
+                     OnActivateView = (view, o) =>
+                    {
+                        var project = Gui.Application.Project;
+                        var coverages = project.GetAllItemsRecursive().OfType<INetworkCoverage>().Distinct().Where(nc => nc.Name.Equals(NetworkSideViewDataController.WaterLevelCoverageNameInMapFile) && nc.IsTimeDependent);
+                        //view.DataController.WaterLevelNetworkCoverage
+                        /*foreach (var networkCoverage in coverages)
+                        {
+                            if(view.DataController.AllNetworkCoverages.Contains(networkCoverage)) continue;
+                            var comperator = new NetworkStructureComparer();
+                            if (comperator.Equals(networkCoverage.Network, view.DataController.NetworkRoute.Network))
+                                
+                            view.DataController.AddRenderedCoverage(networkCoverage);
+                        }#1#
+                        
+                    }*/
                 };
             yield return new ViewInfo<HydroRegionFromGisImporter, ImportHydroNetworkFromGisWizardDialog>
                 {
