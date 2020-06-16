@@ -128,10 +128,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     continue;
                 }
 
+                if (ChannelInitialConditionDefinitionsDict.ContainsKey(branchName))
+                {
+                    listOfWarnings.Add($"Could not import channel initial conditions again for branch {branchName}, it was already imported. Skipping import of this initial condition.");
+                    continue;
+                }
+
                 var branch = branchesDictionary[branchName];
                 var channel = branch as Channel;
-                if (channel == null) throw new ArgumentException(); 
-                
+                if (channel == null)
+                {
+                    listOfWarnings.Add($"Could not import channel initial conditions for branch {branchName}, it is not of type Channel. Skipping import of this initial condition.");
+                    continue;
+                }
+
                 var channelInitialConditionDefinition = initialCondition.Level.IsConstant 
                     ? CreateConstantChannelInitialConditionDefinition(channel, initialCondition)
                     : CreateSpatialChannelInitialConditionDefinition(channel, initialCondition);
