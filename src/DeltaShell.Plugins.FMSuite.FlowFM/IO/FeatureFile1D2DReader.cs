@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
         {
             ReadStructuresFiles(targetMduFilePath, modelDefinition, network);
-            ReadCrossSectionFiles(targetMduFilePath, modelDefinition, network);
+            ReadCrossSectionFiles(targetMduFilePath, modelDefinition, network, channelFrictionDefinitions);
             ReadObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             ReadRoughnessFiles(targetMduFilePath, modelDefinition, network, roughnessSections, channelFrictionDefinitions);
             ReadRetentionsFile(targetMduFilePath, modelDefinition, network);
@@ -45,7 +46,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         }
 
-        private static void ReadCrossSectionFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+        private static void ReadCrossSectionFiles(
+            string targetMduFilePath,
+            WaterFlowFMModelDefinition modelDefinition,
+            IHydroNetwork network,
+            IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             var crLocFile = modelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();
             crLocFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crLocFile);
@@ -55,7 +60,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             crDefFile =IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
             if (!File.Exists(crDefFile)) return;
 
-            CrossSectionFileReader.ReadFile(crLocFile,crDefFile, network, "Channels");
+            var channelFrictionDefinitionPerChannelLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel, cfd => cfd);
+
+            CrossSectionFileReader.ReadFile(crLocFile,crDefFile, network, "Channels", channel =>
+            {
+                if (channel != null)
+                {
+                    channelFrictionDefinitionPerChannelLookup[channel].SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
+                }
+            });
         }
         private static void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {

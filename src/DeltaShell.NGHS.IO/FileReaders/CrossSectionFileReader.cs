@@ -20,7 +20,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
             string cslFilename,
             string csdFilename,
             IHydroNetwork network,
-            string defaultFrictionId)
+            string defaultFrictionId,
+            Action<IChannel> onAddingCrossSectionWithFrictionToBranch)
         {
             IList<DelftIniCategory> cslCategories = new List<DelftIniCategory>();
             if (File.Exists(cslFilename))
@@ -45,22 +46,30 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var nonStructureCrossSectionDefinitions = csIniLocations.Select(csIniLocation => csIniLocation.ReadProperty<string>(LocationRegion.Definition.Key)).Distinct().ToArray();
 
             IList<ICrossSectionDefinition> crossSectionDefinitions = new List<ICrossSectionDefinition>();
+            IList<ICrossSectionDefinition> crossSectionDefinitionsWithFriction = new List<ICrossSectionDefinition>();
             IList<ICrossSectionDefinition> sharedNotConnectedCrossSectionDefinitions = new List<ICrossSectionDefinition>();
             foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name == DefinitionPropertySettings.Header))
             {
                 try
                 {
                     var crossSectionDefinition = TransformDefinitionCategoryIntoCrossSectionDefinition(
-                        csdDefinitionCategory, network, nonStructureCrossSectionDefinitions, defaultFrictionId);
+                        csdDefinitionCategory, network, nonStructureCrossSectionDefinitions, defaultFrictionId,
+                        out var hasFriction);
+
                     if (crossSectionDefinitions.Contains(crossSectionDefinition) || crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinition.Name) != null)
                         throw new FileReadingException(string.Format("cross section definition with id {0} is already read, id's CAN NOT be duplicates!", crossSectionDefinition.Name));
-                    if(csdDefinitionCategory.ReadProperty<bool>(DefinitionPropertySettings.IsShared.Key, true))
+                    
+                    if (csdDefinitionCategory.ReadProperty<bool>(DefinitionPropertySettings.IsShared.Key, true))
                     {
                         sharedNotConnectedCrossSectionDefinitions.Add(crossSectionDefinition);
                     }
                     
                     crossSectionDefinitions.Add(crossSectionDefinition);
-                    
+
+                    if (hasFriction)
+                    {
+                        crossSectionDefinitionsWithFriction.Add(crossSectionDefinition);
+                    }
                 }
                 catch (FileReadingException fileReadingException)
                 {
@@ -121,7 +130,14 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     var isSharedCrossSection = crossSectionLocationInfos.Length > 1;
                     var crossSectionDefinitionName = crossSectionDefinition.Name;
                     var crossSection = network.AddCrossSection(crossSectionLocationInfo, crossSectionDefinition, isSharedCrossSection);
-                    
+
+                    var hasFriction = false;
+                    if (crossSectionDefinitionsWithFriction.Contains(crossSectionDefinition))
+                    {
+                        hasFriction = true;
+                        onAddingCrossSectionWithFrictionToBranch((IChannel) crossSection.Branch);
+                    }
+
                     if (isSharedCrossSection)
                     {
                         if (crossSection != null && crossSection.Definition != null)
@@ -137,7 +153,12 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         {
                             var crossSectionDefinitionProxy = new CrossSectionDefinitionProxy(crossSectionDefinition);
                             crossSectionDefinitionProxy.ShiftLevel(sectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key));
-                            network.AddCrossSection(sectionLocationInfo, crossSectionDefinitionProxy, false);
+                            crossSection = network.AddCrossSection(sectionLocationInfo, crossSectionDefinitionProxy, false);
+
+                            if (hasFriction)
+                            {
+                                onAddingCrossSectionWithFrictionToBranch((IChannel) crossSection.Branch);
+                            }
                         }
                     }
                 }
@@ -215,8 +236,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
             IDelftIniCategory crossSectionDefinitionCategory,
             IHydroNetwork network,
             string[] nonStructureCrossSectionDefinitions,
-            string defaultFrictionId)
+            string defaultFrictionId, out bool hasFriction)
         {
+            hasFriction = false;
+
             var typeProperty = crossSectionDefinitionCategory.Properties
                 .First(p => p.Name.ToLowerInvariant() == DefinitionPropertySettings.DefinitionType.Key.ToLowerInvariant());
 
@@ -236,18 +259,20 @@ namespace DeltaShell.NGHS.IO.FileReaders
             if (nonStructureCrossSectionDefinitions.Contains(readCrossSectionDefinition.Name) || crossSectionDefinitionCategory.ReadProperty<bool>(DefinitionPropertySettings.IsShared.Key, true))
             {
                 SetFrictionOnCrossSectionDefinition(crossSectionDefinitionCategory, readCrossSectionDefinition, network,
-                    defaultFrictionId);
+                    defaultFrictionId, out hasFriction);
             }
 
             return readCrossSectionDefinition;
         }
 
-        private static void SetFrictionOnCrossSectionDefinition(
-            IDelftIniCategory csdDefinitionCategory,
+        private static void SetFrictionOnCrossSectionDefinition(IDelftIniCategory csdDefinitionCategory,
             ICrossSectionDefinition readCrossSectionDefinition,
             IHydroNetwork network,
-            string defaultFrictionId)
+            string defaultFrictionId,
+            out bool hasFriction)
         {
+            hasFriction = false;
+
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.YZ || readCrossSectionDefinition.CrossSectionType == CrossSectionType.GeometryBased)
             {
                 var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds.Key,true,';');
@@ -280,6 +305,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         MaxY = frictionPositions[index+1]
                     });
                 }
+
+                hasFriction = true;
             }
 
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.ZW)
@@ -306,8 +333,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
                 readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
                 readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
+
+                hasFriction = true;
             }
-            
+
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.Standard)
             {
                 var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionId.Key, true,';');
@@ -326,6 +355,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 }
 
                 readCrossSectionDefinition.Sections.Add(new CrossSectionSection{SectionType = GetCrossSectionSectionType(sectionTypeName, network)});
+
+                hasFriction = true;
             }
         }
         
