@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -199,7 +200,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     Chainage = networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage,
                     Name = meshGeometry.NodeIds[i],
                     LongName = meshGeometry.NodeLongNames[i],
-                    Geometry = new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
+                    Geometry = HydroNetworkHelper.GetStructureGeometry(networkBranch, networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage) // => werkt niet! new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
                 };
             }
 
