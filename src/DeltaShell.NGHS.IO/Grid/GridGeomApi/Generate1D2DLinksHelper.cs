@@ -121,6 +121,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                         case LinkGeneratingType.EmbeddedOneToOne: //go to next case
                         case LinkGeneratingType.EmbeddedOneToMany:
                             isAvailableMesh1DPoint = sewerConnection == null ||
+                                                     sewerConnection.WaterType == SewerConnectionWaterType.None ||
                                                      sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
                                                      sewerConnection.WaterType == SewerConnectionWaterType.StormWater;
                             break;
