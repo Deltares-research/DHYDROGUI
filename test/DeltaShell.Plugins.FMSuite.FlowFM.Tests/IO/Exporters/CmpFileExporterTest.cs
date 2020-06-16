@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using NUnit.Framework;
@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
     {
         private MockRepository mocks;
         private CmpFileExporter exporter;
-        private readonly string dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("cmpFiles", "dummy.cmp"));
 
         [SetUp]
         public void Setup()
@@ -28,8 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         public void TearDown()
         {
             mocks.VerifyAll();
-
-            File.Delete(dummyFilePath);
         }
 
         [Test]
@@ -75,12 +72,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenABoundaryConditionWhenExportingWithValidFilePathThenWritesCmpFileAndReturnFalse()
         {
-            var boundaryCondition = mocks.DynamicMock<IBoundaryCondition>();
-            boundaryCondition.Expect(bc => bc.DataType).Return(BoundaryConditionDataType.AstroComponents).Repeat.Any();
-            mocks.ReplayAll();
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                var boundaryCondition = mocks.DynamicMock<IBoundaryCondition>();
+                boundaryCondition.Expect(bc => bc.DataType).Return(BoundaryConditionDataType.AstroComponents).Repeat.Any();
+                mocks.ReplayAll();
 
-            bool exportResult = exporter.Export(boundaryCondition, dummyFilePath);
-            Assert.IsTrue(exportResult);
+                bool exportResult = exporter.Export(boundaryCondition, Path.Combine(temporaryDirectory.Path, "dummy.cmp"));
+                Assert.IsTrue(exportResult);
+            }
         }
 
         [Test]
