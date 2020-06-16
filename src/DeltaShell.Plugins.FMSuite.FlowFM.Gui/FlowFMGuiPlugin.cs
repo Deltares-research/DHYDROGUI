@@ -22,6 +22,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -461,35 +462,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
 
-            yield return CreateChannelFrictionDefinitionsWrapperViewInfo(() => Gui);
+            yield return CreateChannelFrictionDefinitionsWrapperViewInfo<ChannelFrictionDefinitionsWrapper>(() => Gui, cfdw => cfdw, cfdw => cfdw.WrappedData);
+            yield return CreateChannelFrictionDefinitionsWrapperViewInfo<IEventedList<ChannelFrictionDefinition>>(() => Gui, ChannelFrictionDefinitionsWrapper.GetInstance, cfd => cfd);
             yield return CreatePipeFrictionDefinitionsWrapperViewInfo(() => Gui);
             yield return CreateChannelInitialConditionDefinitionsWrapperViewInfo(() => Gui);
         }
 
-        private static ViewInfo<ChannelFrictionDefinitionsWrapper, ILayer, ChannelFrictionDefinitionsView> CreateChannelFrictionDefinitionsWrapperViewInfo(Func<IGui> getGui)
+        private static ViewInfo<TData, ILayer, ChannelFrictionDefinitionsView> CreateChannelFrictionDefinitionsWrapperViewInfo<TData>(
+            Func<IGui> getGui,
+            Func<TData, ChannelFrictionDefinitionsWrapper> getChannelFrictionDefinitionsWrapper,
+            Func<TData, IEventedList<ChannelFrictionDefinition>> getChannelFrictionDefinitions)
         {
-            return new ViewInfo<ChannelFrictionDefinitionsWrapper, ILayer, ChannelFrictionDefinitionsView>
+            return new ViewInfo<TData, ILayer, ChannelFrictionDefinitionsView>
             {
                 Description = "1D Roughness - Channels",
                 GetViewName = (view, layer) => layer.Name,
-                GetViewData = channelFrictionDefinitionsWrapper =>
+                GetViewData = data =>
                 {
                     return getGui().DocumentViews
                         .OfType<ProjectItemMapView>()
-                        .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(channelFrictionDefinitionsWrapper))
+                        .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(getChannelFrictionDefinitionsWrapper(data)))
                         .FirstOrDefault(layerData => layerData != null);
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = channelFrictionDefinitionsWrapper => getGui().Application.Project.RootFolder
+                GetCompositeViewData = data => getGui().Application.Project.RootFolder
                     .GetAllItemsRecursive()
                     .OfType<WaterFlowFMModel>()
-                    .First(waterFlowFmModel => Equals(channelFrictionDefinitionsWrapper.WrappedData, waterFlowFmModel.ChannelFrictionDefinitions)),
-                AfterCreate = (view, channelFrictionDefinitionsWrapper) =>
+                    .First(waterFlowFmModel => Equals(getChannelFrictionDefinitions(data), waterFlowFmModel.ChannelFrictionDefinitions)),
+                AfterCreate = (view, data) =>
                 {
                     var gui = getGui();
                     var flowFmModel = gui.Application.Project.RootFolder.GetAllItemsRecursive()
                         .OfType<WaterFlowFMModel>()
-                        .First(waterFlowFmModel => Equals(channelFrictionDefinitionsWrapper.WrappedData, waterFlowFmModel.ChannelFrictionDefinitions));
+                        .First(waterFlowFmModel => Equals(getChannelFrictionDefinitions(data), waterFlowFmModel.ChannelFrictionDefinitions));
 
                     view.SetWaterFlowFmModel(flowFmModel);
 
@@ -504,7 +509,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                     var centralMap = gui.DocumentViews
                         .OfType<ProjectItemMapView>()
-                        .First(vi => vi.MapView.GetLayerForData(channelFrictionDefinitionsWrapper) != null);
+                        .First(vi => vi.MapView.GetLayerForData(getChannelFrictionDefinitionsWrapper(data)) != null);
                     if (centralMap == null) return;
 
                     view.SetZoomToFeatureMethod(feature => centralMap.MapView.EnsureVisible(feature));

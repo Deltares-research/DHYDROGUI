@@ -12,14 +12,18 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
+        public override DelftIniCategory CreateDefinitionRegion(
+            ICrossSectionDefinition crossSectionDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
         {
             AddCommonProperties(crossSectionDefinition);
+
             AddCoordinates(crossSectionDefinition);
 
             IniCategory.AddProperty(DefinitionPropertySettings.Conveyance, DefinitionPropertySettings.Conveyance.DefaultValue);
 
-            AddFrictionData(crossSectionDefinition);
+            AddFrictionData(crossSectionDefinition, writeFrictionFromDefinition, defaultFrictionId);
             // can't create a protected base function! (because CrossSectionDefinitionXYZ != CrossSectionDefinitionYZ)
             
             return IniCategory;
@@ -42,6 +46,5 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             var zCoordinates = crossSectionDefinitionXyz.Geometry.Coordinates.Select(c => c.Z);
             IniCategory.AddProperty(DefinitionPropertySettings.ZCoors, zCoordinates);
         }
-
     }
 }

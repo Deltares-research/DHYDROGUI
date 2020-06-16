@@ -42,7 +42,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.That(csdStd.Shape, Is.InstanceOf<ICrossSectionStandardShapeOpenClosed>());
             var rect = (ICrossSectionStandardShapeOpenClosed) csdStd.Shape;
             rect.Closed = isClosed;
-            var category = categoryGenerator.CreateDefinitionRegion(csdStd);
+            var category = categoryGenerator.CreateDefinitionRegion(csdStd, true, "");
             Assert.IsTrue(category.Properties.Any(p => p.Name.Equals(DefinitionPropertySettings.Closed.Key, StringComparison.InvariantCultureIgnoreCase)));
             Assert.IsTrue(category.ReadProperty<string>(DefinitionPropertySettings.Closed.Key).Equals(isClosed ? "yes" : "no", StringComparison.CurrentCultureIgnoreCase));
 

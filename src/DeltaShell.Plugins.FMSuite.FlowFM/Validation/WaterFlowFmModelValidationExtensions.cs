@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -31,6 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateRestartInput(model),
                 WaterFlowFMEmbankmentValidator.Validate(model),
                 WaterFlowFMEnclosureValidator.Validate(model),
+                ValidateRoughness(model)
             };
 
             var subReports = model.UseMorSed
@@ -42,6 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             
             return validationReport;
         }
+
         private static ValidationReport ValidateLinks(IEnumerable<ILink1D2D> links)
         {
             var invalidLinkIssues = links
@@ -170,6 +174,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
             return new ValidationReport("Input restart state", issues);
         }
-    }
 
+        private static ValidationReport ValidateRoughness(WaterFlowFMModel model)
+        {
+            IList<ValidationIssue> issues = new List<ValidationIssue>();
+
+            var channelFrictionDefinitionPerChannelLookup = model.ChannelFrictionDefinitions.ToDictionary(cfd => cfd.Channel, cfd => cfd);
+            var channelsPerCrossSectionDefinitionLookup = model.Network.GetChannelsPerCrossSectionDefinitionLookup();
+
+            foreach (var sharedCrossSectionDefinition in model.Network.SharedCrossSectionDefinitions)
+            {
+                if (!channelsPerCrossSectionDefinitionLookup.TryGetValue(sharedCrossSectionDefinition,
+                    out var channelsUsingSharedCrossSectionDefinition))
+                {
+                    continue; // Skip shared cross section definitions that are unused
+                }
+
+                var relatedChannelFrictionDefinitions = channelsUsingSharedCrossSectionDefinition.Select(c => channelFrictionDefinitionPerChannelLookup[c]).ToArray();
+
+                if (relatedChannelFrictionDefinitions.All(cfd =>
+                    cfd.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections
+                    || cfd.SpecificationType == ChannelFrictionSpecificationType.CrossSectionFrictionDefinitions))
+                {
+                    continue;
+                }
+
+                if (relatedChannelFrictionDefinitions.All(cfd =>
+                    cfd.SpecificationType != ChannelFrictionSpecificationType.RoughnessSections
+                    && cfd.SpecificationType != ChannelFrictionSpecificationType.CrossSectionFrictionDefinitions))
+                {
+                    continue;
+                }
+
+                issues.Add(new ValidationIssue("Conflicting roughness specification types",
+                    ValidationSeverity.Error,
+                    $"Shared cross section definition '{sharedCrossSectionDefinition.Name}' is used on branches " +
+                    "that have a conflicting roughness Specification type. The branches involved are: " +
+                    $"{string.Join(", ", channelsUsingSharedCrossSectionDefinition.Select(c => c.Name))}.",
+                    model.ChannelFrictionDefinitions));
+            }
+
+            return new ValidationReport("Roughness", issues);
+        }
+    }
 }

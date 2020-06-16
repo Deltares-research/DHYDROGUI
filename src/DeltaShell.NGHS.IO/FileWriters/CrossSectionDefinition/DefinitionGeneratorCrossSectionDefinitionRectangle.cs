@@ -16,11 +16,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             return rectangleShape != null;
         }
 
-        protected override void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
-        {
-            base.AddCommonProperties(crossSectionDefinition);
-        }
-
         protected override void AddShapeMeasurementProperties(ICrossSectionStandardShape shape)
         {
             var rectangleShape = shape as CrossSectionStandardShapeRectangle;

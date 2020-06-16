@@ -14,12 +14,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             UseTabulatedProfile = useTabulatedProfile;
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
+        public override DelftIniCategory CreateDefinitionRegion(
+            ICrossSectionDefinition crossSectionDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
         {
             var standardDefinition = crossSectionDefinition as CrossSectionDefinitionStandard;
             if (!IsCorrectCrossSectionDefinitionForGenerator(standardDefinition)) return IniCategory;
 
-            AddProperties(standardDefinition);
+            AddProperties(standardDefinition, writeFrictionFromDefinition, defaultFrictionId);
             if (standardDefinition?.Shape is ICrossSectionStandardShapeOpenClosed shape)
             {
                 IniCategory.AddProperty(DefinitionPropertySettings.Closed, shape.Closed ? "yes" : "no");
@@ -33,22 +36,48 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                    && HasCorrectCrossSectionShape(standardDefinition);
         }
 
-        private void AddProperties(CrossSectionDefinitionStandard standardDefinition)
+        private void AddProperties(
+            CrossSectionDefinitionStandard standardDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
         {
-            AddCommonProperties(standardDefinition);
+            AddEnhancedCommonProperties(standardDefinition, writeFrictionFromDefinition, defaultFrictionId);
             AddShapeMeasurementProperties(standardDefinition.Shape);
             if (UseTabulatedProfile)
+            {
                 GenerateTabulatedProfile(standardDefinition.Shape.GetTabulatedDefinition());
+            }
         }
         
-        protected override void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
+        protected virtual void AddEnhancedCommonProperties(
+            ICrossSectionDefinition crossSectionDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
         {
-            base.AddCommonProperties(crossSectionDefinition);
-            var crossSectionSection = crossSectionDefinition.Sections.FirstOrDefault();
-            if (crossSectionSection != null) IniCategory.AddProperty(DefinitionPropertySettings.FrictionId, crossSectionSection.SectionType?.Name);
+            AddCommonProperties(crossSectionDefinition);
+            AddFrictionData(crossSectionDefinition, writeFrictionFromDefinition, defaultFrictionId);
         }
 
         protected abstract bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition);
+
         protected abstract void AddShapeMeasurementProperties(ICrossSectionStandardShape shape);
+
+        private void AddFrictionData(
+            ICrossSectionDefinition crossSectionDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
+        {
+            if (!writeFrictionFromDefinition)
+            {
+                IniCategory.AddProperty(DefinitionPropertySettings.FrictionId, defaultFrictionId);
+                return;
+            }
+
+            var crossSectionSection = crossSectionDefinition.Sections.FirstOrDefault();
+            if (crossSectionSection != null)
+            {
+                IniCategory.AddProperty(DefinitionPropertySettings.FrictionId, crossSectionSection.SectionType?.Name);
+            }
+        }
     }
 }

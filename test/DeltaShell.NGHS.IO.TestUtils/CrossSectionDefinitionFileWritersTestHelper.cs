@@ -346,7 +346,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                     if (!processCsDefinitions.Contains(csDefinitionId))
                     {
                         var definitionRegion = definitionGeneratorCrossSectionDefinition
-                            .CreateDefinitionRegion(crossSection.Definition);
+                            .CreateDefinitionRegion(crossSection.Definition, true, "");
                         categories.Add(definitionRegion);
                         processCsDefinitions.Add(csDefinitionId);
                     }

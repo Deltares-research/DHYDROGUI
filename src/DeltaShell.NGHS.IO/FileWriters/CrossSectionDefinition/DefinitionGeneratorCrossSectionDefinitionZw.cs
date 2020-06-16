@@ -19,7 +19,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
+        public override DelftIniCategory CreateDefinitionRegion(
+            ICrossSectionDefinition crossSectionDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
         {
             AddCommonProperties(crossSectionDefinition);
             
@@ -34,8 +37,24 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             IniCategory.AddProperty(DefinitionPropertySettings.TotalAreaLevee, summerDike.TotalSurface);
             IniCategory.AddProperty(DefinitionPropertySettings.BaseLevelLevee, summerDike.FloodPlainLevel);
 
+            AddFrictionData(crossSectionDefinitionZw, writeFrictionFromDefinition, defaultFrictionId);
+            
+            return IniCategory;
+        }
+
+        private void AddFrictionData(
+            CrossSectionDefinitionZW crossSectionDefinitionZw,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
+        {
             if (crossSectionDefinitionZw.Sections.Count > 0)
             {
+                if (!writeFrictionFromDefinition)
+                {
+                    IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, defaultFrictionId);
+                    return;
+                }
+
                 IniCategory.AddProperty(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.MainSectionTypeName));
                 IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain1, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain1SectionTypeName));
                 IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain2, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain2SectionTypeName));
@@ -45,8 +64,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 var largestTotalWidth = crossSectionDefinitionZw.ZWDataTable.OrderBy(hfsw => hfsw.Z).Select(r => r.Width).Max();
                 IniCategory.AddProperty(DefinitionPropertySettings.Main, largestTotalWidth);
             }
-            
-            return IniCategory;
         }
 
         protected void GenerateTabulatedProfile(CrossSectionDefinitionZW crossSectionDefinitionZw)

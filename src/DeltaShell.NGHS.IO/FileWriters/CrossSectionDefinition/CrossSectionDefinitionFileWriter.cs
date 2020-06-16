@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -9,15 +11,27 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public static class CrossSectionDefinitionFileWriter
     {
-        public static void WriteFile(string targetFile, IHydroNetwork network)
+        public static void WriteFile(
+            string targetFile,
+            IHydroNetwork network,
+            Func<IChannel, bool> writeFrictionFromCrossSectionDefinitionsForChannel,
+            string defaultFrictionId)
         {
             var crossSectionDefinitions = network.GetNetworkCrossSectionDefinitions();
             var sharedCrossSectionDefinitions = network.SharedCrossSectionDefinitions;
+            var channelsPerCrossSectionDefinitionLookup = network.GetChannelsPerCrossSectionDefinitionLookup();
 
-            WriteFile(targetFile, crossSectionDefinitions, sharedCrossSectionDefinitions);
+            WriteFile(targetFile, crossSectionDefinitions, sharedCrossSectionDefinitions,
+                csd => WriteFrictionFromCrossSectionDefinition(writeFrictionFromCrossSectionDefinitionsForChannel, channelsPerCrossSectionDefinitionLookup, csd),
+                defaultFrictionId);
         }
 
-        private static void WriteFile(string targetFile, IEnumerable<ICrossSectionDefinition> crossSectionDefinitions, IEnumerable<ICrossSectionDefinition> sharedCrossSectionDefinitions)
+        private static void WriteFile(
+            string targetFile,
+            IEnumerable<ICrossSectionDefinition> crossSectionDefinitions,
+            IEnumerable<ICrossSectionDefinition> sharedCrossSectionDefinitions,
+            Func<ICrossSectionDefinition, bool> writeFrictionFromCrossSectionDefinition,
+            string defaultFrictionId)
         {
             if (File.Exists(targetFile)) File.Delete(targetFile);
 
@@ -25,7 +39,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.CrossSectionDefinitionsMajorVersion, 
                     GeneralRegion.CrossSectionDefinitionsMinorVersion, 
-                    GeneralRegion.FileTypeName.CrossSectionDefinition),
+                    GeneralRegion.FileTypeName.CrossSectionDefinition)
             };
 
             var processedCsDefinitions = new List<string>();
@@ -38,7 +52,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 var csDefinitionId = crossSectionDefinition.Name;
                 if (processedCsDefinitions.Contains(csDefinitionId)) continue;
 
-                var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(crossSectionDefinition);
+                var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(
+                    crossSectionDefinition,
+                    writeFrictionFromCrossSectionDefinition(crossSectionDefinition),
+                    defaultFrictionId);
 
                 categories.Add(definitionRegion);
                 processedCsDefinitions.Add(csDefinitionId);
@@ -53,7 +70,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 var csDefinitionId = sharedCrossSectionDefinition.Name;
                 if (processedCsDefinitions.Contains(csDefinitionId)) continue;
 
-                var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(sharedCrossSectionDefinition);
+                var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(
+                    sharedCrossSectionDefinition,
+                    writeFrictionFromCrossSectionDefinition(sharedCrossSectionDefinition),
+                    defaultFrictionId);
                 definitionRegion.AddProperty(DefinitionPropertySettings.IsShared.Key,true);
                 categories.Add(definitionRegion);
             }
@@ -61,6 +81,17 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             new IniFileWriter().WriteIniFile(categories, targetFile);
         }
 
-        
+        private static bool WriteFrictionFromCrossSectionDefinition(
+            Func<IChannel, bool> writeFrictionFromCrossSectionDefinitionsForChannel,
+            IDictionary<ICrossSectionDefinition, IEnumerable<IChannel>> channelsPerCrossSectionDefinitionLookup,
+            ICrossSectionDefinition crossSectionDefinition)
+        {
+            if (!channelsPerCrossSectionDefinitionLookup.TryGetValue(crossSectionDefinition, out var channels))
+            {
+                return true; // Always write friction for unused shared cross section definitions
+            }
+
+            return channels.Any(writeFrictionFromCrossSectionDefinitionsForChannel);
+        }
     }
 }

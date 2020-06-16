@@ -1,7 +1,10 @@
 ﻿using System.IO;
+using System.Linq;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
@@ -23,13 +26,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         public void GivenArrayOfCrossSectionDefinitions_WhenWritingToFile_ThenIniFileIsWritten()
         {
             var filePath = Path.Combine(FileUtils.CreateTempDirectory(), FeatureFile1D2DWriter.CROSS_SECTION_DEFINITION_FILE_NAME);
+
             var fmModel = new WaterFlowFMModel();
-            //fmModel.Network.SharedCrossSectionDefinitions.Add(new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle()));
-            CrossSectionDefinitionFileWriter.WriteFile(filePath, fmModel.Network);
+            var channelFrictionDefinitionPerBranchLookup = fmModel.ChannelFrictionDefinitions.ToDictionary(cfd => (IBranch) cfd.Channel, cfd => cfd);
+
+            CrossSectionDefinitionFileWriter.WriteFile(filePath, fmModel.Network, branch =>
+                {
+                    var channelFrictionDefinition = channelFrictionDefinitionPerBranchLookup[branch];
+
+                    return channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections
+                           || channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.CrossSectionFrictionDefinitions;
+                }, "Channels");
 
             Assert.That(File.Exists(filePath));
         }
-
-        
     }
 }

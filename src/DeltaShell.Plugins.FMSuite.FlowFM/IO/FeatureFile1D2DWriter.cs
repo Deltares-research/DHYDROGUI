@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
@@ -41,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             WriteNodeFile(targetMduFilePath, modelDefinition, network);
             WriteBranchFile(targetMduFilePath, modelDefinition, network.Branches);
-            WriteCrossSectionFiles(targetMduFilePath, modelDefinition, network);
+            WriteCrossSectionFiles(targetMduFilePath, modelDefinition, network, channelFrictionDefinitions);
             WriteObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             WriteStructuresFiles(targetMduFilePath, modelDefinition, network, area);
             WriteRoughnessFiles(targetMduFilePath, modelDefinition, roughnessSections, channelFrictionDefinitions);
@@ -103,9 +102,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             BranchFile.Write(branchesFilePath, branches);
             modelDefinition.SetModelProperty(KnownProperties.BranchFile, NetworkPropertiesHelper.BranchGuiFileName);
         }
-        private static void WriteCrossSectionFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+
+        private static void WriteCrossSectionFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
+            IHydroNetwork network, IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
-            WriteCrossSectionDefinitions(targetMduFilePath, modelDefinition, network);
+            WriteCrossSectionDefinitions(targetMduFilePath, modelDefinition, network, channelFrictionDefinitions);
             WriteCrossSectionLocations(targetMduFilePath, modelDefinition, network);
         }
 
@@ -128,20 +129,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WriteCrossSectionDefinitions(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+        private static void WriteCrossSectionDefinitions(
+            string targetMduFilePath,
+            WaterFlowFMModelDefinition modelDefinition,
+            IHydroNetwork network,
+            IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, CROSS_SECTION_DEFINITION_FILE_NAME);
             FileUtils.DeleteIfExists(crossSectionDefinitionFilePath);
 
+            var channelFrictionDefinitionPerChannelLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel, cfd => cfd);
+
             if (network.ContainsAnyCrossSectionDefinitions() || network.SharedCrossSectionDefinitions.Any())
             {
                 modelDefinition.SetModelProperty(KnownProperties.CrossDefFile, CROSS_SECTION_DEFINITION_FILE_NAME);
-                CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, network);
+                CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, network,
+                    WriteFrictionFromCrossSectionDefinitionsForChannel(channelFrictionDefinitionPerChannelLookup),
+                    "Channels");
             }
             else
             {
                 modelDefinition.SetModelProperty(KnownProperties.CrossDefFile, string.Empty);
             }
+        }
+
+        private static Func<IChannel, bool> WriteFrictionFromCrossSectionDefinitionsForChannel(IReadOnlyDictionary<IChannel, ChannelFrictionDefinition> channelFrictionDefinitionPerChannelLookup)
+        {
+            return channel =>
+            {
+                var channelFrictionDefinition = channelFrictionDefinitionPerChannelLookup[channel];
+
+                return channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections
+                       || channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.CrossSectionFrictionDefinitions;
+            };
         }
 
         private static void WriteStructuresFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area)

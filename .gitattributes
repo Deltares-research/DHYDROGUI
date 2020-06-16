@@ -248,6 +248,7 @@ src/DelftTools.Hydro/CrossSections/DataSets/FastYZDataTable.cs -text
 src/DelftTools.Hydro/CrossSections/DataSets/FastZWDataTable.cs -text
 src/DelftTools.Hydro/CrossSections/DataSets/LightDataTable.cs -text
 src/DelftTools.Hydro/CrossSections/Extensions/CrossSectionDefinitionStandardExtensions.cs -text
+src/DelftTools.Hydro/CrossSections/Extensions/CrossSectionExtensions.cs -text
 src/DelftTools.Hydro/CrossSections/HeightFlowStorageWidth.cs -text
 src/DelftTools.Hydro/CrossSections/ICrossSection.cs -text
 src/DelftTools.Hydro/CrossSections/ICrossSectionDefinition.cs -text

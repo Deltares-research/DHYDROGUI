@@ -18,32 +18,43 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
         }
 
-        public override DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition)
+        public override DelftIniCategory CreateDefinitionRegion(
+            ICrossSectionDefinition crossSectionDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
         {
             AddCommonProperties(crossSectionDefinition);
 
             IniCategory.AddProperty(DefinitionPropertySettings.SingleValuedZ, DefinitionPropertySettings.SingleValuedZ.DefaultValue);
             IniCategory.AddProperty(DefinitionPropertySettings.YZCount, crossSectionDefinition.Profile.ToList().Count);
+            
             AddCoordinates(crossSectionDefinition);
-            AddFrictionData(crossSectionDefinition);
+            
+            AddFrictionData(crossSectionDefinition, writeFrictionFromDefinition, defaultFrictionId);
 
             return IniCategory;
         }
 
-        protected void AddFrictionData(ICrossSectionDefinition crossSectionDefinition)
+        protected void AddFrictionData(
+            ICrossSectionDefinition crossSectionDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
         {
+            if (!writeFrictionFromDefinition)
+            {
+                IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, defaultFrictionId);
+                return;
+            }
+
             var crossSectionSections = crossSectionDefinition.Sections;
             if (crossSectionSections != null && crossSectionSections.Any())
             {
                 IniCategory.AddProperty(DefinitionPropertySettings.SectionCount, crossSectionSections.Count);
-                /*IniCategory.AddProperty(DefinitionPropertySettings.FrictionPositions,
-                    string.Join(";", crossSectionSections.Select(css => css.MinY.ToString("F3"))) + ";" +
-                    crossSectionSections.Max(css => css.MaxY.ToString("F3")));*/
                 IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, string.Join(";", crossSectionSections.Select(css => css.SectionType.Name)));
                 IniCategory.AddProperty(DefinitionPropertySettings.FrictionPositions, crossSectionSections.Select(css => css.MinY).Plus(crossSectionSections.Max(css => css.MaxY)));
-                
             }
         }
+
         private void AddCoordinates(ICrossSectionDefinition crossSectionDefinition)
         {
             var zCoordinates = crossSectionDefinition.IsProxy

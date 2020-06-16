@@ -22,9 +22,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             IniCategory = new DelftIniCategory(DefinitionPropertySettings.Header);
         }
 
-        public abstract DelftIniCategory CreateDefinitionRegion(ICrossSectionDefinition crossSectionDefinition);
+        public abstract DelftIniCategory CreateDefinitionRegion(
+            ICrossSectionDefinition crossSectionDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId);
 
-        protected virtual void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
+        protected void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
         {
             IniCategory.AddProperty(DefinitionPropertySettings.Id, crossSectionDefinition.Name);
             IniCategory.AddProperty(DefinitionPropertySettings.DefinitionType, definitiontype);

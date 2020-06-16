@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             crDefFile =IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
             if (!File.Exists(crDefFile)) return;
 
-            CrossSectionFileReader.ReadFile(crLocFile,crDefFile, network);
+            CrossSectionFileReader.ReadFile(crLocFile,crDefFile, network, "Channels");
         }
         private static void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {

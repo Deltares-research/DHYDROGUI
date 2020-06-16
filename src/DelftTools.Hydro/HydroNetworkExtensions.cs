@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.Extensions;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -27,6 +28,7 @@ namespace DelftTools.Hydro
                    hydroNetwork.Manholes.FirstOrDefault(m => m.Compartments.Any(c => compartment.Name != null // search for manhole via compartments in manholes using this compartment name
                                                                                      && c.Name.Equals(compartment.Name, StringComparison.InvariantCultureIgnoreCase)));
         }
+
         public static void FindAndConnectManholesInNetwork(this IHydroNetwork hydroNetwork, ISewerConnection sewerConnection)
         {
             var connection = sewerConnection as SewerConnection;
@@ -63,6 +65,7 @@ namespace DelftTools.Hydro
             }
             
         }
+
         public static void UpdateGeodeticDistancesOfChannels(this IHydroNetwork network)
         {
             if (network.CoordinateSystem == null)
@@ -84,7 +87,6 @@ namespace DelftTools.Hydro
                 c.GeodeticLength = distance;
             });
         }
-
 
         /// Ensure that all <see cref="ICompositeBranchStructure"/> have a unique name
         /// </summary>
@@ -147,21 +149,13 @@ namespace DelftTools.Hydro
                 }
             }
         }
+
         public static IEnumerable<ICrossSectionDefinition> GetNetworkCrossSectionDefinitions(this IHydroNetwork network)
         {
-            return network.CrossSections.Select(GetCrossSectionDefinition)
+            return network.CrossSections.Select(c => c.GetCrossSectionDefinition())
                 .Concat(network.BridgeCrossSectionDefinitions())
                 .Concat(network.CulvertCrossSectionDefinitions())
                 .Concat(network.PipeCrossSectionDefinitions());
-        }
-
-        private static ICrossSectionDefinition GetCrossSectionDefinition(ICrossSection crossSection)
-        {
-            var crossSectionDefinition = crossSection.Definition;
-            var definition = crossSectionDefinition.IsProxy
-                ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition
-                : crossSectionDefinition;
-            return definition;
         }
 
         private static IEnumerable<ICrossSectionDefinition> BridgeCrossSectionDefinitions(this IHydroNetwork network)
@@ -174,14 +168,33 @@ namespace DelftTools.Hydro
             return network.Culverts.Where(c => c.CrossSectionDefinition != null).Select(c => c.CrossSectionDefinition);
         }
 
-
         private static IEnumerable<ICrossSectionDefinition> PipeCrossSectionDefinitions(this IHydroNetwork network)
         {
             return network.Pipes.Where(p => p.CrossSectionDefinition != null).Select(p => p.CrossSectionDefinition.IsProxy ? ((CrossSectionDefinitionProxy)p.CrossSectionDefinition).InnerDefinition : p.CrossSectionDefinition);
         }
+
         public static bool ContainsAnyCrossSectionDefinitions(this IHydroNetwork network)
         {
             return network.GetNetworkCrossSectionDefinitions().Any();
+        }
+
+        public static IDictionary<ICrossSectionDefinition, IEnumerable<IChannel>> GetChannelsPerCrossSectionDefinitionLookup(this IHydroNetwork network)
+        {
+            var channelsPerCrossSectionDefinitionLookup = new Dictionary<ICrossSectionDefinition, IEnumerable<IChannel>>();
+
+            foreach (var crossSection in network.CrossSections)
+            {
+                var crossSectionDefinition = crossSection.GetCrossSectionDefinition();
+
+                if (!channelsPerCrossSectionDefinitionLookup.ContainsKey(crossSectionDefinition))
+                {
+                    channelsPerCrossSectionDefinitionLookup.Add(crossSectionDefinition, new List<IChannel>());
+                }
+
+                ((List<IChannel>) channelsPerCrossSectionDefinitionLookup[crossSectionDefinition]).Add((IChannel) crossSection.Branch);
+            }
+
+            return channelsPerCrossSectionDefinitionLookup;
         }
     }
 }

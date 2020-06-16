@@ -12,9 +12,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             this.templateType = templateType;
         }
 
-        protected override void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
+        protected override void AddEnhancedCommonProperties(
+            ICrossSectionDefinition crossSectionDefinition,
+            bool writeFrictionFromDefinition,
+            string defaultFrictionId)
         {
-            base.AddCommonProperties(crossSectionDefinition);
+            base.AddEnhancedCommonProperties(crossSectionDefinition, writeFrictionFromDefinition, defaultFrictionId);
             IniCategory.AddProperty(DefinitionPropertySettings.Template, templateType);
         }
 
