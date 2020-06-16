@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 SubscribeToNetwork(value);
                 
                 // refresh data
-                //moet dit ? RefreshNetworkRelatedData();
+                RefreshNetworkRelatedData();
 
             }
         }
