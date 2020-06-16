@@ -35,16 +35,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
         [TestCase("bendprof_20080905_040000_rst.nc", 4)]
         [TestCase("bendprof_20080905_120000_rst.nc", 12)]
         [TestCase("bendprof_20080905_220000_rst.nc", 22)]
         public void GivenRestartFile_WhenImported_ThenCorrectDataSetOnModel(string restartFile, int expectedHour)
         {
-            WaterFlowFMModel model = LoadBendProfModelWithWriteRestart();
+            // Given
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(TestHelper.GetTestFilePath("dummy.mdu"));
 
+            // When
             model.ImportRestartFile(TestHelper.GetTestFilePath(Path.Combine(nameof(WaterFlowFMModelRestartTest), restartFile)));
 
+            // Then
             Assert.That(model.RestartInput.SimulationTime, Is.EqualTo(new DateTime(2008, 9, 5, expectedHour,0,0)));
         }
 
