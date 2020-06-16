@@ -136,36 +136,41 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             var features = new List<IFeature>();
             foreach (var leveeFeature in leveeFeatures)
             {
-                var extractBranchLocationPointFeatureOfThisLeveeBreach = ExtractPointFeatureOfThisLeveeBreach(geometry,
-                    layer, leveeFeature, leveePointFeatures, LeveeBreachPointLocationType.BreachLocation,
+                var extractBranchLocationPointFeatureOfThisLeveeBreach = ExtractPointFeatureOfThisLeveeBreach(geometry, leveeFeature, leveePointFeatures, LeveeBreachPointLocationType.BreachLocation,
                     leveeFeature.BreachLocation);
                 if (extractBranchLocationPointFeatureOfThisLeveeBreach != null)
                     features.Add(extractBranchLocationPointFeatureOfThisLeveeBreach);
-                var extractWaterLevelUpstreamPointFeatureOfThisLeveeBreach = ExtractPointFeatureOfThisLeveeBreach(
-                    geometry, layer, leveeFeature, leveePointFeatures,
-                    LeveeBreachPointLocationType.WaterLevelUpstreamLocation, leveeFeature.WaterLevelUpstreamLocation);
-                if (extractWaterLevelUpstreamPointFeatureOfThisLeveeBreach != null)
-                    features.Add(extractWaterLevelUpstreamPointFeatureOfThisLeveeBreach);
-                var extractWaterLevelDownstreamPointFeatureOfThisLeveeBreach = ExtractPointFeatureOfThisLeveeBreach(
-                    geometry, layer, leveeFeature, leveePointFeatures,
-                    LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
-                    leveeFeature.WaterLevelDownstreamLocation);
-                if (extractWaterLevelDownstreamPointFeatureOfThisLeveeBreach != null)
-                    features.Add(extractWaterLevelDownstreamPointFeatureOfThisLeveeBreach);
+                if (leveeFeature.WaterLevelFlowLocationsActive)
+                {
+                    var extractWaterLevelUpstreamPointFeatureOfThisLeveeBreach = ExtractPointFeatureOfThisLeveeBreach(
+                        geometry, leveeFeature, leveePointFeatures,
+                        LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
+                        leveeFeature.WaterLevelUpstreamLocation);
+                    if (extractWaterLevelUpstreamPointFeatureOfThisLeveeBreach != null)
+                        features.Add(extractWaterLevelUpstreamPointFeatureOfThisLeveeBreach);
+                    var extractWaterLevelDownstreamPointFeatureOfThisLeveeBreach = ExtractPointFeatureOfThisLeveeBreach(
+                        geometry, leveeFeature, leveePointFeatures,
+                        LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
+                        leveeFeature.WaterLevelDownstreamLocation);
+                    if (extractWaterLevelDownstreamPointFeatureOfThisLeveeBreach != null)
+                        features.Add(extractWaterLevelDownstreamPointFeatureOfThisLeveeBreach);
+                }
 
             }
 
             foreach (var feature in GetFeatures(geometry.EnvelopeInternal, layer))
             {
                 if (features.Contains(feature)) continue;
+                if (feature is Feature2DPoint point && 
+                    point.Attributes != null &&
+                    point.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
+                    !((ILeveeBreach)point.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE]).WaterLevelFlowLocationsActive) continue;
                 features.Add(feature);
             }
 
             return features;
         }
-
-
-        private IFeature ExtractPointFeatureOfThisLeveeBreach(IGeometry geometry, ILayer layer, ILeveeBreach leveeFeature, IEnumerable<Feature2DPoint> leveePointFeatures, LeveeBreachPointLocationType leveeBreachPointLocationType, IGeometry leveeFeatureBreachLocation)
+        private IFeature ExtractPointFeatureOfThisLeveeBreach(IGeometry geometry, ILeveeBreach leveeFeature, IEnumerable<Feature2DPoint> leveePointFeatures, LeveeBreachPointLocationType leveeBreachPointLocationType, IGeometry leveeFeatureBreachLocation)
         {
             if (leveeFeatureBreachLocation.Within(geometry))
             {
@@ -173,65 +178,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                     lpf.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
                     lpf.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE) &&
                     lpf.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE].Equals(leveeFeature) &&
-                    (LeveeBreachPointLocationType) lpf.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE] ==
+                    (LeveeBreachPointLocationType)lpf.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE] ==
                     leveeBreachPointLocationType);
-                if (feature2DPoint == null)
-                {
-                    feature2DPoint = new Feature2DPoint
-                    {
-                        Name = leveeFeature.Name + " : " + leveeBreachPointLocationType.GetDescription(),
-                        Geometry = leveeFeatureBreachLocation,
-                        Attributes = new DictionaryFeatureAttributeCollection()
-                        {
-                            {LeveeBreach.LEVEE_BREACH_FEATURE, leveeFeature},
-                            {LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE, leveeBreachPointLocationType}
-                        }
-                    };
-                    feature2DPoint.PropertyChanged += Feature2DPointOnPropertyChanged;
-                    layer.DataSource.Features.Add(feature2DPoint);
-                }
                 return feature2DPoint;
             }
             return null;
         }
 
 
-        private void Feature2DPointOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender is Feature2DPoint feature2DPoint &&
-                feature2DPoint.Attributes != null &&
-                feature2DPoint.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
-                feature2DPoint.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE] is LeveeBreach leveeBreach &&
-                feature2DPoint.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE))
-            {
-                var type = (LeveeBreachPointLocationType)feature2DPoint.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE];
-                const double tolerance = 1e-5d;
-                var locationX = feature2DPoint.X;
-                var locationY = feature2DPoint.Y;
-                switch (type)
-                {
-                    case LeveeBreachPointLocationType.BreachLocation:
-                        if(Math.Abs(leveeBreach.BreachLocationX - locationX) > tolerance)
-                            leveeBreach.BreachLocationX = locationX;
-                        if (Math.Abs(leveeBreach.BreachLocationY - locationY) > tolerance)
-                            leveeBreach.BreachLocationY = locationY;
-                        break;
-                    case LeveeBreachPointLocationType.WaterLevelUpstreamLocation:
-                        if (Math.Abs(leveeBreach.WaterLevelUpstreamLocationX - locationX) > tolerance)
-                            leveeBreach.WaterLevelUpstreamLocationX = locationX;
-                        if (Math.Abs(leveeBreach.WaterLevelUpstreamLocationY - locationY) > tolerance)
-                            leveeBreach.WaterLevelUpstreamLocationY = locationY;
-                        break;
-                    case LeveeBreachPointLocationType.WaterLevelDownstreamLocation:
-                        
-                        if (Math.Abs(leveeBreach.WaterLevelDownstreamLocationX - locationX) > tolerance)
-                            leveeBreach.WaterLevelDownstreamLocationX = locationX;
-                        if (Math.Abs(leveeBreach.WaterLevelDownstreamLocationY - locationY) > tolerance)
-                            leveeBreach.WaterLevelDownstreamLocationY = locationY;
-                        break;
-                }
-            }
-        }
 
         public IEnumerable<IFeature> GetFeatures(Envelope box, ILayer layer)
         {

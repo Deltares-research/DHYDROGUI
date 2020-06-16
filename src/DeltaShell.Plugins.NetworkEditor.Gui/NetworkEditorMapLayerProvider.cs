@@ -600,7 +600,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         NameIsReadOnly = true,
                         CanBeRemovedByUser = true,
-                        FeatureEditor = new HydroAreaFeatureEditor(area2DParent),
+                        FeatureEditor = new HydroAreaFeatureEditor(area2DParent) { CreateNewFeature = layer => new LeveeBreach()},
                         DataSource =
                             new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches,
                                 "LeveeBreach_2D_", modelName,

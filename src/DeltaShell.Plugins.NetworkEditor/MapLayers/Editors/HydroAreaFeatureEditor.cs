@@ -1,7 +1,6 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
