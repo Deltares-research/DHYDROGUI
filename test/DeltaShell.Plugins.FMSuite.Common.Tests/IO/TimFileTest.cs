@@ -103,6 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [TestCase("Aimen.tim")]
         [TestCase("test_mk.tim")]
         public void GivenFileWithMultipleSpacesInColumn_WhenRead_ThenDoesNotCrashAndReturnsExpectedColumns(string fileName)
