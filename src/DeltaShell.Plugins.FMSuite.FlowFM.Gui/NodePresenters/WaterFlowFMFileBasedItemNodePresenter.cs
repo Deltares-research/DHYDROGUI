@@ -57,10 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 {
                     return WaterFlowFMModelNodePresenter.FixedWeirIcon;
                 }
-                if (MatchProperty(data, KnownProperties.LeveeBreachFile))
-                {
-                    return WaterFlowFMModelNodePresenter.LeveeBreachIcon;
-                }
                 if (MatchProperty(data, KnownProperties.ObsFile))
                 {
                     return WaterFlowFMModelNodePresenter.ObsIcon;
