@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -10,7 +11,9 @@ using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
@@ -311,6 +314,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                     longname = $"{b.Name}_node{j}_long",
                 });
             }).ToArray();
+            
+            /*
+             * we are now calculating the locations via branch / chainage,
+             * this should not matter. what we write should come back
+             */
+            var nodesX = network.Branches
+                .Select(b=> points.Where(p => p.branch.Equals(b))
+                    .Select(p1 => GeometryHelper.LineStringCoordinate((ILineString)b.Geometry, p1.chainage))
+                    .Select(g => g.X)).SelectMany(d => d).ToArray();
+
+            var nodesY = network.Branches
+                .Select(b => points.Where(p => p.branch.Equals(b))
+                    .Select(p1 => GeometryHelper.LineStringCoordinate((ILineString)b.Geometry, p1.chainage))
+                    .Select(g => g.Y)).SelectMany(d => d).ToArray();
 
             var disposable1DMeshGeometry = new Disposable1DMeshGeometry
             {
@@ -319,8 +336,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                 BranchOffsets = points.Select(p => p.chainage).ToArray(),
                 NodeIds = points.Select(p => p.name).ToArray(),
                 NodeLongNames = points.Select(p => p.longname).ToArray(),
-                NodesX = Enumerable.Range(0, 10 * network.Branches.Count).Select(i => (double) i).ToArray(),
-                NodesY = Enumerable.Range(0, 10 * network.Branches.Count).Select(i => (double) i).ToArray()
+                NodesX = nodesX,
+                NodesY = nodesY,
             };
 
             // Act
@@ -337,8 +354,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual(7, networkLocation2.Chainage, 0.1);
             Assert.AreEqual($"{network.Branches[0].Name}_node1", networkLocation2.Name);
             Assert.AreEqual($"{network.Branches[0].Name}_node1_long", networkLocation2.LongName);
-            Assert.AreEqual(1, networkLocation2.Geometry.Coordinate.X, 0.1);
-            Assert.AreEqual(1, networkLocation2.Geometry.Coordinate.Y, 0.1);
+            Assert.AreEqual(nodesX.Skip(1).First(), networkLocation2.Geometry.Coordinate.X, 0.1);
+            Assert.AreEqual(nodesY.Skip(1).First(), networkLocation2.Geometry.Coordinate.Y, 0.1);
         }
 
         [Test]
