@@ -41,6 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string StandardNameAttribute = "standard_name";
         private const string LongNameAttribute = "long_name";
         private const string UnitAttribute = "units";
+        private const string FillValueAttribute = "_FillValue";
 
         public FM1DFileFunctionStore(IHydroNetwork network)
         {
@@ -180,8 +181,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var location = netCdfFile.GetDimensionName(netCdfFile.GetDimensions(netcdfVariable).ToArray()[1]);//netCdfFile.GetAttributeValue(netcdfVariable, UGridConstants.Naming.LocationAttributeName);
             var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
+            var noDataValue = double.Parse(netCdfFile.GetAttributeValue(netcdfVariable, FillValueAttribute));
 
-            coverage = CreateNetworkCoverage(coverageLongName, unitSymbol, netCdfVariableName, location, timeDependentVariable.ReferenceDate);
+            coverage = CreateNetworkCoverage(coverageLongName, unitSymbol, netCdfVariableName, location, timeDependentVariable.ReferenceDate, noDataValue:noDataValue);
 
             yield return coverage;
         }
@@ -209,14 +211,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public ICoordinateSystem CoordinateSystem { get; set; }
         
         private NetworkCoverage CreateNetworkCoverage(string coverageLongName, string unitSymbol,
-            string netCdfVariableName, string location, string refDate, int number = -1)
+            string netCdfVariableName, string location, string refDate, int number = -1, double noDataValue = -999.0d)
         {
             var suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
             var coverageName = coverageLongName + suffix;
-            var networkCoverage = new NetworkCoverage(coverageName, true, coverageName, unitSymbol) { Network = inputNetwork, CoordinateSystem = CoordinateSystem };
+            var networkCoverage = new NetworkCoverage(coverageName, true, coverageName, unitSymbol) { Network = inputNetwork, CoordinateSystem = CoordinateSystem};
             networkCoverage.Store = this;
 
-            networkCoverage.Components[0].NoDataValue = double.NaN;
+            networkCoverage.Components[0].NoDataValue = noDataValue;
             
             networkCoverage.Locations.FixedSize = 0;
             networkCoverage.Locations.InterpolationType = InterpolationType.Constant;
