@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set => ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = value;
         }
 
-        public void ImportRestartFile(string restartFilePath)
+        public virtual void ImportRestartFile(string restartFilePath)
         {
             string fileName = Path.GetFileName(restartFilePath);
             string[] splitFileName = fileName.Split(new[]
@@ -347,8 +347,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private static string GetFilePathFromMduPath(string mduPath, string filePath)
         {
-            return Path.Combine(Path.GetDirectoryName(mduPath),
-                                Path.GetFileName(filePath));
+            string directoryName = Path.GetDirectoryName(mduPath);
+            string normalizedFilePath = filePath.Replace('/', '\\');
+            string combinationPath = Path.Combine(directoryName,
+                                                  normalizedFilePath);
+            return combinationPath;
         }
 
         private void InitializeRestart(string targetDir)
