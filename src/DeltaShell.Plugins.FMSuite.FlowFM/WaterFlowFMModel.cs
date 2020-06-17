@@ -200,6 +200,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (e.PropertyName == nameof(Name))
             {
                 fmRegion.Name = Name;
+                if (!OutputIsEmpty)
+                {
+                    OnClearOutput();
+                }
             }
         }
 
