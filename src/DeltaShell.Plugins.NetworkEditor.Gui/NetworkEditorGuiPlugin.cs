@@ -45,6 +45,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Wizard;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
@@ -190,7 +191,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
             yield return new PropertyInfo<ReverseRoughnessSection, ReverseRoughnessSectionProperties>();
             yield return new PropertyInfo<RoughnessSection, RoughnessSectionPropertiesBase<RoughnessSection>>();
-            yield return new PropertyInfo<VisibilityVectorLayer, VisibilityVectorLayerProperties>();
+            yield return new PropertyInfo<VectorLayer, VisibilityVectorLayerProperties>()
+            {
+                AdditionalDataCheck = layer => layer.DataSource is HydroNetworkFeatureCollection || 
+                                               layer.DataSource is HydroAreaFeature2DCollection
+            };
             yield return new PropertyInfo<SewerConnection, SewerConnectionProperties>();
             yield return new PropertyInfo<ICompartment, CompartmentProperties>();
             yield return new PropertyInfo<ILeveeBreach, LeveeBreachProperties>();

@@ -435,7 +435,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
                         return newFeature;
                     };
-                    return new VisibilityVectorLayer(HydroArea.GullyName)
+                    return new VectorLayer(HydroArea.GullyName)
                     {
                         Style = AreaLayerStyles.Gulliestyle,
                         NameIsReadOnly = true,
@@ -491,7 +491,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         modelName,
                         area2DParent.CoordinateSystem);
                     feature2DCollection.FeatureType = typeof(Weir2D); // Override so we can use FeatureAttributes!
-                    return new VisibilityVectorLayer(HydroArea.WeirsPluralName)
+                    return new VectorLayer(HydroArea.WeirsPluralName)
                     {
                         NameIsReadOnly = true,
                         Style = AreaLayerStyles.WeirStyle,
@@ -571,7 +571,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     };
                 case IEventedList<FixedWeir> fixedWeirs2D
                     when Equals(fixedWeirs2D, area2DParent.FixedWeirs):
-                    return new VisibilityVectorLayer(HydroArea.FixedWeirsPluralName)
+                    return new VectorLayer(HydroArea.FixedWeirsPluralName)
                     {
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(area2DParent),
@@ -705,17 +705,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             switch (data)
             {
                 case IEnumerable<IManhole> manholeNodes:
-                    return CreateNetworkVisibilityVectorLayer<Manhole>(manholeNodes, "Manholes", hydroNetwork,
-                        MaxVisibilityLayerValue);
+                    return CreateNetworkVectorLayer<Manhole>(manholeNodes, "Manholes", hydroNetwork,MaxVisibilityLayerValue);
                 case IEnumerable<OutletCompartment> outletCompartments:
-                    return CreateNetworkVisibilityVectorLayer<OutletCompartment>(outletCompartments, "Outlets",
+                    return CreateNetworkVectorLayer<OutletCompartment>(outletCompartments, "Outlets",
                         hydroNetwork, MaxVisibilityLayerValue);
                 case IEnumerable<Compartment> compartments:
-                    var compartmentLayer = CreateNetworkVisibilityVectorLayer<Compartment>(compartments, "Compartments", hydroNetwork,
+                    var compartmentLayer = CreateNetworkVectorLayer<Compartment>(compartments, "Compartments", hydroNetwork,
                         MaxVisibilityLayerValue);
                     return compartmentLayer;
                 case IEnumerable<Orifice> orifices:
-                    return CreateNetworkVisibilityVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork,
+                    return CreateNetworkVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork,
                         MaxVisibilityLayerValue);
                 case IEnumerable<IPipe> pipes:
                     return CreateNetworkVectorLayer<Pipe>(pipes, "Pipes", hydroNetwork);
@@ -728,52 +727,52 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     return CreateNetworkVectorLayer<Channel>(channels, "Branches", hydroNetwork);
                 case IEnumerable<IPump> pumps:
                     return CreateNetworkVectorLayer<Pump>(pumps, "Pumps", hydroNetwork,
-                        o => o is Channel && ((Channel) o).Pumps.Any());
+                         refreshForChangedItem:o => o is Channel channel && channel.Pumps.Any());
                 case IEnumerable<ILateralSource> lateralSources:
                     return CreateNetworkVectorLayer<LateralSource>(lateralSources, "Lateral Sources", hydroNetwork,
-                        o =>
-                            o is Channel &&
-                            ((Channel) o).BranchFeatures.OfType<LateralSource>()
+                        refreshForChangedItem: o =>
+                            o is Channel channel &&
+                            channel.BranchFeatures.OfType<LateralSource>()
                             .Any());
                 case IEnumerable<IRetention> retentions:
                     return CreateNetworkVectorLayer<Retention>(retentions, "Retentions", hydroNetwork,
-                        o =>
-                            o is Channel &&
-                            ((Channel) o).BranchFeatures.OfType<Retention>().Any());
+                        refreshForChangedItem: o =>
+                            o is Channel channel &&
+                            channel.BranchFeatures.OfType<Retention>().Any());
                 case IEnumerable<IObservationPoint> observationPoints:
                     return CreateNetworkVectorLayer<ObservationPoint>(observationPoints, "Observation Points",
                         hydroNetwork,
-                        o =>
-                            o is Channel &&
-                            ((Channel) o).ObservationPoints.Any());
+                        refreshForChangedItem: o =>
+                            o is Channel channel &&
+                            channel.ObservationPoints.Any());
                 case IEnumerable<IWeir> weirs:
-                    return CreateNetworkVisibilityVectorLayer<Weir>(weirs, "Weirs", hydroNetwork, MaxVisibilityLayerValue,
-                        o => o is Channel && ((Channel) o).Weirs.Any());
+                    return CreateNetworkVectorLayer<Weir>(weirs, "Weirs", hydroNetwork, MaxVisibilityLayerValue,
+                        o => o is Channel channel && channel.Weirs.Any());
                 case IEnumerable<IGate> gates:
                     return CreateNetworkVectorLayer<Gate>(gates, "Gates", hydroNetwork,
-                        o => o is Channel && ((Channel) o).Gates.Any());
+                        refreshForChangedItem: o => o is Channel channel && channel.Gates.Any());
                 case IEnumerable<ICulvert> culverts:
                     return CreateNetworkVectorLayer<Culvert>(culverts, "Culverts", hydroNetwork,
-                        o => o is Channel && ((Channel)o).Culverts.Any());
+                        refreshForChangedItem: o => o is Channel channel && channel.Culverts.Any());
                 case IEnumerable<IBridge> bridges:
                     return CreateNetworkVectorLayer<Bridge>(bridges, "Bridges", hydroNetwork,
-                        o => o is Channel && ((Channel) o).Bridges.Any());
+                        refreshForChangedItem: o => o is Channel channel && channel.Bridges.Any());
                 case IEnumerable<IExtraResistance> extraResistances:
                     return CreateNetworkVectorLayer<ExtraResistance>(extraResistances, "Extra Resistances", hydroNetwork,
-                        o =>
-                            o is Channel &&
-                            ((Channel) o).BranchFeatures
+                        refreshForChangedItem: o =>
+                            o is Channel channel &&
+                            channel.BranchFeatures
                             .OfType<ExtraResistance>().Any());
                 case IEnumerable<ICompositeBranchStructure> compositeBranchStructures:
                     return CreateNetworkVectorLayer<CompositeBranchStructure>(compositeBranchStructures,
                         "Composite Structure",
                         hydroNetwork,
-                        o =>
-                            o is Channel &&
-                            ((Channel) o).CrossSections.Any());
+                        refreshForChangedItem: o =>
+                            o is Channel channel &&
+                            channel.CrossSections.Any());
                 case IEnumerable<ICrossSection> crossSections:
                     return CreateNetworkVectorLayer<CrossSection>(crossSections, "Cross Sections", hydroNetwork,
-                        o => o is Channel && ((Channel) o).CrossSections.Any());
+                        refreshForChangedItem: o => o is Channel channel && channel.CrossSections.Any());
                 case IEnumerable<Route> routes:
                     return new GroupLayer("Routes")
                         {
@@ -787,13 +786,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        private static VectorLayer CreateNetworkVectorLayer<TFeature>(IEnumerable<IFeature> networkItems, string name, IHydroNetwork hydroNetwork, Func<object, bool> refreshForChangedItem = null)
+        private static VectorLayer CreateNetworkVectorLayer<TFeature>(IEnumerable<IFeature> networkItems, string name, IHydroNetwork hydroNetwork, double maxVisible = double.MaxValue, Func<object, bool> refreshForChangedItem = null)
         {
             var layer = new VectorLayer(name)
                             {
                                 Style = NetworkLayerStyleFactory.CreateStyle(networkItems),
                                 Theme = NetworkLayerStyleFactory.CreateTheme(networkItems),
                                 NameIsReadOnly = true,
+                                MaxVisible = maxVisible,
                                 DataSource = new HydroNetworkFeatureCollection
                                                  {
                                                      FeatureType = typeof (TFeature),
@@ -810,7 +810,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             return (VectorLayer)AddSnappingRulesToLayer<TFeature>(layer);
         }
         
-        private static VisibilityVectorLayer CreateNetworkVisibilityVectorLayer<TFeature>(IEnumerable<IFeature> networkItems, string name, IHydroNetwork hydroNetwork, double maxVisible, Func<object, bool> refreshForChangedItem = null)
+        /*private static VisibilityVectorLayer CreateNetworkVisibilityVectorLayer<TFeature>(IEnumerable<IFeature> networkItems, string name, IHydroNetwork hydroNetwork, double maxVisible, Func<object, bool> refreshForChangedItem = null)
         {
             var layer = new VisibilityVectorLayer(name)
             {
@@ -835,7 +835,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 
 
             return (VisibilityVectorLayer)AddSnappingRulesToLayer<TFeature>(layer);
-        }
+        }*/
         
         private static ILayer AddSnappingRulesToLayer<TFeature>(ILayer layer)
         {

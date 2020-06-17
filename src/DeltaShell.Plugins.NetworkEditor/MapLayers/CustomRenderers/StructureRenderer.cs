@@ -19,6 +19,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
     {
         private readonly IDictionary<IFeature, IGeometry> customGeometries = new Dictionary<IFeature, IGeometry>();
         private Envelope lastEnvelope;
+        private long? previousLayerCSAuthorityCode;
+        private long? previousMapCSAuthorityCode;
 
         #region IFeatureRenderer Members
         
@@ -85,6 +87,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         public IGeometry GetRenderedFeatureGeometry(IFeature feature, ILayer layer)
         {
             IGeometry geometry;
+            var currentLayerCSAuthorityCode = layer.CoordinateTransformation?.TargetCS?.AuthorityCode;
+            var currentMapCSAuthorityCode = layer.CoordinateTransformation?.SourceCS?.AuthorityCode;
+            if (currentLayerCSAuthorityCode != previousLayerCSAuthorityCode ||
+                currentMapCSAuthorityCode != previousMapCSAuthorityCode)
+            {
+                Reset();
+            }
+            previousLayerCSAuthorityCode = currentLayerCSAuthorityCode;
+            previousMapCSAuthorityCode = currentMapCSAuthorityCode;
             if (!customGeometries.ContainsKey(feature))
             {
                 geometry = GenerateCustomGeometry(feature, (VectorLayer)layer);

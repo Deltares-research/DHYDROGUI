@@ -2826,7 +2826,6 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Ribbon.xaml -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Ribbon.xaml.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/RibbonBrushes.xaml -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/ShapeEditViewModel.cs -text
-src/DeltaShell.Plugins.NetworkEditor.Gui/VisibilityVectorLayer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Wizard/CrossSectionCsvImportWizard.Designer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Wizard/CrossSectionCsvImportWizard.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Wizard/CrossSectionImportSettingsWizardPage.Designer.cs -text

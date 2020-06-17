@@ -729,7 +729,6 @@
       <DependentUpon>Ribbon.xaml</DependentUpon>
     </Compile>
     <Compile Include="ShapeEditViewModel.cs" />
-    <Compile Include="VisibilityVectorLayer.cs" />
     <Compile Include="Wizard\CrossSectionImportSettingsWizardPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
