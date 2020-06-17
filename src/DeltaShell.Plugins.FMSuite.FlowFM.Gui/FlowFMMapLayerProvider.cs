@@ -324,12 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     Selectable = true,
                     NameIsReadOnly = true,
                     CanBeRemovedByUser = false,
-                    DataSource = new FeatureCollection
-                    {
-                        FeatureType = typeof(ChannelFrictionDefinition),
-                        Features = (IList) channelFrictionDefinitionsWrapper.WrappedData,
-                        CoordinateSystem = ((FrictionGroupLayerData) parent).CoordinateSystem
-                    }
+                    DataSource = new ComplexFeatureCollection(((FrictionGroupLayerData)parent).Network, (IList)channelFrictionDefinitionsWrapper.WrappedData, typeof(ChannelFrictionDefinition))
                 };
             }
 
@@ -341,12 +336,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     Selectable = true,
                     NameIsReadOnly = true,
                     CanBeRemovedByUser = false,
-                    DataSource = new FeatureCollection
-                    {
-                        FeatureType = typeof(PipeFrictionDefinition),
-                        Features = (IList) pipeFrictionDefinitionsWrapper.WrappedData,
-                        CoordinateSystem = ((FrictionGroupLayerData) parent).CoordinateSystem
-                    }
+                    DataSource = new ComplexFeatureCollection(((FrictionGroupLayerData)parent).Network, (IList)pipeFrictionDefinitionsWrapper.WrappedData, typeof(PipeFrictionDefinition))
                 };
             }
 
@@ -368,12 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     Selectable = true,
                     NameIsReadOnly = true,
                     CanBeRemovedByUser = false,
-                    DataSource = new FeatureCollection
-                    {
-                        FeatureType = typeof(ChannelInitialConditionDefinition),
-                        Features = (IList)channelInitialConditionDefinitionsWrapper.WrappedData,
-                        CoordinateSystem = ((InitialConditionGroupLayerData)parent).CoordinateSystem
-                    }
+                    DataSource = new ComplexFeatureCollection(((InitialConditionGroupLayerData)parent).Network, (IList)channelInitialConditionDefinitionsWrapper.WrappedData, typeof(ChannelInitialConditionDefinition))
                 };
             }
 
@@ -876,8 +861,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 this.model = model;
             }
 
-            public ICoordinateSystem CoordinateSystem => model.CoordinateSystem;
-
+            public IHydroNetwork Network => model.Network;
             public IEnumerable<object> ChildLayerObjects()
             {
                 yield return ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions);
@@ -894,8 +878,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 this.model = model;
             }
-
-            public ICoordinateSystem CoordinateSystem => model.CoordinateSystem;
+            public IHydroNetwork Network => model.Network;
 
             public IEnumerable<object> ChildLayerObjects()
             {

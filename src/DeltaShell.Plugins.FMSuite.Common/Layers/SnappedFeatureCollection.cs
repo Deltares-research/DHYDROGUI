@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Properties;
@@ -24,6 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 {
     public class SnappedFeatureCollection : FeatureCollection
     {
+        private HydroArea area2D;
         private VectorStyle OriginalFeaturesLayerStyle { get; set; }
         protected List<Feature2D> SnappedFeatures { get; set; }
         private bool dirty;
@@ -35,22 +37,56 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         /// snapped with <see cref="IGridOperationApi"/>.
         /// </summary>
         /// <param name="operationApi">snap api</param>
+        /// <param name="area2D"></param>
         /// <param name="originalFeatures">Expected to be a collection of <see cref="IFeature"/>, where collection implements <see cref="INotifyCollectionChanged"/> and <see cref="INotifyPropertyChanged"/>.</param>
         /// <param name="originalFeaturesLayerStyle">Style of the layer from which <paramref name="originalFeatures"/> are coming from.</param>
         /// <param name="layerName">Name of the layer.</param>
         /// <param name="snapApiFeatureType">The feature type name for the snapping api</param>
-        public SnappedFeatureCollection(IGridOperationApi operationApi, ICoordinateSystem coordinateSystem, IList originalFeatures, VectorStyle originalFeaturesLayerStyle, string layerName, string snapApiFeatureType)
+        public SnappedFeatureCollection(IGridOperationApi operationApi, HydroArea area2D, IList originalFeatures, VectorStyle originalFeaturesLayerStyle, string layerName, string snapApiFeatureType)
         {
             OperationApi = operationApi;
+            Area2D = area2D;
             FeatureType = typeof(Feature2D);
-            CoordinateSystem = coordinateSystem;
-
             OriginalFeatures = originalFeatures;
             OriginalFeaturesLayerStyle = originalFeaturesLayerStyle;
             LayerName = layerName;
             SnapApiFeatureType = snapApiFeatureType;
             SnappedFeatures = new List<Feature2D>();
             dirty = true;
+        }
+        public override ICoordinateSystem CoordinateSystem
+        {
+            get { return Area2D != null ? Area2D.CoordinateSystem : null; }
+            set { }
+        }
+
+        private HydroArea Area2D
+        {
+            get { return area2D; }
+            set
+            {
+                var previousCoordinateSystem = CoordinateSystem;
+                if (area2D != null)
+                {
+                    area2D.PropertyChanged -= HydroAreaOnPropertyChanged;
+                }
+
+                area2D = value;
+
+                if (area2D != null)
+                {
+                    area2D.PropertyChanged += HydroAreaOnPropertyChanged;
+                }
+
+                if (area2D != null && area2D.CoordinateSystem != previousCoordinateSystem)
+                    OnCoordinateSystemChanged();
+            }
+        }
+
+        private void HydroAreaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(HydroArea.CoordinateSystem)) return;
+            OnCoordinateSystemChanged();
         }
 
         public override IList Features

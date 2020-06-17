@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedLeveeBreachCollection));
 
-        public SnappedLeveeBreachCollection(IGridOperationApi operationApi, ICoordinateSystem coordinateSystem, IList originalFeatures, VectorStyle originalFeaturesLayerStyle, string layerName, string snapApiFeatureType) : base(operationApi, coordinateSystem, originalFeatures, originalFeaturesLayerStyle, layerName, snapApiFeatureType)
+        public SnappedLeveeBreachCollection(IGridOperationApi operationApi, HydroArea area2D, ICoordinateSystem coordinateSystem, IList originalFeatures, VectorStyle originalFeaturesLayerStyle, string layerName, string snapApiFeatureType) : base(operationApi, area2D, originalFeatures, originalFeaturesLayerStyle, layerName, snapApiFeatureType)
         {
         }
 
