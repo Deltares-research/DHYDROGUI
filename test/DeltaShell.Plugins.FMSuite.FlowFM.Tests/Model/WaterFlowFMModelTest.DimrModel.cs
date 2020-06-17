@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -17,44 +18,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
     public partial class WaterFlowFMModelTest
     {
         [Test]
-        public void GetDataItemByItemString_ReturnsExpectedDataItem()
+        public void GetDataItemsByItemString_ReturnsExpectedDataItem()
         {
             // Given
             var fmModel = new WaterFlowFMModel();
-            var gate = new Weir2D
+            const string gateName = "structure01";
+            var gate1 = new Weir2D
             {
-                Name = "structure01",
+                Name = gateName,
                 WeirFormula = new GatedWeirFormula()
             };
-            fmModel.Area.Weirs.Add(gate);
+            fmModel.Area.Weirs.Add(gate1);
+            var gate2 = new Weir2D
+            {
+                Name = gateName,
+                WeirFormula = new GatedWeirFormula()
+            };
+            fmModel.Area.Weirs.Add(gate2);
 
             // When
             var itemStringComponents = new List<string>(new[]
             {
                 KnownFeatureCategories.Gates,
-                gate.Name,
+                gateName,
                 KnownStructureProperties.CrestLevel
             });
             string itemString = string.Join("/", itemStringComponents);
 
-            IDataItem dataItem = fmModel.GetDataItemByItemString(itemString);
+            IEnumerable<IDataItem> dataItems = fmModel.GetDataItemsByItemString(itemString).ToArray();
 
             // Then
-            var messageDifferentFeatureInDataItem =
-                "The retrieved dataItem is not correct, since the features are not the same";
+            Assert.That(dataItems.Count(), Is.EqualTo(2));
+            AssertDataItemIsGate(dataItems.ElementAt(0), gate1);
+            AssertDataItemIsGate(dataItems.ElementAt(1), gate2);
+        }
 
-            var messageDifferentParameterInDataItem =
-                "The retrieved dataItem is not correct, since the parameters are not the same";
+        private static void AssertDataItemIsGate(IDataItem dataItem, Weir2D gate)
+        {
+            const string messageDifferentFeatureInDataItem = "The retrieved dataItem is not correct, since the features are not the same";
+            const string messageDifferentParameterInDataItem = "The retrieved dataItem is not correct, since the parameters are not the same";
 
-            Assert.AreEqual(gate, ((ParameterValueConverter) dataItem.ValueConverter).Location,
-                            messageDifferentFeatureInDataItem);
-            Assert.AreEqual(gate.Name, dataItem.Name,
-                            messageDifferentFeatureInDataItem);
-            Assert.AreEqual(KnownStructureProperties.CrestLevel,
-                            ((ParameterValueConverter) dataItem.ValueConverter).ParameterName,
-                            messageDifferentParameterInDataItem);
-            Assert.AreEqual(KnownStructureProperties.CrestLevel, dataItem.Tag,
-                            messageDifferentParameterInDataItem);
+            var dataItemParameterConverter = ((ParameterValueConverter) dataItem.ValueConverter);
+
+            Assert.That(dataItemParameterConverter.Location, Is.EqualTo(gate), messageDifferentFeatureInDataItem);
+            Assert.That(dataItem.Name, Is.EqualTo(gate.Name), messageDifferentFeatureInDataItem);
+            Assert.That(dataItemParameterConverter.ParameterName, Is.EqualTo(KnownStructureProperties.CrestLevel), messageDifferentParameterInDataItem);
+            Assert.That(dataItem.Tag, Is.EqualTo(KnownStructureProperties.CrestLevel), messageDifferentParameterInDataItem);
         }
 
         [Test]
@@ -71,11 +80,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             });
             string itemString = string.Join("/", itemStringComponents);
 
-            void Call() => fmModel.GetDataItemByItemString(itemString);
+            void Call() => fmModel.GetDataItemsByItemString(itemString);
 
             // Then
-            var ex =
-                Assert.Throws<ArgumentException>(Call);
+            var ex = Assert.Throws<ArgumentException>(Call);
             Assert.AreEqual($"{itemString} should contain a category, feature name and a parameter name.", ex.Message,
                             "The exception message is different than expected");
         }
@@ -97,11 +105,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             });
             string itemString = string.Join("/", itemStringComponents);
 
-            void Call() => fmModel.GetDataItemByItemString(itemString);
+            void Call() => fmModel.GetDataItemsByItemString(itemString);
 
             // Then
-            var ex =
-                Assert.Throws<ArgumentException>(Call);
+            var ex = Assert.Throws<ArgumentException>(Call);
             Assert.AreEqual($"feature {featureName} in {itemString} cannot be found in the FM model.", ex.Message,
                             "The exception message is different than expected");
         }
@@ -129,11 +136,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             });
             string itemString = string.Join("/", itemStringComponents);
 
-            void Call() => fmModel.GetDataItemByItemString(itemString);
+            void Call() => fmModel.GetDataItemsByItemString(itemString);
 
             // Then
-            var ex =
-                Assert.Throws<ArgumentException>(Call);
+            var ex = Assert.Throws<ArgumentException>(Call);
             Assert.AreEqual($"parameter name {parameterName} in {KnownFeatureCategories.Gates}/{gate.Name}/{parameterName} cannot be found in the FM model.",
                             ex.Message, "The exception message is different than expected");
         }

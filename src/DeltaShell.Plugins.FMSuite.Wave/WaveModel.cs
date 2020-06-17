@@ -1377,7 +1377,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return null;
         }
 
-        public virtual IDataItem GetDataItemByItemString(string itemString)
+        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString)
         {
             throw new NotImplementedException();
         }

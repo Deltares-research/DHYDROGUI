@@ -36,12 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             string parameterName = dataItem.GetParameterName();
 
-            var concatNames = new List<string>(new[]
-            {
-                feature,
-                dataItemName,
-                parameterName
-            });
+            var concatNames = new List<string>(new[] {feature, dataItemName, parameterName});
 
             concatNames.RemoveAll(s => s == null);
 
@@ -72,52 +67,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <param name="itemString"/>
         /// is unknown.
         /// </exception>
-        public virtual IDataItem GetDataItemByItemString(string itemString)
+        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString)
         {
             string[] stringParts = itemString.Split('/');
 
             if (stringParts.Length != 3)
             {
-                throw new ArgumentException(string.Format(
-                                                Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString__0__should_contain_a_category_feature_name_and_a_parameter_name,
-                                                itemString));
+                throw new ArgumentException(string.Format(Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString__0__should_contain_a_category_feature_name_and_a_parameter_name,
+                                                          itemString));
             }
 
             string category = stringParts[0];
             string featureName = stringParts[1];
             string parameterName = stringParts[2];
 
-            IFeature feature = GetAreaFeature(category, featureName);
+            IEnumerable<IFeature> features = GetAreaFeatures(category, featureName).ToArray();
 
-            if (feature == null)
+            if (!features.Any())
             {
-                throw new ArgumentException(string.Format(
-                                                Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_feature__0__in__1__cannot_be_found_in_the_FM_model,
-                                                featureName, itemString));
+                throw new ArgumentException(string.Format(Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_feature__0__in__1__cannot_be_found_in_the_FM_model,
+                                                          featureName, itemString));
             }
 
-            IDataItem dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
+            IEnumerable<IDataItem> dataItem = features.SelectMany(GetChildDataItems).Where(di =>
             {
                 var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
                 return parameterValueConverter?.ParameterName == parameterName;
-            });
+            }).ToArray();
 
-            if (dataItem == null)
+            if (!dataItem.Any())
             {
-                throw new ArgumentException(string.Format(
-                                                Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cannot_be_found_in_the_FM_model,
-                                                parameterName, itemString));
+                throw new ArgumentException(string.Format(Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cannot_be_found_in_the_FM_model,
+                                                          parameterName, itemString));
             }
 
             return dataItem;
         }
 
-        private IFeature GetAreaFeature(string featureCategory, string featureName)
+        private IEnumerable<IFeature> GetAreaFeatures(string featureCategory, string featureName)
         {
-            IEnumerable<INameable> featuresFromCategory =
-                Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
-
-            return (IFeature) featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
+            IEnumerable<INameable> featuresFromCategory = Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
+            return featuresFromCategory.Where(f => f.Name.Equals(featureName)).Cast<IFeature>();
         }
 
         public virtual string MpiCommunicatorString => "DFM_COMM_DFMWORLD";
@@ -150,17 +140,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (category == GridPropertyName)
             {
-                return new[]
-                {
-                    grid
-                };
+                return new[] {grid};
             }
 
             return !string.IsNullOrEmpty(itemName)
                        ? !string.IsNullOrEmpty(parameter)
-                             ? runner.GetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter))
-                             : runner.GetVar(string.Format("{0}/{1}/{2}", Name, category, itemName))
-                       : runner.GetVar(string.Format("{0}/{1}", Name, category));
+                             ? runner.GetVar($"{Name}/{category}/{itemName}/{parameter}")
+                             : runner.GetVar($"{Name}/{category}/{itemName}")
+                       : runner.GetVar($"{Name}/{category}");
         }
 
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
@@ -180,15 +167,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (!string.IsNullOrEmpty(parameter))
                 {
-                    runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
+                    runner.SetVar($"{Name}/{category}/{itemName}/{parameter}", values);
                     return;
                 }
 
-                runner.SetVar(string.Format("{0}/{1}/{2}", Name, category, itemName), values);
+                runner.SetVar($"{Name}/{category}/{itemName}", values);
                 return;
             }
 
-            runner.SetVar(string.Format("{0}/{1}", Name, category), values);
+            runner.SetVar($"{Name}/{category}", values);
         }
 
         public virtual void PrepareForIntegratedModelRun()

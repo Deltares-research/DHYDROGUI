@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Validation;
@@ -42,12 +43,11 @@ namespace DeltaShell.Dimr
         string GetItemString(IDataItem value);
 
         /// <summary>
-        /// Gets the data item by item string.
+        /// Gets the data items that match the given item string.
         /// </summary>
         /// <param name="itemString">The item string.</param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        IDataItem GetDataItemByItemString(string itemString);
+        /// <returns>A collection of matching data items.</returns>
+        IEnumerable<IDataItem> GetDataItemsByItemString(string itemString);
 
         string GetExporterPath(string directoryName);
 

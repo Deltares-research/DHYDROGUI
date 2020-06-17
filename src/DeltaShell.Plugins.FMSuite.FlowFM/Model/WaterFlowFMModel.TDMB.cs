@@ -177,8 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 yield break;
             }
 
-            List<IDataItem> items;
-            areaDataItems.TryGetValue(location, out items);
+            areaDataItems.TryGetValue(location, out List<IDataItem> items);
 
             if (items == null)
             {

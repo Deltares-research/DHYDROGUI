@@ -945,30 +945,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             throw new ArgumentException(string.Format("Could not serialize data item {0} to d-hydro xml", dataItem));
         }
 
-        /// <summary>
-        /// Gets the data item by item string.
-        /// </summary>
-        /// <param name="itemString">The item string.</param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException">
+        /// <inheritdoc />
+        /// <exception cref="NotSupportedException">
         /// If the string does not start with <see cref="RtcXmlTag.Input"/> or
         /// <see cref="RtcXmlTag.Output"/>
         /// </exception>
-        public virtual IDataItem GetDataItemByItemString(string itemString)
+        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString)
         {
-            //[Output]Maeslant_drempel/Crest width (s)
             bool isOutput = itemString.StartsWith(RtcXmlTag.Output);
             bool isInput = itemString.StartsWith(RtcXmlTag.Input);
 
             if (!isOutput && !isInput)
             {
-                throw new NotImplementedException($"{itemString} does not start with {RtcXmlTag.Input} or {RtcXmlTag.Output}");
+                throw new NotSupportedException($"{itemString} does not start with {RtcXmlTag.Input} or {RtcXmlTag.Output}");
             }
-
-            IDataItem dataItem = AllDataItems.FirstOrDefault(di => (di.ValueConverter?.OriginalValue as ConnectionPoint)?.Name == itemString);
-            if (dataItem == null)
+                
+            IEnumerable<IDataItem> dataItem = AllDataItems.Where(di => (di.ValueConverter?.OriginalValue as ConnectionPoint)?.Name == itemString).ToArray();
+            if (!dataItem.Any())
             {
-                throw new NotImplementedException($"Could not find {itemString} on {Name}");
+                throw new NotSupportedException($"Could not find {itemString} on {Name}");
             }
 
             return dataItem;
