@@ -1430,27 +1430,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.WorkInProgress)]
-        public void Generate1D2DLinksAutomaticallyWhenExistsBoth1D2DGridsFromFile()
-        {
-            var model = new WaterFlowFMModel();
-
-            WaterFlowFMTestHelper.ConfigureDemoNetworkAtGivenCoordinates(model.Network);
-            var offSet = new double[] { 0, 5, 10, 20};
-            HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization, (IChannel)model.Network.Branches[0], offSet);
-            Assert.IsFalse(model.NetworkDiscretization == null || !model.NetworkDiscretization.Locations.AllValues.Any());
-
-            var gridPath = TestHelper.GetTestFilePath(@"flow1d2dLinks\2d_ugrid_net.nc");
-            gridPath = TestHelper.CreateLocalCopy(gridPath);
-            Assert.IsTrue(File.Exists(gridPath));
-
-            model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(gridPath);
-            model.Grid = UGridFileHelper.ReadUnstructuredGrid(gridPath);
-            Assert.IsNotEmpty(model.Links);
-            Assert.That(model.Links.Count, Is.Not.EqualTo(0));
-        }
-
-        [Test]
         public void GivenFmModel_WhenAddingAnAreaFeatureWithGroupNameEqualToPathThatIsPointingToASubFolderOfMduFolder_ThenGroupNameIsAlwaysRelative()
         {
             // Make local copy of project
@@ -1556,7 +1535,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category(TestCategory.Slow)]
         public void GivenValidFmModel_WhenModelHasRun_ThenProgressTextHasBeenReset()
         {
             var originalDir = TestHelper.GetTestFilePath("flow1d2dLinks");
