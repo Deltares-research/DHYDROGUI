@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Test_Given_MduFileWithRelativeRestartFile_When_LoadFromMdu_Then_LoadsRestartState()
+        public void Test_Given_MduFileWithRelativeRestartFile_When_LoadFromMdu_Then_ImportRestartFile_IsCalled()
         {
             // 1. Define test data.
             var fmModel = Substitute.ForPartsOf<WaterFlowFMModel>();
