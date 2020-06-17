@@ -186,6 +186,7 @@
     <Compile Include="PartialSobekImporter\SobekSettingsImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekStructuresImporter.cs" />
     <Compile Include="SobekReaderHelper.cs" />
+    <Compile Include="SobekToWaterFlowFMRoughnessConverter.cs" />
     <Compile Include="SobekValveDataReader.cs" />
     <Compile Include="SobekModelToIntegratedModelImporter.cs" />
     <Compile Include="SobekModelToWaterFlowFMImporter.cs" />

@@ -2253,6 +2253,7 @@ src/DeltaShell.Plugins.ImportExport.Sobek/SobekNetworkImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekNetworkToNetworkImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekReaderHelper.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekSettingsImporter.cs -text
+src/DeltaShell.Plugins.ImportExport.Sobek/SobekToWaterFlowFMRoughnessConverter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekValveDataReader.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekWaterFlowModel1DReaderHelper.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekWindImporter.cs -text
@@ -10914,6 +10915,7 @@ test/DeltaShell.Plugins.ImportExport.Sobek.Tests/SobekRRMeteoDataImporterTest.cs
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/SobekRRPolderConceptImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/SobekRTCModelImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/SobekRainfallRunoffModelImporterTest.cs -text
+test/DeltaShell.Plugins.ImportExport.Sobek.Tests/SobekToWaterFlowFMRoughnessConverterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/SobekWaterFlowModel1DImporterNetworkTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/SobekWaterFlowModel1DImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/SobekWindImporterTest.cs -text

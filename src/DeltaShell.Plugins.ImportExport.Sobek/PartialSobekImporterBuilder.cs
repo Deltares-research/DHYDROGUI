@@ -185,7 +185,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 new SobekStructuresImporter(),
                 new SobekLateralSourcesImporter(),
                 new SobekMeasurementStationsImporter(),
-                //new SobekRoughnessImporter(),
+                new SobekRoughnessImporter(),
                 new SobekInitialConditionsImporter(),
                 new SobekBoundaryConditionsImporter(),
                 new SobekLateralSourcesDataImporter(),

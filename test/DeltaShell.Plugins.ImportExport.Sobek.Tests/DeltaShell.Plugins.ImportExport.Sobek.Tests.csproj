@@ -209,6 +209,7 @@
     <Compile Include="SobekRRMeteoDataImporterTest.cs" />
     <Compile Include="SobekRRPolderConceptImporterTest.cs" />
     <Compile Include="SobekRTCModelImporterTest.cs" />
+    <Compile Include="SobekToWaterFlowFMRoughnessConverterTest.cs" />
     <Compile Include="SobekWaterFlowModel1DImporterTest.cs" />
     <Compile Include="SobekWindImporterTest.cs" />
     <Compile Include="TestClassSetup.cs" />
