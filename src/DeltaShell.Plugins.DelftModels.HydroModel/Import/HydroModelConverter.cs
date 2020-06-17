@@ -38,7 +38,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <param name="path">Path to dimr.xml (used for finding sub-model folders)</param>
         /// <param name="fileImporters">List of file importers for importing sub-models</param>
         /// <returns>Converted <see cref="HydroModel"/></returns>
-        /// <exception cref="ArgumentException">When
+        /// <exception cref="ArgumentException">
+        /// When
         /// <param name="dimrObject"/>
         /// is null
         /// </exception>
@@ -180,21 +181,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     return null;
                 }
 
-                pathParts = new[]
-                {
-                    rootFolder,
-                    workingDirectory,
-                    xmlDirectory
-                };
+                pathParts = new[] {rootFolder, workingDirectory, xmlDirectory};
             }
             else
             {
-                pathParts = new[]
-                {
-                    rootFolder,
-                    workingDirectory,
-                    fileName
-                };
+                pathParts = new[] {rootFolder, workingDirectory, fileName};
             }
 
             return Path.Combine(pathParts);
@@ -257,19 +248,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                         continue;
                     }
 
-                    IDataItem sourceDataItem = sourceModel.GetDataItemByItemString(couplerXml.sourceName);
-                    IDataItem targetDataItem = targetModel.GetDataItemByItemString(couplerXml.targetName);
+                    IDataItem sourceDataItem = sourceModel.GetDataItemsByItemString(couplerXml.sourceName).FirstOrDefault();
+                    IEnumerable<IDataItem> targetDataItems = targetModel.GetDataItemsByItemString(couplerXml.targetName);
 
-                    if (sourceDataItem == null || targetDataItem == null)
+                    if (sourceDataItem == null || targetDataItems == null)
                     {
                         logHandler.ReportErrorFormat(Resources.HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__,
                                                      couplerXml.sourceName, couplerXml.targetName);
                         continue;
                     }
 
-                    targetDataItem.LinkTo(sourceDataItem);
+                    foreach (IDataItem targetDataItem in targetDataItems)
+                    {
+                        targetDataItem.LinkTo(sourceDataItem);
+                    }
                 }
-                catch (Exception e) when (e is NotImplementedException ||
+                catch (Exception e) when (e is NotSupportedException ||
                                           e is ArgumentException)
                 {
                     string mainMessage = string.Format(
