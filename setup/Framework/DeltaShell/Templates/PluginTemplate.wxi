@@ -49,6 +49,7 @@
                         
   Optional variables:
   - excludeBuildNumberFromVersion:  Enable to remove the env.BUILD_NUMBER from the var.FullProductVersion, and include it in the var.FullProductName instead
+  - noDeltaShellFrameworkManual:    If you set this to true the DeltaShell Framework user manual will not(!) be included in the install, neither the shortcut.
   - customizationwxi:               If you want to add extra files to the bin folder where Deltashell.Gui.exe is located, add them here.
                                     It has the same layout as manualswxi.
   - plugin_wixUIDeltares:           You can include your own wixUIDeltares by overriding the default UI dialogs.
@@ -163,7 +164,9 @@
                 <File Id="WindowLayout_normalID" Name="WindowLayout_normal.xml" Source="$(var.windowlayoutpath)!(loc.WindowLayoutFile)"/>
 
                 <!-- Manuals -->
+                <?ifndef noDeltaShellFrameworkManual?>
                 <File Source="$(var.ProjectDir)\..\Framework\DeltaShell\Manuals\Delta_Shell_User_Manual.pdf" Id="Delta_Shell_User_Manual"/>
+                <?endif?>
 
                 <?ifdef manualswxi?>
                 <?include $(var.manualswxi)?>
@@ -354,7 +357,9 @@
           <!-- Manuals folder -->
           <Component Id="ManualsMenuShortcuts" Guid="$(var.ManualsMenuShortcutsGuid)">
             <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedManualsShortcutFolder" Type="integer" Value="1" KeyPath="yes" />
+            <?ifndef noDeltaShellFrameworkManual?>
             <Shortcut Id="DeltaShell_User_Manual_Shortcut" Name="DeltaShell User Manual" Target="[BINDIR]Delta_Shell_User_Manual.pdf" WorkingDirectory="BINDIR"/>
+            <?endif?>
             <?ifdef plugin_manualshortcuts?>
             <?include $(var.plugin_manualshortcuts)?>
             <?endif?>
