@@ -282,6 +282,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
                 if (frictionIds.Count == 1 && frictionIds[0].Equals(defaultFrictionId))
                 {
+                    readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                    {
+                        SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network),
+                        MinY = readCrossSectionDefinition.Left,
+                        MaxY = readCrossSectionDefinition.Right
+                    });
+
                     return;
                 }
 
@@ -311,13 +318,15 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.ZW)
             {
+                var mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network);
+
                 var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds.Key, true, ';');
                 if (frictionIds != null && frictionIds.Count == 1 && frictionIds[0].Equals(defaultFrictionId))
                 {
+                    readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, readCrossSectionDefinition.Width);
                     return;
                 }
 
-                var mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network);
                 var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
                 var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
 
@@ -351,6 +360,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
                 if (sectionTypeName.Equals(defaultFrictionId))
                 {
+                    readCrossSectionDefinition.Sections.Add(new CrossSectionSection { SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network) });
                     return;
                 }
 

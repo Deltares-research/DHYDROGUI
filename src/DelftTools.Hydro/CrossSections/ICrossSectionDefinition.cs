@@ -74,6 +74,11 @@ namespace DelftTools.Hydro.CrossSections
         /// </summary>
         double Left { get; }
 
+        /// <summary>
+        /// The right-most point along the crosssection in the y' plane
+        /// </summary>
+        double Right { get; }
+
         [FeatureAttribute]
         string Description { get; set; }
         

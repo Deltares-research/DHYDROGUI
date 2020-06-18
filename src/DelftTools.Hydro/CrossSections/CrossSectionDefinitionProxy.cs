@@ -83,6 +83,11 @@ namespace DelftTools.Hydro.CrossSections
             get { return InnerDefinition.Left; }
         }
 
+        public virtual double Right
+        {
+            get { return InnerDefinition.Right; }
+        }
+
         public virtual bool IsProxy
         {
             get { return true; }
