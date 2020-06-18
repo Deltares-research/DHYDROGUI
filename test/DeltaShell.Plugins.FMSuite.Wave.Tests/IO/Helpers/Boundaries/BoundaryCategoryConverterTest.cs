@@ -483,7 +483,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         private static void AssertRoundedValue(double actual, double expected)
         {
-            Assert.That(actual, Is.EqualTo(Math.Round(expected, 7, MidpointRounding.AwayFromZero)));
+            Assert.That(actual, Is.EqualTo(Math.Round(expected, 7, MidpointRounding.AwayFromZero)).Within(1e-7));
         }
 
         private static void AssertRoundedValues(double[] actual, double[] expected)
