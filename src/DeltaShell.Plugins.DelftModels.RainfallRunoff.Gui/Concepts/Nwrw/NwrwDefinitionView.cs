@@ -97,7 +97,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
         private void AddNameColumn()
         {
-            tableView.AddColumn(nameof(NwrwDefinition.Name), "Surface type");
+            var column = tableView.AddColumn(nameof(NwrwDefinition.Name), "Surface type");
+            column.CustomFormatter = new NwrwSurfaceTypeNameFormatter();
         }
 
         private void AddSurfaceStorageColumn()
@@ -175,5 +176,44 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
             base.Dispose(disposing);
         }
+
+        private class NwrwSurfaceTypeNameFormatter : ICustomFormatter
+        {
+            public string Format(string format, object arg, IFormatProvider formatProvider)
+            {
+                var name = arg.ToString();
+                switch (name)
+                {
+                    case "GVH_HEL":
+                        return "Closed Sloped";
+                    case "GVH_VLA":
+                        return "Closed Flat";
+                    case "GVH_VLU":
+                        return "Closed Stretch";
+                    case "OVH_HEL":
+                        return "Open Sloped";
+                    case "OVH_VLA":
+                        return "Open Flat";
+                    case "OVH_VLU":
+                        return "Open Stretch";
+                    case "DAK_HEL":
+                        return "Roof Sloped";
+                    case "DAK_VLA":
+                        return "Roof Flat";
+                    case "DAK_VLU":
+                        return "Roof Stretch";
+                    case "ONV_HEL":
+                        return "Unpaved Sloped";
+                    case "ONV_VLA":
+                        return "Unpaved Flat";
+                    case "ONV_VLU":
+                        return "Unpaved Stretch";
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
     }
+
+    
 }
