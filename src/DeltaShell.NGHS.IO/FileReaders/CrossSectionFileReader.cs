@@ -132,7 +132,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     var crossSection = network.AddCrossSection(crossSectionLocationInfo, crossSectionDefinition, isSharedCrossSection);
 
                     var hasFriction = false;
-                    if (crossSectionDefinitionsWithFriction.Contains(crossSectionDefinition))
+                    if (crossSectionDefinitionsWithFriction.Contains(crossSectionDefinition) && crossSection?.Branch is Channel)
                     {
                         hasFriction = true;
                         onAddingCrossSectionWithFrictionToBranch((IChannel) crossSection.Branch);
@@ -155,7 +155,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                             crossSectionDefinitionProxy.ShiftLevel(sectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key));
                             crossSection = network.AddCrossSection(sectionLocationInfo, crossSectionDefinitionProxy, false);
 
-                            if (hasFriction)
+                            if (hasFriction && crossSection?.Branch is Channel)
                             {
                                 onAddingCrossSectionWithFrictionToBranch((IChannel) crossSection.Branch);
                             }

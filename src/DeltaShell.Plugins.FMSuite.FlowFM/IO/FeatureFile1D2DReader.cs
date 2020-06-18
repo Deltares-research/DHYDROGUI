@@ -63,11 +63,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var channelFrictionDefinitionPerChannelLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel, cfd => cfd);
 
             CrossSectionFileReader.ReadFile(crLocFile,crDefFile, network, "Channels", channel =>
-            {
-                if (channel != null)
-                {
-                    channelFrictionDefinitionPerChannelLookup[channel].SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
-                }
+            { 
+                channelFrictionDefinitionPerChannelLookup[channel].SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
             });
         }
         private static void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
