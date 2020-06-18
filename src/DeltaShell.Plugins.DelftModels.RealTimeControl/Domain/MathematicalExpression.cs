@@ -33,6 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         /// <summary>
         /// Gets or sets the inputs of the mathematical expression.
         /// </summary>
+        [Aggregation]
         public IEventedList<IInput> Inputs
         {
             get => inputs;
