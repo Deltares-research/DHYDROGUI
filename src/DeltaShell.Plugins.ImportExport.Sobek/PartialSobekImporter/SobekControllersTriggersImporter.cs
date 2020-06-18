@@ -30,11 +30,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             log.DebugFormat("Importing Controllers and Triggers ...");
             var waterFlowModel1D = GetModel<WaterFlowFMModel>();
 
-            var realTimeControlModel = RealTimeControlModel;
+            RealTimeControlModel realTimeControlModel;
 
-            if (realTimeControlModel == null)
+            try
             {
-                log.ErrorFormat("To object is not a RealTimeControlModel. Importing controllers and triggers has been skipped");
+                realTimeControlModel = RealTimeControlModel;
+            }
+            catch
+            {
+                log.WarnFormat("To object is not a RealTimeControlModel. Importing controllers and triggers has been skipped");
                 return;
             }
 
