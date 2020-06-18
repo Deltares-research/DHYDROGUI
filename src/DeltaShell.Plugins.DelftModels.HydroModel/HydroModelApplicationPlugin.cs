@@ -5,6 +5,7 @@ using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -102,6 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (project == null || project.RootFolder == null) return;
 
+            project.RootFolder.GetAllModelsRecursive().ForEach(m => m.SuspendClearOutputOnInputChange = true);
             // go through all hydro models and unlink all objects that link between rtc and flowFM, 
             // because flow is not saved in the database.
             foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
@@ -109,6 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 hydroModel.UnlinkAndRememberDataItems();
                 hydroModel.UnlinkAndRememberRegionLinks();
             }
+            project.RootFolder.GetAllModelsRecursive().ForEach(m => m.SuspendClearOutputOnInputChange = false);
         }
 
         private void ApplicationProjectSavedOrFailed(Project project)

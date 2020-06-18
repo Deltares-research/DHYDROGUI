@@ -79,6 +79,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void NetworkCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
+            if (SuspendClearOutputOnInputChange)
+                return;
             //uitzonderingen voor route
             if (sender is IEventedList<Route>) return;
             if (!OutputIsEmpty)

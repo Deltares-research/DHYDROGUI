@@ -810,12 +810,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         Gui.CommandHandler.OpenView(flowFmModel, viewType);
                     }
                 }
-                ClosedViewTypes = new List<Type>();
+                if (ClosedViewTypes == null)
+                    ClosedViewTypes = new List<Type>();
+                else
+                    ClosedViewTypes.Clear();
+                HiddenVisibleLayers?.ForEach(l =>
+                {
+                    l.Visible = true;
+                    l.RenderRequired = true;
+                });
+                HiddenVisibleLayers?.Clear();
             }
             catch
             {
                 //gulp
-                ClosedViewTypes = new List<Type>();
+                if (ClosedViewTypes == null)
+                    ClosedViewTypes = new List<Type>();
+                else
+                    ClosedViewTypes.Clear();
+                HiddenVisibleLayers?.Clear();
             }
         }
 
@@ -1000,7 +1013,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private void CloseAllViewsBeforeSaving(Project project)
         {
             if (project == null || project.RootFolder == null) return;
-            ClosedViewTypes = new List<Type>();
+            if (ClosedViewTypes == null)
+                ClosedViewTypes = new List<Type>();
+            else
+                ClosedViewTypes.Clear();
+
+            if (HiddenVisibleLayers == null)
+                HiddenVisibleLayers = new List<ILayer>();
+            else
+                HiddenVisibleLayers.Clear();
+
+            HiddenVisibleLayers = new List<ILayer>();
             
             foreach (var flowFmModel in project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>())
             {
@@ -1013,7 +1036,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     ClosedViewTypes.AddRange(collection);
                 Gui.CommandHandler.RemoveAllViewsForItem(flowFmModel);
             }
+            var activeView = Gui.DocumentViews.ActiveView;
+            if (activeView == null || activeView.Data == null)
+            {
+                return; // strange bug
+            }
+
+            if (activeView is MapView || activeView is ProjectItemMapView)
+            {
+                // when region is dragged onto an opened mapview
+                var mapView = activeView is ProjectItemMapView
+                    ? ((ProjectItemMapView)activeView).MapView
+                    : (MapView)activeView;
+
+                HiddenVisibleLayers = mapView.Map.GetAllVisibleLayers(true).Where(l => l.Name.Contains("Output")).ToList();
+                HiddenVisibleLayers.ForEach(l => l.Visible = false);
+            }
         }
+
+        private IList<ILayer> HiddenVisibleLayers { get; set; }
 
         [InvokeRequired]
         private void CloseViewDataForOutdatedStore(FMHisFileFunctionStore fmHisFileFunctionStore)

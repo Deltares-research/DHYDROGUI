@@ -128,6 +128,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 if (gui != null)
                 {
                     gui.SelectionChanged -= GuiSelectionChanged;
+                    gui.Application.ProjectClosing -= ApplicationProjectClosed;
+                    gui.Application.ProjectOpened -= ApplicationProjectOpened;
+
                 }
 
                 gui = value;
@@ -695,9 +698,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 SetActiveRegion(GetRegionFromActiveView());
             }
 
-            Gui.Application.ProjectClosing += ApplicationProjectClosed;
-            Gui.Application.ProjectOpened += ApplicationProjectOpened;
-            Gui.SelectionChanged += GuiSelectionChanged;
             
             if (Gui.Application.Project != null)
             {
@@ -722,13 +722,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         public override void Deactivate()
         {
             base.Deactivate();
-
-            if (Gui != null)
-            {
-                Gui.Application.ProjectClosing -= ApplicationProjectClosed;
-                Gui.Application.ProjectOpened -= ApplicationProjectOpened;
-                Gui.SelectionChanged -= GuiSelectionChanged;
-            }
 
             if (hydroRegionTreeView != null)
             {
