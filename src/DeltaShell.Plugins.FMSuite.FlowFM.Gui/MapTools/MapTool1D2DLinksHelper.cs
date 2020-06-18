@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         {
             var startPoint = new Point(startCoordinate);
             var endPoint = new Point(endCoordinate);
-            var filter1DMesh = Generate1D2DLinksHelper.GetMesh1DFilter(fmModel.NetworkDiscretization, linkType);
+            var filter1DMesh = Generate1D2DLinksHelper.GetMesh1DFilter(fmModel.NetworkDiscretization, linkType, generatedByUser:true);
             var networkLocationId = Links1D2DHelper.FindCalculationPointIndex(startPoint, fmModel.NetworkDiscretization, snapTolerance, filter1DMesh);
 
             if (networkLocationId == Links1D2DHelper.MISSING_INDEX)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
@@ -100,7 +101,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             return lstNewLinks;
         }
 
-        public static bool[] GetMesh1DFilter(IDiscretization networkDiscretization, LinkGeneratingType linkType, IPolygon selectedArea = null)
+        public static bool[] GetMesh1DFilter(IDiscretization networkDiscretization, LinkGeneratingType linkType, IPolygon selectedArea = null, bool generatedByUser = false)
         {
             var discretisationPoints = networkDiscretization.Locations.Values;
             var filterList = new bool[discretisationPoints.Count];
@@ -126,10 +127,21 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                                                      sewerConnection.WaterType == SewerConnectionWaterType.StormWater;
                             break;
                         case LinkGeneratingType.GullySewer:
-                            isAvailableMesh1DPoint = sewerConnection != null &&
-                                                     (sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
-                                                      sewerConnection.WaterType == SewerConnectionWaterType.StormWater);
+                            if (sewerConnection != null)
+                            {
+                                isAvailableMesh1DPoint = sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
+                                                         sewerConnection.WaterType == SewerConnectionWaterType.StormWater;
+                                
+                                if (generatedByUser)
+                                {
+                                    isAvailableMesh1DPoint = isAvailableMesh1DPoint ||
+                                                             sewerConnection.WaterType == SewerConnectionWaterType.None;
+                                }
+                            }
+
                             break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(linkType), linkType, null);
                     }
                 }
 

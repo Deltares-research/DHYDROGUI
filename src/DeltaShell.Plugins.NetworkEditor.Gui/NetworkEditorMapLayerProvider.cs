@@ -809,34 +809,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             };
             return (VectorLayer)AddSnappingRulesToLayer<TFeature>(layer);
         }
-        
-        /*private static VisibilityVectorLayer CreateNetworkVisibilityVectorLayer<TFeature>(IEnumerable<IFeature> networkItems, string name, IHydroNetwork hydroNetwork, double maxVisible, Func<object, bool> refreshForChangedItem = null)
-        {
-            var layer = new VisibilityVectorLayer(name)
-            {
-                Style = NetworkLayerStyleFactory.CreateStyle(networkItems),
-                Theme = NetworkLayerStyleFactory.CreateTheme(networkItems),
-                NameIsReadOnly = true,
-                DataSource = new HydroNetworkFeatureCollection
-                {
-                    FeatureType = typeof(TFeature),
-                    Network = hydroNetwork,
-                    RefreshForChangedItem = refreshForChangedItem,
-                    CoordinateSystem = hydroNetwork.CoordinateSystem
-                },
-                FeatureEditor = new HydroNetworkFeatureEditor(hydroNetwork)
-                {
-                    CreateNewFeature = NewNetworkFeature<TFeature>()
-                },
-                CustomRenderers = GetCustomRenderer<TFeature>(),
-                MaxVisible = maxVisible
-            };
-            
-                
 
-            return (VisibilityVectorLayer)AddSnappingRulesToLayer<TFeature>(layer);
-        }*/
-        
         private static ILayer AddSnappingRulesToLayer<TFeature>(ILayer layer)
         {
             var snapRules = GetSnapRule<TFeature>(layer);
