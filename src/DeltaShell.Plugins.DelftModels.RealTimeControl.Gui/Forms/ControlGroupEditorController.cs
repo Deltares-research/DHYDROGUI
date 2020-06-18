@@ -472,53 +472,86 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             adjustingConnectionInDomain = true;
 
-            if (from is Input fromInput)
+            switch (from)
             {
-                switch (to)
-                {
-                    case RuleBase toRule:
-                        toRule.Inputs.Remove(fromInput);
-                        break;
-                    case SignalBase toSignal:
-                        toSignal.Inputs.Remove(fromInput);
-                        break;
-                    case ConditionBase toCondition:
-                        toCondition.Input = null;
-                        break;
-                }
+                case Input fromInput:
+                    DisconnectFromInput(to, fromInput);
+                    break;
+                case MathematicalExpression fromMathExpression:
+                    DisconnectFromMathematicalExpression(to, fromMathExpression);
+                    break;
+                case ConditionBase fromCondition:
+                    DisconnectFromCondition(to, fromCondition);
+                    break;
+                case RuleBase fromRule:
+                    DisconnectFromRule(to, fromRule);
+                    break;
+                case SignalBase fromSignal:
+                    DisconnectFromSignal(to, fromSignal);
+                    break;
             }
-
-            if (to is MathematicalExpression toMathExpression)
-            {
-                switch (from)
-                {
-                    case IInput fromExpressionInput:
-                        toMathExpression.Inputs.Remove(fromExpressionInput);
-                        break;
-                    case ConditionBase condition:
-                        condition.FalseOutputs.Remove(toMathExpression);
-                        condition.TrueOutputs.Remove(toMathExpression);
-                        break;
-                }
-            }
-
-            if (from is MathematicalExpression fromMathExpression)
-            {
-                switch (to)
-                {
-                    case RuleBase toRule:
-                        toRule.Inputs.Remove(fromMathExpression);
-                        break;
-                    case ConditionBase toCondition:
-                        toCondition.Input = null;
-                        break;
-                    case MathematicalExpression toMathematicalExpression:
-                        toMathematicalExpression.Inputs.Remove(fromMathExpression);
-                        break;
-                }
-            }
-
+            
             adjustingConnectionInDomain = false;
+        }
+
+        private static void DisconnectFromSignal(object to, SignalBase fromSignal)
+        {
+            if (to is RuleBase toRule)
+            {
+                fromSignal.RuleBases.Remove(toRule);
+            }
+        }
+
+        private static void DisconnectFromRule(object to, RuleBase fromRule)
+        {
+            if (to is Output toOutput)
+            {
+                fromRule.Outputs.Remove(toOutput);
+            }
+        }
+
+        private static void DisconnectFromCondition(object to, ConditionBase fromCondition)
+        {
+            if (to is RtcBaseObject toRtcObject)
+            {
+                fromCondition.FalseOutputs.Remove(toRtcObject);
+                fromCondition.TrueOutputs.Remove(toRtcObject);
+            }
+        }
+
+        private static void DisconnectFromMathematicalExpression(object to, MathematicalExpression fromMathExpression)
+        {
+            switch (to)
+            {
+                case RuleBase toRule:
+                    toRule.Inputs.Remove(fromMathExpression);
+                    break;
+                case ConditionBase toCondition:
+                    toCondition.Input = null;
+                    break;
+                case MathematicalExpression toMathematicalExpression:
+                    toMathematicalExpression.Inputs.Remove(fromMathExpression);
+                    break;
+            }
+        }
+
+        private static void DisconnectFromInput(object to, Input fromInput)
+        {
+            switch (to)
+            {
+                case RuleBase toRule:
+                    toRule.Inputs.Remove(fromInput);
+                    break;
+                case SignalBase toSignal:
+                    toSignal.Inputs.Remove(fromInput);
+                    break;
+                case ConditionBase toCondition:
+                    toCondition.Input = null;
+                    break;
+                case MathematicalExpression toMathematicalExpression:
+                    toMathematicalExpression.Inputs.Remove(fromInput);
+                    break;
+            }
         }
 
         internal void PlaceShapeOnGraphControl(object obj, double x, double y)

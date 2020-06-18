@@ -10,6 +10,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using Netron.GraphLib;
 using Netron.GraphLib.UI;
+using NSubstitute;
 using NUnit.Framework;
 using Connection = Netron.GraphLib.Connection;
 
@@ -685,6 +686,178 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             controlGroup.Inputs.Add(new Input());
             Assert.AreEqual(1, collectionChangedCount);
+        }
+
+        [TestFixture]
+        public static class GivenInput
+        {
+            private static Input input;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                input = new Input();
+            }
+
+            [Test]
+            public static void WhenDisconnectingRule_ThenInputRemovedFromRule()
+            {
+                var rule = Substitute.For<RuleBase>();
+                rule.Inputs.Add(input);
+
+                ControlGroupEditorController.Disconnect(input, rule);
+
+                Assert.That(rule.Inputs, Is.Empty);
+            }
+
+            [Test]
+            public static void WhenDisconnectingSignal_ThenInputRemovedFromSignal()
+            {
+                var signal = Substitute.For<SignalBase>();
+                signal.Inputs.Add(input);
+
+                ControlGroupEditorController.Disconnect(input, signal);
+
+                Assert.That(signal.Inputs, Is.Empty);
+            }
+
+            [Test]
+            public static void WhenDisconnectingCondition_ThenInputRemovedFromCondition()
+            {
+                var condition = Substitute.For<ConditionBase>();
+                condition.Input = input;
+
+                ControlGroupEditorController.Disconnect(input, condition);
+
+                Assert.That(condition.Input, Is.Null);
+            }
+
+            [Test]
+            public static void WhenDisconnectingMathematicalExpression_ThenInputRemovedFromMathematicalExpression()
+            {
+                var mathematicalExpression = new MathematicalExpression();
+                mathematicalExpression.Inputs.Add(input);
+
+                ControlGroupEditorController.Disconnect(input, mathematicalExpression);
+
+                Assert.That(mathematicalExpression.Inputs, Is.Empty);
+            }
+        }
+
+        [TestFixture]
+        public static class GivenMathematicalExpression
+        {
+            private static MathematicalExpression mathematicalExpression;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                mathematicalExpression = new MathematicalExpression();
+            }
+
+            [Test]
+            public static void WhenDisconnectingRule_ThenInputRemovedFromRule()
+            {
+                var rule = Substitute.For<RuleBase>();
+                rule.Inputs.Add(mathematicalExpression);
+
+                ControlGroupEditorController.Disconnect(mathematicalExpression, rule);
+
+                Assert.That(rule.Inputs, Is.Empty);
+            }
+
+            [Test]
+            public static void WhenDisconnectingCondition_ThenInputRemovedFromCondition()
+            {
+                var condition = Substitute.For<ConditionBase>();
+                condition.Input = mathematicalExpression;
+
+                ControlGroupEditorController.Disconnect(mathematicalExpression, condition);
+
+                Assert.That(condition.Input, Is.Null);
+            }
+
+            [Test]
+            public static void WhenDisconnectingMathematicalExpression_ThenInputRemovedFromMathematicalExpression()
+            {
+                var mathematicalExpression2 = new MathematicalExpression();
+                mathematicalExpression2.Inputs.Add(mathematicalExpression);
+
+                ControlGroupEditorController.Disconnect(mathematicalExpression, mathematicalExpression2);
+
+                Assert.That(mathematicalExpression2.Inputs, Is.Empty);
+            }
+        }
+
+        [TestFixture]
+        public static class GivenCondition
+        {
+            private static ConditionBase condition;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                condition = Substitute.For<ConditionBase>();
+            }
+
+            [Test]
+            public static void WhenDisconnectingRtcBaseObject_ThenRtcBaseObjectRemovedFromConditionOutputs()
+            {
+                var rtcBaseObject = Substitute.For<RtcBaseObject>();
+                condition.FalseOutputs.Add(rtcBaseObject);
+                condition.TrueOutputs.Add(rtcBaseObject);
+
+                ControlGroupEditorController.Disconnect(condition, rtcBaseObject);
+
+                Assert.That(condition.FalseOutputs, Is.Empty);
+                Assert.That(condition.TrueOutputs, Is.Empty);
+            }
+        }
+
+        [TestFixture]
+        public static class GivenRule
+        {
+            private static RuleBase rule;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                rule = Substitute.For<RuleBase>();
+            }
+
+            [Test]
+            public static void WhenDisconnectingOutput_ThenOutputRemovedFromRuleOutputs()
+            {
+                var output = Substitute.For<Output>();
+                rule.Outputs.Add(output);
+
+                ControlGroupEditorController.Disconnect(rule, output);
+
+                Assert.That(rule.Outputs, Is.Empty);
+            }
+        }
+
+        [TestFixture]
+        public static class GivenSignal
+        {
+            private static SignalBase signal;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                signal = Substitute.For<SignalBase>();
+            }
+
+            [Test]
+            public static void WhenDisconnectingOutput_ThenOutputRemovedFromRuleOutputs()
+            {
+                var ruleBase = Substitute.For<RuleBase>();
+                signal.RuleBases.Add(ruleBase);
+
+                ControlGroupEditorController.Disconnect(signal, ruleBase);
+
+                Assert.That(signal.RuleBases, Is.Empty);
+            }
         }
 
         private static Dictionary<ConnectorType, ConnectorType> GetAllowedConnections(object from, object to)
