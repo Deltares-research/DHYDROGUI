@@ -201,7 +201,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     Chainage = networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage,
                     Name = meshGeometry.NodeIds[i],
                     LongName = meshGeometry.NodeLongNames[i],
-                    Geometry = new Point(GeometryHelper.LineStringCoordinate((ILineString)networkBranch.Geometry, networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage)) // => x en y werkt niet! new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
+                    Geometry = HydroNetworkHelper.GetStructureGeometry(networkBranch, networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage) // => werkt niet! new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
                 };
             }
 
@@ -595,7 +595,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
                 if (branch is IPipe pipe)
                 {
-                    pipe.WaterType = (SewerConnectionWaterType)networkGeometry.BranchTypes[i];
+                    pipe.WaterType = ToPipeWaterType((BranchType)networkGeometry.BranchTypes[i]);
                 }
                 var nodeCount = networkGeometry.BranchGeometryNodesCount[i];
                 var coordinates = new Coordinate[nodeCount];
@@ -613,6 +613,21 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             }
 
             return branches.ToArray();
+        }
+
+        private static SewerConnectionWaterType ToPipeWaterType(BranchType networkGeometryBranchType)
+        {
+            switch (networkGeometryBranchType)
+            {
+                case BranchType.DryWeatherFlow:
+                    return SewerConnectionWaterType.DryWater;
+                case BranchType.StormWaterFlow:
+                    return SewerConnectionWaterType.StormWater;
+                case BranchType.MixedFlow:
+                    return SewerConnectionWaterType.Combined;
+            }
+            return SewerConnectionWaterType.None;
+
         }
 
         private static IEnumerable<string> GetNodeLookupNames(INode node)
