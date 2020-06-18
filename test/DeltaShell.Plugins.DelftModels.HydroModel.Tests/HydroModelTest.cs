@@ -452,22 +452,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var firstWorkflow = new SequentialActivity { Activities = { firstDummyActivity } };
             var lastWorkflow = new SequentialActivity { Activities = { secondDummyActivity } };
 
-            var hydroModel = new HydroModel();
-            hydroModel.Activities.Add(firstDummyActivity);
-            hydroModel.Activities.Add(secondDummyActivity);
-            hydroModel.CurrentWorkflow = firstWorkflow;
-            
-            // 2. Verify initial expectations.
-            Assert.That(((IDimrModel) firstDummyActivity).RunsInIntegratedModel, Is.True);
-            Assert.That(((IDimrModel) secondDummyActivity).RunsInIntegratedModel, Is.False);
+            using (var hydroModel = new HydroModel())
+            {
+                hydroModel.Activities.Add(firstDummyActivity);
+                hydroModel.Activities.Add(secondDummyActivity);
+                hydroModel.CurrentWorkflow = firstWorkflow;
 
-            // 3. Run test.
-            TestDelegate testAction = () => hydroModel.CurrentWorkflow = lastWorkflow;
+                // 2. Verify initial expectations.
+                Assert.That(((IDimrModel)firstDummyActivity).RunsInIntegratedModel, Is.True);
+                Assert.That(((IDimrModel)secondDummyActivity).RunsInIntegratedModel, Is.False);
 
-            // 4. Verify final expectations.
-            Assert.That(testAction, Throws.Nothing);
-            Assert.That(((IDimrModel) firstDummyActivity).RunsInIntegratedModel, Is.False);
-            Assert.That(((IDimrModel) secondDummyActivity).RunsInIntegratedModel, Is.True);
+                // 3. Run test.
+                TestDelegate testAction = () => hydroModel.CurrentWorkflow = lastWorkflow;
+
+                // 4. Verify final expectations.
+                Assert.That(testAction, Throws.Nothing);
+                Assert.That(((IDimrModel)firstDummyActivity).RunsInIntegratedModel, Is.False);
+                Assert.That(((IDimrModel)secondDummyActivity).RunsInIntegratedModel, Is.True);
+            }
         }
 
         private class TimeDepModel : TimeDependentModelBase
