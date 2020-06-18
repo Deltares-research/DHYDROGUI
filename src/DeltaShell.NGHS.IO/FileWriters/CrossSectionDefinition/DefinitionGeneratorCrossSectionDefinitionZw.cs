@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             {
                 if (!writeFrictionFromDefinition)
                 {
-                    IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, defaultFrictionId);
+                    IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, $"{defaultFrictionId};{defaultFrictionId};{defaultFrictionId}");
                     return;
                 }
 
