@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -99,6 +100,41 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                          readFunction.Components[1].GetValues<double>(), 1e-06);
             ListTestUtils.AssertAreEqual(function.Components[2].GetValues<double>(),
                                          readFunction.Components[2].GetValues<double>(), 1e-06);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase("Aimen.tim")]
+        [TestCase("test_mk.tim")]
+        public void GivenFileWithMultipleSpacesInColumn_WhenRead_ThenDoesNotCrashAndReturnsExpectedColumns(string fileName)
+        {
+            // 1. Prepare test data
+            string filepath = TestHelper.GetTestFilePath(Path.Combine("timFiles", fileName));
+            double[] firstValues = {392.30, 0.10, 25.0};
+            double[] lastValues = {190.86, 0.10, 25.0};
+            const int expectedComponents = 3;
+            const int expectedValues = 50;
+
+            var refDate = new DateTime(2014, 5, 1, 0, 0, 0);
+            TimeSeries readTimeSeries = null;
+            
+            // 2. Verify initial expectations.
+            Assert.That(File.Exists(filepath));
+
+            // 3. Run test.
+            TestDelegate testAction = () => readTimeSeries = new TimFile().Read(filepath, refDate);
+
+            // 4. Verify final expectations.
+            Assert.That(testAction, Throws.Nothing);
+            Assert.That(readTimeSeries, Is.Not.Null);
+            Assert.That(readTimeSeries.Time.AllValues.Count, Is.EqualTo(expectedValues));
+            Assert.That(readTimeSeries.Components.Count, Is.EqualTo(expectedComponents));
+            Assert.That(readTimeSeries.Components[0].GetValues<double>().First(), Is.EqualTo(firstValues[0]));
+            Assert.That(readTimeSeries.Components[1].GetValues<double>().First(), Is.EqualTo(firstValues[1]));
+            Assert.That(readTimeSeries.Components[2].GetValues<double>().First(), Is.EqualTo(firstValues[2]));
+            Assert.That(readTimeSeries.Components[0].GetValues<double>().Last(), Is.EqualTo(lastValues[0]));
+            Assert.That(readTimeSeries.Components[1].GetValues<double>().Last(), Is.EqualTo(lastValues[1]));
+            Assert.That(readTimeSeries.Components[2].GetValues<double>().Last(), Is.EqualTo(lastValues[2]));
         }
 
         [Test]

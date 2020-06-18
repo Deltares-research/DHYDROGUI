@@ -105,8 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     return timeSeries;
                 }
 
-                int componentColumns = line.Split(' ').Length - 1;
-
+                int componentColumns = SplitLine(line).Count() - 1;
                 for (var i = 0; i < componentColumns; i++)
                 {
                     values.Add(new List<double>());
