@@ -15,6 +15,7 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -28,7 +29,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IHydroNetwork outputNetwork = new HydroNetwork();
         private IHydroNetwork inputNetwork;
         private IDiscretization outputDiscretization = new Discretization();
-        
+        private IDictionary<string, IList<INetworkLocation>> LocationsByNetworkDataType { get; set; }
+
         private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
         private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
         private readonly Dictionary<IVariable, IMultiDimensionalArray> argumentVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
@@ -48,6 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             OutputFileReader = new FmMapFile1DOutputFileReader();
             sobekStartIndex = 0;
             inputNetwork = network;
+            DisableCaching = true;
         }
         public IHydroNetwork OutputNetwork
         {
@@ -93,7 +96,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             }
         }
+        private bool HasValidFile
+        {
+            get { return !string.IsNullOrEmpty(Path) && File.Exists(Path); }
+        }
+        private static IMultiDimensionalArray CreateEmptyArrayForType(Type type)
+        {
+            var listType = typeof(List<>).MakeGenericType(type);
+            var mda = typeof(MultiDimensionalArray<>).MakeGenericType(type);
+            return (IMultiDimensionalArray)Activator.CreateInstance(mda, Activator.CreateInstance(listType));
+        }
 
+        protected override int GetVariableValuesCount(IVariable variable, IVariableFilter[] filters)
+        {
+            if (!HasValidFile)
+            {
+                return 0;
+            }
+            return base.GetVariableValuesCount(variable, filters);
+        }
+
+        public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable function, params IVariableFilter[] filters)
+        {
+            if (!HasValidFile)
+            {
+                return (IMultiDimensionalArray<T>)CreateEmptyArrayForType(function.ValueType);
+            }
+            if (function.IsIndependent && typeof(T) == typeof(INetworkLocation))
+            {
+                var featureFilter = filters.FirstOrDefault(f => f.Variable.ValueType == typeof(INetworkLocation));
+                if (function.Attributes != null && function.Attributes.ContainsKey(LocationAttributeName))
+                {
+                    var location = function.Attributes[LocationAttributeName];
+                    var networkLocations = LocationsByNetworkDataType[location];
+                    if (filters.Length == 0 || featureFilter == null)
+                    {
+
+                        return new MultiDimensionalArray<T>((IList<T>)networkLocations);
+                    }
+
+                    if (featureFilter is VariableIndexFilter indexFilter)
+                    {
+                        return new MultiDimensionalArray<T>(
+                            new List<T>(indexFilter.Indices.Select(i => (T)networkLocations[i])));
+                    }
+                }
+                return new MultiDimensionalArray<T>();
+            }
+            return base.GetVariableValues<T>(function, filters);
+        }
         protected override void UpdateFunctionsAfterPathSet()
         {
             UpdateNetworkAndDiscretisationAfterPathSet();
@@ -112,6 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
+            LocationsByNetworkDataType = new Dictionary<string, IList<INetworkLocation>>();
             var netCdfVariables = netCdfFile.GetVariables().ToList();
             var mesh1DNameNetCdfVariable = netCdfVariables.FirstOrDefault(dv =>
             {
@@ -180,6 +232,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 : netCdfVariableName;
 
             var location = netCdfFile.GetDimensionName(netCdfFile.GetDimensions(netcdfVariable).ToArray()[1]);//netCdfFile.GetAttributeValue(netcdfVariable, UGridConstants.Naming.LocationAttributeName);
+            var timeDependentVariableMetaDataBaseKeyForThisLocation = MetaData.Locations.Keys.FirstOrDefault(tdv => tdv.Name.Equals(netCdfVariableName) );
+            if (!LocationsByNetworkDataType.ContainsKey(location) &&
+                timeDependentVariableMetaDataBaseKeyForThisLocation != null)
+            {
+                LocationsByNetworkDataType[location] = MetaData
+                    .Locations[timeDependentVariableMetaDataBaseKeyForThisLocation]
+                    .Select(l => new NetworkLocation(inputNetwork.Branches[l.BranchId - sobekStartIndex], l.Chainage)
+                        {Geometry = new Point(l.XCoordinate, l.YCoordinate), Name = l.Id, Attributes = new DictionaryFeatureAttributeCollection(){{LocationAttributeName, location}}}).Cast<INetworkLocation>().ToList();
+            }
             var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
             var noDataValue = double.Parse(netCdfFile.GetAttributeValue(netcdfVariable, FillValueAttribute));
 
@@ -200,14 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return NetworkDataLocation.UnKnown;
             }
         }
-
-        private string GetNetCdfVariableName(ICoverage coverage)
-        {
-            var networkCoverage = coverage as NetworkCoverage;
-            if (networkCoverage?.Attributes == null || !networkCoverage.Attributes.ContainsKey("NetCdfVariableName")) return string.Empty;
-            return networkCoverage.Attributes["NetCdfVariableName"];
-        }
-
+        
         public ICoordinateSystem CoordinateSystem { get; set; }
         
         private NetworkCoverage CreateNetworkCoverage(string coverageLongName, string unitSymbol,
@@ -305,44 +359,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
         private FmMapFile1DOutputFileReader OutputFileReader { get; set; }
-        
-        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
+
+        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function,
+            IVariableFilter[] filters)
         {
-            if (function.Attributes[NcUseVariableSizeAttribute] == "false" 
-                && typeof(T) == typeof(INetworkLocation))
+            if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable (for example nFlowElem, which is only a dimension)
             {
-
-                var convertedList = (List<INetworkLocation>)TypeUtils.CreateGeneric(typeof(List<>),
-                    networkLocationTypeConverter.ConvertedType);
-
-                var shape = MetaData.NumLocationsForFunctionId(GetNetCdfVariableName(GetCoverage(function)));//netCdfFile.GetShape(netCdfFile.GetVariableByName(GetNetCdfVariableName(GetCoverage(function))))[1];
-                var timeDependentVariableMetaData = MetaData.TimeDependentVariables.FirstOrDefault(tdv => Equals(tdv.Name, GetNetCdfVariableName(GetCoverage(function))));
-                if (timeDependentVariableMetaData != null && MetaData.Locations.ContainsKey(timeDependentVariableMetaData))
+                int size = GetSize(function);
+                return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), new[]
                 {
-                    UpdateTypeConverters(function);
-                    convertedList.AddRange(MetaData.Locations[timeDependentVariableMetaData].Select(l => new NetworkLocation(inputNetwork.Branches[l.BranchId - sobekStartIndex], l.Chainage) { Geometry = new Point(l.XCoordinate, l.YCoordinate), Name = l.Id }));
-                    shape = MetaData.Locations[timeDependentVariableMetaData].Count;
-                }
-                return (IMultiDimensionalArray<T>)new MultiDimensionalArray<INetworkLocation>(convertedList, shape);
+                    size
+                });
             }
-            return base.GetVariableValuesCore<T>(function, filters);
-        }
-
-        private void UpdateTypeConverters(IVariable function)
-        {
-            if (Functions.Any(f => f is INetworkCoverage))
+            try
             {
-                var networkCoverage = Functions.OfType<INetworkCoverage>().FirstOrDefault(f => f.Arguments.Contains(function));
-                if (networkCoverage != null)
-                {
-                    networkLocationTypeConverter.Network = networkCoverage.Network;
-                    networkLocationTypeConverter.Coverage = networkCoverage;
-                }
+                return base.GetVariableValuesCore<T>(function, filters);
             }
-        }
-        private ICoverage GetCoverage(IVariable variable)
-        {
-            return Functions.OfType<ICoverage>().FirstOrDefault(f => f.Arguments.Concat(f.Components).Contains(variable));
+            catch (Exception e) when (e.Message.Contains("NetCDF error code"))
+            {
+                log.Error(string.Format("While reading variable {0} from the file {1} an error was encountered: {2}", function.Name, System.IO.Path.GetFileName(Path), e.Message));
+                int functionSize = GetSize(function);
+                return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]), functionSize);
+            }
         }
     }
 }

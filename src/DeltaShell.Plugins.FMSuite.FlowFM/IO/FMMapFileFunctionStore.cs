@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
@@ -110,6 +111,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected override int GetVariableValuesCount(IVariable function, IVariableFilter[] filters)
         {
+            if (!HasValidFile)
+            {
+                return 0;
+            }
+
             int variableValuesCount = base.GetVariableValuesCount(function, filters);
 
             if (function.IsIndependent)
@@ -236,6 +242,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable function, params IVariableFilter[] filters)
         {
+            if (!HasValidFile)
+            {
+                return (IMultiDimensionalArray<T>)CreateEmptyArrayForType(function.ValueType);
+            }
             if (function.IsIndependent && function.ValueType == typeof(ILink1D2D))
             {
                 var featureFilter = filters.FirstOrDefault(f => f.Variable.ValueType == typeof(ILink1D2D));
@@ -251,10 +261,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 return new MultiDimensionalArray<T>();
             }
-
+            
             return base.GetVariableValues<T>(function, filters);
         }
-
+        private bool HasValidFile
+        {
+            get { return !string.IsNullOrEmpty(Path) && File.Exists(Path); }
+        }
+        
+        private static IMultiDimensionalArray CreateEmptyArrayForType(Type type)
+        {
+            var listType = typeof(List<>).MakeGenericType(type);
+            var mda = typeof(MultiDimensionalArray<>).MakeGenericType(type);
+            return (IMultiDimensionalArray)Activator.CreateInstance(mda, Activator.CreateInstance(listType));
+        }
+        
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
         {
             if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable (for example nFlowElem, which is only a dimension)

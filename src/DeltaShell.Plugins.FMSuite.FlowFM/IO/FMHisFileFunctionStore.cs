@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Units;
@@ -247,6 +249,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         private readonly IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
+        private bool HasValidFile
+        {
+            get { return !string.IsNullOrEmpty(Path) && File.Exists(Path); }
+        }
+        private static IMultiDimensionalArray CreateEmptyArrayForType(Type type)
+        {
+            var listType = typeof(List<>).MakeGenericType(type);
+            var mda = typeof(MultiDimensionalArray<>).MakeGenericType(type);
+            return (IMultiDimensionalArray)Activator.CreateInstance(mda, Activator.CreateInstance(listType));
+        }
+        protected override int GetVariableValuesCount(IVariable variable, IVariableFilter[] filters)
+        {
+            if (!HasValidFile)
+            {
+                return 0;
+            }
+            return base.GetVariableValuesCount(variable, filters);
+        }
+        public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable function, params IVariableFilter[] filters)
+        {
+            if (!HasValidFile)
+            {
+                return (IMultiDimensionalArray<T>)CreateEmptyArrayForType(function.ValueType);
+            }
+            return base.GetVariableValues<T>(function, filters);
+        }
 
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, DelftTools.Functions.Filters.IVariableFilter[] filters)
         {
