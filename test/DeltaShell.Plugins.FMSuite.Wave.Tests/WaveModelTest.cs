@@ -662,6 +662,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenInvalidWaveModel_WhenModelSaveTo_Then_LogsException()
         {
             // Given
