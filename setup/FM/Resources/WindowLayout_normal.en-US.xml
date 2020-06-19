@@ -1,84 +1,35 @@
-<dotnetbarlayout version="6" zorder="3,1,2,4">
-  <docksite size="0" dockingside="Top" originaldocksitesize="0" />
-  <docksite size="97" dockingside="Bottom" originaldocksitesize="0">
-    <dockcontainer orientation="1" w="200" h="0">
-      <barcontainer w="1140" h="94">
-        <bar name="bar_Messages" dockline="999" layout="2" dockoffset="0" state="2" dockside="4" fpos="735,887,128,128" visible="true" seldocktab="1">
-          <items>
-            <item name="Messages" origBar="" origPos="-1" pos="0" />
-            <item name="Time Series Navigator" origBar="" origPos="-1" pos="1" />
-          </items>
-        </bar>
-      </barcontainer>
-      <barcontainer w="186" h="60">
-        <bar name="Data Structure" candockleft="true" candockright="true" candocktop="true" candockbottom="true" candockdoc="false" candocktab="true" text="Data Structure" dockline="999" dockoffset="0" grabhandle="8" menubar="false" stretch="true" style="3" wrapdock="false" wrapfloat="true" state="2" dockside="4" visible="false" custom="true" canhide="true" imagesize="0" itemsp="0" themes="false" layout="2" eqbutton="false" ahanim="0" autocaptionsync="true">
-          <items>
-            <item name="Data Structure" origBar="" origPos="-1" pos="0" />
-          </items>
-        </bar>
-      </barcontainer>
-    </dockcontainer>
-  </docksite>
-  <docksite size="266" dockingside="Left" originaldocksitesize="0">
-    <dockcontainer orientation="1" w="0" h="200">
-      <barcontainer w="263" h="327">
-        <bar name="bar_Project Explorer" dockline="0" layout="2" dockoffset="392" state="2" dockside="1" fpos="103,420,128,128" visible="true">
-          <items>
-            <item name="Project Explorer" origBar="" origPos="-1" pos="0" />
-          </items>
-        </bar>
-      </barcontainer>
-      <barcontainer w="263" h="546">
-        <bar name="Map Contents" candockleft="true" candockright="true" candocktop="true" candockbottom="true" candockdoc="false" candocktab="true" text="Map Contents" dockline="0" dockoffset="330" grabhandle="8" menubar="false" stretch="true" style="3" wrapdock="false" wrapfloat="true" state="2" dockside="1" visible="true" custom="true" canhide="true" imagesize="0" itemsp="0" themes="false" layout="2" eqbutton="false" ahanim="0" autocaptionsync="true">
-          <items>
-            <item name="Map Contents" origBar="" origPos="-1" pos="0" />
-          </items>
-        </bar>
-      </barcontainer>
-    </dockcontainer>
-  </docksite>
-  <docksite size="274" dockingside="Right" originaldocksitesize="0">
-    <dockcontainer orientation="1" w="0" h="200">
-      <barcontainer w="271" h="368">
-        <bar name="Hydro Region Contents0" candockleft="true" candockright="true" candocktop="true" candockbottom="true" candockdoc="false" candocktab="true" text="Hydro Region Contents" dockline="0" dockoffset="0" grabhandle="8" menubar="false" stretch="true" style="3" wrapdock="false" wrapfloat="true" state="2" dockside="2" visible="true" custom="true" canhide="true" imagesize="0" itemsp="0" themes="false" layout="2" eqbutton="false" seldocktab="0" ahanim="0" autocaptionsync="true">
-          <items>
-            <item name="Hydro Region Contents" origBar="" origPos="-1" pos="0" />
-            <item name="Undo / Redo History" origBar="" origPos="-1" pos="1" />
-            <item name="Chart Contents" origBar="" origPos="-1" pos="2" />
-          </items>
-        </bar>
-      </barcontainer>
-      <barcontainer w="271" h="505">
-        <bar name="Hydro Region Contents" candockleft="true" candockright="true" candocktop="true" candockbottom="true" candockdoc="false" candocktab="true" text="Properties" dockline="999" dockoffset="371" grabhandle="8" menubar="false" stretch="true" style="3" wrapdock="false" wrapfloat="true" state="2" dockside="2" visible="true" custom="true" canhide="true" imagesize="0" itemsp="0" themes="false" layout="2" eqbutton="false" ahanim="0" autocaptionsync="true">
-          <items>
-            <item name="Properties" origBar="" origPos="-1" pos="0" />
-          </items>
-        </bar>
-      </barcontainer>
-    </dockcontainer>
-  </docksite>
-  <documents>
-    <dockcontainer orientation="0" w="0" h="200">
-      <barcontainer w="1140" h="779">
-        <bar name="bar_Start Page" dockline="0" layout="2" dockoffset="0" state="2" dockside="5" visible="true" seldocktab="0">
-          <items>
-            <item name="Start Page" origBar="" origPos="-1" pos="0" />
-          </items>
-        </bar>
-      </barcontainer>
-    </dockcontainer>
-  </documents>
-  <bars>
-    <bar name="barMenu" dockline="0" layout="0" dockoffset="0" state="2" dockside="3" visible="true" />
-    <bar name="toolbarMain" dockline="1" layout="0" dockoffset="0" state="2" dockside="3" visible="true" />
-    <bar name="HydroRegionEditorToolbar" dockline="1" layout="0" dockoffset="89" state="2" dockside="3" visible="true" />
-    <bar name="ScriptingToolbar" dockline="1" layout="0" dockoffset="728" state="2" dockside="3" visible="true" />
-    <bar name="MapZoomBar" dockline="1" layout="0" dockoffset="763" state="2" dockside="3" visible="true" />
-    <bar name="MapSelectionBar" dockline="1" layout="0" dockoffset="942" state="2" dockside="3" visible="true" />
-    <bar name="toolbarRun" dockline="1" layout="0" dockoffset="1006" state="2" dockside="3" visible="true" />
-    <bar name="CrossSectionToolbar" dockline="1" layout="0" dockoffset="1065" state="2" dockside="3" visible="true" />
-    <bar name="FeatureToolbar" dockline="1" layout="0" dockoffset="1100" state="2" dockside="3" visible="true" />
-    <bar name="MapToolBar" dockline="2" layout="0" dockoffset="0" state="2" dockside="3" visible="true" />
-    <bar name="statusBar" dockline="0" layout="0" dockoffset="0" state="2" dockside="4" visible="true" />
-  </bars>
-</dotnetbarlayout>
+<?xml version="1.0" encoding="utf-8"?>
+<LayoutRoot>
+  <RootPanel Orientation="Horizontal">
+    <LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="220">
+      <LayoutAnchorablePane DockWidth="220" DocMinWidth="200">
+        <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Project" IsSelected="True" ContentId="Project" CanClose="False" LastActivationTimeStamp="06/19/2020 13:58:14" />
+      </LayoutAnchorablePane>
+      <LayoutAnchorablePane DocMinWidth="200">
+        <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Properties" IsSelected="True" ContentId="Properties" CanClose="False" LastActivationTimeStamp="06/19/2020 13:58:14" />
+      </LayoutAnchorablePane>
+    </LayoutAnchorablePaneGroup>
+    <LayoutPanel Orientation="Vertical">
+      <LayoutDocumentPaneGroup Orientation="Horizontal">
+        <LayoutDocumentPane />
+      </LayoutDocumentPaneGroup>
+      <LayoutAnchorablePane DockHeight="150" DockMinHeight="100">
+        <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Messages" IsSelected="True" ContentId="Messages" CanClose="False" LastActivationTimeStamp="06/19/2020 13:58:14" />
+        <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Time Navigator" ContentId="Time Navigator" CanClose="False" LastActivationTimeStamp="06/19/2020 13:58:14" />
+      </LayoutAnchorablePane>
+    </LayoutPanel>
+    <LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="250">
+      <LayoutAnchorablePane DockWidth="250" DocMinWidth="200">
+        <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Map" IsSelected="True" ContentId="Map" CanClose="False" LastActivationTimeStamp="06/19/2020 13:59:34" />
+        <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Operations" ContentId="Operations" CanClose="False" LastActivationTimeStamp="06/19/2020 13:59:29" />
+        <LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Chart" ContentId="Chart" CanClose="False" LastActivationTimeStamp="06/19/2020 13:58:14" />
+      </LayoutAnchorablePane>
+    </LayoutAnchorablePaneGroup>
+  </RootPanel>
+  <TopSide />
+  <RightSide />
+  <LeftSide />
+  <BottomSide />
+  <FloatingWindows />
+  <Hidden />
+</LayoutRoot>
