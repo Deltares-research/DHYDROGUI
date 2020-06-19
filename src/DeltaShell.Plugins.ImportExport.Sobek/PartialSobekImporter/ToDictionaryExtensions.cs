@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using log4net;
 
@@ -7,7 +8,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
     public static class ToDictionaryExtensions
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(ToDictionaryExtensions));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ToDictionaryExtensions));
 
         /// <summary>
         /// Performs a ToDictionary, but catches non-unique key exceptions and prints the keys that are not unique
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 throw new ArgumentException(message);
             }
         }
-
+        
         private static string ToOrdinalSuffixString(int number)
         {
             string suffix;
@@ -80,6 +81,50 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                                                                  Func<T, TKey> keySelector)
         {
             return ToDictionaryWithErrorDetails(source, context, keySelector, x => x);
+        }
+
+        public static Dictionary<TKey, TValue> ToDictionaryWithDuplicateWarnings<TKey, TValue, T>(
+            this IEnumerable<T> source,
+            string context,
+            Func<T, TKey> keySelector,
+            Func<T, TValue> valueSelector)
+        {
+
+            var dictionary = new Dictionary<TKey, TValue>();
+            var duplicateKeys = new Collection<TKey>();
+            foreach (var item in source)
+            {
+                var key = keySelector(item);
+                if (dictionary.ContainsKey(key))
+                {
+                    duplicateKeys.Add(key);
+                    continue;
+                }
+
+                var value = valueSelector(item);
+                dictionary[key] = value;
+            }
+
+            if (duplicateKeys.Any())
+            {
+                var message =
+                    string.Format("The following entries were not unique: '{0}'. Total non-unique: {1}, in: {2}.",
+                        string.Join(", ", duplicateKeys),
+                        duplicateKeys.Count,
+                        context);
+                Log.Warn(message);
+            }
+
+            return dictionary;
+        }
+
+        public static Dictionary<TKey, T> ToDictionaryWithDuplicateWarnings<TKey, T>(
+            this IEnumerable<T> source,
+            string context,
+            Func<T, TKey> keySelector)
+        {
+
+            return ToDictionaryWithDuplicateWarnings(source, context, keySelector, x => x);
         }
     }
 }

@@ -768,7 +768,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (sobekCrossSectionDefinitions == null)
                     {
                         var crossSectionDefinitionReader = new CrossSectionDefinitionReader();
-                        sobekCrossSectionDefinitions = crossSectionDefinitionReader.Read(crossSectionDefinitionReaderPath).ToDictionaryWithErrorDetails(crossSectionDefinitionReaderPath, csDef => csDef.ID, csDef => csDef);
+                        sobekCrossSectionDefinitions = crossSectionDefinitionReader.Read(crossSectionDefinitionReaderPath).ToDictionaryWithDuplicateWarnings(crossSectionDefinitionReaderPath, csDef => csDef.ID, csDef => csDef);
                     }
                     SobekCrossSectionDefinition sobekCrossSectionDefinition = null;
 

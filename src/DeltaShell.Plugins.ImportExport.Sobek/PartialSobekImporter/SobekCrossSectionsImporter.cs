@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var crossSectionLookup = HydroNetwork.CrossSections.ToDictionary(cs => cs.Name);
             var defPath = GetFilePath(SobekFileNames.SobekProfileDefinitionsFileName);
             var crossSectionDefinitionsLookup = crossSectionDefinitionReader.Read(defPath)
-                                                        .ToDictionaryWithErrorDetails(defPath, d => d.ID);
+                                                        .ToDictionaryWithDuplicateWarnings(defPath, d => d.ID);
 
             if (mappings.Count > 0)
             {

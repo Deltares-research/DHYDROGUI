@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var filePath = GetFilePath(SobekFileNames.SobekProfileDefinitionsFileName);
             return new CrossSectionDefinitionReader()
                 .Read(filePath)
-                .ToDictionaryWithErrorDetails(filePath, csd => csd.ID);
+                .ToDictionaryWithDuplicateWarnings(filePath, csd => csd.ID);
         }
 
         private IList<SobekValveData> GetSobekValveData()
