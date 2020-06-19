@@ -28,8 +28,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 StopDelivery = category.ReadProperty<double>(StructureRegion.StopLevelDeliverySide.Key)
             };
 
-            var useReductionTable = category.ReadProperty<bool>(StructureRegion.UseReductionTable.Key, true);
-            if (useReductionTable)
+
+            var numReductionLevels = category.ReadProperty<int>(StructureRegion.ReductionFactorLevels.Key, true);
+            if(numReductionLevels > 0)
             {
                 var headValues = category.ReadProperty<string>(StructureRegion.Head.Key, true).ToDoubleArray();
                 var reductionFactorValues =
