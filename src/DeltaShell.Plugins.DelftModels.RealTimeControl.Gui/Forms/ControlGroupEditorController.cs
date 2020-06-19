@@ -468,6 +468,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             adjustingConnectionInDomain = false;
         }
 
+        /// <summary>
+        /// Disconnects two objects.
+        /// </summary>
+        /// <param name="from">The object from where the connection is linked.</param>
+        /// <param name="to">The object to where the connection is linked.</param>
         public static void Disconnect(object from, object to)
         {
             adjustingConnectionInDomain = true;
