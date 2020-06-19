@@ -17,23 +17,35 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private const int RoughnessValueComponentIndex = 0;
         private const int ChainageArgumentIndex = 0;
         private const int FunctionArgumentIndex = 1;
-        
+
         /// <summary>
         /// Converts roughness from a collection of <see cref="RoughnessSection"/> to a collection of
         /// <see cref="ChannelFrictionDefinition"/>.
         /// </summary>
         /// <param name="channelFrictionDefinitions">The channel friction definitions to be updated.</param>
         /// <param name="roughnessSections">The roughness sections to be converted to <see cref="ChannelFrictionDefinition"/>.</param>
+        /// <param name="network">The network of the corresponding model.</param>
         /// <exception cref="ArgumentNullException">When one of the input parameters equals <c>null</c>.</exception>
         /// <exception cref="IndexOutOfRangeException"></exception>
         /// <exception cref="ArgumentOutOfRangeException">When an invalid <see cref="RoughnessFunction"/> is provided.</exception>
         public void ConvertSobekRoughnessToWaterFlowFmRoughness(
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
-            IEnumerable<RoughnessSection> roughnessSections)
+            IEnumerable<RoughnessSection> roughnessSections,
+            IHydroNetwork network)
         {
-            if (channelFrictionDefinitions == null || roughnessSections == null)
+            if (channelFrictionDefinitions == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(channelFrictionDefinitions));
+            }
+
+            if (roughnessSections == null)
+            {
+                throw new ArgumentNullException(nameof(roughnessSections));
+            }
+
+            if (network == null)
+            {
+                throw new ArgumentNullException(nameof(network));
             }
 
             if (!channelFrictionDefinitions.Any() || !roughnessSections.Any())
