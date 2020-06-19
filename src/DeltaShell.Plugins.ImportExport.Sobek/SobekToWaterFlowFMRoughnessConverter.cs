@@ -11,7 +11,6 @@ using DelftTools.Hydro;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
-
     public class SobekToWaterFlowFMRoughnessConverter
     {
         private const int NetworkLocationArgumentIndex = 0;
@@ -20,27 +19,37 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private const int FunctionArgumentIndex = 1;
         
         /// <summary>
-        /// Converts roughness from a collection of <see cref="RoughnessSection"/>
-        /// to a collection of <see cref="ChannelFrictionDefinition"/>.
+        /// Converts roughness from a collection of <see cref="RoughnessSection"/> to a collection of
+        /// <see cref="ChannelFrictionDefinition"/>.
         /// </summary>
-        /// <param name="channelFrictionDefinitions">Channel friction definitions to be updated.</param>
-        /// <param name="roughnessSections">Roughness sections to be converted to <see cref="ChannelFrictionDefinition"/>.</param>
-        /// <exception cref="ArgumentNullException">When one of the arguments is null.</exception>
+        /// <param name="channelFrictionDefinitions">The channel friction definitions to be updated.</param>
+        /// <param name="roughnessSections">The roughness sections to be converted to <see cref="ChannelFrictionDefinition"/>.</param>
+        /// <exception cref="ArgumentNullException">When one of the input parameters equals <c>null</c>.</exception>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException">When invalid <see cref="RoughnessFunction"/> is provided.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">When an invalid <see cref="RoughnessFunction"/> is provided.</exception>
         public void ConvertSobekRoughnessToWaterFlowFmRoughness(
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
             IEnumerable<RoughnessSection> roughnessSections)
         {
-            if (channelFrictionDefinitions == null || roughnessSections == null) throw new ArgumentNullException();
-            if (!channelFrictionDefinitions.Any() || !roughnessSections.Any()) return;
+            if (channelFrictionDefinitions == null || roughnessSections == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (!channelFrictionDefinitions.Any() || !roughnessSections.Any())
+            {
+                return;
+            }
 
             var roughnessSectionsPerBranch = GetRoughnessSectionsPerBranch(roughnessSections);
 
             foreach (var channelFrictionDefinition in channelFrictionDefinitions)
             {
                 var channel = channelFrictionDefinition.Channel;
-                if (!roughnessSectionsPerBranch.ContainsKey(channel)) continue;
+                if (!roughnessSectionsPerBranch.ContainsKey(channel))
+                {
+                    continue;
+                }
 
                 UpdateChannelFrictionDefinition(channelFrictionDefinition, roughnessSectionsPerBranch);
             }
@@ -48,7 +57,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private void UpdateChannelFrictionDefinition(
             ChannelFrictionDefinition channelFrictionDefinition, 
-            Dictionary<IBranch, HashSet<RoughnessSection>> roughnessSectionsPerBranch)
+            IReadOnlyDictionary<IBranch, HashSet<RoughnessSection>> roughnessSectionsPerBranch)
         {
             var channel = channelFrictionDefinition.Channel;
             var sectionCount = roughnessSectionsPerBranch[channel].Count;
@@ -109,7 +118,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             roughnessNetworkCoverage.Arguments[RoughnessValueComponentIndex].RemoveValues(new VariableValueFilter<INetworkLocation>(roughnessNetworkCoverage.Arguments[0], networkLocations));
         }
 
-        private void SetChannelFrictionDefinitionToConstantDefinition(ChannelFrictionDefinition channelFrictionDefinition,
+        private static void SetChannelFrictionDefinitionToConstantDefinition(
+            ChannelFrictionDefinition channelFrictionDefinition,
             double sectionRoughnessValue, RoughnessType sectionRoughnessType)
         {
             channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition;
@@ -152,7 +162,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
 
-        private void UpdateFunctionSpatialChannelFrictionDefinition(SpatialChannelFrictionDefinition spatialDefinition, IFunction function)
+        private static void UpdateFunctionSpatialChannelFrictionDefinition(SpatialChannelFrictionDefinition spatialDefinition, IFunction function)
         {
             var chainageArgument = function.Arguments[ChainageArgumentIndex];
             var functionArgument = function.Arguments[FunctionArgumentIndex];
@@ -162,8 +172,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             spatialDefinition.Function.Components[RoughnessValueComponentIndex].SetValues(roughnessComponent.Values);
         }
 
-        private void UpdateConstantSpatialChannelFrictionDefinitions(ChannelFrictionDefinition channelFrictionDefinition,
-            IList<INetworkLocation> networkLocations, 
+        private static void UpdateConstantSpatialChannelFrictionDefinitions(
+            ChannelFrictionDefinition channelFrictionDefinition,
+            IEnumerable<INetworkLocation> networkLocations, 
             RoughnessNetworkCoverage roughnessNetworkCoverage)
         {
             foreach (var networkLocation in networkLocations)
@@ -177,12 +188,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
 
-        private RoughnessType GetRoughnessTypeForRoughnessSection(RoughnessNetworkCoverage roughnessNetworkCoverage, INetworkLocation networkLocation)
+        private static RoughnessType GetRoughnessTypeForRoughnessSection(RoughnessNetworkCoverage roughnessNetworkCoverage, INetworkLocation networkLocation)
         {
             return roughnessNetworkCoverage.EvaluateRoughnessType(networkLocation);
         }
 
-        private Dictionary<IBranch, HashSet<RoughnessSection>> GetRoughnessSectionsPerBranch(IEnumerable<RoughnessSection> roughnessSections)
+        private static Dictionary<IBranch, HashSet<RoughnessSection>> GetRoughnessSectionsPerBranch(IEnumerable<RoughnessSection> roughnessSections)
         {
             var roughnessSectionsPerBranch = new Dictionary<IBranch, HashSet<RoughnessSection>>();
             foreach (var roughnessSection in roughnessSections)
@@ -191,7 +202,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
                 foreach (var networkLocationObject in roughnessNetworkCoverage.Arguments[NetworkLocationArgumentIndex].Values)
                 {
-                    var networkLocation = ((INetworkLocation) networkLocationObject);
+                    var networkLocation = (INetworkLocation) networkLocationObject;
                     var branch = networkLocation.Branch;
 
                     if (!roughnessSectionsPerBranch.ContainsKey(branch))
