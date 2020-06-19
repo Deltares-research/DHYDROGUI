@@ -54,20 +54,32 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 return;
             }
 
-            var remainingChannelFrictionDefinitions = SetOnLanesForRelevantChannelFrictionDefinitions(channelFrictionDefinitions, network);
+            var remainingChannelFrictionDefinitions = SetOnLanesSpecificationForRelevantChannelFrictionDefinitions(channelFrictionDefinitions, network);
 
-            SetDefaultRoughnessSectionDataToRemainingChannelFrictionDefinitions(remainingChannelFrictionDefinitions, defaultRoughnessSection);
+            MoveDefaultRoughnessSectionDataToRemainingChannelFrictionDefinitions(remainingChannelFrictionDefinitions, defaultRoughnessSection);
         }
 
-        private static IEnumerable<ChannelFrictionDefinition> SetOnLanesForRelevantChannelFrictionDefinitions(
+        #region OnLanes
+
+        private static IEnumerable<ChannelFrictionDefinition> SetOnLanesSpecificationForRelevantChannelFrictionDefinitions(
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
             IHydroNetwork network)
+        {
+            var remainingChannelFrictionDefinitions = SetOnLanesSpecificationBasedOnCrossSectionDefinitionsPerBranch(channelFrictionDefinitions);
+
+            SynchronizeOnLanesSpecificationBasedOnSharedCrossSectionDefinitions(channelFrictionDefinitions, network, remainingChannelFrictionDefinitions);
+
+            return remainingChannelFrictionDefinitions;
+        }
+
+        private static List<ChannelFrictionDefinition> SetOnLanesSpecificationBasedOnCrossSectionDefinitionsPerBranch(IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             var remainingChannelFrictionDefinitions = new List<ChannelFrictionDefinition>();
 
             foreach (var channelFrictionDefinition in channelFrictionDefinitions)
             {
                 var channel = channelFrictionDefinition.Channel;
+
                 if (ChannelHasLanesDefinitions(channel))
                 {
                     channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
@@ -75,29 +87,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 else
                 {
                     remainingChannelFrictionDefinitions.Add(channelFrictionDefinition);
-                }
-            }
-
-            var channelFrictionDefinitionsLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel, cfd => cfd);
-
-            foreach (var sharedCrossSectionDefinition in network.SharedCrossSectionDefinitions)
-            {
-                var crossSectionsUsingDefinition = sharedCrossSectionDefinition.FindUsage(network);
-                var correspondingChannels = crossSectionsUsingDefinition
-                    .Select(cs => cs.Branch)
-                    .Distinct()
-                    .OfType<IChannel>();
-                var correspondingChannelFrictionDefinitions = correspondingChannels.Select(channel => channelFrictionDefinitionsLookup[channel]);
-                if (correspondingChannelFrictionDefinitions.Any(cfd => cfd.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections))
-                {
-                    foreach (var channelFrictionDefinition in correspondingChannelFrictionDefinitions)
-                    {
-                        if (remainingChannelFrictionDefinitions.Contains(channelFrictionDefinition))
-                        {
-                            channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
-                            remainingChannelFrictionDefinitions.Remove(channelFrictionDefinition);
-                        }
-                    }
                 }
             }
 
@@ -133,7 +122,37 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return false;
         }
 
-        private static void SetDefaultRoughnessSectionDataToRemainingChannelFrictionDefinitions(
+        private static void SynchronizeOnLanesSpecificationBasedOnSharedCrossSectionDefinitions(
+            IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
+            IHydroNetwork network,
+            ICollection<ChannelFrictionDefinition> remainingChannelFrictionDefinitions)
+        {
+            var channelFrictionDefinitionsLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel, cfd => cfd);
+
+            foreach (var sharedCrossSectionDefinition in network.SharedCrossSectionDefinitions)
+            {
+                var crossSectionsUsingDefinition = sharedCrossSectionDefinition.FindUsage(network);
+                var correspondingChannels = crossSectionsUsingDefinition.Select(cs => cs.Branch).Distinct().OfType<IChannel>();
+                var correspondingChannelFrictionDefinitions = correspondingChannels.Select(channel => channelFrictionDefinitionsLookup[channel]);
+                if (correspondingChannelFrictionDefinitions.Any(cfd => cfd.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections))
+                {
+                    foreach (var channelFrictionDefinition in correspondingChannelFrictionDefinitions)
+                    {
+                        if (remainingChannelFrictionDefinitions.Contains(channelFrictionDefinition))
+                        {
+                            channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
+                            remainingChannelFrictionDefinitions.Remove(channelFrictionDefinition);
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region Branch Constant / Branch Chainages
+
+        private static void MoveDefaultRoughnessSectionDataToRemainingChannelFrictionDefinitions(
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
             RoughnessSection defaultRoughnessSection)
         {
@@ -176,6 +195,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                         break;
                 }
 
+                // Remove data from default roughness section
                 if (networkLocations.Any())
                 {
                     defaultRoughnessSection.RoughnessNetworkCoverage.Arguments[RoughnessValueComponentIndex].RemoveValues(new VariableValueFilter<INetworkLocation>(defaultRoughnessSection.RoughnessNetworkCoverage.Arguments[0], networkLocations));
@@ -217,5 +237,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             spatialChannelFrictionDefinition.Function.Arguments[FunctionArgumentIndex].SetValues(functionArgument.Values);
             spatialChannelFrictionDefinition.Function.Components[RoughnessValueComponentIndex].SetValues(roughnessComponent.Values);
         }
+
+        #endregion
     }
 }
