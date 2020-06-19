@@ -25,12 +25,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         /// </summary>
         /// <param name="channelFrictionDefinitions">The channel friction definitions to be updated.</param>
         /// <param name="defaultRoughnessSection">The roughness section to be converted to <see cref="ChannelFrictionDefinition"/>.</param>
+        /// <param name="network">The network of the model.</param>
         /// <exception cref="ArgumentNullException">When one of the input parameters equals <c>null</c>.</exception>
         /// <exception cref="IndexOutOfRangeException"></exception>
         /// <exception cref="ArgumentOutOfRangeException">When an invalid <see cref="RoughnessFunction"/> is provided.</exception>
         public void ConvertSobekRoughnessToWaterFlowFmRoughness(
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
-            RoughnessSection defaultRoughnessSection)
+            RoughnessSection defaultRoughnessSection,
+            IHydroNetwork network)
         {
             if (channelFrictionDefinitions == null)
             {
@@ -42,27 +44,79 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 throw new ArgumentNullException(nameof(defaultRoughnessSection));
             }
 
+            if (network == null)
+            {
+                throw new ArgumentNullException(nameof(network));
+            }
+
             if (!channelFrictionDefinitions.Any())
             {
                 return;
             }
 
-            SetDefaultRoughnessSectionDataToChannelFrictionDefinitions(channelFrictionDefinitions, defaultRoughnessSection);
+            var remainingChannelFrictionDefinitions = SetOnLanesForRelevantChannelFrictionDefinitions(channelFrictionDefinitions, network);
+
+            SetDefaultRoughnessSectionDataToRemainingChannelFrictionDefinitions(remainingChannelFrictionDefinitions, defaultRoughnessSection);
         }
 
-        private static void SetDefaultRoughnessSectionDataToChannelFrictionDefinitions(
+        private static IEnumerable<ChannelFrictionDefinition> SetOnLanesForRelevantChannelFrictionDefinitions(
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
-            RoughnessSection defaultRoughnessSection)
+            IHydroNetwork network)
         {
+            var remainingChannelFrictionDefinitions = new List<ChannelFrictionDefinition>();
+
             foreach (var channelFrictionDefinition in channelFrictionDefinitions)
             {
                 var channel = channelFrictionDefinition.Channel;
                 if (ChannelHasLanesDefinitions(channel))
                 {
                     channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
-                    continue;
                 }
+                else
+                {
+                    remainingChannelFrictionDefinitions.Add(channelFrictionDefinition);
+                }
+            }
 
+            return remainingChannelFrictionDefinitions;
+        }
+
+        private static bool ChannelHasLanesDefinitions(IChannel channel)
+        {
+            var crossSectionDefinitions = channel.CrossSections.Select(cs => cs.GetCrossSectionDefinition());
+
+            foreach (var crossSectionDefinition in crossSectionDefinitions)
+            {
+                switch (crossSectionDefinition.CrossSectionType)
+                {
+                    case CrossSectionType.GeometryBased:
+                    case CrossSectionType.YZ:
+                    case CrossSectionType.Standard:
+                        if (crossSectionDefinition.Sections.Any(s => s.SectionType.Name != RoughnessDataSet.MainSectionTypeName))
+                        {
+                            return true;
+                        }
+                        break;
+                    case CrossSectionType.ZW:
+                        var crossSectionDefinitionZw = (CrossSectionDefinitionZW) crossSectionDefinition;
+                        if (crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.MainSectionTypeName) != crossSectionDefinitionZw.Width)
+                        {
+                            return true;
+                        }
+                        break;
+                }
+            }
+
+            return false;
+        }
+
+        private static void SetDefaultRoughnessSectionDataToRemainingChannelFrictionDefinitions(
+            IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
+            RoughnessSection defaultRoughnessSection)
+        {
+            foreach (var channelFrictionDefinition in channelFrictionDefinitions)
+            {
+                var channel = channelFrictionDefinition.Channel;
                 var functionType = defaultRoughnessSection.GetRoughnessFunctionType(channel);
                 var networkLocations = defaultRoughnessSection.RoughnessNetworkCoverage.GetLocationsForBranch(channel);
 
@@ -105,35 +159,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     defaultRoughnessSection.RemoveRoughnessFunctionsForBranch(channel);
                 }
             }
-        }
-
-        private static bool ChannelHasLanesDefinitions(IChannel channel)
-        {
-            var crossSectionDefinitions = channel.CrossSections.Select(cs => cs.GetCrossSectionDefinition());
-
-            foreach (var crossSectionDefinition in crossSectionDefinitions)
-            {
-                switch (crossSectionDefinition.CrossSectionType)
-                {
-                    case CrossSectionType.GeometryBased:
-                    case CrossSectionType.YZ:
-                    case CrossSectionType.Standard:
-                        if (crossSectionDefinition.Sections.Any(s => s.SectionType.Name != RoughnessDataSet.MainSectionTypeName))
-                        {
-                            return true;
-                        }
-                        break;
-                    case CrossSectionType.ZW:
-                        var crossSectionDefinitionZw = (CrossSectionDefinitionZW) crossSectionDefinition;
-                        if (crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.MainSectionTypeName) != crossSectionDefinitionZw.Width)
-                        {
-                            return true;
-                        }
-                        break;
-                }
-            }
-
-            return false;
         }
 
         private static RoughnessType GetRoughnessTypeForChannel(

@@ -23,11 +23,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         public void WhenChannelFrictionDefinitionsIsNull_ThenShouldThrowArgumentNullException()
         {
+            var hydroNetwork = new HydroNetwork();
             var converter = new SobekToWaterFlowFMRoughnessConverter();
 
             TestDelegate action = () =>
             {
-                converter.ConvertSobekRoughnessToWaterFlowFmRoughness(null, new RoughnessSection(new CrossSectionSectionType(), new HydroNetwork()));
+                converter.ConvertSobekRoughnessToWaterFlowFmRoughness(null, new RoughnessSection(new CrossSectionSectionType(), hydroNetwork), hydroNetwork);
             };
             
             var exception = Assert.Throws<ArgumentNullException>(action);
@@ -39,10 +40,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             var converter = new SobekToWaterFlowFMRoughnessConverter();
 
-            TestDelegate action = () => converter.ConvertSobekRoughnessToWaterFlowFmRoughness(Enumerable.Empty<ChannelFrictionDefinition>(), null);
+            TestDelegate action = () => converter.ConvertSobekRoughnessToWaterFlowFmRoughness(Enumerable.Empty<ChannelFrictionDefinition>(), null, new HydroNetwork());
             
             var exception = Assert.Throws<ArgumentNullException>(action);
             Assert.AreEqual("defaultRoughnessSection", exception.ParamName);
+        }
+
+        [Test]
+        public void WhenNetworkIsNull_ThenShouldThrowArgumentNullException()
+        {
+            var converter = new SobekToWaterFlowFMRoughnessConverter();
+
+            TestDelegate action = () => converter.ConvertSobekRoughnessToWaterFlowFmRoughness(Enumerable.Empty<ChannelFrictionDefinition>(), new RoughnessSection(new CrossSectionSectionType(), new HydroNetwork()), null);
+
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.AreEqual("network", exception.ParamName);
         }
 
         // [Test]
