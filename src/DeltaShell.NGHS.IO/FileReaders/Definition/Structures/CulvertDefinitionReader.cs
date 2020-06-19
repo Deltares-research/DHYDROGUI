@@ -36,13 +36,13 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 InletLossCoefficient = category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key),
                 OutletLossCoefficient = category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key),
                 IsGated = category.ReadProperty<string>(StructureRegion.ValveOnOff.Key) != "0",
-                GateInitialOpening = category.ReadProperty<double>(StructureRegion.IniValveOpen.Key),
                 BendLossCoefficient = category.ReadProperty<double>(StructureRegion.BendLossCoef.Key, true),
                 SiphonOnLevel = category.ReadProperty<double>(StructureRegion.TurnOnLevel.Key, true),
                 SiphonOffLevel = category.ReadProperty<double>(StructureRegion.TurnOffLevel.Key, true),
                 FrictionDataType = (Friction) Enum.Parse(typeof(Friction), category.ReadProperty<string>(StructureRegion.BedFrictionType.Key), true),
                 Friction = category.ReadProperty<double>(StructureRegion.BedFriction.Key)
             };
+            culvert.GateInitialOpening = category.ReadProperty<double>(StructureRegion.IniValveOpen.Key, !culvert.IsGated);
 
             SetCulvertDimensionsBasedOnProfile(culvert, definition);
             var numLossCoeff = category.ReadProperty<int>(StructureRegion.LossCoeffCount.Key, true);
