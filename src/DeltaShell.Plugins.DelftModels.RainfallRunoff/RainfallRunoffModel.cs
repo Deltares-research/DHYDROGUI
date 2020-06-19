@@ -1279,17 +1279,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             var functionLookup = OutputFunctions.ToDictionary(f => f.Name);
 
             OutputSettings.EngineParameters.Where(ep => ep.AggregationOptions != AggregationOptions.None).ForEach(parameter =>
-            //OutputSettings.EngineParameters.Where(ep => ep.AggregationOptions != AggregationOptions.None).ForEach(parameter =>
             {
-                var function = functionLookup[parameter.Name];
-                var fileName =
-                    RainfallRunoffModelParameterHisFileMapping.HisFileParameterLookup[parameter.Name]
-                        .HisFileName;
-
-                var readOnlyMapHisFileFunctionStore = function.Store as ReadOnlyMapHisFileFunctionStore;
-                if (readOnlyMapHisFileFunctionStore != null)
+                if (functionLookup.ContainsKey(parameter.Name))
                 {
-                    readOnlyMapHisFileFunctionStore.Path = Path.Combine(workingDir, fileName);
+                    var function = functionLookup[parameter.Name];
+                    var fileName = RainfallRunoffModelParameterHisFileMapping.HisFileParameterLookup[parameter.Name].HisFileName;
+
+                    var readOnlyMapHisFileFunctionStore = function.Store as ReadOnlyMapHisFileFunctionStore;
+                    if (readOnlyMapHisFileFunctionStore != null)
+                    {
+                        readOnlyMapHisFileFunctionStore.Path = Path.Combine(workingDir, fileName);
+                    }
                 }
             });
         }
