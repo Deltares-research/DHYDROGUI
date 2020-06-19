@@ -78,6 +78,29 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 }
             }
 
+            var channelFrictionDefinitionsLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel, cfd => cfd);
+
+            foreach (var sharedCrossSectionDefinition in network.SharedCrossSectionDefinitions)
+            {
+                var crossSectionsUsingDefinition = sharedCrossSectionDefinition.FindUsage(network);
+                var correspondingChannels = crossSectionsUsingDefinition
+                    .Select(cs => cs.Branch)
+                    .Distinct()
+                    .OfType<IChannel>();
+                var correspondingChannelFrictionDefinitions = correspondingChannels.Select(channel => channelFrictionDefinitionsLookup[channel]);
+                if (correspondingChannelFrictionDefinitions.Any(cfd => cfd.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections))
+                {
+                    foreach (var channelFrictionDefinition in correspondingChannelFrictionDefinitions)
+                    {
+                        if (remainingChannelFrictionDefinitions.Contains(channelFrictionDefinition))
+                        {
+                            channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
+                            remainingChannelFrictionDefinitions.Remove(channelFrictionDefinition);
+                        }
+                    }
+                }
+            }
+
             return remainingChannelFrictionDefinitions;
         }
 
