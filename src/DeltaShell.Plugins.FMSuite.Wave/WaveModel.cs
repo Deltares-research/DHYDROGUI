@@ -512,7 +512,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
             catch (Exception exception)
             {
-                Log.ErrorFormat($"Error found while saving. Please validate the model before saving. Error: {exception.Message}");
+                Log.ErrorFormat(Resources.WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_saving__Error___0_, exception.Message);
             }
         }
 

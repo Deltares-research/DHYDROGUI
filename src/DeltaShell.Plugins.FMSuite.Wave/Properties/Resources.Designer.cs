@@ -485,6 +485,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error found while saving. Please validate the model before saving. Error: {0}.
+        /// </summary>
+        public static string WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_saving__Error___0_ {
+            get {
+                return ResourceManager.GetString("WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_" +
+                        "saving__Error___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grid is set in project but doesn&apos;t contain a coordinate system. The model has co-ordinate system {0}, setting grid to this co-oordinate system type..
         /// </summary>
         public static string WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_ {

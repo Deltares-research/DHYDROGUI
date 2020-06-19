@@ -153,10 +153,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             functions.Add(timeSeriesFunction);
             var boundaryConditionToFunctionsMappings = new Dictionary<string, List<IFunction>> {{boundaryConditionName, functions}};
+
+            // When
             TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
             {
                 string filePath = Path.Combine(tempDirectory, fileName);
                 TestDelegate testAction = () => bcwFile.Write(boundaryConditionToFunctionsMappings, filePath);
+                
+                // Then
                 Assert.That(
                     testAction,
                     Throws.Exception.TypeOf<InvalidOperationException>()
