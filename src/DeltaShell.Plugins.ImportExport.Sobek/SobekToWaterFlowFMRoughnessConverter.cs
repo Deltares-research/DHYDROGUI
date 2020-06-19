@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.Extensions;
+using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
@@ -24,14 +27,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         /// </summary>
         /// <param name="channelFrictionDefinitions">The channel friction definitions to be updated.</param>
         /// <param name="defaultRoughnessSection">The roughness section to be converted to <see cref="ChannelFrictionDefinition"/>.</param>
-        /// <param name="network">The network of the corresponding model.</param>
         /// <exception cref="ArgumentNullException">When one of the input parameters equals <c>null</c>.</exception>
         /// <exception cref="IndexOutOfRangeException"></exception>
         /// <exception cref="ArgumentOutOfRangeException">When an invalid <see cref="RoughnessFunction"/> is provided.</exception>
         public void ConvertSobekRoughnessToWaterFlowFmRoughness(
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
-            RoughnessSection defaultRoughnessSection,
-            IHydroNetwork network)
+            RoughnessSection defaultRoughnessSection)
         {
             if (channelFrictionDefinitions == null)
             {
@@ -43,190 +44,134 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 throw new ArgumentNullException(nameof(defaultRoughnessSection));
             }
 
-            if (network == null)
-            {
-                throw new ArgumentNullException(nameof(network));
-            }
-
             if (!channelFrictionDefinitions.Any())
             {
                 return;
             }
 
-            var roughnessSectionsPerBranch = GetRoughnessSectionsPerBranch(new [] { defaultRoughnessSection });
+            SetDefaultRoughnessSectionDataToChannelFrictionDefinitions(channelFrictionDefinitions, defaultRoughnessSection);
+        }
 
+        private void SetDefaultRoughnessSectionDataToChannelFrictionDefinitions(
+            IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
+            RoughnessSection defaultRoughnessSection)
+        {
             foreach (var channelFrictionDefinition in channelFrictionDefinitions)
             {
                 var channel = channelFrictionDefinition.Channel;
-                if (!roughnessSectionsPerBranch.ContainsKey(channel))
+                if (ChannelHasLanesDefinitions(channel))
                 {
+                    channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
                     continue;
                 }
 
-                UpdateChannelFrictionDefinition(channelFrictionDefinition, roughnessSectionsPerBranch);
+                var functionType = defaultRoughnessSection.GetRoughnessFunctionType(channel);
+                var networkLocations = defaultRoughnessSection.RoughnessNetworkCoverage.GetLocationsForBranch(channel);
+
+                switch (functionType)
+                {
+                    case RoughnessFunction.Constant:
+                        switch (networkLocations.Count)
+                        {
+                            case 0: // Branch constant
+                                channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition;
+                                channelFrictionDefinition.ConstantChannelFrictionDefinition.Type = defaultRoughnessSection.GetDefaultRoughnessType();
+                                channelFrictionDefinition.ConstantChannelFrictionDefinition.Value = defaultRoughnessSection.GetDefaultRoughnessValue();
+                                break;
+                            default: // Branch Chainages - Constant (one or more locations)
+                                channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                                channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetRoughnessTypeForChannel(defaultRoughnessSection.RoughnessNetworkCoverage, channel);
+                                channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant;
+                                SetSpatialValuesToSpatialChannelFrictionDefinition(channelFrictionDefinition.SpatialChannelFrictionDefinition, defaultRoughnessSection.RoughnessNetworkCoverage, networkLocations);
+                                break;
+                        }
+
+                        break;
+                    case RoughnessFunction.FunctionOfQ: // Branch Chainages - Function of Q
+                        channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetRoughnessTypeForChannel(defaultRoughnessSection.RoughnessNetworkCoverage, channel);
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfQ;
+                        SetFunctionValuesToSpatialChannelFrictionDefinition(channelFrictionDefinition.SpatialChannelFrictionDefinition, defaultRoughnessSection.FunctionOfQ(channel));
+                        break;
+                    case RoughnessFunction.FunctionOfH: // Branch Chainages - Function of H
+                        channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetRoughnessTypeForChannel(defaultRoughnessSection.RoughnessNetworkCoverage, channel);
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfH;
+                        SetFunctionValuesToSpatialChannelFrictionDefinition(channelFrictionDefinition.SpatialChannelFrictionDefinition, defaultRoughnessSection.FunctionOfH(channel));
+                        break;
+                }
+
+                if (networkLocations.Any())
+                {
+                    defaultRoughnessSection.RoughnessNetworkCoverage.Arguments[RoughnessValueComponentIndex].RemoveValues(new VariableValueFilter<INetworkLocation>(defaultRoughnessSection.RoughnessNetworkCoverage.Arguments[0], networkLocations));
+                    defaultRoughnessSection.RemoveRoughnessFunctionsForBranch(channel);
+                }
             }
         }
 
-        private void UpdateChannelFrictionDefinition(
-            ChannelFrictionDefinition channelFrictionDefinition, 
-            IReadOnlyDictionary<IBranch, HashSet<RoughnessSection>> roughnessSectionsPerBranch)
+        private static bool ChannelHasLanesDefinitions(IChannel channel)
         {
-            var channel = channelFrictionDefinition.Channel;
-            var sectionCount = roughnessSectionsPerBranch[channel].Count;
+            var crossSectionDefinitions = channel.CrossSections.Select(cs => cs.GetCrossSectionDefinition());
 
-            // if roughness of branch is defined in none of the sections, set channelFrictionDefinition to 'Use global value'
-            if (sectionCount == 0)
+            foreach (var crossSectionDefinition in crossSectionDefinitions)
             {
-                channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.ModelSettings;
-                return;
+                switch (crossSectionDefinition.CrossSectionType)
+                {
+                    case CrossSectionType.GeometryBased:
+                    case CrossSectionType.YZ:
+                    case CrossSectionType.Standard:
+                        if (crossSectionDefinition.Sections.Any(s => s.SectionType.Name != RoughnessDataSet.MainSectionTypeName))
+                        {
+                            return true;
+                        }
+                        break;
+                    case CrossSectionType.ZW:
+                        var crossSectionDefinitionZw = (CrossSectionDefinitionZW) crossSectionDefinition;
+                        if (crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.MainSectionTypeName) != crossSectionDefinitionZw.Width)
+                        {
+                            return true;
+                        }
+                        break;
+                }
             }
 
-            // if roughness of branch is defined in multiple sections, set channelFrictionDefinition to 'On lanes'
-            if (sectionCount > 1)
-            {
-                channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
-                return;
-            }
-
-            // if roughness of branch is defined in exactly one section, convert it to new data model and remove it from roughness section 
-            if (sectionCount == 1)
-            {
-                var roughnessSection = roughnessSectionsPerBranch[channel].FirstOrDefault();
-                if (roughnessSection == null) throw new IndexOutOfRangeException();
-                ConvertRoughnessSectionToChannelFrictionDefinition(channelFrictionDefinition, roughnessSection);
-            }
+            return false;
         }
 
-        private void ConvertRoughnessSectionToChannelFrictionDefinition(
-            ChannelFrictionDefinition channelFrictionDefinition, 
-            RoughnessSection roughnessSection)
-        {
-            var channel = channelFrictionDefinition.Channel;
-
-            var roughnessNetworkCoverage = roughnessSection.RoughnessNetworkCoverage;
-            var networkLocations = roughnessNetworkCoverage.GetLocationsForBranch(channel);
-
-            if (networkLocations.Count == 0)
-            {
-                channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.ModelSettings;
-                return;
-            }
-
-            var sectionRoughnessType = GetRoughnessTypeForRoughnessSection(roughnessNetworkCoverage, networkLocations.First());
-
-            if (networkLocations.Count == 1) // branch constant
-            {
-                var sectionRoughnessValue = roughnessNetworkCoverage.EvaluateRoughnessValue(networkLocations.First());
-                SetChannelFrictionDefinitionToConstantDefinition(channelFrictionDefinition, sectionRoughnessValue, sectionRoughnessType);
-            }
-
-            if (networkLocations.Count > 1) // branch chainages
-            {
-                SetChannelFrictionDefinitionToSpatialDefinition(channelFrictionDefinition, roughnessSection, networkLocations, roughnessNetworkCoverage, sectionRoughnessType);
-                roughnessSection.RemoveRoughnessFunctionsForBranch(channel);
-            }
-
-            // remove from network coverage
-            roughnessNetworkCoverage.Arguments[RoughnessValueComponentIndex].RemoveValues(new VariableValueFilter<INetworkLocation>(roughnessNetworkCoverage.Arguments[0], networkLocations));
-        }
-
-        private static void SetChannelFrictionDefinitionToConstantDefinition(
-            ChannelFrictionDefinition channelFrictionDefinition,
-            double sectionRoughnessValue, RoughnessType sectionRoughnessType)
-        {
-            channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition;
-            channelFrictionDefinition.ConstantChannelFrictionDefinition.Value = sectionRoughnessValue;
-            channelFrictionDefinition.ConstantChannelFrictionDefinition.Type = sectionRoughnessType;
-        }
-
-        private void SetChannelFrictionDefinitionToSpatialDefinition(
-            ChannelFrictionDefinition channelFrictionDefinition, 
-            RoughnessSection roughnessSection, 
-            IList<INetworkLocation> networkLocations,
+        private static RoughnessType GetRoughnessTypeForChannel(
             RoughnessNetworkCoverage roughnessNetworkCoverage,
-            RoughnessType roughnessType)
+            IChannel channel)
         {
-            var channel = channelFrictionDefinition.Channel;
-            
-            var functionType = roughnessSection.GetRoughnessFunctionType(channel);
+            return roughnessNetworkCoverage.EvaluateRoughnessType(new NetworkLocation(channel, 0));
+        }
 
-            channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
-            var spatialDefinition = channelFrictionDefinition.SpatialChannelFrictionDefinition;
-            channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = roughnessType;
-            spatialDefinition.FunctionType = functionType;
-            
-
-            switch (functionType)
+        private static void SetSpatialValuesToSpatialChannelFrictionDefinition(
+            SpatialChannelFrictionDefinition spatialChannelFrictionDefinition,
+            RoughnessNetworkCoverage roughnessNetworkCoverage,
+            IEnumerable<INetworkLocation> networkLocations)
+        {
+            foreach (var networkLocation in networkLocations)
             {
-                case RoughnessFunction.Constant:
-                    UpdateConstantSpatialChannelFrictionDefinitions(channelFrictionDefinition, networkLocations, roughnessNetworkCoverage);
-                    break;
-                case RoughnessFunction.FunctionOfQ:
-                    var functionOfQ = roughnessSection.FunctionOfQ(channel);
-                    UpdateFunctionSpatialChannelFrictionDefinition(spatialDefinition, functionOfQ);
-                    break;
-                case RoughnessFunction.FunctionOfH:
-                    var functionOfH = roughnessSection.FunctionOfH(channel);
-                    UpdateFunctionSpatialChannelFrictionDefinition(spatialDefinition, functionOfH);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                spatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.Add(new ConstantSpatialChannelFrictionDefinition
+                {
+                    Chainage = networkLocation.Chainage,
+                    Value = roughnessNetworkCoverage.EvaluateRoughnessValue(networkLocation)
+                });
             }
         }
 
-        private static void UpdateFunctionSpatialChannelFrictionDefinition(SpatialChannelFrictionDefinition spatialDefinition, IFunction function)
+        private static void SetFunctionValuesToSpatialChannelFrictionDefinition(
+            SpatialChannelFrictionDefinition spatialChannelFrictionDefinition,
+            IFunction function)
         {
             var chainageArgument = function.Arguments[ChainageArgumentIndex];
             var functionArgument = function.Arguments[FunctionArgumentIndex];
             var roughnessComponent = function.Components[RoughnessValueComponentIndex];
-            spatialDefinition.Function.Arguments[ChainageArgumentIndex].SetValues(chainageArgument.Values);
-            spatialDefinition.Function.Arguments[FunctionArgumentIndex].SetValues(functionArgument.Values);
-            spatialDefinition.Function.Components[RoughnessValueComponentIndex].SetValues(roughnessComponent.Values);
+            spatialChannelFrictionDefinition.Function.Arguments[ChainageArgumentIndex].SetValues(chainageArgument.Values);
+            spatialChannelFrictionDefinition.Function.Arguments[FunctionArgumentIndex].SetValues(functionArgument.Values);
+            spatialChannelFrictionDefinition.Function.Components[RoughnessValueComponentIndex].SetValues(roughnessComponent.Values);
         }
 
-        private static void UpdateConstantSpatialChannelFrictionDefinitions(
-            ChannelFrictionDefinition channelFrictionDefinition,
-            IEnumerable<INetworkLocation> networkLocations, 
-            RoughnessNetworkCoverage roughnessNetworkCoverage)
-        {
-            foreach (var networkLocation in networkLocations)
-            {
-                var constantSpatialDefinition = new ConstantSpatialChannelFrictionDefinition()
-                {
-                    Chainage = networkLocation.Chainage,
-                    Value = roughnessNetworkCoverage.EvaluateRoughnessValue(networkLocation)
-                };
-                channelFrictionDefinition.SpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.Add(constantSpatialDefinition);
-            }
-        }
 
-        private static RoughnessType GetRoughnessTypeForRoughnessSection(RoughnessNetworkCoverage roughnessNetworkCoverage, INetworkLocation networkLocation)
-        {
-            return roughnessNetworkCoverage.EvaluateRoughnessType(networkLocation);
-        }
-
-        private static Dictionary<IBranch, HashSet<RoughnessSection>> GetRoughnessSectionsPerBranch(IEnumerable<RoughnessSection> roughnessSections)
-        {
-            var roughnessSectionsPerBranch = new Dictionary<IBranch, HashSet<RoughnessSection>>();
-            foreach (var roughnessSection in roughnessSections)
-            {
-                var roughnessNetworkCoverage = roughnessSection.RoughnessNetworkCoverage;
-
-                foreach (var networkLocationObject in roughnessNetworkCoverage.Arguments[NetworkLocationArgumentIndex].Values)
-                {
-                    var networkLocation = (INetworkLocation) networkLocationObject;
-                    var branch = networkLocation.Branch;
-
-                    if (!roughnessSectionsPerBranch.ContainsKey(branch))
-                    {
-                        roughnessSectionsPerBranch.Add(branch, new HashSet<RoughnessSection>());
-                    }
-
-                    roughnessSectionsPerBranch[branch].Add(roughnessSection);
-                }
-            }
-
-            return roughnessSectionsPerBranch;
-        }
     }
 }
