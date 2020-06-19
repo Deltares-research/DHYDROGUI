@@ -61,6 +61,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No values given for {0}..
+        /// </summary>
+        public static string BcwFile_WriteBoundaryData_No_values_given_for__0__ {
+            get {
+                return ResourceManager.GetString("BcwFile_WriteBoundaryData_No_values_given_for__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to In the MDW file the property {0} is missing. Based on property {1} the default value is set.
         /// </summary>
         public static string MdwFile_In_the_MDW_file_the_property__0__is_missing__Based_on_property__1__the_default_value_is_set {

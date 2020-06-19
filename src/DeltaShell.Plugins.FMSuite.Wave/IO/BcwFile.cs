@@ -11,6 +11,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
@@ -349,6 +350,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 string line = string.Format("{0,8}", time);
                 for (var j = 1; j < sortedParameters.Count; ++j)
                 {
+                    if (sortedParameters[j].Values.Count == 0)
+                    {
+                        throw new InvalidOperationException(string.Format(Resources.BcwFile_WriteBoundaryData_No_values_given_for__0__, sortedParameters[j].Name));
+                    }
                     line += string.Format(
                         " {0,8}", sortedParameters[j].Values[i].ToString("F4", CultureInfo.InvariantCulture));
                 }

@@ -502,12 +502,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 Directory.CreateDirectory(targetDir);
             }
 
-            mdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
+            try
+            {
+                mdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
 
-            // write spatial data:
-            SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
-
-            SaveOutput(targetDir, switchTo);
+                // write spatial data:
+                SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
+                SaveOutput(targetDir, switchTo);
+            }
+            catch (Exception exception)
+            {
+                Log.ErrorFormat($"Error found while saving. Please validate the model before saving. Error: {exception.Message}");
+            }
         }
 
         public void ReloadAllGrids()
