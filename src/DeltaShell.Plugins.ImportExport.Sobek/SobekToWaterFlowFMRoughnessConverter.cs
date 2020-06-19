@@ -2,7 +2,6 @@
 using DelftTools.Hydro.Roughness;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Networks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 {
     public class SobekToWaterFlowFMRoughnessConverter
     {
-        private const int NetworkLocationArgumentIndex = 0;
         private const int RoughnessValueComponentIndex = 0;
         private const int ChainageArgumentIndex = 0;
         private const int FunctionArgumentIndex = 1;
@@ -52,7 +50,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             SetDefaultRoughnessSectionDataToChannelFrictionDefinitions(channelFrictionDefinitions, defaultRoughnessSection);
         }
 
-        private void SetDefaultRoughnessSectionDataToChannelFrictionDefinitions(
+        private static void SetDefaultRoughnessSectionDataToChannelFrictionDefinitions(
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
             RoughnessSection defaultRoughnessSection)
         {
@@ -73,7 +71,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     case RoughnessFunction.Constant:
                         switch (networkLocations.Count)
                         {
-                            case 0: // Branch constant
+                            case 0: // Branch Constant
                                 channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition;
                                 channelFrictionDefinition.ConstantChannelFrictionDefinition.Type = defaultRoughnessSection.GetDefaultRoughnessType();
                                 channelFrictionDefinition.ConstantChannelFrictionDefinition.Value = defaultRoughnessSection.GetDefaultRoughnessValue();
@@ -171,7 +169,5 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             spatialChannelFrictionDefinition.Function.Arguments[FunctionArgumentIndex].SetValues(functionArgument.Values);
             spatialChannelFrictionDefinition.Function.Components[RoughnessValueComponentIndex].SetValues(roughnessComponent.Values);
         }
-
-
     }
 }
