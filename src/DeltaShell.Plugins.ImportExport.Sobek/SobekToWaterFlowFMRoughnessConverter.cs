@@ -23,14 +23,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         /// <see cref="ChannelFrictionDefinition"/>.
         /// </summary>
         /// <param name="channelFrictionDefinitions">The channel friction definitions to be updated.</param>
-        /// <param name="roughnessSections">The roughness sections to be converted to <see cref="ChannelFrictionDefinition"/>.</param>
+        /// <param name="defaultRoughnessSection">The roughness section to be converted to <see cref="ChannelFrictionDefinition"/>.</param>
         /// <param name="network">The network of the corresponding model.</param>
         /// <exception cref="ArgumentNullException">When one of the input parameters equals <c>null</c>.</exception>
         /// <exception cref="IndexOutOfRangeException"></exception>
         /// <exception cref="ArgumentOutOfRangeException">When an invalid <see cref="RoughnessFunction"/> is provided.</exception>
         public void ConvertSobekRoughnessToWaterFlowFmRoughness(
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
-            IEnumerable<RoughnessSection> roughnessSections,
+            RoughnessSection defaultRoughnessSection,
             IHydroNetwork network)
         {
             if (channelFrictionDefinitions == null)
@@ -38,9 +38,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 throw new ArgumentNullException(nameof(channelFrictionDefinitions));
             }
 
-            if (roughnessSections == null)
+            if (defaultRoughnessSection == null)
             {
-                throw new ArgumentNullException(nameof(roughnessSections));
+                throw new ArgumentNullException(nameof(defaultRoughnessSection));
             }
 
             if (network == null)
@@ -48,12 +48,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 throw new ArgumentNullException(nameof(network));
             }
 
-            if (!channelFrictionDefinitions.Any() || !roughnessSections.Any())
+            if (!channelFrictionDefinitions.Any())
             {
                 return;
             }
 
-            var roughnessSectionsPerBranch = GetRoughnessSectionsPerBranch(roughnessSections);
+            var roughnessSectionsPerBranch = GetRoughnessSectionsPerBranch(new [] { defaultRoughnessSection });
 
             foreach (var channelFrictionDefinition in channelFrictionDefinitions)
             {

@@ -84,7 +84,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             SetCrossSectionFrictionsToRougnessCoverages(sobekFriction);
 
             var converter = new SobekToWaterFlowFMRoughnessConverter();
-            converter.ConvertSobekRoughnessToWaterFlowFmRoughness(fmModel.ChannelFrictionDefinitions, fmModel.RoughnessSections, fmModel.Network);
+            converter.ConvertSobekRoughnessToWaterFlowFmRoughness(fmModel.ChannelFrictionDefinitions,
+                fmModel.RoughnessSections.First(rs => rs.CrossSectionSectionType.Name == RoughnessDataSet.MainSectionTypeName),
+                fmModel.Network);
         }
 
         private void SetCrossSectionFrictionsToRougnessCoverages(SobekFriction sobekFriction)
