@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -29,9 +30,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             get
             {
-                var model = new HydroModel() {Name = "Blastoise"};
+                var model = new HydroModel {Name = "Blastoise"};
                 yield return new TestCaseData(null, model);
-                yield return new TestCaseData(new HydroModel() {Name = "Squirtle"}, model);
+                yield return new TestCaseData(new HydroModel {Name = "Squirtle"}, model);
                 yield return new TestCaseData(model, model);
             }
         }
@@ -111,44 +112,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenPluginWithProjectItemMapViewForHydroModel_WhenViewInfoForHydroModelAfterCreateCalled_ThenMapViewDoubleRefreshed()
         {
             // Setup
-            object modelArgument = null;
+            const int expectedRenderCalls = 2;
 
+            var viewList = new ViewList(Substitute.For<IDockingManager>(), ViewLocation.Bottom);
+            var gui = Substitute.For<IGui>();
+            gui.DocumentViews.Returns(viewList);
+
+            object modelArgument = null;
             IMap map = Substitute.For<IMap, INotifyPropertyChanged>();
             map.Layers.Returns(new EventedList<ILayer>());
-
-            using (var mapView = new ProjectItemMapView
+            using (ProjectItemMapView mapView = CreateMapView(map, o =>
             {
-                MapView =
-                {
-                    GetLayerForData = o =>
-                    {
-                        modelArgument = o;
-                        return Substitute.For<ILayer>();
-                    },
-                    Map = map
-                }
-            })
+                modelArgument = o;
+                return Substitute.For<ILayer>();
+            }))
             using (var model = new HydroModel())
+            using (var view = new HydroModelSettings())
+            using (var plugin = new HydroModelGuiPlugin {Gui = gui})
             {
-                var dockingManager = Substitute.For<IDockingManager>();
-                var viewList = new ViewList(dockingManager, ViewLocation.Bottom) {mapView};
+                viewList.Add(mapView);
+                ViewInfo viewInfo = plugin.GetViewInfoObjects()
+                                          .First(vi => vi.DataType == typeof(HydroModel));
 
-                var gui = Substitute.For<IGui>();
-                gui.DocumentViews.Returns(viewList);
+                // Call
+                viewInfo.AfterCreate(view, model);
 
-                using (var view = new HydroModelSettings())
-                using (var plugin = new HydroModelGuiPlugin {Gui = gui})
-                {
-                    ViewInfo viewInfo = plugin.GetViewInfoObjects()
-                                              .First(vi => vi.DataType == typeof(HydroModel));
-
-                    // Call
-                    viewInfo.AfterCreate(view, model);
-
-                    // Assert
-                    Assert.That(modelArgument, Is.SameAs(model));
-                    map.Received(2).Render();
-                }
+                // Assert
+                Assert.That(modelArgument, Is.SameAs(model));
+                map.Received(expectedRenderCalls).Render();
             }
         }
 
@@ -168,44 +159,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenPluginWithNoProjectItemMapViewForHydroModel_WhenViewInfoForHydroModelAfterCreateCalled_ThenMapViewRefreshed()
         {
             // Setup
-            object modelArgument = null;
+            const int expectedRenderCalls = 1;
 
+            var viewList = new ViewList(Substitute.For<IDockingManager>(), ViewLocation.Bottom);
+            var gui = Substitute.For<IGui>();
+            gui.DocumentViews.Returns(viewList);
+
+            object modelArgument = null;
             IMap map = Substitute.For<IMap, INotifyPropertyChanged>();
             map.Layers.Returns(new EventedList<ILayer>());
-
-            using (var mapView = new ProjectItemMapView
+            using (ProjectItemMapView mapView = CreateMapView(map, o =>
             {
-                MapView =
-                {
-                    GetLayerForData = o =>
-                    {
-                        modelArgument = o;
-                        return null;
-                    },
-                    Map = map
-                }
-            })
+                modelArgument = o;
+                return null;
+            }))
             using (var model = new HydroModel())
+            using (var view = new HydroModelSettings())
+            using (var plugin = new HydroModelGuiPlugin {Gui = gui})
             {
-                var dockingManager = Substitute.For<IDockingManager>();
-                var viewList = new ViewList(dockingManager, ViewLocation.Bottom) {mapView};
+                viewList.Add(mapView);
 
-                var gui = Substitute.For<IGui>();
-                gui.DocumentViews.Returns(viewList);
+                ViewInfo viewInfo = plugin.GetViewInfoObjects()
+                                          .First(vi => vi.DataType == typeof(HydroModel));
 
-                using (var view = new HydroModelSettings())
-                using (var plugin = new HydroModelGuiPlugin {Gui = gui})
-                {
-                    ViewInfo viewInfo = plugin.GetViewInfoObjects()
-                                              .First(vi => vi.DataType == typeof(HydroModel));
+                // Call
+                viewInfo.AfterCreate(view, model);
 
-                    // Call
-                    viewInfo.AfterCreate(view, model);
-
-                    // Assert
-                    Assert.That(modelArgument, Is.SameAs(model));
-                    map.Received(1).Render();
-                }
+                // Assert
+                Assert.That(modelArgument, Is.SameAs(model));
+                map.Received(expectedRenderCalls).Render();
             }
         }
 
@@ -225,13 +207,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Tag = beforeTag
             };
 
-            HydroModelGuiPlugin plugin = GetConfiguredPlugin(validateItem);
+            using (HydroModelGuiPlugin plugin = GetConfiguredPlugin(validateItem))
+            {
+                // Given
+                plugin.GetContextMenu(null, model);
 
-            // Given
-            plugin.GetContextMenu(null, model);
+                // Then
+                Assert.That(validateItem.Tag, Is.EqualTo(model));
+            }
+        }
 
-            // Then
-            Assert.That(validateItem.Tag, Is.EqualTo(model));
+        private static ProjectItemMapView CreateMapView(IMap map, Func<object, ILayer> getLayerForDataFunc)
+        {
+            return new ProjectItemMapView
+            {
+                MapView =
+                {
+                    GetLayerForData = getLayerForDataFunc,
+                    Map = map
+                }
+            };
         }
 
         private static HydroModelGuiPlugin GetConfiguredPlugin(ToolStripItem validateItem)
