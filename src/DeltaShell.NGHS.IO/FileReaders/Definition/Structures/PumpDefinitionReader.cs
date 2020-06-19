@@ -22,11 +22,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 DirectionIsPositive = category.ReadProperty<string>(StructureRegion.Orientation.Key)?.ToLower() == "positive",
                 ControlDirection = GetControlDirectionFromString(category.ReadProperty<string>(StructureRegion.Direction.Key)),
                 Capacity = category.ReadProperty<double>(StructureRegion.Capacity.Key),
-                StartSuction = category.ReadProperty<double>(StructureRegion.StartLevelSuctionSide.Key),
-                StopSuction = category.ReadProperty<double>(StructureRegion.StopLevelSuctionSide.Key),
-                StartDelivery = category.ReadProperty<double>(StructureRegion.StartLevelDeliverySide.Key),
-                StopDelivery = category.ReadProperty<double>(StructureRegion.StopLevelDeliverySide.Key)
             };
+
+            pump.StartSuction = category.ReadProperty<double>(StructureRegion.StartLevelSuctionSide.Key, pump.ControlDirection == PumpControlDirection.DeliverySideControl);
+            pump.StopSuction = category.ReadProperty<double>(StructureRegion.StopLevelSuctionSide.Key, pump.ControlDirection == PumpControlDirection.DeliverySideControl);
+            pump.StartDelivery = category.ReadProperty<double>(StructureRegion.StartLevelDeliverySide.Key, pump.ControlDirection == PumpControlDirection.SuctionSideControl);
+            pump.StopDelivery = category.ReadProperty<double>(StructureRegion.StopLevelDeliverySide.Key, pump.ControlDirection == PumpControlDirection.SuctionSideControl);
 
 
             var numReductionLevels = category.ReadProperty<int>(StructureRegion.ReductionFactorLevels.Key, true);
