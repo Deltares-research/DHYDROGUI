@@ -190,11 +190,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                                 RoughnessType = branchRoughnessType,
                                 RoughnessFunctionType = functionType,
                                 Levels = levels,
+                                Chainages = chainages,
                                 Values = new double[numLevels][]
                             };
                             for (int i = 0; i < numLevels; i++)
                             {
-                                qorHRoughnessBranchData.Values[i] =values.GetRange(i * numLocations, i * numLocations + numLocations).ToArray(); 
+                                qorHRoughnessBranchData.Values[i] = values.GetRange(i * numLocations, numLocations).ToArray(); 
                             }
                             branchData.Add(qorHRoughnessBranchData);
                             break;
