@@ -122,7 +122,7 @@ namespace DeltaShell.Dimr
                 {
                     return;
                 }
-
+                
                 int returnCode = dimrApi.Update(timeStep);
 
                 if (returnCode != 0)

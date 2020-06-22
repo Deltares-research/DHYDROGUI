@@ -8,7 +8,7 @@ namespace DelftTools.Hydro.Helpers
     {
         public static IEnumerable<T> GetActivitiesOfType<T>(this IEnumerable<IActivity> activities)
         {
-            return activities.SelectMany(a => ActivityExtensions.GetActivitiesOfType<T>(a));
+            return activities.SelectMany(a => a.GetActivitiesOfType<T>());
         }
     }
 }

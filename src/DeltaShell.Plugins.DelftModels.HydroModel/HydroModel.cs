@@ -747,11 +747,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnInitialize()
         {
-            if (CurrentWorkflow == null)
-            {
-                return;
-            }
-
             if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(CurrentWorkflow).Valid())
             {
                 LogInvalidWorkflow();
