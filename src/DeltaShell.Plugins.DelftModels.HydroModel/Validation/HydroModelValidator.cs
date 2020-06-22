@@ -6,6 +6,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
 {
@@ -40,6 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             return new ValidationReport(validationReportName, reports);
         }
 
+        #region ModelGrid
+
         private static ValidationReport ConstructModelGridReport(ICompositeActivity model)
         {
             var gridCoordinatesIssues = new List<ValidationIssue>();
@@ -73,9 +76,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             return subModelReports;
         }
 
+        #endregion
+
+        #region ModelStructure
+
         private static ValidationReport ConstructModelStructureReport(ICompositeActivity model)
         {
-            IEnumerable<ValidationIssue> modelNameIssues = ValidateIfModelNamesAreUnique(model.CurrentWorkflow.Activities.GetActivitiesOfType<IActivity>().ToList());
+            IEnumerable<ValidationIssue> modelNameIssues = ValidateIfModelNamesAreUnique(model.CurrentWorkflow.Activities.GetActivitiesOfType<IActivity>().ToArray());
             return new ValidationReport(Resources.HydroModelValidator_ConstructModelStructureReport_Model_structure, modelNameIssues);
         }
 
@@ -96,6 +103,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             return modelStructureIssues;
         }
 
+        #endregion
+
+        #region CurrentWorkflow
+
         private ValidationReport ConstructCurrentWorkflowReport(ICompositeActivity model)
         {
             IEnumerable<ValidationIssue> currentWorkflowIssues = ValidateCurrentWorkflow(model.CurrentWorkflow);
@@ -103,16 +114,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             return currentWorkflowReport;
         }
 
-        private IEnumerable<ValidationIssue> ValidateCurrentWorkflow(IActivity activity)
+        private static IEnumerable<ValidationIssue> ValidateCurrentWorkflow(ICompositeActivity currentWorkflow)
         {
-            var validationIssues = new List<ValidationIssue>();
-            if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(activity).Valid())
+            if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(currentWorkflow).Valid())
             {
-                validationIssues.Add(new ValidationIssue(activity, ValidationSeverity.Error,
-                                                         string.Format(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, activity.Name)));
+                yield return new ValidationIssue(currentWorkflow, ValidationSeverity.Error,
+                                                 string.Format(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, currentWorkflow.Name));
             }
-
-            return validationIssues;
         }
+
+        #endregion
+
     }
 }

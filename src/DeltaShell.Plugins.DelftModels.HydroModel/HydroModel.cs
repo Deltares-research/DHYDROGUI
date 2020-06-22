@@ -204,8 +204,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get
             {
-                return
-                    GetProgressTextCore(Activities.GetActivitiesOfType<TimeDependentModelBase>().Average(m => m.ProgressPercentage));
+                TimeDependentModelBase[] timeDependentModelBases = Activities.GetActivitiesOfType<TimeDependentModelBase>().ToArray();
+                return timeDependentModelBases.Any()
+                           ? GetProgressTextCore(timeDependentModelBases.Average(m => m.ProgressPercentage))
+                           : GetProgressTextCore(0);
             }
         }
 
@@ -559,12 +561,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
 
         [InvokeRequired]
-        private void LogInvalidWorkflow()
-        {
-            Log.ErrorFormat(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, CurrentWorkflow.Name);
-        }
-
-        [InvokeRequired]
         private void LogInvalidActivities()
         {
             Log.ErrorFormat(Resources.HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__Please_check_the_validation_report_, Name);
@@ -747,12 +743,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnInitialize()
         {
-            if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(CurrentWorkflow).Valid())
-            {
-                LogInvalidWorkflow();
-                Status = ActivityStatus.Failed;
-                return;
-            }
+//            if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(CurrentWorkflow).Valid())
+//            {
+//                LogInvalidWorkflow();
+//                Status = ActivityStatus.Failed;
+//                return;
+//            }
 
             ValidationReport validationReport = new HydroModelValidator().Validate(this);
             if (validationReport.ErrorCount > 0)
