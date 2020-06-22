@@ -142,11 +142,19 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                     channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
 
                     var branchRoughnessType = FrictionTypeConverter.ConvertToRoughnessFrictionType(branchCategory.ReadProperty<Friction>(RoughnessDataRegion.RoughnessType.Key));
+
                     RoughnessFunction functionType;
                     var functionTypeString = branchCategory.ReadProperty<string>(RoughnessDataRegion.FunctionType.Key);
-                    if(!Enum.TryParse(functionTypeString, out functionType))
+
+                    try
+                    {
+                        functionType = RoughnessHelper.ConvertStringToRoughnessFunction(functionTypeString);
+                    }
+                    catch (InvalidOperationException)
+                    {
                         throw new FileReadingException(string.Format("The function type {0} is unknown!", functionTypeString));
-                    
+                    }
+
                     var chainages = branchCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key).ToArray();
                     for (int i = 0; i < chainages.Length; i++)
                     {
