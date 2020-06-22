@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
                 Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
-                DirectionIsPositive = category.ReadProperty<string>(StructureRegion.Orientation.Key)?.ToLower() == "positive",
+                DirectionIsPositive = category.ReadProperty<string>(StructureRegion.Orientation.Key, true, "positive")?.ToLower() == "positive",
                 ControlDirection = GetControlDirectionFromString(category.ReadProperty<string>(StructureRegion.Direction.Key)),
                 Capacity = category.ReadProperty<double>(StructureRegion.Capacity.Key),
             };
@@ -30,7 +30,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             pump.StopDelivery = category.ReadProperty<double>(StructureRegion.StopLevelDeliverySide.Key, pump.ControlDirection == PumpControlDirection.SuctionSideControl);
 
 
-            var numReductionLevels = category.ReadProperty<int>(StructureRegion.ReductionFactorLevels.Key, true);
+            var numReductionLevels = category.ReadProperty<int>(StructureRegion.ReductionFactorLevels.Key, true, 0);
             if(numReductionLevels > 0)
             {
                 var headValues = category.ReadProperty<string>(StructureRegion.Head.Key, true).ToDoubleArray();

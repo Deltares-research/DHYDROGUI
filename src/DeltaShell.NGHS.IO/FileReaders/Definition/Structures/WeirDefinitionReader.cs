@@ -25,12 +25,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             {
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
-                CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key, true),
+                CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key),
                 CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
                 FlowDirection = allowedFlowDir,
                 Branch = branch,
                 Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
-                UseVelocityHeight = category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true)
+                UseVelocityHeight = category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true, true)
             };
 
             orifice.WeirFormula = ReadFormulaFromDefinition(category, orifice);
@@ -54,12 +54,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             {
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
-                CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key, true),
+                CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key),
                 CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
                 FlowDirection = allowedFlowDir,
                 Branch = branch,
                 Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
-                UseVelocityHeight = category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true)
+                UseVelocityHeight = category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true, true)
             };
 
             weir.WeirFormula = ReadFormulaFromDefinition(category, weir);
@@ -77,7 +77,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 case StructureType.Weir:
                     return new SimpleWeirFormula
                     {
-                        CorrectionCoefficient = category.ReadProperty<double>(StructureRegion.CorrectionCoeff.Key)
+                        CorrectionCoefficient = category.ReadProperty<double>(StructureRegion.CorrectionCoeff.Key, true,1.0)
                     };
                 case StructureType.UniversalWeir:
                     var readFormulaFromDefinition = new FreeFormWeirFormula
@@ -131,56 +131,50 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                     return new GatedWeirFormula
                     {
                         GateOpening = category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel.Key) - weir.CrestLevel,
-                        ContractionCoefficient = category.ReadProperty<double>(StructureRegion.CorrectionCoeff.Key),
+                        ContractionCoefficient = category.ReadProperty<double>(StructureRegion.CorrectionCoeff.Key, true, 1.0),
                         LateralContraction = 1
                     };
                 case StructureType.GeneralStructure:
-                    var extraResistance = category.ReadProperty<double>(StructureRegion.ExtraResistance.Key);
+                    var extraResistance = category.ReadProperty<double>(StructureRegion.ExtraResistance.Key, true, 0.0);
 
                     var tolerance = 1e-10;
                     var generalStructureWeirFormula = new GeneralStructureWeirFormula
                     {
-                        WidthLeftSideOfStructure = category.ReadProperty<double>(StructureRegion.Upstream1Width.Key),
-                        WidthStructureLeftSide = category.ReadProperty<double>(StructureRegion.Upstream2Width.Key),
-                        WidthStructureCentre = category.ReadProperty<double>(StructureRegion.CrestWidth.Key),
-                        WidthStructureRightSide = category.ReadProperty<double>(StructureRegion.Downstream1Width.Key),
-                        WidthRightSideOfStructure = category.ReadProperty<double>(StructureRegion.Downstream2Width.Key),
+                        WidthLeftSideOfStructure = category.ReadProperty<double>(StructureRegion.Upstream1Width.Key, true, 10.0),
+                        WidthStructureLeftSide = category.ReadProperty<double>(StructureRegion.Upstream2Width.Key, true, 10.0),
+                        WidthStructureCentre = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true, 10.0),
+                        WidthStructureRightSide = category.ReadProperty<double>(StructureRegion.Downstream1Width.Key, true, 10.0),
+                        WidthRightSideOfStructure = category.ReadProperty<double>(StructureRegion.Downstream2Width.Key, true, 10.0),
 
-                        BedLevelLeftSideOfStructure = category.ReadProperty<double>(StructureRegion.Upstream1Level.Key),
-                        BedLevelLeftSideStructure = category.ReadProperty<double>(StructureRegion.Upstream2Level.Key),
-                        BedLevelStructureCentre = category.ReadProperty<double>(StructureRegion.CrestLevel.Key),
-                        BedLevelRightSideStructure = category.ReadProperty<double>(StructureRegion.Downstream1Level.Key),
-                        BedLevelRightSideOfStructure = category.ReadProperty<double>(StructureRegion.Downstream2Level.Key),
+                        BedLevelLeftSideOfStructure = category.ReadProperty<double>(StructureRegion.Upstream1Level.Key, true, 0.0),
+                        BedLevelLeftSideStructure = category.ReadProperty<double>(StructureRegion.Upstream2Level.Key, true, 0.0),
+                        BedLevelStructureCentre = category.ReadProperty<double>(StructureRegion.CrestLevel.Key, true, 0.0),
+                        BedLevelRightSideStructure = category.ReadProperty<double>(StructureRegion.Downstream1Level.Key, true, 0.0),
+                        BedLevelRightSideOfStructure = category.ReadProperty<double>(StructureRegion.Downstream2Level.Key, true, 0.0),
 
-                        PositiveFreeGateFlow = category.ReadProperty<double>(StructureRegion.PosFreeGateFlowCoeff.Key),
-                        PositiveDrownedGateFlow =
-                            category.ReadProperty<double>(StructureRegion.PosDrownGateFlowCoeff.Key),
-                        PositiveFreeWeirFlow = category.ReadProperty<double>(StructureRegion.PosFreeWeirFlowCoeff.Key),
-                        PositiveDrownedWeirFlow =
-                            category.ReadProperty<double>(StructureRegion.PosDrownWeirFlowCoeff.Key),
-                        PositiveContractionCoefficient =
-                            category.ReadProperty<double>(StructureRegion.PosContrCoefFreeGate.Key),
+                        PositiveFreeGateFlow = category.ReadProperty<double>(StructureRegion.PosFreeGateFlowCoeff.Key, true, 1.0),
+                        PositiveDrownedGateFlow = category.ReadProperty<double>(StructureRegion.PosDrownGateFlowCoeff.Key, true, 1.0),
+                        PositiveFreeWeirFlow = category.ReadProperty<double>(StructureRegion.PosFreeWeirFlowCoeff.Key, true, 1.0),
+                        PositiveDrownedWeirFlow = category.ReadProperty<double>(StructureRegion.PosDrownWeirFlowCoeff.Key, true, 1.0),
+                        PositiveContractionCoefficient = category.ReadProperty<double>(StructureRegion.PosContrCoefFreeGate.Key, true, 1.0),
 
 
-                        NegativeFreeGateFlow = category.ReadProperty<double>(StructureRegion.NegFreeGateFlowCoeff.Key),
-                        NegativeDrownedGateFlow =
-                            category.ReadProperty<double>(StructureRegion.NegDrownGateFlowCoeff.Key),
-                        NegativeFreeWeirFlow = category.ReadProperty<double>(StructureRegion.NegFreeWeirFlowCoeff.Key),
-                        NegativeDrownedWeirFlow =
-                            category.ReadProperty<double>(StructureRegion.NegDrownWeirFlowCoeff.Key),
-                        NegativeContractionCoefficient =
-                            category.ReadProperty<double>(StructureRegion.NegContrCoefFreeGate.Key),
+                        NegativeFreeGateFlow = category.ReadProperty<double>(StructureRegion.NegFreeGateFlowCoeff.Key, true, 1.0),
+                        NegativeDrownedGateFlow = category.ReadProperty<double>(StructureRegion.NegDrownGateFlowCoeff.Key, true, 1.0),
+                        NegativeFreeWeirFlow = category.ReadProperty<double>(StructureRegion.NegFreeWeirFlowCoeff.Key, true, 1.0),
+                        NegativeDrownedWeirFlow = category.ReadProperty<double>(StructureRegion.NegDrownWeirFlowCoeff.Key, true, 1.0),
+                        NegativeContractionCoefficient = category.ReadProperty<double>(StructureRegion.NegContrCoefFreeGate.Key, true, 1.0),
 
                         ExtraResistance = extraResistance,
                         UseExtraResistance = Math.Abs(extraResistance) > tolerance,
 
-                        GateOpening = category.ReadProperty<double>(StructureRegion.GateHeight.Key, true),
-                        CrestLength = category.ReadProperty<double>(StructureRegion.CrestLength.Key),
-                        GateOpeningWidth = category.ReadProperty<double>(StructureRegion.GateOpeningWidth.Key),
+                        GateOpening = category.ReadProperty<double>(StructureRegion.GateHeight.Key, true, 1E10d),
+                        CrestLength = category.ReadProperty<double>(StructureRegion.CrestLength.Key, true, 0.0),
+                        GateOpeningWidth = category.ReadProperty<double>(StructureRegion.GateOpeningWidth.Key, true, 0.0),
 
                     };
 
-                    var gateOpeningDirection = category.ReadProperty<string>(StructureRegion.GateHorizontalOpeningDirection.Key);
+                    var gateOpeningDirection = category.ReadProperty<string>(StructureRegion.GateHorizontalOpeningDirection.Key, true, "symmetric");
                     switch (gateOpeningDirection.ToLower())
                     {
                         case "symmetric":
@@ -198,7 +192,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 
                     if (Math.Abs(generalStructureWeirFormula.GateOpening) < tolerance)
                     {
-                        generalStructureWeirFormula.GateOpening = category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel.Key) - weir.CrestLevel;
+                        generalStructureWeirFormula.GateOpening = category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel.Key, true, 11.0) - weir.CrestLevel;
                     }
 
                     return generalStructureWeirFormula;
