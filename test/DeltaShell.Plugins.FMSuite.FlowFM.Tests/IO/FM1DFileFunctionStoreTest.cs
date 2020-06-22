@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(waterLevelFunction.Locations.AllValues.Count, Is.EqualTo(86));
                 IMultiDimensionalArray timeSlice = waterLevelFunction.GetValues(new VariableValueFilter<DateTime>(waterLevelFunction.Time, new DateTime(1996, 1, 1,1,0,0)));
 
-                Assert.That(timeSlice.Count, Is.EqualTo(86));
+                Assert.That(timeSlice.Count, Is.EqualTo(86)); // 86 locations for this timestep
                 Assert.That((double)timeSlice[0], Is.EqualTo(0.30163).Within(0.001));
 
                 var waterDischargeFunction = (NetworkCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh1d_q1");
@@ -119,6 +119,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That((double)timeSlice[88], Is.EqualTo(0.011).Within(0.001));timeSlice = waterDischargeFunction.GetValues(new VariableValueFilter<DateTime>(waterDischargeFunction.Time, new DateTime(1996, 1, 1,0,1,0)));
 
                 timeSlice = waterDischargeFunction.GetValues(new IVariableFilter[]{new VariableValueFilter<DateTime>(waterDischargeFunction.Time, new DateTime(1996, 1, 1, 0, 1, 0)), new VariableValueFilter<INetworkLocation>(waterDischargeFunction.Locations, waterDischargeFunction.Locations.Values.First(l => l.Branch.Name.Equals("1")))});
+                Assert.That(timeSlice.Count, Is.EqualTo(1));
+                Assert.That((double)timeSlice[0], Is.EqualTo(0.015).Within(0.001));
+            });
+        }
+
+        [Test]
+        public void OpenMap1DFileCheckValuesForASpecificLocation()
+        {
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            var fmModelMap1DZip = "FM_model_map.zip";
+            string fmModelMap1DZipFilePath = Path.Combine(testDataFilePath, fmModelMap1DZip);
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                FileUtils.CopyDirectory(testDataFilePath, tempDir);
+                ZipFileUtils.Extract(fmModelMap1DZipFilePath, tempDir);
+
+                var store = InitializeFM1DStore(tempDir);
+
+                var waterLevelFunction = (NetworkCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh1d_s1");
+
+                Assert.That(waterLevelFunction, Is.Not.Null);
+                Assert.That(waterLevelFunction.Time.AllValues.Count, Is.EqualTo(2281));
+                Assert.That(waterLevelFunction.Locations.AllValues.Count, Is.EqualTo(86));
+                Assert.That(store.LocationsByNetworkDataType["mesh1d_nNodes"].Count, Is.EqualTo(86));
+                IMultiDimensionalArray timeSlice = waterLevelFunction.GetValues(
+                    new VariableValueFilter<DateTime>(waterLevelFunction.Time, new DateTime(1996, 1, 1,1,0,0)), 
+                    new VariableValueFilter<INetworkLocation>(waterLevelFunction.Locations, store.LocationsByNetworkDataType["mesh1d_nNodes"][0]));
+
+                Assert.That(timeSlice.Count, Is.EqualTo(1)); // filterd 1 location for this timestep
+                Assert.That((double)timeSlice[0], Is.EqualTo(0.30163).Within(0.001));
+
+                var waterDischargeFunction = (NetworkCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh1d_q1");
+
+                Assert.That(waterDischargeFunction, Is.Not.Null);
+                Assert.That(waterDischargeFunction.Time.AllValues.Count, Is.EqualTo(2281));
+                Assert.That(waterDischargeFunction.Locations.AllValues.Count, Is.EqualTo(91));
+                Assert.That(store.LocationsByNetworkDataType["mesh1d_nEdges"].Count, Is.EqualTo(91));
+                timeSlice = waterDischargeFunction.GetValues(new VariableValueFilter<DateTime>(waterDischargeFunction.Time, new DateTime(1996, 1, 1,0,1,0)));
+
+                Assert.That(timeSlice.Count, Is.EqualTo(91));
+                Assert.That((double)timeSlice[88], Is.EqualTo(0.011).Within(0.001));timeSlice = waterDischargeFunction.GetValues(new VariableValueFilter<DateTime>(waterDischargeFunction.Time, new DateTime(1996, 1, 1,0,1,0)));
+
+                timeSlice = waterDischargeFunction.GetValues(new IVariableFilter[]{new VariableValueFilter<DateTime>(waterDischargeFunction.Time, new DateTime(1996, 1, 1, 0, 1, 0)), new VariableValueFilter<INetworkLocation>(waterDischargeFunction.Locations, waterDischargeFunction.Locations.Values.First(l => l.Branch.Name.Equals("1")))});
+                Assert.That(timeSlice.Count, Is.EqualTo(1));
+                Assert.That((double)timeSlice[0], Is.EqualTo(0.015).Within(0.001));
+                timeSlice = waterDischargeFunction.GetValues(new IVariableFilter[]{new VariableValueFilter<DateTime>(waterDischargeFunction.Time, new DateTime(1996, 1, 1, 0, 1, 0)), new VariableValueFilter<INetworkLocation>(waterDischargeFunction.Locations, store.LocationsByNetworkDataType["mesh1d_nEdges"][86])});
                 Assert.That(timeSlice.Count, Is.EqualTo(1));
                 Assert.That((double)timeSlice[0], Is.EqualTo(0.015).Within(0.001));
             });

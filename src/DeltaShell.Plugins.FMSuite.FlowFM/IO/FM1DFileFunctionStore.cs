@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IHydroNetwork outputNetwork = new HydroNetwork();
         private IHydroNetwork inputNetwork;
         private IDiscretization outputDiscretization = new Discretization();
-        private IDictionary<string, IList<INetworkLocation>> LocationsByNetworkDataType { get; set; }
+        public IDictionary<string, IList<INetworkLocation>> LocationsByNetworkDataType { get; set; }
 
         private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
         private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
@@ -125,9 +125,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (function.IsIndependent && typeof(T) == typeof(INetworkLocation))
             {
                 var featureFilter = filters.FirstOrDefault(f => f.Variable.ValueType == typeof(INetworkLocation));
-                if (function.Attributes != null && function.Attributes.ContainsKey(LocationAttributeName))
+                if (function.Attributes != null && function.Attributes.ContainsKey(NcNameAttribute))
                 {
-                    var location = function.Attributes[LocationAttributeName];
+                    var location = function.Attributes[NcNameAttribute];
                     var networkLocations = LocationsByNetworkDataType[location];
                     if (filters.Length == 0 || featureFilter == null)
                     {
