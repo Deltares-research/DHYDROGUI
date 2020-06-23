@@ -192,32 +192,20 @@
     <Compile Include="SobekModelToWaterFlowFMImporter.cs" />
     <Compile Include="SobekWindImporter.cs" />
     <Compile Include="StringUtils.cs" />
-    <Compile Include="Wizard\ImportPartialSobekWizardDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizard\ImportSobekHydroModelWizardDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizard\ImportSobekWaterFlowFMWizardDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizard\SelectSobekModelsWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Wizard\ImportPartialSobekWizardDialog.cs" />
+    <Compile Include="Wizard\ImportSobekHydroModelWizardDialog.cs" />
+    <Compile Include="Wizard\ImportSobekWaterFlowFMWizardDialog.cs" />
+    <Compile Include="Wizard\SelectSobekModelsWizardPage.cs" />
     <Compile Include="Wizard\SelectSobekModelsWizardPage.Designer.cs">
       <DependentUpon>SelectSobekModelsWizardPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wizard\SelectSobekPartsWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Wizard\SelectSobekPartsWizardPage.cs" />
     <Compile Include="Wizard\SelectSobekPartsWizardPage.Designer.cs">
       <DependentUpon>SelectSobekPartsWizardPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ControlGroupBuilder.cs" />
-    <Compile Include="Wizard\SobekModelSelectFileWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Wizard\SobekModelSelectFileWizardPage.cs" />
     <Compile Include="Wizard\SobekModelSelectFileWizardPage.Designer.cs">
       <DependentUpon>SobekModelSelectFileWizardPage.cs</DependentUpon>
     </Compile>

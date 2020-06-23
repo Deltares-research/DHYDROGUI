@@ -157,21 +157,15 @@
       <DependentUpon>CreateHydroModelSettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\CreateHydroModelSettingViewViewModel.cs" />
-    <Compile Include="Forms\DHydroExporterDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\DHydroExporterDialog.cs" />
     <Compile Include="Forms\DHydroExporterDialog.Designer.cs">
       <DependentUpon>DHydroExporterDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\HydroModelSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\HydroModelSettings.cs" />
     <Compile Include="Forms\HydroModelSettings.Designer.cs">
       <DependentUpon>HydroModelSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MergeModelValidationView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\MergeModelValidationView.cs" />
     <Compile Include="Forms\MergeModelValidationView.designer.cs">
       <DependentUpon>MergeModelValidationView.cs</DependentUpon>
     </Compile>
@@ -195,9 +189,7 @@
     <Compile Include="Views\HydroModelTimeSettingsView.xaml.cs">
       <DependentUpon>HydroModelTimeSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WorkflowEditorControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\WorkflowEditorControl.cs" />
     <Compile Include="Forms\WorkflowEditorControl.Designer.cs">
       <DependentUpon>WorkflowEditorControl.cs</DependentUpon>
     </Compile>

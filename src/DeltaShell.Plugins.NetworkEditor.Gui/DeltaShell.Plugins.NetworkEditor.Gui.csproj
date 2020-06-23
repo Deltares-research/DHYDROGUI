@@ -210,9 +210,7 @@
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionPipeView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\CrossSectionPipeView.cs" />
     <Compile Include="Forms\CrossSectionView\CrossSectionPipeView.Designer.cs">
       <DependentUpon>CrossSectionPipeView.cs</DependentUpon>
     </Compile>
@@ -229,16 +227,12 @@
     <Compile Include="Forms\PropertyGrid\RoughnessSectionPropertiesBase.cs" />
     <Compile Include="Forms\PropertyGrid\SewerConnectionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\VectorVisibilityLayerProperties.cs" />
-    <Compile Include="Forms\Roughness\RoughnessAsFunctionOfView.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\Roughness\RoughnessAsFunctionOfView.cs" />
     <Compile Include="Forms\Roughness\RoughnessAsFunctionOfView.Designer.cs">
       <DependentUpon>RoughnessAsFunctionOfView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Roughness\RoughnessFunctionConvertor.cs" />
-    <Compile Include="Forms\Roughness\RoughnessSectionCoverageTableView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\Roughness\RoughnessSectionCoverageTableView.cs" />
     <Compile Include="Forms\Roughness\RoughnessSectionCoverageTableView.Designer.cs">
       <DependentUpon>RoughnessSectionCoverageTableView.cs</DependentUpon>
     </Compile>
@@ -307,9 +301,7 @@
       <DependentUpon>SingleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\FeatureCollectionViewInfoHelper.cs" />
-    <Compile Include="Forms\AreaStructureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\AreaStructureView.cs" />
     <Compile Include="Forms\AreaStructureView.Designer.cs">
       <DependentUpon>AreaStructureView.cs</DependentUpon>
     </Compile>
@@ -378,9 +370,7 @@
     <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirInSideViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirInStructureViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirShapeFeature.cs" />
-    <Compile Include="Forms\CompositeStructureView\CompositeStructureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CompositeStructureView\CompositeStructureView.cs" />
     <Compile Include="Forms\CompositeStructureView\CompositeStructureView.Designer.cs">
       <DependentUpon>CompositeStructureView.cs</DependentUpon>
     </Compile>
@@ -390,22 +380,16 @@
     <Compile Include="Forms\CompositeStructureView\ICompositeStructureView.cs" />
     <Compile Include="Forms\CompositeStructureView\IStructureView.cs" />
     <Compile Include="Forms\CompositeStructureView\StructurePresenter.cs" />
-    <Compile Include="Forms\CompositeStructureView\StructureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CompositeStructureView\StructureView.cs" />
     <Compile Include="Forms\CompositeStructureView\StructureView.Designer.cs">
       <DependentUpon>StructureView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\CompositeStructureView\StructureViewHelper.cs" />
-    <Compile Include="Forms\ComputationalGridDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\ComputationalGridDialog.cs" />
     <Compile Include="Forms\ComputationalGridDialog.Designer.cs">
       <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionDefinitionView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\CrossSectionDefinitionView.cs" />
     <Compile Include="Forms\CrossSectionView\CrossSectionDefinitionView.Designer.cs">
       <DependentUpon>CrossSectionDefinitionView.cs</DependentUpon>
     </Compile>
@@ -415,17 +399,13 @@
     <Compile Include="Forms\CrossSectionView\CrossSectionPresenter.cs" />
     <Compile Include="Forms\CrossSectionView\CrossSectionProfileMutatorProvider.cs" />
     <Compile Include="Forms\CrossSectionView\CrossSectionStandardShapeViewFactory.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\CrossSectionView.cs" />
     <Compile Include="Forms\CrossSectionView\CrossSectionView.Designer.cs">
       <DependentUpon>CrossSectionView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\CrossSectionView\CrossSectionViewModel.cs" />
     <Compile Include="Forms\CrossSectionView\ICrossSectionHistoryCapableView.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileChartView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\ProfileChartView.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileChartView.Designer.cs">
       <DependentUpon>ProfileChartView.cs</DependentUpon>
     </Compile>
@@ -439,91 +419,63 @@
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWFlowProfileMutator.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWProfileMutator.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWProfileMutatorBase.cs" />
-    <Compile Include="Forms\CrossSectionView\SectionsTableView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\SectionsTableView.cs" />
     <Compile Include="Forms\CrossSectionView\SectionsTableView.Designer.cs">
       <DependentUpon>SectionsTableView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\CrossSectionView\Sections\CrossSectionDefinitionViewSectionRenderer.cs" />
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataView.cs" />
     <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataView.Designer.cs">
       <DependentUpon>CrossSectionStandardDataView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeArchView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeArchView.cs" />
     <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeArchView.Designer.cs">
       <DependentUpon>CrossSectionStandardShapeArchView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeRoundView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeRoundView.cs" />
     <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeRoundView.Designer.cs">
       <DependentUpon>CrossSectionStandardShapeRoundView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeSteelCunetteView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeSteelCunetteView.cs" />
     <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeSteelCunetteView.Designer.cs">
       <DependentUpon>CrossSectionStandardShapeSteelCunetteView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeTrapeziumView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeTrapeziumView.cs" />
     <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeTrapeziumView.Designer.cs">
       <DependentUpon>CrossSectionStandardShapeTrapeziumView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightView.cs" />
     <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightView.Designer.cs">
       <DependentUpon>CrossSectionStandardShapeWidthHeightView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\SummerDikeView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\SummerDikeView.cs" />
     <Compile Include="Forms\CrossSectionView\SummerDikeView.Designer.cs">
       <DependentUpon>SummerDikeView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\YZTableView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\YZTableView.cs" />
     <Compile Include="Forms\CrossSectionView\YZTableView.Designer.cs">
       <DependentUpon>YZTableView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\ZWSectionsView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\CrossSectionView\ZWSectionsView.cs" />
     <Compile Include="Forms\CrossSectionView\ZWSectionsView.Designer.cs">
       <DependentUpon>ZWSectionsView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\CrossSectionView\ZWSectionsViewModel.cs" />
-    <Compile Include="Forms\FMWeirView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\FMWeirView.cs" />
     <Compile Include="Forms\FMWeirView.Designer.cs">
       <DependentUpon>FMWeirView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormLevelShift.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\FormLevelShift.cs" />
     <Compile Include="Forms\FormLevelShift.Designer.cs">
       <DependentUpon>FormLevelShift.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormPasteCrossSection.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\FormPasteCrossSection.cs" />
     <Compile Include="Forms\FormPasteCrossSection.Designer.cs">
       <DependentUpon>FormPasteCrossSection.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\GatePropertiesRow.cs" />
     <Compile Include="Forms\HydroRegionTreeView\BranchFeatureComparer.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\HydroRegionTreeView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\HydroRegionTreeView\HydroRegionTreeView.cs" />
     <Compile Include="Forms\HydroRegionTreeView\HydroRegionTreeView.Designer.cs">
       <DependentUpon>HydroRegionTreeView.cs</DependentUpon>
     </Compile>
@@ -560,17 +512,13 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WeirTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\TreeViewBranchFeatureNodeSorter.cs" />
-    <Compile Include="Forms\ImportBranchFeatureDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\ImportBranchFeatureDialog.cs" />
     <Compile Include="Forms\ImportBranchFeatureDialog.Designer.cs">
       <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\NetworkSideView\CompositeStructureViewDataController.cs" />
     <Compile Include="Forms\NetworkSideView\INetworkSideView.cs" />
-    <Compile Include="Forms\NetworkSideView\NetworkSideView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\NetworkSideView\NetworkSideView.cs" />
     <Compile Include="Forms\NetworkSideView\NetworkSideView.Designer.cs">
       <DependentUpon>NetworkSideView.cs</DependentUpon>
     </Compile>
@@ -614,76 +562,52 @@
     <Compile Include="Forms\PropertyGrid\WasteWaterTreatmentPlantProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WeirProperties.cs" />
-    <Compile Include="Forms\SimpleProgress.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\SimpleProgress.cs" />
     <Compile Include="Forms\SimpleProgress.Designer.cs">
       <DependentUpon>SimpleProgress.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\BridgeView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\BridgeView.cs" />
     <Compile Include="Forms\StructureFeatureView\BridgeView.Designer.cs">
       <DependentUpon>BridgeView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.cs" />
     <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.Designer.cs">
       <DependentUpon>ExtraResistanceView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\GateView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\GateView.cs" />
     <Compile Include="Forms\StructureFeatureView\GateView.Designer.cs">
       <DependentUpon>GateView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\StructureFeatureView\GateViewData.cs" />
-    <Compile Include="Forms\StructureFeatureView\PumpView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\PumpView.cs" />
     <Compile Include="Forms\StructureFeatureView\PumpView.Designer.cs">
       <DependentUpon>PumpView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaView.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaView.Designer.cs">
       <DependentUpon>FreeFormWeirFormulaView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.Designer.cs">
       <DependentUpon>GatedWeirFormulaView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaView.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaView.Designer.cs">
       <DependentUpon>GeneralStructureWeirFormulaView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\PierWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\PierWeirFormulaView.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\PierWeirFormulaView.Designer.cs">
       <DependentUpon>PierWeirFormulaView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaView.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaView.Designer.cs">
       <DependentUpon>RiverWeirFormulaView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaView.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaView.Designer.cs">
       <DependentUpon>SimpleWeirFormulaView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirView.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirView.Designer.cs">
       <DependentUpon>WeirView.cs</DependentUpon>
     </Compile>
@@ -729,45 +653,29 @@
       <DependentUpon>Ribbon.xaml</DependentUpon>
     </Compile>
     <Compile Include="ShapeEditViewModel.cs" />
-    <Compile Include="Wizard\CrossSectionImportSettingsWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Wizard\CrossSectionImportSettingsWizardPage.cs" />
     <Compile Include="Wizard\CrossSectionImportSettingsWizardPage.Designer.cs">
       <DependentUpon>CrossSectionImportSettingsWizardPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wizard\DefineMappingTableWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Wizard\DefineMappingTableWizardPage.cs" />
     <Compile Include="Wizard\DefineMappingTableWizardPage.Designer.cs">
       <DependentUpon>DefineMappingTableWizardPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wizard\CrossSectionCsvImportWizard.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Wizard\CrossSectionCsvImportWizard.cs" />
     <Compile Include="Wizard\CrossSectionCsvImportWizard.Designer.cs">
       <DependentUpon>CrossSectionCsvImportWizard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wizard\ImportFromGisWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Wizard\ImportFromGisWizardPage.cs" />
     <Compile Include="Wizard\ImportFromGisWizardPage.Designer.cs">
       <DependentUpon>ImportFromGisWizardPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wizard\ImportHydroNetworkFromGisWizardDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizard\ImportNetworkCoverageFromGisWizardDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizard\SelectDataWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Wizard\ImportHydroNetworkFromGisWizardDialog.cs" />
+    <Compile Include="Wizard\ImportNetworkCoverageFromGisWizardDialog.cs" />
+    <Compile Include="Wizard\SelectDataWizardPage.cs" />
     <Compile Include="Wizard\SelectDataWizardPage.Designer.cs">
       <DependentUpon>SelectDataWizardPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wizard\SelectDataWizardPageRelatedTablesPopUp.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Wizard\SelectDataWizardPageRelatedTablesPopUp.cs" />
     <Compile Include="Wizard\SelectDataWizardPageRelatedTablesPopUp.Designer.cs">
       <DependentUpon>SelectDataWizardPageRelatedTablesPopUp.cs</DependentUpon>
     </Compile>

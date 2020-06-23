@@ -45,29 +45,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlGroupFeatureCollection.cs" />
-    <Compile Include="Forms\ControlGroupLayerEditorView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\ControlGroupLayerEditorView.cs" />
     <Compile Include="Forms\ControlGroupLayerEditorView.Designer.cs">
       <DependentUpon>ControlGroupLayerEditorView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ControlGroupEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\ControlGroupEditor.cs" />
     <Compile Include="Forms\ControlGroupEditor.Designer.cs">
       <DependentUpon>ControlGroupEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ControlGroupEditorController.cs" />
     <Compile Include="Forms\ControlGroupEditorViewContext.cs" />
-    <Compile Include="Forms\ControlGroupGraphView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\ControlGroupGraphView.cs" />
     <Compile Include="Forms\ControlGroupGraphView.Designer.cs">
       <DependentUpon>ControlGroupGraphView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\InputSelectionDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\InputSelectionDialog.cs" />
     <Compile Include="Forms\InputSelectionDialog.Designer.cs">
       <DependentUpon>InputSelectionDialog.cs</DependentUpon>
     </Compile>
@@ -85,9 +77,7 @@
     <Compile Include="Forms\PropertyGrid\TimeConditionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\TimeRuleProperties.cs" />
     <Compile Include="Forms\Connection.cs" />
-    <Compile Include="Forms\RtcExporterDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\RtcExporterDialog.cs" />
     <Compile Include="Helpers\RTCModelCoordinateConvertor.cs" />
     <Compile Include="NodePresenters\ControlGroupCollectionNodePresenter.cs" />
     <Compile Include="NodePresenters\ControlGroupNodePresenter.cs" />
