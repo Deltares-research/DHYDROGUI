@@ -200,6 +200,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (e.PropertyName == nameof(Name))
             {
                 fmRegion.Name = Name;
+                MduFilePath = GetMduPathFromDeltaShellPath(Path.GetDirectoryName(MduFilePath));
+                ModelDefinition.ModelName = Name;
                 if (!OutputIsEmpty)
                 {
                     OnClearOutput();
