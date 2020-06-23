@@ -10,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -28,102 +29,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     "timeseries", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.TimeSeries,
-                        ArgumentDefinitions = new[]
-                        {
-                            "time"
-                        },
-                        ComponentDefinitions = new[]
-                        {
-                            ""
-                        }
+                        ArgumentDefinitions = new[] {"time"},
+                        ComponentDefinitions = new[] {""}
                     }
                 },
                 {
                     "t3d", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.TimeSeries,
-                        ArgumentDefinitions = new[]
-                        {
-                            "time"
-                        },
-                        ComponentDefinitions = new[]
-                        {
-                            ""
-                        }
+                        ArgumentDefinitions = new[] {"time"},
+                        ComponentDefinitions = new[] {""}
                     }
                 },
                 {
                     "astronomic", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.AstroComponents,
-                        ArgumentDefinitions = new[]
-                        {
-                            "astronomic component"
-                        },
-                        ComponentDefinitions = new[]
-                        {
-                            "amplitude",
-                            "phase"
-                        }
+                        ArgumentDefinitions = new[] {"astronomic component"},
+                        ComponentDefinitions = new[] {"amplitude", "phase"}
                     }
                 },
                 {
                     "astronomic-correction", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.AstroCorrection,
-                        ArgumentDefinitions = new[]
-                        {
-                            "astronomic component"
-                        },
-                        ComponentDefinitions = new[]
-                        {
-                            "amplitude",
-                            "phase"
-                        }
+                        ArgumentDefinitions = new[] {"astronomic component"},
+                        ComponentDefinitions = new[] {"amplitude", "phase"}
                     }
                 },
                 {
                     "harmonic", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.Harmonics,
-                        ArgumentDefinitions = new[]
-                        {
-                            "harmonic component"
-                        },
-                        ComponentDefinitions = new[]
-                        {
-                            "amplitude",
-                            "phase"
-                        }
+                        ArgumentDefinitions = new[] {"harmonic component"},
+                        ComponentDefinitions = new[] {"amplitude", "phase"}
                     }
                 },
                 {
                     "harmonic-correction", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.HarmonicCorrection,
-                        ArgumentDefinitions = new[]
-                        {
-                            "harmonic component"
-                        },
-                        ComponentDefinitions = new[]
-                        {
-                            "amplitude",
-                            "phase"
-                        }
+                        ArgumentDefinitions = new[] {"harmonic component"},
+                        ComponentDefinitions = new[] {"amplitude", "phase"}
                     }
                 },
                 {
                     "qhtable", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.Qh,
-                        ArgumentDefinitions = new[]
-                        {
-                            "qhbnd discharge"
-                        },
-                        ComponentDefinitions = new[]
-                        {
-                            "qhbnd waterlevel"
-                        }
+                        ArgumentDefinitions = new[] {"qhbnd discharge"},
+                        ComponentDefinitions = new[] {"qhbnd waterlevel"}
                     }
                 }
             };
@@ -542,7 +497,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                                 ? typeof(string)
                                                 : typeof(double);
 
-                                List<object> parsedArgumentValues = ParseValues(argVariables[0], type).ToList();
+                                List<object> parsedArgumentValues = ParseValues(argVariables[0], type, dataBlock.SupportPoint).ToList();
 
                                 List<int> indexMapping = parsedArgumentValues.Select(existingArgument.IndexOf).ToList();
 
@@ -553,7 +508,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                     int l = k % 2 == 0 ? (2 * k) + 2 : (2 * k) + 1;
                                     IVariable variable = existingData.Components[l];
                                     List<double> variableValues = variable.GetValues<double>().ToList();
-                                    List<object> values = ParseValues(comp.Value, variable.ValueType).ToList();
+                                    List<object> values = ParseValues(comp.Value, variable.ValueType, dataBlock.SupportPoint).ToList();
 
                                     for (var i = 0; i < parsedArgumentValues.Count; ++i)
                                     {
@@ -582,7 +537,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                 {
                                     IVariable variable = existingData.Arguments[arg.Key];
                                     variable.Values.Clear();
-                                    variable.SetValues(ParseValues(arg.Value, variable.ValueType));
+                                    variable.SetValues(ParseValues(arg.Value, variable.ValueType, dataBlock.SupportPoint));
                                     if (variable is IVariable<DateTime>)
                                     {
                                         variable.InterpolationType = timeInterpolationType;
@@ -593,7 +548,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                     in quantityGroup)
                                 {
                                     IVariable variable = existingData.Components[comp.Key.Item2];
-                                    variable.SetValues(ParseValues(comp.Value, variable.ValueType));
+                                    variable.SetValues(ParseValues(comp.Value, variable.ValueType, dataBlock.SupportPoint));
                                 }
                             }
 
@@ -723,7 +678,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return boundaryCondition;
         }
 
-        protected virtual IEnumerable<object> ParseValues(BcQuantityData quantityData, Type type)
+        protected virtual IEnumerable<object> ParseValues(BcQuantityData quantityData, Type type, string supportPointName)
         {
             IEnumerable<string> stringValues = quantityData.Values;
             string format = quantityData.Unit;
@@ -731,32 +686,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             {
                 if (string.IsNullOrEmpty(format) || format == "-")
                 {
-                    return
-                        stringValues.Select(s => DateTime.ParseExact(s, "yyyyMMddHHmmss", CultureInfo.InvariantCulture))
-                                    .Cast<object>();
+                    return stringValues.Select(s => DateTime.ParseExact(s, "yyyyMMddHHmmss", CultureInfo.InvariantCulture))
+                                       .Cast<object>();
                 }
 
-                List<string> splittedFormat = format.Split().ToList();
-                if (splittedFormat[1] == "since")
+                List<string> splitFormat = format.Split().ToList();
+                if (splitFormat[1] == "since")
                 {
-                    string dateString = string.Join(" ", splittedFormat.Skip(2));
+                    string dateString = string.Join(" ", splitFormat.Skip(2));
+                    DateTime startDate = TryParseDate(dateString, supportPointName);
 
-                    bool succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                                                         DateTimeStyles.AdjustToUniversal, out DateTime startDate);
-
-                    if (!succes)
-                    {
-                        succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd HH:mm:ss",
-                                                        CultureInfo.InvariantCulture,
-                                                        DateTimeStyles.AdjustToUniversal, out startDate);
-                    }
-
-                    if (!succes)
-                    {
-                        throw new FormatException("Time format " + dateString + " is not supported by bc file parser");
-                    }
-
-                    switch (splittedFormat[0].ToLower())
+                    switch (splitFormat[0].ToLower())
                     {
                         case "seconds":
                             return stringValues
@@ -860,6 +800,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 variable.GetValues<DateTime>()
                         .Select(d => (d - referenceTime.Value).TotalSeconds)
                         .Select(m => m.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static DateTime TryParseDate(string dateString, string supportPointName)
+        {
+            bool dateParsed = DateTime.TryParseExact(dateString, new[] {"yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss zzz"},
+                                                     CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal,
+                                                     out DateTime startDate);
+
+            if (!dateParsed)
+            {
+                throw new FormatException("Time format '" + dateString + "' in support point '"+ supportPointName + "' is not supported by bc file parser");
+            }
+
+            CheckForTimezoneOffset(dateString, supportPointName);
+
+            return startDate;
+        }
+
+        private static void CheckForTimezoneOffset(string dateString, string supportPointName)
+        {
+            bool offsetParsed = DateTimeOffset.TryParseExact(dateString, "yyyy-MM-dd HH:mm:ss zzz",
+                                                             CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
+                                                             out DateTimeOffset dateTimeOffset);
+
+            if (offsetParsed && dateTimeOffset.Offset.Ticks != 0)
+            {
+                Log.Warn(string.Format(Resources.BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset, supportPointName));
+            }
         }
 
         private string ParseQuantityName(string[] componentKeys, string quantityName,

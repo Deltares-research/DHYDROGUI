@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return Enumerable.Empty<string>();
         }
 
-        protected override IEnumerable<object> ParseValues(BcQuantityData dataBlock, Type type)
+        protected override IEnumerable<object> ParseValues(BcQuantityData dataBlock, Type type, string supportPointName)
         {
             IEnumerable<string> stringValues = dataBlock.Values;
             string format = dataBlock.Unit;

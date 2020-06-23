@@ -1279,18 +1279,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                             boundaryConditionSet.BoundaryConditions[2].GetDataAtPoint(2).Components[0].Values);
         }
 
-        /// <summary>
-        /// GIVEN a BoundaryConditionSet
-        /// AND a BcBlockData with a time unit starting at pm
-        /// WHEN InsertBoundaryData is called
-        /// THEN no format error is thrown
-        /// </summary>
         [Test]
-        public void GivenABoundaryConditionSetAndABcBlockDataWithATimeUnitStartingAtPm_WhenInsertBoundaryDataIsCalled_ThenNoFormatErrorIsThrown()
+        [TestCase("seconds since 1992-09-01 18:00:00")]
+        [TestCase("seconds since 1992-09-01 04:00:00")]
+        [TestCase("seconds since 1992-09-01 18:00:00 +04:40")]
+        [TestCase("seconds since 1992-09-01 18:00:00 -10:12")]
+        public void GivenABoundaryConditionSetAndABcBlockDataWithTimeUnitFormats_WhenInsertBoundaryDataIsCalled_ThenNoFormatErrorIsThrown(string timeUnit)
         {
             // Given
             const string boundaryName = "tfl_01_0001";
-            const string timeUnit = "seconds since 1992-09-01 18:00:00";
             const string valUnit = "m";
             const string quantity = "waterlevelbnd";
 
@@ -1298,7 +1295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSetWithFlowBoundaryCondition(boundaryName, "sand");
 
             // When
-            void testAction()
+            void TestAction()
             {
                 builder.InsertBoundaryData(new[]
                 {
@@ -1307,7 +1304,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             }
 
             // Then
-            Assert.DoesNotThrow(testAction, $"Expected {nameof(BcFileFlowBoundaryDataBuilder.InsertBoundaryData)} not to throw a format error:");
+            Assert.DoesNotThrow(TestAction, $"Expected {nameof(BcFileFlowBoundaryDataBuilder.InsertBoundaryData)} not to throw a format error:");
+        }
+
+        [Test]
+        [TestCase("seconds since 1992-09-01 18:00:00 +04:40")]
+        [TestCase("seconds since 1992-09-01 18:00:00 -10:12")]
+        public void GivenABoundaryConditionSetAndABcBlockDataWithTimeZoneOffset_WhenInsertBoundaryDataIsCalled_ThenWarningLogged(string timeUnit)
+        {
+            // Given
+            const string boundaryName = "tfl_01_0001";
+            const string valUnit = "m";
+            const string quantity = "waterlevelbnd";
+
+            BcBlockData dataBlock = CreateBcBlockData(boundaryName, "support", timeUnit, valUnit, quantity);
+            BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSetWithFlowBoundaryCondition(boundaryName, "sand");
+
+            // When
+            void TestAction()
+            {
+                builder.InsertBoundaryData(new[]
+                {
+                    boundaryConditionSet
+                }, dataBlock);
+            }
+
+            // Then
+            TestHelper.AssertLogMessageIsGenerated(TestAction, "Support point 'tfl_01_0001_0001' contains a time zone offset, the time points will be adjusted to their equivalents in UTC.");
         }
 
         [TestCase("sand", "sand", 1)]

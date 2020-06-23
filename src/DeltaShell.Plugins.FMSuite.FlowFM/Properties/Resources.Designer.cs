@@ -71,6 +71,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Support point &apos;{0}&apos; contains a time zone offset, the time points will be adjusted to their equivalents in UTC..
+        /// </summary>
+        public static string BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset {
+            get {
+                return ResourceManager.GetString("BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Morphology boundary condition bcm-file importer could not import data onto given target.
         /// </summary>
         public static string BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target {

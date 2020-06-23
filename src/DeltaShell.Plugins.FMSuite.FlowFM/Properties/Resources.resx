@@ -625,4 +625,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="FMImporters_Category_D_Flow_FM_2D_3D" xml:space="preserve">
     <value>D-Flow FM 2D/3D</value>
   </data>
+  <data name="BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset" xml:space="preserve">
+    <value>Support point '{0}' contains a time zone offset, the time points will be adjusted to their equivalents in UTC.</value>
+  </data>
 </root>
