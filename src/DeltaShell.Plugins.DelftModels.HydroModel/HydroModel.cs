@@ -743,14 +743,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnInitialize()
         {
-//            if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(CurrentWorkflow).Valid())
-//            {
-//                LogInvalidWorkflow();
-//                Status = ActivityStatus.Failed;
-//                return;
-//            }
-
-            ValidationReport validationReport = new HydroModelValidator().Validate(this);
+            ValidationReport validationReport = Validate();
             if (validationReport.ErrorCount > 0)
             {
                 LogInvalidActivities();

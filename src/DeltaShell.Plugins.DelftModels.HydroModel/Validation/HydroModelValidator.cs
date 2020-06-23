@@ -6,7 +6,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
 {
@@ -22,7 +21,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             // null-check of current workflow
             if (model.CurrentWorkflow == null)
             {
-                return new ValidationReport(validationReportName, new List<ValidationIssue> {new ValidationIssue(model.CurrentWorkflow, ValidationSeverity.Error, Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty)});
+                return new ValidationReport(validationReportName, new List<ValidationIssue>
+                {
+                    new ValidationIssue(model, ValidationSeverity.Error, Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty)
+                });
             }
 
             var hydroModelReports = new List<ValidationReport>
