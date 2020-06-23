@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
@@ -6,6 +7,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
+using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
@@ -177,6 +179,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 e => e.Message.Equals(
                     string.Format(Resources.WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_,
                         firstStructure.Name, secondStructure.Name))));
+        }
+
+        [Test]
+        public void ValidateDiscretizationWithAnEdgeLessThanDxmin1D()
+        {
+            var model = WaterFlowFMTestHelper.CreateModelWithDemoNetwork();
+            var firstChannel = model.Network.Channels.First();
+            var dxmin1D = Convert.ToDouble(model.ModelDefinition.GetModelProperty("Dxmin1D").GetValueAsString());
+            var networkLocation = new NetworkLocation(firstChannel, dxmin1D);
+            model.NetworkDiscretization[networkLocation] = 11.0;
+            
+            Assert.IsNotNull(model.NetworkDiscretization.Locations.Values.FirstOrDefault(l => l.Branch == firstChannel && Math.Abs(l.Chainage) < double.Epsilon));
+            Assert.IsNotNull(model.NetworkDiscretization.Locations.Values.FirstOrDefault(l => l.Branch == firstChannel && Math.Abs(l.Chainage - dxmin1D) < double.Epsilon));
+            var report = WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model);
+
+            Assert.That(report.AllErrors.Any(), Is.False);
+            Assert.That(report.AllErrors.Count(), Is.EqualTo(0));
+            Assert.That(report.Severity(), Is.EqualTo(ValidationSeverity.None));
+
+            var offsetLessThanDxmin1D = dxmin1D - dxmin1D / 10;
+            networkLocation = new NetworkLocation(firstChannel, dxmin1D + offsetLessThanDxmin1D);
+            model.NetworkDiscretization[networkLocation] = 22.0;
+            Assert.IsNotNull(model.NetworkDiscretization.Locations.Values.FirstOrDefault(l => l.Branch == firstChannel && Math.Abs(l.Chainage - (dxmin1D + offsetLessThanDxmin1D)) < double.Epsilon));
+            report = WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model);
+
+            Assert.That(report.AllErrors.Any(), Is.True);
+            Assert.That(report.AllErrors.Count(), Is.EqualTo(1));
+            Assert.That(report.Severity(), Is.EqualTo(ValidationSeverity.Error));
+
         }
 
         [Test]

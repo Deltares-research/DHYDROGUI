@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Validation;
@@ -73,7 +75,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 subReports = subReports.Concat(new[] { new ValidationReport("Finite volume", finiteVolumeIssues) });
             }
 
+            if (flowFmModel != null)
+            {
+                double dxmin1D;
+                if(double.TryParse(flowFmModel.ModelDefinition.GetModelProperty("Dxmin1D").GetValueAsString(), NumberStyles.AllowDecimalPoint|NumberStyles.AllowExponent|NumberStyles.AllowLeadingSign,CultureInfo.InvariantCulture, out dxmin1D))
+                {
+                    var segmentIssues = ValidateSegments(networkDiscretization, dxmin1D);
+                    if(segmentIssues.Any())
+                        subReports = subReports.Concat(new[] { new ValidationReport("Segment issues", segmentIssues) });
+                }
+            }
             return new ValidationReport(CategoryName, issues, subReports);
+        }
+
+        private static IEnumerable<ValidationIssue> ValidateSegments(IDiscretization networkDiscretization, double dxmin1D)
+        {
+            foreach (var segment in networkDiscretization.Segments.AllValues)
+            {
+                if (segment.Length < dxmin1D )
+                {
+                    var locations = networkDiscretization.GetLocationsForBranch(segment.Branch);
+                    var startPoint = locations.FirstOrDefault(l => Math.Abs(l.Chainage - segment.Chainage) < double.Epsilon);
+                    var endPoint = locations.FirstOrDefault(l => Math.Abs(l.Chainage - segment.EndChainage) < double.Epsilon);
+                    if(startPoint == null || endPoint == null) continue;
+                    yield return new ValidationIssue(segment, ValidationSeverity.Error, $"Segment {segment.Name} on branch {segment.Branch} between start point {startPoint} at chainage {segment.Chainage} and end point {endPoint} at chainage {segment.EndChainage} is shorter ({segment.Length} than minimum length provided (Dxmin1D) : {dxmin1D}.");
+                }
+            }
+            yield break;
+            
         }
 
         private static IEnumerable<ValidationIssue> CheckBranchLocations(IDiscretization networkDiscretization, IBranch branch)
