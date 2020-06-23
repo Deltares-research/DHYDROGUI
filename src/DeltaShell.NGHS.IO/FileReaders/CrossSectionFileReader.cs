@@ -48,7 +48,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             IList<ICrossSectionDefinition> crossSectionDefinitions = new List<ICrossSectionDefinition>();
             IList<ICrossSectionDefinition> crossSectionDefinitionsWithFriction = new List<ICrossSectionDefinition>();
             IList<ICrossSectionDefinition> sharedNotConnectedCrossSectionDefinitions = new List<ICrossSectionDefinition>();
-            foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name == DefinitionPropertySettings.Header))
+            foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name.Equals(DefinitionPropertySettings.Header, StringComparison.InvariantCultureIgnoreCase)))
             {
                 try
                 {
