@@ -228,6 +228,7 @@
     <Compile Include="FileWriters\Network\NetworkAndGridWriter.cs" />
     <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
     <Compile Include="FileWriters\Network\NodeFile.cs" />
+    <Compile Include="FileWriters\Network\RoutesFile.cs" />
     <Compile Include="FileWriters\Retention\RetentionFileWriter.cs" />
     <Compile Include="FileWriters\Retention\RetentionRegion.cs" />
     <Compile Include="FileReaders\Roughness\RoughnessDataFileReader.cs" />

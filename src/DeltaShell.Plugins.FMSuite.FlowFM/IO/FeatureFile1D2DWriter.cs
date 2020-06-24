@@ -16,6 +16,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -40,6 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             WriteNodeFile(targetMduFilePath, modelDefinition, network);
             WriteBranchFile(targetMduFilePath, modelDefinition, network.Branches);
+            WriteRoutesFile(targetMduFilePath, network.Routes);
             WriteCrossSectionFiles(targetMduFilePath, modelDefinition, network, channelFrictionDefinitions);
             WriteObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             WriteStructuresFiles(targetMduFilePath, modelDefinition, network, area);
@@ -90,9 +92,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 modelDefinition.SetModelProperty(KnownProperties.StorageNodeFile, string.Empty);
             }
         }
+
         private static void WriteBranchFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<IBranch> branches)
         {
-
             var branchesFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, NetworkPropertiesHelper.BranchGuiFileName);
             FileUtils.DeleteIfExists(branchesFilePath);
             if (!branches.Any())
@@ -101,6 +103,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             BranchFile.Write(branchesFilePath, branches);
             modelDefinition.SetModelProperty(KnownProperties.BranchFile, NetworkPropertiesHelper.BranchGuiFileName);
+        }
+
+        private static void WriteRoutesFile(string targetMduFilePath, IEnumerable<Route> routes)
+        {
+            var routesFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, RoutesFile.RoutesFileName);
+            FileUtils.DeleteIfExists(routesFilePath);
+
+            RoutesFile.Write(routesFilePath, routes);
         }
 
         private static void WriteCrossSectionFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,

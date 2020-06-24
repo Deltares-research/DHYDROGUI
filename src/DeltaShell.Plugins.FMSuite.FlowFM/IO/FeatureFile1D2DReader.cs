@@ -10,6 +10,7 @@ using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Roughness;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
@@ -27,6 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions,
             IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
         {
+            ReadRoutesFile(targetMduFilePath, network);
             ReadStructuresFiles(targetMduFilePath, modelDefinition, network);
             ReadCrossSectionFiles(targetMduFilePath, modelDefinition, network, channelFrictionDefinitions);
             ReadObservationPointsFiles(targetMduFilePath, modelDefinition, network);
@@ -77,6 +79,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 LocationFileReader.ReadFileObservationPointLocations(obsFileFullPath, network);
             }
             
+        }
+
+        private static void ReadRoutesFile(string targetMduFilePath, IHydroNetwork network)
+        {
+            var routesFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, RoutesFile.RoutesFileName);
+            if (!File.Exists(routesFile))
+            {
+                return;
+            }
+
+            RoutesFile.Read(routesFile, network);
         }
 
         private static void ReadStructuresFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)

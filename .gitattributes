@@ -673,6 +673,7 @@ src/DeltaShell.NGHS.IO/FileWriters/Network/NetworkAndGridWriter.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/NetworkDefinitionRegion.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/NetworkRegion.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/NodeFile.cs -text
+src/DeltaShell.NGHS.IO/FileWriters/Network/RoutesFile.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Retention/RetentionFileWriter.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Retention/RetentionRegion.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Roughness/RoughnessDataFileWriter.cs -text
