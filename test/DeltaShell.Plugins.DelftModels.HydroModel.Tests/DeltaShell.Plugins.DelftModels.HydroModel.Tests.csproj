@@ -291,7 +291,7 @@
     <Compile Include="Forms\WorkflowEditorControlTest.cs" />
     <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
-    <Compile Include="HydroModelGuiTest.cs" />
+    <Compile Include="HydroModelGuiPluginTest.cs" />
     <Compile Include="HydroModelHelperTest.cs" />
     <Compile Include="HydroModelTest.cs" />
     <Compile Include="HydroModelWaveIntegrationTest.cs" />
