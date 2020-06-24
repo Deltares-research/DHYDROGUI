@@ -96,7 +96,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
             var model1DLateralSourceDatas = lateralSourcesData as Model1DLateralSourceData[] ?? lateralSourcesData.ToArray();
-            foreach (var lateralCategory in categories.Where(category => category.Name == BoundaryRegion.BcLateralHeader || category.Name == BoundaryRegion.BcForcingHeader))
+            foreach (var lateralCategory in categories.Where(category =>
+                category.Name.Equals(BoundaryRegion.BcLateralHeader, StringComparison.InvariantCultureIgnoreCase) ||
+                category.Name.Equals(BoundaryRegion.BcForcingHeader, StringComparison.InvariantCultureIgnoreCase)))
             {
                 try
                 {
