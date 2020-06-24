@@ -441,6 +441,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenHydroModel_WhenChangeCurrentWorkflow_ThenUpdatesRunsInIntegratedModelProperties()
+        {
+            // 1. Prepare test data.
+            IActivity firstDummyActivity = Substitute.For<IActivity, IDimrModel>();
+            IActivity secondDummyActivity = Substitute.For<IActivity, IDimrModel>();
+
+            var firstWorkflow = new SequentialActivity { Activities = { firstDummyActivity } };
+            var lastWorkflow = new SequentialActivity { Activities = { secondDummyActivity } };
+
+            using (var hydroModel = new HydroModel())
+            {
+                hydroModel.Activities.Add(firstDummyActivity);
+                hydroModel.Activities.Add(secondDummyActivity);
+                hydroModel.CurrentWorkflow = firstWorkflow;
+
+                // 2. Verify initial expectations.
+                Assert.That(((IDimrModel)firstDummyActivity).RunsInIntegratedModel, Is.True);
+                Assert.That(((IDimrModel)secondDummyActivity).RunsInIntegratedModel, Is.False);
+
+                // 3. Run test.
+                TestDelegate testAction = () => hydroModel.CurrentWorkflow = lastWorkflow;
+
+                // 4. Verify final expectations.
+                Assert.That(testAction, Throws.Nothing);
+                Assert.That(((IDimrModel)firstDummyActivity).RunsInIntegratedModel, Is.False);
+                Assert.That(((IDimrModel)secondDummyActivity).RunsInIntegratedModel, Is.True);
+            }
+        }
+
         private class TimeDepModel : TimeDependentModelBase
         {
             protected override void OnInitialize() {}
