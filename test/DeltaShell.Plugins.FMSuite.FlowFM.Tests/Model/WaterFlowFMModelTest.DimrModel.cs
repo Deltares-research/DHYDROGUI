@@ -23,18 +23,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             var fmModel = new WaterFlowFMModel();
             const string gateName = "structure01";
-            var gate1 = new Weir2D
+            var gate = new Weir2D
             {
                 Name = gateName,
                 WeirFormula = new GatedWeirFormula()
             };
-            fmModel.Area.Weirs.Add(gate1);
-            var gate2 = new Weir2D
-            {
-                Name = gateName,
-                WeirFormula = new GatedWeirFormula()
-            };
-            fmModel.Area.Weirs.Add(gate2);
+            fmModel.Area.Weirs.Add(gate);
 
             // When
             var itemStringComponents = new List<string>(new[]
@@ -48,9 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             IEnumerable<IDataItem> dataItems = fmModel.GetDataItemsByItemString(itemString).ToArray();
 
             // Then
-            Assert.That(dataItems.Count(), Is.EqualTo(2));
-            AssertDataItemIsGate(dataItems.ElementAt(0), gate1);
-            AssertDataItemIsGate(dataItems.ElementAt(1), gate2);
+            AssertDataItemIsGate(dataItems.Single(), gate);
         }
 
         private static void AssertDataItemIsGate(IDataItem dataItem, Weir2D gate)

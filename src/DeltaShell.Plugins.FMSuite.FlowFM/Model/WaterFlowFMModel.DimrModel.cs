@@ -81,33 +81,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             string featureName = stringParts[1];
             string parameterName = stringParts[2];
 
-            IEnumerable<IFeature> features = GetAreaFeatures(category, featureName).ToArray();
+            IFeature feature = GetAreaFeature(category, featureName);
 
-            if (!features.Any())
+            if (feature == null)
             {
                 throw new ArgumentException(string.Format(Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_feature__0__in__1__cannot_be_found_in_the_FM_model,
                                                           featureName, itemString));
             }
 
-            IEnumerable<IDataItem> dataItem = features.SelectMany(GetChildDataItems).Where(di =>
+            IDataItem dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
             {
                 var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
                 return parameterValueConverter?.ParameterName == parameterName;
-            }).ToArray();
+            });
 
-            if (!dataItem.Any())
+            if (dataItem == null)
             {
                 throw new ArgumentException(string.Format(Resources.WaterFlowFMModel_DimrModel_GetDataItemByItemString_parameter_name__0__in__1__cannot_be_found_in_the_FM_model,
                                                           parameterName, itemString));
             }
 
-            return dataItem;
+            return new[] {dataItem};
         }
 
-        private IEnumerable<IFeature> GetAreaFeatures(string featureCategory, string featureName)
+        private IFeature GetAreaFeature(string featureCategory, string featureName)
         {
             IEnumerable<INameable> featuresFromCategory = Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
-            return featuresFromCategory.Where(f => f.Name.Equals(featureName)).Cast<IFeature>();
+
+            return (IFeature) featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
         }
 
         public virtual string MpiCommunicatorString => "DFM_COMM_DFMWORLD";
