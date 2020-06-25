@@ -409,6 +409,7 @@
     <Compile Include="IO\WaveModelSchemaCsvFileTest.cs" />
     <Compile Include="IO\WavmFileFunctionStoreTest.cs" />
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProviderTest.cs" />
+    <Compile Include="ModelDefinition\WaveModelDefinitionLoadHelperTest.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinitionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClassSetup.cs" />
