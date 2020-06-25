@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                     catchment.CatchmentType = CatchmentType.None;
                 }
             }
-            else
+            else if (!string.IsNullOrEmpty(columnNameCatchmentType))
             {
                 catchment.CatchmentType = CatchmentType.None;
             }
