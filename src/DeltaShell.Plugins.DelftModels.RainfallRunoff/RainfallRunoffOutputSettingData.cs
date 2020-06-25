@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 
                 {RainfallRunoffModelParameterNames.UnpavedGroundwaterLevel,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Groundw.Level   [m]"} },
                 {RainfallRunoffModelParameterNames.UnpavedGwOutflow ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Groundw.outfl.[m3/s]"} },
-                {RainfallRunoffModelParameterNames.UnpavedStorageCoeff ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = null} }, // TODO: Not in His file
+                {RainfallRunoffModelParameterNames.UnpavedStorageCoeff ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Storage coeff."} }, // TODO: Not in His file
                 {RainfallRunoffModelParameterNames.UnpavedSurfaceRunoff,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Surf. Runoff  [m3/s]"} },
                 {RainfallRunoffModelParameterNames.UnpavedRainfall ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Rainfall     [m3/s]"} },
                 {RainfallRunoffModelParameterNames.UnpavedEvaporationActual ,new HisFileParameter {HisFileName = UnPavedHisFileName, ParameterName = "Actual Evap. [m3/s]"} },
