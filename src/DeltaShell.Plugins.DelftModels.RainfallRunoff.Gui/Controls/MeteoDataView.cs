@@ -12,6 +12,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Binding;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.Threading;
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
                     Dock = DockStyle.Fill
                 };
             pnlView.Controls.Add(functionView);
-
+            if (functionView?.TableView != null) functionView.TableView.SelectionChanged += TableViewOnSelectionChanged;
             cmbMeteoDataType.DataSource = Enum.GetValues(typeof (MeteoDataDistributionType));
             cmbMeteoDataType.SelectedValueChanged += CmbMeteoDataTypeSelectedValueChanged;
 
@@ -57,6 +58,33 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
             {
                 childViews.AddRange(functionView.ChildViews);
             }
+
+            if (stationsListEditor != null)
+                stationsListEditor.MeteoStationsSelected += StationsListEditorOnMeteoStationsSelected;
+        }
+
+        private void StationsListEditorOnMeteoStationsSelected(object sender, MeteoStationsSelectedEventArgs e)
+        {
+            if (functionView?.TableView?.Columns == null) return;
+
+            var selectedRow = functionView.TableView.FocusedRowIndex;
+            functionView.TableView.ClearSelection();
+            e.SelectedMeteoStations.ForEach(meteoStation =>
+            {
+                var toBeSelectedColumn = functionView.TableView.Columns.IndexOf(functionView.TableView.GetColumnByName(meteoStation));
+                functionView.TableView.SelectCells(
+                    selectedRow,
+                    toBeSelectedColumn,
+                    selectedRow,
+                    toBeSelectedColumn,
+                    false);
+            });
+        }
+
+
+        private void TableViewOnSelectionChanged(object sender, TableSelectionChangedEventArgs e)
+        {
+            stationsListEditor?.SetSelection(e.Cells.Select(c => c.Column).Distinct().Select(c => c.Name));
         }
 
         #region IView<MeteoData> Members
