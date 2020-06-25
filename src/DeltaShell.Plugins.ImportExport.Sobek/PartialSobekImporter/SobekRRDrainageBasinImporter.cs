@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Geometries;
@@ -20,6 +23,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private Dictionary<string, Catchment> dictionaryCatchments;
         private Dictionary<string, IHydroNode> dictionaryBoundaries;
         private Dictionary<string, ILateralSource> dictionaryLateralSources;
+        private Dictionary<LateralSource, Model1DLateralSourceData> dictionaryLateralSourcesData;
         private Dictionary<string, RunoffBoundary> dictionaryRRBoundaries;
         
         private const string displayName = "Rainfall Runoff elements";
@@ -39,6 +43,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     HydroNetwork.HydroNodes.Where(n => !n.IsConnectedToMultipleBranches).ToDictionary(n => n.Name,
                                                                                                       n => n);
                 dictionaryLateralSources = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
+                var flowFmModel = TryGetModel<WaterFlowFMModel>();
+                if (flowFmModel?.LateralSourcesData != null)
+                {
+                    dictionaryLateralSourcesData = flowFmModel.LateralSourcesData.ToDictionary(model1DLateralSourceData => model1DLateralSourceData.Feature);
+                }
             }
 
             log.DebugFormat("Importing Rainfall Runoff nodes and links...");
@@ -305,6 +314,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (dictionaryLateralSources != null && dictionaryLateralSources.ContainsKey(link.NodeToId))
                 {
                     Link(linksource, dictionaryLateralSources[link.NodeToId], link.Id);
+                    if (dictionaryLateralSources[link.NodeToId] is LateralSource lateralSource &&
+                        dictionaryLateralSourcesData.ContainsKey(lateralSource))
+                        dictionaryLateralSourcesData[lateralSource].DataType = Model1DLateralDataType.FlowRealTime;
                     continue;
                 }
 
