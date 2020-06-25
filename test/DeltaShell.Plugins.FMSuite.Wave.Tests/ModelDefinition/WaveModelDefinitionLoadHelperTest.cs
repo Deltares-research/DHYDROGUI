@@ -164,6 +164,74 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             Assert.That(targetBoundaryContainer.GetBoundarySnappingCalculator(), Is.Not.Null);
             Assert.That(targetBoundaryContainer.GetGridBoundary(), Is.SameAs(grid));
         }
+
+        [Test]
+        public void GivenModelDefinitionWithOuterDomain_WhenTransferLoadedProperties_ThenOuterDomainTransferred()
+        {
+            // Given
+            var targetDefinition = new WaveModelDefinition();
+
+            var outerDomain = Substitute.For<IWaveDomainData>();
+            var loadedDefinition = new WaveModelDefinition
+            {
+                OuterDomain =  outerDomain
+            };
+        
+            // Precondition
+            Assert.That(targetDefinition.OuterDomain, Is.Null);
+
+            // When
+            WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
+
+            // Then
+            Assert.That(targetDefinition.OuterDomain, Is.SameAs(outerDomain));
+        }
+
+        [Test]
+        public void GivenModelDefinitionWithWaveInputFieldData_WhenTransferLoadedProperties_ThenWaveInputFieldDataTransferred()
+        {
+            // Given
+            var targetDefinition = new WaveModelDefinition();
+
+            var random = new Random(21);
+            var inputFieldData = new WaveInputFieldData
+            {
+                HydroDataType = InputFieldDataType.TimeVarying,
+                WindDataType= InputFieldDataType.TimeVarying,
+                WaterLevelConstant = random.NextDouble(),
+                VelocityXConstant = random.NextDouble(),
+                VelocityYConstant = random.NextDouble(),
+                WindSpeedConstant = random.NextDouble(),
+                WindDirectionConstant = random.NextDouble()
+            };
+            
+            var loadedDefinition = new WaveModelDefinition
+            {
+                TimePointData = inputFieldData
+            };
+
+            // Precondition
+            WaveInputFieldData targetInputFieldData = targetDefinition.TimePointData;
+            Assert.That(targetInputFieldData.HydroDataType, Is.EqualTo(InputFieldDataType.Constant));
+            Assert.That(targetInputFieldData.WindDataType, Is.EqualTo(InputFieldDataType.Constant));
+            Assert.That(targetInputFieldData.WaterLevelConstant, Is.EqualTo(0.0));
+            Assert.That(targetInputFieldData.VelocityXConstant, Is.EqualTo(0.0));
+            Assert.That(targetInputFieldData.VelocityYConstant, Is.EqualTo(0.0));
+            Assert.That(targetInputFieldData.WindSpeedConstant, Is.EqualTo(0.0));
+            Assert.That(targetInputFieldData.WindDirectionConstant, Is.EqualTo(0.0));
+
+            // When
+            WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
+
+            // Then
+            Assert.That(targetInputFieldData.HydroDataType, Is.EqualTo(inputFieldData.HydroDataType));
+            Assert.That(targetInputFieldData.WindDataType, Is.EqualTo(inputFieldData.WindDataType));
+            Assert.That(targetInputFieldData.WaterLevelConstant, Is.EqualTo(inputFieldData.WaterLevelConstant));
+            Assert.That(targetInputFieldData.VelocityXConstant, Is.EqualTo(inputFieldData.VelocityXConstant));
+            Assert.That(targetInputFieldData.VelocityYConstant, Is.EqualTo(inputFieldData.VelocityYConstant));
+            Assert.That(targetInputFieldData.WindSpeedConstant, Is.EqualTo(inputFieldData.WindSpeedConstant));
+            Assert.That(targetInputFieldData.WindDirectionConstant, Is.EqualTo(inputFieldData.WindDirectionConstant));
+        }
     }
 
     public static class WaveModelDefinitionLoadHelper
@@ -186,11 +254,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
                 throw new ArgumentNullException(nameof(loadedDefinition));
             }
 
+            targetDefinition.OuterDomain = loadedDefinition.OuterDomain;
+
             targetDefinition.ObservationPoints.AddRange(loadedDefinition.ObservationPoints);
             targetDefinition.ObservationCrossSections.AddRange(loadedDefinition.ObservationCrossSections);
             targetDefinition.Obstacles.AddRange(loadedDefinition.Obstacles);
 
+            TransferTimePointData(targetDefinition.TimePointData, loadedDefinition.TimePointData);
             TransferBoundaryContainer(targetDefinition.BoundaryContainer, loadedDefinition.BoundaryContainer);
+        }
+
+        private static void TransferTimePointData(WaveInputFieldData targetTimePointData, WaveInputFieldData loadedTimePointData)
+        {
+            targetTimePointData.HydroDataType = loadedTimePointData.HydroDataType;
+            targetTimePointData.WindDataType = loadedTimePointData.WindDataType;
+            targetTimePointData.WaterLevelConstant = loadedTimePointData.WaterLevelConstant;
+            targetTimePointData.VelocityXConstant = loadedTimePointData.VelocityXConstant;
+            targetTimePointData.VelocityYConstant = loadedTimePointData.VelocityYConstant;
+            targetTimePointData.WindSpeedConstant = loadedTimePointData.WindSpeedConstant;
+            targetTimePointData.WindDirectionConstant = loadedTimePointData.WindDirectionConstant;
         }
 
         private static void TransferBoundaryContainer(IBoundaryContainer targetBoundaryContainer, IBoundaryContainer loadedBoundaryContainer)
