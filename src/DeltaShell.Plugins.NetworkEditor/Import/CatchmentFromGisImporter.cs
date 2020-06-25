@@ -45,14 +45,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
             ICoordinateTransformation coordinateTransformation = null;
             var sourceCoordinateSystem = GetCoordinateSystem();
-
-            if (drainageBasin.CoordinateSystem != null)
+            if (sourceCoordinateSystem != null)
             {
-                coordinateTransformation = new OgrCoordinateSystemFactory().CreateTransformation(sourceCoordinateSystem, drainageBasin.CoordinateSystem);
-            }
-            else if (drainageBasin.Catchments.Count == 0)
-            {
-                drainageBasin.CoordinateSystem = sourceCoordinateSystem;
+                if (drainageBasin.CoordinateSystem != null)
+                {
+                    coordinateTransformation =
+                        new OgrCoordinateSystemFactory().CreateTransformation(sourceCoordinateSystem,
+                            drainageBasin.CoordinateSystem);
+                }
+                else if (drainageBasin.Catchments.Count == 0)
+                {
+                    drainageBasin.CoordinateSystem = sourceCoordinateSystem;
+                }
             }
 
             CatchmentToGisFeatureMapping.Clear();
