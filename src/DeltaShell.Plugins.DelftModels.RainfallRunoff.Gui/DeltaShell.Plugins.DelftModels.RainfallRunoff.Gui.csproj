@@ -138,112 +138,162 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CatchmentModelDataTreeFolder.cs" />
-    <Compile Include="Concepts\CatchmentMeteoStationSelection.cs" />
+    <Compile Include="Concepts\CatchmentMeteoStationSelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\CatchmentMeteoStationSelection.Designer.cs">
       <DependentUpon>CatchmentMeteoStationSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="Concepts\GreenhouseDataRow.cs" />
-    <Compile Include="Concepts\GreenhouseDataView.cs" />
+    <Compile Include="Concepts\GreenhouseDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\GreenhouseDataView.Designer.cs">
       <DependentUpon>GreenhouseDataView.cs</DependentUpon>
     </Compile>
     <Compile Include="Concepts\GreenhouseDataViewModel.cs" />
     <Compile Include="Concepts\GreenhouseInitialConditionsDataRow.cs" />
     <Compile Include="Concepts\HbvDataRow.cs" />
-    <Compile Include="Concepts\HbvDataView.cs" />
-    <Compile Include="Concepts\HbvMeteoStationSelection.cs" />
+    <Compile Include="Concepts\HbvDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Concepts\HbvMeteoStationSelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\HbvMeteoStationSelection.Designer.cs">
       <DependentUpon>HbvMeteoStationSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="Concepts\NwrwDataRow.cs" />
-    <Compile Include="Concepts\Nwrw\NwrwDryWeatherFlowDefinitionDailyVolumePercentagesForm.cs" />
+    <Compile Include="Concepts\Nwrw\NwrwDryWeatherFlowDefinitionDailyVolumePercentagesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Concepts\Nwrw\NwrwDryWeatherFlowDefinitionDailyVolumePercentagesForm.Designer.cs">
       <DependentUpon>NwrwDryWeatherFlowDefinitionDailyVolumePercentagesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Concepts\Nwrw\NwrwDryWeatherFlowDefinitionView.cs" />
+    <Compile Include="Concepts\Nwrw\NwrwDryWeatherFlowDefinitionView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\Nwrw\NwrwDryWeatherFlowDefinitionView.Designer.cs">
       <DependentUpon>NwrwDryWeatherFlowDefinitionView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Concepts\Nwrw\NwrwDefinitionView.cs" />
+    <Compile Include="Concepts\Nwrw\NwrwDefinitionView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\Nwrw\NwrwDefinitionView.Designer.cs">
       <DependentUpon>NwrwDefinitionView.cs</DependentUpon>
     </Compile>
     <Compile Include="Concepts\OpenWaterDataRow.cs" />
-    <Compile Include="Concepts\OpenWaterDataView.cs" />
+    <Compile Include="Concepts\OpenWaterDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\OpenWaterDataView.Designer.cs">
       <DependentUpon>OpenWaterDataView.cs</DependentUpon>
     </Compile>
     <Compile Include="Concepts\OpenWaterInitialConditionsDataRow.cs" />
     <Compile Include="Concepts\PavedDataRow.cs" />
-    <Compile Include="Concepts\PavedDataView.cs" />
+    <Compile Include="Concepts\PavedDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\PavedDataView.Designer.cs">
       <DependentUpon>PavedDataView.cs</DependentUpon>
     </Compile>
     <Compile Include="Concepts\PavedDataViewModel.cs" />
     <Compile Include="Concepts\PavedInitialConditionsDataRow.cs" />
-    <Compile Include="Concepts\SacramentoCapacitiesControl.cs" />
+    <Compile Include="Concepts\SacramentoCapacitiesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\SacramentoCapacitiesControl.Designer.cs">
       <DependentUpon>SacramentoCapacitiesControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Concepts\SacramentoDataRow.cs" />
-    <Compile Include="Concepts\SacramentoDataView.cs" />
-    <Compile Include="Concepts\Polder\PolderConceptView.cs" />
+    <Compile Include="Concepts\SacramentoDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Concepts\Polder\PolderConceptView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\Polder\PolderConceptView.Designer.cs">
       <DependentUpon>PolderConceptView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Concepts\Polder\PolderPieChart.cs" />
+    <Compile Include="Concepts\Polder\PolderPieChart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\Polder\PolderPieChart.Designer.cs">
       <DependentUpon>PolderPieChart.cs</DependentUpon>
     </Compile>
-    <Compile Include="Concepts\SacramentoUnitHydrographControl.cs" />
+    <Compile Include="Concepts\SacramentoUnitHydrographControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\SacramentoUnitHydrographControl.Designer.cs">
       <DependentUpon>SacramentoUnitHydrographControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Concepts\UnpavedDataRow.cs" />
-    <Compile Include="Concepts\UnpavedDataView.cs" />
+    <Compile Include="Concepts\UnpavedDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\UnpavedDataView.Designer.cs">
       <DependentUpon>UnpavedDataView.cs</DependentUpon>
     </Compile>
     <Compile Include="Concepts\UnpavedDataViewModel.cs" />
     <Compile Include="Concepts\UnpavedInitialConditionsDataRow.cs" />
-    <Compile Include="Concepts\Unpaved\ErnstZeeuwHellingaDrainageControl.cs" />
+    <Compile Include="Concepts\Unpaved\ErnstZeeuwHellingaDrainageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\Unpaved\ErnstZeeuwHellingaDrainageControl.Designer.cs">
       <DependentUpon>ErnstZeeuwHellingaDrainageControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Concepts\Unpaved\KrayenhoffDrainageControl.cs" />
+    <Compile Include="Concepts\Unpaved\KrayenhoffDrainageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Concepts\Unpaved\KrayenhoffDrainageControl.Designer.cs">
       <DependentUpon>KrayenhoffDrainageControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\AreaDictionaryEditor.cs" />
+    <Compile Include="Controls\AreaDictionaryEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\AreaDictionaryEditor.Designer.cs">
       <DependentUpon>AreaDictionaryEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\AreaDictionaryEditorController.cs" />
-    <Compile Include="Controls\CatchmentAttributeCoverageView.cs" />
+    <Compile Include="Controls\CatchmentAttributeCoverageView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\CatchmentAttributeCoverageView.Designer.cs">
       <DependentUpon>CatchmentAttributeCoverageView.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\IRRUnitAwareView.cs" />
     <Compile Include="Controls\MeteoDataProperties.cs" />
-    <Compile Include="Controls\MeteoDataView.cs" />
+    <Compile Include="Controls\MeteoDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\MeteoDataView.Designer.cs">
       <DependentUpon>MeteoDataView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MeteoStationsListEditor.cs" />
+    <Compile Include="Controls\MeteoStationsListEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\MeteoStationsListEditor.Designer.cs">
       <DependentUpon>MeteoStationsListEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MultipleDataEditor.cs" />
+    <Compile Include="Controls\MultipleDataEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\MultipleDataEditor.Designer.cs">
       <DependentUpon>MultipleDataEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NwrwMultipleDataEditor.cs" />
+    <Compile Include="Controls\NwrwMultipleDataEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\RainfallRunoffFormsHelper.cs" />
-    <Compile Include="Controls\RRBoundarySeriesView.cs" />
+    <Compile Include="Controls\RRBoundarySeriesView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\RRBoundarySeriesView.Designer.cs">
       <DependentUpon>RRBoundarySeriesView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RunoffBoundaryDataView.cs" />
+    <Compile Include="Controls\RunoffBoundaryDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\RunoffBoundaryDataView.Designer.cs">
       <DependentUpon>RunoffBoundaryDataView.cs</DependentUpon>
     </Compile>
@@ -252,12 +302,18 @@
     <Compile Include="DataRows\IDataRowProvider.cs" />
     <Compile Include="DataRows\RainfallRunoffDataRow.cs" />
     <Compile Include="DataRows\RainfallRunoffDataRowProviderFactory.cs" />
-    <Compile Include="Importers\ImportPolderWizardDialog.cs" />
-    <Compile Include="Importers\LandUseMappingControl.cs" />
+    <Compile Include="Importers\ImportPolderWizardDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Importers\LandUseMappingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Importers\LandUseMappingControl.Designer.cs">
       <DependentUpon>LandUseMappingControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Importers\LandUsePolderMappingWizardPage.cs" />
+    <Compile Include="Importers\LandUsePolderMappingWizardPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Importers\LandUsePolderMappingWizardPage.Designer.cs">
       <DependentUpon>LandUsePolderMappingWizardPage.cs</DependentUpon>
     </Compile>

@@ -160,6 +160,7 @@
     <Compile Include="FileWriters\IniFileWriterTest.cs" />
     <Compile Include="FileWriters\LocationFileWritersTest.cs" />
     <Compile Include="FileWriters\NetworkAndGridWriterTest.cs" />
+    <Compile Include="FileWriters\Network\RoutesFileTest.cs" />
     <Compile Include="FileWriters\RetentionFileWriterTests.cs" />
     <Compile Include="FileWriters\SpatialDataFileWriterTests.cs" />
     <Compile Include="FileWriters\StructureFileWriterTest.cs" />

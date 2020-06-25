@@ -194,22 +194,30 @@
       <DependentUpon>ModelFeatureCoordinateDataView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewViewModel.cs" />
-    <Compile Include="Editors\FlowBoundaryConditionDataView.cs" />
+    <Compile Include="Editors\FlowBoundaryConditionDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\FlowBoundaryConditionDataView.Designer.cs">
       <DependentUpon>FlowBoundaryConditionDataView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\BoundaryConditionListView.cs" />
+    <Compile Include="Editors\BoundaryConditionListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\BoundaryConditionListView.Designer.cs">
       <DependentUpon>BoundaryConditionListView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\FlowBoundaryConditionPropertiesControl.cs" />
+    <Compile Include="Editors\FlowBoundaryConditionPropertiesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\FlowBoundaryConditionPropertiesControl.Designer.cs">
       <DependentUpon>FlowBoundaryConditionPropertiesControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\FlowBoundaryConditionEditorController.cs" />
     <Compile Include="Editors\FlowBoundaryConditionSeriesFactory.cs" />
     <Compile Include="Editors\FMToolboxesPanel.cs" />
-    <Compile Include="Editors\GriddedWindView.cs" />
+    <Compile Include="Editors\GriddedWindView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\GriddedWindView.Designer.cs">
       <DependentUpon>GriddedWindView.cs</DependentUpon>
     </Compile>
@@ -217,7 +225,9 @@
       <DependentUpon>HarmonicConditionsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\HarmonicConditionsDialogViewModel.cs" />
-    <Compile Include="Editors\HeatFluxModelView.cs" />
+    <Compile Include="Editors\HeatFluxModelView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\HeatFluxModelView.Designer.cs">
       <DependentUpon>HeatFluxModelView.cs</DependentUpon>
     </Compile>
@@ -230,7 +240,9 @@
     <Compile Include="Editors\SedimentFractionsEditorRelayCommand.cs" />
     <Compile Include="Editors\SedimentFractionsEditorViewModel.cs" />
     <Compile Include="Editors\SedimentPropertyValidationRule.cs" />
-    <Compile Include="Editors\SourceAndSinkView.cs" />
+    <Compile Include="Editors\SourceAndSinkView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\SourceAndSinkView.Designer.cs">
       <DependentUpon>SourceAndSinkView.cs</DependentUpon>
     </Compile>
@@ -244,79 +256,115 @@
     </Compile>
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMap.cs" />
     <Compile Include="Editors\WaterFlowFmSettingsHelper.cs" />
-    <Compile Include="Editors\FmMeteoFieldListView.cs" />
+    <Compile Include="Editors\FmMeteoFieldListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\FmMeteoFieldListView.Designer.cs">
       <DependentUpon>FmMeteoFieldListView.cs</DependentUpon>
     </Compile>
     <Compile Include="FlowFMGuiPlugin.cs" />
     <Compile Include="FlowFMMapViewDecorator.cs" />
-    <Compile Include="Forms\BcmFileExportDialog.cs" />
-    <Compile Include="Forms\BcmFileImportDialog.cs" />
+    <Compile Include="Forms\BcmFileExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BcmFileImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\BoundaryConditionDialogLauncher.FileType.cs" />
     <Compile Include="Forms\CreateFmModelSettingView.xaml.cs">
       <DependentUpon>CreateFmModelSettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\CrossSectionViewModel.cs" />
     <Compile Include="Forms\DuplicateCalculationPointsViewModel.cs" />
-    <Compile Include="Forms\FMModelInspectionWindow.cs" />
+    <Compile Include="Forms\FMModelInspectionWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FMModelInspectionWindow.Designer.cs">
       <DependentUpon>FMModelInspectionWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BcFileExportDialog.cs" />
+    <Compile Include="Forms\BcFileExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\BcFileExportDialog.Designer.cs">
       <DependentUpon>BcFileExportDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BcFileImportDialog.cs" />
+    <Compile Include="Forms\BcFileImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\BcFileImportDialog.Designer.cs">
       <DependentUpon>BcFileImportDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BoundaryConditionDialogLauncher.cs" />
-    <Compile Include="Forms\BoundaryConditionWpsDialog.cs" />
+    <Compile Include="Forms\BoundaryConditionWpsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\BoundaryConditionWpsDialog.Designer.cs">
       <DependentUpon>BoundaryConditionWpsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BoundaryConditionBcFileImportDialog.cs" />
+    <Compile Include="Forms\BoundaryConditionBcFileImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\BoundaryConditionBcFileImportDialog.Designer.cs">
       <DependentUpon>BoundaryConditionBcFileImportDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BoundaryDataImportDialog.cs" />
+    <Compile Include="Forms\BoundaryDataImportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\BoundaryDataImportDialog.Designer.cs">
       <DependentUpon>BoundaryDataImportDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Feature2DImportExportDialog.cs" />
+    <Compile Include="Forms\Feature2DImportExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Feature2DImportExportDialog.Designer.cs">
       <DependentUpon>Feature2DImportExportDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FMPartitionExportDialog.cs" />
+    <Compile Include="Forms\FMPartitionExportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FMPartitionExportDialog.Designer.cs">
       <DependentUpon>FMPartitionExportDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FMWeirProperties.cs" />
-    <Compile Include="Forms\Friction\ChannelFrictionDefinitionsView.cs" />
+    <Compile Include="Forms\Friction\ChannelFrictionDefinitionsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Friction\ChannelFrictionDefinitionsView.Designer.cs">
       <DependentUpon>ChannelFrictionDefinitionsView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Friction\ConstantSpatialChannelFrictionDefinitionsForm.cs" />
+    <Compile Include="Forms\Friction\ConstantSpatialChannelFrictionDefinitionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Friction\ConstantSpatialChannelFrictionDefinitionsForm.Designer.cs">
       <DependentUpon>ConstantSpatialChannelFrictionDefinitionsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GenerateEmbankmentsDialog.cs" />
+    <Compile Include="Forms\GenerateEmbankmentsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\GenerateEmbankmentsDialog.Designer.cs">
       <DependentUpon>GenerateEmbankmentsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GridWizard.cs" />
+    <Compile Include="Forms\GridWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\GridWizard.Designer.cs">
       <DependentUpon>GridWizard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FmMeteoSelectionDialog.cs" />
+    <Compile Include="Forms\FmMeteoSelectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FmMeteoSelectionDialog.Designer.cs">
       <DependentUpon>FmMeteoSelectionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\InitialConditions\ChannelInitialConditionDefinitionsView.cs" />
+    <Compile Include="Forms\InitialConditions\ChannelInitialConditionDefinitionsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\InitialConditions\ChannelInitialConditionDefinitionsView.Designer.cs">
       <DependentUpon>ChannelInitialConditionDefinitionsView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionsForm.cs" />
+    <Compile Include="Forms\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionsForm.Designer.cs">
       <DependentUpon>ConstantSpatialChannelInitialConditionDefinitionsForm.cs</DependentUpon>
     </Compile>
@@ -347,8 +395,12 @@
     <Compile Include="Ribbon\RibbonViewModel1D2D.cs" />
     <Compile Include="Ribbon\RibbonViewModelRegion.cs" />
     <Compile Include="Forms\RemoveBoundaryPointDialog.cs" />
-    <Compile Include="Forms\DataImportPointsListBox.cs" />
-    <Compile Include="Forms\WindSelectionDialog.cs" />
+    <Compile Include="Forms\DataImportPointsListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\WindSelectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\WindSelectionDialog.Designer.cs">
       <DependentUpon>WindSelectionDialog.cs</DependentUpon>
     </Compile>
@@ -378,7 +430,9 @@
     </Compile>
     <Compile Include="FmModelTreeShortcut.cs" />
     <Compile Include="FlowFMMapLayerProvider.cs" />
-    <Compile Include="Editors\WindFieldListView.cs" />
+    <Compile Include="Editors\WindFieldListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\WindFieldListView.Designer.cs">
       <DependentUpon>WindFieldListView.cs</DependentUpon>
     </Compile>

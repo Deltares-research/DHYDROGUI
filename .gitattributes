@@ -3339,6 +3339,7 @@ test/DeltaShell.NGHS.IO.Tests/FileWriters/CrossSectionDefinition/CrossSectionDef
 test/DeltaShell.NGHS.IO.Tests/FileWriters/CrossSectionDefinition/CrossSectionDefinitionIniCategoryGeneratorFactoryTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/IniFileWriterTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/LocationFileWritersTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/FileWriters/Network/RoutesFileTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/NetworkAndGridWriterTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/RetentionFileWriterTests.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/SpatialDataFileWriterTests.cs -text
@@ -3367,6 +3368,7 @@ test/DeltaShell.NGHS.IO.Tests/test-data/FileReaders/StructureFileReaderTest/roug
 test/DeltaShell.NGHS.IO.Tests/test-data/FileReaders/StructureFileReaderTest/roughness-Sewer.ini -text
 test/DeltaShell.NGHS.IO.Tests/test-data/FileReaders/StructureFileReaderTest/structures.ini -text
 test/DeltaShell.NGHS.IO.Tests/test-data/FileWriters/CrossSectionDefinitions_expected.txt -text
+test/DeltaShell.NGHS.IO.Tests/test-data/FileWriters/Routes_expected.txt -text
 test/DeltaShell.NGHS.IO.Tests/test-data/FileWriters/Structures_expected.txt -text
 test/DeltaShell.NGHS.IO.Tests/test-data/FunctionStores/deltashell.map -text
 test/DeltaShell.NGHS.IO.Tests/test-data/FunctionStores/flowhis.his -text

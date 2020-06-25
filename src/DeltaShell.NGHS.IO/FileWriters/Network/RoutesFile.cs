@@ -14,7 +14,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
         private static readonly ConfigurationSetting Name = new ConfigurationSetting("name");
         private static readonly ConfigurationSetting Branches = new ConfigurationSetting("branch");
-        private static readonly ConfigurationSetting Chainages = new ConfigurationSetting("chainage", format: "F5");
+        private static readonly ConfigurationSetting Chainages = new ConfigurationSetting("chainage", format: "F6");
 
         public static void Write(string filePath, IEnumerable<Route> routes)
         {
@@ -43,19 +43,22 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             foreach (var category in categories)
             {
                 var name = category.ReadProperty<string>(Name.Key);
-                var branchNames = category.ReadPropertiesToListOfType<string>(Branches.Key);
-                var chainages = category.ReadPropertiesToListOfType<double>(Chainages.Key);
-
-                var branchLookup = network.Branches.ToDictionary(b => b.Name);
-                var branches = branchNames.Select(id => branchLookup[id]).ToArray();
-                var locations = branches.Select((branch, i) => new NetworkLocation(branch, chainages.ElementAt(i))).ToList();
+                var branchNames = category.ReadPropertiesToListOfType<string>(Branches.Key, true);
+                var chainages = category.ReadPropertiesToListOfType<double>(Chainages.Key, true);
 
                 var route = new Route
                 {
                     Name = name
                 };
 
-                route.Locations.AddValues(locations);
+                if (branchNames != null)
+                {
+                    var branchLookup = network.Branches.ToDictionary(b => b.Name);
+                    var branches = branchNames.Select(id => branchLookup[id]).ToArray();
+                    var locations = branches.Select((branch, i) => new NetworkLocation(branch, chainages.ElementAt(i))).ToList();
+
+                    route.Locations.AddValues(locations);
+                }
 
                 network.Routes.Add(route);
             }
