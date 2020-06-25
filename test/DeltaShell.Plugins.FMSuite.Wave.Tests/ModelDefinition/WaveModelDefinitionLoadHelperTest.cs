@@ -1,4 +1,6 @@
 ﻿using System;
+using DelftTools.Functions;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -194,7 +196,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             var targetDefinition = new WaveModelDefinition();
 
             var random = new Random(21);
-            var inputFieldData = new WaveInputFieldData
+            var loadedMeteoData = new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXYP,
+                XYVectorFilePath = nameof(WaveMeteoData.XYVectorFilePath),
+                XComponentFilePath = nameof(WaveMeteoData.XComponentFilePath),
+                YComponentFilePath = nameof(WaveMeteoData.YComponentFilePath),
+                HasSpiderWeb = true,
+                SpiderWebFilePath = nameof(WaveMeteoData.SpiderWebFilePath)
+            };
+
+            var loadedInputFieldData = new WaveInputFieldData
             {
                 HydroDataType = InputFieldDataType.TimeVarying,
                 WindDataType= InputFieldDataType.TimeVarying,
@@ -202,12 +214,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
                 VelocityXConstant = random.NextDouble(),
                 VelocityYConstant = random.NextDouble(),
                 WindSpeedConstant = random.NextDouble(),
-                WindDirectionConstant = random.NextDouble()
+                WindDirectionConstant = random.NextDouble(),
+                InputFields = Substitute.For<IFunction>(),
+                MeteoData = loadedMeteoData
             };
             
             var loadedDefinition = new WaveModelDefinition
             {
-                TimePointData = inputFieldData
+                TimePointData = loadedInputFieldData
             };
 
             // Precondition
@@ -219,21 +233,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             Assert.That(targetInputFieldData.VelocityYConstant, Is.EqualTo(0.0));
             Assert.That(targetInputFieldData.WindSpeedConstant, Is.EqualTo(0.0));
             Assert.That(targetInputFieldData.WindDirectionConstant, Is.EqualTo(0.0));
+            Assert.That(targetInputFieldData.InputFields, Is.Not.SameAs(loadedInputFieldData.InputFields));
+
+            WaveMeteoData targetMeteoData = targetInputFieldData.MeteoData;
+            Assert.That(targetMeteoData.FileType, Is.EqualTo(WindDefinitionType.WindXY));
+            Assert.That(targetMeteoData.XYVectorFilePath, Is.Null);
+            Assert.That(targetMeteoData.XComponentFilePath, Is.Null);
+            Assert.That(targetMeteoData.YComponentFilePath, Is.Null);
+            Assert.That(targetMeteoData.HasSpiderWeb, Is.False);
+            Assert.That(targetMeteoData.SpiderWebFilePath, Is.Null);
 
             // When
             WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
 
             // Then
-            Assert.That(targetInputFieldData.HydroDataType, Is.EqualTo(inputFieldData.HydroDataType));
-            Assert.That(targetInputFieldData.WindDataType, Is.EqualTo(inputFieldData.WindDataType));
-            Assert.That(targetInputFieldData.WaterLevelConstant, Is.EqualTo(inputFieldData.WaterLevelConstant));
-            Assert.That(targetInputFieldData.VelocityXConstant, Is.EqualTo(inputFieldData.VelocityXConstant));
-            Assert.That(targetInputFieldData.VelocityYConstant, Is.EqualTo(inputFieldData.VelocityYConstant));
-            Assert.That(targetInputFieldData.WindSpeedConstant, Is.EqualTo(inputFieldData.WindSpeedConstant));
-            Assert.That(targetInputFieldData.WindDirectionConstant, Is.EqualTo(inputFieldData.WindDirectionConstant));
+            Assert.That(targetInputFieldData.HydroDataType, Is.EqualTo(loadedInputFieldData.HydroDataType));
+            Assert.That(targetInputFieldData.WindDataType, Is.EqualTo(loadedInputFieldData.WindDataType));
+            Assert.That(targetInputFieldData.WaterLevelConstant, Is.EqualTo(loadedInputFieldData.WaterLevelConstant));
+            Assert.That(targetInputFieldData.VelocityXConstant, Is.EqualTo(loadedInputFieldData.VelocityXConstant));
+            Assert.That(targetInputFieldData.VelocityYConstant, Is.EqualTo(loadedInputFieldData.VelocityYConstant));
+            Assert.That(targetInputFieldData.WindSpeedConstant, Is.EqualTo(loadedInputFieldData.WindSpeedConstant));
+            Assert.That(targetInputFieldData.WindDirectionConstant, Is.EqualTo(loadedInputFieldData.WindDirectionConstant));
+            Assert.That(targetInputFieldData.InputFields, Is.SameAs(loadedInputFieldData.InputFields));
+
+            Assert.That(targetMeteoData.FileType, Is.EqualTo(loadedMeteoData.FileType));
+            Assert.That(targetMeteoData.XYVectorFilePath, Is.EqualTo(loadedMeteoData.XYVectorFilePath));
+            Assert.That(targetMeteoData.XComponentFilePath, Is.EqualTo(loadedMeteoData.XComponentFilePath));
+            Assert.That(targetMeteoData.YComponentFilePath, Is.EqualTo(loadedMeteoData.YComponentFilePath));
+            Assert.That(targetMeteoData.HasSpiderWeb, Is.EqualTo(loadedMeteoData.HasSpiderWeb));
+            Assert.That(targetMeteoData.SpiderWebFilePath, Is.EqualTo(loadedMeteoData.SpiderWebFilePath));
         }
     }
 
+    /// <summary>
+    /// Helper class which contains methods to support the loading of a <see cref="WaveModelDefinition"/>.
+    /// </summary>
     public static class WaveModelDefinitionLoadHelper
     {
         /// <summary>
@@ -273,6 +307,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             targetTimePointData.VelocityYConstant = loadedTimePointData.VelocityYConstant;
             targetTimePointData.WindSpeedConstant = loadedTimePointData.WindSpeedConstant;
             targetTimePointData.WindDirectionConstant = loadedTimePointData.WindDirectionConstant;
+
+            targetTimePointData.InputFields = loadedTimePointData.InputFields;
+
+            TransferMeteoData(targetTimePointData.MeteoData, loadedTimePointData.MeteoData);
+        }
+
+        private static void TransferMeteoData(WaveMeteoData targetMeteoData, WaveMeteoData loadedMeteoData)
+        {
+            targetMeteoData.FileType = loadedMeteoData.FileType;
+            targetMeteoData.XYVectorFilePath = loadedMeteoData.XYVectorFilePath;
+            targetMeteoData.XComponentFilePath = loadedMeteoData.XComponentFilePath;
+            targetMeteoData.YComponentFilePath = loadedMeteoData.YComponentFilePath;
+            targetMeteoData.HasSpiderWeb = loadedMeteoData.HasSpiderWeb;
+            targetMeteoData.SpiderWebFilePath = loadedMeteoData.SpiderWebFilePath;
         }
 
         private static void TransferBoundaryContainer(IBoundaryContainer targetBoundaryContainer, IBoundaryContainer loadedBoundaryContainer)
