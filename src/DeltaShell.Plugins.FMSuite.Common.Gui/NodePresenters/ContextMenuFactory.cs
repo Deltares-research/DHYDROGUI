@@ -32,21 +32,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
         {
             var menu = new ContextMenuStrip();
 
-            var openWithItem = new ClonableToolStripMenuItem
+            if (gui.CommandHandler.CanOpenSelectViewDialog())
             {
-                Text = Resources.FMSuiteNodePresenterBase_GetContextMenu_Open__With___,
-                Tag = data,
-                Enabled = gui.CommandHandler.CanOpenSelectViewDialog()
-            };
+                var openWithItem = new ClonableToolStripMenuItem
+                {
+                    Text = Resources.FMSuiteNodePresenterBase_GetContextMenu_Open__With___,
+                    Tag = data,
+                    Enabled = true,
+                };
 
-            openWithItem.Click += (s, a) =>
-            {
-                gui.Selection = ((ToolStripMenuItem) s).Tag;
-                gui.CommandHandler.OpenSelectViewDialog();
-            };
+                openWithItem.Click += (s, a) =>
+                {
+                    gui.Selection = ((ToolStripMenuItem)s).Tag;
+                    gui.CommandHandler.OpenSelectViewDialog();
+                };
 
-            menu.Items.Add(openWithItem);
-            menu.Items.Add(new ToolStripSeparator());
+                menu.Items.Add(openWithItem);
+                menu.Items.Add(new ToolStripSeparator());
+            }
 
             var addToolStripSeparator = false;
             if (node != null && nodePresenter.CanRemove(null, node.Tag))
