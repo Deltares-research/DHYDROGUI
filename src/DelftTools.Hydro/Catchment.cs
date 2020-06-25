@@ -45,7 +45,6 @@ namespace DelftTools.Hydro
         [Aggregation]
         [DisplayName("Type")]
         [FeatureAttribute]
-        [ReadOnly(true)]
         public virtual CatchmentType CatchmentType { get; set; }
 
         [FeatureAttribute(Order = 2)]
