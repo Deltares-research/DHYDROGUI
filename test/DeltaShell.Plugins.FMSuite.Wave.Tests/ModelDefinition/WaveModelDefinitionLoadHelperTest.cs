@@ -1,7 +1,9 @@
 ﻿using System;
-using DelftTools.Hydro;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NetTopologySuite.Extensions.Features;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
@@ -35,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             // Given
             var targetDefinition = new WaveModelDefinition();
 
-            var observationPoints = new[] { new Feature2DPoint(), new Feature2DPoint() };
+            var observationPoints = new[] {new Feature2DPoint(), new Feature2DPoint()};
             var loadedDefinition = new WaveModelDefinition();
             loadedDefinition.ObservationPoints.AddRange(observationPoints);
 
@@ -55,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             // Given
             var targetDefinition = new WaveModelDefinition();
 
-            var crossSections = new[] { new Feature2D(), new Feature2D() };
+            var crossSections = new[] {new Feature2D(), new Feature2D()};
             var loadedDefinition = new WaveModelDefinition();
             loadedDefinition.ObservationCrossSections.AddRange(crossSections);
 
@@ -67,6 +69,76 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
 
             // Then
             CollectionAssert.AreEqual(loadedDefinition.ObservationCrossSections, targetDefinition.ObservationCrossSections);
+        }
+
+        [Test]
+        public void GivenModelDefinitionWithBoundaryContainerWithBoundaryForFilesProperties_WhenTransferLoadedProperties_ThenBoundaryContainerTransferred()
+        {
+            // Given
+            var targetDefinition = new WaveModelDefinition();
+
+            var grid = Substitute.For<IGridBoundary>();
+
+            var loadedDefinition = new WaveModelDefinition();
+            IBoundaryContainer loadedBoundaryContainer = loadedDefinition.BoundaryContainer;
+            loadedBoundaryContainer.DefinitionPerFileUsed = true;
+            loadedBoundaryContainer.FilePathForBoundariesPerFile = "JustAFilePath";
+            loadedBoundaryContainer.UpdateGridBoundary(grid);
+            loadedBoundaryContainer.Boundaries.AddRange(new[] {Substitute.For<IWaveBoundary>(), Substitute.For<IWaveBoundary>()});
+
+            // Precondition
+            IBoundaryContainer targetBoundaryContainer = targetDefinition.BoundaryContainer;
+            Assert.That(targetBoundaryContainer.DefinitionPerFileUsed, Is.False);
+            Assert.That(targetBoundaryContainer.FilePathForBoundariesPerFile, Is.Empty);
+            Assert.That(targetBoundaryContainer.Boundaries, Is.Empty);
+            Assert.That(targetBoundaryContainer.GetGridBoundary(), Is.Null);
+            Assert.That(targetBoundaryContainer.GetBoundarySnappingCalculator(), Is.Null);
+
+            // When
+            WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
+
+            // Then
+            Assert.That(targetBoundaryContainer.DefinitionPerFileUsed, Is.True);
+            Assert.That(targetBoundaryContainer.FilePathForBoundariesPerFile, Is.EqualTo(loadedBoundaryContainer.FilePathForBoundariesPerFile));
+            Assert.That(targetBoundaryContainer.Boundaries, Is.Empty);
+
+            Assert.That(targetBoundaryContainer.GetBoundarySnappingCalculator(), Is.Not.Null);
+            Assert.That(targetBoundaryContainer.GetGridBoundary(), Is.SameAs(grid));
+        }
+
+        [Test]
+        public void GivenModelDefinitionWithBoundaryContainerWithBoundaries_WhenTransferLoadedProperties_ThenBoundaryContainerTransferred()
+        {
+            // Given
+            var targetDefinition = new WaveModelDefinition();
+
+            var grid = Substitute.For<IGridBoundary>();
+
+            var loadedDefinition = new WaveModelDefinition();
+            IBoundaryContainer loadedBoundaryContainer = loadedDefinition.BoundaryContainer;
+            loadedBoundaryContainer.DefinitionPerFileUsed = false;
+            loadedBoundaryContainer.FilePathForBoundariesPerFile = "JustAFilePath";
+            loadedBoundaryContainer.UpdateGridBoundary(grid);
+            loadedBoundaryContainer.Boundaries.AddRange(new[] {Substitute.For<IWaveBoundary>(), Substitute.For<IWaveBoundary>()});
+
+            // Precondition
+            IBoundaryContainer targetBoundaryContainer = targetDefinition.BoundaryContainer;
+            Assert.That(targetBoundaryContainer.DefinitionPerFileUsed, Is.False);
+            Assert.That(targetBoundaryContainer.FilePathForBoundariesPerFile, Is.Empty);
+            Assert.That(targetBoundaryContainer.Boundaries, Is.Empty);
+            Assert.That(targetBoundaryContainer.GetGridBoundary(), Is.Null);
+            Assert.That(targetBoundaryContainer.GetBoundarySnappingCalculator(), Is.Null);
+
+            // When
+            WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
+
+            // Then
+            Assert.That(targetBoundaryContainer.DefinitionPerFileUsed, Is.False);
+            Assert.That(targetBoundaryContainer.FilePathForBoundariesPerFile, Is.Empty);
+            CollectionAssert.AreEqual(loadedBoundaryContainer.Boundaries, targetBoundaryContainer.Boundaries);
+
+            Assert.That(targetBoundaryContainer.GetBoundarySnappingCalculator(), Is.Not.Null);
+            Assert.That(targetBoundaryContainer.GetGridBoundary(), Is.SameAs(grid));
         }
     }
 
@@ -83,6 +155,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             targetDefinition.ObservationPoints.AddRange(loadedDefinition.ObservationPoints);
             targetDefinition.ObservationCrossSections.AddRange(loadedDefinition.ObservationCrossSections);
             targetDefinition.Obstacles.AddRange(loadedDefinition.Obstacles);
+
+            TransferBoundaryContainer(targetDefinition.BoundaryContainer, loadedDefinition.BoundaryContainer);
+        }
+
+        private static void TransferBoundaryContainer(IBoundaryContainer targetBoundaryContainer, IBoundaryContainer loadedBoundaryContainer)
+        {
+            targetBoundaryContainer.UpdateGridBoundary(loadedBoundaryContainer.GetGridBoundary());
+            if (loadedBoundaryContainer.DefinitionPerFileUsed)
+            {
+                targetBoundaryContainer.DefinitionPerFileUsed = true;
+                targetBoundaryContainer.FilePathForBoundariesPerFile = loadedBoundaryContainer.FilePathForBoundariesPerFile;
+            }
+            else
+            {
+                targetBoundaryContainer.Boundaries.AddRange(loadedBoundaryContainer.Boundaries);
+            }
         }
     }
 }
