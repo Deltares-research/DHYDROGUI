@@ -45,11 +45,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 
         private static PumpControlDirection GetControlDirectionFromString(string value)
         {
-            switch (value)
+            switch (value.ToLowerInvariant())
             {
-                case "suctionSide":
+                case "suctionside":
                     return PumpControlDirection.SuctionSideControl;
-                case "deliverySide":
+                case "deliveryside":
                     return PumpControlDirection.DeliverySideControl;
                 case "both":
                     return PumpControlDirection.SuctionAndDeliverySideControl;
