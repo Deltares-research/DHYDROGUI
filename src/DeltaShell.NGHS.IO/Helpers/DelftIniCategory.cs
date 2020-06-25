@@ -202,6 +202,8 @@ namespace DeltaShell.NGHS.IO.Helpers
 
     public static class DelftIniCategoryExtensionMethods
     {
+        private static readonly char[] StandardSeperators = new[] { ' ', '\t' };
+
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, ref string errorMessage)
         {
             var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
@@ -229,19 +231,19 @@ namespace DeltaShell.NGHS.IO.Helpers
 
             if (iniProperty != null)
             {
-                return iniProperty.Value.Split(' ').Select(elementValue => (T) TypeDescriptor.GetConverter(typeof (T)).ConvertFromInvariantString(elementValue.Split(',')[0])).ToList();
+                return iniProperty.Value.Split(new []{' '},StringSplitOptions.RemoveEmptyEntries).Select(elementValue => (T) TypeDescriptor.GetConverter(typeof (T)).ConvertFromInvariantString(elementValue.Split(',')[0])).ToList();
             }
 
             errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
             return default(IList<T>);
         }
-        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char separator = ' ', IList<T> defaultValue = default(IList<T>))
+        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>))
         {
             var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
 
             if (iniProperty != null)
             {
-                return iniProperty.Value.Split(separator).Select(elementValue => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(elementValue)).ToList();
+                return iniProperty.Value.Split(StandardSeperators.Concat(new []{customSeparator}).ToArray(), StringSplitOptions.RemoveEmptyEntries).Select(elementValue => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(elementValue)).ToList();
             }
 
             if (!isOptional)

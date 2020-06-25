@@ -133,7 +133,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
             var readRoughnessFiles =
                 fileSection[0].ReadPropertiesToListOfType<string>(ModelDefinitionsRegion.RoughnessFile.Key,
-                    separator: ';', isOptional: true);
+                    customSeparator: ';', isOptional: true);
             if (readRoughnessFiles == null) return;
             foreach (var file in readRoughnessFiles)
             {
