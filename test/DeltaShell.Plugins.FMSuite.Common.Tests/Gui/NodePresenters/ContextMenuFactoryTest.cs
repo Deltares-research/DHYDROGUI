@@ -1,7 +1,9 @@
-﻿using System.Windows.Forms;
+﻿using System.Linq;
+using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -68,6 +70,39 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui.NodePresenters
 
             Assert.IsNotNull(importToolStripItem);
             Assert.That(importToolStripItem.Enabled, Is.EqualTo(canExportFrom));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void GivenItem_WhenCanOpenSelectViewDialog_ThenVisibilityIsSet(bool canOpen)
+        {
+            // Given
+            var item = Substitute.For<object>();
+            var commandHandler = Substitute.For<IGuiCommandHandler>();
+            commandHandler.CanOpenSelectViewDialog().Returns(canOpen);
+
+            var gui = Substitute.For<IGui>();
+            gui.CommandHandler.Returns(commandHandler);
+
+            // When
+            ContextMenuStrip menu = ContextMenuFactory.CreateMenuFor(item, gui, Substitute.For<ITreeNodePresenter>(), Substitute.For<ITreeNode>());
+
+            // Then
+            ToolStripItem openAndOpenWithItem = null;
+            foreach (ToolStripItem toolStripItem in menu.Items)
+            {
+                if (toolStripItem.Text == Resources.FMSuiteNodePresenterBase_GetContextMenu_Open__With___)
+                {
+                    openAndOpenWithItem = toolStripItem;
+                }
+            }
+            Assert.That(openAndOpenWithItem != null, Is.EqualTo(canOpen));
+            if (!canOpen)
+            {
+                return;
+            }
+
+            Assert.That(openAndOpenWithItem.Enabled);
         }
     }
 }
