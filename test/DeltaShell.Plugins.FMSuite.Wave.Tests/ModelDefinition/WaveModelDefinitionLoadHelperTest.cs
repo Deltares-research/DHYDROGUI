@@ -12,6 +12,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
     public class WaveModelDefinitionLoadHelperTest
     {
         [Test]
+        public void TransferLoadedProperties_TargetDefinitionNull_ThrowsArgumentNullException()
+        {
+            // Call
+            TestDelegate call = () => WaveModelDefinitionLoadHelper.TransferLoadedProperties(null, new WaveModelDefinition());
+
+            // Assert
+            Assert.That(call, Throws.TypeOf<ArgumentNullException>()
+                                    .With.Property(nameof(ArgumentNullException.ParamName))
+                                    .EqualTo("targetDefinition"));
+        }
+
+        [Test]
+        public void TransferLoadedProperties_LoadedDefinitionNull_ThrowsArgumentNullException()
+        {
+            // Call
+            TestDelegate call = () => WaveModelDefinitionLoadHelper.TransferLoadedProperties(new WaveModelDefinition(), null);
+
+            // Assert
+            Assert.That(call, Throws.TypeOf<ArgumentNullException>()
+                                    .With.Property(nameof(ArgumentNullException.ParamName))
+                                    .EqualTo("loadedDefinition"));
+        }
+
+        [Test]
         public void GivenModelDefinitionWithObstacles_WhenTransferLoadedProperties_ThenObstaclesTransferred()
         {
             // Given
@@ -152,6 +176,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
         /// <exception cref="ArgumentNullException">Thrown when any parameter is <c>null</c>.</exception>
         public static void TransferLoadedProperties(WaveModelDefinition targetDefinition, WaveModelDefinition loadedDefinition)
         {
+            if (targetDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(targetDefinition));
+            }
+
+            if (loadedDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(loadedDefinition));
+            }
+
             targetDefinition.ObservationPoints.AddRange(loadedDefinition.ObservationPoints);
             targetDefinition.ObservationCrossSections.AddRange(loadedDefinition.ObservationCrossSections);
             targetDefinition.Obstacles.AddRange(loadedDefinition.Obstacles);
