@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Network
@@ -36,13 +36,20 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Network
                 Name = "route 4"
             };
 
-            var branch1 = new Branch("Branch 1", new Node(), new Node(), 1000);
-            var branch2 = new Branch("Branch 2", new Node(), new Node(), 1000);
+            var channel = new Channel
+            {
+                Name = "Channel 1"
+            };
 
-            var networkLocation1 = new NetworkLocation(branch1, 100.0);
-            var networkLocation2 = new NetworkLocation(branch1, 200.0);
-            var networkLocation3 = new NetworkLocation(branch2, 300.0);
-            var networkLocation4 = new NetworkLocation(branch2, 400.0);
+            var pipe = new Pipe
+            {
+                Name = "Pipe 1"
+            };
+
+            var networkLocation1 = new NetworkLocation(channel, 100.0);
+            var networkLocation2 = new NetworkLocation(channel, 200.0);
+            var networkLocation3 = new NetworkLocation(pipe, 300.0);
+            var networkLocation4 = new NetworkLocation(pipe, 400.0);
 
             routeWithOneLocation.Locations.AddValues(new[]
             {
@@ -85,22 +92,29 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Network
         public void GivenNetworkWithBranches_WhenReadingRoutesFile_ThenRoutesAddedAsExpected()
         {
             // Given
-            var branch1 = new Branch("Branch 1", new Node(), new Node(), 1000);
-            var branch2 = new Branch("Branch 2", new Node(), new Node(), 1000);
+            var channel = new Channel
+            {
+                Name = "Channel 1"
+            };
 
+            var pipe = new Pipe
+            {
+                Name = "Pipe 1"
+            };
+            
             var hydroNetwork = new HydroNetwork
             {
                 Branches =
                 {
-                    branch1,
-                    branch2
+                    channel,
+                    pipe
                 }
             };
 
-            var expectedNetworkLocation1 = new NetworkLocation(branch1, 100.0);
-            var expectedNetworkLocation2 = new NetworkLocation(branch1, 200.0);
-            var expectedNetworkLocation3 = new NetworkLocation(branch2, 300.0);
-            var expectedNetworkLocation4 = new NetworkLocation(branch2, 400.0);
+            var expectedNetworkLocation1 = new NetworkLocation(channel, 100.0);
+            var expectedNetworkLocation2 = new NetworkLocation(channel, 200.0);
+            var expectedNetworkLocation3 = new NetworkLocation(pipe, 300.0);
+            var expectedNetworkLocation4 = new NetworkLocation(pipe, 400.0);
 
             // When
             RoutesFile.Read(TestHelper.GetTestFilePath(@"FileWriters\Routes_expected.txt"), hydroNetwork);
