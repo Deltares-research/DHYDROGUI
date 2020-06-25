@@ -58,7 +58,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 case CrossSectionRegion.CrossSectionDefinitionType.Trapezium:
                     return new CSDTrapeziumDefinitionReader();
                 default:
-                    return null;
+                    return new CSDZWDefinitionReader();
             }
         }
 

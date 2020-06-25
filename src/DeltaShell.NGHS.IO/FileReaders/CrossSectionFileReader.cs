@@ -321,7 +321,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 var mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network);
 
                 var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds.Key, true, ';');
-                if (frictionIds != null && frictionIds.Count == 3 && frictionIds.All(fi => fi.Equals(defaultFrictionId)))
+                if(frictionIds == null)
+                    return;
+                if (frictionIds.Count == 3 && frictionIds.All(fi => fi.Equals(defaultFrictionId)))
                 {
                     readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, readCrossSectionDefinition.Width);
                     return;

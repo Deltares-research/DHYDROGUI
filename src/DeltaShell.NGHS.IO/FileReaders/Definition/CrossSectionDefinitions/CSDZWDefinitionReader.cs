@@ -38,10 +38,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
                 throw new FileReadingException(errorMessage);
             }
             // summer dike
-            var crestLevel = category.ReadProperty<double>(DefinitionPropertySettings.CrestLevee.Key);
-            var flowArea = category.ReadProperty<double>(DefinitionPropertySettings.FlowAreaLevee.Key);
-            var totalArea = category.ReadProperty<double>(DefinitionPropertySettings.TotalAreaLevee.Key);
-            var baseLevel = category.ReadProperty<double>(DefinitionPropertySettings.BaseLevelLevee.Key);
+            var crestLevel = category.ReadProperty<double>(DefinitionPropertySettings.CrestLevee.Key,true);
+            var flowArea = category.ReadProperty<double>(DefinitionPropertySettings.FlowAreaLevee.Key, true);
+            var totalArea = category.ReadProperty<double>(DefinitionPropertySettings.TotalAreaLevee.Key, true);
+            var baseLevel = category.ReadProperty<double>(DefinitionPropertySettings.BaseLevelLevee.Key, true);
             
             if (Math.Abs(flowArea) > double.Epsilon && Math.Abs(totalArea) > double.Epsilon)//(flowArea and totalArea are larger than 0, so you can do something with this
             {
