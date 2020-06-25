@@ -16,12 +16,29 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Network
         public void GivenNetworkWithRoutes_WhenWritingRoutesFileToTempFolder_ThenFileAsExpected()
         {
             // Given
-            var emptyRoute = new Route {Name = "route_1"};
-            var routeWithOneLocation = new Route { Name = "route_2" };
-            var routeWithMultipleLocationsOnSingleBranch = new Route { Name = "route_3" };
-            var routeWithMultipleLocationsOnMultipleBranches = new Route { Name = "route_4" };
-            var branch1 = new Branch("Branch1", new Node(), new Node(), 1000);
-            var branch2 = new Branch("Branch2", new Node(), new Node(), 1000);
+            var emptyRoute = new Route
+            {
+                Name = "route 1"
+            };
+
+            var routeWithOneLocation = new Route
+            {
+                Name = "route 2"
+            };
+
+            var routeWithMultipleLocationsOnSingleBranch = new Route
+            {
+                Name = "route 3"
+            };
+
+            var routeWithMultipleLocationsOnMultipleBranches = new Route
+            {
+                Name = "route 4"
+            };
+
+            var branch1 = new Branch("Branch 1", new Node(), new Node(), 1000);
+            var branch2 = new Branch("Branch 2", new Node(), new Node(), 1000);
+
             var networkLocation1 = new NetworkLocation(branch1, 100.0);
             var networkLocation2 = new NetworkLocation(branch1, 200.0);
             var networkLocation3 = new NetworkLocation(branch2, 300.0);
@@ -68,8 +85,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Network
         public void GivenNetworkWithBranches_WhenReadingRoutesFile_ThenRoutesAddedAsExpected()
         {
             // Given
-            var branch1 = new Branch("Branch1", new Node(), new Node(), 1000);
-            var branch2 = new Branch("Branch2", new Node(), new Node(), 1000);
+            var branch1 = new Branch("Branch 1", new Node(), new Node(), 1000);
+            var branch2 = new Branch("Branch 2", new Node(), new Node(), 1000);
+
             var hydroNetwork = new HydroNetwork
             {
                 Branches =
@@ -91,11 +109,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Network
             Assert.AreEqual(4, hydroNetwork.Routes.Count);
 
             var route1 = hydroNetwork.Routes[0];
-            Assert.AreEqual("route_1", route1.Name);
+            Assert.AreEqual("route 1", route1.Name);
             Assert.IsEmpty(route1.Locations.AllValues);
 
             var route2 = hydroNetwork.Routes[1];
-            Assert.AreEqual("route_2", route2.Name);
+            Assert.AreEqual("route 2", route2.Name);
             Assert.AreEqual(route2.Locations.AllValues,
                 new[]
                 {
@@ -103,7 +121,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Network
                 });
 
             var route3 = hydroNetwork.Routes[2];
-            Assert.AreEqual("route_3", route3.Name);
+            Assert.AreEqual("route 3", route3.Name);
             Assert.AreEqual(route3.Locations.AllValues,
                 new[]
                 {
@@ -111,7 +129,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Network
                 });
 
             var route4 = hydroNetwork.Routes[3];
-            Assert.AreEqual("route_4", route4.Name);
+            Assert.AreEqual("route 4", route4.Name);
             Assert.AreEqual(route4.Locations.AllValues,
                 new[]
                 {

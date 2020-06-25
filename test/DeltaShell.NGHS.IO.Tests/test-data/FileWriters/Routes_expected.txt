@@ -1,17 +1,17 @@
 [Route]
-    name                  = route_1             
+    name                  = route 1             
 
 [Route]
-    name                  = route_2             
-    branch                = Branch1             
+    name                  = route 2             
+    branch                = Branch 1            
     chainage              = 100.000000          
 
 [Route]
-    name                  = route_3             
-    branch                = Branch1 Branch1     
+    name                  = route 3             
+    branch                = Branch 1;Branch 1   
     chainage              = 100.000000 200.000000
 
 [Route]
-    name                  = route_4             
-    branch                = Branch1 Branch1 Branch2 Branch2
+    name                  = route 4             
+    branch                = Branch 1;Branch 1;Branch 2;Branch 2
     chainage              = 100.000000 200.000000 300.000000 400.000000

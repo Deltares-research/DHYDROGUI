@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 var iniCategory = new DelftIniCategory(RouteIniHeader);
 
                 iniCategory.AddProperty(Name, route.Name);
-                iniCategory.AddProperty(Branches, string.Join(" ", locations.Select(nl => nl.Branch.Name)));
+                iniCategory.AddProperty(Branches, string.Join(";", locations.Select(nl => nl.Branch.Name)));
                 iniCategory.AddProperty(Chainages, locations.Select(nl => nl.Chainage));
 
                 categories.Add(iniCategory);
@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             foreach (var category in categories)
             {
                 var name = category.ReadProperty<string>(Name.Key);
-                var branchNames = category.ReadPropertiesToListOfType<string>(Branches.Key, true);
+                var branchNames = category.ReadPropertiesToListOfType<string>(Branches.Key, true, ';');
                 var chainages = category.ReadPropertiesToListOfType<double>(Chainages.Key, true);
 
                 var route = new Route
