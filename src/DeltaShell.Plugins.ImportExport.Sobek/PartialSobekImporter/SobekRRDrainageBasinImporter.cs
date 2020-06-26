@@ -314,7 +314,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (dictionaryLateralSources != null && dictionaryLateralSources.ContainsKey(link.NodeToId))
                 {
                     Link(linksource, dictionaryLateralSources[link.NodeToId], link.Id);
-                    if (dictionaryLateralSources[link.NodeToId] is LateralSource lateralSource &&
+                    if (dictionaryLateralSourcesData != null && 
+                        dictionaryLateralSources[link.NodeToId] is LateralSource lateralSource && 
                         dictionaryLateralSourcesData.ContainsKey(lateralSource))
                         dictionaryLateralSourcesData[lateralSource].DataType = Model1DLateralDataType.FlowRealTime;
                     continue;
