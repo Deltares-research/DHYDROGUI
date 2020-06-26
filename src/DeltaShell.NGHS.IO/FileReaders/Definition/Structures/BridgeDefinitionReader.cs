@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
                 Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
-                BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : GetBridgeTypeFromShapeType(standardCrossSectionDefinition?.ShapeType),
+                BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : BridgeType.Rectangle,
                 FlowDirection = (FlowDirection)category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key).GetEnumValueFromDisplayName(typeof(FlowDirection)),
                 BottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key),
                 TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW ? definition as CrossSectionDefinitionZW : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() ?? new CrossSectionDefinitionZW(), 
@@ -37,19 +37,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 FrictionDataType = (Friction) Enum.Parse(typeof(Friction), category.ReadProperty<string>(StructureRegion.FrictionType.Key), true),
                 Friction = category.ReadProperty<double>(StructureRegion.Friction.Key)
             };
-        }
-
-        private static BridgeType GetBridgeTypeFromShapeType(CrossSectionStandardShapeType? shapeType)
-        {
-            switch (shapeType)
-            {
-                case CrossSectionStandardShapeType.Rectangle:
-                    return BridgeType.Rectangle;
-                case null:
-                    return BridgeType.Pillar;
-                default:
-                    return BridgeType.Tabulated;
-            }
         }
     }
 }
