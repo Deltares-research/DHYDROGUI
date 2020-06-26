@@ -8,9 +8,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
     {
         [TestCase(BndExtForceFileConstants.BoundaryBlockKey, "[boundary]")]
         [TestCase(BndExtForceFileConstants.QuantityKey, "quantity")]
-        [TestCase(BndExtForceFileConstants.LocationFileKey, "locationfile")]
-        [TestCase(BndExtForceFileConstants.ForcingFileKey, "forcingfile")]
-        [TestCase(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey, "return_time")]
+        [TestCase(BndExtForceFileConstants.LocationFileKey, "locationFile")]
+        [TestCase(BndExtForceFileConstants.ForcingFileKey, "forcingFile")]
+        [TestCase(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey, "returnTime")]
         [TestCase(BndExtForceFileConstants.OpenBoundaryToleranceKey, "OpenBoundaryTolerance")]
         public void ConstantField_ReturnsCorrectValue(string actualValue, string expectedValue)
         {

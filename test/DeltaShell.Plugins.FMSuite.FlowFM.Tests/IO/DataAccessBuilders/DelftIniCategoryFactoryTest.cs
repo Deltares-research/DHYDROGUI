@@ -25,9 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             Assert.That(result.Name, Is.EqualTo("[boundary]"));
             Assert.That(result.Properties, Has.Count.EqualTo(5));
             CategoryContains(result, "quantity", quantity);
-            CategoryContains(result, "locationfile", locationFilePath);
-            CategoryContains(result, "forcingfile", forcingFilePath);
-            CategoryContains(result, "return_time", "3.7230000e+003");
+            CategoryContains(result, "locationFile", locationFilePath);
+            CategoryContains(result, "forcingFile", forcingFilePath);
+            CategoryContains(result, "returnTime", "3.7230000e+003");
             CategoryContains(result, "OpenBoundaryTolerance", "5.0000000e-001");
         }
 
@@ -41,9 +41,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             Assert.That(result.Name, Is.EqualTo("[boundary]"));
             Assert.That(result.Properties, Has.Count.EqualTo(0));
             CategoryDoesNotContain(result, "quantity");
-            CategoryDoesNotContain(result, "locationfile");
-            CategoryDoesNotContain(result, "forcingfile");
-            CategoryDoesNotContain(result, "return_time");
+            CategoryDoesNotContain(result, "locationFile");
+            CategoryDoesNotContain(result, "forcingFile");
+            CategoryDoesNotContain(result, "returnTime");
             CategoryDoesNotContain(result, "OpenBoundaryTolerance");
         }
 
