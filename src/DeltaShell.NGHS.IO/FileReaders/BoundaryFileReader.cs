@@ -28,7 +28,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 
-            foreach (var boundaryCategory in categories.Where(category => category.Name == BoundaryRegion.BcBoundaryHeader || category.Name == BoundaryRegion.BcForcingHeader ))
+            foreach (var boundaryCategory in categories.Where(category => category.Name.Equals( BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase) 
+                                                                          || category.Name.Equals(BoundaryRegion.BcForcingHeader, StringComparison.InvariantCultureIgnoreCase)))
             {
                 try
                 {
