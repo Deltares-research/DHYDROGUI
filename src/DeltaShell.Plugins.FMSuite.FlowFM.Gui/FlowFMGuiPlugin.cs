@@ -438,7 +438,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetFeature2DImportDialogViewInfo<PolFileImporterExporter>();
             yield return GetFeature2DImportDialogViewInfo<LdbFileImporterExporter>();
 
-            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<LeveeBreach, LeveeBreach>>();
+            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<Feature2D, LeveeBreach>>();
 
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString, LeveeBreach>>();
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<IPolygon, RoofArea>>();

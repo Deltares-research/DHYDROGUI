@@ -359,8 +359,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 };
 
 
-            yield return new PliFileImporterExporter<LeveeBreach, LeveeBreach>
+            yield return new PliFileImporterExporter<Feature2D, LeveeBreach>
             {
+                
                 Mode = Feature2DImportExportMode.Import,
                 CreateDelegate = delegate (List<Coordinate> points1, string name1)
                 {
