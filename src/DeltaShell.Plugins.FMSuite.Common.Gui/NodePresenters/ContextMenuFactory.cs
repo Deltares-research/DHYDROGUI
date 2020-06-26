@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
@@ -32,7 +33,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
         {
             var menu = new ContextMenuStrip();
 
-            if (gui.CommandHandler.CanOpenSelectViewDialog())
+            if (gui.CommandHandler.CanOpenSelectViewDialog()
+                && gui.DocumentViewsResolver.GetViewInfosFor(data).Count() > 1)
             {
                 var openWithItem = new ClonableToolStripMenuItem
                 {
