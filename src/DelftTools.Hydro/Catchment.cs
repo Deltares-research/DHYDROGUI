@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -172,9 +173,17 @@ namespace DelftTools.Hydro
         private IPoint CalculateInteriorPoint()
         {
             var interiorPoint = CalculateInteriorPointCore();
+            Links.ForEach(l =>
+            {
+                if(l.Geometry == null) return;
+                l.Geometry = new LineString(new[]
+                {
+                    interiorPoint.Coordinate,
+                    l.Geometry.Coordinates.Last()
+                });
+            });
             return new Point(interiorPoint.X, interiorPoint.Y, 0); //if Z is NaN we get in trouble later
         }
-
         private IPoint CalculateInteriorPointCore()
         {
             //do not touch unless you know what you're doing!!
