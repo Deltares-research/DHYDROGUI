@@ -8,6 +8,7 @@ using System.Linq;
 using BasicModelInterface;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
@@ -53,6 +54,7 @@ using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -1416,6 +1418,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public void Dispose()
         {
+            var points2DFeatures = Area?.LeveeBreaches?.OfType<Feature2D>().Where(f2d =>
+                f2d.Attributes != null &&
+                f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE));
+            if (points2DFeatures != null)
+                foreach (var points2DFeature in points2DFeatures)
+                {
+                    points2DFeature.PropertyChanged -= Feature2DPointOnPropertyChanged;
+                }
+
             disposing = true;
             // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
             Grid = null;
@@ -3058,7 +3069,101 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
             }
-            
+
+
+            if (e.GetRemovedOrAddedItem() is ILeveeBreach leveeBreach)
+            {
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                    CreatePointFeatureOfThisLeveeBreach(
+                        leveeBreach,
+                        LeveeBreachPointLocationType.BreachLocation,
+                        leveeBreach.BreachLocation);
+                    CreatePointFeatureOfThisLeveeBreach(
+                        leveeBreach,
+                        LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
+                        leveeBreach.WaterLevelUpstreamLocation);
+                    CreatePointFeatureOfThisLeveeBreach(
+                        leveeBreach,
+                        LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
+                        leveeBreach.WaterLevelDownstreamLocation);
+                    break;
+                    case NotifyCollectionChangedAction.Remove:
+                    var supportPoint2DFeatures = ((IEventedList<Feature2D>) Area.LeveeBreaches)
+                        .Where(f2d => f2d.Attributes != null &&
+                                      f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
+                                      ((ILeveeBreach) f2d.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE])
+                                      .Equals(leveeBreach)).ToList();
+                    foreach (var supportPoint2DFeature in supportPoint2DFeatures)
+                    {
+                        supportPoint2DFeature.PropertyChanged -= Feature2DPointOnPropertyChanged;
+                        Area.LeveeBreaches.Remove(supportPoint2DFeature);
+                    }
+                    break;
+                    case NotifyCollectionChangedAction.Replace:
+                    
+                    if (e.OldItems is IEventedList<Feature2D> oldFeature2Ds)
+                    {
+                        foreach (var f2d in oldFeature2Ds)
+                        {
+                            if (f2d.Attributes != null &&
+                                f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE))
+                            {
+                                f2d.PropertyChanged -= Feature2DPointOnPropertyChanged;
+                            }
+                        }
+                    }
+
+
+                    if (e.NewItems is IEventedList<Feature2D> newFeature2Ds)
+                    {
+                        foreach (var f2d in newFeature2Ds)
+                        {
+                            if (f2d.Attributes != null &&
+                                f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE))
+                            {
+                                f2d.PropertyChanged += Feature2DPointOnPropertyChanged;
+                            }
+                        }
+
+                        foreach (var leveeFeature in newFeature2Ds.OfType<ILeveeBreach>())
+                        {
+                            CreatePointFeatureOfThisLeveeBreach(
+                                leveeFeature,
+                                LeveeBreachPointLocationType.BreachLocation,
+                                leveeFeature.BreachLocation);
+                            CreatePointFeatureOfThisLeveeBreach(
+                                leveeFeature,
+                                LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
+                                leveeFeature.WaterLevelUpstreamLocation);
+                            CreatePointFeatureOfThisLeveeBreach(
+                                leveeFeature,
+                                LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
+                                leveeFeature.WaterLevelDownstreamLocation);
+                        }
+                    }
+                    break;
+                    case NotifyCollectionChangedAction.Move:
+                        break;
+                    case NotifyCollectionChangedAction.Reset:
+                    if (e.OldItems is IEventedList<Feature2D> oldLeveeFeature2Ds)
+                    {
+                        foreach (var f2d in oldLeveeFeature2Ds)
+                        {
+                            if (f2d.Attributes != null &&
+                                f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE))
+                            {
+                                f2d.PropertyChanged -= Feature2DPointOnPropertyChanged;
+                            }
+                        }
+                    }
+                    break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
             var groupableFeature = e.GetRemovedOrAddedItem() as IGroupableFeature;
             if (groupableFeature != null && e.Action != NotifyCollectionChangedAction.Remove && !Area.IsEditing)
             {
@@ -3094,6 +3199,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     default:
                         throw new NotImplementedException(
                             String.Format("Action {0} on feature collection not supported", e.Action));
+                }
+            }
+        }
+        private void CreatePointFeatureOfThisLeveeBreach(ILeveeBreach leveeFeature, LeveeBreachPointLocationType leveeBreachPointLocationType, IGeometry leveeFeatureBreachLocation)
+        {
+            if (((IEventedList<Feature2D>)Area.LeveeBreaches).SingleOrDefault(lpf =>
+                    lpf.Attributes != null &&
+                    lpf.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
+                    lpf.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE) &&
+                    lpf.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE].Equals(leveeFeature) &&
+                    (LeveeBreachPointLocationType)lpf.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE] ==
+                    leveeBreachPointLocationType) == null)
+            {
+                var feature2DPoint = new Feature2DPoint
+                {
+                    Name = leveeFeature.Name + " : " + leveeBreachPointLocationType.GetDescription(),
+                    Geometry = leveeFeatureBreachLocation,
+                    Attributes = new DictionaryFeatureAttributeCollection()
+                    {
+                        {LeveeBreach.LEVEE_BREACH_FEATURE, leveeFeature},
+                        {LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE, leveeBreachPointLocationType}
+                    }
+                };
+                feature2DPoint.PropertyChanged += Feature2DPointOnPropertyChanged;
+                Area.LeveeBreaches.Add(feature2DPoint);
+            }
+        }
+        private void Feature2DPointOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is Feature2DPoint feature2DPoint &&
+                feature2DPoint.Attributes != null &&
+                feature2DPoint.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
+                feature2DPoint.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE] is LeveeBreach leveeBreach &&
+                feature2DPoint.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE))
+            {
+                var type = (LeveeBreachPointLocationType)feature2DPoint.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE];
+                const double tolerance = 1e-5d;
+                var locationX = feature2DPoint.X;
+                var locationY = feature2DPoint.Y;
+                switch (type)
+                {
+                    case LeveeBreachPointLocationType.BreachLocation:
+                        if (Math.Abs(leveeBreach.BreachLocationX - locationX) > tolerance)
+                            leveeBreach.BreachLocationX = locationX;
+                        if (Math.Abs(leveeBreach.BreachLocationY - locationY) > tolerance)
+                            leveeBreach.BreachLocationY = locationY;
+                        break;
+                    case LeveeBreachPointLocationType.WaterLevelUpstreamLocation:
+                        if (Math.Abs(leveeBreach.WaterLevelUpstreamLocationX - locationX) > tolerance)
+                            leveeBreach.WaterLevelUpstreamLocationX = locationX;
+                        if (Math.Abs(leveeBreach.WaterLevelUpstreamLocationY - locationY) > tolerance)
+                            leveeBreach.WaterLevelUpstreamLocationY = locationY;
+                        break;
+                    case LeveeBreachPointLocationType.WaterLevelDownstreamLocation:
+
+                        if (Math.Abs(leveeBreach.WaterLevelDownstreamLocationX - locationX) > tolerance)
+                            leveeBreach.WaterLevelDownstreamLocationX = locationX;
+                        if (Math.Abs(leveeBreach.WaterLevelDownstreamLocationY - locationY) > tolerance)
+                            leveeBreach.WaterLevelDownstreamLocationY = locationY;
+                        break;
                 }
             }
         }
