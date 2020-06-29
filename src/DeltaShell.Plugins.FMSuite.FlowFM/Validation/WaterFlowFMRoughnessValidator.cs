@@ -13,38 +13,65 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             IList<ValidationIssue> issues = new List<ValidationIssue>();
 
-            ValidateForMissingChannelFrictionData(model, issues);
+            ValidateForMissingOrInvalidChannelFrictionData(model, issues);
             ValidateForConflictingChannelFrictionSpecifications(model, issues);
 
             return new ValidationReport("Roughness", issues);
         }
 
-        private static void ValidateForMissingChannelFrictionData(WaterFlowFMModel model, ICollection<ValidationIssue> issues)
+        private static void ValidateForMissingOrInvalidChannelFrictionData(WaterFlowFMModel model, ICollection<ValidationIssue> issues)
         {
             foreach (var channelFrictionDefinition in model.ChannelFrictionDefinitions.Where(cfd => cfd.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition))
             {
+                var channel = channelFrictionDefinition.Channel;
                 var spatialChannelFrictionDefinition = channelFrictionDefinition.SpatialChannelFrictionDefinition;
+
                 switch (spatialChannelFrictionDefinition.FunctionType)
                 {
                     case RoughnessFunction.Constant:
                         var constantSpatialChannelFrictionDefinitions = spatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions;
                         if (constantSpatialChannelFrictionDefinitions.Count == 0)
                         {
-                            issues.Add(new ValidationIssue(channelFrictionDefinition.Channel,
+                            issues.Add(new ValidationIssue(channel,
                                 ValidationSeverity.Error,
-                                "No constant values defined",
+                                $"No '{RoughnessFunction.Constant}' values defined",
                                 model.ChannelFrictionDefinitions));
 
                         }
+                        else
+                        {
+                            var invalidChainages = constantSpatialChannelFrictionDefinitions
+                                .Select(ccfd => ccfd.Chainage)
+                                .Where(chainage => chainage < 0 || chainage > channel.Length)
+                                .ToArray();
+
+                            if (invalidChainages.Any())
+                            {
+                                issues.Add(new ValidationIssue(channel,
+                                    ValidationSeverity.Error,
+                                    $"One or more '{RoughnessFunction.Constant}' values are invalid regarding their 'Chainage'. The chainages involved are: " +
+                                    $"{string.Join(", ", invalidChainages)}.",
+                                    model.ChannelFrictionDefinitions));
+                            }
+                        }
                         break;
                     case RoughnessFunction.FunctionOfQ:
-                    case RoughnessFunction.FunctionOfH:
-                        var function = spatialChannelFrictionDefinition.Function;
-                        if (function.GetValues().Count == 0)
+                        var functionOfQ = spatialChannelFrictionDefinition.Function;
+                        if (functionOfQ.GetValues().Count == 0)
                         {
-                            issues.Add(new ValidationIssue(channelFrictionDefinition.Channel,
+                            issues.Add(new ValidationIssue(channel,
                                 ValidationSeverity.Error,
-                                "No function values defined",
+                                $"No '{RoughnessFunction.FunctionOfQ}' values defined",
+                                model.ChannelFrictionDefinitions));
+                        }
+                        break;
+                    case RoughnessFunction.FunctionOfH:
+                        var functionOfH = spatialChannelFrictionDefinition.Function;
+                        if (functionOfH.GetValues().Count == 0)
+                        {
+                            issues.Add(new ValidationIssue(channel,
+                                ValidationSeverity.Error,
+                                $"No '{RoughnessFunction.FunctionOfH}' values defined",
                                 model.ChannelFrictionDefinitions));
                         }
                         break;
