@@ -163,8 +163,8 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.Version.Sobek.cs">
-      <Link>Properties\AssemblyInfo.Version.Sobek.cs</Link>
+    <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
+      <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="Commands\AddInterpolatedCrossSectionCommand.cs" />
     <Compile Include="Commands\AddNewBranchCommand.cs" />

@@ -61,8 +61,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.Version.Sobek.cs">
-      <Link>Properties\AssemblyInfo.Version.Sobek.cs</Link>
+    <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
+      <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="DataItemMetaData\ADataItemMetaData.cs" />
     <Compile Include="DataItemMetaData\KnownWaqDataItemMetaData.cs" />

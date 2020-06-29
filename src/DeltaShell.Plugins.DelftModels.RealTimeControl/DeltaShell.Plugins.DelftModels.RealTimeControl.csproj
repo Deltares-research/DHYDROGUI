@@ -150,8 +150,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.Version.Sobek.cs">
-      <Link>Properties\AssemblyInfo.Version.Sobek.cs</Link>
+    <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
+      <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="ControlGroupHelper.cs" />
     <Compile Include="Converters\DirectionalOperationConverter.cs" />
