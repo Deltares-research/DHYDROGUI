@@ -20,8 +20,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             var version = category.ReadProperty<string>(GeneralRegion.FileVersion.Key, true);
             if(version == default(string)) return false;
-            if (majorVersionNr < int.Parse(version.Split('.').First()) &&
-                minorVersionNr < int.Parse(version.Split('.').Last()))
+            if ( majorVersionNr < int.Parse(version.Split('.').First()) )
+                return false;
+            if( minorVersionNr < int.Parse(version.Split('.').Last()) )
                 return false;
             return true;
         }

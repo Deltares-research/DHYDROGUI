@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -26,6 +27,7 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
+using PostSharp.Constraints;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -806,7 +808,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (string.IsNullOrEmpty(quantityKey))
                 {
                     if (!containsAndParsedLateralExtForceFileDefinitions)
-                        containsAndParsedLateralExtForceFileDefinitions = CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.Equals(LateralHeaderKey)));
+                        containsAndParsedLateralExtForceFileDefinitions = CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.Equals(LateralHeaderKey, StringComparison.InvariantCultureIgnoreCase)));
                     if(!containsAndParsedLateralExtForceFileDefinitions)
                         Log.WarnFormat("Could not parse quantity {0} into a valid quantity data", quantityKey);
                     continue;
@@ -820,7 +822,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (!containsAndParsedModel1DBoundaryExtForceFileDefinitions && delftIniCategory.ReadProperty<string>(NodeIdKey, true) != null)
                 {
-                    containsAndParsedModel1DBoundaryExtForceFileDefinitions = CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(modelDefinition, network, boundaryConditions1D, bndBlocks.Where(b => b.Name.Equals(BoundaryHeaderKey)));
+                    containsAndParsedModel1DBoundaryExtForceFileDefinitions = CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(modelDefinition, network, boundaryConditions1D, bndBlocks.Where(b => b.Name.Equals(BoundaryHeaderKey, StringComparison.InvariantCultureIgnoreCase)));
                 }
                 if (delftIniCategory.ReadProperty<string>(NodeIdKey, true) != null)
                     continue; // this delftIniCategory is 1d boundary, continue to check if you want to read a new delftIniCategory 2d boundary
@@ -932,7 +934,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 else
                 {
-                    node = network.Nodes.FirstOrDefault(n => n.Name == nodeId);
+                    node = network.Nodes.FirstOrDefault(n => n.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (node == null) continue;
@@ -945,8 +947,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (var fullPath in forcingFiles.Distinct().Select(GetFullPath))
             {
-                if (!File.Exists(fullPath)) continue;
-                BoundaryFileReader.ReadFile(fullPath, boundaryConditions1D);
+                if (!File.Exists(fullPath))
+                {
+                    Log.Error($"Reading boundary source data failed because path to data does not exist {fullPath}");
+                    continue;
+                }
+
+                var isValidBcFile = IoHelper.IsValidTextFile(fullPath) && new DelftBcReader()
+                                        .ReadDelftBcFile(fullPath)
+                                        .Any(c =>
+                                            c.ValidGeneralRegion(
+                                                GeneralRegion.BoundaryConditionsMajorVersion,
+                                                GeneralRegion.BoundaryConditionsMinorVersion,
+                                                GeneralRegion.FileTypeName.BoundaryConditions));
+                if (isValidBcFile)
+                    BoundaryFileReader.ReadFile(fullPath, boundaryConditions1D);
+                else
+                    Log.Warn($"Can not read boundary model data from : {fullPath}");
             }
             return true;
         }
@@ -963,22 +980,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var chainage = 0.0d;
                 var forcingFile = delftIniCategory.GetPropertyValue(DischargeKey);
                 ICompartment compartment = null;
-                if (forcingFile == "realtime" || forcingFile == "FlowFM_lateral_sources.bc")
-                {
-                    //node id is a compartment id, we need to find the bijbehorende Manhole
-                    var compartmentId = delftIniCategory.GetPropertyValue(NodeIdKey);
-                    branch = network.Branches
-                        .OfType<IPipe>()
-                        .FirstOrDefault(p =>
-                            string.Equals(p.TargetCompartmentName,compartmentId, StringComparison.InvariantCultureIgnoreCase) ||
-                            string.Equals(p.SourceCompartmentName, compartmentId, StringComparison.InvariantCultureIgnoreCase));
-                    if (branch is IPipe pipe)
-                        compartment = string.Equals(pipe.SourceCompartmentName,compartmentId)
-                            ? pipe.SourceCompartment
-                            : pipe.TargetCompartment;
 
+                //node id could be a compartment id, we need to find the bijbehorende Manhole
+                var compartmentId = delftIniCategory.GetPropertyValue(NodeIdKey);
+                branch = network.Branches
+                    .OfType<IPipe>()
+                    .FirstOrDefault(p =>
+                        string.Equals(p.TargetCompartmentName, compartmentId,
+                            StringComparison.InvariantCultureIgnoreCase) ||
+                        string.Equals(p.SourceCompartmentName, compartmentId,
+                            StringComparison.InvariantCultureIgnoreCase));
+                if (branch is IPipe pipe)
+                    compartment = string.Equals(pipe.SourceCompartmentName, compartmentId)
+                        ? pipe.SourceCompartment
+                        : pipe.TargetCompartment;
+
+                var branchId = delftIniCategory.GetPropertyValue(BranchIdKey);
+                if (branchId != null)
+                {
+                    branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
+                    chainage = delftIniCategory.ReadProperty<double>(ChainageKey);
                 }
-                else
+
+                if (branch == null)
                 {
                     var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
                     if (nodeId != null)
@@ -994,37 +1018,65 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                 }
 
-                var branchId = delftIniCategory.GetPropertyValue(BranchIdKey);
-                if (branchId != null)
-                {
-                    branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
-                    chainage = delftIniCategory.ReadProperty<double>(ChainageKey);
-                }
                 if (branch == null) continue;
 
-                var lateralSource = new LateralSource() { Branch = branch, Chainage = chainage, Name = id, LongName = name };
+                var lateralSource = new LateralSource()
+                    {Branch = branch, Chainage = chainage, Name = id, LongName = name};
                 var lengthIndexedLine = new LengthIndexedLine(lateralSource.Branch.Geometry);
                 var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
-                lateralSource.Geometry = new Point((Coordinate)lengthIndexedLine.ExtractPoint(mapOffset).Clone());
+                lateralSource.Geometry = new Point((Coordinate) lengthIndexedLine.ExtractPoint(mapOffset).Clone());
                 branch.BranchFeatures.Add(lateralSource);
                 var model1DLateralSourceData =
                     lateralSourcesData.FirstOrDefault(lsd => lsd.Feature == lateralSource);
-                if (model1DLateralSourceData == null) 
-                    model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource, UseSalt = false, UseTemperature = false};
+                if (model1DLateralSourceData == null)
+                    model1DLateralSourceData = new Model1DLateralSourceData
+                        {Feature = lateralSource, UseSalt = false, UseTemperature = false};
                 if (compartment != null)
                     model1DLateralSourceData.Compartment = compartment;
                 if (forcingFile == "realtime")
                     model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
-                if(lateralSourcesData.All(lsd => lsd.Feature != lateralSource))
+                if (lateralSourcesData.All(lsd => lsd.Feature != lateralSource))
                     lateralSourcesData.Add(model1DLateralSourceData);
-                if (forcingFile == null ) continue;
-                forcingFiles.Add(forcingFile);
+                if (forcingFile == null) continue;
+
+                var numberStyle = NumberStyles.AllowLeadingWhite |
+                                  NumberStyles.AllowTrailingWhite |
+                                  NumberStyles.AllowLeadingSign |
+                                  NumberStyles.AllowDecimalPoint |
+                                  NumberStyles.AllowThousands |
+                                  NumberStyles.AllowExponent;//Choose what you need
+                
+                if (double.TryParse(forcingFile, numberStyle, CultureInfo.InvariantCulture, out var dischargeScalar))
+                {
+                    //set constant in model1d lateral source data and continue
+                    model1DLateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
+                    model1DLateralSourceData.Flow = dischargeScalar;
+                }
+                else
+                {
+                    forcingFiles.Add(forcingFile);
+                }
             }
 
             foreach (var fullPath in forcingFiles.Distinct().Select(GetFullPath))
             {
-                if (!File.Exists(fullPath)) continue;
-                BoundaryFileReader.ReadFile(fullPath, lateralSourcesData);
+                if (!File.Exists(fullPath))
+                {
+                    Log.Error($"Reading laterals source data failed because path to data does not exist {fullPath}");
+                    continue;
+                }
+                var isValidBcFile = IoHelper.IsValidTextFile(fullPath) && new DelftBcReader()
+                    .ReadDelftBcFile(fullPath)
+                    .Any(c => 
+                        c.ValidGeneralRegion(
+                            GeneralRegion.BoundaryConditionsMajorVersion,
+                            GeneralRegion.BoundaryConditionsMinorVersion, 
+                            GeneralRegion.FileTypeName.BoundaryConditions));
+                if(isValidBcFile)
+                    BoundaryFileReader.ReadFile(fullPath, lateralSourcesData);
+                else
+                    Log.Warn($"Can not read lateral sources data from : {fullPath}");
+                
             }
             
             return true;
