@@ -11,17 +11,18 @@
     <ProductName>Delft3D FM Suite 2020.05 OpenHMWQ</ProductName>
     <ProjectGuid>{2481f918-8b09-42cc-ac8b-b81e78a2aaa9}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
-    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion).$(BUILD_NUMBER))</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
+    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion).$(BUILD_NUMBER))</OutputName>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM_NOKERNELS\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;</DefineConstants>
     <SuppressIces>ICE57</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputName>$(ProductName) ($(ReleaseVersion))</OutputName>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM_NOKERNELS\$(Configuration)\</IntermediateOutputPath>
     <SuppressIces>ICE57</SuppressIces>

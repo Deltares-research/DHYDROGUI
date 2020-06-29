@@ -11,17 +11,18 @@
     <ProductName>Delft3D FM Suite 2020.05 HM</ProductName>
     <ProjectGuid>{526694a4-fee1-41ab-8f54-d3f3dc5f192d}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
-    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion).$(BUILD_NUMBER))</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
+    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion).$(BUILD_NUMBER))</OutputName>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM_NOWAQ\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;</DefineConstants>
     <SuppressIces>ICE57</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputName>$(ProductName) ($(ReleaseVersion))</OutputName>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM_NOWAQ\$(Configuration)\</IntermediateOutputPath>
     <SuppressIces>ICE57</SuppressIces>

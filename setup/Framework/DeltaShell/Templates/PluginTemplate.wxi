@@ -102,10 +102,12 @@
   <?define FullProductVersion="$(var.ReleaseVersion).0" ?>
   <?define FullProductNameVersion="$(var.ReleaseVersion).0" ?>
 
+  <?if $(var.Configuration) != "Release"?>
   <?ifdef env.BUILD_NUMBER ?>
   <?define FullProductNameVersion="$(var.FullProductVersion).$(env.BUILD_NUMBER)" ?>
   <?ifndef excludeBuildNumberFromVersion ?>
   <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
+  <?endif?>
   <?endif?>
   <?endif?>
 
