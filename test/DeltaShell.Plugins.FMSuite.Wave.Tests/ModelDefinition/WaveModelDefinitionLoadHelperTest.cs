@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Functions;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
@@ -263,6 +266,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             Assert.That(targetMeteoData.HasSpiderWeb, Is.EqualTo(loadedMeteoData.HasSpiderWeb));
             Assert.That(targetMeteoData.SpiderWebFilePath, Is.EqualTo(loadedMeteoData.SpiderWebFilePath));
         }
+
+        [Test]
+        public void GivenModelDefinitionWithProperties_WhenTransferLoadedProperties_ThenPropertiesTransferred()
+        {
+            // Given
+            var targetDefinition = new WaveModelDefinition();
+
+            var loadedDefinition = new WaveModelDefinition();
+            
+            WaveModelProperty firstProperty = loadedDefinition.Properties.First();
+            ModelPropertyDefinition existingPropertyDefinition = firstProperty.PropertyDefinition;
+            var modifiedExistingProperty = new WaveModelProperty(existingPropertyDefinition, "NewValue");
+            loadedDefinition.SetModelProperty(existingPropertyDefinition.FileCategoryName, 
+                                              existingPropertyDefinition.FilePropertyName, 
+                                              modifiedExistingProperty);
+
+            var newPropertyDefinition = new WaveModelPropertyDefinition
+            {
+                DataType = typeof(string),
+                FileCategoryName = "NewFileCategory",
+                FilePropertyName = "NewFileProperty"
+            };
+            var newProperty = new WaveModelProperty(newPropertyDefinition, "JustAValue");
+            loadedDefinition.SetModelProperty(newPropertyDefinition.FileCategoryName, 
+                                              newPropertyDefinition.FilePropertyName, 
+                                              newProperty);
+
+            // When
+            WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
+
+            // Then
+            int expectedNrOfProperties = loadedDefinition.Properties.Count;
+            Assert.That(targetDefinition.Properties, Has.Count.EqualTo(expectedNrOfProperties));
+
+            for (var i = 0; i < expectedNrOfProperties; i++)
+            {
+                WaveModelProperty targetProperty = targetDefinition.Properties[i];
+                WaveModelProperty expectedProperty = loadedDefinition.Properties[i];
+
+                Assert.That(targetProperty, Is.SameAs(expectedProperty));
+            }
+        }
     }
 
     /// <summary>
@@ -294,6 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             targetDefinition.ObservationCrossSections.AddRange(loadedDefinition.ObservationCrossSections);
             targetDefinition.Obstacles.AddRange(loadedDefinition.Obstacles);
 
+            TransferProperties(targetDefinition, loadedDefinition.Properties);
             TransferTimePointData(targetDefinition.TimePointData, loadedDefinition.TimePointData);
             TransferBoundaryContainer(targetDefinition.BoundaryContainer, loadedDefinition.BoundaryContainer);
         }
@@ -334,6 +380,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             else
             {
                 targetBoundaryContainer.Boundaries.AddRange(loadedBoundaryContainer.Boundaries);
+            }
+        }
+
+        private static void TransferProperties(WaveModelDefinition targetDefinition,
+                                               IEnumerable<WaveModelProperty> loadedProperties)
+        {
+            foreach (WaveModelProperty loadedProperty in loadedProperties)
+            {
+                targetDefinition.SetModelProperty(loadedProperty.PropertyDefinition.FileCategoryName,
+                    loadedProperty.PropertyDefinition.FilePropertyName,
+                    loadedProperty);
             }
         }
     }
