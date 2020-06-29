@@ -56,56 +56,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         }
                         break;
                     case RoughnessFunction.FunctionOfQ:
-                        var functionOfQ = spatialChannelFrictionDefinition.Function;
-                        if (functionOfQ.GetValues().Count == 0)
-                        {
-                            issues.Add(new ValidationIssue(channel,
-                                ValidationSeverity.Error,
-                                $"No '{RoughnessFunction.FunctionOfQ}' values defined",
-                                model.ChannelFrictionDefinitions));
-                        }
-                        else
-                        {
-                            var invalidChainages = functionOfQ.Arguments[0].GetValues<double>()
-                                .Where(chainage => chainage < 0 || chainage > channel.Length)
-                                .ToArray();
-
-                            if (invalidChainages.Any())
-                            {
-                                issues.Add(new ValidationIssue(channel,
-                                    ValidationSeverity.Error,
-                                    $"One or more '{RoughnessFunction.FunctionOfQ}' values are invalid regarding their 'Chainage'. The chainages involved are: " +
-                                    $"{string.Join(", ", invalidChainages)}.",
-                                    model.ChannelFrictionDefinitions));
-                            }
-                        }
+                        ValidateFunction(spatialChannelFrictionDefinition, channel, RoughnessFunction.FunctionOfQ, model.ChannelFrictionDefinitions, issues);
                         break;
                     case RoughnessFunction.FunctionOfH:
-                        var functionOfH = spatialChannelFrictionDefinition.Function;
-                        if (functionOfH.GetValues().Count == 0)
-                        {
-                            issues.Add(new ValidationIssue(channel,
-                                ValidationSeverity.Error,
-                                $"No '{RoughnessFunction.FunctionOfH}' values defined",
-                                model.ChannelFrictionDefinitions));
-                        }
-                        else
-                        {
-                            var invalidChainages = functionOfH.Arguments[0].GetValues<double>()
-                                .Where(chainage => chainage < 0 || chainage > channel.Length)
-                                .ToArray();
-
-                            if (invalidChainages.Any())
-                            {
-                                issues.Add(new ValidationIssue(channel,
-                                    ValidationSeverity.Error,
-                                    $"One or more '{RoughnessFunction.FunctionOfH}' values are invalid regarding their 'Chainage'. The chainages involved are: " +
-                                    $"{string.Join(", ", invalidChainages)}.",
-                                    model.ChannelFrictionDefinitions));
-                            }
-                        }
-
+                        ValidateFunction(spatialChannelFrictionDefinition, channel, RoughnessFunction.FunctionOfH, model.ChannelFrictionDefinitions, issues);
                         break;
+                }
+            }
+        }
+
+        private static void ValidateFunction(
+            SpatialChannelFrictionDefinition spatialChannelFrictionDefinition,
+            IChannel channel,
+            RoughnessFunction roughnessFunctionType,
+            IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
+            ICollection<ValidationIssue> issues)
+        {
+            var function = spatialChannelFrictionDefinition.Function;
+            if (function.GetValues().Count == 0)
+            {
+                issues.Add(new ValidationIssue(channel,
+                    ValidationSeverity.Error,
+                    $"No '{roughnessFunctionType}' values defined",
+                    channelFrictionDefinitions));
+            }
+            else
+            {
+                var invalidChainages = function.Arguments[0].GetValues<double>()
+                    .Where(chainage => chainage < 0 || chainage > channel.Length)
+                    .ToArray();
+
+                if (invalidChainages.Any())
+                {
+                    issues.Add(new ValidationIssue(channel,
+                        ValidationSeverity.Error,
+                        $"One or more '{roughnessFunctionType}' values are invalid regarding their 'Chainage'. The chainages involved are: " +
+                        $"{string.Join(", ", invalidChainages)}.",
+                        channelFrictionDefinitions));
                 }
             }
         }
