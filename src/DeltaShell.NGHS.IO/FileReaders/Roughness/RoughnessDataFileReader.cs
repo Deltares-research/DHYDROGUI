@@ -6,7 +6,6 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
-using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
@@ -16,10 +15,9 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Roughness
 {
-    
     public static class RoughnessDataFileReader
     {
-        public static void ReadFile(string filename, INetwork network, IList<RoughnessSection> RoughnessSections, IList<ChannelFrictionDefinition> channelFrictionDefinitions, bool isCalibratedRoughness = false)
+        public static void ReadFile(string filename, INetwork network, IList<RoughnessSection> RoughnessSections, bool isCalibratedRoughness = false)
         {
             if (!File.Exists(filename)) throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_, filename));
             var categories = new DelftIniReader().ReadDelftIniFile(filename);
@@ -29,7 +27,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             
             var roughnessSection = ReadRoughnessSection(network, RoughnessSections, contentSections[0], isCalibratedRoughness);
             
-            var readRoughnessBranchData = ReadRoughnessBranchData(network, categories, channelFrictionDefinitions);
+            var readRoughnessBranchData = ReadRoughnessBranchData(network, categories);
             
             //Reading went fine add to the model now!
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
@@ -120,7 +118,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             
         }
 
-        private static IList<RoughnessBranchData> ReadRoughnessBranchData(INetwork network, IList<DelftIniCategory> categories, IList<ChannelFrictionDefinition> channelFrictionDefinitions)
+        private static IList<RoughnessBranchData> ReadRoughnessBranchData(INetwork network, IList<DelftIniCategory> categories)
         {
             IList<RoughnessBranchData> branchData = new List<RoughnessBranchData>();
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
@@ -134,12 +132,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                     var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
                     if (branch == null)
                         throw new FileReadingException( string.Format((string) Resources.RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model, branchId));
-
-                    var channelFrictionDefinition = channelFrictionDefinitions.FirstOrDefault(cfd =>
-                        cfd.Channel.Name.Equals(branch.Name, StringComparison.InvariantCultureIgnoreCase));
-                    if (channelFrictionDefinition == null)
-                        throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model, branchId));
-                    channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
 
                     var branchRoughnessType = FrictionTypeConverter.ConvertToRoughnessFrictionType(branchCategory.ReadProperty<Friction>(RoughnessDataRegion.RoughnessType.Key));
 

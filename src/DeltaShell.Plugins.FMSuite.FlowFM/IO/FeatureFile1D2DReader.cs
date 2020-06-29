@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (roughnessFileName == frictionFileName) continue;
                 var fileName = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, roughnessFileName);
                 if (!File.Exists(fileName)) return;
-                RoughnessDataFileReader.ReadFile(fileName, network, roughnessSections, channelFrictionDefinitions);
+                RoughnessDataFileReader.ReadFile(fileName, network, roughnessSections);
             }
 
             // read channels roughness
