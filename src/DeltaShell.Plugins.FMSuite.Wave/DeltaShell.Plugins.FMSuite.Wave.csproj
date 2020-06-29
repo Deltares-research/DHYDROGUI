@@ -233,6 +233,7 @@
     <Compile Include="IWaveModel.cs" />
     <Compile Include="ModelDefinition\IReferenceDateTimeProvider.cs" />
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProvider.cs" />
+    <Compile Include="ModelDefinition\WaveModelDefinitionLoadHelper.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Validation\WaveBoundariesValidator.cs" />
     <Compile Include="Validation\WaveCouplingValidator.cs" />
