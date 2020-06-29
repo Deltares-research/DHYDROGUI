@@ -46,6 +46,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             yield return new SobekModelToWaterFlowFMImporter();
             yield return new SobekNetworkImporter();
             yield return new SobekNetworkToNetworkImporter();
+            yield return new SobekModelToRainfallRunoffModelImporter();
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()

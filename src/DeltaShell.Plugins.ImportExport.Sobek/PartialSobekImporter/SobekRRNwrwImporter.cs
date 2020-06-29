@@ -11,6 +11,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {

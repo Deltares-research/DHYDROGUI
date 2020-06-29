@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;

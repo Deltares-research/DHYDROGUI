@@ -295,6 +295,7 @@
     <Compile Include="Helpers\ModelDefinitionsRegion.cs" />
     <Compile Include="Helpers\StringArrayExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="Helpers\ToDictionaryExtensions.cs" />
     <Compile Include="IFeature2DFileBase.cs" />
     <Compile Include="NGHSFileBase.cs" />
     <Compile Include="PliFile.cs" />

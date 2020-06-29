@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
@@ -53,6 +55,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 if (base.Application != null)
                 {
                     base.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerOnActivityStatusChanged;
+                    base.Application.ProjectSaved -= SaveToFile;
+                    base.Application.ProjectOpened -= LoadFromFile;
                 }
 
                 base.Application = value;
@@ -60,7 +64,34 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 if (base.Application != null)
                 {
                     base.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerOnActivityStatusChanged;
+                    base.Application.ProjectSaved += SaveToFile;
+                    base.Application.ProjectOpened += LoadFromFile;
                 }
+            }
+        }
+
+        private void LoadFromFile(Project project)
+        {
+            //var importers = 
+            var rrModels = project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
+            
+            foreach (var rainfallRunoffModel in rrModels)
+            {
+                var importer = Application.FileImporters.Where(fi =>fi.SupportedItemTypes.Contains(typeof(RainfallRunoffModel)) && !(fi is PolderFromGisImporter) && !(fi is NWRWCatchmentFrom3BImporter)).ElementAt(1);
+                importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
+            }
+        }
+
+        private void SaveToFile(Project project)
+        {
+            var projectDataFolderDirectory = Application.ProjectDataDirectory;
+            var rrModels = project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
+            var exporter = new RainfallRunoffModelExporter();
+            foreach (var rainfallRunoffModel in rrModels)
+            {
+                var path = Path.Combine(projectDataFolderDirectory, rainfallRunoffModel.Name);
+
+                exporter.Export(rainfallRunoffModel, path);
             }
         }
 

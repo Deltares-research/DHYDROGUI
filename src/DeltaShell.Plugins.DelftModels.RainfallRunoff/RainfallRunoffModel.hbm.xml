@@ -7,7 +7,8 @@
                    extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" table="rr_0d_model">
     <key column="project_item_id" />
     
-    <property name="CapSim"/>
+    <property name="Path"/>
+    <!--<property name="CapSim"/>
     <property name="CapSimInitOption"/>
     <property name="CapSimCropAreaOption"/>
 
@@ -53,7 +54,7 @@
       <key column="parent_nwrwdef_id"/>
       <index column="index_in_parent"/>
       <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwDefinition, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
-    </list>
+    </list>-->
 
 
     

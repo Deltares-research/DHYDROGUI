@@ -150,11 +150,11 @@
     <Compile Include="Builders\WeirBuilder.cs" />
     <Compile Include="PartialSobekImporter\SobekRRNwrwImporter.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="SobekModelToRainfallRunoffModelImporter.cs" />
     <Compile Include="SobekSettingsImporter.cs" />
     <Compile Include="Model1DBoundaryNodeDataBuilder.cs" />
     <Compile Include="NumUtils.cs" />
     <Compile Include="PartialSobekImporterBuilder.cs" />
-    <Compile Include="PartialSobekImporter\ToDictionaryExtensions.cs" />
     <Compile Include="PartialSobekImporter\SobekLinkageNodeImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekMeteoDataImporterHelper.cs" />
     <Compile Include="PartialSobekImporter\SobekRRBoundaryConditionsImporter.cs" />

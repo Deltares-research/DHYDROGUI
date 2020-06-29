@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Sobek.Readers;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
@@ -47,8 +48,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     throw new DirectoryNotFoundException(string.Format("The path {0} doesn't exist", BaseDir));
                 }
 
-                SobekFileNames.SobekType = DeltaShell.Sobek.Readers.SobekReaderHelper.GetSobekType(pathSobek);
-                SobekType = DeltaShell.Sobek.Readers.SobekReaderHelper.GetSobekType(pathSobek);
+                try
+                {
+                    SobekFileNames.SobekType = DeltaShell.Sobek.Readers.SobekReaderHelper.GetSobekType(pathSobek);
+                    SobekType = DeltaShell.Sobek.Readers.SobekReaderHelper.GetSobekType(pathSobek);
+                }
+                catch (Exception e)
+                {
+                    SobekFileNames.SobekType = SobekType.Sobek212;
+                    SobekType = SobekType.Sobek212;
+                    //gulp   
+                }
             }
         }
 

@@ -7,6 +7,7 @@ using System.Text;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;

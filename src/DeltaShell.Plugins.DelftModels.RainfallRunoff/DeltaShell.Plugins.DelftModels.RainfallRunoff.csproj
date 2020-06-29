@@ -94,9 +94,11 @@
     <Compile Include="FileWriter\RRModelEngineHelper.cs" />
     <Compile Include="FileWriter\RRModelHybridFileWriter.cs" />
     <Compile Include="FileWriter\RRModelHybridFileWriterFactory.cs" />
+    <Compile Include="Importers\RainfallRunoffModelImporter.cs" />
     <Compile Include="Importers\NWRWCatchmentFrom3BImporter.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="RainfallRunoffModel.FileBased.cs" />
     <Compile Include="RainfallRunoffModelDataSet.cs" />
     <Compile Include="rr_kernel\IRRModelEngineDll.cs" />
     <Compile Include="rr_kernel\RRModelEngineDll.cs" />
@@ -343,62 +345,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Polder\PolderConcept.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Domain\Concepts\UnpavedData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Domain\CatchmentModelData.hbm.xml" />
-    <EmbeddedResource Include="Domain\Concepts\Unpaved\IDrainageFormula.hbm.xml" />
-    <EmbeddedResource Include="Domain\Concepts\Unpaved\ErnstDeZeeuwHellingaDrainageFormulaBase.hbm.xml" />
-    <EmbeddedResource Include="Domain\Concepts\Unpaved\KrayenhoffVanDeLeurDrainageFormula.hbm.xml" />
-    <EmbeddedResource Include="Domain\Concepts\Unpaved\ErnstDrainageFormula.hbm.xml" />
-    <EmbeddedResource Include="Domain\Concepts\Unpaved\DeZeeuwHellingaDrainageFormula.hbm.xml" />
     <EmbeddedResource Include="Domain\Meteo\MeteoData.hbm.xml" />
-    <EmbeddedResource Include="Domain\Concepts\GreenhouseData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Domain\Concepts\PavedData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="EngineParameter.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Domain\Concepts\OpenWaterData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RainfallRunoffBoundaryData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RainfallRunoffOutputSettingData.hbm.xml" />
-    <EmbeddedResource Include="Domain\RunoffBoundaryData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\HbvData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Domain\Concepts\SacramentoData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Domain\Meteo\IMeteoDataDistributed.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwSpecialArea.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinition.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwDefinition.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\DryWeatherFlow.hbm.xml" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

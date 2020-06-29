@@ -45,7 +45,7 @@ using NetTopologySuite.Extensions.Coverages;
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
     [Entity(FireOnCollectionChange=false)]
-    public class RainfallRunoffModel : TimeDependentModelBase, IRainfallRunoffAreaUnitManager, IRainfallRunoffModel, IDimrStateAwareModel, IDisposable, IDimrModel
+    public partial class RainfallRunoffModel : TimeDependentModelBase, IRainfallRunoffAreaUnitManager, IRainfallRunoffModel, IDimrStateAwareModel, IDisposable, IDimrModel
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModel));
         private readonly DimrRunner runner;
@@ -583,11 +583,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 var entryAssembly = GetType().Assembly;
                 if (entryAssembly == null) return "";
-                var file = Path.Combine(RRModelEngineDll.RR_DLL_NAME, DimrApiDataSet.RrDllPath);
+                var file = System.IO.Path.Combine(RRModelEngineDll.RR_DLL_NAME, DimrApiDataSet.RrDllPath);
                 if (!File.Exists(DimrApiDataSet.RrDllPath))
                     return "";
 
-                return "Kernel: " + Path.GetFileName(RRModelEngineDll.RR_DLL_NAME) + "  " + FileVersionInfo.GetVersionInfo(file).FileVersion;
+                return "Kernel: " + System.IO.Path.GetFileName(RRModelEngineDll.RR_DLL_NAME) + "  " + FileVersionInfo.GetVersionInfo(file).FileVersion;
             }
         }
         
@@ -1288,7 +1288,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     var readOnlyMapHisFileFunctionStore = function.Store as ReadOnlyMapHisFileFunctionStore;
                     if (readOnlyMapHisFileFunctionStore != null)
                     {
-                        readOnlyMapHisFileFunctionStore.Path = Path.Combine(workingDir, fileName);
+                        readOnlyMapHisFileFunctionStore.Path = System.IO.Path.Combine(workingDir, fileName);
                     }
                 }
             });

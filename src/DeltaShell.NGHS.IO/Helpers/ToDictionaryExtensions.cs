@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using log4net;
 
-namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
+namespace DeltaShell.NGHS.IO.Helpers
 {
     public static class ToDictionaryExtensions
     {
