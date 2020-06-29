@@ -327,21 +327,26 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     return;
                 }
 
-                var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
-                var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
-
                 var mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.Main.Key);
                 var floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.FloodPlain1.Key,true);
                 var flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths.Key);
             
                 var floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
 
-                double offset = 0.0d;
-
                 readCrossSectionDefinition.Sections.Clear();
                 readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
-                readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
-                readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
+
+                if (Math.Abs(floodPlain1Width) > 1e-6)
+                {
+                    var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
+                    readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
+                }
+
+                if (Math.Abs(floodPlain2Width) > 1e-6)
+                {
+                    var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
+                    readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
+                }
 
                 hasFriction = true;
             }
