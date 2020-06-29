@@ -218,7 +218,8 @@ namespace DelftTools.Hydro.Helpers
             }
 
             discretization.Locations.SkipUniqueValuesCheck = true;
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
+            var currentSegmentationType = discretization.SegmentGenerationMethod;
+            TypeUtils.SetField(discretization, "segmentationType", SegmentGenerationMethod.None);
 
             selectedChannels = selectedChannels ?? hydroNetwork.Channels.ToList();
             
@@ -232,6 +233,9 @@ namespace DelftTools.Hydro.Helpers
                 if (eraseExisting)
                 {
                     NetworkHelper.ClearLocations(discretization, channel);
+                    var segmentsOnChannel =
+                        discretization.Segments.AllValues.Where(s => s.Branch.Equals(channel)).ToList();
+                    discretization.Segments.RemoveValues(discretization.Segments.CreateValuesFilter(segmentsOnChannel));
                 }
                 else
                 {
@@ -249,12 +253,37 @@ namespace DelftTools.Hydro.Helpers
             // force refresh of caching (location dictionary) -> new locations are added
             TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
 
-            discretization.RemoveLocations(discretization.GetDuplicatePointsOnHydroNodes());
+            //discretization.RemoveLocations();
+            var duplicatePointsOnHydroNodes = discretization.GetDuplicatePointsOnHydroNodes();
+            if(duplicatePointsOnHydroNodes.Any())
+            {
+                discretization.Locations.RemoveValues(
+                    discretization.Locations.CreateValuesFilter(duplicatePointsOnHydroNodes));
+            };
 
             // force refresh of caching (location dictionary) -> locations were removed
             TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
 
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
+            //discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
+            switch (currentSegmentationType)
+            {
+                case SegmentGenerationMethod.SegmentPerLocation:
+                case SegmentGenerationMethod.RouteBetweenLocations:
+                case SegmentGenerationMethod.SegmentBetweenLocations:
+                    TypeUtils.SetField(discretization, "segmentationType", currentSegmentationType);
+                    break;
+                case SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered:
+                case SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered:
+                    TypeUtils.SetField(discretization, "segmentationType", SegmentGenerationMethod.SegmentPerLocation);
+                    break;
+            }
+            
+            foreach (var channel in selectedChannels)
+            {
+                NetworkCoverageHelper.UpdateSegments(discretization, channel,discretization.Locations.AllValues);
+            }
+            TypeUtils.SetField(discretization, "segmentationType", currentSegmentationType);
+
             discretization.Locations.SkipUniqueValuesCheck = false;
         }
 

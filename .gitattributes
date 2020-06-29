@@ -290,7 +290,6 @@ src/DelftTools.Hydro/Gully.cs -text
 src/DelftTools.Hydro/Helpers/ActivitiesExtensions.cs -text
 src/DelftTools.Hydro/Helpers/ActivityExtensions.cs -text
 src/DelftTools.Hydro/Helpers/ConveyanceCalculatorBase.cs -text
-src/DelftTools.Hydro/Helpers/CoordinateConverter.cs -text
 src/DelftTools.Hydro/Helpers/CrossSectionConverter.cs -text
 src/DelftTools.Hydro/Helpers/CrossSectionHelper.cs -text
 src/DelftTools.Hydro/Helpers/CrossSectionValidator.cs -text
@@ -3253,6 +3252,7 @@ test/DelftTools.Hydro.Tests/Structures/WeirTest.cs -text
 test/DelftTools.Hydro.Tests/TestClassSetup.cs -text
 test/DelftTools.Hydro.Tests/TestObjects/TestCrossSectionDefinition.cs -text
 test/DelftTools.Hydro.Tests/UndoRedoCrossSectionDataTableTest.cs -text
+test/DelftTools.Hydro.Tests/Validators/DiscretizationValidatorTests.cs -text
 test/DelftTools.Hydro.Tests/WasteWaterTreatmentPlantTest.cs -text
 test/DelftTools.Hydro.Tests/packages.config -text
 test/DeltaShell.Dimr.IntegrationTests/App.config -text

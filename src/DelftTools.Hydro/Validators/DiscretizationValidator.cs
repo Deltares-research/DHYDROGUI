@@ -65,9 +65,10 @@ namespace DelftTools.Hydro.Validators
                 }
             }
 
-            if (networkDiscretization.Locations.Values.GroupBy(lv => lv.Geometry.Coordinate).Any(grp => grp.Count() > 1))
+            var duplicateLocationsViewData = networkDiscretization.Locations.Values.GroupBy(lv => lv.Geometry.Coordinate).Where(grp => grp.Count() > 1);
+            if (duplicateLocationsViewData.Any())
             {
-                issues.Add(new ValidationIssue("Duplicate network calculation points found at same locations", ValidationSeverity.Error, $"There are duplicate calculation points at same the location. Kernel cannot handle this. Please remove one of the points.", networkDiscretization.Locations.Values.GroupBy(lv => lv.Geometry.Coordinate).Where(grp => grp.Count() > 1)));
+                issues.Add(new ValidationIssue("Duplicate network calculation points found at same locations", ValidationSeverity.Error, $"There are duplicate calculation points at same the location. Kernel cannot handle this. Please remove one of the points.", duplicateLocationsViewData));
             }
 
             var subReports = ValidateIds(networkDiscretization);
@@ -89,7 +90,7 @@ namespace DelftTools.Hydro.Validators
             return reports;
         }
 
-        public static IEnumerable<IBranch> GetBranchesWithoutGridSegments(IDiscretization networkDiscretization)
+        private static IEnumerable<IBranch> GetBranchesWithoutGridSegments(IDiscretization networkDiscretization)
         {
             var branches = new HashSet<IBranch>(networkDiscretization.Network.Branches);
 

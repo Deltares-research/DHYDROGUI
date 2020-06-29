@@ -102,6 +102,7 @@
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="TestObjects\TestCrossSectionDefinition.cs" />
     <Compile Include="UndoRedoCrossSectionDataTableTest.cs" />
+    <Compile Include="Validators\DiscretizationValidatorTests.cs" />
     <Compile Include="WasteWaterTreatmentPlantTest.cs" />
   </ItemGroup>
   <ItemGroup>
