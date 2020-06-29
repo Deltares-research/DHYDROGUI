@@ -903,8 +903,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             model.MdwFile.MdwFilePath = mdwFilePath;
             model.Name = Path.GetFileNameWithoutExtension(mdwFilePath);
-            model.ModelDefinition = model.mdwFile.Load(mdwFilePath);
-
+            WaveModelDefinition loadedModelDefinition = model.mdwFile.Load(mdwFilePath);
+            WaveModelDefinitionLoadHelper.TransferLoadedProperties(model.ModelDefinition, loadedModelDefinition);
+            
             model.SyncModelTimesWithBase();
 
             string mdwDir = Path.GetDirectoryName(mdwFilePath);
