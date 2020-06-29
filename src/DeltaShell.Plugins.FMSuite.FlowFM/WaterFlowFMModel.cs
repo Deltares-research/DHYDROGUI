@@ -131,6 +131,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
                 var modelDataItems = AddSpatialDataItems();
                 ImportSpatialOperationsAfterCreating(modelDataItems);
+
+                AddSewerRoughnessIfNecessary();
             }
             else
             {
@@ -143,9 +145,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 AddSpatialDataItems();
                 RenameSubFilesIfApplicable();
-            }
 
-            UpdateRoughnessSections();
+                UpdateRoughnessSections();
+            }
         }
 
         private void CreateDataItemsNotAvailableInPreviousVersion()
