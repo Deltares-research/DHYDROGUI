@@ -297,6 +297,7 @@
     <Compile Include="Validation\WaterFlowFMModelTimersValidator.cs" />
     <Compile Include="Validation\WaterFlowFmModelValidationExtensions.cs" />
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidator.cs" />
+    <Compile Include="Validation\WaterFlowFMRoughnessValidator.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidator.cs" />
     <Compile Include="Validation\WaterFlowFMWindValidator.cs" />
     <Compile Include="Validation\WaterFlowFMModelComputationalGridValidator.cs" />

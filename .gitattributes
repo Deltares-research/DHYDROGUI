@@ -2089,6 +2089,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMModelComputationalGr
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMModelDefinitionValidator.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMModelNetworkValidator.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMModelTimersValidator.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMRoughnessValidator.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMSedimentMorphologyValidator.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMWindValidator.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFmModelValidationExtensions.cs -text
