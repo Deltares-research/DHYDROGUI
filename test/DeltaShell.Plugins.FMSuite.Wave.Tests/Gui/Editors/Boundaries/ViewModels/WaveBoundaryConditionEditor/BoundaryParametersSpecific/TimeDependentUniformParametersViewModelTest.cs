@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Functions;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
@@ -77,6 +80,46 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             generateSeries.Received(1).Execute(waveEnergyFunction, null);
+        }
+
+        [Test]
+        public void GenerateSeriesCommand_TemporarilySwitchesBackingFunction()
+        {
+            // Setup
+            var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
+            var parameters = new TimeDependentParameters<TSpreading>(waveEnergyFunction);
+            var generateSeries = Substitute.For<IGenerateSeries>();
+            var viewModel = new TimeDependentUniformParametersViewModel<TSpreading>(generateSeries,
+                                                                                    parameters);
+
+            var observer = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += observer.OnPropertyChanged;
+
+            var stateIsValid = false;
+            void VerifyStateAtGenerateSeries(object _) => 
+                stateIsValid = !viewModel.TimeDependentParametersFunctions
+                                         .Contains(waveEnergyFunction.UnderlyingFunction);
+
+            generateSeries.When(x => x.Execute(waveEnergyFunction))
+                          .Do(VerifyStateAtGenerateSeries);
+
+            // Call
+            viewModel.GenerateTimeSeriesCommand.Execute(null);
+
+            // Assert
+            Assert.That(stateIsValid);
+
+            IFunction[] expectedEnergyFunctions = {waveEnergyFunction.UnderlyingFunction};
+            Assert.That(viewModel.TimeDependentParametersFunctions, Is.EqualTo(expectedEnergyFunctions));
+            Assert.That(observer.NCalls, Is.EqualTo(2));
+
+            Assert.That(observer.EventArgses[0].PropertyName, 
+                        Is.EqualTo(nameof(viewModel.TimeDependentParametersFunctions)));
+            Assert.That(observer.EventArgses[1].PropertyName, 
+                        Is.EqualTo(nameof(viewModel.TimeDependentParametersFunctions)));
+
+            Assert.That(observer.Senders[0], Is.EqualTo(viewModel));
+            Assert.That(observer.Senders[1], Is.EqualTo(viewModel));
         }
     }
 }

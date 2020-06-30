@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Functions;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
@@ -126,6 +127,64 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             generateSeries.Received(1).Execute(Arg.Is(waveEnergyFunction),
                                                Arg.Is<IEnumerable<IWaveEnergyFunction<TSpreading>>>(x => x.SequenceEqual(otherFunctions)));
+        }
+
+        [Test]
+        public void GenerateSeriesCommand_TemporarilySwitchesBackingFunction()
+        {
+            // Setup
+            var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
+            var supportPoint = new SupportPoint(10.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+            var parameters = new TimeDependentParameters<TSpreading>(waveEnergyFunction);
+            var otherFunctions = new List<IWaveEnergyFunction<TSpreading>>();
+
+            var allParameters = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>> {{supportPoint, parameters}};
+
+            for (var i = 0; i < 5; i++)
+            {
+                var otherWaveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
+                var otherSupportPoint = new SupportPoint(10.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+                var otherParameters = new TimeDependentParameters<TSpreading>(otherWaveEnergyFunction);
+
+                allParameters.Add(otherSupportPoint, otherParameters);
+                otherFunctions.Add(otherWaveEnergyFunction);
+            }
+
+            var generateSeries = Substitute.For<IGenerateSeries>();
+            var viewModel = new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(generateSeries,
+                                                                                             parameters,
+                                                                                             allParameters);
+
+            var observer = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += observer.OnPropertyChanged;
+
+            var stateIsValid = false;
+            void VerifyStateAtGenerateSeries(object _) => 
+                stateIsValid = !viewModel.TimeDependentParametersFunctions
+                                         .Contains(waveEnergyFunction.UnderlyingFunction);
+
+            generateSeries.When(x => 
+                                    x.Execute(Arg.Is(waveEnergyFunction), 
+                                              Arg.Is<IEnumerable<IWaveEnergyFunction<TSpreading>>>( y => y.SequenceEqual(otherFunctions))))
+                          .Do(VerifyStateAtGenerateSeries);
+
+            // Call
+            viewModel.GenerateTimeSeriesCommand.Execute(null);
+
+            // Assert
+            Assert.That(stateIsValid);
+
+            IFunction[] expectedEnergyFunctions = {waveEnergyFunction.UnderlyingFunction};
+            Assert.That(viewModel.TimeDependentParametersFunctions, Is.EqualTo(expectedEnergyFunctions));
+            Assert.That(observer.NCalls, Is.EqualTo(2));
+
+            Assert.That(observer.EventArgses[0].PropertyName, 
+                        Is.EqualTo(nameof(viewModel.TimeDependentParametersFunctions)));
+            Assert.That(observer.EventArgses[1].PropertyName, 
+                        Is.EqualTo(nameof(viewModel.TimeDependentParametersFunctions)));
+
+            Assert.That(observer.Senders[0], Is.EqualTo(viewModel));
+            Assert.That(observer.Senders[1], Is.EqualTo(viewModel));
         }
     }
 }
