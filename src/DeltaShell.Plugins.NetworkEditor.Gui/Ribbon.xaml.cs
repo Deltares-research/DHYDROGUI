@@ -43,6 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewCrossSectionInterpolatedCommand = new AddInterpolatedCrossSectionCommand();
         private ICommand addNewPumpCommand = new AddNewPumpCommand();
         private ICommand addNewWeirCommand = new AddNewWeirCommand();
+        private ICommand addNewOrificeCommand = new AddNewOrificeCommand();
         private ICommand addNewCulvertCommand = new AddNewCulvertCommand();
         private ICommand addNewBridgeCommand = new AddNewBridgeCommand();
         private ICommand addNewExtraResistanceCommand = new AddNewExtraResistanceCommand();
@@ -105,6 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewCrossSectionInterpolatedCommand;
                 yield return addNewPumpCommand;
                 yield return addNewWeirCommand;
+                yield return addNewOrificeCommand;
                 yield return addNewCulvertCommand;
                 yield return addNewBridgeCommand;
                 yield return addNewExtraResistanceCommand;
@@ -178,6 +180,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             // structure tools
             ButtonAddNewPump.SetState(addNewPumpCommand, showNetworkTools);
             ButtonAddNewWeir.SetState(addNewWeirCommand, showNetworkTools);
+            ButtonAddNewOrifice.SetState(addNewOrificeCommand, showNetworkTools);
             ButtonAddNewCulvert.SetState(addNewCulvertCommand, showNetworkTools);
             ButtonAddNewBridge.SetState(addNewBridgeCommand, showNetworkTools);
             ButtonAddNewExtraResistance.SetState(addNewExtraResistanceCommand, showNetworkTools);
@@ -404,6 +407,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewWeir_Click(object sender, RoutedEventArgs e)
         {
             addNewWeirCommand.Execute();
+            ValidateItems();
+        }
+
+        private void ButtonAddNewOrifice_Click(object sender, RoutedEventArgs e)
+        {
+            addNewOrificeCommand.Execute();
             ValidateItems();
         }
 

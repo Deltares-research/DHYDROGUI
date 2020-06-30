@@ -62,6 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string AddRetentionToolName = "add retention";
         public const string AddObservationPointToolName = "add observation point";
         public const string AddWeirToolName = "add weir";
+        public const string AddOrificeToolName = "add orifice";
         public const string AddCulvertToolName = "add culvert";
         public const string AddBridgeToolName = "add bridge";
         public const string AddExtraResistanceToolName = "add new extra resistance";
@@ -109,6 +110,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private static readonly Cursor NewRetentionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Retention);
         private static readonly Cursor NewObservationPointToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Observation);
         private static readonly Cursor AddNewWeirCursor = MapCursors.CreateArrowOverlayCuror(Resources.WeirSmall);
+        private static readonly Cursor AddNewOrificeCursor = MapCursors.CreateArrowOverlayCuror(Resources.Gate);
         private static readonly Cursor NewCulvertToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.CulvertSmall);
         private static readonly Cursor NewBridgeToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.BridgeSmall);
         private static readonly Cursor NewExtraResistanceToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.ExtraResistanceSmall);
@@ -205,6 +207,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var newWeirTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
                   && layer.DataSource.FeatureType == typeof(Weir) && (layer.DataSource is HydroNetworkFeatureCollection), AddWeirToolName) { Cursor = AddNewWeirCursor };
             AddMapTool(newWeirTool);
+
+            var newOrificeTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
+                  && layer.DataSource.FeatureType == typeof(Orifice) && (layer.DataSource is HydroNetworkFeatureCollection), AddOrificeToolName) { Cursor = AddNewOrificeCursor };
+            AddMapTool(newOrificeTool);
 
             var newCulvertTool = new NewPointFeatureTool<Culvert>(AddCulvertToolName) { Cursor = NewCulvertToolCursor };
             AddMapTool(newCulvertTool);

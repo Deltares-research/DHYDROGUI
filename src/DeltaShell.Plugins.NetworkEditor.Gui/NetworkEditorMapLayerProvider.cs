@@ -967,7 +967,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                            };
             }
 
-            if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) || type == typeof(Bridge) || type == typeof(ExtraResistance))
+            if (type == typeof(Weir) || 
+                type == typeof(Orifice) || 
+                type == typeof(Pump) || 
+                type == typeof(Culvert) || 
+                type == typeof(Bridge) || 
+                type == typeof(ExtraResistance))
             {
                 return new List<ISnapRule>
                            {

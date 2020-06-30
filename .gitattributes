@@ -2277,6 +2277,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewLinkCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewNetworkLocationCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewNetworkRouteCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewObservationPointCommand.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewOrificeCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewPipeCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewPumpCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewRetentionCommand.cs -text

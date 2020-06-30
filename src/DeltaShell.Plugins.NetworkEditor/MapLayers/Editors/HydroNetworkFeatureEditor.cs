@@ -112,8 +112,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                 featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
             else if (feature is ICompartment)
                 featureInteractor = new CompartmentInteractor(layer, feature, vectorStyle, Network);
-            else if (feature is IWeir)
-                featureInteractor = new StructureInteractor<Weir>(layer, feature, vectorStyle, Network);
+            else if (feature is IWeir weir)
+                featureInteractor = weir.IsGated ? (IFeatureInteractor)new StructureInteractor<Orifice>(layer, feature, vectorStyle, Network) : new StructureInteractor<Weir>(layer, feature, vectorStyle, Network);
             else if (feature is ICulvert)
                 featureInteractor = new StructureInteractor<Culvert>(layer, feature, vectorStyle, Network);
             else if (feature is IBridge)
