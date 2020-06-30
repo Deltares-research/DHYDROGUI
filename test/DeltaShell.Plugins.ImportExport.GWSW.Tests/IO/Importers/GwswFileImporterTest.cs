@@ -1637,7 +1637,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.IsNotNull(lei17.DryWeatherFlows.Select(dwf =>
                     dwf.DryWeatherFlowId.Equals("Bedrijf", StringComparison.InvariantCultureIgnoreCase)));
                 Assert.IsNotNull(lei17.DryWeatherFlows.Select(dwf =>
-                    dwf.DryWeatherFlowId.Equals("Default_DWA", StringComparison.InvariantCultureIgnoreCase)));
+                    dwf.DryWeatherFlowId.Equals(NwrwData.DEFAULT_DWA_ID, StringComparison.InvariantCultureIgnoreCase)));
                 Assert.That(lei17.LateralSurface, Is.EqualTo(0.0));
                 Assert.That(lei17.MeteoStationId, Is.EqualTo(String.Empty));
                 Assert.That(lei17.NodeOrBranchId, Is.EqualTo("lei17"));
@@ -1689,7 +1689,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.IsNotNull(lei43);
                 Assert.That(lei43.DryWeatherFlows.Count(), Is.EqualTo(2));
                 Assert.That(lei43.DryWeatherFlows.Select(dwf => dwf.DryWeatherFlowId).FirstOrDefault(),
-                    Is.EqualTo("Default_DWA"));
+                    Is.EqualTo(NwrwData.DEFAULT_DWA_ID));
                 Assert.That(lei43.LateralSurface, Is.EqualTo(0.0));
                 Assert.That(lei43.MeteoStationId, Is.EqualTo(String.Empty));
                 Assert.That(lei43.NodeOrBranchId, Is.EqualTo("lei43"));

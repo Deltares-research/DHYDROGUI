@@ -986,7 +986,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/MeteoStationsList
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/MultipleDataEditor.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/MultipleDataEditor.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/MultipleDataEditor.resx -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/NwrwMultipleDataEditor.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitions.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/RRBoundarySeriesView.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/RRBoundarySeriesView.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/RRBoundarySeriesView.resx -text
@@ -5404,6 +5404,7 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Forms/CatchmentAttri
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Forms/MeteoDataPropertiesTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Forms/MeteoDataViewTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Forms/MeteoStationsListEditorTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Forms/MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitionsTests.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Forms/MultipleDataEditorTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Forms/RainfallRunoffBoundaryDataViewTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Forms/TimeSeriesGeneratorDialogTest.cs -text

@@ -86,6 +86,7 @@
     <Compile Include="UI\Forms\MeteoDataPropertiesTest.cs" />
     <Compile Include="UI\Forms\MeteoDataViewTest.cs" />
     <Compile Include="UI\Forms\MeteoStationsListEditorTest.cs" />
+    <Compile Include="UI\Forms\MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitionsTests.cs" />
     <Compile Include="UI\Forms\MultipleDataEditorTest.cs" />
     <Compile Include="UI\Concepts\UnpavedDataPropertiesTest.cs" />
     <Compile Include="UI\Forms\CatchmentAttributeCoverageViewTest.cs" />

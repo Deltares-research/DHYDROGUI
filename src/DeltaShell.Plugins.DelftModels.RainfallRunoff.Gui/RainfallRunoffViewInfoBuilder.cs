@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                         GetViewData = o => GetInitialConditionsWrapperDataRowProviders(o),
                         AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
                     };
-            yield return new ViewInfo<IEnumerable<Catchment>, IEnumerable<IDataRowProvider>, MultipleDataEditor>
+            yield return new ViewInfo<IEnumerable<Catchment>, IEnumerable<IDataRowProvider>, MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitions>
                 {
                     Description = "Multiple data editor (D-RR)",
                     GetViewName = (v, o) => "Multiple data editor (D-RR)",
@@ -245,7 +245,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                         DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui);
                     }
                 };
-            yield return new ViewInfo<TreeFolder, IEnumerable<IDataRowProvider>, NwrwMultipleDataEditor>
+            yield return new ViewInfo<TreeFolder, IEnumerable<IDataRowProvider>, MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitions>
                 {
                     Description = "Catchment attribute viewer",
                     GetViewName = (v, o) => "Multiple data editor (D-RR)",

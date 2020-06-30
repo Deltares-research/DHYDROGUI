@@ -9,7 +9,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 {
-    public class NwrwMultipleDataEditor : MultipleDataEditor
+    public class MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitions : MultipleDataEditor
     {
         private IEventedList<NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitions;
         
@@ -94,12 +94,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
                     var nwrwDataRow = row as NwrwDataRow;
                     if (nwrwDataRow != null && itemsRemoved.Contains(nwrwDataRow.FirstDryWeatherFlowId))
                     {
-                        nwrwDataRow.FirstDryWeatherFlowId = "Default_DWA";
+                        nwrwDataRow.FirstDryWeatherFlowId = NwrwData.DEFAULT_DWA_ID;
                     }
 
                     if (nwrwDataRow != null && itemsRemoved.Contains(nwrwDataRow.LastDryWeatherFlowId))
                     {
-                        nwrwDataRow.LastDryWeatherFlowId = "Default_DWA";
+                        nwrwDataRow.LastDryWeatherFlowId = NwrwData.DEFAULT_DWA_ID;
                     }
                 }
             }

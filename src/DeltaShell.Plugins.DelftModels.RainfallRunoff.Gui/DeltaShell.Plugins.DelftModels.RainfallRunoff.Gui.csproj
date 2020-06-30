@@ -281,7 +281,7 @@
     <Compile Include="Controls\MultipleDataEditor.Designer.cs">
       <DependentUpon>MultipleDataEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NwrwMultipleDataEditor.cs">
+    <Compile Include="Controls\MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitions.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\RainfallRunoffFormsHelper.cs" />

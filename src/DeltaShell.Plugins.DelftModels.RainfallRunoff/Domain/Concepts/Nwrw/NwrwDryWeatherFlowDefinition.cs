@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             return new NwrwDryWeatherFlowDefinition
             {
-                Name = "Default_DWA",
+                Name = NwrwData.DEFAULT_DWA_ID,
                 DistributionType = DryweatherFlowDistributionType.Constant,
                 DailyVolumeConstant = 12,
                 DailyVolumeVariable = 120,
