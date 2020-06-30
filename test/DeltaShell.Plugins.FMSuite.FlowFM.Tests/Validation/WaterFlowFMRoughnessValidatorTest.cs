@@ -121,6 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     {
                         var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
                         channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant;
                         channelFrictionDefinition.SpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.AddRange(new[]
                         {
                             new ConstantSpatialChannelFrictionDefinition
@@ -151,6 +152,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         });
                     },
                     ExpectedMessage = "One or more 'Constant' values are invalid regarding their 'Chainage'. The chainages involved are: -1, 101.",
+                    ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
+                };
+                yield return new RoughnessTestCaseData
+                {
+                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    {
+                        var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
+                        channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfQ;
+
+                        var function = channelFrictionDefinition.SpatialChannelFrictionDefinition.Function;
+                        function[-1.0, 1.0] = 2.0;
+                        function[0.0, 3.0] = 4.0;
+                        function[50.0, 5.0] = 6.0;
+                        function[100.0, 7.0] = 8.0;
+                        function[101.0, 9.0] = 10.0;
+                    },
+                    ExpectedMessage = "One or more 'absDischarge' values are invalid regarding their 'Chainage'. The chainages involved are: -1, 101.",
+                    ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
+                };
+                yield return new RoughnessTestCaseData
+                {
+                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    {
+                        var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
+                        channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfH;
+
+                        var function = channelFrictionDefinition.SpatialChannelFrictionDefinition.Function;
+                        function[-1.0, 1.0] = 2.0;
+                        function[0.0, 3.0] = 4.0;
+                        function[50.0, 5.0] = 6.0;
+                        function[100.0, 7.0] = 8.0;
+                        function[101.0, 9.0] = 10.0;
+                    },
+                    ExpectedMessage = "One or more 'Waterlevel' values are invalid regarding their 'Chainage'. The chainages involved are: -1, 101.",
                     ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
                 };
             }
