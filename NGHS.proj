@@ -28,8 +28,8 @@
   </Target>
   
   <Target Name="MsiFM" DependsOnTargets="BuildRelease">
-    <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
-    <MSBuild Projects="setup\FM\FM_Without_Waq.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+    <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Debug;SolutionDir=$(SolutionDir);"/>
+    <MSBuild Projects="setup\FM\FM_Without_Waq.wixproj" Targets="Rebuild" Properties="Configuration=Debug;SolutionDir=$(SolutionDir);"/>
   </Target>
   
   <Target Name="MsiFM_ReleaseOnly" DependsOnTargets="BuildRelease">
