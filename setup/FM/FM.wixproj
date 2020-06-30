@@ -16,8 +16,8 @@
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(PublicReleaseVersion))</OutputName>
-    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(PublicReleaseVersion).$(BUILD_NUMBER))</OutputName>
+    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ApplicationName) ($(PublicReleaseVersion))</OutputName>
+    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ApplicationName) ($(PublicReleaseVersion).$(BUILD_NUMBER))</OutputName>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;</DefineConstants>
