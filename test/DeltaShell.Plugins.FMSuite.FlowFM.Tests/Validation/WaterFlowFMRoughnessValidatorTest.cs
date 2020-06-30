@@ -16,11 +16,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     public class WaterFlowFMRoughnessValidatorTest
     {
         [Test]
-        public void GivenFmModelWithoutRoughnessDefinitions_WhenValidatingRoughness_ThenValidationReportEmpty()
+        [TestCaseSource(nameof(ValidRoughnessTestCaseSource))]
+        public void GivenFmModelWithValidRoughnessDefinition_WhenValidatingRoughness_ThenValidationReportEmpty(RoughnessTestCaseData testCaseData)
         {
             // Given
             using (var waterFlowFmModel = CreateValidModelWithSimpleNetwork())
             {
+                testCaseData.ConfigureRoughness(waterFlowFmModel);
+
                 // When
                 var report = WaterFlowFMRoughnessValidator.Validate(waterFlowFmModel);
 
@@ -32,12 +35,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         [TestCaseSource(nameof(InvalidRoughnessTestCaseSource))]
         public void GivenFmModelWithInvalidRoughnessDefinition_WhenValidatingRoughness_ThenValidationReportAsExpected(
-            RoughnessTestCaseData testCaseData)
+            InvalidRoughnessTestCaseData testCaseData)
         {
             // Given
             using (var waterFlowFmModel = CreateValidModelWithSimpleNetwork())
             {
-                testCaseData.ConfigureInvalidRoughness(waterFlowFmModel);
+                testCaseData.ConfigureRoughness(waterFlowFmModel);
 
                 // When
                 var report = WaterFlowFMRoughnessValidator.Validate(waterFlowFmModel);
@@ -70,13 +73,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             return flowFmModel;
         }
 
-        private IEnumerable<RoughnessTestCaseData> InvalidRoughnessTestCaseSource
+        private IEnumerable<RoughnessTestCaseData> ValidRoughnessTestCaseSource
         {
             get
             {
                 yield return new RoughnessTestCaseData
                 {
-                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    ConfigureRoughness = waterFlowFmModel => { }
+                };
+            }
+        }
+
+        private IEnumerable<InvalidRoughnessTestCaseData> InvalidRoughnessTestCaseSource
+        {
+            get
+            {
+                yield return new InvalidRoughnessTestCaseData
+                {
+                    ConfigureRoughness = waterFlowFmModel =>
                     {
                         var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
                         channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
@@ -85,9 +99,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     ExpectedMessage = "No 'Constant' values defined",
                     ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
                 };
-                yield return new RoughnessTestCaseData
+                yield return new InvalidRoughnessTestCaseData
                 {
-                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    ConfigureRoughness = waterFlowFmModel =>
                     {
                         var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
                         channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
@@ -96,9 +110,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     ExpectedMessage = "No 'absDischarge' values defined",
                     ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
                 };
-                yield return new RoughnessTestCaseData
+                yield return new InvalidRoughnessTestCaseData
                 {
-                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    ConfigureRoughness = waterFlowFmModel =>
                     {
                         var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
                         channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
@@ -107,9 +121,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     ExpectedMessage = "No 'Waterlevel' values defined",
                     ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
                 };
-                yield return new RoughnessTestCaseData
+                yield return new InvalidRoughnessTestCaseData
                 {
-                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    ConfigureRoughness = waterFlowFmModel =>
                     {
                         var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
                         channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
@@ -146,9 +160,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     ExpectedMessage = "One or more 'Constant' values are invalid regarding their 'Chainage'. The chainages involved are: -1, 101.",
                     ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
                 };
-                yield return new RoughnessTestCaseData
+                yield return new InvalidRoughnessTestCaseData
                 {
-                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    ConfigureRoughness = waterFlowFmModel =>
                     {
                         var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
                         channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
@@ -164,9 +178,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     ExpectedMessage = "One or more 'absDischarge' values are invalid regarding their 'Chainage'. The chainages involved are: -1, 101.",
                     ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
                 };
-                yield return new RoughnessTestCaseData
+                yield return new InvalidRoughnessTestCaseData
                 {
-                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    ConfigureRoughness = waterFlowFmModel =>
                     {
                         var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
                         channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
@@ -182,9 +196,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     ExpectedMessage = "One or more 'Waterlevel' values are invalid regarding their 'Chainage'. The chainages involved are: -1, 101.",
                     ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
                 };
-                yield return new RoughnessTestCaseData
+                yield return new InvalidRoughnessTestCaseData
                 {
-                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    ConfigureRoughness = waterFlowFmModel =>
                     {
                         waterFlowFmModel.ChannelFrictionDefinitions.First().SpecificationType = ChannelFrictionSpecificationType.ModelSettings;
                         waterFlowFmModel.ChannelFrictionDefinitions.Last().SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
@@ -208,8 +222,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         public class RoughnessTestCaseData
         {
-            public Action<WaterFlowFMModel> ConfigureInvalidRoughness { get; set; }
+            public Action<WaterFlowFMModel> ConfigureRoughness { get; set; }
+        }
 
+        public class InvalidRoughnessTestCaseData : RoughnessTestCaseData
+        {
             public string ExpectedMessage { get; set; }
 
             public Func<WaterFlowFMModel, object> ExpectedSubject { get; set; }
