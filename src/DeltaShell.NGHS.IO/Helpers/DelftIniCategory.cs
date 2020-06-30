@@ -237,13 +237,17 @@ namespace DeltaShell.NGHS.IO.Helpers
             errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
             return default(IList<T>);
         }
-        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>))
+        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>), bool useStandardSeparators = true)
         {
             var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
 
             if (iniProperty != null)
-            {
-                return iniProperty.Value.Split(StandardSeperators.Concat(new []{customSeparator}).ToArray(), StringSplitOptions.RemoveEmptyEntries).Select(elementValue => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(elementValue)).ToList();
+            { 
+                var separators = useStandardSeparators
+                    ? StandardSeperators.Concat(new[] { customSeparator }).ToArray()
+                    : new[] { customSeparator };
+
+                return iniProperty.Value.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(elementValue => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(elementValue)).ToList();
             }
 
             if (!isOptional)

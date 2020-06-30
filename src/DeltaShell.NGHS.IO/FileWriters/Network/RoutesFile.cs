@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             foreach (var category in categories)
             {
                 var name = category.ReadProperty<string>(Name.Key);
-                var branchNames = category.ReadPropertiesToListOfType<string>(Branches.Key, true, ';');
+                var branchNames = category.ReadPropertiesToListOfType(Branches.Key, true, ';', default(IList<string>), false);
                 var chainages = category.ReadPropertiesToListOfType<double>(Chainages.Key, true);
 
                 var route = new Route
