@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
@@ -55,27 +57,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         private static WaterFlowFMModel CreateValidModelWithSimpleNetwork()
         {
-            return new WaterFlowFMModel
+            var flowFmModel = new WaterFlowFMModel
             {
                 TimeStep = new TimeSpan(0, 0, 1, 0),
                 StartTime = new DateTime(2000, 1, 1),
                 StopTime = new DateTime(2000, 1, 2),
-                OutputTimeStep = new TimeSpan(0, 0, 2, 0),
-                Network =
-                {
-                    Branches =
-                    {
-                        new Channel
-                        {
-                            Length = 100
-                        },
-                        new Channel
-                        {
-                            Length = 200
-                        }
-                    }
-                }
+                OutputTimeStep = new TimeSpan(0, 0, 2, 0)
             };
+
+            HydroNetworkHelper.AddSnakeHydroNetwork(flowFmModel.Network, new Point(0, 0), new Point(0, 100), new Point(0, 300));
+
+            return flowFmModel;
         }
 
         private IEnumerable<RoughnessTestCaseData> InvalidRoughnessTestCaseSource
@@ -189,6 +181,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     },
                     ExpectedMessage = "One or more 'Waterlevel' values are invalid regarding their 'Chainage'. The chainages involved are: -1, 101.",
                     ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
+                };
+                yield return new RoughnessTestCaseData
+                {
+                    ConfigureInvalidRoughness = waterFlowFmModel =>
+                    {
+                        waterFlowFmModel.ChannelFrictionDefinitions.First().SpecificationType = ChannelFrictionSpecificationType.ModelSettings;
+                        waterFlowFmModel.ChannelFrictionDefinitions.Last().SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
+
+                        var hydroNetwork = waterFlowFmModel.Network;
+                        var channel1 = hydroNetwork.Channels.First();
+                        var channel2 = hydroNetwork.Channels.Last();
+                        var crossSection1 = new CrossSection(new CrossSectionDefinitionYZ("crs1"));
+                        var crossSection2 = new CrossSection(new CrossSectionDefinitionYZ("crs2"));
+
+                        channel1.BranchFeatures.Add(crossSection1);
+                        channel2.BranchFeatures.Add(crossSection2);
+                        crossSection1.ShareDefinitionAndChangeToProxy();
+                        crossSection2.UseSharedDefinition(hydroNetwork.SharedCrossSectionDefinitions.First());
+                    },
+                    ExpectedMessage = "This shared cross section definition is used on branches that have a conflicting roughness Specification type. The branches involved are: branch1, branch2.",
+                    ExpectedSubject = waterFlowFmModel => waterFlowFmModel.Network.SharedCrossSectionDefinitions.First()
                 };
             }
         }
