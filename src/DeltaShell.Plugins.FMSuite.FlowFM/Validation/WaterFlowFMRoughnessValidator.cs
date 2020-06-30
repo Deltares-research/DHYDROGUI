@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 
@@ -34,9 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         {
                             issues.Add(new ValidationIssue(channel,
                                 ValidationSeverity.Error,
-                                $"No '{RoughnessFunction.Constant}' values defined",
+                                $"No '{RoughnessFunction.Constant.GetDescription()}' values defined",
                                 model.ChannelFrictionDefinitions));
-
                         }
                         else
                         {
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                             {
                                 issues.Add(new ValidationIssue(channel,
                                     ValidationSeverity.Error,
-                                    $"One or more '{RoughnessFunction.Constant}' values are invalid regarding their 'Chainage'. The chainages involved are: " +
+                                    $"One or more '{RoughnessFunction.Constant.GetDescription()}' values are invalid regarding their 'Chainage'. The chainages involved are: " +
                                     $"{string.Join(", ", invalidChainages)}.",
                                     model.ChannelFrictionDefinitions));
                             }
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 issues.Add(new ValidationIssue(channel,
                     ValidationSeverity.Error,
-                    $"No '{roughnessFunctionType}' values defined",
+                    $"No '{roughnessFunctionType.GetDescription()}' values defined",
                     channelFrictionDefinitions));
             }
             else
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 {
                     issues.Add(new ValidationIssue(channel,
                         ValidationSeverity.Error,
-                        $"One or more '{roughnessFunctionType}' values are invalid regarding their 'Chainage'. The chainages involved are: " +
+                        $"One or more '{roughnessFunctionType.GetDescription()}' values are invalid regarding their 'Chainage'. The chainages involved are: " +
                         $"{string.Join(", ", invalidChainages)}.",
                         channelFrictionDefinitions));
                 }
