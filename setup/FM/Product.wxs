@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  
   <?define explicitX86desktopshortcut="false"?>
 
   <?define Description="D-FM Delta Shell" ?>
@@ -70,7 +69,7 @@
   <?ifdef var.RWS?>
   <?define splashScreenLicense="NGHS project"?>
   <?else?>
-  <?define splashScreenLicense="Valid until 3 nov 2015"?>
+  <?define splashScreenLicense="Valid until 30 oct 2020"?>
   <?endif?>
 
   <?define plugin_wixUIDeltares="FM_WixUI_Deltares"?>
