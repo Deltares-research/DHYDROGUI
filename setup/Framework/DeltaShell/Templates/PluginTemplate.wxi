@@ -99,16 +99,25 @@
   <!--Include the guids that should be regenerated regularly-->
   <?include "ApplicationGUIDs.wxi"?>
   
-  <?define FullProductVersion="$(var.ReleaseVersion).0" ?>
-  <?define FullProductNameVersion="$(var.ReleaseVersion).0" ?>
+  <?ifdef var.InternalReleaseVersion ?>
+  <?define FullProductVersion="$(var.InternalReleaseVersion)" ?>
+  <?else?>
+  <?define FullProductVersion="$(var.ReleaseVersion)" ?>
+  <?endif?>
+
+  <?define FullProductNameVersion="$(var.ReleaseVersion)" ?>
 
   <?if $(var.Configuration) != "Release"?>
-  <?ifdef env.BUILD_NUMBER ?>
-  <?define FullProductNameVersion="$(var.FullProductVersion).$(env.BUILD_NUMBER)" ?>
-  <?ifndef excludeBuildNumberFromVersion ?>
-  <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
-  <?endif?>
-  <?endif?>
+    <?ifdef env.BUILD_NUMBER ?>
+      <?define FullProductNameVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
+      <?ifndef excludeBuildNumberFromVersion ?>
+        <?ifdef var.InternalReleaseVersion ?>
+          <?define FullProductVersion="$(var.InternalReleaseVersion).$(env.BUILD_NUMBER)" ?>
+        <?else?>
+        <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
+        <?endif?>
+      <?endif?>
+    <?endif?>
   <?endif?>
 
   <?define FullProductName="$(var.ProductName) ($(var.FullProductNameVersion))" ?>
