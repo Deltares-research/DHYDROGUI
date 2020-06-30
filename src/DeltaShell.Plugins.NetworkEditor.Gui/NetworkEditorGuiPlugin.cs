@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Controls.Swf.Editors;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -452,7 +453,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     view.PipeRoughnessSection = sewerRoughnessSection;
                 }
             };
+
+            var attributeTablePipeData = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<IPipe, IModelWithNetwork>(m => m.Network.Pipes, () => Gui);
+            var baseAfterCreate = attributeTablePipeData.AfterCreate;
+            attributeTablePipeData.AfterCreate = (view, datas) =>
+            {
+                baseAfterCreate(view, datas);
+                var networkModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Equals(datas));
+                SetSharedCrossSectionDefinitionsComboBoxTypeEditor(view, networkModel);
+
+                view.TableView.FocusedRowChanged += (sender, args) => { SetSharedCrossSectionDefinitionsComboBoxTypeEditor(view, networkModel); };
+            };
+            yield return attributeTablePipeData;
+
             yield return new ViewInfo<LeveeBreach, LeveeBreachView>();
+        }
+
+        private void SetSharedCrossSectionDefinitionsComboBoxTypeEditor(VectorLayerAttributeTableView view, IModelWithNetwork networkModel)
+        {
+            var pipe = view.TableView.CurrentFocusedRowObject as IPipe;
+            if (pipe == null) return;
+            var columnDisplayName = typeof(Pipe).GetProperty("DefinitionName")?.
+                GetCustomAttributes(typeof(DisplayNameAttribute), true).
+                Cast<DisplayNameAttribute>().SingleOrDefault()?.
+                DisplayName;
+            if (columnDisplayName == null) return;
+            var column = view.TableView.Columns.FirstOrDefault(c => c.Caption.Equals(columnDisplayName, StringComparison.InvariantCultureIgnoreCase));
+            if (column != null)
+                column.Editor = new ComboBoxTypeEditor
+                {
+                    Items = networkModel.Network.SharedCrossSectionDefinitions.Select(d => d.Name),
+                    ItemsMandatory = false
+                };
         }
 
         private ViewInfo GetViewInfoForHydroAreaFeatureCollection<TFeature>(Func<HydroArea, IEventedList<TFeature>> getCollection)

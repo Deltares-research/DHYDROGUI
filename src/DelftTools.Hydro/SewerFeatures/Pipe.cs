@@ -49,6 +49,13 @@ namespace DelftTools.Hydro.SewerFeatures
         public virtual string DefinitionName
         {
             get { return CrossSection.Definition.Name; }
+            set
+            {
+                if (value == null || DefinitionName == value) return;
+                var newDefinition = HydroNetwork?.SharedCrossSectionDefinitions.SingleOrDefault(scd => scd.Name.Equals(value, StringComparison.InvariantCultureIgnoreCase));
+                if(newDefinition == null) return;
+                crossSection?.UseSharedDefinition(newDefinition);
+            }
         }
 
         private void OnPipePropertyChanged(object sender, PropertyChangedEventArgs e)

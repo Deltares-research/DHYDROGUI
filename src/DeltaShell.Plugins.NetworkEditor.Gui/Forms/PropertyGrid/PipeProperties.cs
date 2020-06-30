@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Drawing.Design;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.Extensions;
 using DelftTools.Hydro.CrossSections.StandardShapes;
@@ -128,9 +129,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(0)]
         [DisplayName("Name")]
+        [Editor(typeof(SharedCrossSectionsTypeEditor), typeof(UITypeEditor))]
         public string CrossSectionName
         {
-            get { return data?.Profile?.ToString() ?? string.Empty; }
+            get { return data?.DefinitionName?? string.Empty; }
+            set { data.DefinitionName = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]

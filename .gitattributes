@@ -2552,6 +2552,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/RiverWeirFormulaProp
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/RoughnessSectionPropertiesBase.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/RunoffBoundaryProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/SewerConnectionProperties.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/SharedCrossSectionsTypeEditor.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/SimpleWeirFormulaProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/TimeDependency.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/WasteWaterTreatmentPlantProperties.cs -text

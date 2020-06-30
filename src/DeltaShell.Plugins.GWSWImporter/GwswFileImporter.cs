@@ -672,9 +672,11 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             {
                 if (helper.CrossSectionDefinitionsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var crossSectionDefinition))
                 {
-                    var crossSection = new CrossSection(crossSectionDefinition) { Name = $"SewerProfile_" };
+                    var crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2);
+                    crossSection.Name = $"SewerProfile_";
+                    crossSection.UseSharedDefinition(crossSectionDefinition);
                     pipe.CrossSection = crossSection;
-                    helper.PipeCrossSections.Enqueue(crossSection);
+                    helper.PipeCrossSections?.Enqueue(crossSection);
                 }
 
                 if (helper.SewerProfileMaterialsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var material))
@@ -682,24 +684,6 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }, "Update cross sections in network");
 
 
-
-
-            //doe ik dit nu wel goed?
-            /*var pipes = network.Pipes.ToArray();
-            Parallel.For(0, pipes.Length, pIdx =>
-            {
-                var pipe = pipes[pIdx];
-                if(helper.CrossSectionDefinitionsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var crossSectionDefinition))
-                {
-                    var crossSection = new CrossSection(crossSectionDefinition) {Name=$"SewerProfile_{pIdx}"};
-                    pipe.CrossSection = crossSection;
-                    helper.PipeCrossSections.Enqueue(crossSection);
-                }
-
-                if (helper.SewerProfileMaterialsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var material))
-                    pipe.Material = material;
-            });
-            */
             while (helper.PipeCrossSections.Select(ls => ls.Name).Distinct().Count() !=
                    helper.PipeCrossSections.Select(ls => Name).Count())
             {
