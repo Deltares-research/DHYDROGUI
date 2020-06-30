@@ -40,8 +40,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         }
                         else
                         {
-                            var invalidChainages = constantSpatialChannelFrictionDefinitions
-                                .Select(ccfd => ccfd.Chainage)
+                            var chainages = constantSpatialChannelFrictionDefinitions
+                                .Select(ccfd => ccfd.Chainage);
+                            if (chainages.Count() != chainages.Distinct().Count())
+                            {
+                                issues.Add(new ValidationIssue(channel,
+                                    ValidationSeverity.Error,
+                                    $"One or more '{RoughnessFunction.Constant.GetDescription()}' values have a duplicate 'Chainage'",
+                                    model.ChannelFrictionDefinitions));
+                            }
+
+                            var invalidChainages = chainages
                                 .Where(chainage => chainage < 0 || chainage > channel.Length)
                                 .ToArray();
 

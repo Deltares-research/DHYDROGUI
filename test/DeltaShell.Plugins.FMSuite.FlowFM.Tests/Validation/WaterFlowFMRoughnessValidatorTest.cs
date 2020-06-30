@@ -225,6 +225,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         {
                             new ConstantSpatialChannelFrictionDefinition
                             {
+                                Chainage = 0,
+                                Value = 1
+                            },
+                            new ConstantSpatialChannelFrictionDefinition
+                            {
+                                Chainage = 50,
+                                Value = 2
+                            },
+                            new ConstantSpatialChannelFrictionDefinition
+                            {
+                                Chainage = 50,
+                                Value = 3
+                            },
+                            new ConstantSpatialChannelFrictionDefinition
+                            {
+                                Chainage = 100,
+                                Value = 4
+                            },
+                        });
+                    },
+                    ExpectedMessage = "One or more 'Constant' values have a duplicate 'Chainage'",
+                    ExpectedSubject = waterFlowFmModel => waterFlowFmModel.ChannelFrictionDefinitions.First().Channel
+                };
+                yield return new InvalidRoughnessTestCaseData
+                {
+                    ConfigureRoughness = waterFlowFmModel =>
+                    {
+                        var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
+                        channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.AddRange(new[]
+                        {
+                            new ConstantSpatialChannelFrictionDefinition
+                            {
                                 Chainage = -1,
                                 Value = 1
                             },
