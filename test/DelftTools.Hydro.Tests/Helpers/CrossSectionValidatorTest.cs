@@ -471,10 +471,10 @@ namespace DelftTools.Hydro.Tests.Helpers
                 new Coordinate(0, 0),
                 new Coordinate(15, -10.0),
                 new Coordinate(30, -10.0),
-                new Coordinate(45, 0)
+                new Coordinate(45.000001, 0) // Note: ensure epsilon of 1e-5 is taken into account
             });
 
-            Assert.That(csDef.FlowWidth(), Is.EqualTo(45.0));
+            Assert.That(csDef.FlowWidth(), Is.EqualTo(45.000001));
             return csDef;
         }
 

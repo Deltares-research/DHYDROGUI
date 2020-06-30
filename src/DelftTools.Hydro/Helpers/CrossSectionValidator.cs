@@ -152,7 +152,7 @@ namespace DelftTools.Hydro.Helpers
             if (crossSection is CrossSectionDefinitionStandard stdCrossSection &&
                 stdCrossSection.ShapeType == CrossSectionStandardShapeType.Trapezium) return true;
             var sectionsTotalWidth = crossSection.SectionsTotalWidth();
-            return sectionsTotalWidth - crossSection.FlowWidth() >= -1e-10;
+            return sectionsTotalWidth - crossSection.FlowWidth() >= -1e-5;
         }
 
         private static ICrossSectionDefinition GetUnProxiedCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition)
