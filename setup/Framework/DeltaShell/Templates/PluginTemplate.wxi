@@ -99,31 +99,30 @@
   <!--Include the guids that should be regenerated regularly-->
   <?include "ApplicationGUIDs.wxi"?>
   
-  <?ifdef var.InternalReleaseVersion ?>
-  <?define FullProductVersion="$(var.InternalReleaseVersion)" ?>
-  <?else?>
   <?define FullProductVersion="$(var.ReleaseVersion)" ?>
-  <?endif?>
-
   <?define FullProductNameVersion="$(var.ReleaseVersion)" ?>
+
+  <?define DHydroApplicationName="$(var.ApplicationName)" ?>
+  <?define DHydroFullVersion="$(var.PublicReleaseVersion)" ?>
 
   <?if $(var.Configuration) != "Release"?>
     <?ifdef env.BUILD_NUMBER ?>
       <?define FullProductNameVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
+      <?define DHydroFullVersion="$(var.PublicReleaseVersion).$(env.BUILD_NUMBER)" ?>
       <?ifndef excludeBuildNumberFromVersion ?>
-        <?ifdef var.InternalReleaseVersion ?>
-          <?define FullProductVersion="$(var.InternalReleaseVersion).$(env.BUILD_NUMBER)" ?>
-        <?else?>
         <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
-        <?endif?>
       <?endif?>
     <?endif?>
   <?endif?>
 
+  <?ifdef var.dHydroConfig?>
+  <?define FullProductName="$(var.ApplicationName) ($(var.DHydroFullVersion))" ?>
+  <?else?>
   <?define FullProductName="$(var.ProductName) ($(var.FullProductNameVersion))" ?>
+  <?endif?>
   
   <?define ShortProductVersion="$(var.ReleaseVersion)"?>
-    
+
   <?define deltashell_output_folder="$(var.SolutionDir)bin\$(var.Configuration)\"?>
   <?define deltashell_gui_bin="$(var.deltashell_output_folder)DeltaShell\"?>
     

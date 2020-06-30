@@ -12,6 +12,8 @@
 
   <?define excludeBuildNumberFromVersion="true"?>
 
+  <?define dHydroConfig="true"?>
+
   <?ifdef var.RWS?>
   <?define Delft3DPackageName="D-HYDRO"?>
   <?define registrationFeature="D-HYDRO"?>
@@ -54,7 +56,7 @@
   <?define supportEmail="delft3d.support@deltares.nl"?>
 
   <!-- optional splash screen -->
-  <?define mainWindowTitle="$(var.ProductName)"?>
+  <?define mainWindowTitle="$(var.ApplicationName)"?>
   <?define splashScreenLogoImageFilePath="splash_screen.jpg"?>
   
   <?define splashScreenCompany="Rijkswaterstaat"?>
