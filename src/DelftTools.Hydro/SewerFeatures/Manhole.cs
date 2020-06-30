@@ -151,6 +151,38 @@ namespace DelftTools.Hydro.SewerFeatures
 
             return outlet;
         }
+        
+        /// <summary>
+        /// Downgrade an internal outlet to compartment
+        /// </summary>
+        /// <param name="outlet"></param>
+        /// <returns></returns>
+        public Compartment DowngradeOutletCompartmentToCompartment(OutletCompartment outlet)
+        {
+            var compartment = new Compartment(outlet);
+            compartment.TakeConnectionsOverFrom(outlet);
+
+            lock (Compartments)
+            {
+                Compartments.Remove(outlet);
+                Compartments.Add(compartment);
+            }
+
+            var incomingBranches = IncomingBranches;
+            incomingBranches
+                .OfType<ISewerConnection>()
+                .Where(sw => sw.TargetCompartment == outlet)
+                .ForEach(sw => sw.TargetCompartment = compartment);
+            IncomingBranches = incomingBranches;
+            var outgoingBranches = OutgoingBranches;
+            outgoingBranches 
+                .OfType<ISewerConnection>()
+                .Where(sw => sw.SourceCompartment == outlet)
+                .ForEach(sw => sw.SourceCompartment = compartment);
+            OutgoingBranches = outgoingBranches;
+
+            return compartment;
+        }
 
         private void CompartmentCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {

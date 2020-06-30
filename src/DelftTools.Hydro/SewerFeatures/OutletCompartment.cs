@@ -32,16 +32,6 @@ namespace DelftTools.Hydro.SewerFeatures
         [DisplayName("Surface water level")]
         public double SurfaceWaterLevel { get; set; }
 
-        public void TakeConnectionsOverFrom(ICompartment compartment)
-        {
-            var hydroNetwork = ParentManhole?.HydroNetwork;
-            if (hydroNetwork != null)
-            {
-                ReconnectSewerConnections(compartment, hydroNetwork);
-            }
-
-        }
-
         #region GUI
         // Hide these properties in the Outlets MDE
         public override CompartmentShape Shape { get => base.Shape; set => base.Shape = value; }

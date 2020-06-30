@@ -20,7 +20,19 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             
         }
-
+        public Compartment(ICompartment compartment) : this("outletCompartment")
+        {
+            Name = compartment.Name;
+            ParentManhole = compartment.ParentManhole;
+            ParentManholeName = compartment.ParentManholeName;
+            SurfaceLevel = compartment.SurfaceLevel;
+            ManholeLength = compartment.ManholeLength;
+            ManholeWidth = compartment.ManholeWidth;
+            FloodableArea = compartment.FloodableArea;
+            BottomLevel = compartment.BottomLevel;
+            Geometry = compartment.Geometry;
+            Shape = compartment.Shape;
+        }
         public Compartment(string name)
         {
             Name = name;
@@ -203,7 +215,15 @@ namespace DelftTools.Hydro.SewerFeatures
 
             if (helper != null) helper.ManholesByCompartmentName.AddOrUpdate(name, manhole, (orgManholeName, oldManhole) => manhole);
         }
+        public virtual void TakeConnectionsOverFrom(ICompartment compartment)
+        {
+            var hydroNetwork = ParentManhole?.HydroNetwork;
+            if (hydroNetwork != null)
+            {
+                ReconnectSewerConnections(compartment, hydroNetwork);
+            }
 
+        }
         protected void ReconnectSewerConnections(ICompartment oldCompartment, IHydroNetwork network)
         {
             ReconnectSources(oldCompartment, network);

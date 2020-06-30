@@ -704,6 +704,7 @@
     <Compile Include="MapTools\ImportBranchesFromSelectionMapTool.cs" />
     <Compile Include="MapTools\ImportBranchFeaturesFromSelectedFeaturesMapTool.cs" />
     <Compile Include="MapTools\ImportCrossSectionsFromCsvMapTool.cs" />
+    <Compile Include="MapTools\OutletCompartmentContextMenuMapTool.cs" />
     <Compile Include="MapTools\PasteBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\PasteIntoBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\SelectBranchesAlongShortestPathTool.cs" />

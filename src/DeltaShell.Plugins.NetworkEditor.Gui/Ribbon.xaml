@@ -55,11 +55,6 @@
                         <Rectangle Fill="{StaticResource ManholeBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
-                <fluent:ToggleButton x:Name="ButtonAddNewOutlet" Header="Add outlet" ToolTip="Add new outlet" Click="OnClick" Size="Middle" SizeDefinition="Small,Small,Small">
-                    <fluent:ToggleButton.Icon>
-                        <Rectangle Fill="{StaticResource OutletBrush}"/>
-                    </fluent:ToggleButton.Icon>
-                </fluent:ToggleButton>
                 <Separator />
 
                 <!-- cross-sections --> 

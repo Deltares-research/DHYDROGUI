@@ -2686,6 +2686,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/ImportBranchFeaturesFromSelect
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/ImportBranchesFromSelectionMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/ImportCrossSectionsFromCsvMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/LeveeBreachMapTool.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/OutletCompartmentContextMenuMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/PasteBranchFeaturesMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/PasteIntoBranchFeaturesMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/SelectBranchesAlongShortestPathTool.cs -text

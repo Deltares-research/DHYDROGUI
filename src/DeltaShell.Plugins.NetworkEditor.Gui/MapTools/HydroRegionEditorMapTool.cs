@@ -221,6 +221,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var newExtraResistanceTool = new NewPointFeatureTool<ExtraResistance>(AddExtraResistanceToolName) { Cursor = NewExtraResistanceToolCursor };
             AddMapTool(newExtraResistanceTool);
 
+            var outletCompartmentContextMenuMapTool = new OutletCompartmentContextMenuMapTool();
+            AddMapTool(outletCompartmentContextMenuMapTool);
+
             // DrainageBasin
             Func<ILayer, bool> isCatchmentLayer = FeatureTypeLayerFilter<Catchment>;
             var newLineToolCatchment = new NewLineTool(isCatchmentLayer, AddCatchmentToolName)
