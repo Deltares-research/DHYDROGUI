@@ -358,25 +358,34 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                                 structureFriction.MainFrictionFunctionType, bridge.Name);
                 return;
             }
-            bridge.FrictionType = (BridgeFrictionType)structureFriction.MainFrictionType;
-            bridge.Friction = structureFriction.MainFrictionConst;
-            if (structureFriction.GroundLayerFrictionType != structureFriction.MainFrictionType)
+
+            try
             {
-                if (bridge.GroundLayerEnabled)
+                bridge.FrictionType = (BridgeFrictionType)structureFriction.MainFrictionType;
+                bridge.Friction = structureFriction.MainFrictionConst;
+                if (structureFriction.GroundLayerFrictionType != structureFriction.MainFrictionType)
                 {
-                    //should be the same
-                    log.WarnFormat(
-                        "Bridge '{2}': Bed friction type (={0}) and groundlayer friction type (={1}) should be the same. Groundlayer roughness was set to 0.",
-                        (CulvertFrictionType) structureFriction.MainFrictionType,
-                        (CulvertFrictionType) structureFriction.GroundLayerFrictionType,
-                        bridge.Name);
-                    bridge.GroundLayerRoughness = 0.0;
+                    if (bridge.GroundLayerEnabled)
+                    {
+                        //should be the same
+                        log.WarnFormat(
+                            "Bridge '{2}': Bed friction type (={0}) and groundlayer friction type (={1}) should be the same. Groundlayer roughness was set to 0.",
+                            (BridgeFrictionType)structureFriction.MainFrictionType,
+                            (BridgeFrictionType)structureFriction.GroundLayerFrictionType,
+                            bridge.Name);
+                        bridge.GroundLayerRoughness = 0.0;
+                    }
+                }
+                else
+                {
+                    bridge.GroundLayerRoughness = structureFriction.GroundLayerFrictionValue;
                 }
             }
-            else
+            catch (Exception e)
             {
-                bridge.GroundLayerRoughness = structureFriction.GroundLayerFrictionValue;
+                log.Warn($"Bridge '{bridge.Name}': Bed friction type (={structureFriction.MainFrictionType}) does not exits for bridges. Because of {e.Message}");
             }
+
         }
 
         private static void SetCulvertFriction(ICulvert culvert, SobekStructureFriction structureFriction)
@@ -398,26 +407,35 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                                 "{0} Friction of culvert {1} set default type Chezy and value 45.",
                                 structureFriction.MainFrictionFunctionType, culvert.Name);
             }
-            culvert.FrictionType = (CulvertFrictionType)structureFriction.MainFrictionType;
-            culvert.Friction = structureFriction.MainFrictionConst;
 
-            if (structureFriction.GroundLayerFrictionType != structureFriction.MainFrictionType)
+            try
             {
-                if (culvert.GroundLayerEnabled)
+                culvert.FrictionType = (CulvertFrictionType)structureFriction.MainFrictionType;
+                culvert.Friction = structureFriction.MainFrictionConst;
+
+                if (structureFriction.GroundLayerFrictionType != structureFriction.MainFrictionType)
                 {
-                    //should be the same
-                    log.WarnFormat(
-                        "Culvert '{2}': Bed friction type (={0}) and groundlayer friction type (={1}) should be the same. Groundlayer roughness was set to 0.",
-                        (CulvertFrictionType)structureFriction.MainFrictionType,
-                        (CulvertFrictionType)structureFriction.GroundLayerFrictionType,
-                        culvert.Name);
+                    if (culvert.GroundLayerEnabled)
+                    {
+                        //should be the same
+                        log.WarnFormat(
+                            "Culvert '{2}': Bed friction type (={0}) and groundlayer friction type (={1}) should be the same. Groundlayer roughness was set to 0.",
+                            (CulvertFrictionType)structureFriction.MainFrictionType,
+                            (CulvertFrictionType)structureFriction.GroundLayerFrictionType,
+                            culvert.Name);
+                    }
+                    culvert.GroundLayerRoughness = 0.0;
                 }
-                culvert.GroundLayerRoughness = 0.0;
+                else
+                {
+                    culvert.GroundLayerRoughness = structureFriction.GroundLayerFrictionValue;
+                }
             }
-            else
+            catch (Exception e)
             {
-                culvert.GroundLayerRoughness = structureFriction.GroundLayerFrictionValue;
+                log.Warn($"Culvert:'{culvert.Name}': Bed friction type (={structureFriction.MainFrictionType}) does not exits for culverts. Because of {e.Message}");
             }
+            
         }
 
         /// <summary>
