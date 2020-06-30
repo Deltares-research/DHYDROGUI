@@ -81,6 +81,99 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 {
                     ConfigureRoughness = waterFlowFmModel => { }
                 };
+                yield return new RoughnessTestCaseData
+                {
+                    ConfigureRoughness = waterFlowFmModel =>
+                    {
+                        var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
+                        channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.AddRange(new[]
+                        {
+                            new ConstantSpatialChannelFrictionDefinition
+                            {
+                                Chainage = 0,
+                                Value = 2
+                            },
+                            new ConstantSpatialChannelFrictionDefinition
+                            {
+                                Chainage = 50,
+                                Value = 3
+                            },
+                            new ConstantSpatialChannelFrictionDefinition
+                            {
+                                Chainage = 100,
+                                Value = 4
+                            }
+                        });
+                    }
+                };
+                yield return new RoughnessTestCaseData
+                {
+                    ConfigureRoughness = waterFlowFmModel =>
+                    {
+                        var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
+                        channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfQ;
+
+                        var function = channelFrictionDefinition.SpatialChannelFrictionDefinition.Function;
+                        function[0.0, 1.0] = 2.0;
+                        function[50.0, 3.0] = 4.0;
+                        function[100.0, 5.0] = 6.0;
+                    }
+                };
+                yield return new RoughnessTestCaseData
+                {
+                    ConfigureRoughness = waterFlowFmModel =>
+                    {
+                        var channelFrictionDefinition = waterFlowFmModel.ChannelFrictionDefinitions.First();
+                        channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfH;
+
+                        var function = channelFrictionDefinition.SpatialChannelFrictionDefinition.Function;
+                        function[0.0, 1.0] = 2.0;
+                        function[50.0, 3.0] = 4.0;
+                        function[100.0, 5.0] = 6.0;
+                    }
+                };
+                yield return new RoughnessTestCaseData
+                {
+                    ConfigureRoughness = waterFlowFmModel =>
+                    {
+                        waterFlowFmModel.ChannelFrictionDefinitions.First().SpecificationType = ChannelFrictionSpecificationType.ModelSettings;
+                        waterFlowFmModel.ChannelFrictionDefinitions.Last().SpecificationType = ChannelFrictionSpecificationType.ModelSettings;
+
+                        var hydroNetwork = waterFlowFmModel.Network;
+                        var channel1 = hydroNetwork.Channels.First();
+                        var channel2 = hydroNetwork.Channels.Last();
+                        var crossSection1 = new CrossSection(new CrossSectionDefinitionYZ("crs1"));
+                        var crossSection2 = new CrossSection(new CrossSectionDefinitionYZ("crs2"));
+
+                        channel1.BranchFeatures.Add(crossSection1);
+                        channel2.BranchFeatures.Add(crossSection2);
+                        crossSection1.ShareDefinitionAndChangeToProxy();
+                        crossSection2.UseSharedDefinition(hydroNetwork.SharedCrossSectionDefinitions.First());
+                    }
+                };
+                yield return new RoughnessTestCaseData
+                {
+                    ConfigureRoughness = waterFlowFmModel =>
+                    {
+                        waterFlowFmModel.ChannelFrictionDefinitions.First().SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
+                        waterFlowFmModel.ChannelFrictionDefinitions.Last().SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
+
+                        var hydroNetwork = waterFlowFmModel.Network;
+                        var channel1 = hydroNetwork.Channels.First();
+                        var channel2 = hydroNetwork.Channels.Last();
+                        var crossSection1 = new CrossSection(new CrossSectionDefinitionYZ("crs1"));
+                        var crossSection2 = new CrossSection(new CrossSectionDefinitionYZ("crs2"));
+
+                        channel1.BranchFeatures.Add(crossSection1);
+                        channel2.BranchFeatures.Add(crossSection2);
+                        crossSection1.ShareDefinitionAndChangeToProxy();
+                        crossSection2.UseSharedDefinition(hydroNetwork.SharedCrossSectionDefinitions.First());
+                    }
+                };
             }
         }
 
