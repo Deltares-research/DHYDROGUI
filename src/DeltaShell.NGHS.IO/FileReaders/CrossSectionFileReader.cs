@@ -319,6 +319,15 @@ namespace DeltaShell.NGHS.IO.FileReaders
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.ZW)
             {
                 var mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network);
+                var flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths.Key);
+
+                var frictionId = csdDefinitionCategory.ReadProperty<string>(DefinitionPropertySettings.FrictionId.Key, true);
+                if (frictionId != null)
+                {
+                    // Handle scenario of a zw profile (tabulated) that doesn't contain a template
+                    readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, flowWidths.Max());
+                    return;
+                }
 
                 var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds.Key, true, ';');
                 if (frictionIds != null && frictionIds.Count == 3 && frictionIds.All(fi => fi.Equals(defaultFrictionId)))
@@ -329,8 +338,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
                 var mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.Main.Key);
                 var floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.FloodPlain1.Key,true);
-                var flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths.Key);
-            
+           
                 var floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
 
                 readCrossSectionDefinition.Sections.Clear();
