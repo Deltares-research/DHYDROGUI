@@ -2282,6 +2282,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewPipeCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewPumpCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewRetentionCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewRunoffBoundaryCommand.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewSewerConnectionCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewWasteWaterTreatmentPlantCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewWeirCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/ImportBranchesCommand.cs -text
