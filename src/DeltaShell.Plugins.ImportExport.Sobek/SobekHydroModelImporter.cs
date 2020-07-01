@@ -288,6 +288,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                         log.Warn(e.Message);
                     }
                 }
+
+                hydroModel.OverrideStopTime = true;
+                hydroModel.OverrideStartTime = true;
+                hydroModel.OverrideTimeStep = true;
             }
 
             var timeDependentModel = hydroModel.Activities.OfType<ITimeDependentModel>().FirstOrDefault();
