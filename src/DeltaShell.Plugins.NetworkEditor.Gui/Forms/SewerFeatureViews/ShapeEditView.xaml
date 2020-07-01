@@ -24,7 +24,7 @@
                             <ColumnDefinition Width="120"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Content="Crest level [m]"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CrestLevel}"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CrestLevel, StringFormat={}{0:G3}}"/>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type structures:Pump}">
@@ -40,13 +40,13 @@
                             <ColumnDefinition Width="120"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Grid.Row="2" Content="Start level delivery side[m]"/>
-                        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding StartDelivery}"/>
+                        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding StartDelivery, StringFormat={}{0:G3}}"/>
                         <Label Grid.Column="0" Grid.Row="3" Content="Stop level delivery side [m]"/>
-                        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding StopDelivery}"/>
+                        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding StopDelivery, StringFormat={}{0:G3}}"/>
                         <Label Grid.Column="0" Grid.Row="0" Content="Start level suction side [m]"/>
-                        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding StartSuction}"/>
+                        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding StartSuction, StringFormat={}{0:G3}}"/>
                         <Label Grid.Column="0" Grid.Row="1" Content="Stop level suction side [m]"/>
-                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding StopSuction}"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding StopSuction, StringFormat={}{0:G3}}"/>
                     </Grid>
                 </DataTemplate>
 
@@ -60,7 +60,7 @@
                             <ColumnDefinition Width="120"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Content="Bottom level [m]"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding BottomLevel}"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding BottomLevel, StringFormat={}{0:G3}}"/>
                     </Grid>
                 </DataTemplate>
 

@@ -37,20 +37,20 @@
         <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Compartment.Name}"/>
 
         <Label Grid.Column="0" Grid.Row="1" Content="Surface level [m]"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Compartment.SurfaceLevel}"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Compartment.SurfaceLevel, StringFormat={}{0:G3}}"/>
 
         <Label Grid.Column="0" Grid.Row="2" Content="Bottom level [m]"/>
-        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Compartment.BottomLevel}"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Compartment.BottomLevel, StringFormat={}{0:G3}}"/>
 
         <!-- Right column -->
         <Label Grid.Column="0" Grid.Row="3" Content="Width / diameter [m]"/>
-        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Compartment.ManholeWidth}"/>
+        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Compartment.ManholeWidth, StringFormat={}{0:G3}}"/>
 
         <Label Grid.Column="0" Grid.Row="4" Content="Length"/>
-        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Compartment.ManholeLength}"/>
+        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Compartment.ManholeLength, StringFormat={}{0:G3}}"/>
 
         <Label Grid.Column="0" Grid.Row="5" Content="Storage area [m2]"/>
-        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Compartment.FloodableArea}"/>
+        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Compartment.FloodableArea, StringFormat={}{0:G3}}"/>
 
        
 
