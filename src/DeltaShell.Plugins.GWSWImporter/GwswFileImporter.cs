@@ -307,7 +307,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         /// <param name="lateralSource"></param>
         private void AddLateralSourceToBranch(IBranch branch, LateralSource lateralSource)
         {
-            lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
+            lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, 0);
             lock(branch.BranchFeatures)
                 branch.BranchFeatures.Add(lateralSource);
         }
