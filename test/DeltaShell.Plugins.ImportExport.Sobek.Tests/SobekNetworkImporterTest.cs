@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
@@ -1231,24 +1229,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 12), crossSectionDef.Sections[4].SectionType.Name);
             Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 13), crossSectionDef.Sections[5].SectionType.Name);
             Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 14), crossSectionDef.Sections[6].SectionType.Name);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void IgnoreOrphanedBDFRrecords()
-        {
-            var path = TestHelper.GetTestDataDirectory() + @"\profshft.lit\1\friction.dat";
-            var defFileText = File.ReadAllText(path, Encoding.Default);
-            var sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(defFileText);
-            Assert.AreEqual(2, sobekFriction.SobekBedFrictionList.Count); // 2 BDFR records
-
-            path = TestHelper.GetTestDataDirectory() + @"\profshft.lit\1\network.tp";
-            var importer = new SobekModelToIntegratedModelImporter();
-            var waterFlowFmModel = (WaterFlowFMModel)importer.ImportItem(path);
-
-            var main = waterFlowFmModel.RoughnessSections.FirstOrDefault(rs => rs.Name.ToUpper().Contains("MAIN"));
-            // no mainchannel because no tabulated profiles
-            Assert.IsNull(main);
         }
 
         [Test]
