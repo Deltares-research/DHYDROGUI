@@ -110,12 +110,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             var exporters = (List<IFileExporter>)Application.FileExporters;
             foreach (IFileExporter exporter in exporters.ToList())
             {
-               // bool containsItem = myList.Any(item => item.UniqueProperty == wonderIfItsPresent.UniqueProperty);
-                // check if the exporter is ProjectItemExporter
                 if (exporter is IProjectItemExporter)
                 {
-                   // exporters.
-                   exporters.Remove(exporter);
+                    exporters.Remove(exporter);
                 }
             }
         }
