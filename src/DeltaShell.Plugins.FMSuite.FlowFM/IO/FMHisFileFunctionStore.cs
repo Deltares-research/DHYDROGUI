@@ -63,10 +63,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if(CoordinateSystem == null)
                 CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(Path);
+            Close();
             base.UpdateFunctionsAfterPathSet();
         }
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
+            FeaturesByCoverage.Clear();
+            
             // add special velocity timeseries?
             foreach (var timeVariable in dataVariables.Where(v => v.IsTimeDependent))
             {
