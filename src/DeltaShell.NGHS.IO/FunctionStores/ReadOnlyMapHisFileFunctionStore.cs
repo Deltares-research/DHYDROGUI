@@ -211,7 +211,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                     throw new NotImplementedException();
                 
                 var locationIndex = locationFilter != null ? locationFilter.Values[0] : -1;
-                var timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
+                var timeIndex = timeFilter != null ? MetaData?.Times.IndexOf(timeFilter.Values[0]) ?? -1 : -1;
 
                 data = timeIndex != -1
                     ? MapHisFileReader.GetTimeStepData(path, MetaData, timeIndex, parameterName, locationIndex)
@@ -221,7 +221,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                 {
                     shape = timeIndex != -1
                         ? new[] {1, data.Count}
-                        : new[] {MetaData.NumberOfTimeSteps, 1};
+                        : new[] { MetaData?.NumberOfTimeSteps ?? 1, 1};
                 }
             }
 
@@ -233,20 +233,20 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                 {
                     Func<IMultiDimensionalArray<double>> realGetFunction = () =>
                     {
-                        var values = Enumerable.Range(0, MetaData.Times.Count)
+                        var values = Enumerable.Range(0, MetaData?.Times.Count ?? 1)
                             .SelectMany(i => MapHisFileReader.GetTimeStepData(path, MetaData, i, parameterName))
                             .ToList();
                         UpdateMinMax(values, parameterName, function);
-                        return new MultiDimensionalArray<double>(values, MetaData.NumberOfTimeSteps, MetaData.NumberOfLocations);
+                        return new MultiDimensionalArray<double>(values, MetaData?.NumberOfTimeSteps ?? 1, MetaData?.NumberOfLocations ?? 1);
                     };
-                    return new LazyMultiDimensionalArray<double>(realGetFunction, () => MetaData.NumberOfTimeSteps * MetaData.NumberOfLocations);
+                    return new LazyMultiDimensionalArray<double>(realGetFunction, () => MetaData?.NumberOfTimeSteps ?? 1 * MetaData?.NumberOfLocations ?? 1);
                 }
 
                 var featureVariableFilters = filters.Where(f => f.Variable == featureVariable).OfType<VariableValueFilter<IFeature>>().ToList();
                 var locationIndex = featureVariableFilters.Count == 1
-                    ? MetaData.Locations.IndexOf(LocationFromObjectToString(featureVariableFilters[0].Values[0]))
+                    ? MetaData?.Locations.IndexOf(LocationFromObjectToString(featureVariableFilters[0].Values[0])) ?? -1
                     : -1;
-                var timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
+                var timeIndex = timeFilter != null ? MetaData?.Times.IndexOf(timeFilter.Values[0]) ?? -1 : -1;
 
                 data = timeIndex != -1
                     ? MapHisFileReader.GetTimeStepData(path, MetaData, timeIndex, parameterName, locationIndex)
@@ -256,12 +256,12 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                 {
                     shape = timeIndex != -1
                         ? new[] { 1, data.Count }
-                        : new[] { MetaData.NumberOfTimeSteps, 1 };
+                        : new[] { MetaData?.NumberOfTimeSteps ?? 1, 1 };
                 }
             }
 
             // TimeSeries
-            if (function.Arguments.Count == 1 && !filters.Any() && MetaData.NumberOfLocations == 1)
+            if (MetaData != null && function.Arguments.Count == 1 && !filters.Any() && MetaData.NumberOfLocations == 1)
             {
                 data = MapHisFileReader.GetTimeSeriesData(path, MetaData, parameterName, 0);
                 shape = new[] {MetaData.NumberOfTimeSteps};
@@ -279,12 +279,12 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             var argumentTimeFilter = filters.OfType<VariableValueFilter<DateTime>>().FirstOrDefault();
             if (function.ValueType == typeof(DateTime))
             {
-                return new MultiDimensionalArray<DateTime>(argumentTimeFilter == null? MetaData.Times : argumentTimeFilter.Values);
+                return new MultiDimensionalArray<DateTime>(argumentTimeFilter == null? MetaData?.Times ?? new []{default(DateTime)} : argumentTimeFilter.Values);
             }
 
             if (function.ValueType.Implements(typeof(IFeature)))
             {
-                var features = MetaData.Locations.Select(GetObjectForLocationName).OfType<IFeature>().ToList();
+                var features = MetaData?.Locations.Select(GetObjectForLocationName).OfType<IFeature>().ToList();
 
                 if (filters.Length == 1 && argumentTimeFilter != null)
                 {
@@ -298,7 +298,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
             if (function.ValueType == typeof(int) && !filters.Any())
             {
-                return new MultiDimensionalArray<int>(MetaData.Locations.Select(l => Convert.ToInt32(l)).ToList());
+                return new MultiDimensionalArray<int>(MetaData?.Locations.Select(l => Convert.ToInt32(l)).ToList());
             }
 
             throw new NotImplementedException();
@@ -311,7 +311,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
         private void UpdateMinMaxWithOneTimeStep(IVariable variable)
         {
-            if (MetaData.NumberOfTimeSteps == 0) return;
+            if (MetaData == null || MetaData.NumberOfTimeSteps == 0) return;
 
             var dateTimeVariable = variable.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
             GetVariableValues(variable, new VariableValueFilter<DateTime>(dateTimeVariable, MetaData.Times[0]));
@@ -338,7 +338,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
             if (typeof(T) == typeof(DateTime))
             {
-                var maxDateTime = MetaData.Times.Count == 0 ? MetaData.Times[0] : MetaData.Times.Last();
+                var maxDateTime = MetaData?.Times.Count == 0 ? MetaData.Times[0] : MetaData?.Times.Last() ?? default(DateTime);
                 return (T) Convert.ChangeType(maxDateTime, typeof(T));
             }
 
@@ -365,7 +365,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             }
             if (typeof(T) == typeof(DateTime))
             {
-                return (T) Convert.ChangeType(MetaData.Times[0], typeof(T));
+                return (T) Convert.ChangeType(MetaData?.Times[0] ?? default(DateTime), typeof(T));
             }
 
             throw new NotSupportedException("Map or His file only contains doubles or datetime values");

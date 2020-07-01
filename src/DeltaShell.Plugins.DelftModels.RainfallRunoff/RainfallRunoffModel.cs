@@ -1288,7 +1288,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     var readOnlyMapHisFileFunctionStore = function.Store as ReadOnlyMapHisFileFunctionStore;
                     if (readOnlyMapHisFileFunctionStore != null)
                     {
-                        readOnlyMapHisFileFunctionStore.Path = System.IO.Path.Combine(workingDir, fileName);
+                        var path = System.IO.Path.Combine(workingDir, fileName);
+                        readOnlyMapHisFileFunctionStore.Path = File.Exists(path) ? path : null;
                     }
                 }
             });
