@@ -10,8 +10,6 @@
 
   <?define noDeltaShellFrameworkManual="true"?>
 
-  <?define excludeBuildNumberFromVersion="true"?>
-
   <?define dHydroConfig="true"?>
 
   <?ifdef var.RWS?>

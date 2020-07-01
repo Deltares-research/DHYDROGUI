@@ -48,7 +48,8 @@
       
                         
   Optional variables:
-  - excludeBuildNumberFromVersion:  Enable to remove the env.BUILD_NUMBER from the var.FullProductVersion, and include it in the var.FullProductName instead
+  - dHydroConfig:                   Enable to use the d-hydro specific setup configuration. You must define the following variables: var.ApplicationName
+                                    and var.PublicReleaseVersion.
   - noDeltaShellFrameworkManual:    If you set this to true the DeltaShell Framework user manual will not(!) be included in the install, neither the shortcut.
   - customizationwxi:               If you want to add extra files to the bin folder where Deltashell.Gui.exe is located, add them here.
                                     It has the same layout as manualswxi.
@@ -103,26 +104,27 @@
   <?define FullProductNameVersion="$(var.ReleaseVersion)" ?>
 
   <?ifdef var.dHydroConfig?>
-  <?define DHydroApplicationName="$(var.ApplicationName)" ?>
-  <?define DHydroFullVersion="$(var.PublicReleaseVersion)" ?>
-  <?endif?>
+    <?define DHydroApplicationName="$(var.ApplicationName)" ?>
+    <?define DHydroFullVersion="$(var.PublicReleaseVersion)" ?>
 
-  <?if $(var.Configuration) != "Release"?>
-    <?ifdef env.BUILD_NUMBER ?>
-      <?define FullProductNameVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
-      <?define DHydroFullVersion="$(var.PublicReleaseVersion).$(env.BUILD_NUMBER)" ?>
-      <?ifndef excludeBuildNumberFromVersion ?>
-        <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
+    <?if $(var.Configuration) != "Release"?>
+      <?ifdef env.BUILD_NUMBER ?>
+        <?define FullProductNameVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
+        <?define DHydroFullVersion="$(var.PublicReleaseVersion).$(env.BUILD_NUMBER)" ?>
       <?endif?>
     <?endif?>
+
+    <?define FullProductName="$(var.ApplicationName) ($(var.DHydroFullVersion))" ?>
+
+  <?else?>
+    <?ifdef env.BUILD_NUMBER ?>
+      <?define FullProductNameVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
+      <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
+    <?endif?>
+
+    <?define FullProductName="$(var.ProductName) ($(var.FullProductNameVersion))" ?>
   <?endif?>
 
-  <?ifdef var.dHydroConfig?>
-  <?define FullProductName="$(var.ApplicationName) ($(var.DHydroFullVersion))" ?>
-  <?else?>
-  <?define FullProductName="$(var.ProductName) ($(var.FullProductNameVersion))" ?>
-  <?endif?>
-  
   <?define ShortProductVersion="$(var.ReleaseVersion)"?>
 
   <?define deltashell_output_folder="$(var.SolutionDir)bin\$(var.Configuration)\"?>
