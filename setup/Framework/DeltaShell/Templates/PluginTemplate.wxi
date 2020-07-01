@@ -102,8 +102,10 @@
   <?define FullProductVersion="$(var.ReleaseVersion)" ?>
   <?define FullProductNameVersion="$(var.ReleaseVersion)" ?>
 
+  <?ifdef var.dHydroConfig?>
   <?define DHydroApplicationName="$(var.ApplicationName)" ?>
   <?define DHydroFullVersion="$(var.PublicReleaseVersion)" ?>
+  <?endif?>
 
   <?if $(var.Configuration) != "Release"?>
     <?ifdef env.BUILD_NUMBER ?>
