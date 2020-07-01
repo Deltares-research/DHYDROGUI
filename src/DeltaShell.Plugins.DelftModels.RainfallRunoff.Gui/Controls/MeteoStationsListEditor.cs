@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 
         public void SetSelection(IEnumerable<string> selection)
         {
-            if (selection != null && stationsList?.Items != null && data != null)
+            if (selection != null && stationsList?.Items != null && stationsList?.Items.Count > 0  && data != null)
             {
                 settingSectionFromOutside = true;
                 stationsList.ClearSelected();
