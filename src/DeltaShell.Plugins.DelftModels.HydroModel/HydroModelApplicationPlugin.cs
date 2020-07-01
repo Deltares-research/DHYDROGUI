@@ -87,6 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaveFailed -= ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened -= ApplicationProjectOpened;
                     Application.ProjectClosing -= ApplicationProjectClosing;
+                    Application.AfterRun -= ApplicationRemoveProjectExporter;
                 }
 
                 base.Application = value;
@@ -99,6 +100,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaved += ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened += ApplicationProjectOpened;
                     Application.ProjectClosing += ApplicationProjectClosing;
+                    Application.AfterRun += ApplicationRemoveProjectExporter;
+                }
+            }
+        }
+
+        private void ApplicationRemoveProjectExporter()
+        {
+            var exporters = (List<IFileExporter>)Application.FileExporters;
+            foreach (IFileExporter exporter in exporters.ToList())
+            {
+               // bool containsItem = myList.Any(item => item.UniqueProperty == wonderIfItsPresent.UniqueProperty);
+                // check if the exporter is ProjectItemExporter
+                if (exporter is IProjectItemExporter)
+                {
+                   // exporters.
+                   exporters.Remove(exporter);
                 }
             }
         }
@@ -142,8 +159,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             var initializeThread = new Thread(InitializeModelBuilder) {Priority = ThreadPriority.BelowNormal};
             initializeThread.Start();
-
+          
             base.Activate();
+
         }
 
         public override IEnumerable<IFileExporter> GetFileExporters()
