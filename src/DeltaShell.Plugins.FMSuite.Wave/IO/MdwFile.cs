@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             // time frame
-            modelDefinition.TimePointData = CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out IList<DateTime> _);
+            modelDefinition.TimePointData = CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out IList<DateTime> _, logHandler);
 
             ReadWaveBoundaries(modelDefinition, mdwCategories, mdwDir, logHandler);
 
@@ -883,7 +883,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         }
 
         private WaveInputFieldData CreateTimePointData(IEnumerable<DelftIniCategory> mdwCategories,
-                                                       DateTime referenceDate, out IList<DateTime> times)
+                                                       DateTime referenceDate, out IList<DateTime> times,
+                                                       ILogHandler logHandler)
         {
             var timePointData = new WaveInputFieldData
             {
@@ -908,7 +909,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             if (meteoFiles.Any())
             {
                 timePointData.WindDataType = InputFieldDataType.FromInputFiles;
-                timePointData.MeteoData = CreateMeteoDataFromFiles(meteoFiles);
+                timePointData.MeteoData = CreateMeteoDataFromFiles(meteoFiles, logHandler);
             }
 
             if (timePointData.HydroDataType == InputFieldDataType.Constant)
@@ -984,7 +985,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return timePointData;
         }
 
-        private WaveMeteoData CreateMeteoDataFromFiles(IReadOnlyCollection<string> meteoFiles)
+        private WaveMeteoData CreateMeteoDataFromFiles(IReadOnlyCollection<string> meteoFiles, ILogHandler logHandler)
         {
             List<string> spwFiles = meteoFiles.Where(mf => mf.EndsWith(".spw")).ToList();
             List<string> otherFiles = meteoFiles.Where(mf => !mf.EndsWith(".spw")).ToList();
@@ -1018,8 +1019,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 data = new WaveMeteoData
                 {
                     FileType = WindDefinitionType.WindXWindY,
-                    XComponentFilePath = Path.Combine(MdwFilePath, otherFiles[1]),
-                    YComponentFilePath = Path.Combine(MdwFilePath, otherFiles[1])
+                    XComponentFilePath = GetMeteoComponentFile(otherFiles, KnownWaveProperties.MeteoXComponentValue, logHandler),
+                    YComponentFilePath = GetMeteoComponentFile(otherFiles, KnownWaveProperties.MeteoYComponentValue, logHandler)
                 };
             }
             else
@@ -1035,6 +1036,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             return data;
+        }
+
+        private string GetMeteoComponentFile(IEnumerable<string> meteoFiles, string quantityParameterValue, ILogHandler logHandler)
+        {
+            foreach (string otherFile in meteoFiles)
+            {
+                string filePath = Path.Combine(Path.GetDirectoryName(MdwFilePath), otherFile);
+                MeteoFileProperty[] meteoProperties = new MeteoFileReader().Read(filePath).ToArray();
+
+                if (meteoProperties.First(mp => mp.Property == KnownWaveProperties.MeteoQuantityField).Value == quantityParameterValue)
+                {
+                    return otherFile;
+                }
+            }
+
+            logHandler.ReportError(string.Format(Resources.MdwFile_Could_not_find_meteo_file_for__0__, quantityParameterValue));
+            return string.Empty;
         }
 
         private IEnumerable<WaveObstacle> CreateObstacleData(DelftIniCategory generalCategory,

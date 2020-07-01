@@ -298,4 +298,7 @@
   <data name="MdwFile_In_the_MDW_file_the_property__0__is_missing__Based_on_property__1__the_default_value_is_set" xml:space="preserve">
     <value>In the MDW file the property {0} is missing. Based on property {1} the default value is set</value>
   </data>
+  <data name="MdwFile_Could_not_find_meteo_file_for__0__" xml:space="preserve">
+    <value>Could not find meteo file for '{0}'</value>
+  </data>
 </root>
