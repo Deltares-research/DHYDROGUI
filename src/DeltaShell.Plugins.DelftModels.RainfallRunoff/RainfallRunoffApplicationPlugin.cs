@@ -84,6 +84,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private void SaveToFile(Project project)
         {
+            if (project == null || project.RootFolder == null) return;
+
             var projectDataFolderDirectory = Application.ProjectDataDirectory;
             var rrModels = project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
             var exporter = new RainfallRunoffModelExporter();
