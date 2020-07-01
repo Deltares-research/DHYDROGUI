@@ -96,6 +96,7 @@
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51143-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
