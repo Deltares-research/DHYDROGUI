@@ -50,12 +50,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                                                                                  new IPartialSobekImporter[]
                                                                                      {
                                                                                          new SobekBranchesImporter(),
-                                                                                         new SobekRoughnessImporter(),
+                                                                                         new SobekRoughnessImporter()
                                                                                      });
 
             TestHelper.AssertIsFasterThan(38000, importer.Import);
             var locationCount = flowModel.RoughnessSections.SelectMany(rs => rs.RoughnessNetworkCoverage.Locations.Values).Count();
-            Assert.AreEqual(8684, locationCount);
+            Assert.AreEqual(8737, locationCount);
         }
 
         [Test]
