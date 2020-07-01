@@ -340,11 +340,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             yield return new FlowFMNetFileImporter {GetModelForGrid = GetModelForGrid};
 
-            var rasterFileImporter = new RasterFileImporter();
-            rasterFileImporter.RegisterGetModelFunction<UnstructuredGrid>(GetModelForGrid);
-            rasterFileImporter.RegisterGetModelFunction<UnstructuredGridCoverage>(GetModelForBathymetry);
-
-            yield return rasterFileImporter;
+            //var rasterFileImporter = new RasterFileImporter();
+            //rasterFileImporter.RegisterGetModelFunction<UnstructuredGrid>(GetModelForGrid);
+            //rasterFileImporter.RegisterGetModelFunction<UnstructuredGridCoverage>(GetModelForBathymetry);
+            //
+            //yield return rasterFileImporter;
 
             yield return new TimFileImporter
                 {
