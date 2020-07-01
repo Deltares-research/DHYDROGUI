@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             watch.Stop();
             Log.Info($"Done importing and generating model in {watch.ElapsedMilliseconds / 1000} sec");
             ProgressChanged?.Invoke($"Done importing and generating model in {watch.ElapsedMilliseconds/1000} sec from gwsw files, loading into DeltaShell", 10, 10);
-            return (target is Project || target == null) && !ShouldCancel ? hydroModel : null;
+            return (target is Project || target == null) && !ShouldCancel ? hydroModel : fmModel != null ? (object) fmModel : rrModel != null ? rrModel : null;
         }
 
         /// <summary>
