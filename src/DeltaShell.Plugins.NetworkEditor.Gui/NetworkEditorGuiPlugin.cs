@@ -455,16 +455,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             };
 
             var attributeTablePipeData = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<IPipe, IModelWithNetwork>(m => m.Network.Pipes, () => Gui);
-            var baseAfterCreate = attributeTablePipeData.AfterCreate;
+            var baseAfterCreatePipeData = attributeTablePipeData.AfterCreate;
             attributeTablePipeData.AfterCreate = (view, datas) =>
             {
-                baseAfterCreate(view, datas);
+                baseAfterCreatePipeData(view, datas);
                 var networkModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Equals(datas));
                 SetSharedCrossSectionDefinitionsComboBoxTypeEditor(view, networkModel);
 
                 view.TableView.FocusedRowChanged += (sender, args) => { SetSharedCrossSectionDefinitionsComboBoxTypeEditor(view, networkModel); };
             };
             yield return attributeTablePipeData;
+
+            var attributeTableSewerConnectionsData = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<ISewerConnection, IModelWithNetwork>(m => m.Network.SewerConnections, () => Gui);
+            var baseAfterCreateSewerConnectionsData = attributeTableSewerConnectionsData.AfterCreate;
+            attributeTableSewerConnectionsData.AfterCreate = (view, datas) =>
+            {
+                baseAfterCreateSewerConnectionsData(view, datas);
+                var networkModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Equals(datas));
+                SetCompartmentComboBoxTypeEditor(view, networkModel);
+
+                view.TableView.FocusedRowChanged += (sender, args) => { SetCompartmentComboBoxTypeEditor(view, networkModel); };
+            };
+            yield return attributeTableSewerConnectionsData;
 
             yield return new ViewInfo<LeveeBreach, LeveeBreachView>();
         }
@@ -483,6 +495,39 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 column.Editor = new ComboBoxTypeEditor
                 {
                     Items = networkModel.Network.SharedCrossSectionDefinitions.Select(d => d.Name),
+                    ItemsMandatory = false
+                };
+        }
+        private void SetCompartmentComboBoxTypeEditor(VectorLayerAttributeTableView view, IModelWithNetwork networkModel)
+        {
+            var sewerConnection = view.TableView.CurrentFocusedRowObject as SewerConnection;
+            if (sewerConnection?.Source == null ||
+                !(sewerConnection?.Source is IManhole sourceManhole) ||
+                sewerConnection.Target == null ||
+                !(sewerConnection?.Target is IManhole targetManhole)) return;
+            
+            var columnDisplayName = typeof(SewerConnection).GetProperty("SourceCompartment")?.
+                GetCustomAttributes(typeof(DisplayNameAttribute), true).
+                Cast<DisplayNameAttribute>().SingleOrDefault()?.
+                DisplayName;
+            if (columnDisplayName == null) return;
+            var column = view.TableView.Columns.FirstOrDefault(c => c.Caption.Equals(columnDisplayName, StringComparison.InvariantCultureIgnoreCase));
+            if (column != null)
+                column.Editor = new ComboBoxTypeEditor
+                {
+                    Items = sourceManhole.Compartments,
+                    ItemsMandatory = false
+                };
+            columnDisplayName = typeof(SewerConnection).GetProperty("TargetCompartment")?.
+                GetCustomAttributes(typeof(DisplayNameAttribute), true).
+                Cast<DisplayNameAttribute>().SingleOrDefault()?.
+                DisplayName;
+            if (columnDisplayName == null) return;
+            column = view.TableView.Columns.FirstOrDefault(c => c.Caption.Equals(columnDisplayName, StringComparison.InvariantCultureIgnoreCase));
+            if (column != null)
+                column.Editor = new ComboBoxTypeEditor
+                {
+                    Items = targetManhole.Compartments,
                     ItemsMandatory = false
                 };
         }

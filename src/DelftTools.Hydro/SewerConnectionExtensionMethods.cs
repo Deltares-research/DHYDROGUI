@@ -83,8 +83,7 @@ namespace DelftTools.Hydro
         /// <returns></returns>
         public static bool IsSpecialConnection(this ISewerConnection sewerConnection)
         {
-            var isCandidate = !sewerConnection.IsPipe() && !sewerConnection.IsInternalConnection();
-            return isCandidate && sewerConnection.BranchFeatures.Any();
+            return !sewerConnection.IsPipe() && !sewerConnection.IsInternalConnection();
         }
     }
 }

@@ -17,7 +17,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override void Add(IFeature feature)
         {
-            SewerFactory.AddDefaultPipeToNetwork((IPipe)feature, Network);
+            if(feature is IPipe pipe)
+                SewerFactory.AddDefaultPipeToNetwork(pipe, Network);
+            if(feature is SewerConnection sewerConnection)
+                SewerFactory.AddDefaultSewerConnectionToNetwork(sewerConnection, Network);
         }
 
         public override void Delete()

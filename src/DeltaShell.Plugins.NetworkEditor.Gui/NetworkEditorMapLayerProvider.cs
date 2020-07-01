@@ -720,7 +720,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     return CreateNetworkVectorLayer<Pipe>(pipes, "Pipes", hydroNetwork);
                 case IEnumerable<ISewerConnection> sewerConnections:
                     return CreateNetworkVectorLayer<SewerConnection>(sewerConnections, "Sewer Connections",
-                        hydroNetwork);
+                        hydroNetwork, refreshForChangedItem:o => !(o is IPipe) && o is SewerConnection sewerConnection && sewerConnection.BranchFeatures.Any() );
                 case IEnumerable<IHydroNode> hydroNodes:
                     return CreateNetworkVectorLayer<HydroNode>(hydroNodes, "Nodes", hydroNetwork);
                 case IEnumerable<IChannel> channels:
@@ -880,6 +880,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 }
                 };
             }
+            if (type == typeof(SewerConnection) && type != typeof(Pipe))
+            {
+                return new List<ISnapRule>
+                {
+                    new BranchSnapRule
+                    {
+                        Criteria = (layer, feature) => feature is IManhole && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                        NewFeatureLayer = vectorLayer,
+                        SnapRole = SnapRole.AllTrackers,
+                        Obligatory = false,
+                        PixelGravity = 40
+                    },
+                    new BranchSnapRule
+                    {
+                    Criteria = (layer, feature) => feature is Compartment && layer.DataSource is HydroNetworkFeatureCollection &&
+                    ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                    ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                    NewFeatureLayer = vectorLayer,
+                    SnapRole = SnapRole.AllTrackers,
+                    Obligatory = false,
+                    PixelGravity = 40
+                }
+                };
+            }
 
             if (type == typeof (CrossSection))
             {
@@ -967,10 +993,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                            };
             }
 
-            if (type == typeof(Weir) || 
-                type == typeof(Orifice) || 
-                type == typeof(Pump) || 
-                type == typeof(Culvert) || 
+            if (type == typeof(Culvert) || 
                 type == typeof(Bridge) || 
                 type == typeof(ExtraResistance))
             {
@@ -985,6 +1008,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                new SnapRule
                                    {
                                        Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                                      ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                                      ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                                       NewFeatureLayer = vectorLayer,
+                                       SnapRole = SnapRole.FreeAtObject,
+                                       Obligatory = true,
+                                       PixelGravity = 40
+                                   }
+                           };
+            }
+            if (type == typeof(Weir) || 
+                type == typeof(Orifice) || 
+                type == typeof(Pump))
+            {
+                return new List<ISnapRule>
+                           {
+                               new StructureSnapRule
+                                   {
+                                       // StructureSnapRule needs all structure layer for the custom geometry
+                                       NewFeatureLayer = vectorLayer,
+                                       PixelGravity = 40
+                                   },
+                               new SnapRule
+                               {
+                                   Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                                  ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                                  ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                                   NewFeatureLayer = vectorLayer,
+                                   SnapRole = SnapRole.FreeAtObject,
+                                   Obligatory = true,
+                                   PixelGravity = 40
+                               },
+                               new SnapRule
+                                   {
+                                       Criteria = (layer, feature) => feature is SewerConnection && !(feature is IPipe) && layer.DataSource is HydroNetworkFeatureCollection &&
                                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
                                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
                                        NewFeatureLayer = vectorLayer,

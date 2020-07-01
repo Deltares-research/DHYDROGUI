@@ -34,6 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewBranchScribbleCommand = new AddNewBranchUsingScribbleModeCommand();
         private ICommand insertNewNodeCommand = new InsertNewNodeCommand();
         private ICommand addNewPipeCommand = new AddNewPipeCommand();
+        private ICommand addNewSewerConnectionCommand = new AddNewSewerConnectionCommand();
         private ICommand splitPipeCommand = new SplitPipeCommand();
         private ICommand addNewCrossSectionYZCommand = new AddNewCrossSectionYZCommand();
         private ICommand addNewCrossSectionZWCommand = new AddNewCrossSectionZWCommand();
@@ -96,6 +97,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 yield return showHydroRegionContentsCommand;
                 yield return addNewBranchCommand;
+                yield return addNewPipeCommand;
+                yield return addNewSewerConnectionCommand;
                 yield return addNewBranchScribbleCommand;
                 yield return insertNewNodeCommand;
                 yield return addNewCrossSectionYZCommand;
@@ -168,6 +171,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             // sewer network tools
             ButtonAddNewPipe.SetState(addNewPipeCommand, showNetworkTools);
             ButtonInsertManhole.SetState(splitPipeCommand, showNetworkTools);
+            ButtonAddNewSewerConnection.SetState(addNewSewerConnectionCommand, showNetworkTools);
 
             // crossSection tools
             ButtonAddNewCrossSectionYZ.SetState(addNewCrossSectionYZCommand, showNetworkTools);
@@ -670,6 +674,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 addNewNetworkLocationCommand.Execute();
             }
+            ValidateItems();
+        }
+
+        private void ButtonAddNewSewerConnection_Click(object sender, RoutedEventArgs e)
+        {
+            addNewSewerConnectionCommand.Execute();
             ValidateItems();
         }
     }

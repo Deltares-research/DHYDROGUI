@@ -96,6 +96,34 @@
             </DrawingGroup>
         </DrawingBrush.Drawing>
     </DrawingBrush>
+    <DrawingBrush x:Key="SewerConnectionBrush" Stretch="Uniform">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Geometry="F1 M 2.89583,8.77083C 2.00412,8.77083 1.28125,7.47432 1.28125,5.875C 1.28125,4.27568 2.81223,3.04502 3.21875,3.14583">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFFFC0CB"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Geometry="F1 M 12.9479,5.89583C 13.8396,5.89583 14.5625,7.19234 14.5625,8.79167C 14.5625,10.391 13.8396,11.6875 12.9479,11.6875C 12.0562,11.6875 11.3333,10.391 11.3333,8.79167C 11.3333,7.19234 12.0562,5.89583 12.9479,5.89583 Z ">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFFFC0CB"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Geometry="F1 M 3.05208,3.125L 13.1979,5.95833">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFFFC0CB"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Geometry="F1 M 2.55208,8.70833L 12.8646,11.6875">
+                        <GeometryDrawing.Pen>
+                            <Pen LineJoin="Round" Brush="#FFFFC0CB"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
     <DrawingBrush x:Key="ManholeBrush" Stretch="Uniform">
         <DrawingBrush.Drawing>
             <DrawingGroup>

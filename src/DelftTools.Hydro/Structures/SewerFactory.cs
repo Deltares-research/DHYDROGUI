@@ -59,34 +59,33 @@ namespace DelftTools.Hydro.Structures
 
         public static void SetPipeProperties(this IPipe pipe, HydroNetwork hydroNetwork)
         {
-            SetPipePhysicalProperties(pipe, hydroNetwork);
+            SetPhysicalProperties(pipe, hydroNetwork);
             SetPipeDefaultValues(pipe);
         }
 
-        private static void SetPipePhysicalProperties(IPipe pipe, HydroNetwork hydroNetwork)
+        private static void SetPhysicalProperties(ISewerConnection sewerConnection, HydroNetwork hydroNetwork)
         {
-            pipe.Length = pipe.Geometry.Length;
-            SetSource(pipe, hydroNetwork);
-            SetTarget(pipe, hydroNetwork);
+            sewerConnection.Length = sewerConnection.Geometry.Length;
+            SetSource(sewerConnection, hydroNetwork);
+            SetTarget(sewerConnection, hydroNetwork);
         }
 
-        private static void SetTarget(IPipe pipe, HydroNetwork hydroNetwork)
+        private static void SetTarget(IBranch branch, HydroNetwork hydroNetwork)
         {
-            if (pipe.Target != null) return;
-            pipe.Target = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.Last());
+            if (branch.Target != null) return;
+            branch.Target = GetExistingOrNewManholeFromNetwork(hydroNetwork, branch.Geometry.Coordinates.Last());
         }
 
-        private static void SetSource(IPipe pipe, HydroNetwork hydroNetwork)
+        private static void SetSource(IBranch branch, HydroNetwork hydroNetwork)
         {
-            if (pipe.Source != null) return;
-            pipe.Source = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.First());
+            if (branch.Source != null) return;
+            branch.Source = GetExistingOrNewManholeFromNetwork(hydroNetwork, branch.Geometry.Coordinates.First());
         }
 
         private static void SetPipeDefaultValues(IPipe pipe)
         {
-            pipe.LevelSource = -2.0;
-            pipe.LevelTarget = -2.0;
-            pipe.WaterType = SewerConnectionWaterType.Combined;
+            SetSewerConnectionDefaultProperties(pipe);
+
             pipe.Material = SewerProfileMapping.SewerProfileMaterial.Concrete;
             var pipeCrossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2);
             if(pipe.Network is IHydroNetwork hydroNetwork)
@@ -94,6 +93,13 @@ namespace DelftTools.Hydro.Structures
             pipeCrossSection.UseSharedDefinition(DefaultSewerProfile);
             pipe.CrossSection = pipeCrossSection;
             
+        }
+
+        private static void SetSewerConnectionDefaultProperties(ISewerConnection sewerConnection)
+        {
+            sewerConnection.LevelSource = -2.0;
+            sewerConnection.LevelTarget = -2.0;
+            sewerConnection.WaterType = SewerConnectionWaterType.Combined;
         }
 
         private static INode GetExistingOrNewManholeFromNetwork(IHydroNetwork network, Coordinate coordinate)
@@ -215,6 +221,24 @@ namespace DelftTools.Hydro.Structures
         {
             var compartmentList = network.Manholes.SelectMany(m => m.Compartments); 
             return NetworkHelper.GetUniqueName("Compartment{0:D2}", compartmentList, "Compartment");
+        }
+
+        public static void AddDefaultSewerConnectionToNetwork(SewerConnection sewerConnection, INetwork network)
+        {
+            var hydroNetwork = network as HydroNetwork;
+            if (hydroNetwork == null) return;
+            sewerConnection.Network = network;
+            SetSewerConnectionProperties(sewerConnection, hydroNetwork);
+
+            lock (network.Branches)
+                network.Branches.Add(sewerConnection);
+            BranchOrderHelper.SetOrderForBranch(network, sewerConnection);
+        }
+
+        private static void SetSewerConnectionProperties(SewerConnection sewerConnection, HydroNetwork hydroNetwork)
+        {
+            SetPhysicalProperties(sewerConnection, hydroNetwork);
+            SetSewerConnectionDefaultProperties(sewerConnection);
         }
     }
 }

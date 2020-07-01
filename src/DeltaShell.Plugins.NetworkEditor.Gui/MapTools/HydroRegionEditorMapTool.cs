@@ -49,6 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string AddChannelScribleToolName = "add branch (scribble way)";
         public const string AddChannelToolName = "add channel";
         public const string AddPipeToolName = "add pipe";
+        public const string AddSewerConnectionToolName = "add sewerConnection";
         public const string AddCatchmentToolName = "add catchment";
         public const string InsertNodeToolName = "insert new node";
         public const string InsertManholeToolName = "insert new manhole";
@@ -119,11 +120,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private static readonly Cursor NewLinkToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Link);
         private static readonly Cursor AddInterpolatedCrossSectionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.AddInterpolatedCrossSection);
         private static readonly Cursor AddNewPipeCursor = MapCursors.CreateArrowOverlayCuror(Resources.Pipe_Small);
+        private static readonly Cursor AddNewSewerConnectionCursor = MapCursors.CreateArrowOverlayCuror(Resources.Pipe_Small);
 
         private bool FeatureTypeLayerFilter<T>(ILayer layer)
         {
             // TODO: extend this filter to take only selected HydroRegionLayer into account
             if (layer.DataSource == null || layer is LabelLayer)
+            {
+                return false;
+            }
+
+            return typeof(T).IsAssignableFrom(layer.DataSource.FeatureType);
+        }
+        /// <summary>
+        /// T1 datatype should not be found
+        /// </summary>
+        /// <typeparam name="T">layer with this type of data source</typeparam>
+        /// <typeparam name="T1">layer but not of this type of data source</typeparam>
+        /// <param name="layer">generated maplayer(s)</param>
+        /// <returns></returns>
+        private bool FeatureTypeLayerFilter<T, T1>(ILayer layer)
+        {
+            // T1 datatype should not be found
+            if (layer.DataSource == null || layer is LabelLayer || typeof(T1).IsAssignableFrom(layer.DataSource.FeatureType))
             {
                 return false;
             }
@@ -166,6 +185,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 MaxPoints = 2
             };
             AddMapTool(newPipeTool);
+
+            var newSewerConnectionTool = new NewLineTool(FeatureTypeLayerFilter<SewerConnection, IPipe>, AddSewerConnectionToolName)
+            {
+                AutoCurve = false,
+                MinDistance = 0,
+                IsActive = false,
+                Cursor = AddNewSewerConnectionCursor,
+                MaxPoints = 2
+            };
+            AddMapTool(newSewerConnectionTool);
 
             var newInsertManholeTool = new NewPointFeatureTool<Manhole>(InsertManholeToolName) { Cursor = AddNewPipeCursor };
             AddMapTool(newInsertManholeTool);

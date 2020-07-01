@@ -55,6 +55,11 @@
                         <Rectangle Fill="{StaticResource ManholeBrush}"/>
                     </fluent:ToggleButton.Icon>
                 </fluent:ToggleButton>
+                <fluent:ToggleButton x:Name="ButtonAddNewSewerConnection" Header="Add SewerConnection" ToolTip="Add new SewerConnection" Click="ButtonAddNewSewerConnection_Click" Size="Middle" SizeDefinition="Small,Small,Small">
+                    <fluent:ToggleButton.Icon>
+                        <Rectangle Fill="{StaticResource SewerConnectionBrush}"/>
+                    </fluent:ToggleButton.Icon>
+                </fluent:ToggleButton>
                 <Separator />
 
                 <!-- cross-sections --> 
