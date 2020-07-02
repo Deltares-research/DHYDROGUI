@@ -172,7 +172,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var expression = new MathematicalExpression {Name = expressionName};
 
             const string conditionName = "condition_name";
-            var condition = Setup<ConditionBase>(conditionName);
+            var condition = Get<ConditionBase>(conditionName);
+            var conditionClone = Get<ConditionBase>(conditionName);
+            condition.Clone().Returns(conditionClone);
 
             condition.Input = expression;
 
@@ -200,7 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.That(conditions, Has.Count.EqualTo(2));
             Assert.That(conditions[0], Is.SameAs(condition));
             Assert.That(conditions[0].Name, Is.EqualTo(conditionName));
-            Assert.That(conditions[1], Is.SameAs(condition.Clone()));
+            Assert.That(conditions[1], Is.SameAs(conditionClone));
             Assert.That(conditions[1].Name, Is.EqualTo("Condition - Copy 1"));
         }
 
@@ -212,7 +214,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var expression = new MathematicalExpression {Name = expressionName};
 
             const string ruleName = "rule_name";
-            var rule = Setup<RuleBase>(ruleName);
+            var rule = Get<RuleBase>(ruleName);
+            var ruleClone = Get<RuleBase>(ruleName);
+            rule.Clone().Returns(ruleClone);
 
             rule.Inputs.Add(expression);
 
@@ -240,18 +244,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.That(rules, Has.Count.EqualTo(2));
             Assert.That(rules[0], Is.SameAs(rule));
             Assert.That(rules[0].Name, Is.EqualTo(ruleName));
-            Assert.That(rules[1], Is.SameAs(rule.Clone()));
+            Assert.That(rules[1], Is.SameAs(ruleClone));
             Assert.That(rules[1].Name, Is.EqualTo("Rule - Copy 1"));
         }
 
-        private static T Setup<T>(string name) where T : RtcBaseObject
+        private static T Get<T>(string name) where T : RtcBaseObject
         {
             var obj = Substitute.For<T>();
             obj.Name = name;
-
-            var clone = Substitute.For<T>();
-            clone.Name = name;
-            obj.Clone().Returns(clone);
 
             return obj;
         }
