@@ -20,13 +20,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         private readonly MeteoFileSelectionControl xComponentFileControl = new MeteoFileSelectionControl
         {
             LabelText = "X component:",
-            FileFilter = "uniform x series (*.wnd)|*.wnd"
+            FileFilter = "uniform x series (*.wnd;*.amu)|*.wnd;*.amu"
         };
 
         private readonly MeteoFileSelectionControl yComponentFileControl = new MeteoFileSelectionControl
         {
             LabelText = "Y component:",
-            FileFilter = "uniform y series (*.wnd)|*.wnd"
+            FileFilter = "uniform y series (*.wnd;*.amv)|*.wnd;*.amv"
         };
 
         private readonly MeteoFileSelectionControl xyVectorFileControl = new MeteoFileSelectionControl
