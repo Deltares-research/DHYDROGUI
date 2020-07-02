@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         {
             var fileDialog = new OpenFileDialog
             {
-                Filter = "uniform x series (*.wnd)|*.wnd",
+                Filter = "uniform x series (*.wnd;*.amu)|*.wnd;*.amu",
                 Title = "Select X component file"
             };
 
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         {
             var fileDialog = new OpenFileDialog
             {
-                Filter = "uniform y series (*.wnd)|*.wnd",
+                Filter = "uniform y series (*.wnd;*.amv)|*.wnd;*.amv",
                 Title = "Select Y component file"
             };
 
