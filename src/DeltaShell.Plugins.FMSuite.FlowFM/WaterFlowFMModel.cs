@@ -1229,6 +1229,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var prop = sender as WaterFlowFMProperty;
             if (prop != null && e.PropertyName == nameof(prop.Value))
             {
+                if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity1D))
+                {
+                    var propertyChangedEventArgs = new PropertyChangedEventArgs(nameof(InitialCoverageSetChanged));
+                    OnPropertyChanged(this, propertyChangedEventArgs);
+                }
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
                         StringComparison.InvariantCultureIgnoreCase))
                 {
