@@ -190,6 +190,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
       <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
       <Name>DeltaShell.NGHS.Common</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
       <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>

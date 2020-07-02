@@ -328,6 +328,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
       <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
       <Name>DeltaShell.NGHS.Common</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
