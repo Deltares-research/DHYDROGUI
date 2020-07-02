@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 string line = GetNextLine();
                 while (line != null)
                 {
-                    var values = line.Split(new[]
+                    string[] values = line.Split(new[]
                     {
                         '='
                     }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
