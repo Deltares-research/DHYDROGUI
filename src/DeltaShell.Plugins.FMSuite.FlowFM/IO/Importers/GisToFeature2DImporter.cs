@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         #endregion IFileImporter
 
 
-        private static IList<TFeature2D> ImportShapeFile(string path, IList<TFeature2D> list)
+        private IList<TFeature2D> ImportShapeFile(string path, IList<TFeature2D> list)
         {
             var importer = new ShapeFile(path);
 
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return list;
         }
 
-        private static IList<TFeature2D> ImportByOgrFeatureProvider(string path, IList<TFeature2D> list)
+        private IList<TFeature2D> ImportByOgrFeatureProvider(string path, IList<TFeature2D> list)
         {
             var provider = new OgrFeatureProvider(path);
 
@@ -173,16 +173,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
 
         [InvokeRequired]
-        private static void InsertFeatures(IEnumerable<IFeature> features, IList<TFeature2D> list)// where TFeat : INameable
+        private void InsertFeatures(IEnumerable<IFeature> features, IList<TFeature2D> list)// where TFeat : INameable
         {
             foreach (var feature in features)
             {
-                var instance = (TFeature2D)Activator.CreateInstance(typeof(TFeature2D));
+                var instance = CreateInstanceOfFeature2D != null ? CreateInstanceOfFeature2D() : (TFeature2D)Activator.CreateInstance(typeof(TFeature2D));
                 instance.Name = NamingHelper.GetUniqueName<TFeature2D>("imported_feature_{0}",list);
                 instance.Geometry = ConvertGeometry(feature);
                 list.Add(instance);
             }
         }
+
+        public Func<TFeature2D> CreateInstanceOfFeature2D { get; set; }
+        
 
         private static bool IsShapeTypeValid(ShapeFile importer)
         {

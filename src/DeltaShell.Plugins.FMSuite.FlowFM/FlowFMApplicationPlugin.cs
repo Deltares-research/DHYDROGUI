@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 };
 
 
-            yield return new PliFileImporterExporter<Feature2D, LeveeBreach>
+            yield return new PliFileImporterExporter<Feature2D, Feature2D>
             {
                 
                 Mode = Feature2DImportExportMode.Import,
@@ -368,12 +368,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var feature1 = new LeveeBreach { Name = name1, Geometry = PliFile<Feature2D>.CreatePolyLineGeometry(points1) };
                     return feature1;
                 },
-                EqualityComparer = new GroupableFeatureComparer<LeveeBreach>(),
-                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.LeveeBreaches)),
+                AfterCreateAction = (target, w) => (w as LeveeBreach)?.UpdateGroupName(GetModelFor(target, a => a.LeveeBreaches)),
                 GetEditableObject = target => GetModelFor(target, a => a.LeveeBreaches).Area
             };
 
-            yield return new GisToFeature2DImporter<ILineString, LeveeBreach>();
+            yield return new GisToFeature2DImporter<ILineString, Feature2D>()
+            {
+                CreateInstanceOfFeature2D = () => new LeveeBreach()
+            };
 
             yield return new GisToFeature2DImporter<IPoint, Gully>();
 
