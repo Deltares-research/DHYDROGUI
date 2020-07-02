@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            SetCrossSectionFrictionsToRougnessCoverages(sobekFriction);
+            SetCrossSectionFrictionsToRoughnessCoverages(sobekFriction);
 
             var converter = new SobekToWaterFlowFMRoughnessConverter();
             converter.ConvertSobekRoughnessToWaterFlowFmRoughness(fmModel.ChannelFrictionDefinitions,
@@ -90,11 +90,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 fmModel.Network);
         }
 
-        private void SetCrossSectionFrictionsToRougnessCoverages(SobekFriction sobekFriction)
+        private void SetCrossSectionFrictionsToRoughnessCoverages(SobekFriction sobekFriction)
         {
-
             Dictionary<IBranch, IList<DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>>> crossSectionRoughnessPerBranch = GetCrossSectionRoughnessPerBranch(sobekFriction);
-
 
             // now we have per branch a list with cross section and imported CRFR record
             foreach (var crossSections in crossSectionRoughnessPerBranch)
@@ -169,7 +167,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                                     sobekFriction,
                                                     HydroNetwork.Branches.ToDictionary(b => b.Name, b => b),
                                                     GetFilePath(SobekFileNames.SobekProfileDefinitionsFileName));
-
         }
 
         private void SetMainAndFloodPlainRoughness(CrossSectionSectionType main, CrossSectionSectionType floodPlain1, CrossSectionSectionType floodPlain2, SobekFriction sobekFriction)
@@ -262,7 +259,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var sewerSection = GetRoughnessSection(sewerFriction.Name);
 
             var pipes = waterFlowFMModel.Network.Pipes.ToDictionary(p => p.Name, p => p);
-
 
             // process all BDFR records
             foreach (var sobekBedFriction in sobekFriction.SobekBedFrictionList)
@@ -441,7 +437,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             roughnessSection.SetDefaults((RoughnessType)sobekBedFrictionData.FrictionType, directionData.FrictionConst);
         }
 
-
         private static void SetSobekBedFrictionToRoughnessCoverage(SobekBedFrictionData sobekBedFrictionData, SobekBedFrictionData sobekMainBedFrictionData, bool usePositive,
             RoughnessSection roughnessSection, IBranch channel)
         {
@@ -553,7 +548,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-
         private CrossSectionSectionType GetCrossSectionSectionType(string name)
         {
             var roughnessSection = HydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == name);
@@ -568,11 +562,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return roughnessSection;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sectionTypeName"></param>
-        /// <returns></returns>
         private RoughnessSection GetRoughnessSection(string sectionTypeName)
         {
             var waterFlowFMModel = GetModel<WaterFlowFMModel>();
@@ -644,7 +633,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
 
                 SetRoughnessDataToRoughnessCoverage(networkLocation.Branch, networkLocation.Chainage, sobekFrictionSegment, sectionName);
-
             }
         }
 
@@ -674,7 +662,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 d[new NetworkLocation(branch, offset)] = new DelftTools.Utils.Tuple<double, int>(sobekFrictionSegment.Friction, (int)sobekFrictionSegment.FrictionType);
             }
         }
-
 
         private string GetSectionTypeName(IDictionary<string, RoughnessType> roughnessTypePerBranchSection,
             IDictionary<DelftTools.Utils.Tuple<RoughnessType, double>, string> usedFriction,
@@ -820,8 +807,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         /// <returns></returns>
         private static SobekCrossSectionFriction GetSobekCrossSectionFrictionBasedOnBranchFriction(SobekBranchLocation crossSectionLocation, SobekCrossSectionDefinition sobekCrossSectionDefinition, SobekBedFrictionData sobekBranchMainFriction)
         {
-
-
             var dataTableFormat = new DataTable("format");
             dataTableFormat.Columns.Add(new DataColumn("een", typeof(double)));
             dataTableFormat.Columns.Add(new DataColumn("twee", typeof(double)));
@@ -845,10 +830,5 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             sobekCrossSectionFriction.AddFrictionValues(row);
             return sobekCrossSectionFriction;
         }
-
-
-
-
-
     }
 }
