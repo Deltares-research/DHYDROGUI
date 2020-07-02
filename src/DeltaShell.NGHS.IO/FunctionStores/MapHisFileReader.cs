@@ -14,7 +14,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
         /// <param name="filePath">Path to the output map or his file</param>
         public static MapHisFileMetaData ReadMetaData(string filePath)
         {
-            var isMapFile = Path.GetExtension(filePath).ToLower() == ".map";
+            var isMapFile = filePath != null && Path.GetExtension(filePath).ToLower() == ".map";
             return DoWithMapFileBinaryReader(filePath, r => ReadMapHisFileMetaData(r, isMapFile));
         }
 
