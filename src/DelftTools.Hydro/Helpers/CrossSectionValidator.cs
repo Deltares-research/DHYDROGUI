@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
@@ -147,12 +148,22 @@ namespace DelftTools.Hydro.Helpers
             return !(floodPlain2Width > 0.0);
         }
 
-        private static bool IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(CrossSectionDefinition crossSection)
+        private static bool IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(CrossSectionDefinition crossSectionDefinition)
         {
-            if (crossSection is CrossSectionDefinitionStandard stdCrossSection &&
-                stdCrossSection.ShapeType == CrossSectionStandardShapeType.Trapezium) return true;
-            var sectionsTotalWidth = crossSection.SectionsTotalWidth();
-            return sectionsTotalWidth - crossSection.FlowWidth() >= -1e-5;
+            // Skip trapezium
+            if (crossSectionDefinition is CrossSectionDefinitionStandard stdCrossSection &&
+                stdCrossSection.ShapeType == CrossSectionStandardShapeType.Trapezium)
+            {
+                return true;
+            }
+
+            // Also Skip cases in which no sections are defined
+            if (!crossSectionDefinition.Sections.Any())
+            {
+                return true;
+            }
+
+            return crossSectionDefinition.SectionsTotalWidth() - crossSectionDefinition.FlowWidth() >= -1e-5;
         }
 
         private static ICrossSectionDefinition GetUnProxiedCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition)
