@@ -27,8 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
 
             if (fileDialog.ShowDialog() == true)
             {
-                string selectedFilePath = fileDialog.FileName;
-                ViewModel.XComponentFilePath = selectedFilePath;
+                ViewModel.XComponentFilePath = fileDialog.FileName;
             }
         }
 
@@ -42,8 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
 
             if (fileDialog.ShowDialog() == true)
             {
-                string selectedFilePath = fileDialog.FileName;
-                ViewModel.YComponentFilePath = selectedFilePath;
+                ViewModel.YComponentFilePath = fileDialog.FileName;
             }
         }
 
@@ -57,8 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
 
             if (fileDialog.ShowDialog() == true)
             {
-                string selectedFilePath = fileDialog.FileName;
-                ViewModel.SpiderWebFilePath = selectedFilePath;
+                ViewModel.SpiderWebFilePath = fileDialog.FileName;
             }
         }
 
@@ -72,8 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
 
             if (fileDialog.ShowDialog() == true)
             {
-                string selectedFilePath = fileDialog.FileName;
-                ViewModel.WindVelocityFilePath = selectedFilePath;
+                ViewModel.WindVelocityFilePath = fileDialog.FileName;
             }
         }
     }
