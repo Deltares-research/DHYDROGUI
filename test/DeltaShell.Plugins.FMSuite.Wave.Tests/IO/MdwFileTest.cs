@@ -852,6 +852,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_WithXYComponentMeteoFiles_LoadsFilesCorrectly()
+        {
+            // Setup
+            string mdwPath = Path.Combine(testDataPath, "Wind.mdw");
+
+            // Call
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+
+            // Assert
+            Assert.That(modelDefinition.TimePointData.MeteoData.XComponentFilePath, Is.EqualTo("xwind.wnd"));
+            Assert.That(modelDefinition.TimePointData.MeteoData.YComponentFilePath, Is.EqualTo("ywind.wnd"));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_WithInvalidXYComponentMeteoFiles_LogsErrorMessages()
+        {
+            // Setup
+            string mdwPath = Path.Combine(testDataPath, "InvalidWind.mdw");
+
+            // Call
+            void Call() => new MdwFile().Load(mdwPath);
+
+            // Assert
+            string logMessage = TestHelper.GetAllRenderedMessages(Call).ElementAt(1);
+            Assert.That(logMessage, Is.EqualTo("During loading the D-Waves model the following errors were reported:" + Environment.NewLine +
+                                               "- Could not find meteo file for 'x_wind'" + Environment.NewLine +
+                                               "- Could not find meteo file for 'y_wind'"));
+        }
+
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -1087,14 +1119,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             using (var tempDirectory = new TemporaryDirectory())
             {
-                string meteoFilesPath = Path.Combine(testDataPath, "MeteoFiles");
-
                 modelDefinition.Properties.First(p => p.PropertyDefinition.FilePropertyName == KnownWaveProperties.MeteoFile).Value = "wind.wnd";
 
                 modelDefinition.TimePointData.WindDataType = InputFieldDataType.FromInputFiles;
                 modelDefinition.TimePointData.MeteoData.FileType = WindDefinitionType.WindXWindY;
-                modelDefinition.TimePointData.MeteoData.XComponentFilePath = Path.Combine(meteoFilesPath, "xwind.wnd");
-                modelDefinition.TimePointData.MeteoData.YComponentFilePath = Path.Combine(meteoFilesPath, "ywind.wnd");
+                modelDefinition.TimePointData.MeteoData.XComponentFilePath = Path.Combine(testDataPath, "xwind.wnd");
+                modelDefinition.TimePointData.MeteoData.YComponentFilePath = Path.Combine(testDataPath, "ywind.wnd");
 
                 string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
 
