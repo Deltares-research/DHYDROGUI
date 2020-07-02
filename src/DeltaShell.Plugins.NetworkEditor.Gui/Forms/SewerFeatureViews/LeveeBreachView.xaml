@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
              xmlns:gui="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui"
              xmlns:leveeBreachFormula="clr-namespace:DelftTools.Hydro.Structures.LeveeBreachFormula;assembly=DelftTools.Hydro"
+             xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="1000">
@@ -46,6 +47,7 @@
                 <Setter Property="MouseWheelActiveTrigger" Value="Disabled"/>
             </Style>
             <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
+            <converters:DoubleToStringConverter x:Key="DoubleToStringConverter" />
             <gui:DummyConverter x:Key="Converter" />
             <BooleanToVisibilityConverter x:Key="BooleanVisibilityConverter" />
         </ResourceDictionary>
@@ -82,7 +84,7 @@
 
                 <!-- Row 1 -->
                 <TextBlock Grid.Column="0" Grid.Row="1"  Text="Levee name" />
-                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding LeveeBreach.Name}"/>
+                <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1" Grid.Row="1" Text="{Binding LeveeBreach.Name}"/>
 
                 <!-- Row 2 -->
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="Levee length"/>
@@ -91,13 +93,25 @@
 
                 <!-- Row 3 -->
                 <CheckBox Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Content="Use breach location snapping" IsChecked="{Binding UseSnapping}" VerticalAlignment="Center" Margin="0,3,0,3"/>
-                
+
                 <!-- Row 4 -->
                 <TextBlock Grid.Column="0" Grid.Row="4" Text="Breach x-location"/>
-                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding BreachLocationX, StringFormat={}{0:F2}}"/>
+                <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1" Grid.Row="4" 
+                         Text="{Binding BreachLocationX, 
+                                StringFormat={}{0:G2},
+                                Mode=TwoWay, 
+                                ValidatesOnDataErrors=True, 
+                                ValidatesOnExceptions=True,
+                                Converter={StaticResource DoubleToStringConverter}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="4" Text="Breach y-location"/>
-                <TextBox Grid.Column="3" Grid.Row="4" Text="{Binding BreachLocationY, StringFormat={}{0:F2}}"/>
-                
+                <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="3" Grid.Row="4" 
+                         Text="{Binding BreachLocationY, 
+                                StringFormat={}{0:F2},
+                                Mode=TwoWay, 
+                                ValidatesOnDataErrors=True, 
+                                ValidatesOnExceptions=True,
+                                Converter={StaticResource DoubleToStringConverter}}"/>
+
                 <!-- Row 5 -->
                 <CheckBox Grid.Column="0" Grid.Row="5" Content="Active breach growth" IsChecked="{Binding UseActive}" VerticalAlignment="Center" Margin="0,3,0,3"/>
 
@@ -106,15 +120,43 @@
 
                 <!-- Row 7 -->
                 <TextBlock Grid.Column="0" Grid.Row="7" Text="Upstream x-location" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
-                <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding WaterLevelUpstreamLocationX, StringFormat={}{0:F2}}" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1" Grid.Row="7" 
+                         Text="{Binding WaterLevelUpstreamLocationX, 
+                                StringFormat={}{0:F2},
+                                Mode=TwoWay, 
+                                ValidatesOnDataErrors=True, 
+                                ValidatesOnExceptions=True,
+                                Converter={StaticResource DoubleToStringConverter}}" 
+                         Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="7" Text="Upstream y-location" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
-                <TextBox Grid.Column="3" Grid.Row="7" Text="{Binding WaterLevelUpstreamLocationY, StringFormat={}{0:F2}}" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="3" Grid.Row="7" 
+                         Text="{Binding WaterLevelUpstreamLocationY, 
+                                StringFormat={}{0:F2},
+                                Mode=TwoWay, 
+                                ValidatesOnDataErrors=True, 
+                                ValidatesOnExceptions=True,
+                                Converter={StaticResource DoubleToStringConverter}}" 
+                         Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
 
                 <!-- Row 8 -->
                 <TextBlock Grid.Column="0" Grid.Row="8" Text="Downstream x-location" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
-                <TextBox Grid.Column="1" Grid.Row="8" Text="{Binding WaterLevelDownstreamLocationX, StringFormat={}{0:F2}}" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1" Grid.Row="8" 
+                         Text="{Binding WaterLevelDownstreamLocationX, 
+                                StringFormat={}{0:F2},
+                                Mode=TwoWay, 
+                                ValidatesOnDataErrors=True, 
+                                ValidatesOnExceptions=True,
+                                Converter={StaticResource DoubleToStringConverter}}" 
+                         Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
                 <TextBlock Grid.Column="2" Grid.Row="8" Text="Downstream y-location" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
-                <TextBox Grid.Column="3" Grid.Row="8" Text="{Binding WaterLevelDownstreamLocationY, StringFormat={}{0:F2}}" Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="3" Grid.Row="8" 
+                         Text="{Binding WaterLevelDownstreamLocationY, 
+                                StringFormat={}{0:F2},
+                                Mode=TwoWay, 
+                                ValidatesOnDataErrors=True, 
+                                ValidatesOnExceptions=True,
+                                Converter={StaticResource DoubleToStringConverter}}" 
+                         Visibility="{Binding UseWaterLevelFlowLocation, Converter={StaticResource BooleanVisibilityConverter}}"/>
 
                 <!-- Row 9 -->
                 <TextBlock 
@@ -175,7 +217,7 @@
                             <Setter Property="Margin" Value="0,3,3,3"/>
                         </Style>
                         <DataTemplate DataType="{x:Type leveeBreachFormula:UserDefinedBreachSettings}">
-                                <DataGrid
+                            <DataGrid
                                     ItemsSource="{Binding ManualBreachGrowthSettings}"
                                     AutoGenerateColumns="False"
                                     CanUserResizeRows="False"
@@ -187,15 +229,15 @@
                                     HorizontalAlignment="Left"
                                     HorizontalContentAlignment="Stretch"
                                     MaxWidth="300">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding TimeSpan}" Header="Time [hh:mm:ss]"/>
-                                        <DataGridTextColumn Binding="{Binding Height}" Header="Height [m]" />
-                                        <DataGridTextColumn Binding="{Binding Width}" Header="Width [m]" />
-                                        <DataGridTextColumn Binding="{Binding Area}" Header="Area [m2]" IsReadOnly="True"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding TimeSpan}" Header="Time [hh:mm:ss]"/>
+                                    <DataGridTextColumn Binding="{Binding Height}" Header="Height [m]" />
+                                    <DataGridTextColumn Binding="{Binding Width}" Header="Width [m]" />
+                                    <DataGridTextColumn Binding="{Binding Area}" Header="Area [m2]" IsReadOnly="True"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </DataTemplate>
-                        
+
                         <DataTemplate DataType="{x:Type leveeBreachFormula:VerheijVdKnaap2002BreachSettings}">
                             <StackPanel>
                                 <Grid>
@@ -218,34 +260,64 @@
 
                                     <!-- Row 0 -->
                                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Initial breach width (B0)"/>
-                                    <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding InitialBreachWidth}"/>
+                                    <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1" Grid.Row="0" 
+                                             Text="{Binding InitialBreachWidth,
+                                                    Mode=TwoWay, 
+                                                    ValidatesOnDataErrors=True, 
+                                                    ValidatesOnExceptions=True,
+                                                    Converter={StaticResource DoubleToStringConverter}}"/>
                                     <TextBlock Grid.Column="2" Grid.Row="0" Text="[m]"/>
 
                                     <!-- Row 1 -->
                                     <TextBlock Grid.Column="0" Grid.Row="1" Text="Initial crest level (Z0)"/>
-                                    <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding InitialCrestLevel}"/>
+                                    <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1" Grid.Row="1" 
+                                             Text="{Binding InitialCrestLevel,
+                                                    Mode=TwoWay, 
+                                                    ValidatesOnDataErrors=True, 
+                                                    ValidatesOnExceptions=True,
+                                                    Converter={StaticResource DoubleToStringConverter}}"/>
                                     <TextBlock Grid.Column="2" Grid.Row="1" Text="[m AD]"/>
 
                                     <!-- Row 2 -->
                                     <TextBlock Grid.Column="0" Grid.Row="2" Text="Factor 1 (Alfa)" />
-                                    <TextBox Grid.Column="1"   Grid.Row="2" Text="{Binding Factor1Alfa}" />
+                                    <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1"   Grid.Row="2" 
+                                             Text="{Binding Factor1Alfa,
+                                                    Mode=TwoWay, 
+                                                    ValidatesOnDataErrors=True, 
+                                                    ValidatesOnExceptions=True,
+                                                    Converter={StaticResource DoubleToStringConverter}}" />
                                     <TextBlock Grid.Column="2" Grid.Row="2" Text="[-]" />
-                                    
+
                                     <!-- Row 3 -->
                                     <TextBlock Grid.Column="0" Grid.Row="3" Text="Factor 2 (Beta)" />
-                                    <TextBox Grid.Column="1"   Grid.Row="3" Text="{Binding Factor2Beta}" />
+                                    <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1"   Grid.Row="3" 
+                                             Text="{Binding Factor2Beta,
+                                                    Mode=TwoWay, 
+                                                    ValidatesOnDataErrors=True, 
+                                                    ValidatesOnExceptions=True,
+                                                    Converter={StaticResource DoubleToStringConverter}}" />
                                     <TextBlock Grid.Column="2" Grid.Row="3" Text="[-]" />
-                                    
+
                                     <!-- Row 4-->
                                     <TextBlock Grid.Column="0" Grid.Row="4" Text="Lowest crest level (Z min)" />
-                                    <TextBox Grid.Column="1"   Grid.Row="4" Text="{Binding MinimumCrestLevel}" />
+                                    <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1"   Grid.Row="4" 
+                                             Text="{Binding MinimumCrestLevel,
+                                                    Mode=TwoWay, 
+                                                    ValidatesOnDataErrors=True, 
+                                                    ValidatesOnExceptions=True,
+                                                    Converter={StaticResource DoubleToStringConverter}}" />
                                     <TextBlock Grid.Column="2" Grid.Row="4" Text="[m AD]" />
-                                    
+
                                     <!-- Row 5-->
                                     <TextBlock Grid.Column="0" Grid.Row="5" Text="Critical flow velocity (Uc)"/>
-                                    <TextBox Grid.Column="1"   Grid.Row="5" Text="{Binding CriticalFlowVelocity}" />
+                                    <TextBox attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" Grid.Column="1"   Grid.Row="5" 
+                                             Text="{Binding CriticalFlowVelocity,
+                                                    Mode=TwoWay, 
+                                                    ValidatesOnDataErrors=True, 
+                                                    ValidatesOnExceptions=True,
+                                                    Converter={StaticResource DoubleToStringConverter}}" />
                                     <TextBlock Grid.Column="2" Grid.Row="5" Text="[m/s]" />
-                                    
+
                                     <!-- Row 6 -->
                                     <TextBlock 
                                         Grid.Column="0" Grid.Row="6"

@@ -232,7 +232,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting Factor1 = new ConfigurationSetting(key: "F1");
         public static readonly ConfigurationSetting Factor2 = new ConfigurationSetting(key: "F2");
         public static readonly ConfigurationSetting CriticalFlowVelocity = new ConfigurationSetting(key: "Ucrit");
-        public static readonly ConfigurationSetting UseWaterLevelStream = new ConfigurationSetting(key: "UseWaterLevelStream");
         public static readonly ConfigurationSetting WaterLevelUpstreamLocationX = new ConfigurationSetting(key: "waterLevelUpstreamLocationX");
         public static readonly ConfigurationSetting WaterLevelUpstreamLocationY = new ConfigurationSetting(key: "waterLevelUpstreamLocationY");
         public static readonly ConfigurationSetting WaterLevelDownstreamLocationX = new ConfigurationSetting(key: "waterLevelDownstreamLocationX");

@@ -137,16 +137,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             set
             {
                 if (LeveeBreach == null) return;
-                if (Equals(LeveeBreach.WaterLevelUpstreamLocationX, default(double)))
-                    LeveeBreach.WaterLevelUpstreamLocationX = LeveeBreach.BreachLocationX;
-                if (Equals(LeveeBreach.WaterLevelUpstreamLocationY, default(double)))
-                    LeveeBreach.WaterLevelUpstreamLocationY = LeveeBreach.BreachLocationY;
-                if (Equals(LeveeBreach.WaterLevelDownstreamLocationX, default(double)))
-                    LeveeBreach.WaterLevelDownstreamLocationX = LeveeBreach.BreachLocationX;
-                if (Equals(LeveeBreach.WaterLevelDownstreamLocationY, default(double)))
-                    LeveeBreach.WaterLevelDownstreamLocationY = LeveeBreach.BreachLocationY;
                 LeveeBreach.WaterLevelFlowLocationsActive = value;
-                
+                if (LeveeBreach.WaterLevelFlowLocationsActive)
+                {
+                    if (Equals(LeveeBreach.WaterLevelUpstreamLocationX, default(double)))
+                        LeveeBreach.WaterLevelUpstreamLocationX = LeveeBreach.BreachLocationX;
+                    if (Equals(LeveeBreach.WaterLevelUpstreamLocationY, default(double)))
+                        LeveeBreach.WaterLevelUpstreamLocationY = LeveeBreach.BreachLocationY;
+                    if (Equals(LeveeBreach.WaterLevelDownstreamLocationX, default(double)))
+                        LeveeBreach.WaterLevelDownstreamLocationX = LeveeBreach.BreachLocationX;
+                    if (Equals(LeveeBreach.WaterLevelDownstreamLocationY, default(double)))
+                        LeveeBreach.WaterLevelDownstreamLocationY = LeveeBreach.BreachLocationY;
+                }
+
                 OnPropertyChanged(nameof(UseWaterLevelFlowLocation));
                 OnPropertyChanged(nameof(WaterLevelUpstreamLocationX));
                 OnPropertyChanged(nameof(WaterLevelUpstreamLocationY));
@@ -270,4 +273,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+    
 }

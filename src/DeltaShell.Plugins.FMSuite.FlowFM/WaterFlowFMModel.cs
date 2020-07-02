@@ -3087,14 +3087,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         leveeBreach,
                         LeveeBreachPointLocationType.BreachLocation,
                         leveeBreach.BreachLocation);
-                    CreatePointFeatureOfThisLeveeBreach(
-                        leveeBreach,
-                        LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
-                        leveeBreach.WaterLevelUpstreamLocation);
-                    CreatePointFeatureOfThisLeveeBreach(
-                        leveeBreach,
-                        LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
-                        leveeBreach.WaterLevelDownstreamLocation);
+                    if (leveeBreach.WaterLevelFlowLocationsActive)
+                    {
+                        CreatePointFeatureOfThisLeveeBreach(
+                            leveeBreach,
+                            LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
+                            leveeBreach.WaterLevelUpstreamLocation);
+                        CreatePointFeatureOfThisLeveeBreach(
+                            leveeBreach,
+                            LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
+                            leveeBreach.WaterLevelDownstreamLocation);
+                    }
+
                     break;
                     case NotifyCollectionChangedAction.Remove:
                     var supportPoint2DFeatures = ((IEventedList<Feature2D>) Area.LeveeBreaches)
@@ -3140,14 +3144,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                 leveeFeature,
                                 LeveeBreachPointLocationType.BreachLocation,
                                 leveeFeature.BreachLocation);
-                            CreatePointFeatureOfThisLeveeBreach(
-                                leveeFeature,
-                                LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
-                                leveeFeature.WaterLevelUpstreamLocation);
-                            CreatePointFeatureOfThisLeveeBreach(
-                                leveeFeature,
-                                LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
-                                leveeFeature.WaterLevelDownstreamLocation);
+                            if (leveeFeature.WaterLevelFlowLocationsActive)
+                            {
+                                CreatePointFeatureOfThisLeveeBreach(
+                                    leveeFeature,
+                                    LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
+                                    leveeFeature.WaterLevelUpstreamLocation);
+                                CreatePointFeatureOfThisLeveeBreach(
+                                    leveeFeature,
+                                    LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
+                                    leveeFeature.WaterLevelDownstreamLocation);
+                            }
                         }
                     }
                     break;
@@ -3298,7 +3305,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     UpdateAreaDataItems(weir, isInputSender);
                 }
             }
+            if (sender is ILeveeBreach leveeBreach && e.PropertyName == nameof(leveeBreach.WaterLevelFlowLocationsActive))
+            {
+                if (leveeBreach.WaterLevelFlowLocationsActive)
+                {
+                    CreatePointFeatureOfThisLeveeBreach(
+                        leveeBreach,
+                        LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
+                        leveeBreach.WaterLevelUpstreamLocation);
+                    CreatePointFeatureOfThisLeveeBreach(
+                        leveeBreach,
+                        LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
+                        leveeBreach.WaterLevelDownstreamLocation);
+                }
+                else
+                {
+                    var supportPoint2DFeatures = ((IEventedList<Feature2D>)Area.LeveeBreaches)
+                        .Where(f2d => f2d.Attributes != null &&
+                                      f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
+                                      ((ILeveeBreach)f2d.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE])
+                                      .Equals(leveeBreach)).ToList();
+                    foreach (var supportPoint2DFeature in supportPoint2DFeatures)
+                    {
+                        if (supportPoint2DFeature.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE) &&
+                            (LeveeBreachPointLocationType)supportPoint2DFeature.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE] == LeveeBreachPointLocationType.BreachLocation)
+                            continue;
 
+                        supportPoint2DFeature.PropertyChanged -= Feature2DPointOnPropertyChanged;
+                        Area.LeveeBreaches.Remove(supportPoint2DFeature);
+                    }
+                }
+            }
             var groupableFeature = sender as IGroupableFeature;
             if (updatingGroupName || Area.IsEditing || groupableFeature == null ||
                 e.PropertyName != nameof(groupableFeature.GroupName)) return;
@@ -3313,6 +3350,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             updatingGroupName = false;
+
+            
         }
 
         private void RemoveAreaFeature(IFeature feature)

@@ -393,14 +393,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var breachLocationX = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationX, 0.0);
             var breachLocationY = GetPropertyValue(structure2D, KnownStructureProperties.BreachLocationY, 0.0);
-            //FUCK!
-            var isWaterLevelStreamActive = GetPropertyValue(structure2D, StructureRegion.UseWaterLevelStream.Key, false);
-
-            var waterLevelUpstreamLocationX = GetPropertyValue(structure2D, StructureRegion.WaterLevelUpstreamLocationX.Key, 0.0);
-            var waterLevelUpstreamLocationY = GetPropertyValue(structure2D, StructureRegion.WaterLevelUpstreamLocationY.Key, 0.0);
-            var waterLevelDownstreamLocationX = GetPropertyValue(structure2D, StructureRegion.WaterLevelDownstreamLocationX.Key, 0.0);
-            var waterLevelDownstreamLocationY = GetPropertyValue(structure2D, StructureRegion.WaterLevelDownstreamLocationY.Key, 0.0);
-
+            
+            var isWaterLevelStreamActive =  structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyName.Equals(StructureRegion.WaterLevelUpstreamLocationX.Key,StringComparison.InvariantCultureIgnoreCase)) &&
+                                            structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyName.Equals(StructureRegion.WaterLevelUpstreamLocationY.Key, StringComparison.InvariantCultureIgnoreCase)) &&
+                                            structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyName.Equals(StructureRegion.WaterLevelDownstreamLocationX.Key, StringComparison.InvariantCultureIgnoreCase)) &&
+                                            structure2D.Properties.Any(p => p.PropertyDefinition.FilePropertyName.Equals(StructureRegion.WaterLevelDownstreamLocationY.Key, StringComparison.InvariantCultureIgnoreCase));
+            
             var leveeBreach = new LeveeBreach
             {
                 BreachLocationX = breachLocationX,
@@ -409,7 +407,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             if (isWaterLevelStreamActive)
             {
-                //FUCK!
+                var waterLevelUpstreamLocationX =
+                    GetPropertyValue(structure2D, StructureRegion.WaterLevelUpstreamLocationX.Key, 0.0);
+                var waterLevelUpstreamLocationY =
+                    GetPropertyValue(structure2D, StructureRegion.WaterLevelUpstreamLocationY.Key, 0.0);
+                var waterLevelDownstreamLocationX =
+                    GetPropertyValue(structure2D, StructureRegion.WaterLevelDownstreamLocationX.Key, 0.0);
+                var waterLevelDownstreamLocationY =
+                    GetPropertyValue(structure2D, StructureRegion.WaterLevelDownstreamLocationY.Key, 0.0);
+
                 leveeBreach.WaterLevelFlowLocationsActive = true;
                 leveeBreach.WaterLevelUpstreamLocationX = waterLevelUpstreamLocationX;
                 leveeBreach.WaterLevelUpstreamLocationY = waterLevelUpstreamLocationY;

@@ -2296,6 +2296,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/ShowHydroRegionTreeViewCommand
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/ShowSideViewCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/SplitPipeCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Converters/BooleanToVisibleHiddenConverter.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Converters/DoubleToStringConverter.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Converters/EnumToDescriptionConverter.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/DeltaShell.Plugins.NetworkEditor.Gui.csproj -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/DummyConverter.cs -text

@@ -35,6 +35,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
         public bool Render(IFeature feature, Graphics graphics, ILayer layer)
         {
+            // Draw line.
+            var line = GetRenderedFeatureGeometry(feature, layer);
+            VectorRenderingHelper.RenderGeometry(graphics, layer.Map, line, leveeStyle, null, true);
+
             var leveeBreach = feature as ILeveeBreach;
             if (leveeBreach == null)
             {
@@ -43,9 +47,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                 throw new InvalidOperationException("Cannot render incompatible feature, should be a Levee breach.");
             }
 
-            // Draw line.
-            var line = GetRenderedFeatureGeometry(feature, layer);
-            VectorRenderingHelper.RenderGeometry(graphics, layer.Map, line, leveeStyle, null, true);
             return true;
         }
 
@@ -168,6 +169,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                 features.Add(feature);
             }
 
+            features.Reverse();
             return features;
         }
         private IFeature ExtractPointFeatureOfThisLeveeBreach(IGeometry geometry, ILeveeBreach leveeFeature, IEnumerable<Feature2DPoint> leveePointFeatures, LeveeBreachPointLocationType leveeBreachPointLocationType, IGeometry leveeFeatureBreachLocation)
