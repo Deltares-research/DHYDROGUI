@@ -20,6 +20,19 @@ namespace DelftTools.Hydro.Tests.Helpers
 
         #region CrossSectionDefinition SectionWidths
 
+        [TestCase(false)]
+        [TestCase(true)]
+        public void GivenCrossSectionDefinitionWithoutSections_WhenValidatingSections_ThenSectionsAreAlwaysValid(bool useCsdProxy)
+        {
+            var csDef = GetSimpleCrossSectionDefinition();
+
+            var validationResult = useCsdProxy
+                ? ValidateWithProxyCrossSectionDefinition(csDef, checkSectionsTotalWidth)
+                : checkSectionsTotalWidth(csDef);
+
+            Assert.That(validationResult, Is.True);
+        }
+
         [TestCase(20.0, false, false)]
         [TestCase(45.0, true, false)]
         [TestCase(50.0, true, false)]
