@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             PlaceShapesAndConnections(clonedRtcObjects, controller, mea);
         }
 
-        public static void SetClonedInputsAndOutputsToClonedObjects(Dictionary<object, object> source, Dictionary<object, object> target, object o)
+        private static void SetClonedInputsAndOutputsToClonedObjects(Dictionary<object, object> source, Dictionary<object, object> target, object o)
         {
             if (o is RuleBase ruleTarget)
             {
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 {
                     if (target.ContainsKey(input))
                     {
-                        ruleTarget.Inputs.Add((Input) target[input]);
+                        ruleTarget.Inputs.Add((IInput) target[input]);
                     }
                 }
 
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
                 if (conditionSource.Input != null && target.ContainsKey(conditionSource.Input))
                 {
-                    conditionTarget.Input = (Input) target[conditionSource.Input];
+                    conditionTarget.Input = (IInput) target[conditionSource.Input];
                 }
             }
 

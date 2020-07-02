@@ -4,11 +4,13 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Controls.Swf.Graph;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
@@ -161,5 +163,104 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 }
             }
         }
+
+        [Test]
+        public void CloneRtcObjectsFromClipBoardAndPlaceOnGraph_WithConditionAndMathExpressionAsInput_ClonesCorrectly()
+        {
+            // Setup
+            const string expressionName = "expression_name";
+            var expression = new MathematicalExpression {Name = expressionName};
+
+            const string conditionName = "condition_name";
+            var condition = Setup<ConditionBase>(conditionName);
+
+            condition.Input = expression;
+
+            var controlGroup = new ControlGroup();
+            controlGroup.MathematicalExpressions.Add(expression);
+            controlGroup.Conditions.Add(condition);
+
+            var toCopy = new ShapeBase[] {new MathematicalExpressionShape {Tag = expression}, new ConditionShape {Tag = condition}};
+
+            // Call
+            RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(
+                toCopy,
+                GetController(controlGroup),
+                new Point());
+
+            // Assert
+            IEventedList<MathematicalExpression> expressions = controlGroup.MathematicalExpressions;
+            Assert.That(expressions, Has.Count.EqualTo(2));
+            Assert.That(expressions[0], Is.SameAs(expression));
+            Assert.That(expressions[0].Name, Is.EqualTo(expressionName));
+            Assert.That(expressions[1], Is.Not.SameAs(expression));
+            Assert.That(expressions[1].Name, Is.EqualTo("Expression - Copy 1"));
+
+            IEventedList<ConditionBase> conditions = controlGroup.Conditions;
+            Assert.That(conditions, Has.Count.EqualTo(2));
+            Assert.That(conditions[0], Is.SameAs(condition));
+            Assert.That(conditions[0].Name, Is.EqualTo(conditionName));
+            Assert.That(conditions[1], Is.SameAs(condition.Clone()));
+            Assert.That(conditions[1].Name, Is.EqualTo("Condition - Copy 1"));
+        }
+
+        [Test]
+        public void CloneRtcObjectsFromClipBoardAndPlaceOnGraph_WithRuleAndMathExpressionAsInput_ClonesCorrectly()
+        {
+            // Setup
+            const string expressionName = "expression_name";
+            var expression = new MathematicalExpression {Name = expressionName};
+
+            const string ruleName = "rule_name";
+            var rule = Setup<RuleBase>(ruleName);
+
+            rule.Inputs.Add(expression);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.MathematicalExpressions.Add(expression);
+            controlGroup.Rules.Add(rule);
+
+            var toCopy = new ShapeBase[] {new MathematicalExpressionShape {Tag = expression}, new RuleShape {Tag = rule}};
+
+            // Call
+            RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(
+                toCopy,
+                GetController(controlGroup),
+                new Point());
+
+            // Assert
+            IEventedList<MathematicalExpression> expressions = controlGroup.MathematicalExpressions;
+            Assert.That(expressions, Has.Count.EqualTo(2));
+            Assert.That(expressions[0], Is.SameAs(expression));
+            Assert.That(expressions[0].Name, Is.EqualTo(expressionName));
+            Assert.That(expressions[1], Is.Not.SameAs(expression));
+            Assert.That(expressions[1].Name, Is.EqualTo("Expression - Copy 1"));
+
+            IEventedList<RuleBase> rules = controlGroup.Rules;
+            Assert.That(rules, Has.Count.EqualTo(2));
+            Assert.That(rules[0], Is.SameAs(rule));
+            Assert.That(rules[0].Name, Is.EqualTo(ruleName));
+            Assert.That(rules[1], Is.SameAs(rule.Clone()));
+            Assert.That(rules[1].Name, Is.EqualTo("Rule - Copy 1"));
+        }
+
+        private static T Setup<T>(string name) where T : RtcBaseObject
+        {
+            var obj = Substitute.For<T>();
+            obj.Name = name;
+
+            var clone = Substitute.For<T>();
+            clone.Name = name;
+            obj.Clone().Returns(clone);
+
+            return obj;
+        }
+
+        private static ControlGroupEditorController GetController(ControlGroup controlGroup) =>
+            new ControlGroupEditorController
+            {
+                ControlGroup = controlGroup,
+                GraphControl = new Netron.GraphLib.UI.GraphControl()
+            };
     }
 }
