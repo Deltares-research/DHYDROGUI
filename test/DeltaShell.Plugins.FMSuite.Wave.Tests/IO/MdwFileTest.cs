@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
@@ -31,6 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     [TestFixture]
     public class MdwFileTest
     {
+        private readonly string testDataPath = Path.Combine(TestHelper.GetTestDataDirectory(), nameof(MdwFileTest));
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadAndWriteMdwFile()
@@ -1070,6 +1073,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 AssertPropertyLine(lines[1], KnownWaveProperties.OverallSpecFile, string.Empty);
 
                 Assert.That(boundaryContainer.FilePathForBoundariesPerFile, Is.EqualTo(string.Empty));
+            }
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_WithWindXYComponentMeteoFilesAndOldMeteoFilePropertyInModel_MdwFileShouldContainCorrectMeteoFiles(bool switchTo)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string meteoFilesPath = Path.Combine(testDataPath, "MeteoFiles");
+
+                modelDefinition.Properties.First(p => p.PropertyDefinition.FilePropertyName == KnownWaveProperties.MeteoFile).Value = "wind.wnd";
+
+                modelDefinition.TimePointData.WindDataType = InputFieldDataType.FromInputFiles;
+                modelDefinition.TimePointData.MeteoData.FileType = WindDefinitionType.WindXWindY;
+                modelDefinition.TimePointData.MeteoData.XComponentFilePath = Path.Combine(meteoFilesPath, "xwind.wnd");
+                modelDefinition.TimePointData.MeteoData.YComponentFilePath = Path.Combine(meteoFilesPath, "ywind.wnd");
+
+                string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
+
+                // Call
+                new MdwFile {MdwFilePath = saveFilePath}.SaveTo(saveFilePath, modelDefinition, switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+
+                string[] meteoFileLines = File.ReadAllLines(saveFilePath).Where(l => l.Contains(KnownWaveProperties.MeteoFile)).ToArray();
+                Assert.That(meteoFileLines.Length, Is.EqualTo(2));
+                AssertPropertyLine(meteoFileLines[0], KnownWaveProperties.MeteoFile, "xwind.wnd");
+                AssertPropertyLine(meteoFileLines[1], KnownWaveProperties.MeteoFile, "ywind.wnd");
             }
         }
 
