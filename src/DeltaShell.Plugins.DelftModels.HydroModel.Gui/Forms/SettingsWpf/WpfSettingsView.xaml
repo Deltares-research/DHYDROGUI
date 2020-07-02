@@ -8,6 +8,7 @@
              xmlns:settingsWpf="clr-namespace:DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:controls="clr-namespace:DelftTools.Controls.Wpf.Controls;assembly=DelftTools.Controls.Wpf"
+             xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
              mc:Ignorable="d" 
              x:Name="UserControl"
              d:DesignHeight="300" d:DesignWidth="1000" 
@@ -92,13 +93,12 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding Label}" Style="{StaticResource LabelTextBlockStyle}"/>
                 <TextBox Grid.Column="1"
+                    attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"
                     Text="{Binding Value,
                             Mode=TwoWay, 
                             ValidatesOnDataErrors=True, 
                             ValidatesOnExceptions=True,
-                            Converter={StaticResource DoubleToStringConverter},
-                            Delay=500, 
-                            UpdateSourceTrigger=PropertyChanged}"
+                            Converter={StaticResource DoubleToStringConverter}}"
                     Style="{StaticResource ControlWithErrorStyle}"
                     IsEnabled="{Binding Path=IsEditable}" />
 
