@@ -34,11 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (channelInitialConditionDefinitions == null) throw new ArgumentNullException();
 
             // [General]
-                var categories = new List<DelftIniCategory>
+            var categories = new List<DelftIniCategory>
             {
                 GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.InitialConditionDataMajorVersion,
                     GeneralRegion.InitialConditionDataMinorVersion,
-                    GeneralRegion.FileTypeName.InitialConditionQuantity),
+                    GeneralRegion.FileTypeName.InitialConditionQuantity)
             };
 
             // [Global]

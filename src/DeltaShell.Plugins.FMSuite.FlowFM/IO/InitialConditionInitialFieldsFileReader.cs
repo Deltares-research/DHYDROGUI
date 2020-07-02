@@ -30,7 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
             if (categories.Count == 0) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
 
-
             // [Initial]
             var initialConditionCategories = categories.Where(category => category.Name.Equals(InitialConditionRegion.InitialConditionIniHeader)).ToList();
             var initialConditionCategoryCount = initialConditionCategories.Count;
@@ -44,7 +43,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var initialConditionCategory = initialConditionCategories.First();
 
             return ReadInitialConditionCategory(modelDefinition, initialConditionCategory);
-            
         }
 
         private static (InitialConditionQuantity, string) ReadInitialConditionCategory(WaterFlowFMModelDefinition modelDefinition, DelftIniCategory initialConditionCategory)
@@ -52,10 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var quantityString = initialConditionCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
             var quantity = InitialConditionQuantityTypeConverter.ConvertStringToInitialConditionQuantity(quantityString);
             var dataFile = initialConditionCategory.ReadProperty<string>(InitialConditionRegion.DataFile.Key);
-            //var dataFileType = initialConditionCategory.ReadProperty<string>("dataFileType"); // not used currently
 
             return (quantity, dataFile);
         }
-
     }
 }

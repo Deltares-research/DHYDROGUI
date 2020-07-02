@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
 
             // read Initial<quantity>.ini
-            if (channelInitialConditionDefinitions == null || !channelInitialConditionDefinitions.Any()) { return; }
+            if (channelInitialConditionDefinitions == null || !channelInitialConditionDefinitions.Any()) return;
             var initialConditionQuantityFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, initialConditionTuple.filename);
 
             var branches = network.Branches;
