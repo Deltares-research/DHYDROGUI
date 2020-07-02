@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {
@@ -230,6 +231,172 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 // Then
                 Assert.AreEqual(ChannelFrictionSpecificationType.RoughnessSections, fmModel.ChannelFrictionDefinitions.ElementAt(0).SpecificationType);
                 Assert.AreEqual(ChannelFrictionSpecificationType.RoughnessSections, fmModel.ChannelFrictionDefinitions.ElementAt(1).SpecificationType);
+            }
+        }
+
+        [Test]
+        public void GivenChannelWithoutLocationsInMainSection_WhenConvertingRoughness_ThenChannelFrictionDefinitionSetToConstantChannelFrictionDefinitionWithExpectedValues()
+        {
+            // Given
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var channel = new Channel();
+                var hydroNetwork = fmModel.Network;
+                var mainSectionType = new CrossSectionSectionType
+                {
+                    Name = "Main"
+                };
+
+                var mainRoughnessSection = new RoughnessSection(mainSectionType, hydroNetwork)
+                {
+                    RoughnessNetworkCoverage =
+                    {
+                        DefaultRoughnessType = RoughnessType.DeBosBijkerk,
+                        DefaultValue = 35.6
+                    }
+                };
+
+                hydroNetwork.Branches.Add(channel);
+
+                var channelFrictionDefinition = fmModel.ChannelFrictionDefinitions.First();
+
+                // Preconditions
+                Assert.AreEqual(ChannelFrictionSpecificationType.ModelSettings, channelFrictionDefinition.SpecificationType);
+
+                // When
+                new SobekToWaterFlowFMRoughnessConverter().ConvertSobekRoughnessToWaterFlowFmRoughness(
+                    fmModel.ChannelFrictionDefinitions,
+                    mainRoughnessSection,
+                    hydroNetwork);
+
+                // Then
+                Assert.AreEqual(ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition, channelFrictionDefinition.SpecificationType);
+                Assert.AreEqual(RoughnessType.DeBosBijkerk, channelFrictionDefinition.ConstantChannelFrictionDefinition.Type);
+                Assert.AreEqual(35.6, channelFrictionDefinition.ConstantChannelFrictionDefinition.Value);
+            }
+        }
+
+        [Test]
+        public void GivenChannelWithOneLocationInMainSection_WhenConvertingRoughness_ThenChannelFrictionDefinitionSetToSpatialChannelFrictionDefinitionWithExpectedValues()
+        {
+            // Given
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var channel = new Channel();
+                var hydroNetwork = fmModel.Network;
+                var mainSectionType = new CrossSectionSectionType
+                {
+                    Name = "Main"
+                };
+
+                var mainRoughnessSection = new RoughnessSection(mainSectionType, hydroNetwork)
+                {
+                    RoughnessNetworkCoverage =
+                    {
+                        DefaultRoughnessType = RoughnessType.Manning
+                    }
+                };
+
+                var roughnessNetworkCoverage = mainRoughnessSection.RoughnessNetworkCoverage;
+                roughnessNetworkCoverage.Locations.AddValues(new[] {new NetworkLocation(channel, 10)});
+                roughnessNetworkCoverage.Components[RoughnessValueComponentIndex].SetValues(new[]
+                {
+                    12.3
+                });
+                roughnessNetworkCoverage.Components[RoughnessTypeComponentIndex].SetValues(new[]
+                {
+                    (int) RoughnessType.DeBosBijkerk
+                });
+
+                hydroNetwork.Branches.Add(channel);
+
+                var channelFrictionDefinition = fmModel.ChannelFrictionDefinitions.First();
+
+                // Preconditions
+                Assert.AreEqual(ChannelFrictionSpecificationType.ModelSettings, channelFrictionDefinition.SpecificationType);
+
+                // When
+                new SobekToWaterFlowFMRoughnessConverter().ConvertSobekRoughnessToWaterFlowFmRoughness(
+                    fmModel.ChannelFrictionDefinitions,
+                    mainRoughnessSection,
+                    hydroNetwork);
+
+                // Then
+                Assert.AreEqual(ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition, channelFrictionDefinition.SpecificationType);
+
+                var spatialChannelFrictionDefinition = channelFrictionDefinition.SpatialChannelFrictionDefinition;
+                Assert.AreEqual(RoughnessType.DeBosBijkerk, spatialChannelFrictionDefinition.Type);
+                Assert.AreEqual(RoughnessFunction.Constant, spatialChannelFrictionDefinition.FunctionType);
+                Assert.AreEqual(1, spatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.Count);
+
+                var constantSpatialChannelFrictionDefinition = spatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.ElementAt(0);
+                Assert.AreEqual(10, constantSpatialChannelFrictionDefinition.Chainage);
+                Assert.AreEqual(12.3, constantSpatialChannelFrictionDefinition.Value);
+            }
+        }
+
+        [Test]
+        public void GivenChannelWithMultipleLocationsInMainSection_WhenConvertingRoughness_ThenChannelFrictionDefinitionsSetToSpatialChannelFrictionDefinitionWithExpectedValues()
+        {
+            // Given
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var channel = new Channel();
+                var hydroNetwork = fmModel.Network;
+                var mainSectionType = new CrossSectionSectionType
+                {
+                    Name = "Main"
+                };
+
+                var mainRoughnessSection = new RoughnessSection(mainSectionType, hydroNetwork)
+                {
+                    RoughnessNetworkCoverage =
+                    {
+                        DefaultRoughnessType = RoughnessType.Manning
+                    }
+                };
+
+                var roughnessNetworkCoverage = mainRoughnessSection.RoughnessNetworkCoverage;
+                roughnessNetworkCoverage.Locations.AddValues(new[] { new NetworkLocation(channel, 10) });
+                roughnessNetworkCoverage.Locations.AddValues(new[] { new NetworkLocation(channel, 20) });
+                roughnessNetworkCoverage.Components[RoughnessValueComponentIndex].SetValues(new[]
+                {
+                    12.3, 45.6
+                });
+                roughnessNetworkCoverage.Components[RoughnessTypeComponentIndex].SetValues(new[]
+                {
+                    (int) RoughnessType.DeBosBijkerk,
+                    (int) RoughnessType.DeBosBijkerk
+                });
+
+                hydroNetwork.Branches.Add(channel);
+
+                var channelFrictionDefinition = fmModel.ChannelFrictionDefinitions.First();
+
+                // Preconditions
+                Assert.AreEqual(ChannelFrictionSpecificationType.ModelSettings, channelFrictionDefinition.SpecificationType);
+
+                // When
+                new SobekToWaterFlowFMRoughnessConverter().ConvertSobekRoughnessToWaterFlowFmRoughness(
+                    fmModel.ChannelFrictionDefinitions,
+                    mainRoughnessSection,
+                    hydroNetwork);
+
+                // Then
+                Assert.AreEqual(ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition, channelFrictionDefinition.SpecificationType);
+
+                var spatialChannelFrictionDefinition = channelFrictionDefinition.SpatialChannelFrictionDefinition;
+                Assert.AreEqual(RoughnessType.DeBosBijkerk, spatialChannelFrictionDefinition.Type);
+                Assert.AreEqual(RoughnessFunction.Constant, spatialChannelFrictionDefinition.FunctionType);
+                Assert.AreEqual(2, spatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.Count);
+
+                var constantSpatialChannelFrictionDefinition1 = spatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.ElementAt(0);
+                Assert.AreEqual(10, constantSpatialChannelFrictionDefinition1.Chainage);
+                Assert.AreEqual(12.3, constantSpatialChannelFrictionDefinition1.Value);
+
+                var constantSpatialChannelFrictionDefinition2 = spatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.ElementAt(1);
+                Assert.AreEqual(20, constantSpatialChannelFrictionDefinition2.Chainage);
+                Assert.AreEqual(45.6, constantSpatialChannelFrictionDefinition2.Value);
             }
         }
 
