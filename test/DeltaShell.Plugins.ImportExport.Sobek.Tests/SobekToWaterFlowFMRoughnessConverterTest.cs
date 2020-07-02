@@ -62,12 +62,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             {
                 var channel = new Channel();
                 var hydroNetwork = fmModel.Network;
-                var defaultCrossSectionSectionType = new CrossSectionSectionType
+                var mainSectionType = new CrossSectionSectionType
                 {
                     Name = "Main"
                 };
 
-                var defaultRoughnessSection = new RoughnessSection(defaultCrossSectionSectionType, hydroNetwork);
+                var mainRoughnessSection = new RoughnessSection(mainSectionType, hydroNetwork);
 
                 hydroNetwork.Branches.Add(channel);
 
@@ -79,13 +79,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                         { 
                             MinY = 0,
                             MaxY = 50,
-                            SectionType = defaultCrossSectionSectionType
+                            SectionType = mainSectionType
                         },
                         new CrossSectionSection
                         {
                             MinY = 50,
                             MaxY = 100,
-                            SectionType = defaultCrossSectionSectionType
+                            SectionType = mainSectionType
                         }
                     }
                 }));
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 // When
                 new SobekToWaterFlowFMRoughnessConverter().ConvertSobekRoughnessToWaterFlowFmRoughness(
                     fmModel.ChannelFrictionDefinitions,
-                    defaultRoughnessSection,
+                    mainRoughnessSection,
                     hydroNetwork);
 
                 // Then
@@ -112,12 +112,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             {
                 var channel = new Channel();
                 var hydroNetwork = fmModel.Network;
-                var defaultCrossSectionSectionType = new CrossSectionSectionType
+                var mainSectionType = new CrossSectionSectionType
                 {
                     Name = "Main"
                 };
 
-                var defaultRoughnessSection = new RoughnessSection(defaultCrossSectionSectionType, hydroNetwork);
+                var mainRoughnessSection = new RoughnessSection(mainSectionType, hydroNetwork);
 
                 hydroNetwork.Branches.Add(channel);
 
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                         {
                             MinY = 0,
                             MaxY = 50,
-                            SectionType = defaultCrossSectionSectionType
+                            SectionType = mainSectionType
                         },
                         new CrossSectionSection
                         {
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 // When
                 new SobekToWaterFlowFMRoughnessConverter().ConvertSobekRoughnessToWaterFlowFmRoughness(
                     fmModel.ChannelFrictionDefinitions,
-                    defaultRoughnessSection,
+                    mainRoughnessSection,
                     hydroNetwork);
 
                 // Then
@@ -163,12 +163,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 var channel1 = new Channel();
                 var channel2 = new Channel();
                 var hydroNetwork = fmModel.Network;
-                var defaultCrossSectionSectionType = new CrossSectionSectionType
+                var mainSectionType = new CrossSectionSectionType
                 {
                     Name = "Main"
                 };
 
-                var defaultRoughnessSection = new RoughnessSection(defaultCrossSectionSectionType, hydroNetwork);
+                var mainRoughnessSection = new RoughnessSection(mainSectionType, hydroNetwork);
 
                 var crossSection1 = new CrossSection(new CrossSectionDefinitionYZ
                 {
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                         {
                             MinY = 50,
                             MaxY = 100,
-                            SectionType = defaultCrossSectionSectionType
+                            SectionType = mainSectionType
                         }
                     }
                 });
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                         {
                             MinY = 50,
                             MaxY = 100,
-                            SectionType = defaultCrossSectionSectionType
+                            SectionType = mainSectionType
                         }
                     }
                 });
@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 // When
                 new SobekToWaterFlowFMRoughnessConverter().ConvertSobekRoughnessToWaterFlowFmRoughness(
                     fmModel.ChannelFrictionDefinitions,
-                    defaultRoughnessSection,
+                    mainRoughnessSection,
                     hydroNetwork);
 
                 // Then
