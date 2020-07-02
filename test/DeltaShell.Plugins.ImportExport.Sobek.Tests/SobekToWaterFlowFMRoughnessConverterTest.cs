@@ -1,14 +1,11 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
-using DeltaShell.Plugins.FMSuite.FlowFM;
-using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {
@@ -55,6 +52,185 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(action);
             Assert.AreEqual("network", exception.ParamName);
+        }
+
+        [Test]
+        public void GivenChannelWithCrossSectionThatOnlyReferencesMainSectionType_WhenConvertingRoughness_ThenChannelFrictionDefinitionSetToConstantChannelFrictionDefinition()
+        {
+            // Given
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var channel = new Channel();
+                var hydroNetwork = fmModel.Network;
+                var defaultCrossSectionSectionType = new CrossSectionSectionType
+                {
+                    Name = "Main"
+                };
+
+                var defaultRoughnessSection = new RoughnessSection(defaultCrossSectionSectionType, hydroNetwork);
+
+                hydroNetwork.Branches.Add(channel);
+
+                channel.BranchFeatures.Add(new CrossSection(new CrossSectionDefinitionYZ
+                {
+                    Sections =
+                    {
+                        new CrossSectionSection
+                        { 
+                            MinY = 0,
+                            MaxY = 50,
+                            SectionType = defaultCrossSectionSectionType
+                        },
+                        new CrossSectionSection
+                        {
+                            MinY = 50,
+                            MaxY = 100,
+                            SectionType = defaultCrossSectionSectionType
+                        }
+                    }
+                }));
+
+                // Preconditions
+                Assert.AreEqual(ChannelFrictionSpecificationType.ModelSettings, fmModel.ChannelFrictionDefinitions.First().SpecificationType);
+
+                // When
+                new SobekToWaterFlowFMRoughnessConverter().ConvertSobekRoughnessToWaterFlowFmRoughness(
+                    fmModel.ChannelFrictionDefinitions,
+                    defaultRoughnessSection,
+                    hydroNetwork);
+
+                // Then
+                Assert.AreEqual(ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition, fmModel.ChannelFrictionDefinitions.First().SpecificationType);
+            }
+        }
+
+        [Test]
+        public void GivenChannelWithCrossSectionThatReferencesOtherThanMainSectionType_WhenConvertingRoughness_ThenChannelFrictionDefinitionSetToRoughnessSections()
+        {
+            // Given
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var channel = new Channel();
+                var hydroNetwork = fmModel.Network;
+                var defaultCrossSectionSectionType = new CrossSectionSectionType
+                {
+                    Name = "Main"
+                };
+
+                var defaultRoughnessSection = new RoughnessSection(defaultCrossSectionSectionType, hydroNetwork);
+
+                hydroNetwork.Branches.Add(channel);
+
+                channel.BranchFeatures.Add(new CrossSection(new CrossSectionDefinitionYZ
+                {
+                    Sections =
+                    {
+                        new CrossSectionSection
+                        {
+                            MinY = 0,
+                            MaxY = 50,
+                            SectionType = defaultCrossSectionSectionType
+                        },
+                        new CrossSectionSection
+                        {
+                            MinY = 50,
+                            MaxY = 100,
+                            SectionType = new CrossSectionSectionType()
+                        }
+                    }
+                }));
+
+                // Preconditions
+                Assert.AreEqual(ChannelFrictionSpecificationType.ModelSettings, fmModel.ChannelFrictionDefinitions.First().SpecificationType);
+
+                // When
+                new SobekToWaterFlowFMRoughnessConverter().ConvertSobekRoughnessToWaterFlowFmRoughness(
+                    fmModel.ChannelFrictionDefinitions,
+                    defaultRoughnessSection,
+                    hydroNetwork);
+
+                // Then
+                Assert.AreEqual(ChannelFrictionSpecificationType.RoughnessSections, fmModel.ChannelFrictionDefinitions.First().SpecificationType);
+            }
+        }
+
+        [Test]
+        public void GivenComplexSituationWithSharedCrossSection_WhenConvertingRoughness_ThenChannelFrictionDefinitionForBothChannelsSetToRoughnessSections()
+        {
+            // Given
+            using (var fmModel = new WaterFlowFMModel())
+            {
+                var channel1 = new Channel();
+                var channel2 = new Channel();
+                var hydroNetwork = fmModel.Network;
+                var defaultCrossSectionSectionType = new CrossSectionSectionType
+                {
+                    Name = "Main"
+                };
+
+                var defaultRoughnessSection = new RoughnessSection(defaultCrossSectionSectionType, hydroNetwork);
+
+                var crossSection1 = new CrossSection(new CrossSectionDefinitionYZ
+                {
+                    Sections =
+                    {
+                        new CrossSectionSection
+                        {
+                            MinY = 0,
+                            MaxY = 50,
+                            SectionType = new CrossSectionSectionType()
+                        }
+                    }
+                });
+
+                var crossSection2 = new CrossSection(new CrossSectionDefinitionYZ
+                {
+                    Sections =
+                    {
+                        new CrossSectionSection
+                        {
+                            MinY = 50,
+                            MaxY = 100,
+                            SectionType = defaultCrossSectionSectionType
+                        }
+                    }
+                });
+
+                var crossSection3 = new CrossSection(new CrossSectionDefinitionYZ
+                {
+                    Sections =
+                    {
+                        new CrossSectionSection
+                        {
+                            MinY = 50,
+                            MaxY = 100,
+                            SectionType = defaultCrossSectionSectionType
+                        }
+                    }
+                });
+
+                hydroNetwork.Branches.Add(channel1);
+                hydroNetwork.Branches.Add(channel2);
+                channel1.BranchFeatures.Add(crossSection1);
+                channel1.BranchFeatures.Add(crossSection2);
+                channel2.BranchFeatures.Add(crossSection3);
+                crossSection2.ShareDefinitionAndChangeToProxy();
+                crossSection3.UseSharedDefinition(hydroNetwork.SharedCrossSectionDefinitions.First());
+
+                // Preconditions
+                Assert.AreEqual(ChannelFrictionSpecificationType.ModelSettings, fmModel.ChannelFrictionDefinitions.ElementAt(0).SpecificationType);
+                Assert.AreEqual(ChannelFrictionSpecificationType.ModelSettings, fmModel.ChannelFrictionDefinitions.ElementAt(1).SpecificationType);
+
+                // When
+                new SobekToWaterFlowFMRoughnessConverter().ConvertSobekRoughnessToWaterFlowFmRoughness(
+                    fmModel.ChannelFrictionDefinitions,
+                    defaultRoughnessSection,
+                    hydroNetwork);
+
+                // Then
+                Assert.AreEqual(ChannelFrictionSpecificationType.RoughnessSections, fmModel.ChannelFrictionDefinitions.ElementAt(0).SpecificationType);
+                Assert.AreEqual(ChannelFrictionSpecificationType.RoughnessSections, fmModel.ChannelFrictionDefinitions.ElementAt(1).SpecificationType);
+            }
         }
 
         // [Test]
