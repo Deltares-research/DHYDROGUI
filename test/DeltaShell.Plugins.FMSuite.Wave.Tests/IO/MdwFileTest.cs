@@ -705,15 +705,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             TimerMethod_LoadTimeDependentSpatiallyVaryingBoundary(mdwPath);
         }
 
-        /// <summary>
-        /// Method to test by dot Trace. Should be public for setting thresholds.
-        /// </summary>
-        /// <param name="mdwPath"> The Mdw file path. </param>
-        public static void TimerMethod_LoadTimeDependentSpatiallyVaryingBoundary(string mdwPath)
-        {
-            new MdwFile().Load(mdwPath);
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void Load_FileBasedUniformBoundary_LoadsBoundaryCorrectly()
@@ -819,6 +810,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(WaveDirectionalSpaceType.Sector)]
         [TestCase(WaveDirectionalSpaceType.Circle)]
         [Category(TestCategory.DataAccess)]
@@ -856,43 +848,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
-        private static string CreateMdwFileWithSpectralDomainData(string tempDirPath, SpectralDomainData domainData)
-        {
-            string filePath = Path.Combine(tempDirPath, "file.mdw");
-            string directionalSpaceTypeValue = domainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle
-                                                   ? "circle"
-                                                   : "sector";
-
-            string[] content =
-            {
-                "[Domain]",
-                $"DirSpace  = {directionalSpaceTypeValue}",
-                $"NDir      = {domainData.NDir}",
-                $"StartDir  = {ToDoubleString(domainData.StartDir)}",
-                $"EndDir    = {ToDoubleString(domainData.EndDir)}",
-                $"FreqMin   = {ToDoubleString(domainData.FreqMin)}",
-                $"FreqMax   = {ToDoubleString(domainData.FreqMax)}",
-                $"NFreq     = {domainData.NFreq}",
-                "[Output]",
-                "[General]"
-            };
-
-            File.WriteAllLines(filePath, content);
-
-            return filePath;
-        }
-
-        private static string ToDoubleString(double value)
-        {
-            return value.ToString(CultureInfo.InvariantCulture);
-        }
-
-        private static double GetRandomRoundedValue(Random random)
-        {
-            const int factor = 10000000;
-            return Math.Floor(random.NextDouble() * factor) / factor;
-        }
-
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -941,6 +897,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -979,6 +936,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -1042,6 +1000,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -1083,6 +1042,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -1111,6 +1071,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
                 Assert.That(boundaryContainer.FilePathForBoundariesPerFile, Is.EqualTo(string.Empty));
             }
+        }
+
+        /// <summary>
+        /// Method to test by dot Trace. Should be public for setting thresholds.
+        /// </summary>
+        /// <param name="mdwPath"> The Mdw file path. </param>
+        public static void TimerMethod_LoadTimeDependentSpatiallyVaryingBoundary(string mdwPath)
+        {
+            new MdwFile().Load(mdwPath);
+        }
+
+        private static string CreateMdwFileWithSpectralDomainData(string tempDirPath, SpectralDomainData domainData)
+        {
+            string filePath = Path.Combine(tempDirPath, "file.mdw");
+            string directionalSpaceTypeValue = domainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle
+                                                   ? "circle"
+                                                   : "sector";
+
+            string[] content = {"[Domain]", $"DirSpace  = {directionalSpaceTypeValue}", $"NDir      = {domainData.NDir}", $"StartDir  = {ToDoubleString(domainData.StartDir)}", $"EndDir    = {ToDoubleString(domainData.EndDir)}", $"FreqMin   = {ToDoubleString(domainData.FreqMin)}", $"FreqMax   = {ToDoubleString(domainData.FreqMax)}", $"NFreq     = {domainData.NFreq}", "[Output]", "[General]"};
+
+            File.WriteAllLines(filePath, content);
+
+            return filePath;
+        }
+
+        private static string ToDoubleString(double value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        private static double GetRandomRoundedValue(Random random)
+        {
+            const int factor = 10000000;
+            return Math.Floor(random.NextDouble() * factor) / factor;
         }
 
         private static void AssertPropertyLine(string line, string propertyName, string value)
@@ -1208,9 +1202,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(supportPointData.Spreading.SpreadingPower, Is.EqualTo(spreading));
         }
 
-        private static void AssertCorrectWaveEnergyFunction(
-            IWaveEnergyFunction<DegreesDefinedSpreading> waveEnergyFunction, int i, DateTime date,
-            double height, double period, double direction, double spreading)
+        private static void AssertCorrectWaveEnergyFunction(IWaveEnergyFunction<DegreesDefinedSpreading> waveEnergyFunction, int i, DateTime date,
+                                                            double height, double period, double direction, double spreading)
         {
             Assert.That(waveEnergyFunction.TimeArgument.Values[i], Is.EqualTo(date));
             Assert.That(waveEnergyFunction.HeightComponent.Values[i], Is.EqualTo(height));
@@ -1242,12 +1235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             string filePath = Path.Combine(tempDirPath, "file.mdw");
 
-            string[] content =
-            {
-                "[Domain]",
-                "[Output]",
-                "[General]"
-            };
+            string[] content = {"[Domain]", "[Output]", "[General]"};
 
             File.WriteAllLines(filePath, content);
 

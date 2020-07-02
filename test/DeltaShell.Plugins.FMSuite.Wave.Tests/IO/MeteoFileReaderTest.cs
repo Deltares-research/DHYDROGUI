@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenMeteoFile_WhenRead_ThenExpectedPropertiesReturned()
         {
             string testFile = Path.Combine(testDataPath, "test.wnd");
@@ -37,6 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenMeteoFileWithInvalidLines_WhenRead_ThenExpectedPropertiesReturned()
         {
             string testFile = Path.Combine(testDataPath, "test_with_invalid_lines.wnd");
