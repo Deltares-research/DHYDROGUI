@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         {
             if(feature is IPipe pipe)
                 SewerFactory.AddDefaultPipeToNetwork(pipe, Network);
-            if(feature is SewerConnection sewerConnection)
+            else if(feature is SewerConnection sewerConnection)
                 SewerFactory.AddDefaultSewerConnectionToNetwork(sewerConnection, Network);
         }
 
