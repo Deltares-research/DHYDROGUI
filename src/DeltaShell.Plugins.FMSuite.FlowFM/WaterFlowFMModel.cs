@@ -200,8 +200,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnFMModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if(!(sender is WaterFlowFMModel )) return;
             MarkDirty();
-            if (e.PropertyName == nameof(Name))
+            if (e.PropertyName == nameof(Name) && fmRegion.Name != Name)
             {
                 fmRegion.Name = Name;
                 if (!OutputIsEmpty)
