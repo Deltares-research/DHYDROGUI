@@ -5384,6 +5384,7 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/RainfallRunoffAreaSynch
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/RainfallRunoffBasinSynchronizerTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/RainfallRunoffImportRunSaveLoadTests.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/RainfallRunoffImportRunTests.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/RainfallRunoffModelDataSaveLoadTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/RainfallRunoffModelTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/RainfallRunoffNodePresentersTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/RainfallRunoffOutputSettingDataTest.cs -text
