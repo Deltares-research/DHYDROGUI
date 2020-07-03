@@ -239,7 +239,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                         UpdateMinMax(values, parameterName, function);
                         return new MultiDimensionalArray<double>(values, MetaData?.NumberOfTimeSteps ?? 1, MetaData?.NumberOfLocations ?? 1);
                     };
-                    return new LazyMultiDimensionalArray<double>(realGetFunction, () => MetaData?.NumberOfTimeSteps ?? 1 * MetaData?.NumberOfLocations ?? 1);
+                    return new LazyMultiDimensionalArray<double>(realGetFunction, () => (MetaData?.NumberOfTimeSteps ?? 1) * (MetaData?.NumberOfLocations ?? 1));
                 }
 
                 var featureVariableFilters = filters.Where(f => f.Variable == featureVariable).OfType<VariableValueFilter<IFeature>>().ToList();
