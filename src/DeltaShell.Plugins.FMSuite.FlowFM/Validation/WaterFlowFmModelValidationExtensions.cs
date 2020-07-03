@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateSpatiallyVaryingSedimentCoverage(model),
                 ValidateCoordinateSystem(model),
                 WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model),
-                WaterFlowFMModelNetworkValidator.Validate(model.Network, model.NetworkDiscretization, model.RoughnessSections),
+                WaterFlowFMModelNetworkValidator.Validate(model.Network, model.NetworkDiscretization),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateLinks(model.Links),
                 ValidateBathymetry(model),

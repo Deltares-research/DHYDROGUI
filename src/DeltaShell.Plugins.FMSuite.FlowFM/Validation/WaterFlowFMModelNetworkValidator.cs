@@ -2,7 +2,6 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Validators;
 using DelftTools.Utils;
@@ -16,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
     public static class WaterFlowFMModelNetworkValidator
     {
         public static string CategoryName = "Network";
-        public static ValidationReport Validate(IHydroNetwork target, IDiscretization networkDiscretization = null, IEnumerable<RoughnessSection> roughnessSections = null)
+        public static ValidationReport Validate(IHydroNetwork target, IDiscretization networkDiscretization = null)
         {
             var subReports = new List<ValidationReport>();
             if (target != null)
@@ -46,16 +45,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     });
                     
                 }
-                /*
-                if (target.HydroNodes.Any() && roughnessSections != null)
+
+                if (target.Compartments.Any())
                 {
                     subReports.AddRange(new[]
                     {
-                        WaterFlowModel1DModelDataValidator.ValidateRoughness(target, roughnessSections),
+                        ValidateCompartments(target)
                     });
                 }
-                */
             }
+
             return new ValidationReport(CategoryName, new List<ValidationIssue>(), subReports);
         }
 
@@ -269,6 +268,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 yield return channel;
             }
+        }
+
+        private static ValidationReport ValidateCompartments(IHydroNetwork target)
+        {
+            var issues = new List<ValidationIssue>();
+
+            foreach (var compartment in target.Compartments)
+            {
+                if (compartment.ManholeWidth <= 0)
+                {
+                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Error, "Width / diameter must be larger than 0"));
+                }
+
+                if (compartment.ManholeLength <= 0)
+                {
+                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Error, "Length must be larger than 0"));
+                }
+
+                if (compartment.FloodableArea <= 0)
+                {
+                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Error, "Storage area must be larger than 0"));
+                }
+            }
+
+            return new ValidationReport("Compartments", issues);
         }
     }
 }
