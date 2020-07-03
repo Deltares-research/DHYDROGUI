@@ -125,6 +125,7 @@
     </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50869-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\NHibernate.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
