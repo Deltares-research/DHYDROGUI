@@ -307,7 +307,10 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         /// <param name="lateralSource"></param>
         private void AddLateralSourceToBranch(IBranch branch, LateralSource lateralSource)
         {
-            lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, 0);
+            if (branch is IPipe pipe && pipe.Target is IManhole manhole && manhole.Name.Equals(lateralSource.Name, StringComparison.InvariantCultureIgnoreCase))
+                lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
+            else
+                lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, 0);
             lock(branch.BranchFeatures)
                 branch.BranchFeatures.Add(lateralSource);
         }
