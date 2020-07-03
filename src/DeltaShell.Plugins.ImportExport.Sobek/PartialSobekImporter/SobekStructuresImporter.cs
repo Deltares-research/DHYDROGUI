@@ -165,6 +165,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             else
             {
                 var compositeStructure = Builders.ChannelStructureBuilder.CreateCompositeStructureAndAddItToTheBranch(branch, offset, geometry);
+                compositeStructure.Name = extraFriction.Id + " [compound]"; // to prevent duplicates with substructure
+                
                 var extraResistance = new ExtraResistance
                 {
                     Name = extraFriction.Id,

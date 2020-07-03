@@ -256,7 +256,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                  "    StartLocationY        = 250                 # Y-position of the breach growth" + Environment.NewLine +
                  "    T0                    = 31622400            # Start time of the breach (in seconds) [s]" + Environment.NewLine +
                  "    State                 = 1                   # 0 = off 1 = on (typically set via BMI)" + Environment.NewLine +
-                 "    UseWaterLevelStream   = 0                   # 0 = off 1 = on (Gui trash)" + Environment.NewLine +
                  "    waterLevelUpstreamLocationX= 125                 # X-position of the upstream point of the water level stream to the breach point" + Environment.NewLine +
                  "    waterLevelUpstreamLocationY= 250                 # Y-position of the upstream point of the water level stream to the breach point" + Environment.NewLine +
                  "    waterLevelDownstreamLocationX= 125                 # X-position of the downstream point of the water level stream from the breach point" + Environment.NewLine +

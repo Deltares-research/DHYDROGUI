@@ -651,7 +651,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         [Category(TestCategory.Performance)]
         [TestCase(@"gwswFiles\GWSW_DidactischStelsel\GWSW.hydx_Definitie_DM.csv", 10000)]
-        [TestCase(@"gwswFiles\GWSW_Leiden\GWSW.hydx_Definitie_DM.csv", 180000)]
+        [TestCase(@"gwswFiles\GWSW_Leiden\GWSW.hydx_Definitie_DM.csv", 210000)]
         public void GivenGwswDatabase_WhenImporting_ShouldBeFasterThan(string testFilePath,
             float maximumImportingTimeInMs)
         {

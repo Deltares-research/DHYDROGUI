@@ -41,11 +41,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                     using (var fmModel = new WaterFlowFMModel(mduFilePath))
                     {
                         app.Project.RootFolder.Add(fmModel);
-                        var importer = app.FileImporters.OfType<RasterFileImporter>().FirstOrDefault();
-                        Assert.IsNotNull(importer);
+
+                        var rasterFileImporter = new RasterFileImporter();
+                        rasterFileImporter.RegisterGetModelFunction<UnstructuredGrid>(grid => fmModel);
+                        rasterFileImporter.RegisterGetModelFunction<UnstructuredGridCoverage>(grid => fmModel);
 
                         var expectedGrid =
-                            importer.ImportItem(testFilePath, fmModel.Grid) as UnstructuredGrid;
+                            rasterFileImporter.ImportItem(testFilePath, fmModel.Grid) as UnstructuredGrid;
                         Assert.IsNotNull(expectedGrid);
 
                         const int expectedCells = 252 * 173;
@@ -331,6 +333,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                         // open view for model
                         gui.CommandHandler.OpenView(model);
                         var importer = new RasterFileImporter();
+                        importer.RegisterGetModelFunction<UnstructuredGrid>(grid => model);
+                        importer.RegisterGetModelFunction<UnstructuredGridCoverage>(coverage => model);
                         importer.ImportItem(testFilePath, model.Grid);
                         importer.ImportItem(testFilePath, model.Bathymetry);
                         // open view for model

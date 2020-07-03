@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(12, schema.StructurePropertyGroups[StructureRegion.StructureTypeName.Pump].PropertyDefinitions.Count);
             Assert.AreEqual(7, schema.StructurePropertyGroups[StructureRegion.StructureTypeName.Gate].PropertyDefinitions.Count);
             Assert.AreEqual(28, schema.StructurePropertyGroups[StructureRegion.StructureTypeName.GeneralStructure].PropertyDefinitions.Count);
-            Assert.AreEqual(18, schema.StructurePropertyGroups[StructureRegion.StructureTypeName.LeveeBreach].PropertyDefinitions.Count);
+            Assert.AreEqual(17, schema.StructurePropertyGroups[StructureRegion.StructureTypeName.LeveeBreach].PropertyDefinitions.Count);
         }
     }
 }
