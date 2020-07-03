@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                     IHydroObject target = null;
                     var hasTargetHydroObject = hasTargetHydroObjectType && 
-                                               targetHydroObjectTypes.TryGetValue(regionExchange.SourceName,out target) && 
+                                               targetHydroObjectTypes.TryGetValue(regionExchange.TargetName,out target) && 
                                                target.CanBeLinkTarget;
 
                     if (!hasSourceHydroObject || !hasTargetHydroObject)
