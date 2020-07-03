@@ -44,15 +44,37 @@
 
         <!-- Right column -->
         <Label Grid.Column="0" Grid.Row="3" Content="Width / diameter [m]"/>
-        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Compartment.ManholeWidth, StringFormat={}{0:G3}}"/>
+        <TextBox Grid.Column="1" Grid.Row="3">
+            <TextBox.Text>
+                <Binding Path="Compartment.ManholeWidth" StringFormat="{}{0:G3}" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local:CompartmentValueValidationRule ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
 
         <Label Grid.Column="0" Grid.Row="4" Content="Length"/>
-        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Compartment.ManholeLength, StringFormat={}{0:G3}}"/>
+        <TextBox Grid.Column="1" Grid.Row="4">
+            <TextBox.Text>
+                <Binding Path="Compartment.ManholeLength" StringFormat="{}{0:G3}" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local:CompartmentValueValidationRule ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
 
         <Label Grid.Column="0" Grid.Row="5" Content="Storage area [m2]"/>
-        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Compartment.FloodableArea, StringFormat={}{0:G3}}"/>
-
-       
+        <TextBox Grid.Column="1" Grid.Row="5">
+            <TextBox.Text>
+                <Binding Path="Compartment.FloodableArea" StringFormat="{}{0:G3}" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local:CompartmentValueValidationRule ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
 
     </Grid>
 </UserControl>

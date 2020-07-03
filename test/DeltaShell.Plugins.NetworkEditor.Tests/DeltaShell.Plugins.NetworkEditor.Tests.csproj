@@ -245,6 +245,7 @@
     <Compile Include="Export\HydroRegionToShapeFileExporterTest.cs" />
     <Compile Include="Forms\NetworkSideView\ManHoleSideViewShapeTest.cs" />
     <Compile Include="Forms\NetworkSideView\NetworkSideViewHelperTest.cs" />
+    <Compile Include="Forms\SewerFeatureViews\CompartmentValueValidationRuleTest.cs" />
     <Compile Include="Forms\SewerFeatureViews\LeveeBreachViewModelTest.cs" />
     <Compile Include="Forms\SewerFeatureViews\LeveeBreachViewTest.cs" />
     <Compile Include="Forms\SewerFeatureViews\ManholeViewModelTest.cs" />

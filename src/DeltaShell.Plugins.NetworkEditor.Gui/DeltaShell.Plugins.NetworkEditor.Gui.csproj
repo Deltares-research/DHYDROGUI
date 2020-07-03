@@ -245,6 +245,7 @@
     <Compile Include="Forms\SewerFeatureViews\CanvasItemsControl.cs" />
     <Compile Include="Forms\SewerFeatureViews\CompartmentShape.cs" />
     <Compile Include="Forms\SewerFeatureViews\CompartmentShapeDragAndDropStrategy.cs" />
+    <Compile Include="Forms\SewerFeatureViews\CompartmentValueValidationRule.cs" />
     <Compile Include="Forms\SewerFeatureViews\CompartmentView.xaml.cs">
       <DependentUpon>CompartmentView.xaml</DependentUpon>
     </Compile>

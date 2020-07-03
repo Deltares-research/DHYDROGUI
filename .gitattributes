@@ -2570,6 +2570,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/Roughness/RoughnessSectionCoverag
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/CanvasItemsControl.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/CompartmentShape.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/CompartmentShapeDragAndDropStrategy.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/CompartmentValueValidationRule.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/CompartmentView.xaml -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/CompartmentView.xaml.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/CompartmentViewModel.cs -text
@@ -37578,6 +37579,7 @@ test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideVie
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewHelperTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/NetworkSideView/NetworkSideViewTestHelper.cs -text
+test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/SewerFeatureViews/CompartmentValueValidationRuleTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/SewerFeatureViews/LeveeBreachViewModelTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/SewerFeatureViews/LeveeBreachViewTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Forms/SewerFeatureViews/ManholeViewModelTest.cs -text
