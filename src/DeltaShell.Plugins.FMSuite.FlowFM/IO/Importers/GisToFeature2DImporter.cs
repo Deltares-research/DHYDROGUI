@@ -177,11 +177,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             foreach (var feature in features)
             {
-                var instance = CreateInstanceOfFeature2D != null ? CreateInstanceOfFeature2D() : (TFeature2D)Activator.CreateInstance(typeof(TFeature2D));
-                instance.Name = NamingHelper.GetUniqueName<TFeature2D>("imported_feature_{0}",list);
+                var instance = CreateInstanceOfFeature2D != null 
+                    ? CreateInstanceOfFeature2D() 
+                    : (TFeature2D)Activator.CreateInstance(typeof(TFeature2D));
+
+                instance.Name = $"Imported {instance.GetType().Name}";
                 instance.Geometry = ConvertGeometry(feature);
                 list.Add(instance);
             }
+
+            NamingHelper.MakeNamesUnique(list);
         }
 
         public Func<TFeature2D> CreateInstanceOfFeature2D { get; set; }
