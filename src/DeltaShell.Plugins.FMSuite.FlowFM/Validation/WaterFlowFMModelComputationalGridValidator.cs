@@ -6,6 +6,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
@@ -78,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (flowFmModel != null)
             {
                 double dxmin1D;
-                if(double.TryParse(flowFmModel.ModelDefinition.GetModelProperty("Dxmin1D").GetValueAsString(), NumberStyles.AllowDecimalPoint|NumberStyles.AllowExponent|NumberStyles.AllowLeadingSign,CultureInfo.InvariantCulture, out dxmin1D))
+                if(double.TryParse(flowFmModel.ModelDefinition.GetModelProperty(KnownProperties.Dxmin1D).GetValueAsString(), NumberStyles.AllowDecimalPoint|NumberStyles.AllowExponent|NumberStyles.AllowLeadingSign,CultureInfo.InvariantCulture, out dxmin1D))
                 {
                     var segmentIssues = ValidateSegments(networkDiscretization, dxmin1D);
                     if(segmentIssues.Any())
@@ -98,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     var startPoint = locations.FirstOrDefault(l => Math.Abs(l.Chainage - segment.Chainage) < double.Epsilon);
                     var endPoint = locations.FirstOrDefault(l => Math.Abs(l.Chainage - segment.EndChainage) < double.Epsilon);
                     if(startPoint == null || endPoint == null) continue;
-                    yield return new ValidationIssue(segment, ValidationSeverity.Error, $"Segment {segment.Name} on branch {segment.Branch} between start point {startPoint} at chainage {segment.Chainage} and end point {endPoint} at chainage {segment.EndChainage} is shorter ({segment.Length} than minimum length provided (Dxmin1D) : {dxmin1D}.");
+                    yield return new ValidationIssue(segment, ValidationSeverity.Warning, $"Segment {segment.Name} on branch {segment.Branch} between start point {startPoint} at chainage {segment.Chainage} and end point {endPoint} at chainage {segment.EndChainage} is shorter ({segment.Length} than minimum length provided (Dxmin1D) : {dxmin1D}.");
                 }
             }
             yield break;

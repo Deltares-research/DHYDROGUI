@@ -5,9 +5,9 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
-using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = WaterFlowFMTestHelper.CreateModelWithDemoNetwork();
             var firstChannel = model.Network.Channels.First();
-            var dxmin1D = Convert.ToDouble(model.ModelDefinition.GetModelProperty("Dxmin1D").GetValueAsString());
+            var dxmin1D = Convert.ToDouble(model.ModelDefinition.GetModelProperty(KnownProperties.Dxmin1D).GetValueAsString());
             var networkLocation = new NetworkLocation(firstChannel, dxmin1D);
             model.NetworkDiscretization[networkLocation] = 11.0;
             
@@ -196,6 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             Assert.That(report.AllErrors.Any(), Is.False);
             Assert.That(report.AllErrors.Count(), Is.EqualTo(0));
+            Assert.That(report.WarningCount, Is.EqualTo(0));
             Assert.That(report.Severity(), Is.EqualTo(ValidationSeverity.None));
 
             var offsetLessThanDxmin1D = dxmin1D - dxmin1D / 10;
@@ -204,9 +205,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.IsNotNull(model.NetworkDiscretization.Locations.Values.FirstOrDefault(l => l.Branch == firstChannel && Math.Abs(l.Chainage - (dxmin1D + offsetLessThanDxmin1D)) < double.Epsilon));
             report = WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model);
 
-            Assert.That(report.AllErrors.Any(), Is.True);
-            Assert.That(report.AllErrors.Count(), Is.EqualTo(1));
-            Assert.That(report.Severity(), Is.EqualTo(ValidationSeverity.Error));
+            Assert.That(report.WarningCount, Is.EqualTo(1));
+            Assert.That(report.Severity(), Is.EqualTo(ValidationSeverity.Warning));
 
         }
 

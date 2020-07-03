@@ -105,6 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string TrtDef = "TrtDef";
         public const string TrtL = "TrtL";
         public const string DtTrt = "DtTrt";
+        public const string Dxmin1D = "Dxmin1D";
     }
 
 
