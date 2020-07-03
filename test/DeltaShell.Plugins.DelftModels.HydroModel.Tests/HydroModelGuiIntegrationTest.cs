@@ -85,6 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.Plugins.Add(new RainfallRunoffApplicationPlugin());
             app.Plugins.Add(new NetCdfApplicationPlugin());
             app.Plugins.Add(new FlowFMApplicationPlugin());
+            app.Plugins.Add(new SobekImportApplicationPlugin());
 
             gui.Plugins.Add(new ProjectExplorerGuiPlugin());
             gui.Plugins.Add(new CommonToolsGuiPlugin());

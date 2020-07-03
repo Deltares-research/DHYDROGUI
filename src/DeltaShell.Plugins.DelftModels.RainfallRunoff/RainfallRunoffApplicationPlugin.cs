@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using log4net;
@@ -72,12 +73,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private void LoadFromFile(Project project)
         {
-            //var importers = 
             var rrModels = project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
             
             foreach (var rainfallRunoffModel in rrModels)
             {
-                var importer = Application.FileImporters.Where(fi =>fi.SupportedItemTypes.Contains(typeof(RainfallRunoffModel)) && !(fi is PolderFromGisImporter) && !(fi is NWRWCatchmentFrom3BImporter)).ElementAt(1);
+                var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
                 importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
             }
         }

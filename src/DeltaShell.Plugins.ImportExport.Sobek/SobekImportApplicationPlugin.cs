@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using DelftTools.Shell.Core;
+using DeltaShell.NGHS.IO.Helpers;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
@@ -14,6 +15,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     {
         private Image image;
 
+        static SobekImportApplicationPlugin()
+        {
+            Sobek2ModelImporters.RegisterSobek2Importer(new SobekModelToRainfallRunoffModelImporter());
+        }
         public override string Name
         {
             get { return "Sobek Network import"; }

@@ -293,6 +293,7 @@
     <Compile Include="Helpers\IoHelper.cs" />
     <Compile Include="Helpers\ListExtensions.cs" />
     <Compile Include="Helpers\ModelDefinitionsRegion.cs" />
+    <Compile Include="Helpers\Sobek2ModelImporters.cs" />
     <Compile Include="Helpers\StringArrayExtensions.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\ToDictionaryExtensions.cs" />

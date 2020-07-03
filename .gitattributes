@@ -735,6 +735,7 @@ src/DeltaShell.NGHS.IO/Helpers/FileWritingUtils.cs -text
 src/DeltaShell.NGHS.IO/Helpers/IoHelper.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ListExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ModelDefinitionsRegion.cs -text
+src/DeltaShell.NGHS.IO/Helpers/Sobek2ModelImporters.cs -text
 src/DeltaShell.NGHS.IO/Helpers/StringArrayExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/StringExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ToDictionaryExtensions.cs -text
