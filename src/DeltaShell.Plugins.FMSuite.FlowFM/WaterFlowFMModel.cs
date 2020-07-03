@@ -54,6 +54,7 @@ using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -3499,25 +3500,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual string GetFeatureCategory(IFeature feature)
         {
-            if (feature is IPump)
-            {
-                return "pumps";
-            }
             if (feature is IGate)
             {
                 return "gates";
             }
-            if (feature is IWeir)
-            {
-                return "weirs";
-            }
-            if (Area.ObservationPoints.Contains(feature))
-            {
-                return "observations";
-            }
             if (Area.ObservationCrossSections.Contains(feature))
             {
                 return "crosssections";
+            }
+            if (feature is IPump)
+            {
+                return Model1DParametersCategories.Pumps; ;
+            }
+            if (feature is IWeir)
+            {
+                return Model1DParametersCategories.Weirs;
+            }
+            if (feature is ICulvert)
+            {
+                return Model1DParametersCategories.Culverts;
+            }
+            if (feature is IObservationPoint || Area.ObservationPoints.Contains(feature))
+            {
+                return Model1DParametersCategories.ObservationPoints;
+            }
+            if (feature is IRetention)
+            {
+                return Model1DParametersCategories.Retentions;
+            }
+            if (feature is ILateralSource)
+            {
+                return Model1DParametersCategories.Laterals;
+            }
+            if (feature is IHydroNode)
+            {
+                return Model1DParametersCategories.BoundaryConditions;
             }
 
             return null;
@@ -3720,17 +3737,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual string GetItemString(IDataItem dataItem)
         {
-            var feature = GetFeatureCategory(dataItem.GetFeature());
+            var category = GetFeatureCategory(dataItem.GetFeature());
 
-            var dataItemName = dataItem.Name;
+            var dataItemName = dataItem.ValueConverter.OriginalValue is INetworkFeature networkFeature ? networkFeature.Name : dataItem.Name;
 
-            var parameterName = dataItem.GetParameterName();
+            var parameterName = GetConvertedParameterName(dataItem.GetParameterName(), category);
+            string nameWithoutHashTags = dataItemName.Replace("##", "~~");
 
-            var concatNames = new List<string>(new[] { feature, dataItemName, parameterName });
+            var concatNames = new List<string>(new[] { category, nameWithoutHashTags, parameterName });
 
             concatNames.RemoveAll(s => s == null);
 
             return string.Join("/", concatNames);
+        }
+        private static string GetConvertedParameterName(string parameterName, string category, bool lookForValue = false)
+        {
+            var namesLookup = WaterFlowFMModelDataSet.GetDictionaryForCategory(category);
+            if (namesLookup == null)
+            {
+                return parameterName;
+            }
+
+            if (!lookForValue)
+            {
+                string dhydroParameterName;
+                return namesLookup.TryGetValue(parameterName, out dhydroParameterName)
+                    ? dhydroParameterName
+                    : parameterName;
+            }
+
+            return namesLookup.ContainsValue(parameterName)
+                ? namesLookup.First(kvp => kvp.Value == parameterName).Key
+                : parameterName;
         }
 
         public virtual Type ExporterType
@@ -3863,7 +3901,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return new[] {grid};
             }
 
-            return !string.IsNullOrEmpty(itemName) ? !string.IsNullOrEmpty(parameter) ? runner.GetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter)) : runner.GetVar(string.Format("{0}/{1}/{2}", Name, category, itemName)) : runner.GetVar(string.Format("{0}/{1}", Name, category));
+            if (runner.CanCommunicateWithDimrApi)
+            {
+                return !string.IsNullOrEmpty(itemName)
+                    ? !string.IsNullOrEmpty(parameter)
+                        ?
+                        runner.GetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter))
+                        : runner.GetVar(string.Format("{0}/{1}/{2}", Name, category, itemName))
+                    : runner.GetVar(string.Format("{0}/{1}", Name, category));
+            }
+            IFeature feature = null;
+            switch (category)
+            {
+                case Model1DParametersCategories.Weirs:
+                    feature = Network.Weirs.FirstOrDefault(w => w.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase));
+                    break;
+                case Model1DParametersCategories.Culverts:
+                    feature = Network.Culverts.FirstOrDefault(c => c.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase));
+                    break;
+                case Model1DParametersCategories.Pumps:
+                    feature = Network.Pumps.FirstOrDefault(p => p.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase));
+                    break;
+                case Model1DParametersCategories.Laterals:
+                    feature = Network.LateralSources.FirstOrDefault(l => l.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase));
+                    break;
+            }
+
+            return new[] { EngineParameters.GetInitialValue(feature, parameter) };
         }
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
