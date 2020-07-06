@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
                 if (!(source is IDimrModel sourceDimr)) return;
 
-                SetCouplingInformation(sourceDimr, targetRainfallRunoffModel, unpavedCatchments.SelectMany(c => c.Links), FunctionAttributes.StandardNames.WaterLevel);
+                SetCouplingInformation(sourceDimr, targetRainfallRunoffModel, unpavedCatchments.SelectMany(c => c.Links), FunctionAttributes.StandardNames.WaterLevel, true);
             }
         }
 
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         {
         }
 
-        private void SetCouplingInformation(IDimrModel sourceModel, IDimrModel targetModel, IEnumerable<HydroLink> links, string quantity)
+        private void SetCouplingInformation(IDimrModel sourceModel, IDimrModel targetModel, IEnumerable<HydroLink> links, string quantity, bool invertLinkDirection = false)
         {
             Name = sourceModel.ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + targetModel.ShortName;
             Source = sourceModel.Name;
@@ -68,8 +68,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
             foreach (var link in links)
             {
-                var sourceString = GetItemString(link.Source, quantity);
-                var targetString = GetItemString(link.Target, quantity);
+                var sourceObject = invertLinkDirection? link.Target : link.Source;
+                var targetObject = invertLinkDirection? link.Source : link.Target;
+
+                var sourceString = GetItemString(sourceObject, quantity);
+                var targetString = GetItemString(targetObject, quantity);
 
                 if (sourceString == null || targetString == null)
                 {
@@ -83,9 +86,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         private static string GetItemString(IHydroObject hydroObject, string quantity)
         {
             var category = GetItemCategory(hydroObject);
+            var suffix = hydroObject is Catchment ? "_boundary" : "";
 
             return category != null
-                ? $"{category}/{hydroObject.Name}/{quantity}"
+                ? $"{category}/{hydroObject.Name}{suffix}/{quantity}"
                 : null;
         }
 

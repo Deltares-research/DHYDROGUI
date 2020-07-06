@@ -91,8 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             InternalControlledModelsList = new EventedList<IModel>();
             runner = new DimrRunner(this);
-            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
-
+            
             if(outputFileFunctionStore != null)
                 ReconnectOutputFiles(outputFileFunctionStore.Path);
         }

@@ -1,4 +1,4 @@
-﻿using DelftTools.Hydro.Roughness;
+﻿using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 
@@ -13,22 +13,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         public IDimrConfigModelCoupler CreateCoupler(IModel source, IModel target, ICompositeActivity sourceCoupler,
             ICompositeActivity targetCoupler)
         {
-            var sourceRtcModel = source as IRainfallRunoffModel;
-            var targetfmModel = target as IModelWithNetwork;
-            if (sourceRtcModel != null)
+            if (source is IRainfallRunoffModel && target is IHydroModel || 
+                target is IRainfallRunoffModel && source is IHydroModel)
             {
-                if (targetfmModel != null)
-
+                return new RRFlowDimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler)
                 {
-                    return new RRFlowDimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler)
-                    {
-                        AddCouplerLoggerInfo = true
-                    };
-                }
+                    AddCouplerLoggerInfo = true
+                };
             }
 
+            var sourceRRModel = source as IRainfallRunoffModel;
             var targetRtcModel = target as IRainfallRunoffModel;
-            if (sourceRtcModel != null || targetRtcModel != null)
+            if (sourceRRModel != null || targetRtcModel != null)
             {
                 return new DimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler)
                 {

@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using log4net;
@@ -69,6 +70,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     base.Application.ProjectOpened += LoadFromFile;
                 }
             }
+        }
+
+        public override void Activate()
+        {
+            base.Activate();
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
         }
 
         private void LoadFromFile(Project project)

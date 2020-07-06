@@ -173,7 +173,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             ((ICatchmentCoverageMaintainer) new MeteoDataController(this)).Initialize(null);
 
-            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
             if (!WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.OfType<RainfallRunoffInWorkFlowTypeValidatorProvider>().Any())
             {
                 WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.Add(new RainfallRunoffInWorkFlowTypeValidatorProvider());

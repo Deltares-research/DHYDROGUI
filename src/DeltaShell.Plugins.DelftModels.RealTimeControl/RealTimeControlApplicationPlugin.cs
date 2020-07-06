@@ -4,6 +4,7 @@ using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using Mono.Addins;
 
@@ -60,6 +61,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     Application.ProjectOpened += ApplicationProjectOpened;
                 }
             }
+        }
+
+        public override void Activate()
+        {
+            base.Activate();
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
