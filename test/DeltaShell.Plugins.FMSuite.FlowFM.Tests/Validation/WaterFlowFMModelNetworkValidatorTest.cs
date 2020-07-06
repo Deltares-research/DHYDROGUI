@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -216,6 +217,155 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.IsTrue(ContainsError(WaterFlowFMModelNetworkValidator.Validate(network),
                 string.Format("tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", zwcs.Name)));
 
+        }
+
+        [Test]
+        [TestCaseSource(nameof(InvalidCompartmentTestCaseSource))]
+        public void GivenHydroNetworkWithInvalidCompartment_WhenValidatingCompartments_ThenValidationReportAsExpected(
+            InvalidCompartmentTestCaseData testCaseData)
+        {
+            // Given
+            var hydroNetwork = new HydroNetwork();
+
+            testCaseData.ConfigureCompartments(hydroNetwork);
+
+            // When
+            var report = WaterFlowFMModelNetworkValidator.Validate(hydroNetwork);
+
+            // Then
+            Assert.IsFalse(report.IsEmpty);
+
+            var issues = report.SubReports.First(s => s.Category == "Compartments").Issues.ToArray();
+            Assert.AreEqual(1, issues.Length);
+
+            var issue = issues.ElementAt(0);
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
+            Assert.AreEqual(testCaseData.ExpectedMessage, issue.Message);
+            Assert.AreSame(testCaseData.ExpectedSubject(hydroNetwork), issue.Subject);
+        }
+
+        private IEnumerable<InvalidCompartmentTestCaseData> InvalidCompartmentTestCaseSource
+        {
+            get
+            {
+                yield return new InvalidCompartmentTestCaseData
+                {
+                    ConfigureCompartments = hydroNetwork =>
+                    {
+                        var manhole = new Manhole();
+                        var compartment = new Compartment
+                        {
+                            ManholeLength = -10,
+                            ManholeWidth = 11,
+                            FloodableArea = 12
+                        };
+
+                        hydroNetwork.Nodes.Add(manhole);
+                        manhole.Compartments.Add(compartment);
+                    },
+                    ExpectedMessage = "Length must be larger than 0",
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                };
+                yield return new InvalidCompartmentTestCaseData
+                {
+                    ConfigureCompartments = hydroNetwork =>
+                    {
+                        var manhole = new Manhole();
+                        var compartment = new Compartment
+                        {
+                            ManholeLength = 0,
+                            ManholeWidth = 11,
+                            FloodableArea = 12
+                        };
+
+                        hydroNetwork.Nodes.Add(manhole);
+                        manhole.Compartments.Add(compartment);
+                    },
+                    ExpectedMessage = "Length must be larger than 0",
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                };
+                yield return new InvalidCompartmentTestCaseData
+                {
+                    ConfigureCompartments = hydroNetwork =>
+                    {
+                        var manhole = new Manhole();
+                        var compartment = new Compartment
+                        {
+                            ManholeLength = 10,
+                            ManholeWidth = -11,
+                            FloodableArea = 12
+                        };
+
+                        hydroNetwork.Nodes.Add(manhole);
+                        manhole.Compartments.Add(compartment);
+                    },
+                    ExpectedMessage = "Width / diameter must be larger than 0",
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                };
+                yield return new InvalidCompartmentTestCaseData
+                {
+                    ConfigureCompartments = hydroNetwork =>
+                    {
+                        var manhole = new Manhole();
+                        var compartment = new Compartment
+                        {
+                            ManholeLength = 10,
+                            ManholeWidth = 0,
+                            FloodableArea = 12
+                        };
+
+                        hydroNetwork.Nodes.Add(manhole);
+                        manhole.Compartments.Add(compartment);
+                    },
+                    ExpectedMessage = "Width / diameter must be larger than 0",
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                };
+                yield return new InvalidCompartmentTestCaseData
+                {
+                    ConfigureCompartments = hydroNetwork =>
+                    {
+                        var manhole = new Manhole();
+                        var compartment = new Compartment
+                        {
+                            ManholeLength = 10,
+                            ManholeWidth = 11,
+                            FloodableArea = -12
+                        };
+
+                        hydroNetwork.Nodes.Add(manhole);
+                        manhole.Compartments.Add(compartment);
+                    },
+                    ExpectedMessage = "Storage area must be larger than 0",
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                };
+                yield return new InvalidCompartmentTestCaseData
+                {
+                    ConfigureCompartments = hydroNetwork =>
+                    {
+                        var manhole = new Manhole();
+                        var compartment = new Compartment
+                        {
+                            ManholeLength = 10,
+                            ManholeWidth = 11,
+                            FloodableArea = 0
+                        };
+ 
+                        hydroNetwork.Nodes.Add(manhole);
+                        manhole.Compartments.Add(compartment);
+                    },
+                    ExpectedMessage = "Storage area must be larger than 0",
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                };
+            }
+        }
+
+        public class InvalidCompartmentTestCaseData
+        {
+            public Action<IHydroNetwork> ConfigureCompartments { get; set; }
+
+            public string ExpectedMessage { get; set; }
+
+            public Func<IHydroNetwork, object> ExpectedSubject { get; set; }
         }
 
         private static bool ContainsError(ValidationReport report, string errorMessage)
