@@ -18,7 +18,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
                 {"trtdt", "DtTrt"},
                 {"botlevuni", "BedLevUni"},
                 {"botlevtype", "BedLevType"},
-                {"mduformatversion", "FileVersion"}
+                {"mduformatversion", "FileVersion"},
+                {"locationfile", "locationFile"},
+                {"forcingfile", "forcingFile"},
+                { "return_time", "returnTime" }
             };
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping =>

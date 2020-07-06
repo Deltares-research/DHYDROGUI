@@ -21,7 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             {"trtdt", "DtTrt"},
             {"botlevuni", "BedLevUni"},
             {"botlevtype", "BedLevType"},
-            {"mduformatversion", "FileVersion"}
+            {"mduformatversion", "FileVersion"},
+            {"locationfile", "locationFile"},
+            {"forcingfile", "forcingFile"},
+            { "return_time", "returnTime" }
         };
 
         public IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; } = new Dictionary<string, string>()
