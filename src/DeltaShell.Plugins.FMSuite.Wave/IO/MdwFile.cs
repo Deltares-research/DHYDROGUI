@@ -1048,10 +1048,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private string GetMeteoFile(IEnumerable<string> meteoFiles, string quantityParameterValue, ILogHandler logHandler)
         {
+            var meteoFileReader = new MeteoFileReader();
+
             foreach (string otherFile in meteoFiles)
             {
                 string filePath = Path.Combine(Path.GetDirectoryName(MdwFilePath), otherFile);
-                MeteoFileProperty[] meteoProperties = new MeteoFileReader().Read(filePath).ToArray();
+                IEnumerable<MeteoFileProperty> meteoProperties = meteoFileReader.Read(filePath);
 
                 if (meteoProperties.First(mp => mp.Property == KnownWaveProperties.MeteoQuantityField).Value == quantityParameterValue)
                 {
