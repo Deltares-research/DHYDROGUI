@@ -443,6 +443,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        public void GivenEmptyWorkflowHydroModel_WhenInitialize_ThenValidationFailsAndDoesNotCrash()
+        {
+            // Given
+            var hydroModel = new HydroModel();
+            Assert.That(hydroModel.CurrentWorkflow, Is.Null);
+            Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.None));
+
+            // When
+            TestDelegate testAction = () => hydroModel.Initialize();
+
+            // Then
+            Assert.That(testAction, Throws.Nothing);
+            Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Failed));
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
         public void GivenHydroModel_WhenChangeCurrentWorkflow_ThenUpdatesRunsInIntegratedModelProperties()
         {
             // 1. Prepare test data.

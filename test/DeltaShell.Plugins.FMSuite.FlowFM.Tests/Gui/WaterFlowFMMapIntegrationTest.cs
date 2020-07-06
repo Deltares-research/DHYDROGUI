@@ -404,6 +404,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
+        [Category(TestCategory.Jira)]
         public void ImportHarlingenRunShowVelocityOutput()
         {
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
