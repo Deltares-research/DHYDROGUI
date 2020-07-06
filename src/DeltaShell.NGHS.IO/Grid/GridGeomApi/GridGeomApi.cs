@@ -9,7 +9,7 @@ using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 
 namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 {
-    public class GridGeomApi : IDisposable
+    public class GridGeomApi : IGridGeomApi
     {
         private GridGeomWrapper geomWrapper;
 
@@ -49,12 +49,14 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
         public int LastErrorCode { get; private set; } = UGridConstants.NoErrorCode;
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             ReleaseUnmanagedResources();
             GC.SuppressFinalize(this);
         }
 
+        /// <inheritdoc/>
         public LinkInformation GetLinkInformation(DisposableMeshGeometryGridGeom mesh2D, Mesh1DGeometry mesh1D, GeometriesData selectedArea, bool[] filter1DMesh, LinkGeneratingType linkType, GeometriesData geometryGullies = null)
         {
             try

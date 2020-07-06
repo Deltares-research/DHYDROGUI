@@ -719,7 +719,9 @@ src/DeltaShell.NGHS.IO/Grid/GridGeomApi/DisposableMeshGeometryGridGeom.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/Generate1D2DLinksHelper.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GeometriesData.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GridGeomApi.cs -text
+src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GridGeomApiRemote.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GridGeomWrapper.cs -text
+src/DeltaShell.NGHS.IO/Grid/GridGeomApi/IGridGeomApi.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/LinkInformation.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/Mesh1DGeometry.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/Mesh1DGeometryNative.cs -text

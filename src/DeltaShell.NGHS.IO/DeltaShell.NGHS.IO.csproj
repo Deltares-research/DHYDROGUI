@@ -100,6 +100,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51281-beta\lib\net461\DeltaShell\protobuf-net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="ProtoBufRemote">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51281-beta\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
       <Private>False</Private>
@@ -274,7 +277,9 @@
     <Compile Include="Grid\GridGeomApi\Generate1D2DLinksHelper.cs" />
     <Compile Include="Grid\GridGeomApi\GeometriesData.cs" />
     <Compile Include="Grid\GridGeomApi\GridGeomApi.cs" />
+    <Compile Include="Grid\GridGeomApi\GridGeomApiRemote.cs" />
     <Compile Include="Grid\GridGeomApi\GridGeomWrapper.cs" />
+    <Compile Include="Grid\GridGeomApi\IGridGeomApi.cs" />
     <Compile Include="Grid\GridGeomApi\Mesh1DGeometry.cs" />
     <Compile Include="Grid\GridGeomApi\Mesh1DGeometryNative.cs" />
     <Compile Include="Grid\GridGeomApi\LinkInformation.cs" />
