@@ -18,6 +18,7 @@ using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -248,6 +249,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void WriteDocument_RTC_FM_HasLoggerElement()
         {
+            DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
+
             var hydroModel = BuildCoupledDemoModel();
             CheckCouplerXml(hydroModel);
         }
