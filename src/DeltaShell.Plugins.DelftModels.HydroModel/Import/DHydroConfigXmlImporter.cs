@@ -8,7 +8,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
 
@@ -126,8 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                                       e is FormatException ||
                                       e is OutOfMemoryException ||
                                       e is IOException ||
-                                      e is InvalidOperationException ||
-                                      e is FileReadingException)
+                                      e is InvalidOperationException)
             {
                 log.Error(string.Format(Resources.DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__, Name), e);
                 return null;
