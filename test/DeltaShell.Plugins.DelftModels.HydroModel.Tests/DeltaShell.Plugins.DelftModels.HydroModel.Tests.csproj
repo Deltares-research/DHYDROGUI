@@ -280,7 +280,6 @@
     <Compile Include="Forms\SettingsWpf\DateTimeFormatsTest.cs" />
     <Compile Include="Forms\SettingsWpf\FieldUIDescriptionHelperTest.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelectorTest.cs" />
-    <Compile Include="Forms\SettingsWpf\WpfCustomTimeSpanTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfEnumConverterTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiCategoryTest.cs" />
     <Compile Include="Forms\SettingsWpf\NotifyPropertyChangedWpfGuiPropertySynchronizerTest.cs" />
