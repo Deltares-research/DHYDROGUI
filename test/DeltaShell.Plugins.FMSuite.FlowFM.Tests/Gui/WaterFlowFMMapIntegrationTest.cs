@@ -366,14 +366,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void ImportHarlingenShowVelocityOutput()
         {
-            var asm = typeof(OpenTKRenderer).Assembly;
-            var ty1 = asm.GetType("SharpMap.Rendering.OpenTK.RenderWindow.HiddenRenderWindowWrapper");
-            var ty2 = asm.GetType("SharpMap.Rendering.OpenTK.RenderWindow.HiddenRenderWindow");
-            var typesToLog = new List<Type>() { ty1, ty2 };
-
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            using (var logentries = new LogAppenderEntriesTester(new List<Type>(typesToLog)))
+            using (var logentries = new LogAppenderEntriesTester())
             using (var gui = new DeltaShellGui())
             {
                 IApplication app = gui.Application;
