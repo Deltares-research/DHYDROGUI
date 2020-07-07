@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Shell.Core;
@@ -25,6 +27,7 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using SharpMap.Layers;
+using SharpMap.Rendering.OpenTK;
 using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -363,8 +366,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void ImportHarlingenShowVelocityOutput()
         {
+            var asm = typeof(OpenTKRenderer).Assembly;
+            var ty1 = asm.GetType("SharpMap.Rendering.OpenTK.RenderWindow.HiddenRenderWindowWrapper");
+            var ty2 = asm.GetType("SharpMap.Rendering.OpenTK.RenderWindow.HiddenRenderWindow");
+            var typesToLog = new List<Type>() { ty1, ty2 };
+
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
+            using (var logentries = new LogAppenderEntriesTester(new List<Type>(typesToLog)))
             using (var gui = new DeltaShellGui())
             {
                 IApplication app = gui.Application;
@@ -398,6 +407,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
+
+                foreach (string logentriesMessage in logentries.Messages)
+                {
+                    Console.WriteLine(logentriesMessage);
+                }
             }
         }
 
