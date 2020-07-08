@@ -44,7 +44,9 @@
     {
         Constant = 1,
         VariableWithH0 = 2,
-        VariableWithH0FromModflow = 3
+        VariableWithH0FromModflow = 3,
+        TimeTable = 4,
+        TimeTableAndSaltConcentration = 5
     }
 
     public enum ErrorLevel

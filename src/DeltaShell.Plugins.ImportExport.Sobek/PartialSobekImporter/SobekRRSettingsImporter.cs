@@ -68,8 +68,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             model.TimeStep = settings.TimestepSize;
             model.OutputTimeStep = new TimeSpan(0, 0,
-                                                (int)settings.TimestepSize.TotalSeconds *
-                                                settings.OutputTimestepMultiplier);
+                (int)Math.Round(settings.TimestepSize.TotalSeconds * settings.OutputTimestepMultiplier, 0, MidpointRounding.AwayFromZero));
             if (settings.StartTime > DateTime.MinValue)
                 model.StartTime = settings.StartTime;
             if (settings.EndTime > DateTime.MinValue)

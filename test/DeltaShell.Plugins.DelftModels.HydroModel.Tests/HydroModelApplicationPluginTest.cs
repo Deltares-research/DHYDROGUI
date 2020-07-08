@@ -29,11 +29,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
             app.Plugins.Add(new ToolboxApplicationPlugin());
             app.Plugins.Add(appPlugin);
-            app.Project = new Project();
+            app.Run();
         }
 
         [Test]
-        [Category("Quarantine")]
         public void AdditionalOwnerCheckTest_HydroModel()
         {
             using (var app = new DeltaShellApplication())
@@ -89,7 +88,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
 
         [Test]
-        [Category("Quarantine")]
         public void AdditionalOwnerCheckTest_FlowFM()
         {
             using (var app = new DeltaShellApplication())
@@ -102,8 +100,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(app.Project.RootFolder), true);
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new HydroModel()), true);
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), false);
-                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), false);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new ParallelActivity()), true);
+                Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), true);
             }
         }
     }

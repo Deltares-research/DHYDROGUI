@@ -438,6 +438,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                 OutputController.Initialize(model, FillOutputCoveragesWithFeatures);
 
                 Writer.AddIniOption("Options", "MinFillingPercentage", model.MinimumFillingStoragePercentage.ToString(CultureInfo.InvariantCulture));
+                Writer.AddIniOption("OutputOptions", "OutputAtTimestep", (model.OutputTimeStep.TotalSeconds/model.TimeStep.TotalSeconds).ToString(CultureInfo.InvariantCulture));
                 Writer.AddIniOption("TimeSettings", "EvaporationFromHrs", model.EvaporationStartActivePeriod.ToString(CultureInfo.InvariantCulture));
                 Writer.AddIniOption("TimeSettings", "EvaporationToHrs", model.EvaporationEndActivePeriod.ToString(CultureInfo.InvariantCulture));
 

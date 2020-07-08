@@ -9,9 +9,10 @@
     <property name="Name" access="property" column="name" />
     <property name="DataAggregationType" access="property" column="data_aggr_type" />
     <property name="DataDistributionType" access="property" column="data_dist_type" />
+    <!--
     <many-to-one 
       name="MeteoDataDistributed"
       cascade="all-delete-orphan"
-      class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo.IMeteoDataDistributed,DeltaShell.Plugins.DelftModels.RainfallRunoff" />
+      class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo.IMeteoDataDistributed,DeltaShell.Plugins.DelftModels.RainfallRunoff" />-->
   </class>
 </hibernate-mapping>

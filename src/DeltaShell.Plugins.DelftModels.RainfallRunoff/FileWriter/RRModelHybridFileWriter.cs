@@ -927,7 +927,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             if (iniOptions.Keys.Contains(category))
             {
                 var val = iniOptions[category];
-                val.Add(new DelftTools.Utils.Tuple<string, string>(property, value));
+                var kvp = val.FirstOrDefault(v => v.First.Equals(property, StringComparison.InvariantCultureIgnoreCase));
+                if (kvp != null)
+                    kvp.Second = value;
+                else  
+                    val.Add(new DelftTools.Utils.Tuple<string, string>(property, value));
                 return;
             }
             iniOptions.Add(category, new List<DelftTools.Utils.Tuple<string, string>>

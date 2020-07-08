@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 
@@ -34,6 +35,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return true;
         }
 
+        
         public virtual object ImportItem(string path, object target = null)
         {
             // Configure the TargetObject of the IPartialSobekImporter part of the importer
@@ -51,6 +53,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
             // Import by using the import logic of the IPartialSobekImporter part of the importer
             importer.TargetObject = targetObjectInternal;
+            GetImporters(importer).ForEach(i => i.TargetObject = targetObjectInternal);
             Import();
 
             if (ShouldCancel)

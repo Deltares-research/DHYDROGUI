@@ -213,7 +213,6 @@ src/DelftTools.Hydro/BedLevelNetworkCoverageBuilder.cs -text
 src/DelftTools.Hydro/BranchFeatureHydroObject.cs -text
 src/DelftTools.Hydro/BranchStructure.cs -text
 src/DelftTools.Hydro/Catchment.cs -text
-src/DelftTools.Hydro/Catchment.hbm.xml -text
 src/DelftTools.Hydro/CatchmentType.cs -text
 src/DelftTools.Hydro/Channel.cs -text
 src/DelftTools.Hydro/Channel.hbm.xml -text
@@ -494,7 +493,6 @@ src/DelftTools.Hydro/Validators/ExtraResistanceValidator.cs -text
 src/DelftTools.Hydro/Validators/HydroNetworkValidator.cs -text
 src/DelftTools.Hydro/Validators/StructuresValidator.cs -text
 src/DelftTools.Hydro/WasteWaterTreatmentPlant.cs -text
-src/DelftTools.Hydro/WasteWaterTreatmentPlant.hbm.xml -text
 src/DelftTools.Hydro/packages.config -text
 src/DelftTools.ModelExchange/DelftTools.ModelExchange.csproj -text
 src/DelftTools.ModelExchange/ExchangeItemHelper.cs -text
@@ -1105,7 +1103,6 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/UnpavedData.cs
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/UnpavedDataProperties.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/UnpavedEnums.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Meteo/IMeteoDataDistributed.cs -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Meteo/IMeteoDataDistributed.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Meteo/IMeteoTimeAggregator.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Meteo/MeteoData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Meteo/MeteoData.hbm.xml -text
@@ -1117,7 +1114,9 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Meteo/MeteoDataTimeInte
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/PolderSubTypes.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/RainfallRunoffEnums.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/RunoffBoundaryData.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/RunoffBoundaryData.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/EngineParameter.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/EngineParameter.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/EngineParameters.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Exporters/MeteoDataExporter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Exporters/RRDimrConfigModelCouplerProvider.cs -text
@@ -1193,6 +1192,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RRInitialConditionsWrapper.cs 
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffApplicationPlugin.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffBasinSynchronizer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffBoundaryData.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffBoundaryData.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffCatchmentModelDataFactory.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffChildDataItemProvider.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffDataAccessListener.cs -text
@@ -1202,6 +1202,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffModel.hbm.xml -t
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffModelDataSet.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffModelExtensions.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffOutputSettingData.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffOutputSettingData.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffUnitConverter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Scripts/Examples/RainfallRunoffModel.py -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Scripts/Libraries/RainfallRunoffModelFunctions.py -text

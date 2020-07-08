@@ -10,6 +10,7 @@ using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
@@ -38,6 +39,46 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 
                 ReadAndSetBoundaryConditions(rainfallRunoffModel);
             }
+            else if (File.Exists(GetFilePath("BoundaryConditions.bc")))
+            {
+                ReadAndSetBoundaryConditionsViaBC(rainfallRunoffModel);
+            }
+        }
+
+        private void ReadAndSetBoundaryConditionsViaBC(RainfallRunoffModel model)
+        {
+            ///yep... lets not do this now..
+            var bcFileReader = new BcFile();
+            var bcBlockDatas = bcFileReader.Read(GetFilePath("BoundaryConditions.bc"));
+            var boundaryDatas = model.BoundaryData;
+            foreach (var bcBlockData in bcBlockDatas)
+            {
+                //put condition on the boundary itself
+                var boundaryCondition = boundaryDatas.FirstOrDefault(bd => bd.Boundary.Name == bcBlockData.FunctionType);
+                if (boundaryCondition == null)
+                    continue;
+                var boundaryData = boundaryCondition.Series;
+                boundaryData.IsConstant = bcBlockData.FunctionType.Equals("constant", StringComparison.InvariantCultureIgnoreCase);
+                boundaryData.Data.Time.ExtrapolationType = ExtrapolationType.Constant;
+                /*
+                boundaryData.Value = bc.FixedLevel;
+                if (!String.IsNullOrEmpty(bc.TableId))
+                {
+                    if (dicBCTable.ContainsKey(bc.TableId))
+                    {
+                        var timeSeries = DataTableHelper.ConvertDataTableToTimeSeries(dicBCTable[bc.TableId],
+                            "boundary conditions");
+                        boundaryData.Data = timeSeries;
+                    }
+                    else
+                    {
+                        log.ErrorFormat(
+                            "Unable to find RR boundary conditions table with id {0} for boundary with id {1}",
+                            bc.TableId, bc.Id);
+                    }
+                */
+            }
+
         }
 
         private void ReadAndSetBoundaryConditions(RainfallRunoffModel model)

@@ -9,7 +9,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         public DateTime EndTime { get; set; }
         public TimeSpan TimestepSize { get; set; }
         public bool PeriodFromEvent { get; set; }
-        public int OutputTimestepMultiplier { get; set; }
+        public double OutputTimestepMultiplier { get; set; }
         public int UnsaturatedZone { get; set; }
         public int InitCapsimOption { get; set; }
         public bool CapsimPerCropAreaIsDefined { get; set; }

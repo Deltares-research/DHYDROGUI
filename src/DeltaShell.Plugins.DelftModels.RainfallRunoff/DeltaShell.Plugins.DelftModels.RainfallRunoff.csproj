@@ -345,10 +345,19 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="RainfallRunoffOutputSettingData.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EngineParameter.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Domain\Meteo\MeteoData.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Domain\Meteo\IMeteoDataDistributed.hbm.xml" />
+    <EmbeddedResource Include="Domain\RunoffBoundaryData.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RainfallRunoffBoundaryData.hbm.xml" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

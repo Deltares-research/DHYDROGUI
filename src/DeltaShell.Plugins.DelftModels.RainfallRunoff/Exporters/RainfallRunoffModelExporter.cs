@@ -4,7 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
@@ -55,6 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             if (model == null) return false;
             var bcWriter = new RainfallRunoffBoundaryDataFileWriter();
             bcWriter.WriteFile(Path.Combine(Path.GetFullPath(path), "BoundaryConditions.bc"), model);
+            
             var nwrwWriter = new NwrwModelFileWriter(new NwrwComponentFileWriterBase[]
             {
                 new Nwrw3BComponentFileWriter(model),
@@ -63,8 +66,31 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 new NwrwTpComponentFileWriter(model), 
             });
             nwrwWriter.WriteNwrwFiles(path);
-            model.ModelController.GetWorkingDirectoryDelegate = () => Path.GetFullPath(path); 
-            return model.ModelController.WriteFiles();
+            model.ModelController.GetWorkingDirectoryDelegate = () => Path.GetFullPath(path);
+            model.ModelController.WriteFiles();
+            var meteoWriter = new MeteoDataExporter();
+            if (model.Evaporation.DataDistributionType != MeteoDataDistributionType.Global)
+            {
+                var evapFile = Path.Combine(Path.GetFullPath(path), "default.evp");
+                FileUtils.DeleteIfExists(evapFile);
+                meteoWriter.Export(model.Evaporation, evapFile);
+            }
+
+            if (model.Precipitation.DataDistributionType != MeteoDataDistributionType.Global)
+            {
+                var precipitationFile = Path.Combine(Path.GetFullPath(path), "default.bui");
+                FileUtils.DeleteIfExists(precipitationFile);
+                meteoWriter.Export(model.Precipitation, precipitationFile);
+            }
+
+            if (model.Temperature.DataDistributionType != MeteoDataDistributionType.Global)
+            {
+                var temperatureFile = Path.Combine(Path.GetFullPath(path), "default.tmp");
+                FileUtils.DeleteIfExists(temperatureFile);
+                meteoWriter.Export(model.Temperature, temperatureFile);
+            }
+
+            return true;
         }
     }
 }

@@ -118,8 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
         {
             rrModel.TimeStep = settings.TimestepSize;
             rrModel.OutputTimeStep = new TimeSpan(0, 0,
-                                                (int)settings.TimestepSize.TotalSeconds *
-                                                settings.OutputTimestepMultiplier);
+                                                (int)Math.Round(settings.TimestepSize.TotalSeconds * settings.OutputTimestepMultiplier, 0, MidpointRounding.AwayFromZero));
             if (settings.StartTime > DateTime.MinValue)
                 rrModel.StartTime = settings.StartTime;
             if (settings.EndTime > DateTime.MinValue)

@@ -53,7 +53,30 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 log.DebugFormat("Importing temperature data...");
                 ReadAndSetTemperature();
             }
-            
+            else
+            {
+                if (File.Exists(GetFilePath("default.bui")))
+                {
+                    filePathPrecipitation = GetFilePath("default.bui");
+                    log.DebugFormat("Importing precipitation data...");
+                    ReadAndSetPrecipitation();
+                }
+
+                if (File.Exists(GetFilePath("default.evp")))
+                {
+                    filePathEvaporation = GetFilePath("default.evp");
+                    log.DebugFormat("Importing precipitation data...");
+                    ReadAndSetEvaporation();
+                }
+
+                if (File.Exists(GetFilePath("default.tmp")))
+                {
+                    filePathTemperature = GetFilePath("default.tmp");
+                    log.DebugFormat("Importing precipitation data...");
+                    ReadAndSetTemperature();
+                }
+            }
+
             SetModelTimesBasedOnEvent(rainfallRunoffModel, GetFilePath(SobekFileNames.SobekRRIniFileName));
         }
 

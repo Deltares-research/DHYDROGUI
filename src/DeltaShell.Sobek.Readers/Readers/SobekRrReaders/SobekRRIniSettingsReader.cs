@@ -36,7 +36,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             var outputOptions = iniReader.Configs["OutputOptions"];
             if (outputOptions != null)
             {
-                var multiplier = outputOptions.GetInt("OutputAtTimestep");
+                var multiplier = outputOptions.GetDouble("OutputAtTimestep");
                 settings.OutputTimestepMultiplier = multiplier;
             }
 

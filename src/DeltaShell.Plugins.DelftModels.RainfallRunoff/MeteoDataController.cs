@@ -293,7 +293,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    function.Arguments[1].Values.Add(affectedStation);
+                    if(!function.Arguments[1].Values.Contains(affectedStation)) function.Arguments[1].Values.Add(affectedStation);
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     function.Arguments[1].Values.Remove(affectedStation);

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="false"
+                   namespace="DeltaShell.Plugins.DelftModels.RainfallRunoff" assembly="DeltaShell.Plugins.DelftModels.RainfallRunoff">
+
+  <class name="RainfallRunoffBoundaryData" table="rr_boundary_data" lazy="false">
+    <id name="Id" column="id" type="Int64" unsaved-value="0" access="property">
+      <generator class="increment" />
+    </id>
+
+    <property name="IsConstant"/>
+    <property name="Value"/>
+    
+    <many-to-one name="Data" cascade="all" class="DelftTools.Functions.TimeSeries, DelftTools.Functions"
+                 column="rr_boundary_water_level_series" />
+  </class>
+
+</hibernate-mapping>

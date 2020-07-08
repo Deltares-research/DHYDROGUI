@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         static SobekImportApplicationPlugin()
         {
-            Sobek2ModelImporters.RegisterSobek2Importer(new SobekModelToRainfallRunoffModelImporter());
+            Sobek2ModelImporters.RegisterSobek2Importer(() => new SobekModelToRainfallRunoffModelImporter());
         }
         public override string Name
         {

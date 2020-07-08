@@ -66,7 +66,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         public bool Export(object item, string path)
         {
             MeteoData meteoData = item as MeteoData;
-
             if (meteoData.Name == RainfallRunoffModelDataSet.PrecipitationName ||
                 meteoData.Name == RainfallRunoffModelDataSet.TemperatureName)
             {
@@ -94,7 +93,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
             using (var sw = new StreamWriter(path))
             {
-                sw.WriteLine("* Created: " + DateTime.Now.ToString());
                 IList<DateTime> timeValues = meteoDataDistributed.Arguments[0].Values.Cast<DateTime>().ToList();
                 List<string> meteoStationNames;
                 if (meteoData.DataDistributionType == MeteoDataDistributionType.Global)
@@ -113,6 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                     return false;
                 }
 
+                sw.WriteLine("* Created: " + DateTime.Now.ToString());
                 DateTime first = timeValues[0];
                 TimeSpan span = timeValues[1] - first;
                 sw.WriteLine(HeaderFormatPrecipitation);
@@ -190,7 +189,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                     }
                     sb.Append("\n");
                 }
-                sw.Write(sb.ToString());
+                if(evaporationValues.Shape[0] >0)
+                    sw.Write(sb.ToString());
             }
 
             return true;
