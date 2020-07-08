@@ -100,9 +100,6 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51298-beta\lib\net461\DeltaShell\protobuf-net.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51298-beta\lib\net461\DeltaShell\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="ProtoBufRemote">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51298-beta\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
       <Private>False</Private>
