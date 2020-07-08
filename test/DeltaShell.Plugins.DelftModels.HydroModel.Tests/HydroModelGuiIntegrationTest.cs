@@ -15,6 +15,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.MainWindow;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -141,25 +142,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Wpf)]
         public void GivenAnIntegratedModelWithFmModelInItWhenOpeningGridInRgfGridAndClosingItThenItShouldNotThrowAnException()
         {
-            var mainWindow = (MainWindow) gui.MainWindow;
-
-            void MainWindowShown()
+            using (var messageLogger = new LogAppenderEntriesTester())
             {
-                var hydroModelBuilder = new HydroModelBuilder();
-                using (HydroModel integratedModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels))
+                var mainWindow = (MainWindow) gui.MainWindow;
+
+                void MainWindowShown()
                 {
-                    gui.CommandHandler.AddItemToProject(integratedModel);
-                    gui.Selection = integratedModel;
-                    gui.CommandHandler.OpenViewForSelection();
-                    WaterFlowFMModel waterFlowFmModel = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().First();
-                    waterFlowFmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(50, 50, 20, 20);
-                    waterFlowFmModel.ReloadGrid();
-                    gui.Selection = waterFlowFmModel.Grid;
-                    PerformActionWithCancellationThread(60000, () => gui.CommandHandler.OpenViewForSelection());
+                    var hydroModelBuilder = new HydroModelBuilder();
+                    using (HydroModel integratedModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels))
+                    {
+                        gui.CommandHandler.AddItemToProject(integratedModel);
+                        gui.Selection = integratedModel;
+                        gui.CommandHandler.OpenViewForSelection();
+                        WaterFlowFMModel waterFlowFmModel = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().First();
+                        waterFlowFmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(50, 50, 20, 20);
+                        waterFlowFmModel.ReloadGrid();
+                        gui.Selection = waterFlowFmModel.Grid;
+                        PerformActionWithCancellationThread(60000, () => gui.CommandHandler.OpenViewForSelection());
+                    }
+                }
+
+                WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
+
+                Console.WriteLine(@"Printing messages send the the logger: ");
+                foreach (string logentriesMessage in messageLogger.Messages)
+                {
+                    Console.WriteLine(logentriesMessage);
                 }
             }
 
-            WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
         }
 
         [Test]
