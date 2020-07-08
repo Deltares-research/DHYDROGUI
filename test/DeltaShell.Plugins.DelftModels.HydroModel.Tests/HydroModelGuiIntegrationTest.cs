@@ -140,6 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         [Category(TestCategory.Wpf)]
+        [Category(TestCategory.Jira)]
         public void GivenAnIntegratedModelWithFmModelInItWhenOpeningGridInRgfGridAndClosingItThenItShouldNotThrowAnException()
         {
             using (var messageLogger = new LogAppenderEntriesTester())

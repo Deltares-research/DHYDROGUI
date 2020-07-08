@@ -93,6 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462, only second test fails.
         [TestCase("geometry", "MultipleLinePropertiesTestFile", "Test1 Test2", "# Test comment 1", "= Test1 Test2 # Test comment 1")]
         [TestCase("geometry", "MultipleLinePropertiesTestFile", "Test1 Test2", "# Test comment 1 Test comment 2", "=Test1 \\ # Test comment 1\r\nTest2 # Test comment 2")] /* Slash separated */
@@ -134,6 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462
         [TestCase("geometry", "CustomProperty1", "CustomProperty2", "Test1 Test2", "Test3", true, false)]
         public void MduFileHandlesWrongDeclarationsOfMultipleLineProperties(string fileCategoryName, string property1Name, string property2Name, string property1Value, string property2Value, bool multipleLineProp1, bool multipleLineProp2)
@@ -220,6 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]                        /* Extension of the one above but directly loading an MDU File. */
+        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462
         [TestCase(KnownProperties.EnclosureFile, "Value1 Value2", "CustomPropertyTest", "Value3")]
         public void WhenMduExpectsANewMultipleLinePropertyButItIsANewPropertyItKeepsReading(string hydroAreaFileProperty, string expectedCompositeValue, string customPropertyName, string expectedSimpleValue)
@@ -249,6 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462
+        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         public void MduFileReadsFromMultipleFilesAnAssignsGroupNamesToIGroupableFeatures()
         {
             string mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\FlowFM.mdu");
@@ -507,6 +511,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]                        /* Roundtrip test */
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462
+        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         public void MduFileReadsAndWritesIGroupableFeatures()
         {
             string mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\FlowFM.mdu");
@@ -622,6 +627,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]                        /* Roundtrip test */
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462
+        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         public void MduFileWritesDefaultValueForIGroupableFeatures()
         {
             string mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\FlowFM.mdu");
@@ -737,6 +743,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462. Only slashSeparated is failing for now.
         [TestCase("HydroAreaCollection\\FlowFM.mdu", 2)]
         [TestCase("HydroAreaCollection\\repeatedProperty.mdu", 1)]

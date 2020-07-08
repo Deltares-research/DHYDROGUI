@@ -728,6 +728,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
         [Test]
         [Category(TestCategory.Jira)] // UNST-1769 also see test TestGetSnappedFeatures (assert is commented out)
+        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         public void TestGetSnappedEmbankmentFeature()
         {
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

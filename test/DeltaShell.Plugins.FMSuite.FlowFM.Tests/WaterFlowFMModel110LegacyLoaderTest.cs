@@ -166,6 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [TestCase("run_with_save_and_extra_output", "DFM_OUTPUT_TestModel")]
         [Category(TestCategory.Jira)] // D3DFMIQ-1344
+        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         public void TestDirectoryRestructuring_OutputSubfoldersAreRemained(string testCaseDir, string outputFMDirName)
         {
             var testDataDirInfo = new DirectoryInfo(TestHelper.GetTestFilePath(
