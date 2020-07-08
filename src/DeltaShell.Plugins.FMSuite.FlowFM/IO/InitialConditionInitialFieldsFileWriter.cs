@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using SharpMap.Api.SpatialOperations;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -12,8 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     /// </summary>
     public static class InitialConditionInitialFieldsFileWriter
     {
-        public static void WriteFile(string filename, 
-            InitialConditionQuantity globalInitialConditionQuantity)
+        public static void WriteFile(string filename,
+            InitialConditionQuantity globalInitialConditionQuantity, WaterFlowFMModelDefinition modelDefinition)
         {
             // [General]
             var categories = new List<DelftIniCategory>
@@ -24,9 +28,117 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             };
 
             categories.Add(CreateInitialConditionQuantityCategory(globalInitialConditionQuantity));
+            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,ExtForceQuantNames.FrictCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName)));
 
             if (File.Exists(filename)) File.Delete(filename);
             new IniFileWriter().WriteIniFile(categories, filename);
+        }
+
+        private static IEnumerable<DelftIniCategory> CreateSpatialOperationQuantityCategory(string filename, string quantity, IEnumerable<ISpatialOperation> spatialOperations)
+        {
+            if (spatialOperations != null)
+            {
+                var forceFileItems = GetExtForceFileItems(filename, quantity, spatialOperations);
+
+                foreach (var forceFileItem in forceFileItems)
+                {
+                    var category = new DelftIniCategory(InitialConditionRegion.ParameterIniHeader);
+                    category.AddProperty(InitialConditionRegion.Quantity.Key, quantity);
+                    category.AddProperty(InitialConditionRegion.DataFile.Key, forceFileItem.FileName);
+                    category.AddProperty(InitialConditionRegion.DataFileType.Key, GetDataFileType(forceFileItem.FileType));
+                    category.AddProperty(InitialConditionRegion.InterpolationMethod.Key, GetSpatialOperationMethod(forceFileItem.Method));
+                    category.AddProperty(InitialConditionRegion.Operand.Key, forceFileItem.Operand);
+                    category.AddProperty(InitialConditionRegion.LocationType.Key, "2d");
+                    if (forceFileItem.Method == 6 && forceFileItem.ModelData != null)
+                    {
+                        if(forceFileItem.ModelData.TryGetValue(ExtForceFile.AveragingTypeKey, out var averagingType) && int.TryParse(averagingType.ToString(),out var averagingTypeInt))
+                            category.AddProperty(InitialConditionRegion.AveragingType.Key, GetAveragingType(averagingTypeInt));
+                        if (forceFileItem.ModelData.TryGetValue(ExtForceFile.RelSearchCellSizeKey, out var relSearchCellSize))
+                            category.AddProperty(InitialConditionRegion.AveragingRelSize.Key, relSearchCellSize.ToString());
+                    }
+
+                    if (!Double.IsNaN(forceFileItem.Value) && forceFileItem.FileType == ExtForceQuantNames.FileTypes.InsidePolygon)
+                    {
+                        category.AddProperty(InitialConditionRegion.Value.Key, forceFileItem.Value);
+                    }
+
+                    yield return category;
+                }
+            }
+        }
+
+        private static IEnumerable<ExtForceFileItem> GetExtForceFileItems(string filename, string quantity, IEnumerable<ISpatialOperation> spatialOperations)
+        {
+            
+            // if all ops are interpolations/set value within polygons, write them to the file
+            foreach (var spatialOperation in spatialOperations)
+            {
+                var importSamplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
+                if (importSamplesOperation != null)
+                {
+                    yield return ExtForceFileHelper.WriteInitialConditionsSamples(filename, quantity,
+                        importSamplesOperation, null, true);
+                    continue;
+                }
+
+                var polygonOperation = spatialOperation as SetValueOperation;
+                if (polygonOperation != null)
+                {
+                    yield return ExtForceFileHelper.WriteInitialConditionsPolygon(filename, quantity, 
+                        polygonOperation, null, true);
+                    continue;
+                }
+
+                var addSamplesOperation = spatialOperation as AddSamplesOperation;
+                if (addSamplesOperation != null)
+                {
+                    yield return ExtForceFileHelper.WriteInitialConditionsUnsupported(filename, quantity, 
+                        addSamplesOperation, true);
+                    continue;
+                }
+
+                throw new NotImplementedException(
+                    string.Format("Cannot serialize operation of type {0} to external forcings file",
+                        spatialOperation.GetType()));
+            }
+        }
+
+        private static string GetAveragingType(int averagingType)
+        {
+            switch (averagingType)
+            {
+                //case GridCellAveragingMethod.SimpleAveraging: return "mean";
+                case (int)GridCellAveragingMethod.ClosestPoint: return "nearestNb";
+                case (int)GridCellAveragingMethod.MaximumValue: return "max";
+                case (int)GridCellAveragingMethod.MinimumValue: return "min";
+                case (int)GridCellAveragingMethod.InverseWeightedDistance: return "invDist";
+                case (int)GridCellAveragingMethod.MinAbs: return "minAbs";
+                //case (int)GridCellAveragingMethod.Median: return "median"; // does not exist in gui
+            }
+            return "mean";
+        }
+
+        private static string GetSpatialOperationMethod(int method)
+        {
+            switch (method)
+            {
+                case 5 : return "triangulation";
+                case 6 : return "averaging";
+            }
+
+            return "constant";
+        }
+
+        private static string GetDataFileType(int fileType)
+        {
+            switch (fileType)
+            {
+                case ExtForceQuantNames.FileTypes.Triangulation:
+                case ExtForceQuantNames.FileTypes.TriangulationMagDir:
+                    return "sample";
+                case ExtForceQuantNames.FileTypes.InsidePolygon: return "polygon";
+            }
+            return string.Empty;
         }
 
         private static DelftIniCategory CreateInitialConditionQuantityCategory(
@@ -40,7 +152,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return category;
         }
-        
-        
     }
 }

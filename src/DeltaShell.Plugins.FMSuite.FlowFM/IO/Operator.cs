@@ -11,5 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         ApplyOnly,
         Add,
         Multiply,
+        Maximum,
+        Minimum
     }
 }

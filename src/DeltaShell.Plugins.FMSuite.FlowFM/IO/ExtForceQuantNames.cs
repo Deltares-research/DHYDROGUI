@@ -98,7 +98,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {PointwiseOperationType.Overwrite, Operator.Overwrite},
                 {PointwiseOperationType.OverwriteWhereMissing, Operator.ApplyOnly},
                 {PointwiseOperationType.Add, Operator.Add},
-                {PointwiseOperationType.Multiply, Operator.Multiply}
+                {PointwiseOperationType.Multiply, Operator.Multiply},
+                {PointwiseOperationType.Maximum, Operator.Maximum},
+                {PointwiseOperationType.Minimum, Operator.Minimum}
             };
 
         // operator strings
@@ -108,7 +110,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {Operator.Overwrite, "O"},
                 {Operator.ApplyOnly, "A"},
                 {Operator.Add, "+"},
-                {Operator.Multiply, "*"}
+                {Operator.Multiply, "*"},
+                {Operator.Maximum, "X"},
+                {Operator.Minimum, "N"}
             };
 
         public static PointwiseOperationType ParseOperationType(string operationString)

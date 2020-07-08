@@ -1,11 +1,18 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
+using NetTopologySuite.Extensions.Features;
+using SharpMap.Api.SpatialOperations;
+using SharpMap.Data.Providers;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -29,6 +36,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
             if (categories.Count == 0) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
+            
+            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
+
 
             // [Initial]
             var initialConditionCategories = categories.Where(category => category.Name.Equals(InitialConditionRegion.InitialConditionIniHeader)).ToList();
@@ -45,6 +55,167 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return ReadInitialConditionCategory(modelDefinition, initialConditionCategory);
         }
 
+        private static void ReadSpatialOperation(string filePath, IList<DelftIniCategory> categories, string quantity,
+            string dataItemName, WaterFlowFMModelDefinition modelDefinition)
+        {
+            var parameterCategories = GetParameterCategoriesAndFilterByFrictionType(categories, modelDefinition);
+            ReadSpatialOperationData(filePath, parameterCategories, modelDefinition, quantity, dataItemName);
+
+        }
+
+        private static void ReadSpatialOperationData(string filePath, IEnumerable<DelftIniCategory> parameterCategories,
+            WaterFlowFMModelDefinition modelDefinition, string quantity, string dataItemName)
+        {
+            var parameterItems = parameterCategories
+                .Where(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader) &&
+                            Equals(c.ReadProperty<string>(InitialConditionRegion.Quantity.Key), quantity) && 
+                            Equals(c.ReadProperty<string>(InitialConditionRegion.LocationType.Key,true,"all" ), "2d")).ToList();
+
+            if (!parameterItems.Any()) return;
+
+            var spatialOperations = modelDefinition.GetSpatialOperations(dataItemName);
+
+            bool createOperationSet = spatialOperations == null;
+
+            if (createOperationSet)
+            {
+                spatialOperations = new List<ISpatialOperation>();
+                modelDefinition.SpatialOperations[dataItemName] = spatialOperations;
+            }
+
+            spatialOperations.Clear();
+            foreach (var parameterItem in parameterItems)
+            {
+                var spatialOperation = CreateSpatialOperation(parameterItem, filePath);
+                if (spatialOperation != null)
+                {
+                    spatialOperations.Add(spatialOperation);
+                }
+            }
+        }
+
+        private static ISpatialOperation CreateSpatialOperation(DelftIniCategory parameterItem, string path)
+        {
+            var dataFile = parameterItem.ReadProperty<string>(InitialConditionRegion.DataFile.Key);
+            var dataFileType = parameterItem.ReadProperty<string>(InitialConditionRegion.DataFileType.Key);
+            switch (dataFileType)
+            {
+                case "sample":
+                    return CreateSamplesOperation(parameterItem,Path.Combine(path, dataFile));
+                case "polygon":
+                    return CreatePolygonOperation(parameterItem, Path.Combine(path, dataFile));
+                default:
+                    throw new ArgumentException(
+                        string.Format("Cannot construct spatial operation for file {0} with file type {1}",
+                            dataFile, dataFileType));
+            }
+        }
+        
+
+        private static ISpatialOperation CreatePolygonOperation(DelftIniCategory parameterItem, string polFile)
+        {
+            var features = new PolFile<Feature2DPolygon>().Read(polFile).Select(f => new Feature { Geometry = f.Geometry, Attributes = f.Attributes });
+
+            var operationName = Path.GetFileNameWithoutExtension(polFile);
+            var value = parameterItem.ReadProperty<double>(InitialConditionRegion.Value.Key);
+            var operand = parameterItem.ReadProperty<string>(InitialConditionRegion.Operand.Key);
+            var operation = new SetValueOperation
+            {
+                Value = value,
+                OperationType = ExtForceQuantNames.ParseOperationType(operand),
+                Name = operationName,
+            };
+            operation.Mask.Provider = new FeatureCollection(features.ToList(), typeof(Feature));
+
+            //existingForceFileItems[extForceFileItem] = operation;
+
+            return operation;
+        }
+
+        private static ISpatialOperation CreateSamplesOperation(DelftIniCategory parameterItem, string sampleFile)
+        {
+            var operationName = Path.GetFileNameWithoutExtension(sampleFile);
+
+            var operation = new ImportSamplesSpatialOperationExtension
+            {
+                Name = operationName,
+                FilePath = sampleFile
+            };
+            var averagingType = parameterItem.ReadProperty<string>(InitialConditionRegion.AveragingType.Key, true);
+            if (averagingType != null)
+            {
+                operation.AveragingMethod = GetAveragingType(averagingType);
+            }
+            var relSearchCellSize = parameterItem.ReadProperty<double>(InitialConditionRegion.AveragingRelSize.Key, true,double.NaN);
+            if (!double.IsNaN(relSearchCellSize))
+            {
+                operation.RelativeSearchCellSize = relSearchCellSize;
+            }
+
+            var interpolationMethod = parameterItem.ReadProperty<string>(InitialConditionRegion.InterpolationMethod.Key)?.ToLower();
+            switch (interpolationMethod)
+            {
+                case "triangulation" :
+                    operation.InterpolationMethod = SpatialInterpolationMethod.Triangulation;
+                    break;
+                case "averaging":
+                    operation.InterpolationMethod = SpatialInterpolationMethod.Averaging;
+                    break;
+                default:
+                    throw new Exception(string.Format("Invalid interpolation method {0} for file {1}",
+                        interpolationMethod, Path.GetFileName(sampleFile)));
+            }
+            return operation;
+        }
+
+        private static GridCellAveragingMethod GetAveragingType(string averagingType)
+        {
+            switch (averagingType)
+            {
+                case "nearestNb": return GridCellAveragingMethod.ClosestPoint; //nearest neighbour value
+                case "max": return GridCellAveragingMethod.MaximumValue; //highest
+                case "min": return GridCellAveragingMethod.MinimumValue; //lowest
+                case "invDist": return GridCellAveragingMethod.InverseWeightedDistance; //inverse-weighted distance average
+                case "minAbs": return GridCellAveragingMethod.MinAbs; //smallest absolute value
+                //case "median": return GridCellAveragingMethod.Median; //median value, does not exist yet
+            }
+            return GridCellAveragingMethod.SimpleAveraging;
+        }
+
+        private static IEnumerable<DelftIniCategory> GetParameterCategoriesAndFilterByFrictionType(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition modelDefinition)
+        {
+            var frictionTypeProperty =
+                modelDefinition.Properties.FirstOrDefault(
+                    p => p.PropertyDefinition.MduPropertyName == KnownProperties.FrictionType);
+
+
+            if(!int.TryParse(frictionTypeProperty?.GetValueAsString(), out var modelFrictionType))
+                modelFrictionType = 1;
+
+            foreach (var iniCategory in categories.Where(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader)))
+            {
+                var quantity = iniCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
+                if (quantity != ExtForceQuantNames.FrictCoef)
+                {
+                    yield return iniCategory;
+                    continue;
+                }
+
+                //we don't write this... how do i do this (the writing part)?
+                var frictionType = iniCategory.ReadProperty<int>(ExtForceFile.FricTypeKey,true,defaultValue:modelFrictionType);
+
+                if (frictionType != modelFrictionType)
+                {
+                    Log.WarnFormat(
+                        "Ignoring roughness operation with friction {0} type unequal to uniform model friction type {1}",
+                        frictionType, modelFrictionType);
+                }
+                else
+                {
+                    yield return iniCategory;
+                }
+            }
+        }
         private static (InitialConditionQuantity, string) ReadInitialConditionCategory(WaterFlowFMModelDefinition modelDefinition, DelftIniCategory initialConditionCategory)
         {
             var quantityString = initialConditionCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);

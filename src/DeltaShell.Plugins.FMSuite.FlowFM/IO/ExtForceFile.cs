@@ -209,9 +209,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialTemperatureDataItemName))
                     .Distinct());
 
-            extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.FrictCoef,
-                modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName)).Distinct());
-
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.HorEddyViscCoef,
                 modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName)).Distinct());
 

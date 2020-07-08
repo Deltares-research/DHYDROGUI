@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // write initialFields.ini
             var initialConditionFilePath = Path.Combine(directoryName, INITIAL_CONDITIONS_FILE_NAME);
             FileWritingUtils.ThrowIfFileNotExists(initialConditionFilePath, directoryName,
-                filename => InitialConditionInitialFieldsFileWriter.WriteFile(filename, globalInitialConditionQuantity1D));
+                filename => InitialConditionInitialFieldsFileWriter.WriteFile(filename, globalInitialConditionQuantity1D, modelDefinition));
 
             // write Initial<quantity>.ini
             var intialConditionDefinitionFilename =
