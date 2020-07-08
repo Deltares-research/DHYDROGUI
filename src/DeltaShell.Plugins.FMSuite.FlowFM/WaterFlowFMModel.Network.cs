@@ -445,36 +445,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AddSewerRoughnessIfNecessary();
             }
 
-            if(removedOrAddedItem is IFeature feature)
-            {
-                var role = Network.AllHydroObjects.Contains(feature);
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        //AddNetworkItem(feature, role);
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        //RemoveNetworkFeature(feature);
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        foreach (var networkItem in networkDataItems)
-                        {
-                            //RemoveNetworkFeature(networkItem.Key);
-                        }
-                        networkDataItems.Clear();
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
-                        //RemoveNetworkFeature(oldFeature);
-                        //AddNetworkItem(feature, role);
-                        break;
-                    default:
-                        throw new NotImplementedException(
-                            String.Format("Action {0} on feature collection not supported", e.Action));
-                }
-            }
             // check if removed item is used in the child data items
-            if (removedOrAddedItem is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
+            if (!(removedOrAddedItem is HydroLink) && removedOrAddedItem is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
             {
                 var asNetworkFeature = removedOrAddedItem as INetworkFeature;
                 if (asNetworkFeature != null && asNetworkFeature.IsBeingMoved())
@@ -500,27 +472,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     childDataItem.Parent.Children.Remove(childDataItem);
                 }
             }
-
-        }
-        private void RemoveNetworkFeature(IFeature feature)
-        {
-            List<IDataItem> dataItemsToBeRemoved;
-            if (networkDataItems.TryGetValue(feature, out dataItemsToBeRemoved))
-            {
-                foreach (var dataItem in dataItemsToBeRemoved)
-                {
-                    UnSubscribeFromDataItem(dataItem, true);
-                    OnDataItemRemoved(dataItem);
-                }
-            }
-            networkDataItems.Remove(feature);
         }
 
-        private void AddNetworkItem(IFeature feature, bool isInputSender)
-        {
-            var listToAdd = GetDataItemListForFeature(feature, isInputSender);
-            networkDataItems.Add(feature, listToAdd);
-        }
 
         /// <summary>
         /// - Synchronize the coordinate system in the model with the network coordinate system

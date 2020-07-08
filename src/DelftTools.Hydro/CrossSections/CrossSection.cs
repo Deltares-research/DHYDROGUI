@@ -190,12 +190,12 @@ namespace DelftTools.Hydro.CrossSections
             return CreateDefault(CrossSectionType.YZ, null, 0);
         }
 
-        public static ICrossSection CreateDefault(CrossSectionType definitionType, IBranch branch, double chainage=0.0)
+        public static ICrossSection CreateDefault(CrossSectionType definitionType, IBranch branch, double chainage=0.0, bool uniqueName = true)
         {
             var definition = GetDefaultDefinition(definitionType);
             var crossSection = new CrossSection(definition) {Branch = branch, Chainage = chainage};
             
-            if (crossSection.Network != null)
+            if (crossSection.Network != null && uniqueName)
             {
                 crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(crossSection.Network as HydroNetwork, crossSection);    
             }

@@ -94,7 +94,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IDataItem networkDataItem;
 
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
-        private readonly Dictionary<IFeature, List<IDataItem>> networkDataItems = new Dictionary<IFeature, List<IDataItem>>();
         private double previousProgress;
         private string progressText;
 
@@ -324,7 +323,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         break;
                     case NotifyCollectionChangedAction.Reset:
                         LateralSourcesDataItemSet.DataItems.Clear();
-                        break;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -1222,7 +1220,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var boundaryCondition1DDataItems = BoundaryConditions1D.Select(bc => bc.SeriesDataItem);
                 var lateralDataItems = LateralSourcesData.Select(d => d.SeriesDataItem);
 
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(networkDataItems.Values.SelectMany(v => v)).Concat(boundaryCondition1DDataItems).Concat(lateralDataItems);
+                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(boundaryCondition1DDataItems).Concat(lateralDataItems);
             }
         }
 
@@ -1646,7 +1644,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             items = null;
-            networkDataItems.TryGetValue(location, out items);
 
             if (items != null)
             {

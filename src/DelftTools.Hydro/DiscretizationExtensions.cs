@@ -37,9 +37,7 @@ namespace DelftTools.Hydro
 
         public static void RemoveLocations(this IDiscretization discretization, IEnumerable<INetworkLocation> locationsToRemove) 
         {
-            var locationsToSet = discretization.Locations.Values.ToList();
-
-            locationsToRemove.ForEach(l => locationsToSet.Remove(l));
+            var locationsToSet = discretization.Locations.Values.Except(locationsToRemove).ToList();
 
             discretization.Locations.Clear();
             discretization.SetLocations(locationsToSet);

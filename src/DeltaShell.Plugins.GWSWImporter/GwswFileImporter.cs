@@ -662,11 +662,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             IHydroNetwork network)
         {
             var helper = new SewerImporterHelper();
-            //var elementStructuresUsedInAction = importedFeatureElements.OfType<IStructure1D>().ToList();
-            //var elementUsedInAction = importedFeatureElements.Except(elementStructuresUsedInAction.Cast<ISewerFeature>()).ToArray();
-            //
-            //ParallelHelper.RunActionInParallel(this, elementUsedInAction, feature => feature.AddToHydroNetwork(network, helper), "Network");
-            //elementStructuresUsedInAction.Cast<ISewerFeature>().ForEach(s => s.AddToHydroNetwork(network, helper));
+
             ParallelHelper.RunActionInParallel(this, importedFeatureElements.ToArray(), feature => feature.AddToHydroNetwork(network, helper), "Network");
             ParallelHelper.RunActionInParallel(this, helper.SewerConnectionsByName.Values.Where(sc => sc.BranchFeatures.Count >0).ToArray(),sewerConnection => sewerConnection.UpdateBranchFeatureGeometries(),"");
             ParallelHelper.RunActionInParallel(this, network.SewerConnections.Where(sc => sc.Geometry == null).ToArray(), sc => network.FindAndConnectManholesInNetwork(sc), "Update empty geometries");
@@ -675,7 +671,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             {
                 if (helper.CrossSectionDefinitionsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var crossSectionDefinition))
                 {
-                    var crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2);
+                    var crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2, false);
                     crossSection.Name = $"SewerProfile_";
                     crossSection.UseSharedDefinition(crossSectionDefinition);
                     pipe.CrossSection = crossSection;
@@ -687,22 +683,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }, "Update cross sections in network");
 
 
-            while (helper.PipeCrossSections.Select(ls => ls.Name).Distinct().Count() !=
-                   helper.PipeCrossSections.Select(ls => Name).Count())
-            {
-                NamingHelper.MakeNamesUnique(helper.PipeCrossSections);
-            }
-            var pipeCrossSection = helper.PipeCrossSections.FirstOrDefault(cs => cs.Name == "SewerProfile_");
-            if (pipeCrossSection != null) pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", helper.PipeCrossSections, typeof(ICrossSection), true);
-            //NamingHelper.MakeNamesUnique(pipes.Select(p =>p.CrossSection));
-            while (helper.CompositeBranchStructures.Select(ls => ls.Name).Distinct().Count() !=
-                   helper.CompositeBranchStructures.Select(ls => Name).Count())
-            {
-                NamingHelper.MakeNamesUnique(helper.CompositeBranchStructures);
-            }
-            var compositeBranchStructure = helper.CompositeBranchStructures.FirstOrDefault(cs => cs.Name == "CompositeBranchStructure_1D_");
-            if (compositeBranchStructure != null) compositeBranchStructure.Name = NamingHelper.GetUniqueName("CompositeBranchStructure_1D_{0}", helper.CompositeBranchStructures, typeof(ICompositeBranchStructure), true);
-
+            NamingHelper.MakeNamesUnique(helper.PipeCrossSections);
+            NamingHelper.MakeNamesUnique(helper.CompositeBranchStructures);
         }
 
         /// <summary>
