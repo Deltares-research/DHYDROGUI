@@ -107,5 +107,8 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         ActualDischarge = 110, // Actual lateral discharge
         DefinedDischarge = 111, // Defined lateral discharge
         LateralDifference = 112, // difference between Actual and Defined lateral discharge
+        GateOpeningWidth,
+        GateOpeningHorizontalDirection,
+        ValveOpeningHeight
     }
 }

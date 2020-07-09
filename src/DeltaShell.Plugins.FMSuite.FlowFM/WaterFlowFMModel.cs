@@ -11,6 +11,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -676,6 +677,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 SyncFractionsAndTracers(sourceAndSink);
+            }
+            var inputSender = InputFeatureCollectionsContains(sourceAndSink.Feature);
+            var outputSender = OutputFeatureCollectionsContains(sourceAndSink.Feature);
+
+            if (inputSender || outputSender)
+            {
+                var feature = (IFeature)sourceAndSink.Feature;
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        AddAreaItem(feature, inputSender);
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        RemoveAreaFeature(feature);
+                        break;
+                    case NotifyCollectionChangedAction.Reset:
+                        foreach (var areaDataItem in areaDataItems)
+                        {
+                            RemoveAreaFeature(areaDataItem.Key);
+                        }
+                        areaDataItems.Clear();
+                        break;
+                    case NotifyCollectionChangedAction.Replace:
+                        var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
+                        RemoveAreaFeature(oldFeature);
+                        AddAreaItem(feature, inputSender);
+                        break;
+                    default:
+                        throw new NotImplementedException(
+                            String.Format("Action {0} on feature collection not supported", e.Action));
+                }
             }
         }
 
@@ -2949,6 +2981,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 yield return Area.Pumps;
                 yield return Area.Weirs;
                 yield return Area.Gates;
+                yield return Area.LeveeBreaches.OfType<LeveeBreach>().ToList();
+                yield return SourcesAndSinks.Select(ss => ss.Feature).ToList();
             }
         }
 
@@ -2958,6 +2992,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 yield return Area.ObservationPoints;
                 yield return Area.ObservationCrossSections;
+                
             }
         }
         private bool OutputFeatureCollectionsContains(object item)
@@ -2971,7 +3006,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 return Area.ObservationCrossSections.Contains(item);
             }
-
             return false;
         }
 
@@ -2990,6 +3024,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (item is Gate2D)
             {
                 return Area.Gates.Contains(item);
+            }
+
+            
+            if (item is LeveeBreach)
+            {
+                return Area.LeveeBreaches.Contains(item);
+            }
+
+            if (item is Feature2D sourceAndSinkFeature)
+            {
+                return SourcesAndSinks.Any(ss => ss.Feature.Equals(sourceAndSinkFeature));
             }
 
             return false;
@@ -3405,24 +3450,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var gate = location as IGate;
             if (gate != null)
             {
-                yield return KnownStructureProperties.GateLowerEdgeLevel;
-                yield return KnownStructureProperties.GateOpeningWidth;
-                yield return KnownStructureProperties.GateSillLevel;
+                yield return "GateHeight";
+                yield return "GateLowerEdgeLevel";
+                yield return "GateOpeningWidth";
+                yield return "GateOpeningHorizontalDirection";
+            }
+            var orifice = location as IOrifice;
+            if (orifice != null)
+            {
+                yield return "gateLowerEdgeLevel";
             }
 
             var weir = location as IWeir;
             if (weir != null)
             {
-                yield return KnownStructureProperties.CrestLevel;
-
-                var weirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
-                if (weirFormula != null)
+                yield return "CrestLevel";
+                var generalStructureWeirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+                if (generalStructureWeirFormula != null)
                 {
-                    yield return KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription();
-                    yield return KnownStructureProperties.GateLowerEdgeLevel;
-                    yield return KnownGeneralStructureProperties.CrestWidth.GetDescription();
-                    yield return KnownGeneralStructureProperties.CrestLevel.GetDescription();
+                    yield return "GateHeight";
+                    yield return "GateLowerEdgeLevel";
+                    yield return "GateOpeningWidth";
+                    yield return "GateOpeningHorizontalDirection";
                 }
+                var gatedWeirFormula = weir.WeirFormula as GatedWeirFormula;
+                if (gatedWeirFormula != null)
+                {
+                    yield return "GateHeight";
+                    yield return "GateLowerEdgeLevel";
+                    yield return "GateOpeningWidth";
+                    yield return "GateOpeningHorizontalDirection";
+                }
+
             }
 
             if (Area.ObservationPoints.Contains(location))
@@ -3433,7 +3492,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     yield return "salinity";
                 }
+
+                if (UseTemperature)
+                {
+                    yield return "temperature";
+                }
+
                 yield return "water_depth";
+                foreach (var tracerDefinition in TracerDefinitions)
+                {
+                    yield return tracerDefinition;
+                }
             }
 
             if (Area.ObservationCrossSections.Contains(location))
@@ -3442,6 +3511,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 yield return "velocity";
                 yield return "water_level";
                 yield return "water_depth";
+            }
+            if (Area.LeveeBreaches.Contains(location))
+            {
+                yield return "dambreak_s1up";
+                yield return "dambreak_s1dn";
+                yield return "dambreak_breach_depth";
+                yield return "dambreak_breach_width";
+                yield return "dambreak_instantaneous_discharge";
+                yield return "dambreak_cumulative_discharge";
+            }
+
+            if (SourcesAndSinks.Any(ss => ss.Feature.Equals(location)))
+            {
+                yield return "discharge";
+                yield return "change_in_salinity";
+                yield return "change_in_temperature";
             }
         }
 
@@ -3499,18 +3584,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (feature is IGate)
             {
-                return "gates";
+                return Model1DParametersCategories.Gates;
             }
             if (Area.ObservationCrossSections.Contains(feature))
             {
-                return "crosssections";
+                return Model1DParametersCategories.CrossSections;
+            }
+            if (SourcesAndSinks.Any(ss => ss.Feature.Equals(feature)))
+            {
+                return Model1DParametersCategories.SourceSinks;
             }
             if (feature is IPump)
             {
                 return Model1DParametersCategories.Pumps; ;
             }
-            if (feature is IWeir)
+            if (feature is IWeir weir)
             {
+                if (weir is Orifice)
+                {
+                    return Model1DParametersCategories.Orifices;
+                }
+
+                if (weir.WeirFormula is GeneralStructureWeirFormula)
+                {
+                    return Model1DParametersCategories.GeneralStructures;
+                }
+                if (weir.WeirFormula is GatedWeirFormula)
+                {
+                    return Model1DParametersCategories.Gates;
+                }
                 return Model1DParametersCategories.Weirs;
             }
             if (feature is ICulvert)
@@ -3532,6 +3634,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (feature is IHydroNode)
             {
                 return Model1DParametersCategories.BoundaryConditions;
+            }
+            if (feature is LeveeBreach leveeBreach && Area.LeveeBreaches.Contains(leveeBreach))
+            {
+                return Model1DParametersCategories.LeveeBreaches;
             }
 
             return null;
