@@ -13,9 +13,9 @@
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="$(var.DHydroFullVersion)"/>
   
-   <util:XmlFile Id="SetKey20$(var.GUICONFIGFILE)"
- 		            Action="setValue"
-	 	            ElementPath="/configuration/userSettings/DeltaShell.Gui.Properties.Settings/setting[\[]@name=&quot;ShowStartUpScreen&quot;[\]]/value"
+  <util:XmlFile Id="SetKey20$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/userSettings/DeltaShell.Gui.Properties.Settings/setting[\[]@name=&quot;ShowStartUpScreen&quot;[\]]/value"
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="False"/>
   <?else?>
