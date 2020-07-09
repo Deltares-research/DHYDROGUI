@@ -493,6 +493,7 @@ src/DelftTools.Hydro/Validators/ExtraResistanceValidator.cs -text
 src/DelftTools.Hydro/Validators/HydroNetworkValidator.cs -text
 src/DelftTools.Hydro/Validators/StructuresValidator.cs -text
 src/DelftTools.Hydro/WasteWaterTreatmentPlant.cs -text
+src/DelftTools.Hydro/WasteWaterTreatmentPlant.hbm.xml -text
 src/DelftTools.Hydro/packages.config -text
 src/DelftTools.ModelExchange/DelftTools.ModelExchange.csproj -text
 src/DelftTools.ModelExchange/ExchangeItemHelper.cs -text

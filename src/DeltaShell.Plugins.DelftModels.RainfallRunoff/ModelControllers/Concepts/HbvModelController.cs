@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
 
             Writer.AddHbv(data.Catchment.Name, data.CalculationArea, data.SurfaceLevel, snowParameters, soilParameters,
                             flowParameters, hiniParameters, data.MeteoStationName, data.AreaAdjustmentFactor,
-                            data.TemperatureStationName);
+                            data.TemperatureStationName, data.Catchment.InteriorPoint.X, data.Catchment.InteriorPoint.Y);
         }
     }
 }

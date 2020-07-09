@@ -54,7 +54,8 @@
             double[] waterUsePerCapitaPerHourInDay,
             double runoffCoefficient,
             string meteoId,
-            double areaAdjustmentFactor);
+            double areaAdjustmentFactor,
+            double x, double y);
 
         void SetPavedVariablePumpCapacities(int iref, int[] dates, int[] times, double[] mixedCapacity, double[] dwfCapacity);
 
@@ -107,7 +108,8 @@
             double initialLandStorage, double maximumLandStorage,
             double infiltrationCapacity, int soilType, double initialGroundwaterLevel,
             double maximumAllowedGroundwater, double groundwaterLayerThickness,
-            string meteoId, double areaAdjustmentFactor);
+            string meteoId, double areaAdjustmentFactor,
+            double x, double y);
 
         /// <summary>
         /// Sets Ernst data for unpaved node
@@ -159,7 +161,8 @@
         int AddGreenhouse(string id, double[] areasPerGreenhouseClass, double surfaceLevel,
             double initialRoofStorage, double maximumRoofStorage,
             double siloCapacity, double siloPumpCapacity,
-            bool greenhouseUseSiloArea, double greenhouseSiloArea, string meteoId, double areaAdjustmentFactor);
+            bool greenhouseUseSiloArea, double greenhouseSiloArea, string meteoId, double areaAdjustmentFactor,
+            double x, double y);
         #endregion
 
         #region Open water
@@ -173,7 +176,8 @@
         /// <param name="areaAdjustmentFactor">calculation area adjustment (scaling) factor when calculating 
         /// effective precipitation / evaporation, 1.0 means no adjustment</param>
         /// <returns></returns>
-        int AddOpenWater(string id, double area, string meteoId, double areaAdjustmentFactor);
+        int AddOpenWater(string id, double area, string meteoId, double areaAdjustmentFactor,
+            double x, double y);
 
         #endregion
 
@@ -182,7 +186,7 @@
         #region Sacramento
 
         int AddSacramento(string id, double area, double[] parameters, double[] capacities, double hydrographStep,
-            double[] hydroGraphValues, string meteoId);
+            double[] hydroGraphValues, string meteoId, double x, double y);
 
         #endregion
 
@@ -190,13 +194,13 @@
 
         int AddHbv(string id, double area, double surfaceLevel, double[] snowParameters, double[] soilParameters,
             double[] flowParameters, double[] hiniParameters, string meteoId, double areaAdjustmentFactor,
-            string tempId);
+            string tempId, double x, double y);
 
         #endregion
 
         #region RR Init
-        int AddWasteWaterTreatmentPlant(string id);
-        int AddBoundaryNode(string id, double initialWaterLevel); //lateral or boundary
+        int AddWasteWaterTreatmentPlant(string id, double x, double y);
+        int AddBoundaryNode(string id, double initialWaterLevel, double x, double y); //lateral or boundary
         void AddLink(string linkId, string from, string to);
         bool GenerateRRModelFiles();
         #endregion

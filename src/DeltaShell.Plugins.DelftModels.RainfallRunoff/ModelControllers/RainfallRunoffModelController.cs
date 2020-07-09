@@ -249,7 +249,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
         {
             foreach (var wwtp in model.Basin.WasteWaterTreatmentPlants)
             {
-                Writer.AddWasteWaterTreatmentPlant(wwtp.Name);
+                Writer.AddWasteWaterTreatmentPlant(wwtp.Name, wwtp.Geometry?.Coordinate.X ?? 0.0, wwtp.Geometry?.Coordinate.Y ?? 0.0);
                 AddLink(links, wwtp);
                 allRRNodes.Add(wwtp);
             }
@@ -270,7 +270,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
                     rrBoundaries.Add(boundary);
                     allRRNodes.Add(boundary);
-                    Writer.AddBoundaryNode(link.ToId, GetWaterLevelAtBoundary(boundary));
+                    Writer.AddBoundaryNode(link.ToId, GetWaterLevelAtBoundary(boundary), boundary.Geometry?.Coordinate.X ?? 0.0, boundary.Geometry?.Coordinate.Y ?? 0.0);
                 }
             }
         }

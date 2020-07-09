@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             writer.Expect(
                     fileWriter =>
                         fileWriter.AddHbv(catchmentId, 0, 0, snowParameters, soilParameters, flowParameters,
-                            hiniParameters, "", 1, ""))
+                            hiniParameters, "", 1, "", 0d,0d))
                 .Return(1)
                 .Repeat.Once();
 
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             writer.Expect(
                     fileWriter =>
                         fileWriter.AddHbv(catchmentId, 100000, 0.2, snowParameters, soilParameters, flowParameters,
-                            hiniParameters, "deBiltMeteo", 0.3, "deBiltTemp"))
+                            hiniParameters, "deBiltMeteo", 0.3, "deBiltTemp", 0d, 0d))
                 .Return(1)
                 .Repeat.Once();
 

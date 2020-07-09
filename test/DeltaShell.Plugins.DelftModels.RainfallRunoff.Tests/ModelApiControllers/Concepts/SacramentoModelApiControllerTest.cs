@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             var hydrographValues = Enumerable.Repeat(0.0, 36).ToArray();
             hydrographValues[0] = 1;
 
-            writer.Expect(fileWriter => fileWriter.AddSacramento(catchmentId, 0, parameters, capacities, 0, hydrographValues, ""))
+            writer.Expect(fileWriter => fileWriter.AddSacramento(catchmentId, 0, parameters, capacities, 0, hydrographValues, "", 0d, 0d))
                     .Return(1)
                     .Repeat.Once();
             
@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             var capacities = new[] {100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 0.2, 0.21, 0.22};
             var hydrographValues = Enumerable.Range(0, 36).Select(i => 1.0/(1.0 + i*i)).ToArray();
 
-            writer.Expect(fileWriter => fileWriter.AddSacramento(catchmentId, 100000, parameters, capacities, 1, hydrographValues, ""))
+            writer.Expect(fileWriter => fileWriter.AddSacramento(catchmentId, 100000, parameters, capacities, 1, hydrographValues, "", 0d, 0d))
                     .Return(1)
                     .Repeat.Once();
 

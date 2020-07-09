@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
                                          inhabitants, ToEngineDwfComputationOption(pavedData.DryWeatherFlowOptions),
                                          waterUse24HoursPerCapita,
                                          runoffCoeff,
-                                         GetMeteoId(model, pavedData), GetAreaAdjustmentFactor(model, pavedData));
+                                         GetMeteoId(model, pavedData), GetAreaAdjustmentFactor(model, pavedData), pavedData.Catchment.InteriorPoint.X, pavedData.Catchment.InteriorPoint.Y);
 
             if (!pavedData.IsSewerPumpCapacityFixed)
             {

@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                              new[]
                                  {
                                      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, pavedData.Name, 1.0)).Return(1).Repeat.Once();
+                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, pavedData.Name, 1.0, 0d, 0d)).Return(1).Repeat.Once();
 
             mocks.ReplayAll();
 
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                              0, LinkType.WasteWaterTreatmentPlant, LinkType.WasteWaterTreatmentPlant, 0,
                              DwfComputationOption.NumberOfInhabitantsTimesConstantDWF,
                              new[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, pavedData.Name, 1.0)).Return(1).Repeat.Once();
+                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, pavedData.Name, 1.0, 0d, 0d)).Return(1).Repeat.Once();
             writer.Expect(fileWriter =>
                             fileWriter.AddPaved(pavedData.Name, 2000, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, SewerType.Mixed, true,
                                          0,
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                                          DwfComputationOption.NumberOfInhabitantsTimesConstantDWF,
                                          new[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                                                  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 
-                                                 0.0, "", 0.8)).Return(1).Repeat.Once();
+                                                 0.0, "", 0.8, 0d, 0d)).Return(1).Repeat.Once();
             mocks.ReplayAll();
 
             controller.Writer = writer;
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                              DwfComputationOption.NumberOfInhabitantsTimesConstantDWF,
                              new[]
                                  {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, pavedData.Name, 1.0)).Return(1).Repeat.Once();
+                                  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, pavedData.Name, 1.0, 0d, 0d)).Return(1).Repeat.Once();
 
             mocks.ReplayAll();
 
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                              new[]
                                  {
                                      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 0.5, pavedData.Name, 1.0)).Return(1).Repeat.Once();
+                                     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, 0.5, pavedData.Name, 1.0, 0d, 0d)).Return(1).Repeat.Once();
             
             writer.Expect(fileWriter =>
                 fileWriter.SetPavedVariablePumpCapacities(1, null, null, null, null)).IgnoreArguments().Repeat.Once().

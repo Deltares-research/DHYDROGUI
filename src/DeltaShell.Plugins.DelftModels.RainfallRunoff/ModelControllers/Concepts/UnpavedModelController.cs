@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
                                            initialGroundwaterLevel,
                                            unpavedData.MaximumAllowedGroundWaterLevel,
                                            unpavedData.GroundWaterLayerThickness,
-                                           GetMeteoId(model,unpavedData), GetAreaAdjustmentFactor(model, unpavedData));
+                                           GetMeteoId(model,unpavedData), GetAreaAdjustmentFactor(model, unpavedData), unpavedData.Catchment.InteriorPoint.X, unpavedData.Catchment.InteriorPoint.Y);
 
             SetSeepage(unpavedData, writer, model.StartTime, iref);
             SetDrainage(unpavedData, writer, drainageComputationOption, iref);

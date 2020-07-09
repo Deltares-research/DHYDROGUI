@@ -8,6 +8,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
@@ -23,6 +24,9 @@ using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
@@ -835,7 +839,129 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         public void SaveAndLoadNwrW()
         {
         }
-        
+
+        [Test]
+        public void SaveLoadCatchment()
+        {
+            var catchment = new Catchment
+            {
+                Name = "testName",
+                LongName = "testName",
+                Geometry =
+                    new Polygon(
+                    new LinearRing(new[]
+                                                           {
+                                                               new Coordinate(0, 0), new Coordinate(10, 0),
+                                                               new Coordinate(10, 10), new Coordinate(0, 0)
+                                                           })),
+                IsGeometryDerivedFromAreaSize = true,
+                CatchmentType = CatchmentType.GreenHouse,
+                SubCatchments = { new Catchment() }
+            };
+
+            catchment.SetAreaSize(500);
+
+            var basin = new DrainageBasin();
+            basin.Catchments.Add(catchment);
+
+            var retrievedBasin = SaveLoadObject(basin, "basin");
+
+            Assert.AreEqual(1, retrievedBasin.Catchments.Count);
+            var retrievedCatchment = retrievedBasin.Catchments.First();
+            Assert.AreEqual(catchment.Name, retrievedCatchment.Name);
+            Assert.AreEqual(retrievedBasin, retrievedCatchment.Basin);
+            Assert.AreEqual(catchment.LongName, retrievedCatchment.LongName);
+            Assert.AreEqual(catchment.Geometry.Coordinates.Length, retrievedCatchment.Geometry.Coordinates.Length);
+            for (int i = 0; i < catchment.Geometry.Coordinates.Length; i++)
+            {
+                Assert.AreEqual(catchment.Geometry.Coordinates[i].X, retrievedCatchment.Geometry.Coordinates[i].X, 1 );
+                Assert.AreEqual(catchment.Geometry.Coordinates[i].Y, retrievedCatchment.Geometry.Coordinates[i].Y, 1 );
+            }
+            
+            Assert.AreEqual(catchment.AreaSize, retrievedCatchment.AreaSize, 0.001);
+            Assert.AreEqual(catchment.CatchmentType, retrievedCatchment.CatchmentType);
+            //Assert.AreEqual(catchment.SubCatchments.Count, retrievedCatchment.SubCatchments.Count);
+        }
+
+        [Test]
+        public void SaveLoadDefaultGeometryCatchment()
+        {
+            // add catchment
+            var catchment = new Catchment
+            {
+                IsGeometryDerivedFromAreaSize = true,
+                CatchmentType = CatchmentType.GreenHouse
+            };
+            catchment.SetAreaSize(500);
+
+
+            var basin = new DrainageBasin();
+            basin.Catchments.Add(catchment);
+
+            var retrievedBasin = SaveLoadObject(basin, "basin");
+
+            Assert.AreEqual(1, retrievedBasin.Catchments.Count);
+            var retrievedCatchment = retrievedBasin.Catchments.First();
+
+            var oldArea = retrievedCatchment.Geometry.Area;
+
+            retrievedCatchment.SetAreaSize(retrievedCatchment.AreaSize * 2);
+
+            Assert.AreNotEqual(oldArea, retrievedCatchment.Geometry.Area); //check if change in area, changes geometry (when IsGeometryDerivedFromAreaSize)
+        }
+
+        [Test]
+        [Ignore("Hidde kan jij hier naar kijken")]
+        public void SaveLoadHydroLink()
+        {
+            var catchment = new Catchment()
+            {
+                CatchmentType = CatchmentType.GreenHouse,
+                Geometry =
+                    new Polygon(
+                        new LinearRing(new[]
+                        {
+                            new Coordinate(0, 0), new Coordinate(10, 0),
+                            new Coordinate(10, 10), new Coordinate(0, 0)
+                        })),
+
+            };
+            var wwtp = new WasteWaterTreatmentPlant();
+            var basin = new DrainageBasin { Catchments = { catchment }, WasteWaterTreatmentPlants = { wwtp } };
+
+            catchment.LinkTo(wwtp);
+
+            var retrievedBasin = SaveLoadObject(basin, "basin");
+
+            Assert.AreEqual(1, retrievedBasin.Links.Count);
+
+            var retrievedLink = retrievedBasin.Links.First();
+            var retrievedCatchment = (Catchment)retrievedLink.Source;
+            var retrievedWwtp = (WasteWaterTreatmentPlant)retrievedLink.Target;
+
+            Assert.AreEqual(1, retrievedCatchment.Links.Count);
+            Assert.AreEqual(1, retrievedWwtp.Links.Count);
+            Assert.AreSame(retrievedLink, retrievedWwtp.Links.First());
+        }
+
+        [Test]
+        public void SaveLoadWasteWaterTreatmentPlant()
+        {
+            var wwtp = new WasteWaterTreatmentPlant { Name = "testName", Description = "testDescr", Geometry = new Point(55, 33) };
+
+            var basin = new DrainageBasin();
+            basin.WasteWaterTreatmentPlants.Add(wwtp);
+
+            var retrievedBasin = SaveLoadObject(basin, "basin");
+
+            Assert.AreEqual(1, retrievedBasin.WasteWaterTreatmentPlants.Count);
+            var retrievedWwtp = retrievedBasin.WasteWaterTreatmentPlants.First();
+            Assert.AreEqual(wwtp.Geometry, retrievedWwtp.Geometry);
+            Assert.AreEqual(wwtp.Name, retrievedWwtp.Name);
+            Assert.AreEqual(basin, retrievedWwtp.Basin);
+            //Assert.AreEqual(wwtp.Description, retrievedWwtp.Description);
+        }
+
 
         private RainfallRunoffModel GetRRModel()
         {
@@ -873,7 +999,103 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             app.Run();
         }
 
+        /// <summary>
+        /// Saves and retrieves an object by wrapping it in a dataitem in the rootfolder
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="o"></param>
+        /// <param name="path">Project path used to save / load</param>
+        /// <returns></returns>
+        protected T SaveLoadObject<T>(T o, string onThis) where T : class
+        {
+            string path = string.Empty;
 
+            try
+            {
+                using (var application = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+                {
+                    CreateRunningDeltaShellApplication(application);
+                    using (var model = new RainfallRunoffModel())
+                    {
+
+                        switch (onThis)
+                        {
+                            case "catchments":
+                                var catchment = o as Catchment;
+                                if (catchment != null)
+                                {
+                                    application.Project.RootFolder.Add(model);
+                                    model.Basin.Catchments.Add(catchment);
+                                }
+
+                                break;
+                            case "basin":
+                                var basin = o as DrainageBasin;
+                                if (basin != null)
+                                {
+                                    application.Project.RootFolder.Add(model);
+                                    model.Basin = basin;
+                                }
+
+                                break;
+                            case "wwtp":
+                                var wwtp = o as WasteWaterTreatmentPlant;
+                                if (wwtp != null)
+                                {
+                                    application.Project.RootFolder.Add(model);
+                                    model.Basin.WasteWaterTreatmentPlants.Add(wwtp);
+                                }
+
+                                break;
+                            default:
+                                application.Project.RootFolder.Add(o);
+                                break;
+                        }
+
+                        path = SaveAndCloseProjectWithThisRrModel(TestHelper.GetCurrentMethodName(), application);
+                    }
+
+                    application.OpenProject(path);
+                    var retrievedModel = application.GetAllModelsInProject().OfType<RainfallRunoffModel>()
+                        .FirstOrDefault();
+                    Assert.IsNotNull(retrievedModel);
+                    switch (onThis)
+                    {
+                        case "catchments":
+                            var catchment = o as Catchment;
+                            if (catchment != null)
+                            {
+                                return retrievedModel.Basin.Catchments.FirstOrDefault() as T;
+                            }
+
+                            break;
+                        case "basin":
+                            var basin = o as DrainageBasin;
+                            if (basin != null)
+                            {
+                                return retrievedModel.Basin as T;
+                            }
+
+                            break;
+                        case "wwtp":
+                            var wwtp = o as WasteWaterTreatmentPlant;
+                            if (wwtp != null)
+                            {
+                                return retrievedModel.Basin.WasteWaterTreatmentPlants.FirstOrDefault() as T;
+                            }
+
+                            break;
+                    }
+
+                    return (T) ((DataItem) application.Project.RootFolder.Items[0]).Value;
+                }
+            }
+            finally
+            {
+                //FileUtils.DeleteIfExists(path);
+            }
+
+        }
     }
 
 }

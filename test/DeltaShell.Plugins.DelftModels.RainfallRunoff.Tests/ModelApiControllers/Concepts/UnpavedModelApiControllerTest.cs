@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             writer.Expect(fileWriter =>
                 fileWriter.AddUnpaved(unpavedData.Name, new double[] { 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                1000.0, 1.5, DrainageComputationOption.KrayenhoffVdLeur, 0.0, 0.0, 0.0,
-                               5.0, 1, 0, 1.5, 5.0, unpavedData.Name, 1.0)).Repeat.Once().Return(1);
+                               5.0, 1, 0, 1.5, 5.0, unpavedData.Name, 1.0, 0d, 0d)).Repeat.Once().Return(1);
 
             writer.Expect(fileWriter => fileWriter.SetUnpavedConstantSeepage(1, 0.0)).Repeat.Once();
 
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                 fileWriter.AddUnpaved(unpavedData.Name, new double[] { 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                1000.0, 1.5, DrainageComputationOption.KrayenhoffVdLeur, 0.0, 0.0, 0.0, 5.0, 
                                120, //capsim soil type
-                               0, 1.5, 5.0, unpavedData.Name, 1.0)).Repeat.Once().Return(1);
+                               0, 1.5, 5.0, unpavedData.Name, 1.0, 0d, 0d)).Repeat.Once().Return(1);
 
             writer.Expect(fileWriter => fileWriter.SetUnpavedConstantSeepage(1, 0.0)).Repeat.Once();
 
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             writer.Expect(fileWriter =>
                 fileWriter.AddUnpaved(unpavedData.Name, new double[] { 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                1000.0, 1.5, DrainageComputationOption.KrayenhoffVdLeur, 0.0, 0.0, 0.0, 5.0,
-                               1, 0, 1.5, 5.0, "blah", 0.945)).Repeat.Once().Return(1);
+                               1, 0, 1.5, 5.0, "blah", 0.945, 0d, 0d)).Repeat.Once().Return(1);
 
             writer.Expect(fileWriter => fileWriter.SetUnpavedConstantSeepage(1, 0.0)).Repeat.Once();
 
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             writer.Expect(fileWriter =>
                 fileWriter.AddUnpaved(unpavedData.Name, new double[] { 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                                1000.0, 1.5, DrainageComputationOption.KrayenhoffVdLeur, 0.0, 0.0, 0.0,
-                               5.0, 1, 5.0 + 1.5, 1.5, 5.0, unpavedData.Name, 1.0)).Repeat.Once().Return(1);
+                               5.0, 1, 5.0 + 1.5, 1.5, 5.0, unpavedData.Name, 1.0, 0d, 0d)).Repeat.Once().Return(1);
 
             writer.Expect(fileWriter => fileWriter.SetUnpavedConstantSeepage(1, 0.0)).Repeat.Once();
 
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             writer.Expect(
                 fileWriter => fileWriter.AddUnpaved(null, null, 0, 0, DrainageComputationOption.Ernst, 0, 0, 0,
-                               0, 0, 0, 0, 0, null, 1.0)).IgnoreArguments().Repeat.Once().Return(iref);
+                               0, 0, 0, 0, 0, null, 1.0, 0d, 0d)).IgnoreArguments().Repeat.Once().Return(iref);
             writer.Expect(fileWriter => fileWriter.SetUnpavedConstantSeepage(iref, 0.0)).Repeat.Once();
 
             writer.Expect(fileWriter => fileWriter.SetErnst(iref, 22, 66, 33, new double[] { 0, 5, 6 }, new double[] { 0, 1, 2 })).
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             writer.Expect(
                 fileWriter => fileWriter.AddUnpaved(null, null, 0, 0, DrainageComputationOption.DeZeeuwHellinga, 0, 0, 0,
-                               0, 0, 0, 0, 0, null, 1.0)).IgnoreArguments().Repeat.Once().Return(iref);
+                               0, 0, 0, 0, 0, null, 1.0, 0d, 0d)).IgnoreArguments().Repeat.Once().Return(iref);
             writer.Expect(fileWriter => fileWriter.SetUnpavedConstantSeepage(iref, 0.0)).Repeat.Once();
 
             writer.Expect(

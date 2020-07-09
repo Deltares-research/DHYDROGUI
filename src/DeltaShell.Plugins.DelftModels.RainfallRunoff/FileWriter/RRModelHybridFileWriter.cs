@@ -350,7 +350,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             double maximumDwfSewerStorage, SewerType sewerType, bool sewerCapacityIsFixed, double rainfallSewerCapacity, double dwfSewerCapacity, 
             LinkType rainfallSewerLink, LinkType dwfSewerLink,
             int numberOfPeople,
-            DwfComputationOption dwfComputationOption, double[] waterUsePerCapitaPerHourInDay, double runoffCoef, string meteoId, double areaAdjustmentFactor)
+            DwfComputationOption dwfComputationOption, double[] waterUsePerCapitaPerHourInDay, double runoffCoef, string meteoId, double areaAdjustmentFactor,
+            double x, double y)
         {
             if (waterUsePerCapitaPerHourInDay.Length != 24)
             {
@@ -364,7 +365,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var storageId = id + "_storage";
             var dryWaterId = id + "_dwf";
 
-            AddNodeInternal(id, NodeType.Paved);
+            AddNodeInternal(id, NodeType.Paved, x, y);
 
             var capacityString = sewerCapacityIsFixed
                 ? String.Format("qc 0 {0} {1}", rainfallSewerCapacity, dwfSewerCapacity)
@@ -394,12 +395,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         public int AddGreenhouse(string id, double[] areasPerGreenhouseClass, double surfaceLevel,
             double initialRoofStorage, double maximumRoofStorage, double siloCapacity,
             double siloPumpCapacity, bool greenhouseUseSiloArea, double greenhouseSiloArea,
-            string meteoId, double areaAdjustmentFactor)
+            string meteoId, double areaAdjustmentFactor,
+            double x, double y)
         {
 
             SwitchToInvariantCulture();
 
-            AddNodeInternal(id, NodeType.Greenhouse);
+            AddNodeInternal(id, NodeType.Greenhouse, x, y);
 
             var siloId = (greenhouseUseSiloArea ? id : "-1");
             var greenhouseAreaConnectedToSilo = (greenhouseUseSiloArea ? greenhouseSiloArea : 0.0);
@@ -428,11 +430,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             return greenhouseData.Count;
         }
 
-        public int AddOpenWater(string id, double area, string meteoId, double areaAdjustmentFactor)
+        public int AddOpenWater(string id, double area, string meteoId, double areaAdjustmentFactor,
+            double x, double y)
         {
             SwitchToInvariantCulture();
 
-            AddNodeInternal(id, NodeType.Openwater);
+            AddNodeInternal(id, NodeType.Openwater, x, y);
             
             openWaterData.Add(String.Format("OWRR id '{0}' ar {1} ms '{2}'{3} owrr", id, area, meteoId,
                 GetAreaAdjustmentFactorString(areaAdjustmentFactor)));
@@ -473,11 +476,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         }
 
         public int AddSacramento(string id, double area, double[] parameters, double[] capacities, double hydrographStep,
-            double[] hydroGraphValues, string meteoId)
+            double[] hydroGraphValues, string meteoId,
+            double x, double y)
         {
             SwitchToInvariantCulture();
 
-            AddNodeInternal(id, NodeType.Sacramento);
+            AddNodeInternal(id, NodeType.Sacramento, x, y);
 
             var ca_id = id + "_ca";
             var uh_id = id + "_uh";
@@ -513,11 +517,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
         public int AddHbv(string id, double area, double surfaceLevel, double[] snowParameters, double[] soilParameters,
             double[] flowParameters, double[] hiniParameters, string meteoId, double areaAdjustmentFactor,
-            string tempId)
+            string tempId, double x, double y)
         {
             SwitchToInvariantCulture();
 
-            AddNodeInternal(id, NodeType.Hbv);
+            AddNodeInternal(id, NodeType.Hbv, x, y);
 
             var snow_id = id + "_sn";
             var soil_id = id + "_sl";
@@ -552,17 +556,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             return sacramentoData.Count;
         }
 
-        public int AddWasteWaterTreatmentPlant(string id)
+        public int AddWasteWaterTreatmentPlant(string id, double x, double y)
         {
             wwtp.Add(String.Format("WWTP id '{0}' tb 0 wwtp", id));
-            return AddNodeInternal(id, NodeType.Wwtp);
+            return AddNodeInternal(id, NodeType.Wwtp, x, y);
         }
 
-        public int AddBoundaryNode(string id, double initialWaterLevel)
+        public int AddBoundaryNode(string id, double initialWaterLevel, double x, double y)
         {
             //set initial water level (actual water level is passed during runtime)
             boundaries.Add(String.Format("BOUN id '{0}' bl 0 {1} is 0 boun", id, initialWaterLevel));  //-99 m AD as default (outside)
-            return AddNodeInternal(id, NodeType.BoundaryOrLateral);
+            return AddNodeInternal(id, NodeType.BoundaryOrLateral, x, y);
         }
 
         public void AddLink(string linkId, string from, string to)
@@ -597,13 +601,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             return String.Format("wc {0} wd {1} wh {2}", waterUsePerHourForConstant, waterUsePerDayForVariable, waterUsePercentagesString);
         }
 
-        private int AddNodeInternal(string id, NodeType nodeType)
+        private int AddNodeInternal(string id, NodeType nodeType, double x, double y)
         {
             SwitchToInvariantCulture();
 
             string sobekNodeId = GetSobekNodeId(nodeType);
             nodes.Add(String.Format(
-                "NODE id '{0}' nm '{0}' ri '-1' mt 1 {1} px 0.0 py 0.0 node", id, sobekNodeId));
+                "NODE id '{0}' nm '{0}' ri '-1' mt 1 {1} px {2} py {3} node", id, sobekNodeId, x, y));
             typeForNodes.Add(nodeType);
 
             RestoreCulture();
@@ -724,7 +728,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             double maximumLandStorage, double infiltrationCapacity, 
             int soilType, double initialGroundwaterLevel, double maximumAllowedGroundwater,
             double groundwaterLayerThickness,
-            string meteoId, double areaAdjustmentFactor)
+            string meteoId, double areaAdjustmentFactor,
+            double x, double y)
         {
             if (areasForKnownCropTypes.Length != 16)
             {
@@ -733,7 +738,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             SwitchToInvariantCulture();
 
-            AddNodeInternal(id, NodeType.Unpaved);
+            AddNodeInternal(id, NodeType.Unpaved, x, y);
 
             string drainage = GetDrainageId(drainageComputationOption, id);
 

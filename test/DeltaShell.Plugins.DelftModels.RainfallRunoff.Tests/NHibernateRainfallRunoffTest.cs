@@ -64,7 +64,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         #endregion
         
-        [Test]
+        [Test(Description = "See RainfallRunoffModelDataSaveLoadTest.SaveAndLoadMeteorogicalDataGlobal")]
+        [Category("Quarantine")]
         public void SaveAndLoadGlobalMeteorogicalData()
         {
             var now = new DateTime(2000, 1, 2);
@@ -101,7 +102,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             }
         }
 
-        [Test]
+        [Test(Description = "See RainfallRunoffModelDataSaveLoadTest.SaveAndLoadMeteorogicalDataPerFeature")]
+        [Category("Quarantine")]
         public void SaveAndLoadMeteorogicalDataPerFeature()
         {
             var now = new DateTime(2000, 1, 2);
