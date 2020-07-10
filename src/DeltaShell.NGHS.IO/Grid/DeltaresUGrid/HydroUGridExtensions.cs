@@ -709,7 +709,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                         FloodableArea = properties.StreetStorageArea,
                         ManholeLength = manholeWidth,
                         ManholeWidth = manholeWidth,
-                        Shape = properties.CompartmentShape
+                        Shape = properties.CompartmentShape,
+                        CompartmentStorageType = properties.CompartmentStorageType
                     };
 
 
