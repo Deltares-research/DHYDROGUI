@@ -3034,7 +3034,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (item is Feature2D sourceAndSinkFeature)
             {
-                return SourcesAndSinks.Any(ss => ss.Feature.Equals(sourceAndSinkFeature));
+                return SourcesAndSinks?.Any(ss => ss.Feature.Equals(sourceAndSinkFeature)) ?? false;
             }
 
             return false;
@@ -3522,7 +3522,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 yield return "dambreak_cumulative_discharge";
             }
 
-            if (SourcesAndSinks.Any(ss => ss.Feature.Equals(location)))
+            if (SourcesAndSinks?.Any(ss => ss.Feature.Equals(location)) ?? false)
             {
                 yield return "discharge";
                 yield return "change_in_salinity";
@@ -3590,7 +3590,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 return Model1DParametersCategories.CrossSections;
             }
-            if (SourcesAndSinks.Any(ss => ss.Feature.Equals(feature)))
+            if (SourcesAndSinks?.Any(ss => ss.Feature.Equals(feature)) ?? false)
             {
                 return Model1DParametersCategories.SourceSinks;
             }
