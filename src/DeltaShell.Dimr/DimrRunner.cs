@@ -163,7 +163,7 @@ namespace DeltaShell.Dimr
             get
             {
                 return (model != null) &&
-                       !(model.Status == ActivityStatus.Initialized ||
+                       !(model.Status == ActivityStatus.Initializing ||
                         model.Status == ActivityStatus.Executing ||
                         model.Status == ActivityStatus.Executed ||
                         model.Status == ActivityStatus.Finishing ||
