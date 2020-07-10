@@ -17,6 +17,7 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
@@ -583,7 +584,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 branch.Target = nodeLookup[toNodeId];
                 branch.Name = networkGeometry.BranchIds[i];
                 ((IHydroNetworkFeature)branch).LongName = networkGeometry.BranchLongNames[i];
-                branch.Length = networkGeometry.BranchLengths[i];
+                if (branch.IsLengthCustom)
+                {
+                    branch.Length = 0;
+                    branch.Length = networkGeometry.BranchLengths[i];
+                }
+
                 branch.OrderNumber = networkGeometry.BranchOrder[i];
 
                 if (branch is ISewerConnection sewerConnection)
