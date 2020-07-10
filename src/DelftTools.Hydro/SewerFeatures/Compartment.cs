@@ -84,6 +84,13 @@ namespace DelftTools.Hydro.SewerFeatures
         public virtual CompartmentShape Shape { get; set; }
 
         /// <summary>
+        /// The storage type of the compartment.
+        /// </summary>
+        [FeatureAttribute(Order = 3)]
+        [DisplayName("Compartment Storage Type")]
+        public CompartmentStorageType CompartmentStorageType { get; set; } = CompartmentStorageType.Reservoir;
+
+        /// <summary>
         /// Length of manhole (m).
         /// </summary>
         [FeatureAttribute(Order = 3)]

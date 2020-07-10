@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                 if (compartment.FloodableArea <= 0)
                 {
-                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Error, "Storage area must be larger than 0"));
+                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Warning, "Street storage area is set to 0. Recommended to use storage type closed instead of reservoir"));
                 }
             }
 

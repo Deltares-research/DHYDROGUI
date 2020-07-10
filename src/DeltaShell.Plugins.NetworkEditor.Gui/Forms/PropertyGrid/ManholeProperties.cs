@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
@@ -83,6 +84,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Compartments[manholeOneIndex].FloodableArea = value; }
         }
 
+        [Category("Compartment 1")]
+        [PropertyOrder(5)]
+        [DisplayName("Compartment Storage Type")]
+        [DynamicVisible]
+        public CompartmentStorageType Compartment1StorageType
+        {
+            get
+            {
+                return data.Compartments.ElementAtOrDefault(manholeOneIndex)?.CompartmentStorageType ?? CompartmentStorageType.Reservoir; }
+            set { data.Compartments[manholeOneIndex].CompartmentStorageType = value; }
+        }
+
         #endregion
 
         #region Compartment 2
@@ -127,6 +140,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Compartments[manholeTwoIndex].FloodableArea = value; }
         }
 
+        [Category("Compartment 2")]
+        [PropertyOrder(5)]
+        [DisplayName("Compartment Storage Type")]
+        [DynamicVisible]
+        public CompartmentStorageType Compartment2StorageType
+        {
+            get
+            {
+                return data.Compartments.ElementAtOrDefault(manholeTwoIndex)?.CompartmentStorageType ?? CompartmentStorageType.Reservoir;
+            }
+            set { data.Compartments[manholeTwoIndex].CompartmentStorageType = value; }
+        }
         #endregion
 
         #region Compartment 3
@@ -170,7 +195,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return GetDoublePropertyFromCompartmentAtIndex(manholeThreeIndex, comp => comp.FloodableArea); }
             set { data.Compartments[manholeThreeIndex].FloodableArea = value; }
         }
-
+        [Category("Compartment 3")]
+        [PropertyOrder(5)]
+        [DisplayName("Compartment Storage Type")]
+        [DynamicVisible]
+        public CompartmentStorageType Compartment3StorageType
+        {
+            get
+            {
+                return data.Compartments.ElementAtOrDefault(manholeThreeIndex)?.CompartmentStorageType ?? CompartmentStorageType.Reservoir;
+            }
+            set { data.Compartments[manholeThreeIndex].CompartmentStorageType = value; }
+        }
         #endregion
 
         [DynamicVisibleValidationMethod]
@@ -183,16 +219,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 case nameof(CompartmentOneBottomLevel):
                 case nameof(CompartmentOneStreetLevel):
                 case nameof(CompartmentOneFloodableArea):
+                case nameof(Compartment1StorageType):
                     return compartmentCount > 0;
                 case nameof(CompartmentTwoName):
                 case nameof(CompartmentTwoBottomLevel):
                 case nameof(CompartmentTwoStreetLevel):
                 case nameof(CompartmentTwoFloodableArea):
+                case nameof(Compartment2StorageType):
                     return compartmentCount > 1;
                 case nameof(CompartmentThreeName):
                 case nameof(CompartmentThreeBottomLevel):
                 case nameof(CompartmentThreeStreetLevel):
                 case nameof(CompartmentThreeFloodableArea):
+                case nameof(Compartment3StorageType):
                     return compartmentCount > 2;
                 default:
                     return false;

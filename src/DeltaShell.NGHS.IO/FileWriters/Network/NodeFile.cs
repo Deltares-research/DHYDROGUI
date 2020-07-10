@@ -57,7 +57,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BedLevel, GetValueAsStringWithFormat(compartment.BottomLevel, "{0:0.000}"), string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Area, GetValueAsStringWithFormat(compartment.ManholeLength * compartment.ManholeWidth, "{0:0.0000000}"), string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetLevel, GetValueAsStringWithFormat(compartment.SurfaceLevel, "{0:0.000}"), string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StorageType, "Reservoir", string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StorageType, compartment.CompartmentStorageType.GetDisplayName(), string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetStorageArea, GetValueAsStringWithFormat(compartment.FloodableArea, "{0:0.000}"), string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.CompartmentShape, compartment.Shape.ToString(), String.Empty));
             return iniCategory;
@@ -89,9 +89,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                         BedLevel = GetPropertyValueAsDouble(KnownPropertyNames.BedLevel, category),
                         Area = GetPropertyValueAsDouble(KnownPropertyNames.Area, category),
                         StreetLevel = GetPropertyValueAsDouble(KnownPropertyNames.StreetLevel, category),
-                        StorageType = category.GetPropertyValue(KnownPropertyNames.StorageType),
                         StreetStorageArea = GetPropertyValueAsDouble(KnownPropertyNames.StreetStorageArea, category),
-                        CompartmentShape = (CompartmentShape)Enum.Parse(typeof(CompartmentShape), category.ReadProperty<string>(KnownPropertyNames.CompartmentShape))
+                        CompartmentShape = (CompartmentShape)Enum.Parse(typeof(CompartmentShape), category.ReadProperty<string>(KnownPropertyNames.CompartmentShape)),
+                        CompartmentStorageType = (CompartmentStorageType)Enum.Parse(typeof(CompartmentStorageType), category.ReadProperty<string>(KnownPropertyNames.StorageType))
                     };
                 })
                 .ToList();
@@ -134,11 +134,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             public double Area { get; set; }
 
             public double StreetLevel { get; set; }
-
-            public string StorageType { get; set; }
-
+            
             public double StreetStorageArea { get; set; }
+
             public CompartmentShape CompartmentShape { get; set; }
+
+            public CompartmentStorageType CompartmentStorageType { get; set; }
         }
     }
 }

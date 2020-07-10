@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Surface water level")]
-        [PropertyOrder(9)]
+        [PropertyOrder(10)]
         [DynamicVisible]
         public double SurfaceWaterLevel
         {
@@ -100,6 +100,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 if (outlet == null) return;
                 outlet.SurfaceWaterLevel = value;
             }
+        }
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Compartment Storage Type")]
+        [PropertyOrder(11)]
+        public CompartmentStorageType CompartmentStorageType
+        {
+            get => data.CompartmentStorageType;
+            set => data.CompartmentStorageType = value;
         }
 
         [DynamicVisibleValidationMethod]
