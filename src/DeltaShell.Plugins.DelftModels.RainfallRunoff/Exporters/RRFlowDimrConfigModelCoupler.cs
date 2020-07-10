@@ -86,10 +86,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         private static string GetItemString(IHydroObject hydroObject, string quantity)
         {
             var category = GetItemCategory(hydroObject);
-            var suffix = hydroObject is Catchment ? "_boundary" : "";
-
+            
             return category != null
-                ? $"{category}/{hydroObject.Name}{suffix}/{quantity}"
+                ? $"{category}/{hydroObject.Name}/{quantity}"
                 : null;
         }
 
