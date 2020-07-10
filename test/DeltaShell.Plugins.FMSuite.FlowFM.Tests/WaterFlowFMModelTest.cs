@@ -345,27 +345,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(dataItems.Count, Is.EqualTo(1));
 
             Assert.That(dataItems[0].Name, Is.EqualTo(weir.Name));
-            Assert.That(dataItems[0].Tag, Is.EqualTo(KnownStructureProperties.CrestLevel));
+            Assert.That(dataItems[0].Tag, Is.EqualTo("CrestLevel"));
             Assert.That(dataItems[0].Role, Is.EqualTo(DataItemRole.Input));
 
             var valueConverter = (WaterFlowFMFeatureValueConverter)dataItems[0].ValueConverter;
             Assert.That(valueConverter.Location, Is.EqualTo(weir));
             Assert.That(valueConverter.Model, Is.EqualTo(model));
-            Assert.That(valueConverter.ParameterName, Is.EqualTo(KnownStructureProperties.CrestLevel));
+            Assert.That(valueConverter.ParameterName, Is.EqualTo("CrestLevel"));
 
             // change weir formula
             weir.WeirFormula = new GeneralStructureWeirFormula();
             dataItems = model.GetChildDataItems(weir).ToList();
             Assert.That(dataItems.Count, Is.EqualTo(5));
 
-            var generalStructureDataItems = new List<string>
-            {
-                KnownStructureProperties.CrestLevel,
-                KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
-                KnownStructureProperties.GateLowerEdgeLevel,
-                KnownGeneralStructureProperties.CrestWidth.GetDescription(),
-                KnownGeneralStructureProperties.CrestLevel.GetDescription()
-            };
+            var generalStructureDataItems = (TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowFMModelDataSet), "CreateGeneralStructuresNames") as Dictionary<string, string>)?.Values.ToList();
+
+
             Assert.That(generalStructureDataItems.Count == dataItems.Count);
 
             for (var i = 0; i < dataItems.Count; ++i)

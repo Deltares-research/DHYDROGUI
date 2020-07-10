@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             if (e.PropertyName == nameof(Feature.Name))
             {
                 Name = Feature.Name + " data";
-                Function.Name = Name;
+                if (Function != null) Function.Name = Name;
             }
         }
 
