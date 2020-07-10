@@ -1,6 +1,6 @@
 <Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   
-  <?ifdef dHydroConfig?>
+  <?ifdef EnableDHydroDelft3DFMVersionNaming?>
   <util:XmlFile Id="SetKey2$(var.GUICONFIGFILE)"
                 Action="setValue"
                 ElementPath="/configuration/appSettings/add[\[]@key=&quot;applicationName&quot;[\]]/@value"
@@ -12,12 +12,6 @@
                 ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="$(var.DHydroFullVersion)"/>
-  
-  <util:XmlFile Id="SetKey20$(var.GUICONFIGFILE)"
-                Action="setValue"
-                ElementPath="/configuration/userSettings/DeltaShell.Gui.Properties.Settings/setting[\[]@name=&quot;ShowStartUpScreen&quot;[\]]/value"
-                File="[#$(var.GUICONFIGFILE)]"
-                Value="False"/>
   <?else?>
   <util:XmlFile Id="SetKey2$(var.GUICONFIGFILE)"
                 Action="setValue"
@@ -31,6 +25,15 @@
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="$(var.FullProductNameVersion)"/>
   <?endif?>
+
+  <?ifdef ShowStartUpScreen?>
+  <util:XmlFile Id="SetKey20$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/userSettings/DeltaShell.Gui.Properties.Settings/setting[\[]@name=&quot;ShowStartUpScreen&quot;[\]]/value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.ShowStartUpScreen)"/>
+  <?endif?>
+
   <util:XmlFile Id="SetKey6$(var.GUICONFIGFILE)"
                 Action="setValue"
                 ElementPath="/configuration/appSettings/add[\[]@key=&quot;copyright&quot;[\]]/@value"

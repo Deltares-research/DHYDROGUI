@@ -48,8 +48,9 @@
       
                         
   Optional variables:
-  - dHydroConfig:                   Enable to use the d-hydro specific setup configuration. You must define the following variables: var.ApplicationName
-                                    and var.PublicReleaseVersion.
+  - ShowStartUpScreen:               If you set this to false, the start up screen will not be shown. 
+  - EnableDHydroDelft3DFMVersionNaming: Enable to use the d-hydro specific setup configuration. You must define the following variables: var.ApplicationName
+                                        and var.PublicReleaseVersion.
   - noDeltaShellFrameworkManual:    If you set this to true the DeltaShell Framework user manual will not(!) be included in the install, neither the shortcut.
   - customizationwxi:               If you want to add extra files to the bin folder where Deltashell.Gui.exe is located, add them here.
                                     It has the same layout as manualswxi.
@@ -103,7 +104,7 @@
   <?define FullProductVersion="$(var.ReleaseVersion)" ?>
   <?define FullProductNameVersion="$(var.ReleaseVersion)" ?>
 
-  <?ifdef var.dHydroConfig?>
+  <?ifdef var.EnableDHydroDelft3DFMVersionNaming?>
     <?define DHydroApplicationName="$(var.ApplicationName)" ?>
     <?define DHydroFullVersion="$(var.PublicReleaseVersion)" ?>
 

@@ -10,7 +10,9 @@
 
   <?define noDeltaShellFrameworkManual="true"?>
 
-  <?define dHydroConfig="true"?>
+  <?define EnableDHydroDelft3DFMVersionNaming="true"?>
+
+  <?define ShowStartUpScreen="False"?>
 
   <?ifdef var.RWS?>
   <?define Delft3DPackageName="D-HYDRO"?>
