@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
@@ -105,7 +108,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                         break;
                     }
                 }
-
+                //scrambled ini file compare... currently only doing it for csloc..
+                if (Path.GetFileNameWithoutExtension(expectedFlowFmFile)
+                    .Equals("crsloc", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var readCategories = new DelftIniReader().ReadDelftIniFile(expectedFlowFmFile);
+                    new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(CrossSectionRegion.IniHeader)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)), expectedFlowFmFile);
+                    readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
+                    new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(CrossSectionRegion.IniHeader)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)), actualFlowFmFile);
+                }
                 identical = CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out var errorMessage) && identical;
 
                 if (!string.IsNullOrEmpty(errorMessage))
