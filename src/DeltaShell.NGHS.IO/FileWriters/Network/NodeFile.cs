@@ -90,8 +90,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                         Area = GetPropertyValueAsDouble(KnownPropertyNames.Area, category),
                         StreetLevel = GetPropertyValueAsDouble(KnownPropertyNames.StreetLevel, category),
                         StreetStorageArea = GetPropertyValueAsDouble(KnownPropertyNames.StreetStorageArea, category),
-                        CompartmentShape = (CompartmentShape)Enum.Parse(typeof(CompartmentShape), category.ReadProperty<string>(KnownPropertyNames.CompartmentShape)),
-                        CompartmentStorageType = (CompartmentStorageType)Enum.Parse(typeof(CompartmentStorageType), category.ReadProperty<string>(KnownPropertyNames.StorageType))
+                        CompartmentShape = (CompartmentShape)Enum.Parse(typeof(CompartmentShape), category.ReadProperty<string>(KnownPropertyNames.CompartmentShape, true, "Unknown")),
+                        CompartmentStorageType = (CompartmentStorageType)Enum.Parse(typeof(CompartmentStorageType), category.ReadProperty<string>(KnownPropertyNames.StorageType, true, "Reservoir"))
                     };
                 })
                 .ToList();

@@ -37,7 +37,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public static string GetRelativePathFromCaseToSobekFixed(string absoluteFilePath, string caseDataPath)
         {
-            return Path.GetFullPath(Path.GetDirectoryName(caseDataPath) + @"\..\..\FIXED\" + Path.GetFileName(absoluteFilePath));
+            if (Directory.Exists(Path.Combine(Path.GetDirectoryName(caseDataPath), @"\..\..\FIXED\")))
+                return Path.GetFullPath(Path.GetDirectoryName(caseDataPath) + @"\..\..\FIXED\" + Path.GetFileName(absoluteFilePath));
+            return Path.GetFullPath(Path.GetDirectoryName(caseDataPath) + @"\..\FIXED\" + Path.GetFileName(absoluteFilePath));
         }
     }
 }
