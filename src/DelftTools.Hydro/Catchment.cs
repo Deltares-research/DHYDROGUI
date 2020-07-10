@@ -187,6 +187,8 @@ namespace DelftTools.Hydro
         private IPoint CalculateInteriorPointCore()
         {
             //do not touch unless you know what you're doing!!
+            if (Geometry?.Coordinates == null) return new Point(0,0);
+            
             if (Geometry.Coordinates.Length > 150) //performance
             {
                 return Geometry.Centroid;

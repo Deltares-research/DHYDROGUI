@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             }
             finally
             {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(Path.Combine(path)));
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
             }
         }
 
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             }
             finally
             {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(Path.Combine(path)));
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
             }
         }
 
@@ -401,7 +401,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             }
             finally
             {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(Path.Combine(path)));
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
             }
         }
 
@@ -510,7 +510,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             }
             finally
             {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(Path.Combine(path)));
+                FileUtils.DeleteIfExists(Path.GetDirectoryName(path));
             }
         }
         

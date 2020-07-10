@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
             data.HydrographValues.CopyTo(hydrographValues, 0);
 
             Writer.AddSacramento(data.Catchment.Name, data.CalculationArea, areaParameters, capacities,
-                                   data.HydrographStep, hydrographValues, data.MeteoStationName, data.Catchment.InteriorPoint.X, data.Catchment.InteriorPoint.Y);
+                                   data.HydrographStep, hydrographValues, data.MeteoStationName, data.Catchment?.InteriorPoint?.X ?? 0d, data.Catchment?.InteriorPoint?.Y ?? 0d);
         }
     }
 }
