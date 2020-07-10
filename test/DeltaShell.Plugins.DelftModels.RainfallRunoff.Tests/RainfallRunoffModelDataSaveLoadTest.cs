@@ -911,12 +911,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
-        [Ignore("Hidde kan jij hier naar kijken")]
         public void SaveLoadHydroLink()
         {
             var catchment = new Catchment()
             {
-                CatchmentType = CatchmentType.GreenHouse,
+                CatchmentType = CatchmentType.Paved,
                 Geometry =
                     new Polygon(
                         new LinearRing(new[]
