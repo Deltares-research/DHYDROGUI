@@ -48,7 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-795
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         public void WaveModelApiInitAndRunTest()
         {
             if (!Environment.Is64BitProcess)

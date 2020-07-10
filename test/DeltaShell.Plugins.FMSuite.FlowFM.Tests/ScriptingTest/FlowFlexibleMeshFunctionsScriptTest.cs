@@ -47,7 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
         }
 
         [Test]
-        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         [Category(TestCategory.Wpf)]
         [Category(TestCategory.Jira)] // D3DFMIQ-1713
         public void ExpandingGridShouldWork()

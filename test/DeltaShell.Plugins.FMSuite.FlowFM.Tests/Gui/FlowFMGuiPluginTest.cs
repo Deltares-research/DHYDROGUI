@@ -81,7 +81,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Category(TestCategory.Jira)] // D3DFMIQ-614
-        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         [Category(TestCategory.DataAccess)]
         [TestCase(@"ReloadGrid\netfile_projected_unassigned.nc", 0, @"ReloadGrid\netfile_projected_unassigned.nc", 0)]
         [TestCase(@"ReloadGrid\netfile_projected_unassigned.nc", 0, @"ReloadGrid\netfile_spherical_assigned.nc", 4326)]  // wgs84

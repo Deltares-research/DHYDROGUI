@@ -13,7 +13,6 @@ namespace DeltaShell.Dimr.IntegrationTests
 
         [Test]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-816
-        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         public void GivenDimrApiWhenFinalizeThenNoExceptionThrown()
         {
             using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
@@ -67,7 +66,6 @@ namespace DeltaShell.Dimr.IntegrationTests
 
         [Test]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-816
-        [Ignore("Temporary ignoring all jira tests so I have a category all for myself.")]
         public void GivenDimrApiWhenUpdateThenNoExceptionThrown()
         {
             using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
