@@ -253,6 +253,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var outletCompartmentContextMenuMapTool = new OutletCompartmentContextMenuMapTool();
             AddMapTool(outletCompartmentContextMenuMapTool);
 
+            var addNwrwCatchmentContextMenuMapTool = new AddNWRWCatchmentContextMenuMapTool();
+            AddMapTool(addNwrwCatchmentContextMenuMapTool);
+
             // DrainageBasin
             Func<ILayer, bool> isCatchmentLayer = FeatureTypeLayerFilter<Catchment>;
             var newLineToolCatchment = new NewLineTool(isCatchmentLayer, AddCatchmentToolName)

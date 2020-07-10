@@ -2685,6 +2685,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/HydroNetworkCopyAndPasteHelper.
 src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/HydroRegionEditorHelper.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/NetworkCoordinateConvertor.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/PropertyWindowCategoryHelper.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/AddNWRWCatchmentContextMenuMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/CopyBranchFeaturesMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/ExportCrossSectionToCsvMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/HydroNetworkEditorMapToolHelper.cs -text
@@ -37662,6 +37663,7 @@ test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Providers/HydroAreaFeature
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Providers/HydroNetworkFeatureCollectionTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Snapping/ChannelSnapRuleTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Snapping/CrossSectionSnapRuleTest.cs -text
+test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Tools/AddNWRWCatchmentContextMenuMapToolTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Tools/Feature2DPointToolTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Tools/HydroRegionEditorMapToolTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Tools/ImportBranchFeaturesFromSelectedFeaturesMapToolTest.cs -text
