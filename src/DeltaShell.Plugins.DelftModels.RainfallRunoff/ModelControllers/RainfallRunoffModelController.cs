@@ -224,16 +224,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
         private void SendConceptsToModelAndUpdateLinks()
         {
+            var conceptDataNames = new List<string>();
             foreach (var conceptData in modelDataCache)
             {
                 var controller = conceptControllers.FirstOrDefault(cc => cc.CanHandle(conceptData));
 
                 if (controller == null)
                 {
-                    log.InfoFormat("No model controller found for concept data {0}", conceptData.Name);
+                    conceptDataNames.Add(conceptData.Name);
                     continue;
                 }
                 controller.AddArea(model, conceptData, links, allRRNodes);
+            }
+
+            if (conceptDataNames.Any())
+            {
+                log.InfoFormat("No model controller found for concept data {0}", string.Join(",", conceptDataNames));
             }
         }
 
