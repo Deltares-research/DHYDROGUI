@@ -1,13 +1,16 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
 {
     class CSDYZDefinitionReader : CrossSectionDefinitionReaderBase
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CSDYZDefinitionReader));
         public override ICrossSectionDefinition ReadDefinition(IDelftIniCategory category)
         {
             var crossSectionDefinition = new CrossSectionDefinitionYZ();
@@ -29,6 +32,20 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
             
             for (int i = 0; i < yList.Count; i++)
             {
+                if (i > 0)
+                {
+                    if (yList[i] < yList[i - 1])
+                    {
+                        var errorMessage = "y-values are decreasing for " + crossSectionDefinition.Name;
+                        throw new FileReadingException(errorMessage);
+                    }
+                    if (Math.Abs(yList[i] - yList[i - 1]) < 1e-5)
+                    {
+                        var warningMessage = $"cross section definition {crossSectionDefinition.Name}: y-value {yList[i]} not increasing, incremented with .01 millimeter";
+                        Log.Warn(warningMessage);
+                        yList[i] += 1e-6;
+                    }
+                }
                 try
                 {
                     table.AddCrossSectionYZRow(yList[i], zList[i]);
