@@ -34,8 +34,14 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <returns></returns>
         public string GetPropertyValue(string name, string defaultValue = null)
         {
-            var prop = Properties.FirstOrDefault(p => p.Name == name);
-            return prop != null ? prop.Value : defaultValue;
+            foreach (var property in Properties)
+            {
+                if (property.Name.ToLower().Equals(name.ToLower()))
+                {
+                    return property.Value;
+                }
+            }
+            return defaultValue;
         }
 
         /// <summary>
@@ -45,7 +51,15 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <returns></returns>
         public IEnumerable<string> GetPropertyValues(string name)
         {
-            return Properties.Where(p => p.Name == name).Select(p => p.Value);
+            IList<string> foundProperties = new List<string>();
+            foreach (var property in Properties)
+            {
+                if (property.Name.ToLower().Equals(name.ToLower()))
+                {
+                    foundProperties.Add(property.Value);
+                }
+            }
+            return foundProperties;
         }
 
         public void RemoveProperty(DelftIniProperty property)
