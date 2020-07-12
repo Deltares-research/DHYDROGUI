@@ -6436,6 +6436,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/2contour_hang_testcase/sl
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/2contour_hang_testcase/sluice_sal.pli -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/2contour_hang_testcase/sluice_sal_0001.tim -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/2contour_hang_testcase/thindam_thd.pli -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/BoundsCaseInsensitive.bc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/MixedQuantities.bc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/MixedQuantities.ext -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/MixedQuantities.pli -text

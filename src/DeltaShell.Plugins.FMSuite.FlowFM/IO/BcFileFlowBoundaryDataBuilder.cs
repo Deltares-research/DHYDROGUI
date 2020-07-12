@@ -725,7 +725,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static bool TryParseForcingType(BcBlockData blockData, out ForcingTypeDefinition forcingType)
         {
-            return ForcingTypeDefinitions.TryGetValue(blockData.FunctionType, out forcingType);
+            return ForcingTypeDefinitions.TryGetValue(blockData.FunctionType.ToLower(), out forcingType);
         }
 
         private static bool TryParseSeriesIndex(BcBlockData blockData, out int index)

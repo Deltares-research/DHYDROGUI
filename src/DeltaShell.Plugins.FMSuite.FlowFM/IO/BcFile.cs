@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public const string BlockKey = "[forcing]";
         private const string SupportPointKey = "Name";
-        private const string ForcingTypeKey = "Function";
+        private const string FunctionTypeKey = "Function";
         private const string SeriesIndexKey = "FunctionIndex";
         public const string QuantityKey = "Quantity";
         private const string UnitKey = "Unit";
@@ -228,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             
             WriteKeyValuePairLine(SupportPointKey, block.SupportPoint);
             
-            WriteKeyValuePairLine(ForcingTypeKey, block.FunctionType);
+            WriteKeyValuePairLine(FunctionTypeKey, block.FunctionType);
             
             if (block.SeriesIndex != null)
             {
@@ -301,7 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var line = GetNextLine();
                 while (line != null)
                 {
-                    if (line.StartsWith(BlockKey))
+                    if (LineIsStartOfNewBlock(line))
                     {
                         var block = ReadDataBlock(out line);
                         if (block != null)
@@ -361,43 +361,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     break;
                 }
-                if (split[0] == SupportPointKey)
+                if (String.Equals(split[0], SupportPointKey, StringComparison.OrdinalIgnoreCase))
                 {
                     supportPointName = split[1];
                 }
-                if (split[0] == ForcingTypeKey)
+                if (String.Equals(split[0], FunctionTypeKey, StringComparison.OrdinalIgnoreCase))
                 {
                     forcingType = split[1];
                 }
-                if (split[0] == TimeInterpolationKey)
+                if (String.Equals(split[0], TimeInterpolationKey, StringComparison.OrdinalIgnoreCase))
                 {
                     timeInterpolationType = split[1];
                 }
-                if (split[0] == VerticalPositionTypeKey)
+                if (String.Equals(split[0], VerticalPositionTypeKey, StringComparison.OrdinalIgnoreCase))
                 {
                     verticalPositionType = split[1];
                 }
-                if (split[0] == VerticalPositionSpecKey)
+                if (String.Equals(split[0], VerticalPositionSpecKey, StringComparison.OrdinalIgnoreCase))
                 {
                     verticalPositionSpecification = split[1];
                 }
-                if (split[0] == VerticalIntepolationKey)
+                if (String.Equals(split[0], VerticalIntepolationKey, StringComparison.OrdinalIgnoreCase))
                 {
                     verticalInterpolationType = split[1];
                 }
-                if (split[0] == SeriesIndexKey)
+                if (String.Equals(split[0], SeriesIndexKey, StringComparison.OrdinalIgnoreCase))
                 {
                     seriesIndex = split[1];
                 }
-                if (split[0] == OffsetKey)
+                if (String.Equals(split[0], OffsetKey, StringComparison.OrdinalIgnoreCase))
                 {
                     offset = split[1];
                 }
-                if (split[0] == FactorKey)
+                if (String.Equals(split[0], FactorKey, StringComparison.OrdinalIgnoreCase))
                 {
                     factor = split[1];
                 }
-                if (split[0] == QuantityKey)
+                if (String.Equals(split[0], QuantityKey, StringComparison.OrdinalIgnoreCase))
                 {
                     if (quantityData != null)
                     {
@@ -405,15 +405,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                     if (split.Length == 2)
                     {
-                        quantityData = new BcQuantityData {Quantity = split[1]};
+                        quantityData = new BcQuantityData { Quantity = split[1] };
                     }
                 }
-                if (split[0] == UnitKey)
+                if (String.Equals(split[0], UnitKey, StringComparison.OrdinalIgnoreCase))
                 {
                     if (quantityData == null) continue;
                     quantityData.Unit = split[1];
                 }
-                if (split[0] == VerticalPositionKey)
+                if (String.Equals(split[0], VerticalPositionKey, StringComparison.OrdinalIgnoreCase))
                 {
                     if (quantityData == null) continue;
                     quantityData.VerticalPosition = split[1];
@@ -426,7 +426,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             while (line != null)
             {
-                if (line.StartsWith(BlockKey)) break;
+                if (LineIsStartOfNewBlock(line)) break;
                 var columns = line.Split(new[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
                 if(columns.Length<quantityDataList.Count)
                 {
@@ -458,6 +458,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         Factor = factor,
                         Quantities = quantityDataList
                     };
+        }
+
+        private static bool LineIsStartOfNewBlock(string line)
+        {
+            return line[0] == '[' && line.Substring(0, BlockKey.Length).ToLower().Equals(BlockKey);
         }
 
         public void Write(IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories, string file, string path)

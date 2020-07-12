@@ -1,0 +1,65 @@
+[General]
+fileVersion = 1.01
+fileType = boundConds
+
+[Forcing]
+name       = 140703_391887
+function   = timeSeries
+timeInterpolation = linear
+quantity   = time
+unit       = minutes since 2020-07-08 00:00:00
+quantity   = dischargebnd
+unit       = m3/s
+    0.000000     0.000000 
+   60.000000     0.253075 
+  120.000000     0.166057 
+  180.000000     0.167224 
+  240.000000     0.515612 
+  300.000000     1.003980 
+  360.000000     1.219135 
+  420.000000     1.314666 
+  480.000000     1.445117 
+  540.000000     1.785497 
+  600.000000     2.018757 
+  660.000000     2.149379 
+  720.000000     2.291241 
+  780.000000     2.433828 
+  840.000000     2.616809 
+  900.000000     2.728751 
+  960.000000     2.826193 
+
+[forcing]
+name       = 141134_395446
+function   = timeseries
+timeinterpolation = Linear
+quantity   = time
+unit       = minutes since 2000-01-01 00:00:00
+quantity   = waterlevelbnd
+unit       = m
+    0.000000     7.470000 
+
+[Forcing]
+Name       = nieuw9
+Function   = TimeSeries
+Timeinterpolation = linear
+Quantity   = time
+Unit       = minutes since 2000-02-03 07:00:00
+Quantity   = dischargebnd
+Unit       = m3/s
+    0.000000     0.000000 
+   60.000000     0.053760 
+  120.000000     0.053760 
+  180.000000     0.053760 
+  240.000000     0.053760 
+  300.000000     0.053760 
+  360.000000     0.053760 
+  420.000000     0.053760 
+  480.000000     0.053760 
+  540.000000     0.053760 
+  600.000000     0.059600 
+  660.000000     0.069840 
+  720.000000     0.074210 
+  780.000000     0.073650 
+  840.000000     0.072570 
+  900.000000     0.071480 
+  960.000000     0.070450

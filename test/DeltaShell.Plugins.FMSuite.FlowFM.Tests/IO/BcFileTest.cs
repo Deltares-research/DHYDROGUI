@@ -154,5 +154,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual("2", quantity.VerticalPosition);
             Assert.AreEqual(new[] { "0", "0" }, quantity.Values);
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void BcFileFieldsAreCaseInsensitive()
+        {
+            var filePath = TestHelper.GetTestFilePath(@"BcFiles\BoundsCaseInsensitive.bc");
+            var fileReader = new BcFile();
+            var dataBlocks = fileReader.Read(filePath).ToList();
+            Assert.AreEqual(3, dataBlocks.Count());
+
+            var firstBlock = dataBlocks[0];
+            Assert.AreEqual("140703_391887", firstBlock.SupportPoint);
+            Assert.AreEqual("timeSeries", firstBlock.FunctionType);
+            Assert.AreEqual("linear", firstBlock.TimeInterpolationType);
+            Assert.AreEqual(2, firstBlock.Quantities.Count);
+
+            var quantity1 = firstBlock.Quantities[0];
+            Assert.AreEqual("time", quantity1.Quantity);
+            Assert.AreEqual("minutes since 2020-07-08 00:00:00", quantity1.Unit);
+            Assert.AreEqual("60.000000", quantity1.Values[1]);
+
+            var quantity2 = firstBlock.Quantities[1];
+            Assert.AreEqual("dischargebnd", quantity2.Quantity);
+            Assert.AreEqual("m3/s", quantity2.Unit);
+            Assert.AreEqual("0.253075", quantity2.Values[1]);
+
+            var thirdBlock = dataBlocks[2];
+            Assert.AreEqual("nieuw9", thirdBlock.SupportPoint);
+            Assert.AreEqual("TimeSeries", thirdBlock.FunctionType);
+            Assert.AreEqual("linear", thirdBlock.TimeInterpolationType);
+            Assert.AreEqual(2, thirdBlock.Quantities.Count);
+
+            quantity1 = thirdBlock.Quantities[0];
+            Assert.AreEqual("time", quantity1.Quantity);
+            Assert.AreEqual("minutes since 2000-02-03 07:00:00", quantity1.Unit);
+            Assert.AreEqual("240.000000", quantity1.Values[4]);
+
+            quantity2 = thirdBlock.Quantities[1];
+            Assert.AreEqual("dischargebnd", quantity2.Quantity);
+            Assert.AreEqual("m3/s", quantity2.Unit);
+            Assert.AreEqual("0.074210", quantity2.Values[12]);
+        }
     }
 }

@@ -2,7 +2,9 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -28,6 +30,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Setup()
         {
             if (Map.CoordinateSystemFactory == null) Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
+        [Test]
+        public void CheckCaseInsensitivity()
+        {
+            var bcFile = TestHelper.GetTestFilePath(@"BcFiles/BoundsCaseInsensitive.bc");
+            var importer = new BcFileImporter { DeleteDataBeforeImport = false, FilePaths = new[] { bcFile } };
+
+
+            var bcSet1 = CreateDummyFlowBoundaryConditionSet("140703_391887");
+            var bcSet2 = CreateDummyFlowBoundaryConditionSet("141134_395446");
+            var bcSet3 = CreateDummyFlowBoundaryConditionSet("nieuw9");
+            IEventedList<BoundaryConditionSet> boundaryConditionSets = new EventedList<BoundaryConditionSet>(new [] { bcSet1, bcSet2, bcSet3 });
+
+            importer.ImportItem(null, boundaryConditionSets);
+
+            var bcData1 = bcSet1.BoundaryConditions[0];
+            Assert.AreEqual(BoundaryConditionDataType.TimeSeries, bcData1.DataType);
+            IFunction function1 = (IFunction) ((EventedList<DelftTools.Functions.IFunction>)bcData1.Data)[0];
+            Assert.AreEqual("Discharge" , bcData1.VariableName);
+            Assert.AreEqual(InterpolationType.Linear, function1.Components[0].InterpolationType) ;
+
+            var bcData2 = bcSet2.BoundaryConditions[0];
+            Assert.AreEqual(BoundaryConditionDataType.TimeSeries, bcData2.DataType);
+            IFunction function2 = (IFunction)((EventedList<DelftTools.Functions.IFunction>)bcData2.Data)[0];
+            Assert.AreEqual("WaterLevel", bcData2.VariableName);
+            Assert.AreEqual(InterpolationType.Linear, function2.Components[0].InterpolationType);
+
+            var bcData3 = bcSet3.BoundaryConditions[0];
+            Assert.AreEqual(BoundaryConditionDataType.TimeSeries, bcData3.DataType);
+            IFunction function3 = (IFunction)((EventedList<DelftTools.Functions.IFunction>)bcData3.Data)[0];
+            Assert.AreEqual("Discharge", bcData3.VariableName);
+            Assert.AreEqual(InterpolationType.Linear, function3.Components[0].InterpolationType);
+        }
+
+        private static BoundaryConditionSet CreateDummyFlowBoundaryConditionSet(string locationName)
+        {
+            Geometry geom = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1)});
+            var feature2D = new Feature2D {Name = locationName, Geometry = geom};
+            var flowBc = new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer,
+                BoundaryConditionDataType.Constant) {Feature = feature2D};
+            BoundaryConditionSet bcSet = new BoundaryConditionSet() {Feature = feature2D};
+            return bcSet;
         }
 
         [Test]
