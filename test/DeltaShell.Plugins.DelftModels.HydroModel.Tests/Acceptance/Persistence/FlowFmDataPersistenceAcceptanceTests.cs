@@ -27,8 +27,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private static readonly object[] AcceptanceTests =
         {
             new object[] {"Groesbeek", 722}, // TODO: Add preconditions when the model can be correctly imported
-            //new object[] { "Hydamo_DBV", 0}, // TODO: Add preconditions when the model can be correctly imported
-            //new object[] { "Hydamo_MoergestelBroek", 0} // TODO: Add preconditions when the model can be correctly imported
+            new object[] { "Hydamo_DBV", 0}, // TODO: Add preconditions when the model can be correctly imported
+            new object[] { "Hydamo_MoergestelBroek", 0} // TODO: Add preconditions when the model can be correctly imported
         };
 
         [TestFixtureSetUp]
