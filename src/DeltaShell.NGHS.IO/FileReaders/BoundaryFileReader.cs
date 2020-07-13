@@ -192,50 +192,52 @@ namespace DeltaShell.NGHS.IO.FileReaders
             if (saltBoundaryQuantity.Any()) return;
 
             var function = boundaryCategory.ReadProperty<string>(BoundaryRegion.Function.Key);
-            switch (function)
+            if (function.ToLower().Equals(BoundaryRegion.FunctionStrings.Constant.ToLower()))
             {
-                case BoundaryRegion.FunctionStrings.Constant:
-                    switch (boundaryCategory.Table[0].Quantity.Value)
-                    {
-                        case BoundaryRegion.QuantityStrings.WaterDischarge:
-                            boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
-                            boundaryCondition.Flow = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Name);
-                            break;
-                        case BoundaryRegion.QuantityStrings.WaterLevel:
-                            boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
-                            boundaryCondition.WaterLevel = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Name);
-                            var manhole = boundaryCondition.Node as Manhole;
-                            if (manhole != null)
+                switch (boundaryCategory.Table[0].Quantity.Value)
+                {
+                    case BoundaryRegion.QuantityStrings.WaterDischarge:
+                        boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
+                        boundaryCondition.Flow = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Name);
+                        break;
+                    case BoundaryRegion.QuantityStrings.WaterLevel:
+                        boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+                        boundaryCondition.WaterLevel = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Name);
+                        var manhole = boundaryCondition.Node as Manhole;
+                        if (manhole != null)
+                        {
+                            var outletCandidate = manhole.GetOutletCandidate();
+                            if (outletCandidate != null)
                             {
-                                var outletCandidate = manhole.GetOutletCandidate();
-                                if (outletCandidate != null)
-                                {
-                                    var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
-                                    outlet.SurfaceWaterLevel = boundaryCondition.WaterLevel;
-                                } 
+                                var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
+                                outlet.SurfaceWaterLevel = boundaryCondition.WaterLevel;
                             }
-                            break;
-                    }
-                    break;
-                case BoundaryRegion.FunctionStrings.QhTable:
-                    boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
-                    SetCategoryValuesToFeatureData(boundaryCondition, boundaryCategory, ConvertStringsToDoubles, ConvertStringsToDoubles);
-                    break;
-                case BoundaryRegion.FunctionStrings.TimeSeries:
-                    switch (boundaryCategory.Table[1].Quantity.Value)
-                    {
-                        case BoundaryRegion.QuantityStrings.WaterDischarge:
-                            boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
-                            break;
-                        case BoundaryRegion.QuantityStrings.WaterLevel:
-                            boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
-                            break;
-                    }
-                    SetCategoryValuesToFeatureData(boundaryCondition, boundaryCategory, GetDateTimesValues, ConvertStringsToDoubles);
-                    break;
-                default:
-                    var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", boundaryCategory.Name, BoundaryRegion.Function.Key, Environment.NewLine);
-                    throw new BoundaryConditionReadingException(errorMessage);
+                        }
+                        break;
+                }
+            }
+            else if (function.ToLower().Equals(BoundaryRegion.FunctionStrings.QhTable.ToLower()))
+            {
+                boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
+                SetCategoryValuesToFeatureData(boundaryCondition, boundaryCategory, ConvertStringsToDoubles, ConvertStringsToDoubles);
+            }
+            else if (function.ToLower().Equals(BoundaryRegion.FunctionStrings.TimeSeries.ToLower()))
+            {
+                switch (boundaryCategory.Table[1].Quantity.Value)
+                {
+                    case BoundaryRegion.QuantityStrings.WaterDischarge:
+                        boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
+                        break;
+                    case BoundaryRegion.QuantityStrings.WaterLevel:
+                        boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
+                        break;
+                }
+                SetCategoryValuesToFeatureData(boundaryCondition, boundaryCategory, GetDateTimesValues, ConvertStringsToDoubles);
+            }
+            else
+            {
+                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", boundaryCategory.Name, BoundaryRegion.Function.Key, Environment.NewLine);
+                throw new BoundaryConditionReadingException(errorMessage);
             }
         }
 

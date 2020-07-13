@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Helpers
                 return bytesRead.All(c => // Are all the characters either a:
                         c == (char)10  // New line
                         || c == (char)13 // Carriage Return
-                        || c == (char)11 // Tab
+                        || c == (char)9 // Tab
                         || !char.IsControl(c) // Non-control (regular) character
                 );
             }
