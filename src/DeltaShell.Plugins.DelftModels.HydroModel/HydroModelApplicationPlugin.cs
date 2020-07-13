@@ -108,13 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private void ApplicationRemoveProjectExporter()
         {
             var exporters = (List<IFileExporter>)Application.FileExporters;
-            foreach (IFileExporter exporter in exporters.ToList())
-            {
-                if (exporter is IProjectItemExporter)
-                {
-                    exporters.Remove(exporter);
-                }
-            }
+            exporters.RemoveAll(e => e is IProjectItemExporter);
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
