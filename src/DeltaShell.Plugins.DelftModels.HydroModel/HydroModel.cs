@@ -949,7 +949,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 Name = subRegion.Name,
                 Parent = parent,
                 ValueType = typeof(IHydroRegion),
-                ValueConverter = new AggregationValueConverter(subRegion),
+                Value = subRegion,
                 Owner = parent.Owner
             };
         }

@@ -32,6 +32,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
     public static class BoundaryRegion
     {
         public const string BoundaryHeader = "Boundary";
+        public const string LateralHeader = "Lateral";
         public const string LateralDischargeHeader = "LateralDischarge";
 
         public static readonly ConfigurationSetting NodeId = new ConfigurationSetting(key: "nodeId", description: "Node on which the boundary is located");

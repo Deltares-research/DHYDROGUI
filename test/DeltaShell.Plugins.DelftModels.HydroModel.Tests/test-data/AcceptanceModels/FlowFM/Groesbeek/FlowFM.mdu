@@ -1,15 +1,16 @@
-# Generated on 2019-01-15 09:33:38
-# Deltares,Delft3D FM 2018 Suite Version 1.5.0.41120, D-Flow FM Version Unknown
+# Generated on 2020-01-31 09:25:44
+# Deltares,Delft3D FM 2018 Suite Version 1.5.0.48129, D-Flow FM Version 1.2.90.65708M
 
-[model]
+[General]
 Program           = D-Flow FM
-Version           = Unknown
-MDUFormatVersion  = 1.02
-GuiVersion        = 1.5.0.41120
+Version           = 1.2.90.65708M
+fileType          = modelDef
+fileVersion       = 1.09
+GuiVersion        = 1.5.0.48129
 AutoStart         = 0
+PathsRelativeToParent= 0
 
 [geometry]
-Dxmin1D           = 1.0 # Minimum 1D link length, (except for duikers)
 NetFile           = FlowFM_net.nc
 BathymetryFile    =
 DryPointsFile     =
@@ -23,25 +24,29 @@ StructureFile     = structures.ini
 VertplizFile      =
 CrossDefFile      = crsdef.ini
 CrossLocFile      = crsloc.ini
-FrictFile         = roughness-Main.ini; roughness-Sewer.ini
-NodeFile          = nodeFile.ini
+FrictFile         = roughness-Main.ini;roughness-Sewer.ini
+StorageNodeFile   = nodeFile.ini
+BranchFile        = branches.gui
 RoofsFile         =
-LeveeBreachFile   =
 ProfdefxyzFile    =
+IniFieldFile      =
 Uniformwidth1D    = 0.1
 ManholeFile       =
-WaterLevIni       = -15
+WaterLevIni       = 0
 Bedlevuni         = -5
 Bedslope          = 0
-BedlevType        = 3
+BedlevType        = 1
 Blmeanbelow       = -999
 Blminabove        = -999
 PartitionFile     =
 AngLat            = 0
 AngLon            = 0
 Conveyance2D      = -1
-Nonlin1D          = 2
 Nonlin2D          = 0
+Nonlin1D          = 3
+Slotw2D           = 0
+Slotw1D           = 0.001
+Dxmin1D           = 1
 Sillheightmin     = 0
 Makeorthocenters  = 0
 Dcenterinside     = 1
@@ -52,11 +57,11 @@ Kmx               = 0
 Layertype         = 1
 Numtopsig         = 0
 SigmaGrowthFactor = 1
-Slotw1d           = 0.01
+
 
 [numerics]
-CFLMax            = 0.95
-AdvecType         = 33
+CFLMax            = 0.7
+AdvecType         = 0
 TimeStepType      = 2
 Limtyphu          = 0
 Limtypmom         = 4
@@ -72,8 +77,9 @@ Fixedweirtopwidth = 3
 Fixedweirtopfrictcoef= -999
 Fixedweirtalud    = 4
 Izbndpos          = 0
-Tlfsmo            = 0
+Tlfsmo            = 60
 Slopedrop2D       = 0
+Drop1D       = 1					 
 Chkadvd           = 0.1
 Teta0             = 0.55
 Qhrelax           = 0.01
@@ -145,21 +151,21 @@ Gammax            = 1
 RefDate           = 20010101
 Tzone             = 0
 DtUser            = 60
-DtNodal           = 60
-DtMax             = 600
-DtInit            = 1.0
+DtNodal           =
+DtMax             = 60
+DtInit            = 1
 Tunit             = S
 TStart            = 0
 TStop             = 7200
+AutoTimestepNoStruct= 1
 
 [restart]
-RestartFile       =
-RestartDateTime   = 20190115
+RestartFile       = 
+RestartDateTime   = 
 
 [external forcing]
 ExtForceFile      =
 ExtForceFileNew   = FlowFM_bnd.ext
-MeteoExtForceFileNew=
 
 [trachytopes]
 TrtRou            = N
@@ -181,21 +187,43 @@ Wrishp_src        = 0
 Wrishp_pump       = 0
 OutputDir         =
 FlowGeomFile      =
-ObsFile           =
+ObsFile           = 
 CrsFile           =
 HisFile           =
 HisInterval       = 60
 XLSInterval       =
 MapFile           =
 MapInterval       = 60
-RstInterval       = 86400
+RstInterval       = 
 S1incinterval     =
+TimingsInterval   = 60
 MapFormat         = 4
 Wrihis_balance    = 1
+Wrihis_sourcesink = 1
 Wrihis_structure_gen= 1
 Wrihis_structure_dam= 1
 Wrihis_structure_pump= 1
 Wrihis_structure_gate= 1
+Wrihis_structure_weir= 1
+Wrihis_structure_orifice= 1
+Wrihis_structure_bridge= 1
+Wrihis_structure_culvert= 1
+Wrihis_structure_damBreak= 1
+Wrihis_structure_uniWeir= 1
+Wrihis_structure_compound= 1
+Wrihis_turbulence = 1
+Wrihis_wind       = 1
+Wrihis_rain       = 1
+Wrihis_temperature= 0
+Wrihis_heat_fluxes= 1
+Wrihis_salinity   = 0
+Wrihis_density    = 0
+Wrihis_waterlevel_s1= 1
+Wrihis_waterdepth = 0
+Wrihis_velocity_vector= 1
+Wrihis_upward_velocity_component= 0
+Wrihis_sediment   = 1
+Wrihis_constituents= 1
 Wrimap_waterlevel_s0= 1
 Wrimap_waterlevel_s1= 1
 Wrimap_velocity_component_u0= 1
@@ -213,10 +241,18 @@ Wrimap_chezy      = 1
 Wrimap_turbulence = 1
 Wrimap_wind       = 1
 Wrimap_heat_fluxes= 0
+Wrimap_volume_on_ground= 1
+Wrimap_total_net_inflow_lateral = 1					   
 MapOutputTimeVector=
 FullGridOutput    = 0
 EulerVelocities   = 0
 WaqInterval       = 0
+ClassMapFile      =
+WaterlevelClasses = 0
+WaterdepthClasses = 0
+VelocityMagnitudeClasses= 0
+VelocityDirectionClassesInterval= 30
+ClassMapInterval  = 300
 StatsInterval     =
 Writebalancefile  = 0
 TimingsInterval   =

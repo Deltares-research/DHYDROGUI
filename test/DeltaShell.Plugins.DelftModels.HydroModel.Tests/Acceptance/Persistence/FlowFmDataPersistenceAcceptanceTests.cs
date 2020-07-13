@@ -2,8 +2,11 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using log4net.Core;
 using NUnit.Framework;
@@ -23,9 +26,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
         private static readonly object[] AcceptanceTests =
         {
-            new object[] {"Groesbeek", 0, 0}, // TODO: Add preconditions when the model can be correctly imported
-            new object[] { "Hydamo_DBV", 0, 0}, // TODO: Add preconditions when the model can be correctly imported
-            new object[] { "Hydamo_MoergestelBroek", 0, 0} // TODO: Add preconditions when the model can be correctly imported
+            new object[] {"Groesbeek", 722}, // TODO: Add preconditions when the model can be correctly imported
+            //new object[] { "Hydamo_DBV", 0}, // TODO: Add preconditions when the model can be correctly imported
+            //new object[] { "Hydamo_MoergestelBroek", 0} // TODO: Add preconditions when the model can be correctly imported
         };
 
         [TestFixtureSetUp]
@@ -59,19 +62,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         [TestCaseSource(nameof(AcceptanceTests))]
         public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
             string acceptanceModelName,
-            int preconditionExpectedBranchFeaturesCount,
-            int preconditionExpectedCatchmentsCount)
+            int preconditionExpectedBranchFeaturesCount)
         {
             // [Given]
             using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
-                var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
 
                 ImportFlowFmModelAndAssertPreconditions(
                     acceptanceModelName,
-                    hydroModel,
-                    preconditionExpectedBranchFeaturesCount,
-                    preconditionExpectedCatchmentsCount);
+                    gui,
+                    preconditionExpectedBranchFeaturesCount);
 
                 // [When]
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
@@ -83,25 +83,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
         private void ImportFlowFmModelAndAssertPreconditions(
             string acceptanceModelName, 
-            HydroModel hydroModel,
-            int expectedBranchFeaturesCount,
-            int expectedCatchmentsCount)
+            DeltaShellGui gui,
+            int expectedBranchFeaturesCount)
         {
             var importer = new WaterFlowFMFileImporter();
             var pathToMduFile = Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "FlowFM.mdu");
-           
-            var errorMessages = TestHelper.GetAllRenderedMessages(() => importer.ImportItem(pathToMduFile, hydroModel), Level.Error);
+            WaterFlowFMModel model = null;
+            var errorMessages = TestHelper.GetAllRenderedMessages(() => model = importer.ImportItem(pathToMduFile) as WaterFlowFMModel, Level.Error);
 
+            Assert.IsNotNull(model);
+            gui.Application.Project.RootFolder.Add(model);
             // [Precondition]
             Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the FlowFM model:{Environment.NewLine}{errorMessages}");
 
             // [Precondition]
-            var hydroNetwork = hydroModel.Region.SubRegions.OfType<IHydroNetwork>().Single();
+            var hydroNetwork = model.Network;
             Assert.AreEqual(expectedBranchFeaturesCount, hydroNetwork.BranchFeatures.Count(), "[Precondition failure] Unexpected number of branch features");
-
-            // [Precondition]
-            var basin = hydroModel.Region.SubRegions.OfType<IDrainageBasin>().Single();
-            Assert.AreEqual(expectedCatchmentsCount, basin.AllCatchments.Count(), "[Precondition failure] Unexpected number of catchments");
         }
 
         private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory)

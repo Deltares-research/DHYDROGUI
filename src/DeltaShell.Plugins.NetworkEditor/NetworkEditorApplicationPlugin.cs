@@ -354,7 +354,7 @@ namespace DeltaShell.Plugins.NetworkEditor
                 Role = parent.Role,
                 Parent = parent,
                 ValueType = typeof(IRegion),
-                ValueConverter = new AggregationValueConverter(subRegion),
+                Value = subRegion,
                 Owner = parent.Owner
             };
         }

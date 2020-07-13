@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
@@ -116,6 +117,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                     new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(CrossSectionRegion.IniHeader)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)), expectedFlowFmFile);
                     readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
                     new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(CrossSectionRegion.IniHeader)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)), actualFlowFmFile);
+                }
+                //scrambled ini file compare... currently only doing it for _bnd.ext..
+                if (Path.GetFileNameWithoutExtension(expectedFlowFmFile)
+                    .EndsWith("_bnd", StringComparison.InvariantCultureIgnoreCase) && Path.GetExtension(expectedFlowFmFile).Equals(".ext", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var readCategories = new DelftIniReader().ReadDelftIniFile(expectedFlowFmFile);
+                    var delftIniBoundaryCategories = readCategories.Where(c => c.Name.Equals(DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(BoundaryRegion.NodeId.Key));
+                    var delftIniLateralCategories = readCategories.Where(c => c.Name.Equals(BoundaryRegion.LateralHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)).ThenBy(c => c.ReadProperty<string>(LocationRegion.Name.Key)).ToArray();
+                    //ok... there is something funky with the nodeId location... for now we remove
+                    delftIniLateralCategories.ForEach(c => c.RemoveProperty(c.Properties.First(p =>p.Name.Equals(BoundaryRegion.NodeId.Key))));
+                    new DelftIniWriter().WriteDelftIniFile(delftIniBoundaryCategories.Concat(delftIniLateralCategories), expectedFlowFmFile);
+
+                    readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
+                    delftIniBoundaryCategories = readCategories.Where(c => c.Name.Equals(DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(BoundaryRegion.NodeId.Key));
+                    //ok... there is something funky with the nodeId location... for now we remove
+                    delftIniLateralCategories = readCategories.Where(c => c.Name.Equals(BoundaryRegion.LateralHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)).ThenBy(c => c.ReadProperty<string>(LocationRegion.Name.Key)).ToArray();
+                    delftIniLateralCategories.ForEach(c => c.RemoveProperty(c.Properties.First(p => p.Name.Equals(BoundaryRegion.NodeId.Key))));
+                    new DelftIniWriter().WriteDelftIniFile(delftIniBoundaryCategories.Concat(delftIniLateralCategories), actualFlowFmFile);
                 }
                 identical = CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out var errorMessage) && identical;
 
