@@ -527,7 +527,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         
         private void AddOutputCoverage(EngineParameter modelParameter)
         {
-            if (modelParameter.AggregationOptions == AggregationOptions.None)
+            if (modelParameter.AggregationOptions == AggregationOptions.None || GetDataItemByTag(modelParameter.Name) != null)
             {
                 return;
             }
