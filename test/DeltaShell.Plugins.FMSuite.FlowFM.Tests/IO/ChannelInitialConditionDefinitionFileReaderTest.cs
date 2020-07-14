@@ -32,12 +32,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var modelDefinition = fmModel.ModelDefinition;
 
                 // When
-                TestDelegate action = () =>
+                Action action = () =>
                     ChannelInitialConditionDefinitionFileReader.ReadFile(invalidPath, modelDefinition, null, null);
 
                 // Then
-                var exception = Assert.Throws<FileReadingException>(action);
-                Assert.AreEqual($"Could not read file {invalidPath} properly, it doesn't exist.", exception.Message);
+                TestHelper.AssertAtLeastOneLogMessagesContains(action, $"Could not read file {invalidPath} properly, it doesn't exist.");
             }
         }
 

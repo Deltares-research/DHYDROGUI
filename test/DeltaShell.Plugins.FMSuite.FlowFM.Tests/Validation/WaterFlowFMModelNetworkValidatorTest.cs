@@ -340,9 +340,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         hydroNetwork.Nodes.Add(manhole);
                         manhole.Compartments.Add(compartment);
                     },
-                    ExpectedMessage = "Storage area must be larger than 0",
+                    ExpectedMessage = "Street storage area is set to 0. Recommended to use storage type closed instead of reservoir",
                     ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First(),
-                    Severity = ValidationSeverity.Error
+                    Severity = ValidationSeverity.Warning
                 };
                 yield return new InvalidCompartmentTestCaseData
                 {
@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         hydroNetwork.Nodes.Add(manhole);
                         manhole.Compartments.Add(compartment);
                     },
-                    ExpectedMessage = "Storage area must be larger than 0",
+                    ExpectedMessage = "Street storage area is set to 0. Recommended to use storage type closed instead of reservoir",
                     ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First(),
                     Severity =  ValidationSeverity.Warning
                 };
