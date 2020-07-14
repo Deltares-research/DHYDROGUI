@@ -123,7 +123,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             var error = false;
             try
             {
-                var parts = dateTimeStr.Split(new[] { ';','/' });
+                var parts = dateTimeStr.Split(new[] { ';' });
                 var dateStr = parts[0];
                 var timeStr = parts[1];
 
