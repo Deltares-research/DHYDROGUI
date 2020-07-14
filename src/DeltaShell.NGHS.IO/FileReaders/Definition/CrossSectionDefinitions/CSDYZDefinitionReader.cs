@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
                     {
                         var warningMessage = $"cross section definition {crossSectionDefinition.Name}: y-value {yList[i]} not increasing, incremented with .01 millimeter";
                         Log.Warn(warningMessage);
-                        yList[i] += 1e-6;
+                        yList[i] += 1e-5;
                     }
                 }
                 try
