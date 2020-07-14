@@ -789,8 +789,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             settingSewerRoughness = false;
         }
+
         public virtual void UpdateRoughnessSections()
         {
+            if (RoughnessSections != null
+                && RoughnessSections.Any()
+                && RoughnessSections.All(rs => ReferenceEquals(rs.Network, Network)))
+            {
+                return;
+            }
+
             RoughnessSections?.ForEach(rs =>
             {
                 rs.RoughnessNetworkCoverage.Clear();
