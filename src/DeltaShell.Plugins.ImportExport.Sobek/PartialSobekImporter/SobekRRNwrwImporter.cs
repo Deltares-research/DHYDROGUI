@@ -11,7 +11,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Shell.Core.Extensions;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.HydroModel;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
@@ -46,8 +48,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             catch (ArgumentException)
             {
-                Log.Warn("Can't import Nwrw catchments, no network found.");
-                return;
+                if (rrModel.Owner is HydroModel hydroModel)
+                {
+                    fmModel = hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>().FirstOrDefault();
+                    if (fmModel == null)
+                    {
+                        Log.Warn("Can't import Nwrw catchments, no network found.");
+                        return;
+                    }
+                }
+                else
+                {
+                    Log.Warn("Can't import Nwrw catchments, no network found.");
+                    return;
+                }
             }
 
             if (!CreateNodeAndBranchDictionary())
