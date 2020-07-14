@@ -9,6 +9,7 @@ using System.Windows.Media;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -17,6 +18,7 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -147,9 +149,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)
         {
-            yield return model.GetDataItemByValue(model.RestartInput);
-
-            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model, model.InitialWaterLevel, ShortCutType.SpatialCoverage);
+            var initialWaterCondition2DQuantity = (InitialConditionQuantity) (int) model.ModelDefinition
+                .GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
+            yield return new FmModelTreeShortcut(initialWaterCondition2DQuantity == InitialConditionQuantity.WaterLevel 
+                ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
+                : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, Resources.waterLayers, model, model.InitialWaterLevel, ShortCutType.SpatialCoverage);
 
             if (model.UseSalinity)
             {

@@ -235,9 +235,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WaterFlowFMModelDefinition modelDefinition,
             IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions, IHydroNetwork network)
         {
-            if (network == null
-                || network.IsEdgesEmpty
-                || network.IsVerticesEmpty) return;
+            var networkIsEmpty = network == null
+                                         || network.IsEdgesEmpty
+                                         || network.IsVerticesEmpty;
 
             var directoryName = Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
@@ -250,8 +250,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // write initialFields.ini
             var initialConditionFilePath = Path.Combine(directoryName, INITIAL_CONDITIONS_FILE_NAME);
             FileWritingUtils.ThrowIfFileNotExists(initialConditionFilePath, directoryName,
-                filename => InitialConditionInitialFieldsFileWriter.WriteFile(filename, globalInitialConditionQuantity1D, modelDefinition));
+                filename => InitialConditionInitialFieldsFileWriter.WriteFile(filename, modelDefinition, networkIsEmpty));
 
+            if (networkIsEmpty) return;
             // write Initial<quantity>.ini
             var intialConditionDefinitionFilename =
                 Path.Combine(directoryName, GetInitialConditionDefinitionFilename(globalInitialConditionQuantity1D));

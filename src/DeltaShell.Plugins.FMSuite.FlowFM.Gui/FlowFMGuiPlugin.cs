@@ -56,6 +56,7 @@ using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
+using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -1141,8 +1142,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var mapView = FindMapView(view);
             if (mapView != null)
                 FlowFMMapViewDecorator.AddMapToolsIfMissing(mapView);
+            var projectItemMapView = GetFocusedProjectItemMapView();
+
+            if (projectItemMapView != null)
+            {
+                // get available layers from the map view and set them in the combobox ribbon
+                IEnumerable<ILayer> layers = projectItemMapView.GetAvailableSpatialOperationLayers();
+                var layer = layers.OfType<UnstructuredGridCellCoverageLayer>().SingleOrDefault(l =>
+                    Equals(l.Coverage, FlowModels.FirstOrDefault()?.InitialWaterLevel));
+                if (layer != null && layer.Name != layer.Coverage.Name)
+                {
+                    var layerNameIsReadOnly = layer.NameIsReadOnly;
+                    layer.NameIsReadOnly = false;
+                    layer.Name = layer.Coverage.Name;
+                    layer.NameIsReadOnly = layerNameIsReadOnly;
+                }
+
+            }
+
+
+
+        }
+        private ProjectItemMapView GetFocusedProjectItemMapView()
+        {
+            var mapView = GetFocusedMapControl();
+            if (mapView != null)
+            {
+                var projectItemMapViews = Gui.DocumentViews.AllViews.OfType<ProjectItemMapView>().ToList();
+
+                // could be null
+                return projectItemMapViews.FirstOrDefault(p => p.MapView.MapControl == mapView);
+            }
+            else return null;
+        }
+        internal MapView GetFocusedMapView(IView view = null)
+        {
+            var viewToSearch = view ?? Gui?.DocumentViews?.ActiveView;
+            return viewToSearch?.GetViewsOfType<MapView>().FirstOrDefault();
         }
 
+        internal MapControl GetFocusedMapControl(IView view = null)
+        {
+            return GetFocusedMapView(view)?.MapControl;
+        }
         private static MapView FindMapView(IView activeView)
         {
             var mapView = activeView as MapView;

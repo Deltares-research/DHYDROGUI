@@ -38,38 +38,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (categories.Count == 0) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
             
             ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
+            if (categories.Any(c => c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase) &&
+                                    c.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all")
+                                        .Equals("2d", StringComparison.InvariantCultureIgnoreCase) &&
+                                    c.ReadProperty<string>(InitialConditionRegion.Quantity.Key)
+                                        .Equals(ExtForceQuantNames.InitialWaterLevel, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterLevel).ToString());
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
+            }
+            else if (categories.Any(c => c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase) &&
+                                    c.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all")
+                                        .Equals("2d", StringComparison.InvariantCultureIgnoreCase) &&
+                                    c.ReadProperty<string>(InitialConditionRegion.Quantity.Key)
+                                        .Equals(ExtForceQuantNames.InitialWaterDepth, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterDepth).ToString());
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.InitialWaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
+            }
 
 
-            // [Initial]
-            var initialConditionCategories = categories.Where(category => category.Name.Equals(InitialConditionRegion.InitialConditionIniHeader)).ToList();
-            var initialConditionCategoryCount = initialConditionCategories.Count;
-            if (initialConditionCategoryCount == 0) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__no_valid_content_categories_found, filePath));
+            // [Initial 1d]
+            
 
-            if (initialConditionCategoryCount > 1)
+            var initialConditionCategories = categories.Where(category => category.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.CurrentCultureIgnoreCase) &&
+                                                                        (category.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all").Equals("1d", StringComparison.InvariantCultureIgnoreCase) ||
+                                                                         category.ReadProperty<string>(InitialConditionRegion.DataFileType.Key).Equals("1dField", StringComparison.InvariantCultureIgnoreCase))).ToArray();
+            //if (!initialConditionCategories.Any()) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__no_valid_content_categories_found, filePath));
+            if (initialConditionCategories.Length > 1)
             {
                 Log.Warn(Properties.Resources.Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others);
             }
-            
-            var initialConditionCategory = initialConditionCategories.First();
+            return initialConditionCategories.Any() 
+                ? ReadInitialConditionCategory(modelDefinition, initialConditionCategories.First())
+                : (InitialConditionQuantity.WaterLevel, "");
 
-            return ReadInitialConditionCategory(modelDefinition, initialConditionCategory);
         }
 
-        private static void ReadSpatialOperation(string filePath, IList<DelftIniCategory> categories, string quantity,
-            string dataItemName, WaterFlowFMModelDefinition modelDefinition)
+        private static void ReadSpatialOperation(
+            string filePath, 
+            IList<DelftIniCategory> categories, 
+            string quantity, 
+            string dataItemName, 
+            WaterFlowFMModelDefinition modelDefinition)
         {
             var parameterCategories = GetParameterCategoriesAndFilterByFrictionType(categories, modelDefinition);
             ReadSpatialOperationData(filePath, parameterCategories, modelDefinition, quantity, dataItemName);
-
         }
 
         private static void ReadSpatialOperationData(string filePath, IEnumerable<DelftIniCategory> parameterCategories,
             WaterFlowFMModelDefinition modelDefinition, string quantity, string dataItemName)
         {
             var parameterItems = parameterCategories
-                .Where(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader) &&
-                            Equals(c.ReadProperty<string>(InitialConditionRegion.Quantity.Key), quantity) && 
-                            Equals(c.ReadProperty<string>(InitialConditionRegion.LocationType.Key,true,"all" ), "2d")).ToList();
+                .Where(c => (c.Name.Equals(InitialConditionRegion.ParameterIniHeader, StringComparison.InvariantCultureIgnoreCase) ||
+                             c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase)) &&
+                            c.ReadProperty<string>(InitialConditionRegion.Quantity.Key, true, string.Empty).Equals(quantity, StringComparison.InvariantCultureIgnoreCase) && 
+                            c.ReadProperty<string>(InitialConditionRegion.LocationType.Key,true,"all" ).Equals("2d", StringComparison.InvariantCultureIgnoreCase)).ToList();
 
             if (!parameterItems.Any()) return;
 
@@ -192,7 +216,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if(!int.TryParse(frictionTypeProperty?.GetValueAsString(), out var modelFrictionType))
                 modelFrictionType = 1;
 
-            foreach (var iniCategory in categories.Where(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader)))
+            foreach (var iniCategory in categories.Where(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader, StringComparison.InvariantCultureIgnoreCase) || 
+                                                              c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase) &&
+                                                              c.ReadProperty<string>(InitialConditionRegion.LocationType.Key,true,"all").Equals("2d", StringComparison.CurrentCultureIgnoreCase)))
             {
                 var quantity = iniCategory.ReadProperty<string>(InitialConditionRegion.Quantity.Key);
                 if (quantity != ExtForceQuantNames.FrictCoef)

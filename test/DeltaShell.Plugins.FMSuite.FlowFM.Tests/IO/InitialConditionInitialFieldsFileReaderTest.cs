@@ -55,6 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("ToCheck")] //do we need this test?
         public void GivenFileWithOnlyInvalidCategories_WhenCallingReadFile_ThenThrowsException()
         {
             var noCategoriesFile = TestHelper.GetTestFilePath(@"IO\invalidCategoriesOnly.ini");
@@ -177,10 +178,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     // update model definition (called during export)
                     fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions,
                         initialSpatialOps);
-
+                    fmModel.ModelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, ((int)InitialConditionQuantity.WaterLevel).ToString());
                     // call
-                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, InitialConditionQuantity.WaterLevel,
-                        fmModel.ModelDefinition);
+                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition, true);
                 }
                 
                 using (var fmModel = new WaterFlowFMModel() { MduFilePath = mduFilePath })
@@ -292,10 +292,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     // update model definition (called during export)
                     fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions,
                         initialSpatialOps);
+                    fmModel.ModelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, ((int)InitialConditionQuantity.WaterLevel).ToString());
 
                     // call
-                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, InitialConditionQuantity.WaterLevel,
-                        fmModel.ModelDefinition);
+                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition, true);
                 }
                 using (var fmModel = new WaterFlowFMModel() { MduFilePath = mduFilePath })
                 {
@@ -397,9 +397,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     // update model definition (called during export)
                     fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions,
                         initialSpatialOps);
+                    fmModel.ModelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, ((int)InitialConditionQuantity.WaterLevel).ToString());
+
                     // call
-                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, InitialConditionQuantity.WaterLevel,
-                        fmModel.ModelDefinition);
+                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition,true);
                 }
 
                 using (var fmModel = new WaterFlowFMModel() { MduFilePath = mduFilePath })

@@ -152,6 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public const string InitialConditionGlobalValue1D = "InitialConditionGlobalValue1D";
         public const string InitialConditionGlobalQuantity1D = "InitialConditionGlobalQuantity1D";
+        public const string InitialConditionGlobalQuantity2D = "InitialConditionGlobalQuantity2D";
 
         
     }

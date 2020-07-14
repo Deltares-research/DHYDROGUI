@@ -36,7 +36,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             Dictionary<string, IBranch> branchDictionary,
             IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
         {
-            if (!File.Exists(filePath)) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
+            if (!File.Exists(filePath))
+            {
+                //throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
+                Log.Warn(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
+                return;
+            }
 
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
             if (categories.Count == 0) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));

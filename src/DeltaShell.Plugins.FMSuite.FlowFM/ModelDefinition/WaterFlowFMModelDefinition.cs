@@ -40,6 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     {
         public const string BathymetryDataItemName = "Bed Level";
         public const string InitialWaterLevelDataItemName = "Initial Water Level";
+        public const string InitialWaterDepthDataItemName = "Initial Water Depth";
         public const string InitialSalinityDataItemName = "Initial Salinity";
         public const string InitialTemperatureDataItemName = "Initial Temperature";
         public const string RoughnessDataItemName = "Roughness";
@@ -50,6 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             BathymetryDataItemName,
             InitialWaterLevelDataItemName,
+            InitialWaterDepthDataItemName,
             InitialSalinityDataItemName,
             InitialTemperatureDataItemName,
             RoughnessDataItemName,

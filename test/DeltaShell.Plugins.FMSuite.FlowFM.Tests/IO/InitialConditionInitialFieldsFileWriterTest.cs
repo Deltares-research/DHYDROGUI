@@ -24,7 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class InitialConditionInitialFieldsFileWriterTest
     {
-        [Test]
         [TestCase(InitialConditionQuantity.WaterLevel)]
         [TestCase(InitialConditionQuantity.WaterDepth)]
         public void GivenInitialConditionQuantity_WhenWritingToFile_ThenIsSameAsExpectedFile(
@@ -44,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         $"{(int) globalQuantity}");
 
                     // call
-                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, globalQuantity, fmModel.ModelDefinition);
+                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition, false);
 
                     // assert
                     Assert.That(File.Exists(actualFile), Is.True);
@@ -123,9 +122,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     var initialSpatialOps = new List<string>() { WaterFlowFMModelDefinition.RoughnessDataItemName };
                     // update model definition (called during export)
                     fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
-                    
+                    fmModel.ModelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, ((int)InitialConditionQuantity.WaterLevel).ToString());
                     // call
-                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, InitialConditionQuantity.WaterLevel, fmModel.ModelDefinition);
+                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition, true);
                     var categories = new DelftIniReader().ReadDelftIniFile(actualFile);
                     var parameterFriction = categories.FirstOrDefault(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader));
 
@@ -205,9 +204,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     var initialSpatialOps = new List<string>() { WaterFlowFMModelDefinition.RoughnessDataItemName };
                     // update model definition (called during export)
                     fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
-                    
+                    fmModel.ModelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D, ((int) InitialConditionQuantity.WaterLevel).ToString());
                     // call
-                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, InitialConditionQuantity.WaterLevel, fmModel.ModelDefinition);
+                    InitialConditionInitialFieldsFileWriter.WriteFile(actualFile, fmModel.ModelDefinition, true);
                     var categories = new DelftIniReader().ReadDelftIniFile(actualFile);
                     var parameterFriction = categories.FirstOrDefault(c => c.Name.Equals(InitialConditionRegion.ParameterIniHeader));
 

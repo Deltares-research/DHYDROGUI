@@ -1201,8 +1201,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
             var bedLevelDataItem = DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
             if (bedLevelDataItem != null) bedLevelDataItem.ValueType = typeof(UnstructuredGridCoverage);
+            var initialWaterQuantityNameType = (InitialConditionQuantity)(int)ModelDefinition
+                .GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
+            AddOrRenameDataItem(InitialWaterLevel, initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel
+                ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
+                : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName);
 
-            AddOrRenameDataItem(InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
+            //AddOrRenameDataItem(InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
             AddOrRenameDataItem(Roughness, WaterFlowFMModelDefinition.RoughnessDataItemName);
             AddOrRenameDataItem(Viscosity, WaterFlowFMModelDefinition.ViscosityDataItemName);
             AddOrRenameDataItem(Diffusivity, WaterFlowFMModelDefinition.DiffusivityDataItemName);
@@ -1261,8 +1266,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var prop = sender as WaterFlowFMProperty;
             if (prop != null && e.PropertyName == nameof(prop.Value))
             {
-                if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity1D))
+                if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity1D) ||
+                    prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity2D))
                 {
+                    if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity2D))
+                    {
+                        var type = (InitialConditionQuantity)(int) prop.Value;
+                        InitialWaterLevel.Name = type == InitialConditionQuantity.WaterLevel 
+                            ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName 
+                            : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
+                    }
+
                     var propertyChangedEventArgs = new PropertyChangedEventArgs(nameof(InitialCoverageSetChanged));
                     OnPropertyChanged(this, propertyChangedEventArgs);
                 }
@@ -2563,10 +2577,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             LoadStateFromMdu(mduPath);
             
             FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions);
-
+            UpdateDataItemsNotCreatedInPreviousVersion();
             LoadLinks();
 
+            UpdateSpatialDataAfterGridSet(grid, false, false, false);
             ImportSpatialOperationsAfterLoading();
+        }
+
+        private void UpdateDataItemsNotCreatedInPreviousVersion()
+        {
+            var initialWaterQuantityNameType = (InitialConditionQuantity)(int)ModelDefinition
+                .GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
+            var waterQuantityName =
+                initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel
+                    ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
+                    : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
+
+            if (!AllDataItems.Any(di => di.Name.Equals(waterQuantityName, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                AddOrRenameDataItem(InitialWaterLevel,
+                    initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel
+                        ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
+                        : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName);
+                UpdateSpatialDataAfterGridSet(grid, false, false, false);
+                ImportSpatialOperationsAfterCreating(new EventedList<IDataItem>(){GetDataItemByValue(InitialWaterLevel)});
+            }
+
         }
 
         private void OnAddedToProject(string mduPath)

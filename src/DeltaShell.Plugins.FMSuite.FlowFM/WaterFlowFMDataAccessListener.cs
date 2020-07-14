@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
@@ -147,7 +148,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.BathymetryDataItemName, waterFlowFMModel.Bathymetry);
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.RoughnessDataItemName, waterFlowFMModel.Roughness);
-            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, waterFlowFMModel.InitialWaterLevel);
+            var initialWaterQuantityNameType = (InitialConditionQuantity)(int)waterFlowFMModel.ModelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
+            waterFlowFMModel.InitialWaterLevel.Name =
+                initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel
+                    ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
+                    : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
+            SynchronizeDataItemValue(waterFlowFMModel, initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel 
+                ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
+                : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, waterFlowFMModel.InitialWaterLevel);
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.ViscosityDataItemName, waterFlowFMModel.Viscosity);
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.DiffusivityDataItemName, waterFlowFMModel.Diffusivity);
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InitialTemperatureDataItemName, waterFlowFMModel.InitialTemperature);
@@ -165,6 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             waterFlowFMModel.ImportSpatialOperationsAfterLoading();
+            
 
             // update intermediate results in operation stack after loading project:
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Bathymetry);

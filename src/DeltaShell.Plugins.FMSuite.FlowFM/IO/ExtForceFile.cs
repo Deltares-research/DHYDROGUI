@@ -183,11 +183,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             extForceFileItems.AddRange(WriteSourcesAndSinks(modelDefinition).Distinct());
 
             extForceFileItems.AddRange(
-                WriteSpatialData(ExtForceQuantNames.InitialWaterLevel,
-                    modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName))
-                    .Distinct());
-
-            extForceFileItems.AddRange(
                 WriteSpatialData(ExtForceQuantNames.InitialSalinity,
                     modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName))
                     .Distinct());
@@ -863,7 +858,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var knownQuantities = new Dictionary<string, string>
             {
-                {ExtForceQuantNames.InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName},
                 {ExtForceQuantNames.InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName},
                 {ExtForceQuantNames.InitialSalinityTop, WaterFlowFMModelDefinition.InitialSalinityDataItemName},
                 {ExtForceQuantNames.InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName},

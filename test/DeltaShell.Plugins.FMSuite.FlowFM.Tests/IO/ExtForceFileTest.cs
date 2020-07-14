@@ -142,6 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void ReadXyzFile_WithKnownSpatiallyVaryingProperties_ShouldNotGiveAWarningMessage()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -567,6 +568,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void ReadWriteSampleForcingsWaterLevel()
         {
             var def = new WaterFlowFMModelDefinition();

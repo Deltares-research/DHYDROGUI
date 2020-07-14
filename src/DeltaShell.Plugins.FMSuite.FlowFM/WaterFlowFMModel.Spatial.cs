@@ -347,9 +347,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 // sync ModelDefinition with new Bathymetry
                 ModelDefinition.Bathymetry = Bathymetry;
             }
+            var initialWaterQuantityNameType = (InitialConditionQuantity)(int)ModelDefinition
+                .GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
 
-            InitialWaterLevel =
-                CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
+            InitialWaterLevel = CreateUnstructuredGridCellCoverage(initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel 
+                ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
+                : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName
+                , Grid);
             InitialSalinity = new CoverageDepthLayersList(s => CreateUnstructuredGridCellCoverage(s, Grid))
             {
                 Name = WaterFlowFMModelDefinition.InitialSalinityDataItemName,
@@ -468,7 +472,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         // Can be further optimized by letting InsertGrid accept lists of coverages
-        private void UpdateSpatialDataAfterGridSet(UnstructuredGrid newGrid, bool nodesChanged, bool cellsChanged, bool linksChanged)
+        public void UpdateSpatialDataAfterGridSet(UnstructuredGrid newGrid, bool nodesChanged, bool cellsChanged, bool linksChanged)
         {
             UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Bathymetry, g => Bathymetry = g);
             UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialWaterLevel, g => InitialWaterLevel = g);
