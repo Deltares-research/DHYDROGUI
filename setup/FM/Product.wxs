@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  
   <?define explicitX86desktopshortcut="false"?>
 
   <?define Description="D-FM Delta Shell" ?>
@@ -11,7 +10,9 @@
 
   <?define noDeltaShellFrameworkManual="true"?>
 
-  <?define excludeBuildNumberFromVersion="true"?>
+  <?define EnableDHydroDelft3DFMVersionNaming="true"?>
+
+  <?define ShowStartUpScreen="False"?>
 
   <?ifdef var.RWS?>
   <?define Delft3DPackageName="D-HYDRO"?>
@@ -55,7 +56,7 @@
   <?define supportEmail="delft3d.support@deltares.nl"?>
 
   <!-- optional splash screen -->
-  <?define mainWindowTitle="$(var.ProductName)"?>
+  <?define mainWindowTitle="$(var.ApplicationName)"?>
   <?define splashScreenLogoImageFilePath="splash_screen.jpg"?>
   
   <?define splashScreenCompany="Rijkswaterstaat"?>
@@ -70,7 +71,7 @@
   <?ifdef var.RWS?>
   <?define splashScreenLicense="NGHS project"?>
   <?else?>
-  <?define splashScreenLicense="Valid until 3 nov 2015"?>
+  <?define splashScreenLicense="Valid until 30 oct 2020"?>
   <?endif?>
 
   <?define plugin_wixUIDeltares="FM_WixUI_Deltares"?>

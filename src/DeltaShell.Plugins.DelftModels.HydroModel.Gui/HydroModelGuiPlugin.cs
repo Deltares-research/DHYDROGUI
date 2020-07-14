@@ -124,6 +124,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 GetCompositeViewData = o => o,
                 AfterCreate = (v, o) =>
                 {
+                    ProjectItemMapView mapView = Gui.DocumentViews.OfType<ProjectItemMapView>().SingleOrDefault(view => view.MapView.GetLayerForData(o) != null);
+                    mapView?.MapView?.Map?.Render();
+
                     v.RunCallback = (m) =>
                     {
                         Gui.Selection = m;

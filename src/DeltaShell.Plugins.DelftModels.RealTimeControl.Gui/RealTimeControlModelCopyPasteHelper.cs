@@ -86,17 +86,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             PlaceShapesAndConnections(clonedRtcObjects, controller, mea);
         }
 
-        public static void SetClonedInputsAndOutputsToClonedObjects(Dictionary<object, object> source, Dictionary<object, object> target, object o)
+        private static void SetClonedInputsAndOutputsToClonedObjects(Dictionary<object, object> source, Dictionary<object, object> target, object o)
         {
-            if (o is RuleBase)
+            if (o is RuleBase ruleTarget)
             {
-                var ruleTarget = (RuleBase) o;
                 var ruleSource = (RuleBase) source[ruleTarget];
                 foreach (IInput input in ruleSource.Inputs)
                 {
                     if (target.ContainsKey(input))
                     {
-                        ruleTarget.Inputs.Add((Input) target[input]);
+                        ruleTarget.Inputs.Add((IInput) target[input]);
                     }
                 }
 
@@ -109,9 +108,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 }
             }
 
-            if (o is ConditionBase)
+            if (o is ConditionBase conditionTarget)
             {
-                var conditionTarget = (ConditionBase) o;
                 var conditionSource = (ConditionBase) source[conditionTarget];
                 foreach (RtcBaseObject trueOutput in conditionSource.TrueOutputs)
                 {
@@ -131,13 +129,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
                 if (conditionSource.Input != null && target.ContainsKey(conditionSource.Input))
                 {
-                    conditionTarget.Input = (Input) target[conditionSource.Input];
+                    conditionTarget.Input = (IInput) target[conditionSource.Input];
                 }
             }
 
-            if (o is SignalBase)
+            if (o is SignalBase signalTarget)
             {
-                var signalTarget = (SignalBase) o;
                 var signalSource = (SignalBase) source[signalTarget];
                 foreach (Input input in signalSource.Inputs)
                 {

@@ -16,6 +16,10 @@
     <File Id="Tao.Platform.Windows.dll" Source="$(var.deltashell_gui_bin)Tao.Platform.Windows.dll" />
   </Component>
 
+  <Component Id="comp_OpenTK" Guid="8A834442-150C-4DDB-973D-AF8A522C4B87">
+    <File Id="OpenTK" Source="$(var.deltashell_gui_bin)OpenTK.dll" />
+  </Component>
+
   <Directory Id="dir_geometrydll_x64" Name="x64">
     <Component Id="comp_geometrydll_x64" Guid="4F693BDD-43A9-4E7C-891A-7A59D9F26BDA">
       <File Id="ec_moduledll_x64" Source="$(var.deltashell_gui_bin)x64\ec_module.dll" />

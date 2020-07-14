@@ -204,8 +204,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get
             {
-                return
-                    GetProgressTextCore(Activities.GetActivitiesOfType<TimeDependentModelBase>().Average(m => m.ProgressPercentage));
+                TimeDependentModelBase[] timeDependentModelBases = Activities.GetActivitiesOfType<TimeDependentModelBase>().ToArray();
+                return timeDependentModelBases.Any()
+                           ? GetProgressTextCore(timeDependentModelBases.Average(m => m.ProgressPercentage))
+                           : GetProgressTextCore(0);
             }
         }
 
@@ -540,6 +542,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (currentWorkflow != null)
                 {
                     currentWorkflow.StatusChanged -= CurrentWorkflowOnStatusChanged;
+                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach( dm => dm.RunsInIntegratedModel = false);
                 }
 
                 currentWorkflow = value;
@@ -547,6 +550,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (currentWorkflow != null)
                 {
                     currentWorkflow.StatusChanged += CurrentWorkflowOnStatusChanged;
+                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(dm => dm.RunsInIntegratedModel = true);
                 }
 
                 currentWorkFlowData = null;
@@ -556,12 +560,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     RebuildModelLinks();
                 }
             }
-        }
-
-        [InvokeRequired]
-        private void LogInvalidWorkflow()
-        {
-            Log.ErrorFormat(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, CurrentWorkflow.Name);
         }
 
         [InvokeRequired]
@@ -747,19 +745,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnInitialize()
         {
-            if (CurrentWorkflow == null)
-            {
-                return;
-            }
-
-            if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(CurrentWorkflow).Valid())
-            {
-                LogInvalidWorkflow();
-                Status = ActivityStatus.Failed;
-                return;
-            }
-
-            ValidationReport validationReport = new HydroModelValidator().Validate(this);
+            ValidationReport validationReport = Validate();
             if (validationReport.ErrorCount > 0)
             {
                 LogInvalidActivities();

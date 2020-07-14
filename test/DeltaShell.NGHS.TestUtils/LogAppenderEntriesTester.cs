@@ -20,6 +20,12 @@ namespace DeltaShell.NGHS.TestUtils
             BasicConfigurator.Configure(appender);
         }
 
+        public LogAppenderEntriesTester()
+        {
+            appender = new MemoryAppender();
+            BasicConfigurator.Configure(appender);
+        }
+
         public IEnumerable<string> Messages
         {
             get
@@ -30,7 +36,7 @@ namespace DeltaShell.NGHS.TestUtils
 
         public void Dispose()
         {
-            logger.RemoveAppender(appender);
+            logger?.RemoveAppender(appender);
         }
     }
 }

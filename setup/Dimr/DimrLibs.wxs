@@ -20,6 +20,33 @@
                         <Component Id="cmp048881C876251BEC66F4660434A9B673" Guid="*">
                             <File Id="fil453B0F967529E923E0F1241585DAEEE9" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\dfmoutput.exe" />
                         </Component>
+                        <Component Id="cmpC349E7921CBF27DAABDB38FE9E1D136F" Guid="*">
+                            <File Id="filC58C8A365F3184F1BE54B839F0F351C9" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\expat.dll" />
+                        </Component>
+                        <Component Id="cmp92A955EFBF9392AB777414C7239DF4C9" Guid="*">
+                            <File Id="filC25E65087D0C95B9F400E1C16139230B" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\freexl.dll" />
+                        </Component>
+                        <Component Id="cmpE52FBEF7131C56EED75D91B2DA61EDFA" Guid="*">
+                            <File Id="fil79FA59E777606F2159F9CB2B3FD5A551" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\gdal300.dll" />
+                        </Component>
+                        <Component Id="cmpA14872F9BE8C476C24053686A272A333" Guid="*">
+                            <File Id="filCB0CDE299A578F273A40522491BE4A3D" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\geos.dll" />
+                        </Component>
+                        <Component Id="cmp8AD76C0B18E4BC733111CA16AF015B94" Guid="*">
+                            <File Id="fil17C4C48FCA8E9BD601C9581F94D57801" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\geos_c.dll" />
+                        </Component>
+                        <Component Id="cmpBA8D6B8C2ADECD64C08C3DC1B50940F4" Guid="*">
+                            <File Id="fil089CDCC6926C15C3B6F9EB53344A82E0" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\iconv.dll" />
+                        </Component>
+                        <Component Id="cmpD34590CB4BFD22A9D2D831681D00B82D" Guid="*">
+                            <File Id="fil427320DE7ACDC3F3BA060A12324B362A" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\libmysql.dll" />
+                        </Component>
+                        <Component Id="cmp5A7F66BFF6CC9BC122DA3F3C1B2B6E9D" Guid="*">
+                            <File Id="fil4BA53F022CB697AA8137DABE654FE260" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\libpq.dll" />
+                        </Component>
+                        <Component Id="cmp12FFB21EB9A6BFEA54217C642461C7D1" Guid="*">
+                            <File Id="fil83A26DC2A0759BAECDB77C02B6D7C049" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\libxml2.dll" />
+                        </Component>
                         <Component Id="cmp507DC0E02CCFC9E838A6B6E8CD808D1F" Guid="*">
                             <File Id="filC2B6EB60682FF1A78800FFE4170309BB" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\mkl_core.dll" />
                         </Component>
@@ -32,8 +59,26 @@
                         <Component Id="cmpCB8C9DB7EC2C13A433F39E49ED382CE2" Guid="*">
                             <File Id="fil5D3843D1EF94F62D52CED9EA300A3EBD" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\msvcr90.dll" />
                         </Component>
+                        <Component Id="cmp30C07DB8D04B7054DB2AEA2686B1E053" Guid="*">
+                            <File Id="fil745EA90D6AA752373A7604762C2AB969" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\openjp2.dll" />
+                        </Component>
+                        <Component Id="cmp72FC005C51AFB388AFD875B7E2991164" Guid="*">
+                            <File Id="fil3A377FF51E5D19CF708E0A3A4B0806ED" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\proj.dll" />
+                        </Component>
+                        <Component Id="cmp35530E6897A727C290442FD4967E3A4D" Guid="*">
+                            <File Id="filDA59BC101A410342505E06457C487DCA" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\proj_6_1.dll" />
+                        </Component>
+                        <Component Id="cmpFF6143C08A23B5BB2B2C5E4B5550FFA7" Guid="*">
+                            <File Id="filA191F45FFDFD48826022254C17653C6F" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\spatialite.dll" />
+                        </Component>
+                        <Component Id="cmp00629FE122D4CD351EC34B1E6AF0C5A1" Guid="*">
+                            <File Id="fil675F9270714ABFACDD3FEB17E8A8C604" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\sqlite3.dll" />
+                        </Component>
                         <Component Id="cmpE779391A8E1605FADD99EFEB9A3CD48A" Guid="*">
                             <File Id="fil2A2E6CBF5655359C42D8F34F51886D13" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\tecio.dll" />
+                        </Component>
+                        <Component Id="cmpFF597A983CF92279C86432B91555BB59" Guid="*">
+                            <File Id="filC18FA07579D625AEB9DC25A4AA2C1DE3" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dflowfm\bin\xerces-c_3_2.dll" />
                         </Component>
                     </Directory>
                     <Directory Id="dir8D3A5A74D55F246BC27BF895BB87FCCB" Name="default">
@@ -569,11 +614,26 @@
             <ComponentRef Id="cmpBCBF21504C2CE84636F57BC7ED60D503" />
             <ComponentRef Id="cmpEBA078D3D7AC57BA680DD5F8F9B99276" />
             <ComponentRef Id="cmp048881C876251BEC66F4660434A9B673" />
+            <ComponentRef Id="cmpC349E7921CBF27DAABDB38FE9E1D136F" />
+            <ComponentRef Id="cmp92A955EFBF9392AB777414C7239DF4C9" />
+            <ComponentRef Id="cmpE52FBEF7131C56EED75D91B2DA61EDFA" />
+            <ComponentRef Id="cmpA14872F9BE8C476C24053686A272A333" />
+            <ComponentRef Id="cmp8AD76C0B18E4BC733111CA16AF015B94" />
+            <ComponentRef Id="cmpBA8D6B8C2ADECD64C08C3DC1B50940F4" />
+            <ComponentRef Id="cmpD34590CB4BFD22A9D2D831681D00B82D" />
+            <ComponentRef Id="cmp5A7F66BFF6CC9BC122DA3F3C1B2B6E9D" />
+            <ComponentRef Id="cmp12FFB21EB9A6BFEA54217C642461C7D1" />
             <ComponentRef Id="cmp507DC0E02CCFC9E838A6B6E8CD808D1F" />
             <ComponentRef Id="cmp13CAC604ED1EF5EABCC84D5F56B0A113" />
             <ComponentRef Id="cmpC28D682A25610B5B97C8A74746B1739B" />
             <ComponentRef Id="cmpCB8C9DB7EC2C13A433F39E49ED382CE2" />
+            <ComponentRef Id="cmp30C07DB8D04B7054DB2AEA2686B1E053" />
+            <ComponentRef Id="cmp72FC005C51AFB388AFD875B7E2991164" />
+            <ComponentRef Id="cmp35530E6897A727C290442FD4967E3A4D" />
+            <ComponentRef Id="cmpFF6143C08A23B5BB2B2C5E4B5550FFA7" />
+            <ComponentRef Id="cmp00629FE122D4CD351EC34B1E6AF0C5A1" />
             <ComponentRef Id="cmpE779391A8E1605FADD99EFEB9A3CD48A" />
+            <ComponentRef Id="cmpFF597A983CF92279C86432B91555BB59" />
             <ComponentRef Id="cmp2284D9BEEF134E805F1F7DF9A176E828" />
             <ComponentRef Id="cmp19F7159E3EE598F6C40509A0D2410F7E" />
             <ComponentRef Id="cmp8531E46AFFC9F81BF1EC2BEB19993A7B" />

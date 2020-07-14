@@ -201,6 +201,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             }
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenEmptyWorkflowHydroModel_WhenValidate_ThenReportsCurrentWorkflowError()
+        {
+            // Given
+            var hydroModel = new HydroModel();
+            Assert.That(hydroModel.CurrentWorkflow, Is.Null);
+
+            // When
+            ValidationReport validationReport = hydroModel.Validate();
+
+            // Then
+            Assert.That(validationReport.ErrorCount, Is.EqualTo(1));
+            ValidationIssue generatedError = validationReport.AllErrors.ToArray()[0];
+            Assert.That(generatedError.Subject, Is.EqualTo(hydroModel));
+            Assert.That(generatedError.Message, Is.EqualTo(Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty));
+        }
+
         private void ValidateAndAssertOnWorkflowValidationReport(HydroModel hydroModel, string equalModelName1)
         {
             ValidationReport validationReport = validator.Validate(hydroModel);
