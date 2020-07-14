@@ -264,6 +264,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
             }
 
+            if (TargetObject is RainfallRunoffModel)
+            {
+                var rainfallRunoffModel = TargetObject as RainfallRunoffModel;
+                if (rainfallRunoffModel != null)
+                {
+                    if (rainfallRunoffModel.Owner != null && rainfallRunoffModel.Owner is HydroModel integratedModel)
+                    {
+                        var fmModel = integratedModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                        var network = fmModel?.Network;
+                        if (network != null)
+                        {
+                            return network;
+                        }
+                    }
+                }
+            }
+
             if (TargetObject is ICompositeActivity)
             {
                 foreach (var model in ((ICompositeActivity)TargetObject).Activities.OfType<IModel>())

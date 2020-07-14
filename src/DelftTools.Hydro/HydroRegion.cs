@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 
 namespace DelftTools.Hydro
@@ -17,6 +18,7 @@ namespace DelftTools.Hydro
     [Entity]
     public class HydroRegion : RegionBase, IHydroRegion
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(HydroRegion));
         private IEventedList<HydroLink> links;
 
         private bool isCloning;
@@ -97,14 +99,19 @@ namespace DelftTools.Hydro
         public static HydroLink AddNewLink(IHydroObject source, IHydroObject target)
         {
             var link = new HydroLink(source, target);
-            
+
             var commonRegion = GetCommonRegion(source, target);
-
-            lock (commonRegion.Links)
+            if (commonRegion != null)
             {
-                commonRegion.Links.Add(link);
+                lock (commonRegion.Links)
+                {
+                    commonRegion.Links.Add(link);
+                }
             }
-
+            else
+            {
+                log.Warn($"could not find common region for {source?.Name} and {target?.Name}, linking is probably wrong");
+            }
             return link;
         }
 
