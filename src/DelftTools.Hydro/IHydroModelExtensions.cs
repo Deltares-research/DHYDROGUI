@@ -33,16 +33,23 @@ namespace DelftTools.Hydro
             if (sourceModel.Region != null && hmodel != null)
             {
                 // Replace the region of the integrated model by the one in the source model. 
-                
-                var hydroRegions = hmodel.Region.SubRegions;
-                var integratedModelHydroRegion =
-                    hydroRegions.FirstOrDefault(region => TypeUtils.Implements(region.GetType(), sourceModel.Region.GetType()));
+                //var soucemodelRegions = sourceModel.Region.AllRegions.Where(r => !(r is HydroRegion)).ToArray();
 
-                if (integratedModelHydroRegion != null)
+                var hydroRegions = hmodel.Region.SubRegions;
+                var regionsToReplace = sourceModel.Region is HydroRegion hydroRegion
+                    ? hydroRegion.SubRegions.ToArray()
+                    : new[] { sourceModel.Region };
+                
+
+                foreach (var region in regionsToReplace)
                 {
-                    hydroRegions.Remove(integratedModelHydroRegion);
+                    var integratedModelHydroRegion = hydroRegions.FirstOrDefault(r => region.GetType().Implements(r.GetType()));
+                    if (integratedModelHydroRegion != null)
+                    {
+                        hydroRegions.Remove(integratedModelHydroRegion);
+                    }
+                    hydroRegions.Add(region);
                 }
-                hydroRegions.Add(sourceModel.Region);
             }
             // Move (overwrite) model itself to target CompositeModel. 
             var targetFlowModel =
