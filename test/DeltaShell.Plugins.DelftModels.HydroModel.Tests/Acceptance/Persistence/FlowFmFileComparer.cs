@@ -126,14 +126,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                     var delftIniBoundaryCategories = readCategories.Where(c => c.Name.Equals(DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(BoundaryRegion.NodeId.Key));
                     var delftIniLateralCategories = readCategories.Where(c => c.Name.Equals(BoundaryRegion.LateralHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)).ThenBy(c => c.ReadProperty<string>(LocationRegion.Name.Key)).ToArray();
                     //ok... there is something funky with the nodeId location... for now we remove
-                    delftIniLateralCategories.ForEach(c => c.RemoveProperty(c.Properties.First(p =>p.Name.Equals(BoundaryRegion.NodeId.Key))));
+                    delftIniLateralCategories.Where(c=> c.Properties.Any(p => p.Name.Equals(BoundaryRegion.NodeId.Key))).ForEach(c => c.RemoveProperty(c.Properties.First(p =>p.Name.Equals(BoundaryRegion.NodeId.Key))));
                     new DelftIniWriter().WriteDelftIniFile(delftIniBoundaryCategories.Concat(delftIniLateralCategories), expectedFlowFmFile);
 
                     readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
                     delftIniBoundaryCategories = readCategories.Where(c => c.Name.Equals(DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(BoundaryRegion.NodeId.Key));
                     //ok... there is something funky with the nodeId location... for now we remove
                     delftIniLateralCategories = readCategories.Where(c => c.Name.Equals(BoundaryRegion.LateralHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)).ThenBy(c => c.ReadProperty<string>(LocationRegion.Name.Key)).ToArray();
-                    delftIniLateralCategories.ForEach(c => c.RemoveProperty(c.Properties.First(p => p.Name.Equals(BoundaryRegion.NodeId.Key))));
+                    delftIniLateralCategories.Where(c => c.Properties.Any(p => p.Name.Equals(BoundaryRegion.NodeId.Key))).ForEach(c => c.RemoveProperty(c.Properties.First(p => p.Name.Equals(BoundaryRegion.NodeId.Key))));
                     new DelftIniWriter().WriteDelftIniFile(delftIniBoundaryCategories.Concat(delftIniLateralCategories), actualFlowFmFile);
                 }
                 identical = CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out var errorMessage) && identical;
