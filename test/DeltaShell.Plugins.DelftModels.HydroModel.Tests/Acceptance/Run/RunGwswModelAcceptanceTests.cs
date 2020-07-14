@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             new object[] {"DidactischStelsel", 108, 74},
             new object[] {"Groesb2", 719, 675},
             new object[] {"Pudong", 4974, 4936},
-            new object[] {"Eindhoven", 16529, 16131}
+            //new object[] {"Eindhoven", 16529, 16131}
         };
 
         [TestFixtureSetUp]
