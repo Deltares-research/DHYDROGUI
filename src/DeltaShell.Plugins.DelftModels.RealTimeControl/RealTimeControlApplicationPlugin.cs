@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
@@ -126,21 +126,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             yield return new RtcDataAccessListener();
         }
 
-        private void HybridProjectRepositoryOnProjectOpening(object sender, CancelEventArgs e)
+        private void HybridProjectRepositoryOnProjectOpening(object sender, ProjectOpeningEventArgs e)
         {
-            Ensure.NotNull(sender, nameof(sender), "Empty project path is not allowed");
+            Ensure.NotNull(e, nameof(e), "Empty project path is not allowed");
 
-            if (sender is string projectFilePath)
+            var projectFilePath = e.ProjectPath;
+
+            if (string.IsNullOrEmpty(projectFilePath) || !File.Exists(projectFilePath))
             {
-                if (!File.Exists(projectFilePath))
-                {
-                    throw new FileNotFoundException($"File not found {projectFilePath}");
-                }
+                throw new FileNotFoundException($"File not found {projectFilePath}");
+            }
 
-                if (ShouldUpgradeDataBaseUsingSqlQueries(projectFilePath))
-                {
-                    UpdateDataBase(projectFilePath);
-                }
+            if (ShouldUpgradeDataBaseUsingSqlQueries(projectFilePath))
+            {
+                UpdateDataBase(projectFilePath);
             }
         }
 
