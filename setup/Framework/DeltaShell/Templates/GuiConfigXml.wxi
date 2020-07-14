@@ -1,16 +1,38 @@
 <Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   
+  <?ifdef EnableDHydroDelft3DFMVersionNaming?>
   <util:XmlFile Id="SetKey2$(var.GUICONFIGFILE)"
-    Action="setValue"
-    ElementPath="/configuration/appSettings/add[\[]@key=&quot;applicationName&quot;[\]]/@value"
-    File="[#$(var.GUICONFIGFILE)]"
-    Value="$(var.ProductName)"/>
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;applicationName&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.DHydroApplicationName)"/>
+
+  <util:XmlFile Id="SetKey4$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.DHydroFullVersion)"/>
+  <?else?>
+  <util:XmlFile Id="SetKey2$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;applicationName&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.ProductName)"/>
 
   <util:XmlFile Id="SetKey4$(var.GUICONFIGFILE)"
                 Action="setValue"
                 ElementPath="/configuration/appSettings/add[\[]@key=&quot;fullVersion&quot;[\]]/@value"
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="$(var.FullProductNameVersion)"/>
+  <?endif?>
+
+  <?ifdef ShowStartUpScreen?>
+  <util:XmlFile Id="SetKey20$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/userSettings/DeltaShell.Gui.Properties.Settings/setting[\[]@name=&quot;ShowStartUpScreen&quot;[\]]/value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.ShowStartUpScreen)"/>
+  <?endif?>
 
   <util:XmlFile Id="SetKey6$(var.GUICONFIGFILE)"
                 Action="setValue"

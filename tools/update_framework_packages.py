@@ -25,7 +25,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("svn_root_path", help="Path to the root of the SVN directory")
     parser.add_argument("version_number", help="Version number of the Framework NuGet package")
-    parser.add_argument("--with_signed", action="store_true", help="Add the signed value to the revision number.")
+    parser.add_argument("--postfix", help="Add the signed value to the revision number.")
     return parser.parse_args()
 
 
@@ -33,12 +33,15 @@ if __name__ == "__main__":
     args = get_args()
     root_path = Path(args.svn_root_path)
     version_number = args.version_number
-    revision_number = "{}{}".format(version_number, "-SIGNED" if args.with_signed else "")
+    
+    # -beta is currently the default, due to DS Framework being in beta. This should be removed 
+    # once the framework is officially released.
+    revision_number = "{}{}".format(version_number, args.postfix if args.postfix else "-beta")
 
     project_file_paths = search_files(root_path, '.csproj')
     
     version_regex = r'1\.5\.0\.\d{5}(?:-beta)?(?:-SIGNED)?'
-    new_version_string = f"1.5.0.{revision_number}-beta"
+    new_version_string = f"1.5.0.{revision_number}"
 
     find_and_replace_csproj = [
         (re.compile(f'DeltaShell\\.Framework\\.{version_regex}'),   f"DeltaShell.Framework.{new_version_string}"),
