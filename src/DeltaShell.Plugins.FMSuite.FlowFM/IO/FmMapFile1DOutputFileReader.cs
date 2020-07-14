@@ -179,14 +179,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 : unit.ToString().Replace(timeVariableUnitValuePrefixInNetCdfFile, "").Trim();
             
             DateTime referenceTime;
-            if (!DateTime.TryParseExact(unitString, dateTimeFormat, 
+            if (!DateTime.TryParseExact(unitString, $"{dateTimeFormat} zzz", 
                 CultureInfo.InvariantCulture, DateTimeStyles.None, out referenceTime))
             {
-                var errorMessage = string.Format(
-                    (string)"Unable to parse DateTime {0} from file {1}",
-                    unitString, outputFile.Path);
+                if (!DateTime.TryParseExact(unitString, dateTimeFormat,
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out referenceTime))
+                {
+                    var errorMessage = string.Format(
+                        (string) "Unable to parse DateTime {0} from file {1}",
+                        unitString, outputFile.Path);
 
-                throw new FileReadingException(errorMessage);
+                    throw new FileReadingException(errorMessage);
+                }
             }
 
             return referenceTime;
