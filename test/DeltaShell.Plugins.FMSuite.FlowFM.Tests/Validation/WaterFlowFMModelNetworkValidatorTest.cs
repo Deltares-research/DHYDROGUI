@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(1, issues.Length);
 
             var issue = issues.ElementAt(0);
-            Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
+            Assert.AreEqual(testCaseData.Severity, issue.Severity);
             Assert.AreEqual(testCaseData.ExpectedMessage, issue.Message);
             Assert.AreSame(testCaseData.ExpectedSubject(hydroNetwork), issue.Subject);
         }
@@ -264,7 +264,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         manhole.Compartments.Add(compartment);
                     },
                     ExpectedMessage = "Length must be larger than 0",
-                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First(),
+                    Severity = ValidationSeverity.Error
+                    
                 };
                 yield return new InvalidCompartmentTestCaseData
                 {
@@ -282,7 +284,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         manhole.Compartments.Add(compartment);
                     },
                     ExpectedMessage = "Length must be larger than 0",
-                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First(),
+                    Severity = ValidationSeverity.Error
                 };
                 yield return new InvalidCompartmentTestCaseData
                 {
@@ -300,7 +303,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         manhole.Compartments.Add(compartment);
                     },
                     ExpectedMessage = "Width / diameter must be larger than 0",
-                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First(),
+                    Severity = ValidationSeverity.Error
                 };
                 yield return new InvalidCompartmentTestCaseData
                 {
@@ -318,7 +322,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         manhole.Compartments.Add(compartment);
                     },
                     ExpectedMessage = "Width / diameter must be larger than 0",
-                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First(),
+                    Severity = ValidationSeverity.Error
                 };
                 yield return new InvalidCompartmentTestCaseData
                 {
@@ -336,7 +341,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         manhole.Compartments.Add(compartment);
                     },
                     ExpectedMessage = "Storage area must be larger than 0",
-                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First(),
+                    Severity = ValidationSeverity.Error
                 };
                 yield return new InvalidCompartmentTestCaseData
                 {
@@ -354,7 +360,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                         manhole.Compartments.Add(compartment);
                     },
                     ExpectedMessage = "Storage area must be larger than 0",
-                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First()
+                    ExpectedSubject = hydroNetwork => hydroNetwork.Compartments.First(),
+                    Severity =  ValidationSeverity.Warning
                 };
             }
         }
@@ -366,6 +373,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             public string ExpectedMessage { get; set; }
 
             public Func<IHydroNetwork, object> ExpectedSubject { get; set; }
+            public ValidationSeverity Severity { get; set; }
         }
 
         private static bool ContainsError(ValidationReport report, string errorMessage)
