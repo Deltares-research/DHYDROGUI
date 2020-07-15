@@ -345,12 +345,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="RainfallRunoffOutputSettingData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="EngineParameter.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Domain\Meteo\MeteoData.hbm.xml" />
   </ItemGroup>
   <ItemGroup>

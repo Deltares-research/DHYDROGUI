@@ -896,6 +896,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             // copy output settings
             clone.OutputSettings = (RainfallRunoffOutputSettingData)OutputSettings.Clone();
 
+            clone.OutputDataItems = new EventedList<IDataItem>(OutputDataItems.Select(odi => (IDataItem)odi.DeepClone()));
+
             // clone model data
             clone.ModelData = new EventedList<CatchmentModelData>(ModelData.Select(md => (CatchmentModelData) md.Clone()));
 

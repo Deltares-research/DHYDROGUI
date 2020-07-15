@@ -9,9 +9,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FeatureCoverageProviders
     public class ModelOutputFeatureCoverageProvider : IFeatureCoverageProvider
     {
         private const string OutputPrefix = "Output: ";
-        private readonly IModel model;
+        private readonly RainfallRunoffModel model;
 
-        public ModelOutputFeatureCoverageProvider(IModel model)
+        public ModelOutputFeatureCoverageProvider(RainfallRunoffModel model)
         {
             this.model = model;
         }
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FeatureCoverageProviders
         {
             get
             {
-                return model.DataItems.Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output).Where(
+                return model.OutputDataItems.Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output).Where(
                     di => di.Value is IFeatureCoverage).
                     Select(di => di.Value as IFeatureCoverage);
             }
