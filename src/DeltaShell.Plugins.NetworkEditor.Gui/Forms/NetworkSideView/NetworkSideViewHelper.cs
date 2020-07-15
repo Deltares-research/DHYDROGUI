@@ -14,6 +14,7 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
@@ -342,13 +343,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 var relativeOffset = relativeOffsets[i];
                 var value = values[i];
+
                 var segmentChainage = GetBranchChainageFromRelativeLength(route, relativeOffset);
                 var segment = segmentChainage?.Item1;
                 var chainage = segmentChainage?.Item2;
 
                 if (segment == null || !(segment.Branch is IPipe pipe))
                     continue;
-                
+
                 var currentData = new PipeWaterLevelData
                 {
                     Pipe = pipe,
@@ -362,7 +364,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
                 if (previousData != null)
                 {
-                    var coordinatesToAdd = GetExtraCoordinates(previousData, currentData).Where(c => c != null);
+                    if (previousData.Pipe != currentData.Pipe)
+                    {
+                        var pipeBottomLevel = previousData.Segment.DirectionIsPositive
+                            ? previousData.Pipe.LevelTarget
+                            : previousData.Pipe.LevelSource;
+
+                        var dataEndPreviousPipe = new PipeWaterLevelData
+                        {
+                            Pipe = previousData.Pipe,
+                            Value = currentData.Value,
+                            Segment = previousData.Segment,
+                            RelativeOffset = currentData.RelativeOffset,
+                            PipeBottomLevel = pipeBottomLevel
+                        };
+
+                        dataEndPreviousPipe.SetValueInPipe(currentData.Value);
+
+                        foreach (var coordinate in GetIntersectingCoordinates(previousData, dataEndPreviousPipe).OrderBy(c => c.X))
+                        {
+                            xValues.Add(coordinate.X);
+                            yValues.Add(coordinate.Y);
+                        }
+
+                        xValues.Add(dataEndPreviousPipe.RelativeOffset);
+                        yValues.Add(dataEndPreviousPipe.ValueInPipe);
+
+                        previousData = dataEndPreviousPipe;
+                    }
+                    
+                    var coordinatesToAdd = GetIntersectingCoordinates(previousData, currentData).Where(c => c != null);
 
                     foreach (var coordinate in coordinatesToAdd.OrderBy(c => c.X))
                     {
@@ -380,32 +411,57 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return CreateFunction(new Unit("meter", "m AD"), xValues, yValues, "Waterlevel in pipe");
         }
 
-        private static Tuple<INetworkSegment, double> GetBranchChainageFromRelativeLength(Route route, double relativeOffset)
+        internal static Tuple<INetworkSegment, double> GetBranchChainageFromRelativeLength(Route route, double relativeOffset)
         {
             var currentLength = 0.0;
+            var segments = route.Segments.Values;
 
-            foreach (var segment in route.Segments.Values)
+            for (int i = 0; i < segments.Count; i++)
             {
-                currentLength += segment.Length;
+                var segment = segments[i];
 
-                if (relativeOffset <= currentLength)
+                var startSegment = currentLength;
+                var endSegment = currentLength + segment.Length;
+
+                var onBeginSegment = Math.Abs(relativeOffset - startSegment) < 1e-8;
+                var onEndSegment = Math.Abs(relativeOffset - endSegment) < 1e-8;
+                var isOnSegment = relativeOffset >= startSegment && relativeOffset <= endSegment;
+
+                if (!isOnSegment)
                 {
-                                        currentLength -= segment.Length;
-
-                    var segmentOffset = relativeOffset - currentLength;
-
-                    var chainage = segment.DirectionIsPositive 
-                        ? segment.Chainage +  segmentOffset
-                        : segment.Chainage - segmentOffset;
-
-                    return new Tuple<INetworkSegment, double>(segment, chainage);
+                    currentLength += segment.Length;
+                    continue;
                 }
+
+                if (onBeginSegment)
+                {
+                    return new Tuple<INetworkSegment, double>(segment, segment.Chainage);
+                }
+
+                if (onEndSegment)
+                {
+                    if (i == segments.Count - 1)
+                    {
+                        return new Tuple<INetworkSegment, double>(segment, segment.EndChainage);
+                    }
+
+                    currentLength += segment.Length;
+                    segment = segments[i + 1];
+                }
+
+                var segmentOffset = relativeOffset - currentLength;
+                var chainage = segment.DirectionIsPositive
+                    ? segment.Chainage + segmentOffset
+                    : segment.Chainage - segmentOffset;
+
+                return new Tuple<INetworkSegment, double>(segment, chainage);
+
             }
 
             return null;
         }
 
-        private static IEnumerable<Coordinate> GetExtraCoordinates(PipeWaterLevelData previousData, PipeWaterLevelData currentData)
+        private static IEnumerable<Coordinate> GetIntersectingCoordinates(PipeWaterLevelData previousData, PipeWaterLevelData currentData)
         {
             var previousLocation = previousData.ValueLocation;
             var location = currentData.ValueLocation;
