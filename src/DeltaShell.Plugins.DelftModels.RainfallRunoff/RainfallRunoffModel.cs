@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private IEventedList<NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitions;
         private IEventedList<NwrwDefinition> nwrwDefinitions;
         private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
-
+        
         public RainfallRunoffModel() : base("Rainfall Runoff")
         {
             ((INotifyPropertyChanged) this).PropertyChanged += (s, e) =>
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             get
             {
-                return DataItems
+                return OutputDataItems
                     .Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output && di.Value is IFunction)
                     .Select(di => (IFunction)di.Value);
             }
@@ -524,10 +524,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             base.OnInputCollectionChanged(sender, e);
         }
 
+        public IEventedList<IDataItem> OutputDataItems { get; set; } = new EventedList<IDataItem>();
+
         
         private void AddOutputCoverage(EngineParameter modelParameter)
         {
-            if (modelParameter.AggregationOptions == AggregationOptions.None || GetDataItemByTag(modelParameter.Name) != null)
+            if (modelParameter.AggregationOptions == AggregationOptions.None)
             {
                 return;
             }
@@ -543,7 +545,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                                                                   modelParameter.Unit, true);
                 coverage.IsEditable = false;
                 coverage.Components[0].NoDataValue = double.NaN;
-                AddDataItem(coverage, DataItemRole.Output, coverage.Name);
+                //AddDataItem(coverage, DataItemRole.Output, coverage.Name);
+                if(!OutputDataItems.Any(odi => odi.Tag.Equals(coverage.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    OutputDataItems.Add(new DataItem(coverage, DataItemRole.Output, coverage.Name));
             }
             else if (modelParameter.ElementSet == ElementSet.UnpavedElmSet ||
                      modelParameter.ElementSet == ElementSet.PavedElmSet ||
@@ -557,7 +561,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                                                                     modelParameter.Unit, true);
                 coverage.IsEditable = false;
                 coverage.Components[0].NoDataValue = double.NaN;
-                AddDataItem(coverage, DataItemRole.Output, coverage.Name);
+                //AddDataItem(coverage, DataItemRole.Output, coverage.Name);
+                if (!OutputDataItems.Any(odi => odi.Tag.Equals(coverage.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    OutputDataItems.Add(new DataItem(coverage, DataItemRole.Output, coverage.Name));
             }
             else if (modelParameter.ElementSet == ElementSet.BalanceModelElmSet)
             {
@@ -566,7 +572,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 timeSeries.IsEditable = false;
                 timeSeries.Components.Add(new Variable<double>(modelParameter.Name, modelParameter.Unit));
                 timeSeries.Components[0].NoDataValue = double.NaN;
-                AddDataItem(timeSeries, DataItemRole.Output, timeSeries.Name);
+                //AddDataItem(timeSeries, DataItemRole.Output, timeSeries.Name);
+                if (!OutputDataItems.Any(odi => odi.Tag.Equals(timeSeries.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    OutputDataItems.Add(new DataItem(timeSeries, DataItemRole.Output, timeSeries.Name));
             }
             else
             {

@@ -89,6 +89,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
             {
                 yield return model.GetDataItemByValue(outputDataItem.Value);
             }
+
+            foreach (var outputDataItem in model.OutputDataItems.Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output &&
+                !IsOutputRestartFile(di)))
+            {
+                yield return outputDataItem;
+            }
         }
 
         private static object GetRestartFolder(RainfallRunoffModel data)
