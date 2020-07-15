@@ -59,18 +59,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
 
-            categories.ForEach(category =>
-            {
-                category.Name =
-                    backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name) ??
-                    category.Name;
-                category.Properties.ForEach(property =>
-                {
-                    property.Name =
-                        backwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name) ??
-                        property.Name;
-                });
-            });
+            categories.SelectMany(cat => cat.Properties)
+                      .ForEach(prop => prop.Name = backwardsCompatibilityHelper.GetUpdatedPropertyName(prop.Name) ?? prop.Name);
         }
 
         private string GetFullPathForReading(string relativePath)
