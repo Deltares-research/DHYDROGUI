@@ -7,17 +7,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
     public class WaveModelValidator : IValidator<WaveModel, WaveModel>
     {
-        public ValidationReport Validate(WaveModel model, WaveModel target = null)
+        /// <summary>
+        /// Validates the specified model.
+        /// </summary>
+        /// <param name="rootObject">The model.</param>
+        /// <param name="target">The target, unused.</param>
+        /// <returns>
+        /// A <see cref="ValidationReport"/> containing any validation violations.
+        /// </returns>
+        /// <remarks>
+        /// <paramref name="target"/> is currently unused.
+        /// </remarks>
+        public ValidationReport Validate(WaveModel rootObject, WaveModel target = null)
         {
-            return new ValidationReport(model.Name + " (Waves Model)", new[]
+            return new ValidationReport(rootObject.Name + " (Waves Model)", new[]
             {
-                WaveDomainValidator.Validate(model),
-                WaveTimePointValidator.Validate(model),
-                WaveBoundariesValidator.Validate(model.BoundaryContainer.Boundaries, model.TimePointData.TimePoints.FirstOrDefault()),
-                WaveAreaValidator.Validate(model),
-                WaveCouplingValidator.Validate(model),
-                WavePropertiesValidator.Validate(model),
-                WaveOutputParametersValidator.Validate(model)
+                WaveDomainValidator.Validate(rootObject),
+                WaveTimePointValidator.Validate(rootObject),
+                WaveBoundariesValidator.Validate(rootObject.BoundaryContainer.Boundaries, rootObject.TimePointData.TimePoints.FirstOrDefault()),
+                WaveAreaValidator.Validate(rootObject),
+                WaveCouplingValidator.Validate(rootObject),
+                WavePropertiesValidator.Validate(rootObject),
+                WaveOutputParametersValidator.Validate(rootObject)
             });
         }
     }

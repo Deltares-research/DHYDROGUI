@@ -241,11 +241,11 @@ namespace DelftTools.Hydro.CrossSections
         /// <exception cref="System.ArgumentException"> </exception>
         public abstract void ShiftLevel(double delta);
 
-        public virtual IGeometry GetGeometry(ICrossSection cs)
+        public virtual IGeometry GetGeometry(ICrossSection crossSection)
         {
-            return cachedGeometry ??
-                   (cachedGeometry =
-                        CalculateGeometry(cs.Branch.Geometry, NetworkHelper.MapChainage(cs.Branch, cs.Chainage)));
+            return cachedGeometry ?? (cachedGeometry = CalculateGeometry(crossSection.Branch.Geometry, 
+                                                                         NetworkHelper.MapChainage(crossSection.Branch, 
+                                                                                                   crossSection.Chainage)));
         }
 
         public virtual void SetGeometry(IGeometry value)

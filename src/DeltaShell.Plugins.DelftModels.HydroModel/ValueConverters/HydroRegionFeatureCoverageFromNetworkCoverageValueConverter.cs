@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
     {
         private readonly Dictionary<INetworkFeature, int> networkFeatureLocationIndex = new Dictionary<INetworkFeature, int>();
 
-        public void Update(DateTime timeToUpdate, object value = null)
+        public void Update(DateTime time, object value = null)
         {
             List<IHydroObject> catchments = RRInputWaterLevel.FeatureVariable.Values.OfType<IHydroObject>().ToList();
             if (catchments.Count == 0)
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
                 return;
             }
 
-            int timeIndex = GetActualOrPreviousTimeIndex(FlowOutputWaterLevel.Time, timeToUpdate);
+            int timeIndex = GetActualOrPreviousTimeIndex(FlowOutputWaterLevel.Time, time);
             if (timeIndex < 0)
             {
                 return;
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             {
                 RRInputWaterLevel.Store.FireEvents = false;
                 RRInputWaterLevel.Time.Clear();
-                RRInputWaterLevel[timeToUpdate] = inputWaterLevels;
+                RRInputWaterLevel[time] = inputWaterLevels;
             }
             finally
             {

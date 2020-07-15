@@ -192,24 +192,24 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public int GetMeshName(int mesh, out string name)
+        public int GetMeshName(int meshId, out string meshName)
         {
-            name = string.Empty;
+            meshName = string.Empty;
             if (!Initialized)
             {
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
             }
 
-            var meshName = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
+            var meshNameBuilder = new StringBuilder(GridApiDataSet.GridConstants.MAXSTRLEN);
             try
             {
-                int ierr = wrapper.GetMeshName(ioncId, mesh, meshName);
+                int ierr = wrapper.GetMeshName(ioncId, meshId, meshNameBuilder);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
 
-                name = meshName.ToString();
+                meshName = meshNameBuilder.ToString();
                 return ierr;
             }
             catch
@@ -305,10 +305,10 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public virtual int GetNumberOfEdges(int meshId, out int numberOfMeshEdges)
+        public virtual int GetNumberOfEdges(int meshId, out int numberOfEdges)
         {
             int ierr;
-            numberOfMeshEdges = -1;
+            numberOfEdges = -1;
             if (!Initialized)
             {
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
@@ -316,7 +316,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                ierr = wrapper.GetEdgeCount(ioncId, meshId, ref numberOfMeshEdges);
+                ierr = wrapper.GetEdgeCount(ioncId, meshId, ref numberOfEdges);
             }
             catch
             {

@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             return null;
         }
 
-        public bool CanCreateLayerFor(object data, object parentObject)
+        public bool CanCreateLayerFor(object data, object parentData)
         {
             return data is HydroModel ||
                    data is ModelFolder && ((ModelFolder) data).Model is HydroModel;

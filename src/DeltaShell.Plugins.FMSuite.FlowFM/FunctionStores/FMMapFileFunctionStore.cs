@@ -87,16 +87,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             return functions;
         }
 
-        protected override int GetVariableValuesCount(IVariable function, IVariableFilter[] filters)
+        protected override int GetVariableValuesCount(IVariable variable, IVariableFilter[] filters)
         {
-            int variableValuesCount = base.GetVariableValuesCount(function, filters);
+            int variableValuesCount = base.GetVariableValuesCount(variable, filters);
 
-            if (function.IsIndependent)
+            if (variable.IsIndependent)
             {
                 return variableValuesCount;
             }
 
-            IFunction coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
+            IFunction coverage = Functions.FirstOrDefault(f => f.Components.Contains(variable));
 
             if (coverage == null || !coverage.Attributes.ContainsKey(SedIndexAttributeName))
             {
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             using (ReconnectToMapFile())
             {
                 NetCdfVariable netcdfVariable =
-                    netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
+                    netCdfFile.GetVariableByName(variable.Components[0].Attributes[NcNameAttribute]);
                 if (netcdfVariable == null)
                 {
                     throw new Exception("Missing NetCdf name");

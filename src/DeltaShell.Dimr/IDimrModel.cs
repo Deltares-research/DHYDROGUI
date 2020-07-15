@@ -40,7 +40,7 @@ namespace DeltaShell.Dimr
 
         string DimrModelRelativeOutputDirectory { get; }
 
-        string GetItemString(IDataItem value);
+        string GetItemString(IDataItem dataItem);
 
         /// <summary>
         /// Gets the data items that match the given item string.

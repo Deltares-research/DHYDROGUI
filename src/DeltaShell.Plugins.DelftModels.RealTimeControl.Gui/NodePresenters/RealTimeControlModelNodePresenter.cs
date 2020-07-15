@@ -92,18 +92,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             return DragOperations.None;
         }
 
-        public override IEnumerable GetChildNodeObjects(RealTimeControlModel rtcModel, ITreeNode node)
+        /// <summary>
+        /// Gets the child node objects.
+        /// </summary>
+        /// <param name="model">The RTC model.</param>
+        /// <param name="node">The node.</param>
+        /// <returns></returns>
+        public override IEnumerable GetChildNodeObjects(RealTimeControlModel model, ITreeNode node)
         {
-            yield return new TreeFolder(rtcModel, GetInputItems(rtcModel), InputFolderName, FolderImageType.Input);
-            yield return new TreeFolder(rtcModel, GetOutputItems(rtcModel), OutputFolderName, FolderImageType.Output);
+            yield return new TreeFolder(model, GetInputItems(model), InputFolderName, FolderImageType.Input);
+            yield return new TreeFolder(model, GetOutputItems(model), OutputFolderName, FolderImageType.Output);
         }
 
-        protected override bool CanRemove(RealTimeControlModel nodeData)
+        protected override bool CanRemove(RealTimeControlModel model)
         {
             return true;
         }
 
-        protected override bool RemoveNodeData(object parentNodeData, RealTimeControlModel nodeData)
+        protected override bool RemoveNodeData(object parentNodeData, RealTimeControlModel o)
         {
             return gui.CommandHandler.DeleteCurrentProjectItem();
         }

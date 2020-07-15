@@ -53,9 +53,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
             return TypeUtils.MemberwiseClone(this);
         }
 
-        public int CompareTo(object other)
+        public int CompareTo(object obj)
         {
-            return Name.CompareTo(other.ToString());
+            return Name.CompareTo(obj.ToString());
         }
     }
 }

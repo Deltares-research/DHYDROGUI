@@ -1372,7 +1372,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual string ShortName => "wave";
 
-        public virtual string GetItemString(IDataItem value)
+        public virtual string GetItemString(IDataItem dataItem)
         {
             return null;
         }

@@ -65,10 +65,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             }
         }
 
-        public override IMenuItem GetContextMenu(ITreeNode node, object nodeData)
+        /// <summary>
+        /// Gets the context menu.
+        /// </summary>
+        /// <param name="sender">The node for which to get hte context menu.</param>
+        /// <param name="nodeData">The node data.</param>
+        /// <returns></returns>
+        public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
-            IMenuItem menuBase = base.GetContextMenu(node, nodeData);
-            IMenuItem menu = NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, node, nodeData);
+            IMenuItem menuBase = base.GetContextMenu(sender, nodeData);
+            IMenuItem menu = NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, sender, nodeData);
             if (menuBase != null)
             {
                 menu.Add(menuBase);
@@ -80,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                 return menu;
             }
 
-            ContextMenuStrip menu1 = ContextMenuFactory.CreateMenuFor(shortcut.Data, Gui, this, node);
+            ContextMenuStrip menu1 = ContextMenuFactory.CreateMenuFor(shortcut.Data, Gui, this, sender);
             menu.Add(new MenuItemContextMenuStripAdapter(menu1));
             return menu;
         }

@@ -15,9 +15,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
         /// <summary>
         /// Grabs output from RR and places it in Inflows input for flow for requested timestep.
         /// </summary>
-        /// <param name="timeToUpdate"></param>
-        /// <param name="value"></param>
-        public void Update(DateTime timeToUpdate, object value = null)
+        /// <param name="time">The time to update</param>
+        /// <param name="value">The value, currently unused</param>
+        /// <remarks>
+        /// <paramref name="value"/> is currently unused.
+        /// </remarks>
+        public void Update(DateTime time, object value = null)
         {
             List<IHydroObject> flowBoundaries = FlowInflows.FeatureVariable.Values.OfType<IHydroObject>().ToList();
             if (flowBoundaries.Count == 0)
@@ -43,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             var flowValues = new double[flowBoundaries.Count];
 
             // copy the rr output values for the timeToUpdate
-            double[] rrValues = GatherRRDischargeValues(timeToUpdate, numRRFeatures);
+            double[] rrValues = GatherRRDischargeValues(time, numRRFeatures);
 
             var iFeature = 0;
             // gather the results based on the linked features
@@ -72,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             {
                 FlowInflows.Store.FireEvents = false;
                 FlowInflows.Time.Clear();
-                FlowInflows[timeToUpdate] = flowValues;
+                FlowInflows[time] = flowValues;
             }
             finally
             {

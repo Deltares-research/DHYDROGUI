@@ -184,11 +184,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
         }
 
-        public double InitializeComputationalTimeStep(double targetTimeRel, double timeStep)
+        public double InitializeComputationalTimeStep(double targetTimeRel, double dt)
         {
             try
             {
-                return remoteInstanceApi.InitializeComputationalTimeStep(targetTimeRel, timeStep);
+                return remoteInstanceApi.InitializeComputationalTimeStep(targetTimeRel, dt);
             }
             catch (Exception e)
             {
@@ -280,9 +280,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             remoteInstanceApi.SetValue(featureCategory, featureName, parameterName, value);
         }
 
-        public void WriteNetGeometry(string fileName)
+        public void WriteNetGeometry(string filePath)
         {
-            remoteInstanceApi.WriteNetGeometry(fileName);
+            remoteInstanceApi.WriteNetGeometry(filePath);
         }
 
         public void WritePartitioning(string inputFileName, string outputFileName, string polFileName)

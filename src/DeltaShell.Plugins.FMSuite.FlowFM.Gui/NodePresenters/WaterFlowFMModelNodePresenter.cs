@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         public WaterFlowFMModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaterFlowFMModel nodeData)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaterFlowFMModel model)
         {
             if (firstTimeCreate)
             {
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 firstTimeCreate = false;
             }
 
-            node.Text = nodeData.Name;
+            node.Text = model.Name;
             node.Image = UnstrucModelIcon;
         }
 
@@ -69,16 +69,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return DragOperations.Move | DragOperations.Copy;
         }
 
-        public override IEnumerable GetChildNodeObjects(WaterFlowFMModel parentNodeData, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(WaterFlowFMModel model, ITreeNode node)
         {
             // experimental: don't have 'Input' folder..
-            foreach (object input in GetInputItems(parentNodeData))
+            foreach (object input in GetInputItems(model))
             {
                 yield return input;
             }
 
             //yield return new TreeFolder(parentNodeData, , "Input", FolderImageType.Input);
-            yield return new TreeFolder(parentNodeData, GetOutputItems(parentNodeData), "Output", FolderImageType.Output);
+            yield return new TreeFolder(model, GetOutputItems(model), "Output", FolderImageType.Output);
         }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)

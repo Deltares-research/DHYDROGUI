@@ -32,15 +32,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         }
 
         /// <summary>
-        /// Custom paint method since x of level lines is dependend of zoom-level
+        /// Custom paint method since x of level lines is dependent of zoom-level
         /// </summary>
-        /// <param name="vectorStyle"></param>
-        public override void Paint(VectorStyle vectorStyle)
+        /// <param name="style">The style to paint with.</param>
+        public override void Paint(VectorStyle style)
         {
             //base.Paint(vectorStyle);
             //custom paint logic :)
             CalculateShapeFeatures();
-            base.Paint(vectorStyle);
+            base.Paint(style);
         }
 
         public override bool Contains(int x, int y)

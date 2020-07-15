@@ -107,14 +107,24 @@ namespace DeltaShell.Dimr
             api?.set_feedback_logger();
         }
 
-        public int Initialize(string xmlFile)
+        /// <summary>
+        /// Initializes this <see cref="RemoteDimrApi"/>.
+        /// </summary>
+        /// <param name="path">Path to the DIMR XML file.</param>
+        /// <returns>The exit code of initializing this <see cref="RemoteDimrApi"/>.</returns>
+        public int Initialize(string path)
         {
-            return api?.Initialize(xmlFile) ?? 1;
+            return api?.Initialize(path) ?? 1;
         }
 
-        public int Update(double step)
+        /// <summary>
+        /// Updates this <see cref="RemoteDimrApi"/> with the specified time step <paramref name="dt"/>.
+        /// </summary>
+        /// <param name="dt">The time step dt.</param>
+        /// <returns>The exit code of the Update call.</returns>
+        public int Update(double dt)
         {
-            return api?.Update(step) ?? 1;
+            return api?.Update(dt) ?? 1;
         }
 
         public int Finish()

@@ -442,9 +442,9 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public int GetCoordinateSystemCode(out int epsg_code)
+        public int GetCoordinateSystemCode(out int coordinateSystemCode)
         {
-            epsg_code = 0;
+            coordinateSystemCode = 0;
             if (!Initialized)
             {
                 return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
@@ -452,7 +452,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                int ierr = wrapper.GetCoordinateSystem(ioncId, ref epsg_code);
+                int ierr = wrapper.GetCoordinateSystem(ioncId, ref coordinateSystemCode);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -476,7 +476,9 @@ namespace DeltaShell.NGHS.IO.Grid
             return !Initialized ? double.NaN : convversion;
         }
 
-        public int CreateFile(string filePath, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
+        public int CreateFile(string filePath, 
+                              UGridGlobalMetaData uGridGlobalMetaData, 
+                              GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
             var imode = (int) mode;
             var netcdfId = 0;
@@ -486,7 +488,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 return ierr;
             }
 
-            ierr = CreateAndWriteDefaultNetCdfMetaData(globalMetaData, netcdfId);
+            ierr = CreateAndWriteDefaultNetCdfMetaData(uGridGlobalMetaData, netcdfId);
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
                 return ierr;

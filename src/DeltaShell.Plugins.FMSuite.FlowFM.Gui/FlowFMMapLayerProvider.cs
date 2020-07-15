@@ -67,9 +67,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         /// Creates a maplayer.
         /// </summary>
         /// <param name="data"> The data object for which the layer is created. </param>
-        /// <param name="parent"> The parent object. </param>
+        /// <param name="parentData"> The parent object. </param>
         /// <returns> The layer that is created for the data object. </returns>
-        public ILayer CreateLayer(object data, object parent)
+        public ILayer CreateLayer(object data, object parentData)
         {
             var waterFlowFmModel = data as WaterFlowFMModel;
             if (waterFlowFmModel != null)
@@ -94,9 +94,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
             var feature2Ds = data as IEventedList<Feature2D>;
-            if (feature2Ds != null && parent is WaterFlowFMModel)
+            if (feature2Ds != null && parentData is WaterFlowFMModel)
             {
-                var fmModel = (WaterFlowFMModel) parent;
+                var fmModel = (WaterFlowFMModel) parentData;
                 if (Equals(feature2Ds, fmModel.Boundaries))
                 {
                     return new VectorLayer(BoundariesLayerName)
@@ -137,9 +137,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
             var allBoundaryConditionSets = data as IEventedList<BoundaryConditionSet>;
-            if (allBoundaryConditionSets != null && parent is WaterFlowFMModel)
+            if (allBoundaryConditionSets != null && parentData is WaterFlowFMModel)
             {
-                var fmModel = (WaterFlowFMModel) parent;
+                var fmModel = (WaterFlowFMModel) parentData;
                 CategorialTheme theme = CreateBoundaryConditionsTheme();
                 return new VectorLayer(BoundaryConditionsLayerName)
                 {
@@ -242,11 +242,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         /// Determines whether this instance can create a layer for the specified data object.
         /// </summary>
         /// <param name="data"> The data object for which will be determined whether a layer can be created. </param>
-        /// <param name="parentObject"> The parent object. </param>
+        /// <param name="parentData"> The parent object. </param>
         /// <returns>
         /// <c> true </c> if this instance [can create layer for] the specified data; otherwise, <c> false </c>.
         /// </returns>
-        public bool CanCreateLayerFor(object data, object parentObject)
+        public bool CanCreateLayerFor(object data, object parentData)
         {
             return data is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
@@ -254,7 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is FMHisFileFunctionStore
                    || data is FMClassMapFileFunctionStore
                    || data is ImportedFMNetFile
-                   || data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel
+                   || data is IEventedList<BoundaryConditionSet> && parentData is WaterFlowFMModel
                    || data is FMSnappedFeaturesGroupLayerData
                    || data is FMOutputSnappedFeaturesGroupLayerData
                    || data is CoverageDepthLayersList

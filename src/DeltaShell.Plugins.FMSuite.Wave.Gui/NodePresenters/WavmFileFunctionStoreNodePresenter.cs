@@ -21,18 +21,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             node.Image = Icon;
         }
 
-        public override IEnumerable GetChildNodeObjects(WavmFileFunctionStore parent, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(WavmFileFunctionStore parentNodeData, ITreeNode node)
         {
             WaveModel model = Gui.Application.GetAllModelsInProject().OfType<WaveModel>()
-                                 .FirstOrDefault(m => m.WavmFunctionStores.Contains(parent));
+                                 .FirstOrDefault(m => m.WavmFunctionStores.Contains(parentNodeData));
             if (model == null)
             {
-                yield return WrapIntoOutputItem(parent.Grid, parent, "grid");
+                yield return WrapIntoOutputItem(parentNodeData.Grid, parentNodeData, "grid");
             }
 
-            foreach (IFunction function in parent.Functions)
+            foreach (IFunction function in parentNodeData.Functions)
             {
-                yield return WrapIntoOutputItem(function, parent, function.Name);
+                yield return WrapIntoOutputItem(function, parentNodeData, function.Name);
             }
         }
 

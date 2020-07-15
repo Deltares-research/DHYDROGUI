@@ -24,24 +24,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
     {
         private WaqProcessesRules ProcessesRules;
 
-        public ValidationReport Validate(WaterQualityModel model, WaterQualityModel target = null)
+        /// <summary>
+        /// Validates the specified model.
+        /// </summary>
+        /// <param name="rootObject">The model.</param>
+        /// <param name="target">The target, currently unused.</param>
+        /// <returns>A validation report for the provided <paramref name="rootObject"/>.</returns>
+        /// <remarks>
+        /// <paramref name="target"/> is currently unused.
+        /// </remarks>
+        public ValidationReport Validate(WaterQualityModel rootObject, WaterQualityModel target = null)
         {
             return new ValidationReport("Water Quality Model", new[]
             {
-                new ValidationReport("Flow data", ValidateHydroData(model)),
-                new ValidationReport("Model settings", ValidateModelSettings(model)),
-                new ValidationReport("Simulation timer", ValidateSimulationTimer(model)),
-                new ValidationReport("Output timers", ValidateOutputTimers(model, model.ModelSettings)),
+                new ValidationReport("Flow data", ValidateHydroData(rootObject)),
+                new ValidationReport("Model settings", ValidateModelSettings(rootObject)),
+                new ValidationReport("Simulation timer", ValidateSimulationTimer(rootObject)),
+                new ValidationReport("Output timers", ValidateOutputTimers(rootObject, rootObject.ModelSettings)),
                 new ValidationReport("Substance process library",
-                                     ValidateSubstanceProcessLibrary(model.SubstanceProcessLibrary)),
+                                     ValidateSubstanceProcessLibrary(rootObject.SubstanceProcessLibrary)),
                 new ValidationReport("Process coefficients",
-                                     ValidateProcessCoefficients(model.SubstanceProcessLibrary,
-                                                                 model.ProcessCoefficients, model.WaqProcessesRules)),
-                new ValidationReport("Loads", ValidateLoads(model)),
-                new ValidationReport(@"Observation points / areas", ValidateObservationPointsAndAreas(model)),
-                new ValidationReport("Input restart state", ValidateRestartInput(model)),
-                new ValidationReport("Output restart state", ValidateRestartOutput(model)),
-                new ValidationReport("Segment function file existance", ValidateExistanceSegmentFiles(model))
+                                     ValidateProcessCoefficients(rootObject.SubstanceProcessLibrary,
+                                                                 rootObject.ProcessCoefficients, rootObject.WaqProcessesRules)),
+                new ValidationReport("Loads", ValidateLoads(rootObject)),
+                new ValidationReport(@"Observation points / areas", ValidateObservationPointsAndAreas(rootObject)),
+                new ValidationReport("Input restart state", ValidateRestartInput(rootObject)),
+                new ValidationReport("Output restart state", ValidateRestartOutput(rootObject)),
+                new ValidationReport("Segment function file existance", ValidateExistanceSegmentFiles(rootObject))
             });
         }
 

@@ -107,18 +107,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
 
         public class CoverageAbsDiffOperation : NetworkCoveragePairOperation
         {
-            public override INetworkCoverage Perform(INetworkCoverage a, INetworkCoverage b)
+            public override INetworkCoverage Perform(INetworkCoverage networkCoverage, INetworkCoverage b)
             {
-                return DoOperation(a, b, (aa, bb) =>
+                return DoOperation(networkCoverage, b, (aa, bb) =>
                 {
-                    if (IsNoDataValue(a, aa))
+                    if (IsNoDataValue(networkCoverage, aa))
                     {
                         return aa;
                     }
 
                     if (IsNoDataValue(b, bb))
                     {
-                        return GetNoDataValue(a, b, bb);
+                        return GetNoDataValue(networkCoverage, b, bb);
                     }
 
                     return Math.Abs(aa - bb);
@@ -137,9 +137,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
         /// </summary>
         public class CoverageAddOperation : NetworkCoveragePairOperation
         {
-            public override INetworkCoverage Perform(INetworkCoverage a, INetworkCoverage b)
+            public override INetworkCoverage Perform(INetworkCoverage networkCoverage, INetworkCoverage b)
             {
-                return DoOperation(a, b, NetworkCoverageMathExtensions.Add);
+                return DoOperation(networkCoverage, b, NetworkCoverageMathExtensions.Add);
             }
 
             public override string ToString()
@@ -252,9 +252,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
 
         public class CoverageMaxOperation : NetworkCoverageOperation
         {
-            public override INetworkCoverage Perform(INetworkCoverage a, object b = null)
+            public override INetworkCoverage Perform(INetworkCoverage networkCoverage, object b = null)
             {
-                return DoAggregation(a, ds => ds.Max());
+                return DoAggregation(networkCoverage, ds => ds.Max());
             }
 
             public override string ToString()
@@ -265,9 +265,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
 
         public class CoverageMeanOperation : NetworkCoverageOperation
         {
-            public override INetworkCoverage Perform(INetworkCoverage a, object b = null)
+            public override INetworkCoverage Perform(INetworkCoverage networkCoverage, object b = null)
             {
-                return DoAggregation(a, ds => ds.Average());
+                return DoAggregation(networkCoverage, ds => ds.Average());
             }
 
             public override string ToString()
@@ -278,10 +278,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
 
         public class CoverageMinOperation : NetworkCoverageOperation
         {
-            public override INetworkCoverage Perform(INetworkCoverage a, object b = null)
+            public override INetworkCoverage Perform(INetworkCoverage networkCoverage, object b = null)
             {
                 //in the future we may want to add a second component with timestamp (using DoAggregationComplex)
-                return DoAggregation(a, ds => ds.Min());
+                return DoAggregation(networkCoverage, ds => ds.Min());
             }
 
             public override string ToString()
@@ -296,9 +296,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
         /// </summary>
         public class CoverageSubtractOperation : NetworkCoveragePairOperation
         {
-            public override INetworkCoverage Perform(INetworkCoverage a, INetworkCoverage b)
+            public override INetworkCoverage Perform(INetworkCoverage networkCoverage, INetworkCoverage b)
             {
-                return DoOperation(a, b, NetworkCoverageMathExtensions.Substract);
+                return DoOperation(networkCoverage, b, NetworkCoverageMathExtensions.Substract);
             }
 
             public override string ToString()
@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             bool RequiresSecondCoverage { get; }
             bool RequiresPrimaryTimeDependent { get; }
             bool AllowSecondaryNonTimeDependentIfFirstIs { get; }
-            INetworkCoverage Perform(INetworkCoverage a, object b = null);
+            INetworkCoverage Perform(INetworkCoverage networkCoverage, object b = null);
         }
 
         public abstract class NetworkCoverageOperation : INetworkCoverageOperation
@@ -351,12 +351,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             }
 
             /// <summary>
-            /// Performs an operation on <paramref name="a"/>, using <paramref name="b"/> for
+            /// Performs an operation on <paramref name="networkCoverage"/>, using <paramref name="b"/> for
             /// additional data required by the operation.
             /// </summary>
-            /// <param name="a">Source of the operation (left side)</param>
+            /// <param name="networkCoverage">Source of the operation (left side)</param>
             /// <param name="b">Additional data of the operation (right side)</param>
-            public abstract INetworkCoverage Perform(INetworkCoverage a, object b = null);
+            public abstract INetworkCoverage Perform(INetworkCoverage networkCoverage, object b = null);
         }
 
         public abstract class NetworkCoveragePairOperation : NetworkCoverageOperation
@@ -385,11 +385,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
                 }
             }
 
-            public abstract INetworkCoverage Perform(INetworkCoverage a, INetworkCoverage b = null);
+            public abstract INetworkCoverage Perform(INetworkCoverage networkCoverage, INetworkCoverage b = null);
 
-            public override INetworkCoverage Perform(INetworkCoverage a, object b)
+            public override INetworkCoverage Perform(INetworkCoverage networkCoverage, object b)
             {
-                return Perform(a, b as INetworkCoverage);
+                return Perform(networkCoverage, b as INetworkCoverage);
             }
         }
 
@@ -419,11 +419,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
                 }
             }
 
-            public abstract INetworkCoverage Perform(INetworkCoverage a, double referenceValue);
+            public abstract INetworkCoverage Perform(INetworkCoverage networkCoverage, double referenceValue);
 
-            public override INetworkCoverage Perform(INetworkCoverage a, object b)
+            public override INetworkCoverage Perform(INetworkCoverage networkCoverage, object b)
             {
-                return Perform(a, (double) b);
+                return Perform(networkCoverage, (double) b);
             }
         }
     }

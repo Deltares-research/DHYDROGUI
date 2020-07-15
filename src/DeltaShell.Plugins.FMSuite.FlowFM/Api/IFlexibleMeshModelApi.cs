@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         void SetValue(string featureCategory, string featureName, string parameterName, double value);
 
-        void WriteNetGeometry(string fileName);
+        void WriteNetGeometry(string filePath);
 
         void WritePartitioning(string inputFileName, string outputFileName, string polFileName);
 

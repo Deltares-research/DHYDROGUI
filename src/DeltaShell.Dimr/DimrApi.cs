@@ -174,22 +174,27 @@ namespace DeltaShell.Dimr
             }
         }
 
-        public int Initialize(string xmlFile)
+        /// <summary>
+        /// Initializes this <see cref="DimrApi"/>.
+        /// </summary>
+        /// <param name="path">Path to the DIMR XML file.</param>
+        /// <returns>The exit code of initializing this <see cref="DimrApi"/>.</returns>
+        public int Initialize(string path)
         {
             string previousDir = Environment.CurrentDirectory;
             reduceLogging = false;
 
             try
             {
-                Environment.CurrentDirectory = Path.GetDirectoryName(xmlFile);
+                Environment.CurrentDirectory = Path.GetDirectoryName(path);
                 LogMsg(string.Format("Running dimr in : {0}", Environment.CurrentDirectory));
 
-                string path = Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey);
+                string environmentPathVariable = Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey);
 
-                path = KernelDirs + ";" +
+                environmentPathVariable = KernelDirs + ";" +
                        DimrApiDataSet.DimrDllPath + ";" +
-                       path;
-                Environment.SetEnvironmentVariable(EnvironmentConstants.PathKey, path, EnvironmentVariableTarget.Process);
+                       environmentPathVariable;
+                Environment.SetEnvironmentVariable(EnvironmentConstants.PathKey, environmentPathVariable, EnvironmentVariableTarget.Process);
 
                 LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey)));
 
@@ -234,7 +239,7 @@ namespace DeltaShell.Dimr
                 // Free memory
                 Marshal.FreeHGlobal(intPointer);
 
-                int returnCode = DimrApiWrapper.initialize(xmlFile);
+                int returnCode = DimrApiWrapper.initialize(path);
                 if (returnCode != 0)
                 {
                     return returnCode;
@@ -259,7 +264,12 @@ namespace DeltaShell.Dimr
             return 0;
         }
 
-        public void SetLoggingLevel(string debugLevelType, Level level)
+        /// <summary>
+        /// Sets the logging level.
+        /// </summary>
+        /// <param name="logType">Type of the debug level.</param>
+        /// <param name="level">The level.</param>
+        public void SetLoggingLevel(string logType, Level level)
         {
             // Allocating memory for long
             IntPtr intPointer = Marshal.AllocHGlobal(sizeof(int));
@@ -268,7 +278,7 @@ namespace DeltaShell.Dimr
 
             // sending intPointer to unmanaged code here
 
-            DimrApiWrapper.set_var(debugLevelType, intPointer);
+            DimrApiWrapper.set_var(logType, intPointer);
             // Free memory
             Marshal.FreeHGlobal(intPointer);
         }
@@ -286,9 +296,14 @@ namespace DeltaShell.Dimr
             }
         }
 
-        public int Update(double step)
+        /// <summary>
+        /// Updates this <see cref="DimrApi"/> with the specified time step <paramref name="dt"/>.
+        /// </summary>
+        /// <param name="dt">The time step dt.</param>
+        /// <returns>The exit code of the Update call.</returns>
+        public int Update(double dt)
         {
-            int returnCode = DimrApiWrapper.update(step);
+            int returnCode = DimrApiWrapper.update(dt);
 
             if (returnCode != 0)
             {

@@ -40,14 +40,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             set => remoteInstanceApi.ReferenceDateTime = value;
         }
 
-        public int Initialize(string mdwFilePath)
+        /// <summary>
+        /// Initializes this <see cref="RemoteWaveModelApi"/> with the specified MDW file path.
+        /// </summary>
+        /// <param name="path">The MDW file path.</param>
+        /// <returns>
+        /// The return code of the initialize call.
+        /// </returns>
+        public int Initialize(string path)
         {
-            return remoteInstanceApi.Initialize(mdwFilePath);
+            return remoteInstanceApi.Initialize(path);
         }
 
-        public int Update(double timestep)
+        public int Update(double dt)
         {
-            return remoteInstanceApi.Update(timestep);
+            return remoteInstanceApi.Update(dt);
         }
 
         public int Finish()

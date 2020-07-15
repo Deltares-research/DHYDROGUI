@@ -166,10 +166,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return structures;
         }
 
-        public void Write(string filePath, IEnumerable<IStructure> structures)
+        /// <summary>
+        /// Writes the specified file path.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="features">The collection of structures to write.</param>
+        public void Write(string filePath, IEnumerable<IStructure> features)
         {
             new DelftIniWriter().WriteDelftIniFile(
-                GetSupportedStructures(structures)
+                GetSupportedStructures(features)
                     .Select(s => CreateDelftIniCategory(s, filePath, ReferenceDate)), filePath);
         }
 

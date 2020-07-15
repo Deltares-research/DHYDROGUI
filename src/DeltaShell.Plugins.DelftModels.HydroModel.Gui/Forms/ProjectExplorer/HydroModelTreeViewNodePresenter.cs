@@ -72,43 +72,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
             return true;
         }
 
-        public override void OnNodeRenamed(HydroModel model, string newName)
+        /// <summary>
+        /// Called when [node renamed].
+        /// </summary>
+        /// <param name="data">The model contained in the node.</param>
+        /// <param name="newName">The new name.</param>
+        public override void OnNodeRenamed(HydroModel data, string newName)
         {
-            if (model.Name != newName)
+            if (data.Name != newName)
             {
-                model.Name = newName;
+                data.Name = newName;
             }
         }
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, HydroModel model)
+        /// <summary>
+        /// Updates the node.
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="node">The node.</param>
+        /// <param name="nodeData">The model contained in the node.</param>
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, HydroModel nodeData)
         {
-            node.Text = model.Name;
-            node.Tag = model;
-            UpdateNodeImage(node, model);
+            node.Text = nodeData.Name;
+            node.Tag = nodeData;
+            UpdateNodeImage(node, nodeData);
 
             // first time added hydro model
-            if (!node.IsLoaded && model.Id == 0)
+            if (!node.IsLoaded && nodeData.Id == 0)
             {
                 node.Expand(); // model
                 node.Nodes.ForEach(n => n.Expand());
             }
         }
 
-        public override IEnumerable GetChildNodeObjects(HydroModel model, ITreeNode node)
+        /// <summary>
+        /// Gets the child node objects.
+        /// </summary>
+        /// <param name="parentNodeData">The model contained in the node.</param>
+        /// <param name="node">The node.</param>
+        /// <returns></returns>
+        public override IEnumerable GetChildNodeObjects(HydroModel parentNodeData, ITreeNode node)
         {
-            yield return model.GetDataItemByValue(model.Region);
-            yield return new TreeFolder(model, model.Activities, "Models", FolderImageType.None);
+            yield return parentNodeData.GetDataItemByValue(parentNodeData.Region);
+            yield return new TreeFolder(parentNodeData, parentNodeData.Activities, "Models", FolderImageType.None);
             var outputs = new List<TreeFolder>();
 
-            var hydroModelWorkFlow = model.CurrentWorkflow as IHydroModelWorkFlow;
+            var hydroModelWorkFlow = parentNodeData.CurrentWorkflow as IHydroModelWorkFlow;
             if (hydroModelWorkFlow != null && hydroModelWorkFlow.Data != null && hydroModelWorkFlow.Data.OutputDataItems.Any())
             {
-                outputs.Add(new TreeFolder(model, hydroModelWorkFlow.Data.OutputDataItems, "1D-2D Spatial Data", FolderImageType.None));
+                outputs.Add(new TreeFolder(parentNodeData, hydroModelWorkFlow.Data.OutputDataItems, "1D-2D Spatial Data", FolderImageType.None));
             }
 
-            outputs.Add(new TreeFolder(model, model.GetDataItems<TextDocument>(DataItemRole.Output), "Reports", FolderImageType.None));
+            outputs.Add(new TreeFolder(parentNodeData, parentNodeData.GetDataItems<TextDocument>(DataItemRole.Output), "Reports", FolderImageType.None));
 
-            yield return new TreeFolder(model, outputs, "Output", FolderImageType.Output);
+            yield return new TreeFolder(parentNodeData, outputs, "Output", FolderImageType.Output);
         }
 
         public override DragOperations CanDrag(HydroModel nodeData)
@@ -121,6 +138,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
             return DragOperations.None;
         }
 
+        /// <summary>
+        /// Called when [drag and dropped].
+        /// </summary>
+        /// <param name="item">The item being dragged and dropped.</param>
+        /// <param name="sourceParentNodeData">The source parent node data.</param>
+        /// <param name="target">The target node model.</param>
+        /// <param name="operation">The drag operations</param>
+        /// <param name="position">the new position.</param>
         /// <exception cref="NotSupportedException">
         /// When a <paramref name="item"/> has an unlinked <see cref="DataItem"/>s
         /// <see cref="DataItem.Value"/> does not inherit from <see cref="ICloneable"/>, is not null, or is not a value type.
@@ -129,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
         /// When <paramref name="item"/> contains a <see cref="IModel"/> with a <see cref="DataItemSet"/> for which a
         /// <see cref="IDataItem"/>s <see cref="IDataItem.Owner"/> is not the data item set.
         /// </exception>
-        public override void OnDragDrop(object item, object sourceParentNodeData, HydroModel targetModel, DragOperations operation, int position)
+        public override void OnDragDrop(object item, object sourceParentNodeData, HydroModel target, DragOperations operation, int position)
         {
             var model = item as IModel;
 
@@ -144,19 +169,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
                 var project = TreeView.Nodes[0].Tag as Project;
 
                 gui.CopyPasteHandler.Cut(model);
-                gui.CopyPasteHandler.Paste(gui.Application.Project, targetModel, position);
+                gui.CopyPasteHandler.Paste(gui.Application.Project, target, position);
             }
             else if ((operation & DragOperations.Copy) != 0)
             {
                 var modelCopy = (IModel) model.DeepClone();
-                targetModel.Activities.Insert(position, modelCopy);
+                target.Activities.Insert(position, modelCopy);
             }
         }
 
-        protected override bool CanRemove(HydroModel hydroModel)
+        /// <summary>
+        /// Determines whether this instance can remove the specified hydro model node data.
+        /// </summary>
+        /// <param name="nodeData">The hydro model contained in the node.</param>
+        /// <returns>
+        ///   <c>true</c> if this instance can remove the specified hydro model; otherwise, <c>false</c>.
+        /// </returns>
+        protected override bool CanRemove(HydroModel nodeData)
         {
-            List<IModel> models = gui.Application.ModelService.GetModelsLinkedBy(hydroModel) //models linked to hydro model
-                                     .Where(m => !hydroModel.Activities.Contains(m))         //not contained by hydro model itself
+            List<IModel> models = gui.Application.ModelService.GetModelsLinkedBy(nodeData) //models linked to hydro model
+                                     .Where(m => !nodeData.Activities.Contains(m))         //not contained by hydro model itself
                                      .ToList();
 
             if (models.Count > 0)

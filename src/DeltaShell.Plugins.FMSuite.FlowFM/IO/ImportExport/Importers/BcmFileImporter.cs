@@ -142,14 +142,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public string[] FilePaths { get; set; }
 
-        public object ImportItem(string filePath, object target = null)
+        public object ImportItem(string path, object target = null)
         {
-            string[] filePaths = filePath == null
-                                     ? FilePaths
-                                     : new[]
-                                     {
-                                         filePath
-                                     };
+            string[] filePaths = path == null ? FilePaths : new[] {path};
 
             if (filePaths == null)
             {
@@ -159,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             var bcSetList = target as IList<BoundaryConditionSet>;
             if (bcSetList != null)
             {
-                foreach (string path in filePaths)
+                foreach (string filePath in filePaths)
                 {
                     if (ShouldCancel)
                     {
@@ -176,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                         }
                     }
 
-                    ImportTo(path, bcSetList, true);
+                    ImportTo(filePath, bcSetList, true);
                 }
 
                 OpenViewAfterImport = false;
@@ -186,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             var bcSet = target as BoundaryConditionSet;
             if (bcSet != null)
             {
-                foreach (string path in filePaths)
+                foreach (string filePath in filePaths)
                 {
                     if (ShouldCancel)
                     {
@@ -203,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                         }
                     }
 
-                    ImportTo(path, new[]
+                    ImportTo(filePath, new[]
                     {
                         bcSet
                     }, true);
@@ -218,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             {
                 var tempSet = new BoundaryConditionSet {Feature = condition.Feature};
                 tempSet.BoundaryConditions.Add(condition);
-                foreach (string path in filePaths)
+                foreach (string filePath in filePaths)
                 {
                     if (ShouldCancel)
                     {
@@ -230,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                         condition.ClearData();
                     }
 
-                    ImportTo(path, new[]
+                    ImportTo(filePath, new[]
                     {
                         tempSet
                     }, false);

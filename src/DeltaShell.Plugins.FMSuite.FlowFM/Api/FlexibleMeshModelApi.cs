@@ -112,17 +112,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             throw new Exception("Flow FM finalize user time step failed with error code " + result);
         }
 
-        public double InitializeComputationalTimeStep(double targetTimeRel, double timeStep)
+        /// <summary>
+        /// Initializes the computational time step.
+        /// </summary>
+        /// <param name="targetTimeRel">The relative target time.</param>
+        /// <param name="dt">The requested time step.</param>
+        /// <returns>
+        /// The initialized time step.
+        /// </returns>
+        /// <exception cref="Exception">Flow FM initialize computational time step failed with error code " + result</exception>
+        public double InitializeComputationalTimeStep(double targetTimeRel, double dt)
         {
-            double dt = timeStep;
-            int result = FlexibleMeshModelDll.dfm_init_computational_timestep(ref targetTimeRel, ref dt);
+            double timeStep = dt;
+            int result = FlexibleMeshModelDll.dfm_init_computational_timestep(ref targetTimeRel, ref timeStep);
 
             if (result != 0 && result != 88)
             {
                 throw new Exception("Flow FM initialize computational time step failed with error code " + result);
             }
 
-            return dt;
+            return timeStep;
         }
 
         public double RunComputationalTimeStep(double timeStep)
@@ -130,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             double newTimeStep = timeStep;
             int result = FlexibleMeshModelDll.dfm_run_computational_timestep(ref newTimeStep);
 
-            // Keep dflowfm (1d2d) computation going, when dflofm core returns warning code 31 (time setback) 
+            // Keep dflowfm (1d2d) computation going, when dflowfm core returns warning code 31 (time setback) 
             if (result != 0 && result != 31)
             {
                 throw new Exception("Flow FM perform computational time step failed with error code " + result);

@@ -59,11 +59,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         /// <inheritdoc/>
         /// <summary>Imports the RTC Model.</summary>
-        /// <param name="directoryPath">The directory path of the directory of the RTC files.</param>
+        /// <param name="path">The directory path of the directory of the RTC files.</param>
+        /// <param name="target">target, currently unused</param>
         /// <returns>A RealTimeControlModel as object</returns>
-        public object ImportItem(string directoryPath, object target = null)
+        /// <remarks>
+        /// <paramref name="target"/> is unused.
+        /// </remarks>
+        public object ImportItem(string path, object target = null)
         {
-            return RealTimeControlModelXmlReader.Read(directoryPath);
+            return RealTimeControlModelXmlReader.Read(path);
         }
     }
 }

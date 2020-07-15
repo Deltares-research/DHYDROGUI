@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             return null;
         }
 
-        public bool CanCreateLayerFor(object data, object parentObject)
+        public bool CanCreateLayerFor(object data, object parentData)
         {
             return data is RealTimeControlModel
                    || data is ModelFolder && ((ModelFolder) data).Model is RealTimeControlModel

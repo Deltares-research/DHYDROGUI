@@ -25,15 +25,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             return c1.X == c2.X && c1.Y == c2.Y;
         }
 
-        public override int GetHashCode(GridCoordinate coordinate)
+        public override int GetHashCode(GridCoordinate obj)
         {
-            if (coordinate == null)
+            if (obj == null)
             {
                 return 0;
             }
 
-            int hCode = (ShiftAndWrap(coordinate.X.GetHashCode(), 2) ^
-                         coordinate.Y.GetHashCode()) + 1;
+            int hCode = (ShiftAndWrap(obj.X.GetHashCode(), 2) ^
+                         obj.Y.GetHashCode()) + 1;
             return hCode.GetHashCode();
         }
 

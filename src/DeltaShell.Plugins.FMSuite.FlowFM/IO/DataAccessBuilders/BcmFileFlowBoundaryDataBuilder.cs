@@ -93,12 +93,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return Enumerable.Empty<string>();
         }
 
-        protected override IEnumerable<object> ParseValues(BcQuantityData dataBlock, Type type, string supportPointName)
+        protected override IEnumerable<object> ParseValues(BcQuantityData quantityData, Type type, string supportPointName)
         {
-            IEnumerable<string> stringValues = dataBlock.Values;
-            string format = dataBlock.Unit;
+            IEnumerable<string> stringValues = quantityData.Values;
+            string format = quantityData.Unit;
 
-            var bcmData = dataBlock as BcmQuantityData;
+            var bcmData = quantityData as BcmQuantityData;
             string dateString = bcmData == null
                                     ? DateTime.Now.ToString("yyyyMMdd", CultureInfo.InvariantCulture)
                                     : bcmData.ReferenceTime;

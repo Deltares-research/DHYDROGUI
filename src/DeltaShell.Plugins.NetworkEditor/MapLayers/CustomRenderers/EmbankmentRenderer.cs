@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             };
         }
 
-        public bool Render(IFeature feature, Graphics graphics, ILayer layer)
+        public bool Render(IFeature feature, Graphics g, ILayer layer)
         {
             var embankment = feature as Embankment;
             if (embankment == null)
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                 style.Line.Brush = new LinearGradientBrush(pointFBegin, pointFEnd, colorBegin, colorEnd);
 
                 // Draw the geometry. 
-                VectorRenderingHelper.RenderGeometry(graphics, layer.Map, line, style, null, true);
+                VectorRenderingHelper.RenderGeometry(g, layer.Map, line, style, null, true);
             }
 
             return true;

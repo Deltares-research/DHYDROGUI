@@ -79,13 +79,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
             return false;
         }
 
-        public virtual IPoint GetTrackerAt(double x, double y, double xMarge, double yMarge)
+        public virtual IPoint GetTrackerAt(double x, double y, double width, double height)
         {
             for (var i = 0; i <= points.Count - 1; i++)
             {
                 // could be generalized with polygon geometry and contains but this is simpler
                 Coordinate coordinate = points[i].Coordinates[0];
-                if (x >= coordinate.X - xMarge && x <= coordinate.X + xMarge && y >= coordinate.Y - yMarge && y <= coordinate.Y + yMarge)
+                if (x >= coordinate.X - width && x <= coordinate.X + width && y >= coordinate.Y - height && y <= coordinate.Y + height)
                 {
                     return points[i];
                 }

@@ -12,12 +12,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public class LdbFile : NGHSFileBase, IFeature2DFileBase<LandBoundary2D>
     {
-        public void Write(string filePath, IEnumerable<LandBoundary2D> area2DFeatures)
+        /// <summary>
+        /// Writes the features to the specified file path.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        /// <param name="features">The 2D area features.</param>
+        /// <exception cref="Exception">
+        /// Thrown when <paramref name="features"/> contains invalid geometry.
+        /// </exception>
+        public void Write(string filePath, IEnumerable<LandBoundary2D> features)
         {
             OpenOutputFile(filePath);
             try
             {
-                foreach (LandBoundary2D area2DFeature in area2DFeatures)
+                foreach (LandBoundary2D area2DFeature in features)
                 {
                     var polyLine = area2DFeature.Geometry as ILineString;
                     if (polyLine == null)

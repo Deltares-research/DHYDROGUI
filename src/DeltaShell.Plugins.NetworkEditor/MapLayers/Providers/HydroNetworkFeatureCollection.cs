@@ -90,20 +90,20 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             base.Dispose();
         }
 
-        public virtual void OnInsert(int index, object o)
+        public virtual void OnInsert(int index, object value)
         {
             if (typeof(IBranch).IsAssignableFrom(FeatureType))
             {
                 lock (network.Branches)
                 {
-                    network.Branches.Insert(index, (IBranch) o);
+                    network.Branches.Insert(index, (IBranch) value);
                 }
             }
             else if (typeof(INode).IsAssignableFrom(FeatureType))
             {
                 lock (network.Nodes)
                 {
-                    network.Nodes.Insert(index, (INode) o);
+                    network.Nodes.Insert(index, (INode) value);
                 }
             }
             else if (typeof(IBranchFeature).IsAssignableFrom(FeatureType))

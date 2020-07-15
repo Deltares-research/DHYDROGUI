@@ -28,13 +28,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public virtual bool IsMasterTimeStep => true;
         public virtual string ShortName => "flow";
 
-        public virtual string GetItemString(IDataItem dataItem)
+        public virtual string GetItemString(IDataItem value)
         {
-            string feature = GetFeatureCategory(dataItem.GetFeature());
+            string feature = GetFeatureCategory(value.GetFeature());
 
-            string dataItemName = dataItem.Name;
+            string dataItemName = value.Name;
 
-            string parameterName = dataItem.GetParameterName();
+            string parameterName = value.GetParameterName();
 
             var concatNames = new List<string>(new[] {feature, dataItemName, parameterName});
 

@@ -40,11 +40,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
             }
         }
 
-        public override IEnumerable GetChildNodeObjects(WaterQualityModel waterQualityModel, ITreeNode node)
+        /// <summary>
+        /// Gets the child node objects.
+        /// </summary>
+        /// <param name="model">The water quality model.</param>
+        /// <param name="node">The node.</param>
+        /// <returns>The collection of child node objects.</returns>
+        public override IEnumerable GetChildNodeObjects(WaterQualityModel model, ITreeNode node)
         {
-            yield return new WaterQualityInputTreeFolder(waterQualityModel, null, "Input", FolderImageType.Input,
+            yield return new WaterQualityInputTreeFolder(model, null, "Input", FolderImageType.Input,
                                                          GuiPlugin);
-            yield return new TreeFolder(waterQualityModel, GetOutputItems(waterQualityModel), "Output",
+            yield return new TreeFolder(model, GetOutputItems(model), "Output",
                                         FolderImageType.Output);
         }
 

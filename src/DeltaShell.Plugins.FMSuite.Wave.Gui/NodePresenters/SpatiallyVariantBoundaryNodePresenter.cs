@@ -14,7 +14,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
     /// <see cref="SpatiallyVariantBoundaryNodePresenter"/> implements the NodePresenter for
     /// <see cref="IWaveBoundary"/>, such that they can be viewed within the Node Tree.
     /// </summary>
-    // TODO Rename this?
     public class SpatiallyVariantBoundaryNodePresenter : FMSuiteNodePresenterBase<IWaveBoundary>
     {
         private static readonly Bitmap boundaryImage = Resources.boundary;
@@ -54,11 +53,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         [ExcludeFromCodeCoverage]
         protected override Image GetNodeImage(IWaveBoundary data) => boundaryImage;
 
-        protected override bool CanRemove(IWaveBoundary data) => true;
+        protected override bool CanRemove(IWaveBoundary nodeData) => true;
 
-        protected override bool RemoveNodeData(object parentNodeData, IWaveBoundary data)
+        protected override bool RemoveNodeData(object parentNodeData, IWaveBoundary nodeData)
         {
-            return OnDeleteBoundary(data);
+            return OnDeleteBoundary(nodeData);
         }
 
         private IBoundaryContainer GetBoundaryContainer(IWaveBoundary waveBoundary)

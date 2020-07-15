@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             };
         }
 
-        public bool Render(IFeature feature, Graphics graphics, ILayer layer)
+        public bool Render(IFeature feature, Graphics g, ILayer layer)
         {
             if (!(feature is Feature2DPolygon))
             {
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             {
                 IGeometry newGeo = newPol.Difference(geoAsPol);
                 // Draw the geometry. 
-                VectorRenderingHelper.RenderGeometry(graphics, layer.Map, newGeo, style, null, true);
+                VectorRenderingHelper.RenderGeometry(g, layer.Map, newGeo, style, null, true);
             }
             catch (Exception e)
             {

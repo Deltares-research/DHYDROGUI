@@ -37,7 +37,9 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="filePath">File name for NetCDF dataset to be opened.</param>
         /// <param name="uGridGlobalMetaData">The global metadata of the NetCDF file</param>
         /// <param name="mode">NetCDF open mode, e.g. NF90_NOWRITE.</param>
-        int CreateFile(string filePath, UGridGlobalMetaData uGridGlobalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write);
+        int CreateFile(string filePath, 
+                       UGridGlobalMetaData uGridGlobalMetaData, 
+                       GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write);
 
         /// <summary>
         /// Tries to open a NetCDF file and initialize based on its specified conventions.
@@ -57,6 +59,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns>Number of meshes.</returns>
         int GetMeshCount(out int numberOfMeshes);
 
+        /// <summary>
+        /// Gets the coordinate system code.
+        /// </summary>
+        /// <param name="coordinateSystemCode">The epsg coordinate system code.</param>
+        /// <returns>The return code.</returns>
         int GetCoordinateSystemCode(out int coordinateSystemCode);
 
         /// <summary>

@@ -23,24 +23,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             node.Image = Resources.unstrucWater;
         }
 
-        public override IEnumerable GetChildNodeObjects(FMMapFileFunctionStore parent, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(FMMapFileFunctionStore parentNodeData, ITreeNode node)
         {
             WaterFlowFMModel model =
                 Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>()
-                   .FirstOrDefault(m => Equals(m.OutputMapFileStore, parent));
+                   .FirstOrDefault(m => Equals(m.OutputMapFileStore, parentNodeData));
 
             if (model == null)
             {
-                UnstructuredGridCoverage coverage = parent.Functions.OfType<UnstructuredGridCoverage>().FirstOrDefault();
+                UnstructuredGridCoverage coverage = parentNodeData.Functions.OfType<UnstructuredGridCoverage>().FirstOrDefault();
                 if (coverage != null)
                 {
-                    yield return WrapIntoOutputItem(coverage.Grid, parent, "grid");
+                    yield return WrapIntoOutputItem(coverage.Grid, parentNodeData, "grid");
                 }
             }
 
-            foreach (IFunction function in parent.Functions)
+            foreach (IFunction function in parentNodeData.Functions)
             {
-                yield return WrapIntoOutputItem(function, parent, function.Name);
+                yield return WrapIntoOutputItem(function, parentNodeData, function.Name);
             }
         }
 

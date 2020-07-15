@@ -36,25 +36,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         /// <summary>
         /// Gets the child node objects.
         /// </summary>
-        /// <param name="parent">The parent.</param>
+        /// <param name="parentNodeData">The parent.</param>
         /// <param name="node">The node.</param>
         /// <returns></returns>
-        public override IEnumerable GetChildNodeObjects(FMClassMapFileFunctionStore parent, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(FMClassMapFileFunctionStore parentNodeData, ITreeNode node)
         {
-            WaterFlowFMModel model = GetModelByFunctionStore(parent);
+            WaterFlowFMModel model = GetModelByFunctionStore(parentNodeData);
 
             if (model == null)
             {
-                UnstructuredGridCoverage coverage = parent.Functions.OfType<UnstructuredGridCoverage>().FirstOrDefault();
+                UnstructuredGridCoverage coverage = parentNodeData.Functions.OfType<UnstructuredGridCoverage>().FirstOrDefault();
                 if (coverage != null)
                 {
-                    yield return WrapIntoOutputItem(coverage.Grid, parent, "grid");
+                    yield return WrapIntoOutputItem(coverage.Grid, parentNodeData, "grid");
                 }
             }
 
-            foreach (IFunction function in parent.Functions)
+            foreach (IFunction function in parentNodeData.Functions)
             {
-                yield return WrapIntoOutputItem(function, parent, function.Name);
+                yield return WrapIntoOutputItem(function, parentNodeData, function.Name);
             }
         }
 

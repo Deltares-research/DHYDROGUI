@@ -44,11 +44,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         /// <summary>
         /// Initializes the wave model, mdw file directory will be used to switch to
         /// </summary>
-        /// <param name="mdwFilePath"> the full filepath of the mdw file </param>
-        public int Initialize(string mdwFilePath)
+        /// <param name="path"> the full filepath of the mdw file </param>
+        public int Initialize(string path)
         {
-            workingDirectory = Path.GetDirectoryName(mdwFilePath);
-            string mdwFileName = Path.GetFileName(mdwFilePath);
+            workingDirectory = Path.GetDirectoryName(path);
+            string mdwFileName = Path.GetFileName(path);
             using (new WaveDllHelper(workingDirectory))
             {
                 WaveModelDll.initialize(mdwFileName);
@@ -57,11 +57,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             return 0;
         }
 
-        public int Update(double timestep)
+        public int Update(double dt)
         {
             using (new WaveDllHelper(workingDirectory))
             {
-                WaveModelDll.update(timestep);
+                WaveModelDll.update(dt);
             }
 
             return 0;

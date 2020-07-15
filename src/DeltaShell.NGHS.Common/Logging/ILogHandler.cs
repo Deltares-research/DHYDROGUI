@@ -11,41 +11,41 @@
         /// <summary>
         /// Adds a log message to the collection of log messages with severity <see cref="LogSeverity.Info"/>.
         /// </summary>
-        /// <param name="message">The log message.</param>
-        void ReportInfo(string message);
+        /// <param name="logMessage">The log message.</param>
+        void ReportInfo(string logMessage);
 
         /// <summary>
         /// Adds a formatted log message to the collection of log messages with severity <see cref="LogSeverity.Info"/>.
         /// </summary>
-        /// <param name="message">The log message containing zero or more format items</param>
+        /// <param name="logMessage">The log message containing zero or more format items</param>
         /// <param name="args">An Object array containing zero or more objects to format</param>
-        void ReportInfoFormat(string message, params object[] args);
+        void ReportInfoFormat(string logMessage, params object[] args);
 
         /// <summary>
         /// Adds a log message to the collection of log messages with severity <see cref="LogSeverity.Warning"/>.
         /// </summary>
-        /// <param name="message">The log message.</param>
-        void ReportWarning(string message);
+        /// <param name="logMessage">The log message.</param>
+        void ReportWarning(string logMessage);
 
         /// <summary>
         /// Adds a formatted log message to the collection of log messages with severity <see cref="LogSeverity.Warning"/>.
         /// </summary>
-        /// <param name="message">The log message containing zero or more format items</param>
+        /// <param name="logMessage">The log message containing zero or more format items</param>
         /// <param name="args">An Object array containing zero or more objects to format</param>
-        void ReportWarningFormat(string message, params object[] args);
+        void ReportWarningFormat(string logMessage, params object[] args);
 
         /// <summary>
         /// Adds a log message to the collection of log messages with severity <see cref="LogSeverity.Error"/>.
         /// </summary>
-        /// <param name="message">The log message.</param>
-        void ReportError(string message);
+        /// <param name="logMessage">The log message.</param>
+        void ReportError(string logMessage);
 
         /// <summary>
         /// Adds a formatted log message to the collection of log messages with severity <see cref="LogSeverity.Error"/>.
         /// </summary>
-        /// <param name="message">The log message containing zero or more format items</param>
+        /// <param name="logMessage">The log message containing zero or more format items</param>
         /// <param name="args">An Object array containing zero or more objects to format</param>
-        void ReportErrorFormat(string message, params object[] args);
+        void ReportErrorFormat(string logMessage, params object[] args);
 
         /// <summary>
         /// Logs all the log messages as one report.
