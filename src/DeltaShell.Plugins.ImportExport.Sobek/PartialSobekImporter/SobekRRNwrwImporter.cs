@@ -395,6 +395,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     {
                         filteredReadSobekRRNodeDictionary[targetName] = sobekRRNode;
                     }
+                    else if (branchDictionary.ContainsKey(targetName))
+                    {
+                        filteredReadSobekRRNodeDictionary[targetName] = sobekRRNode;
+                    }
+                    else if (fmModel.Network.Compartments.Any(c => c.Name.Equals(targetName, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        filteredReadSobekRRNodeDictionary[targetName] = sobekRRNode;
+                    }
                 }
                 else if (objectTypeName.Contains(pipeIdentifier)) // check if target is branch
                 {
