@@ -75,8 +75,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         continue;
                     }
 
-                    // link:
-                    targetItem.LinkTo(sourceItem);
+                    if (!targetItem.LinkedBy.Contains(targetItem))
+                    {
+                        // link:
+                        targetItem.LinkTo(sourceItem);
+                    }
                 }
             }
         }
@@ -147,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                             continue;
                         }
 
-                        if (source.CanLinkTo(target))
+                        if (source.CanLinkTo(target) && !Region.Links.Any(l => l.Source.Equals(source) && l.Target.Equals(target)))
                         {
                             Region.Links.Add(new HydroLink(source, target)
                                 {
