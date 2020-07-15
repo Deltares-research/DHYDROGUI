@@ -216,11 +216,27 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="discretization">Discretization to base the mesh on</param>
         public static Disposable1DMeshGeometry CreateDisposable1DMeshGeometry(this IDiscretization discretization)
         {
-            var locations = discretization.Locations.Values.ToArray();
-            var segments = discretization.Segments.Values.ToArray();
 
+
+            var locations = discretization.Locations.Values.ToArray();
             var locationCount = locations.Length;
+
+            var segments = discretization.Segments.Values.ToArray();
             var edgeCount = segments.Length;
+
+            var locationIdLookup = locations.ToIndexDictionary();
+            var locationIdxBySegment = new Dictionary<INetworkSegment, int[]>();
+            for (int i = 0; i < edgeCount; i++)
+            {
+                var segment = segments[i];
+
+                var indices = GetLocationIndices(discretization, segment, locationIdLookup);
+                locationIdxBySegment[segment] = indices;
+            }
+
+            //update because of missing and thus new points
+            locations = discretization.Locations.Values.ToArray();
+            locationCount = locations.Length;
 
             var mesh = new Disposable1DMeshGeometry
             {
@@ -253,7 +269,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.NodeLongNames[i] = location.LongName ?? "";
             }
 
-            var locationIdLookup = locations.ToIndexDictionary();
+            //var locationIdLookup = locations.ToIndexDictionary();
             var edgeNodeIndex = 0;
             for (int i = 0; i < edgeCount; i++)
             {
@@ -264,9 +280,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.EdgeCenterPointX[i] = segment.Geometry.Centroid.X.TruncateByDigits();
                 mesh.EdgeCenterPointY[i] = segment.Geometry.Centroid.Y.TruncateByDigits();
                 
-                var indices = GetLocationIndices(discretization, segment, locationIdLookup);
-                mesh.EdgeNodes[edgeNodeIndex++] = indices[0];
-                mesh.EdgeNodes[edgeNodeIndex++] = indices[1];
+                mesh.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][0];
+                mesh.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][1];
             }
 
             return mesh;
@@ -317,8 +332,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[0] = locationIdLookup[firstLocation];
                 else
                 {
-                    Log.Error($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}");
-                    indices[0] = -1;
+                    Log.Warn($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}. Creating one on start node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
+                    var startLocation = new NetworkLocation(segment.Branch, segment.Chainage);
+                    discretization.Locations.Values.Add(startLocation);
+                    locationIdLookup[startLocation] = locationIdLookup.Count;
+                    indices[0] = locationIdLookup[startLocation];
                 }
             }
 
@@ -343,8 +361,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[1] = locationIdLookup[firstLocation];
                 else
                 {
-                    Log.Error($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}");
-                    indices[1] = -1;
+                    Log.Warn($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}. Creating one on end node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
+                    var endLocation = new NetworkLocation(segment.Branch, segment.EndChainage);
+                    discretization.Locations.Values.Add(endLocation);
+                    locationIdLookup[endLocation] = locationIdLookup.Count;
+                    indices[1] = locationIdLookup[endLocation];
                 }
             }
             return indices;
