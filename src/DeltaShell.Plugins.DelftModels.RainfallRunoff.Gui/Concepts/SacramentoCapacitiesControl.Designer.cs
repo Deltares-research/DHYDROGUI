@@ -285,6 +285,7 @@
             this.Controls.Add(this.label1);
             this.Name = "SacramentoCapacitiesControl";
             this.Size = new System.Drawing.Size(688, 152);
+            this.AutoSize = true;
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

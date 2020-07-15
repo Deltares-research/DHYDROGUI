@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
                 ObjectDescriptionFromTypeExtractor.ExtractObjectDescription(typeof (SacramentoData)));
             dataEditor.Dock = DockStyle.Fill;
             Controls.Add(dataEditor);
+            InitializeComponent();
         }
 
         public object Data
@@ -55,6 +56,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         public IEventedList<string> MeteoStations
         {
             set { dataEditor.GetCustomControls().OfType<CatchmentMeteoStationSelection>().First().MeteoStations = value; }
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // SacramentoDataView
+            // 
+            this.AutoSize = true;
+            this.Name = "SacramentoDataView";
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ResumeLayout(false);
+
         }
     }
 

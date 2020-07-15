@@ -86,6 +86,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Name = "SacramentoUnitHydrographControl";
+            this.AutoSize = true;
             this.Size = new System.Drawing.Size(158, 246);
             ((System.ComponentModel.ISupportInitialize)(this.sacramentoBindingSource)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
