@@ -357,6 +357,10 @@
   <ItemGroup>
     <EmbeddedResource Include="RainfallRunoffBoundaryData.hbm.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EngineParameter.hbm.xml" />
+    <EmbeddedResource Include="RainfallRunoffOutputSettingData.hbm.xml" />
+  </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
   </PropertyGroup>
