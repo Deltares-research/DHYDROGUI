@@ -264,6 +264,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51366-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="GeoAPI.CoordinateSystems">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51366-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="GeoAPI.Extensions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51366-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
