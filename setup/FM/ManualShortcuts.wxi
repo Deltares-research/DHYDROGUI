@@ -2,5 +2,6 @@
 <Include>
   <?include Manuals\FMManualShortcuts.wxi?>
   <?include ..\RealTimeControl\Manuals\RTCManualShortcuts.wxi?>
+  <?include ..\Sobek\Manuals\RainfallRunoffManualShortcuts.wxi?>
   <?include ..\Dimr\Manuals\DIMRManualShortcuts.wxi?>
 </Include>

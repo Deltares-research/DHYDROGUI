@@ -6,7 +6,7 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <ReleaseVersion>0.9.5</ReleaseVersion>
+    <ReleaseVersion>0.9.6</ReleaseVersion>
     <!-- This is the product name -->
     <ProductName>D-HYDRO Suite 1D2D (Beta)</ProductName>
     <ProjectGuid>{5725d793-35b5-48a1-bb6a-2291df6c2980}</ProjectGuid>
@@ -38,6 +38,12 @@
     <Content Include="..\Dimr\DimrDefines.wxi">
       <Link>DimrDefines.wxi</Link>
     </Content>
+    <Content Include="..\Dimr\Manuals\DIMRManuals.wxi">
+      <Link>Manuals\DIMRManuals.wxi</Link>
+    </Content>
+    <Content Include="..\Dimr\Manuals\DIMRManualShortcuts.wxi">
+      <Link>Manuals\DIMRManualShortcuts.wxi</Link>
+    </Content>
     <Content Include="..\HydroModel\HydroModelPlugin.wxi">
       <Link>HydroModelPlugin.wxi</Link>
     </Content>
@@ -52,6 +58,12 @@
     </Content>
     <Content Include="..\NGHS.IO\NGHS.IO.wxi">
       <Link>NGHS.IO.wxi</Link>
+    </Content>
+    <Content Include="..\RealTimeControl\Manuals\RTCManuals.wxi">
+      <Link>Manuals\RTCManuals.wxi</Link>
+    </Content>
+    <Content Include="..\RealTimeControl\Manuals\RTCManualShortcuts.wxi">
+      <Link>Manuals\RTCManualShortcuts.wxi</Link>
     </Content>
     <Content Include="..\RealTimeControl\RealTimeControlPlugin.wxi">
       <Link>RealTimeControlPlugin.wxi</Link>
@@ -76,6 +88,12 @@
     </Content>
     <Content Include="..\Sobek\ImportSobek2NetworkPlugin.wxi">
       <Link>ImportSobek2NetworkPlugin.wxi</Link>
+    </Content>
+    <Content Include="..\Sobek\Manuals\RainfallRunoffManuals.wxi">
+      <Link>Manuals\RainfallRunoffManuals.wxi</Link>
+    </Content>
+    <Content Include="..\Sobek\Manuals\RainfallRunoffManualShortcuts.wxi">
+      <Link>Manuals\RainfallRunoffManualShortcuts.wxi</Link>
     </Content>
     <Content Include="..\Sobek\RainfallRunoffModelPlugin.wxi">
       <Link>RainfallRunoffModelPlugin.wxi</Link>

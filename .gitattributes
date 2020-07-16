@@ -148,6 +148,8 @@ setup/Sobek/Manuals/D-Flow1D_Technical_Reference_Manual.pdf -text svneol=unset#u
 setup/Sobek/Manuals/D-Flow1D_User_Manual.pdf -text svneol=unset#unset
 setup/Sobek/Manuals/D-Rainfall_Runoff_Technical_Reference_Manual.pdf -text svneol=unset#unset
 setup/Sobek/Manuals/D-Rainfall_Runoff_User_Manual.pdf -text svneol=unset#unset
+setup/Sobek/Manuals/RainfallRunoffManualShortcuts.wxi -text
+setup/Sobek/Manuals/RainfallRunoffManuals.wxi -text
 setup/Sobek/Manuals/SobekManualShortcuts.wxi -text
 setup/Sobek/Manuals/SobekManuals.wxi -text
 setup/Sobek/OpenMI/Localization/OpenMINames.wxl -text
