@@ -41,9 +41,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             Resolution = new TimeSpan(0, 0, 0, 0, 1);
             
-            if (waterFlowFmModel.ReferenceTime > waterFlowFmModel.StartTime)
+            if (waterFlowFmModel.ReferenceTime != waterFlowFmModel.StartTime)
             {
-                yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time precedes reference time", new FmValidationShortcut(){FlowFmModel = model as WaterFlowFMModel,TabName = "Time Frame"});
+                yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time is not the same as reference time", new FmValidationShortcut {FlowFmModel = model as WaterFlowFMModel,TabName = "Time Frame"});
             }
 
             if (waterFlowFmModel.WriteRestart && waterFlowFmModel.SaveStateTimeStep.Ticks == 0)
