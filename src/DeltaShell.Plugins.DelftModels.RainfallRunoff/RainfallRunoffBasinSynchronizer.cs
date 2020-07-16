@@ -186,6 +186,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     AddDefaultModelDataForCatchment(catchment);
                 }
             }
+
+            if (sender is IDrainageBasin basin && e.PropertyName == nameof(basin.CoordinateSystem))
+            {
+                Model.OutputCoverages.ForEach(c => c.CoordinateSystem = basin?.CoordinateSystem);
+            }
         }
 
         [EditAction]
@@ -254,6 +259,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 Basin.Catchments.ForEach(OnCatchmentAdded);
                 Basin.Boundaries.ForEach(OnBoundaryAdded);
+
+                Model.OutputCoverages.ForEach(c => c.CoordinateSystem = Basin?.CoordinateSystem);
             }
         }
 

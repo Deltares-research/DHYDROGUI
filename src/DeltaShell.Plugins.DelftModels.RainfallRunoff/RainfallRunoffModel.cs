@@ -24,7 +24,6 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.FunctionStores;
-using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
@@ -37,6 +36,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.rr_kernel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using DeltaShell.Plugins.NetCDF;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -57,7 +57,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private IEventedList<CatchmentModelData> modelData;
         private IEventedList<NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitions;
         private IEventedList<NwrwDefinition> nwrwDefinitions;
-        private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
         
         public RainfallRunoffModel() : base("Rainfall Runoff")
         {
@@ -100,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             AddDataItem(globalTemperature, RainfallRunoffModelDataSet.TemperatureName, DataItemRole.Input, RainfallRunoffModelDataSet.TemperatureTag);
 
             // input water level (used by unpaved only)
-            var inputWaterLevel = CreateCatchmentCoverage(RainfallRunoffModelDataSet.InputWaterLevelUnpaved, "Input water level", null, true);
+            var inputWaterLevel = CreateCatchmentCoverage(RainfallRunoffModelDataSet.InputWaterLevelUnpaved, "Input water level", null, true, Basin?.CoordinateSystem);
             inputWaterLevel.Components[0].NoDataValue = RainfallRunoffModelDataSet.UndefinedWaterLevel;
             inputWaterLevel.Components[0].DefaultValue = RainfallRunoffModelDataSet.UndefinedWaterLevel;
             AddDataItem(inputWaterLevel, RainfallRunoffModelDataSet.InputWaterLevelUnpaved, DataItemRole.Input, RainfallRunoffModelDataSet.InputWaterLevelTag);
@@ -542,7 +541,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 modelParameter.ElementSet == ElementSet.WWTPElmSet)
             {
                 IFeatureCoverage coverage = CreateFeatureCoverage(functionName, modelParameter.Name,
-                                                                  modelParameter.Unit, true);
+                                                                  modelParameter.Unit, true, Basin?.CoordinateSystem);
                 coverage.IsEditable = false;
                 coverage.Components[0].NoDataValue = double.NaN;
                 //AddDataItem(coverage, DataItemRole.Output, coverage.Name);
@@ -558,7 +557,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                      modelParameter.ElementSet == ElementSet.NWRWElmSet)
             {
                 var coverage = CreateCatchmentCoverage(functionName, modelParameter.Name,
-                                                                    modelParameter.Unit, true);
+                                                                    modelParameter.Unit, true, Basin?.CoordinateSystem);
                 coverage.IsEditable = false;
                 coverage.Components[0].NoDataValue = double.NaN;
                 //AddDataItem(coverage, DataItemRole.Output, coverage.Name);
@@ -824,17 +823,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
         }
 
-        private static IFeatureCoverage CreateCatchmentCoverage(string name, string valueName = "Value", Unit valueUnit = null, bool timeDependent = false)
+        private static IFeatureCoverage CreateCatchmentCoverage(string name, string valueName = "Value", Unit valueUnit = null, bool timeDependent = false, ICoordinateSystem coordinateSystem = null)
         {
-            IFeatureCoverage catchmentCoverage = CreateFeatureCoverage(name, valueName, valueUnit, timeDependent);
+            IFeatureCoverage catchmentCoverage = CreateFeatureCoverage(name, valueName, valueUnit, timeDependent, coordinateSystem);
             catchmentCoverage.Arguments.Last().Name = "Catchment";
 
             return catchmentCoverage;
         }
 
-        private static IFeatureCoverage CreateFeatureCoverage(string name, string valueName = "Value", Unit valueUnit = null, bool timeDependent = false)
+        private static IFeatureCoverage CreateFeatureCoverage(string name, string valueName = "Value", Unit valueUnit = null, bool timeDependent = false, ICoordinateSystem coordinateSystem = null)
         {
-            var featureCoverage = new FeatureCoverage(name) {IsTimeDependent = timeDependent};
+            var featureCoverage = new FeatureCoverage(name)
+            {
+                CoordinateSystem = coordinateSystem,
+                IsTimeDependent = timeDependent
+            };
+
             var argument = new Variable<IFeature>("Feature") {FixedSize = 0};
             featureCoverage.Arguments.Add(argument);
             featureCoverage.Components.Add(new Variable<double>(valueName) {Unit = valueUnit});
