@@ -407,7 +407,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(string.Join(" ", StructureFileWriterTestHelper.UNI_WEIR_Z_VALUES.Select(v => v.ToString(StructureRegion.ZValues.Format, CultureInfo.InvariantCulture))), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestLevel.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_Z_VALUES.Min().ToString(StructureRegion.CrestLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            Assert.AreEqual(0d.ToString(StructureRegion.CrestLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DischargeCoeff.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF.ToString(StructureRegion.DischargeCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
