@@ -369,8 +369,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var zetjes = freeFormWeirFormula.Z.ToArray();
             Assert.AreEqual(2.0, zetjes[0], 1.0e-6);
             Assert.AreEqual(1.4, zetjes[1], 1.0e-6);
-            // for freeformweir crestlevel is the actual lowest Z -> 1.7 + -0.3 = 1.4
-            Assert.AreEqual(1.4F, weir.CrestLevel, 1.0e-6);
+            // (for freeformweir crestlevel is the actual lowest Z -> 1.7 + -0.3 = 1.4)
+            // Not any more. FM crest level shift is the Sobek2 crest level shift (FM1D2D-1023)
+            Assert.AreEqual(1.7F, weir.CrestLevel, 1.0e-6);
         }
 
         [Test]

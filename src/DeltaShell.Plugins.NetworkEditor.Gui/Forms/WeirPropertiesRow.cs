@@ -326,6 +326,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 return weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries;
             }
+            if (propertyName == "CrestWidth")
+            {
+                return weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries || weir.GetStructureType() == StructureType.UniversalWeir;
+            }
             if (propertyName == "FlowDirection" || propertyName == "SDischargeCoefficient" || propertyName == "SLateralContraction")
             {
                 return Formula != FormulaEnum.SimpleWeir;

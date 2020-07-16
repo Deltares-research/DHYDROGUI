@@ -82,7 +82,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 case StructureType.UniversalWeir:
                     var readFormulaFromDefinition = new FreeFormWeirFormula
                     {
-                        DischargeCoefficient = category.ReadProperty<double>(StructureRegion.DischargeCoeff.Key)
+                        DischargeCoefficient = category.ReadProperty<double>(StructureRegion.DischargeCoeff.Key),
+                        CrestLevel = weir.CrestLevel
                     };
 
                     var yValues = category.ReadProperty<string>(StructureRegion.YValues.Key).ToDoubleArray();

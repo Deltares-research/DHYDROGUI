@@ -11,6 +11,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     public class FreeFormWeirFormula : EditableObjectUnique<long>, IWeirFormula
     {
         private IGeometry shape;
+        private double crestLevel;
 
         public FreeFormWeirFormula()
         {
@@ -103,7 +104,8 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual double CrestLevel
         {
-            get { return null != shape && !shape.IsEmpty ? Z.Min() : 0; }
+            get { return crestLevel; }
+            set { crestLevel = value;  }
         }
 
         /// <summary>

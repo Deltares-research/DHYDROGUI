@@ -78,10 +78,14 @@ namespace DelftTools.Hydro.Structures
         FlowDirection FlowDirection { get; set; }
         
         /// <summary>
-        /// Determines whether controls should let the user set crest level and crest width. 
-        /// For a general structure this is disabled since it is part of the formula.
+        /// Determines whether controls should let the user set the crest level. 
         /// </summary>
-        bool SpecifyCrestLevelAndWidthOnWeir { get; }
+        bool SpecifyCrestLevelOnWeir { get; }
+
+        /// <summary>
+        /// Determines whether controls should let the user set the crest width. 
+        /// </summary>
+        bool SpecifyCrestWidthOnWeir { get; }
 
 
         /// <summary>

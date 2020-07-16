@@ -117,7 +117,14 @@ namespace DelftTools.Hydro.Structures
             }
             set
             {
-                crestLevel = value;
+                if (WeirFormula is FreeFormWeirFormula)
+                {
+                    (WeirFormula as FreeFormWeirFormula).CrestLevel = value;
+                }
+                else
+                {
+                    crestLevel = value;
+                }
                 OnCrestLevelChanged();
             }
         }
@@ -223,12 +230,13 @@ namespace DelftTools.Hydro.Structures
         {
             base.CopyFrom(source);
             var copyFrom = (Weir) source;
+            // first copy weir formula, because get/set crest width/level depend on the type of formula
+            WeirFormula = (IWeirFormula)copyFrom.WeirFormula.Clone();
             CrestWidth = copyFrom.CrestWidth;
             CrestLevel = copyFrom.CrestLevel;
             CrestShape = copyFrom.CrestShape;
             FlowDirection = copyFrom.FlowDirection;
             Attributes = (IFeatureAttributeCollection)copyFrom.Attributes.Clone();
-            WeirFormula = (IWeirFormula)copyFrom.WeirFormula.Clone();
             CanBeTimedependent = copyFrom.CanBeTimedependent;
 
             if (!copyFrom.CanBeTimedependent) return;
@@ -245,7 +253,11 @@ namespace DelftTools.Hydro.Structures
                        : (allowNegativeFlow ? FlowDirection.Negative : FlowDirection.None);
         }
 
-        public virtual bool SpecifyCrestLevelAndWidthOnWeir
+        public virtual bool SpecifyCrestLevelOnWeir
+        {
+            get { return !(WeirFormula is GeneralStructureWeirFormula); }
+        }
+        public virtual bool SpecifyCrestWidthOnWeir
         {
             get { return !(WeirFormula is GeneralStructureWeirFormula || WeirFormula is FreeFormWeirFormula); }
         }

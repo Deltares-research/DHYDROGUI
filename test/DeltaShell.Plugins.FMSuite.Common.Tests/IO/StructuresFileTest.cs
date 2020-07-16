@@ -363,7 +363,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                          initialGeneralStructure.AllowNegativeFlow == resultingGeneralStructure.AllowNegativeFlow &&
                                          initialGeneralStructure.AllowPositiveFlow == resultingGeneralStructure.AllowPositiveFlow &&
                                          initialGeneralStructure.IsRectangle == resultingGeneralStructure.IsRectangle &&
-                                         initialGeneralStructure.SpecifyCrestLevelAndWidthOnWeir == resultingGeneralStructure.SpecifyCrestLevelAndWidthOnWeir &&
+                                         initialGeneralStructure.SpecifyCrestLevelOnWeir == resultingGeneralStructure.SpecifyCrestLevelOnWeir &&
+                                         initialGeneralStructure.SpecifyCrestWidthOnWeir == resultingGeneralStructure.SpecifyCrestWidthOnWeir &&
                                          initialGeneralStructure.FormulaName == resultingGeneralStructure.FormulaName;
 
             var formulasAreEqual = (initialFormula.Name == resultingFormula.Name &&

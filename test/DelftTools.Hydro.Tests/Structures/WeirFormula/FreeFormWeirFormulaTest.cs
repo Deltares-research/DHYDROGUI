@@ -38,7 +38,8 @@ namespace DelftTools.Hydro.Tests.Structures.WeirFormula
             var yValues = new[] { 1.0, 20.0 };
             var zValues = new[] { 3.0, 4.0 };
             formula.SetShape(yValues, zValues);
-            Assert.AreEqual(formula.CrestLevel, 3, 1.0e-6);
+            // Crest level used to be derived from the table, but not any more (issue FM1D2D-1023)
+            Assert.AreEqual(formula.CrestLevel, 0, 1.0e-6);
         }
 
         [Test]

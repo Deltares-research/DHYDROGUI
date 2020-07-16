@@ -41,7 +41,7 @@
     numLevels             = 4                   
     yValues               = 5.000 -2.000 -2.000 5.000
     zValues               = 10.000 2.500 2.500 10.000
-    crestLevel            = 2.500               
+    crestLevel            = 0.000               
     dischargeCoeff        = 0.500               
 
 [Structure]
