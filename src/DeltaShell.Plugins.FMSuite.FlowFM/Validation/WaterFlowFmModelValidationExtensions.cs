@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Collections;
@@ -153,24 +156,68 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
         private static ValidationReport ValidateRestartInput(WaterFlowFMModel model)
         {
-            if (!model.UseRestart) return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
+            var issues = new List<ValidationIssue>();
 
-            IList<ValidationIssue> issues = new List<ValidationIssue>();
+            var initCondCategory = model.ModelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalValue1D).PropertyDefinition.Category;
+            string restartFileName = model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
 
-            if (model.RestartInput.IsEmpty)
+            if (String.IsNullOrWhiteSpace(restartFileName))
             {
-                issues.Add(new ValidationIssue("Input restart state", ValidationSeverity.Error,
-                                               "Input restart state is empty; cannot restart."));
+                return new ValidationReport("Initial Conditions", issues);
             }
-            else
-            {
-                IEnumerable<string> errors, warnings;
-                model.ValidateInputState(out errors, out warnings);
 
-                issues = errors.Select(error => new ValidationIssue("Input restart state", ValidationSeverity.Error, error)).ToList();
-                issues.AddRange(warnings.Select(warning => new ValidationIssue("Input restart state", ValidationSeverity.Warning, warning)));
+            var validationShortcut = new FmValidationShortcut
+            {
+                FlowFmModel = model,
+                TabName = "Initial conditions"
+            };
+
+            var splitFileName = restartFileName.Split(new[] { '_', '.' }, StringSplitOptions.RemoveEmptyEntries);
+            var length = splitFileName.Length;
+
+            bool nameOK = true;
+            if (splitFileName.Last() != "nc")
+            {
+                nameOK = false;
             }
-            return new ValidationReport("Input restart state", issues);
+
+            if (length < 5 || length > 2 && splitFileName[length - 2] != "rst")
+            {
+                nameOK = false;
+            }
+
+            if (length > 4)
+            {
+                var dateTimeString = string.Concat(splitFileName[length - 4], splitFileName[length - 3]);
+                DateTime dateTime;
+                if (!DateTime.TryParseExact(dateTimeString, "yyyyMMddhhmmss", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out dateTime))
+                {
+                    nameOK = false;
+                }
+            }
+
+            if (!nameOK)
+            {
+                issues.Add(new ValidationIssue(initCondCategory, ValidationSeverity.Error,
+                    $"Invalid restart file name \"{restartFileName}\": your file should be formatted as <name>_yyyyMMdd_HHmmss_rst.nc", validationShortcut));
+            }
+
+            if (!String.IsNullOrWhiteSpace(model.ModelDefinition.ModelDirectory))
+            {
+                // model has been saved, restart file can be checked
+                if (!String.IsNullOrWhiteSpace(restartFileName))
+                {
+                    string restartFilePath = Path.Combine(model.ModelDefinition.ModelDirectory, restartFileName);
+                    if (!File.Exists(restartFilePath))
+                    {
+                        issues.Add(new ValidationIssue(initCondCategory, ValidationSeverity.Error,
+                            $"Restart file {restartFileName} does not exist (full path: {restartFilePath}).", validationShortcut));
+                    }
+                }
+            }
+
+            return new ValidationReport("Initial Conditions", issues);
         }
     }
 }

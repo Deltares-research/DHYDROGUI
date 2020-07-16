@@ -2469,13 +2469,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (!Directory.Exists(dirName))
                 Directory.CreateDirectory(dirName);
 
-            // make sure on save / export, restart file + mdu are up to date and could be ran standalone with correct info
-            if (switchTo)
-            {
-                SaveRestartInfo(mduPath);
-            }
-
-            InitializeRestart(dirName);
+            CopyRestartFile(dirName);
 
             if (switchTo)
             {
@@ -4192,6 +4186,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var lastCoordinate = link.Geometry?.Coordinates.Last();
                 link.DiscretisationPointIndex = Links1D2DHelper.FindCalculationPointIndex(firstCoordinate, NetworkDiscretization, link.SnapToleranceUsed);
                 link.FaceIndex = Links1D2DHelper.FindCellIndex(lastCoordinate, Grid);
+            }
+        }
+        private void CopyRestartFile(string targetDir)
+        {
+            string sourceDirectory = ModelDefinition.ModelDirectory;
+            if (String.IsNullOrWhiteSpace(sourceDirectory))
+                return;
+
+            var restartFileName = ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
+            if (String.IsNullOrWhiteSpace(restartFileName))
+                return;
+            string sourcePath = Path.Combine(sourceDirectory, restartFileName);
+            if (File.Exists(sourcePath))
+            {
+                string targetPath = Path.Combine(targetDir, restartFileName);
+                FileUtils.CopyFile(sourcePath, targetPath);
             }
         }
     }

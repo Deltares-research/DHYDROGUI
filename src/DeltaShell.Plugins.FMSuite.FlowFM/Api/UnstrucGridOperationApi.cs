@@ -78,6 +78,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 var existingProperty = model.ModelDefinition.GetModelProperty(propertyToClear);
                 var clonedProperty = (WaterFlowFMProperty)existingProperty.Clone();
+                if (clonedProperty.PropertyDefinition.DataType == typeof(string))
+                {
+                    // string are not cloned correctly (the clone contains a reference to the source string)
+                    // so do it here (todo: check for better solution)
+                    clonedProperty.SetValueAsString(String.Copy(clonedProperty.GetValueAsString()));
+                }
                 if (propertyToClear.ToLowerInvariant() == KnownProperties.TrtRou.ToLowerInvariant())
                 {
                     clonedProperty.SetValueAsString("N");

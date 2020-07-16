@@ -180,20 +180,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        public void ValidateRestartInputReportTestRestartIsEmpty()
-        {
-            var model = new WaterFlowFMModel();
-            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            model.UseRestart = true;
-
-            var report = model.Validate();
-            Assert.AreEqual(1, report.ErrorCount);
-            Assert.That(report.AllErrors.First(i => i.Severity == ValidationSeverity.Error).Message,
-                Is.EqualTo("Input restart state is empty; cannot restart."));
-            
-        }
-
-        [Test]
         [Category(TestCategory.Integration)]
         public void ValidateWithSpaciallyVariantFullCoverage()
         {

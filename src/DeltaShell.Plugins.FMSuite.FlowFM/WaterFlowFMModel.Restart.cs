@@ -24,24 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         private const string RestartInfoPath = "restart.meta";
         
-        private void SaveRestartInfo(string mduPath)
-        {
-            var restartInfo = new SerializableStatesInfo
-                {
-                    InState = CreateStateInfo(RestartInput),
-                    OutStates = GetRestartOutputStates().Where(r => !r.IsEmpty).Select(CreateStateInfo).ToArray()
-                };
-
-            restartInfo.Save(GetFilePathFromMduPath(mduPath, RestartInfoPath));
-        }
-
-        private StateInfo CreateStateInfo(FileBasedRestartState fileBasedRestartState)
-        {
-            if (fileBasedRestartState.IsEmpty)
-                return null;
-            return new StateInfo(fileBasedRestartState.Name, fileBasedRestartState.Path);
-        }
-
         private void LoadRestartInfo(string mduPath)
         {
             var infoPath = GetFilePathFromMduPath(mduPath, RestartInfoPath);
