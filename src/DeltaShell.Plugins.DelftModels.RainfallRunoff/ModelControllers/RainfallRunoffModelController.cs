@@ -480,6 +480,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                     (int)model.TimeStep.TotalSeconds,
                     (int)model.OutputTimeStep.TotalSeconds);
 
+                Writer.AddIniOption("Options", "ControlModule", model.IsRunningParallelWithFlow() ? "-1" : "0");
+
                 Writer.WriteFiles(); 
                 return true;
             });
