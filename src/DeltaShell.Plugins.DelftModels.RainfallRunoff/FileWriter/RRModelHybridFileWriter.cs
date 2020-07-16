@@ -896,7 +896,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                     new List<DelftTools.Utils.Tuple<string,string>>
                     {
                         new DelftTools.Utils.Tuple<string, string>("InitGwlOption","-1"),
-                        new DelftTools.Utils.Tuple<string, string>("ControlModule","0"),
                         new DelftTools.Utils.Tuple<string, string>("MaalstopModule","0"),
                         new DelftTools.Utils.Tuple<string, string>("NWRWContinuous","0"),
                         new DelftTools.Utils.Tuple<string, string>("RestartFileNameEachTimestepOption","0"),
