@@ -363,10 +363,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     Log.Warn($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}. Creating one on start node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
                     indices[0] = -1;
                     doNotWriteTheseSegments.Add(segment);
-                    /*var startLocation = new NetworkLocation(segment.Branch, segment.Chainage);
-                    discretization.Locations.Values.Add(startLocation);
-                    locationIdLookup[startLocation] = locationIdLookup.Count;
-                    indices[0] = locationIdLookup[startLocation];*/
                 }
             }
 
@@ -394,29 +390,20 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     Log.Warn($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}. Creating one on end node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
                     if (indices[0] != -1 && Math.Abs(segment.Chainage) > epsilonLocation)
                     {
-                        //var moveToEndChainage = branchLocations.FirstOrDefault(loc => 
                         var moveToEndChainage = branchLocations.FirstOrDefault(loc => Math.Abs(loc.Chainage - segment.Chainage) < epsilonLocation);
                         if (moveToEndChainage == null)
                         {
-                            //moveToEndChainage = GetNeighboringNetworkLocation(segment.Branch.Source, discretization, segment.Branch);
                             moveToEndChainage = discretization.Locations.Values.FirstOrDefault(l => l.Geometry.Coordinate.Equals2D(segment.Geometry.Coordinates.FirstOrDefault(), epsilonLocation));
                         }
 
                         if (moveToEndChainage != null)
                         {
-                            //locationIdLookup.Keys.First(k => k.Equals(moveToEndChainage)).Chainage = segment.EndChainage;
                             moveToEndChainage.Chainage = segment.EndChainage;
                             locationIdLookup[moveToEndChainage] = indices[0];
-
-
                         }
                     }
                     indices[1] = -1;
                     doNotWriteTheseSegments.Add(segment);
-                    /*var endLocation = new NetworkLocation(segment.Branch, segment.EndChainage);
-                    discretization.Locations.Values.Add(endLocation);
-                    locationIdLookup[endLocation] = locationIdLookup.Count;
-                    indices[1] = locationIdLookup[endLocation];*/
                 }
             }
             return indices;
