@@ -118,9 +118,6 @@ setup/HydroModel/HydroModelPlugin.wxi -text
 setup/HydroModel/HydroModel_FeatureContent.wxi -text
 setup/NGHS.IO/NGHS.IO.wxi -text
 setup/NetworkEditor/NetworkEditorPlugin.wxi -text
-setup/RealTimeControl/D-HYDRO_Manuals/D-RTC_User_Manual.pdf -text
-setup/RealTimeControl/Delft3D[!!-~]FM[!!-~]HMWQ_Manuals/D-RTC_User_Manual.pdf -text svneol=unset#unset
-setup/RealTimeControl/Delft3D[!!-~]FM[!!-~]HM_Manuals/D-RTC_User_Manual.pdf -text svneol=unset#unset
 setup/RealTimeControl/Localization/RTCNames.wxl -text
 setup/RealTimeControl/Manuals/RTCManualShortcuts.wxi -text
 setup/RealTimeControl/Manuals/RTCManuals.wxi -text
