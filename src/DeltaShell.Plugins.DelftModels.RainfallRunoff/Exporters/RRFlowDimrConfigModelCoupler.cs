@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             Name = sourceModel.ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + targetModel.ShortName;
             Source = sourceModel.Name;
             Target = targetModel.Name;
-            SourceIsMasterTimeStep = false;
+            SourceIsMasterTimeStep = sourceModel.IsMasterTimeStep;
 
             foreach (var link in links)
             {
