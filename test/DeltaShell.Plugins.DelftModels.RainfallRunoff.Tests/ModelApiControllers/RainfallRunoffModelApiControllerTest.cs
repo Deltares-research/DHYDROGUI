@@ -392,7 +392,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                 System.Threading.Thread.Sleep(15); // Give kernel a chance to die and release file handles
 
                 var balansFunction =
-                    model.DataItems.Where(di => di.Value is ITimeSeries).Select(di => (ITimeSeries)di.Value).First(
+                    model.OutputDataItems.Where(di => di.Value is ITimeSeries).Select(di => (ITimeSeries)di.Value).First(
                         c => c.Name.StartsWith(RainfallRunoffModelParameterNames.ModelBalanceError));
                 var balansPerNode = (IFeatureCoverage) model.OutputCoverages.First(
                     c => c.Name.StartsWith(RainfallRunoffModelParameterNames.NodeBalanceBalanceError));

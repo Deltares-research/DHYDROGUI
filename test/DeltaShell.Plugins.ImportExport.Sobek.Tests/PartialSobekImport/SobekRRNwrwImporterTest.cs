@@ -133,8 +133,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.That(importedDefinition.Name, Is.EqualTo("GVH_VLA"));
             Assert.That(importedDefinition.SurfaceType, Is.EqualTo(NwrwSurfaceType.ClosedPavedFlat));
             Assert.That(importedDefinition.SurfaceStorage, Is.EqualTo(0.5));
-            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(2));
-            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(0.5));
+            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(0));
+            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(0));
             Assert.That(importedDefinition.InfiltrationCapacityReduction, Is.EqualTo(3));
             Assert.That(importedDefinition.InfiltrationCapacityRecovery, Is.EqualTo(0.1));
             Assert.That(importedDefinition.RunoffDelay, Is.EqualTo(0.2));
@@ -167,8 +167,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.That(importedDefinition.Name, Is.EqualTo("OVH_HEL"));
             Assert.That(importedDefinition.SurfaceType, Is.EqualTo(NwrwSurfaceType.OpenPavedWithSlope));
             Assert.That(importedDefinition.SurfaceStorage, Is.EqualTo(0));
-            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(5));
-            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(1));
+            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(2));
+            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(0.5));
             Assert.That(importedDefinition.InfiltrationCapacityReduction, Is.EqualTo(3));
             Assert.That(importedDefinition.InfiltrationCapacityRecovery, Is.EqualTo(0.1));
             Assert.That(importedDefinition.RunoffDelay, Is.EqualTo(0.5));
@@ -184,8 +184,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.That(importedDefinition.Name, Is.EqualTo("OVH_VLA"));
             Assert.That(importedDefinition.SurfaceType, Is.EqualTo(NwrwSurfaceType.OpenPavedFlat));
             Assert.That(importedDefinition.SurfaceStorage, Is.EqualTo(0.5));
-            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(0));
-            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(0));
+            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(2));
+            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(0.5));
             Assert.That(importedDefinition.InfiltrationCapacityReduction, Is.EqualTo(0));
             Assert.That(importedDefinition.InfiltrationCapacityRecovery, Is.EqualTo(0));
             Assert.That(importedDefinition.RunoffDelay, Is.EqualTo(0.2));
@@ -235,8 +235,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.That(importedDefinition.Name, Is.EqualTo("DAK_VLA"));
             Assert.That(importedDefinition.SurfaceType, Is.EqualTo(NwrwSurfaceType.RoofFlat));
             Assert.That(importedDefinition.SurfaceStorage, Is.EqualTo(2));
-            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(5));
-            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(1));
+            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(0));
+            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(0));
             Assert.That(importedDefinition.InfiltrationCapacityReduction, Is.EqualTo(3));
             Assert.That(importedDefinition.InfiltrationCapacityRecovery, Is.EqualTo(0.1));
             Assert.That(importedDefinition.RunoffDelay, Is.EqualTo(0.2));
@@ -269,8 +269,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.That(importedDefinition.Name, Is.EqualTo("ONV_HEL"));
             Assert.That(importedDefinition.SurfaceType, Is.EqualTo(NwrwSurfaceType.UnpavedWithSlope));
             Assert.That(importedDefinition.SurfaceStorage, Is.EqualTo(2));
-            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(2));
-            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(0.5));
+            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(5));
+            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(1));
             Assert.That(importedDefinition.InfiltrationCapacityReduction, Is.EqualTo(3));
             Assert.That(importedDefinition.InfiltrationCapacityRecovery, Is.EqualTo(0.1));
             Assert.That(importedDefinition.RunoffDelay, Is.EqualTo(0.5));
@@ -286,8 +286,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.That(importedDefinition.Name, Is.EqualTo("ONV_VLA"));
             Assert.That(importedDefinition.SurfaceType, Is.EqualTo(NwrwSurfaceType.UnpavedFlat));
             Assert.That(importedDefinition.SurfaceStorage, Is.EqualTo(4));
-            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(0));
-            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(0));
+            Assert.That(importedDefinition.InfiltrationCapacityMax, Is.EqualTo(5));
+            Assert.That(importedDefinition.InfiltrationCapacityMin, Is.EqualTo(1));
             Assert.That(importedDefinition.InfiltrationCapacityReduction, Is.EqualTo(0));
             Assert.That(importedDefinition.InfiltrationCapacityRecovery, Is.EqualTo(0));
             Assert.That(importedDefinition.RunoffDelay, Is.EqualTo(0.2));
