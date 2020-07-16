@@ -247,26 +247,27 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var saltBoundaryQuantity = lateralSourceCategory.Table.Where(bcq => bcq.Quantity.Value == BoundaryRegion.QuantityStrings.WaterSalinity);
             if (saltBoundaryQuantity.Any()) return;
 
-            var function = lateralSourceCategory.ReadProperty<string>(BoundaryRegion.Function.Key);
-            switch (function)
+            var function = lateralSourceCategory.ReadProperty<string>(BoundaryRegion.Function.Key).ToLower();
+            if (function.Equals(BoundaryRegion.FunctionStrings.Constant.ToLower()))
             {
-                case BoundaryRegion.FunctionStrings.Constant:
                     lateralSource.DataType = Model1DLateralDataType.FlowConstant;
                     lateralSource.Flow = ReadConstantValue(lateralSourceCategory.Table[0], lateralSourceCategory.Name);
-                    break;
-                case BoundaryRegion.FunctionStrings.QhTable:
-                    lateralSource.DataType = Model1DLateralDataType.FlowWaterLevelTable;
-                    SetCategoryValuesToFeatureData(lateralSource, lateralSourceCategory, ConvertStringsToDoubles, ConvertStringsToDoubles);
-                    break;
-                case BoundaryRegion.FunctionStrings.TimeSeries:
-                    lateralSource.DataType = Model1DLateralDataType.FlowTimeSeries;
-                    SetCategoryValuesToFeatureData(lateralSource, lateralSourceCategory, GetDateTimesValues, ConvertStringsToDoubles);
-                    break;
-                default:
-                    var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", lateralSourceCategory.Name, BoundaryRegion.Function.Key, Environment.NewLine);
-                    throw new LateralDischargeReadingException(errorMessage);
             }
-            
+            else if (function.Equals(BoundaryRegion.FunctionStrings.QhTable.ToLower()))
+            {
+                lateralSource.DataType = Model1DLateralDataType.FlowWaterLevelTable;
+                SetCategoryValuesToFeatureData(lateralSource, lateralSourceCategory, ConvertStringsToDoubles, ConvertStringsToDoubles);
+            }
+            else if (function.Equals(BoundaryRegion.FunctionStrings.TimeSeries.ToLower()))
+            {
+                lateralSource.DataType = Model1DLateralDataType.FlowTimeSeries;
+                SetCategoryValuesToFeatureData(lateralSource, lateralSourceCategory, GetDateTimesValues, ConvertStringsToDoubles);
+            }
+            else
+            {
+                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", lateralSourceCategory.Name, BoundaryRegion.Function.Key, Environment.NewLine);
+                throw new LateralDischargeReadingException(errorMessage);
+            }
         }
        
         private static void SetCategoryValuesToFeatureData<Targ>(IFeatureData featureData, IDelftBcCategory category, Func<IDelftBcQuantityData, IEnumerable<Targ>> parseArgumentValues, Func<IDelftBcQuantityData, IEnumerable<double>> parseFunctionValues)
