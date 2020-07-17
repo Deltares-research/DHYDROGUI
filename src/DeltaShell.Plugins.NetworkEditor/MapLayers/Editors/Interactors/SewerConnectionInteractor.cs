@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             var nodes = new[] {connection.Source, connection.Target};
 
             // check for pipe connections if non then remove nodes
-            var nodesToRemove = nodes
+            var nodesToRemove = nodes.OfType<IManhole>()
                 .Where(n => !n.IncomingBranches.OfType<IPipe>().Concat(n.OutgoingBranches.OfType<IPipe>()).Any())
                 .ToList();
 
