@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.DataObjects;
@@ -40,10 +41,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 yield return issue;
 
             Resolution = new TimeSpan(0, 0, 0, 0, 1);
-            
-            if (waterFlowFmModel.ReferenceTime != waterFlowFmModel.StartTime)
+
+            if (waterFlowFmModel.ReferenceTime > waterFlowFmModel.StartTime)
             {
-                yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time is not the same as reference time", new FmValidationShortcut {FlowFmModel = model as WaterFlowFMModel,TabName = "Time Frame"});
+                yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time precedes reference time", new FmValidationShortcut() { FlowFmModel = model as WaterFlowFMModel, TabName = "Time Frame" });
+            }
+            else if (IsRunningInParallelWithOtherModels(waterFlowFmModel) && waterFlowFmModel.ReferenceTime != waterFlowFmModel.StartTime)
+            {
+                yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time should be the same as reference time when running in parallel with other models", new FmValidationShortcut { FlowFmModel = model as WaterFlowFMModel, TabName = "Time Frame" });
             }
 
             if (waterFlowFmModel.WriteRestart && waterFlowFmModel.SaveStateTimeStep.Ticks == 0)
@@ -93,6 +98,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 TabName = "Output Parameters"
             };
             return new ValidationIssue(category, ValidationSeverity.Error, errorMessage,validationShortcut);
+        }
+
+        private bool IsRunningInParallelWithOtherModels(IWaterFlowFMModel model)
+        {
+            if (!(model.Owner is ICompositeActivity owner))
+                return false;
+
+            return owner.GetActivitiesRunningSimultaneous(model).Any();
         }
     }
 }

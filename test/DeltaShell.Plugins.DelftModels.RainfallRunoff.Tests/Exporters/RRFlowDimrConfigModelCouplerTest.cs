@@ -81,6 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             target.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
             ((IDimrModel)target).Expect(dm => dm.GetItemString(dataItemInput)).Return(targetDataitemText).Repeat.Any();
             ((IDimrModel)target).Expect(m => m.ShortName).Return("flowd1d").Repeat.Any();
+            ((IDimrModel)target).Expect(dm => dm.IsMasterTimeStep).Return(true).Repeat.Any();
 
             CatchmentType catchmentType = CatchmentType.LoadFromString(catchment);
             var targetObj = mocks.StrictMultiMock<IHydroObject>(typeof(IHydroNode));
@@ -108,6 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             basin.Expect(b => b.Catchments).Return(catchments).Repeat.Any();
             ((IHydroModel)source).Expect(m => m.Region).Return(basin).Repeat.Any();
             ((IDimrModel)source).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
+            ((IDimrModel)source).Expect(dm => dm.IsMasterTimeStep).Return(false).Repeat.Any();
 
             ICompositeActivity sourceCoupler;
 
@@ -122,6 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 sourceCoupler.Expect(c => c.CurrentWorkflow).Return(workflow).Repeat.Any();
 
                 ((IDimrModel)sourceCoupler).Expect(dm => dm.ShortName).Return(couplerText).Repeat.Any();
+                ((IDimrModel)sourceCoupler).Expect(dm => dm.IsMasterTimeStep).Return(false).Repeat.Any();
 
                 source.Expect(m => m.Owner).Return(sourceCoupler).Repeat.Any();
             }
@@ -134,6 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 sourceCoupler.Expect(c => c.CurrentWorkflow).Return(workflow).Repeat.Any();
 
                 ((IDimrModel)sourceCoupler).Expect(dm => dm.ShortName).Return(couplerText).Repeat.Any();
+                ((IDimrModel)sourceCoupler).Expect(dm => dm.IsMasterTimeStep).Return(false).Repeat.Any();
 
                 source.Expect(m => m.Owner).Return(sourceCoupler).Repeat.Any();
             }
