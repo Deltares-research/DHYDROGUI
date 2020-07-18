@@ -1062,7 +1062,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 if (!File.Exists(fullPath))
                 {
-                    Log.Error($"Reading laterals source data failed because path to data does not exist {fullPath}");
+                    if (!fullPath.ToLower().EndsWith("realtime"))
+                    {
+                        Log.Error($"Reading laterals source data failed because path to data does not exist {fullPath}");
+                    }
                     continue;
                 }
                 var isValidBcFile = IoHelper.IsValidTextFile(fullPath) && new DelftBcReader()
