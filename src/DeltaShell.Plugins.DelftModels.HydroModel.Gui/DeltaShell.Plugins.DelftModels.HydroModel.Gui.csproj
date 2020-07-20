@@ -180,7 +180,6 @@
     <Compile Include="Forms\SettingsWpf\DoubleWrapper.cs" />
     <Compile Include="Forms\SettingsWpf\FieldUIDescriptionHelper.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelector.cs" />
-    <Compile Include="Forms\SettingsWpf\WpfCustomTimeSpan.cs" />
     <Compile Include="Forms\SettingsWpf\WpfEnumConverter.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiCategory.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiProperty.cs" />
