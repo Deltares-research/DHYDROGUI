@@ -746,7 +746,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             ((INotifyPropertyChange) project).PropertyChanging += ProjectPropertyChanging;
             ((INotifyPropertyChanged) project).PropertyChanged += ProjectPropertyChanged;
-            ((INotifyCollectionChanged) project).CollectionChanged += ProjectOnCollectionChanged;
         }
 
         private void UnsubscribeToProjectPropertyChanged(Project project)
@@ -758,17 +757,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             ((INotifyPropertyChange) project).PropertyChanging -= ProjectPropertyChanging;
             ((INotifyPropertyChanged) project).PropertyChanged -= ProjectPropertyChanged;
-            ((INotifyCollectionChanged) project).CollectionChanged -= ProjectOnCollectionChanged;
-
-            CloseAllRelatedMultipleFunctionViews(FlowModels);
-        }
-
-        private void ProjectOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                CloseAllRelatedMultipleFunctionViews(e.OldItems.OfType<WaterFlowFMModel>());
-            }
         }
 
         private void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -938,7 +926,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     importer is IFeature2DImporterExporter)
                 {
                     Gui?.MainWindow?.ProjectExplorer?.TreeView?.Refresh();
-                }
+                } 
 
                 return;
             }
@@ -955,41 +943,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
             }
         }
-
-        private void CloseAllRelatedMultipleFunctionViews(IEnumerable<WaterFlowFMModel> fmModels)
-        {
-            if (fmModels == null)
-            {
-                return;
-            }
-
-            MultipleFunctionView[] fmViews = Gui?.DocumentViews?.OfType<MultipleFunctionView>().ToArray();
-            if (fmViews == null || !fmViews.Any())
-            {
-                return;
-            }
-
-            string[][] dataItemNames = GetDataItemNames(fmModels);
-            if (!dataItemNames.Any())
-            {
-                return;
-            }
-
-            // Collection needs to be cached to prevent CollectionModifiedException
-            foreach (MultipleFunctionView multipleFunctionView in fmViews)
-            {
-                IEnumerable<string> functionNames = multipleFunctionView.Functions.Select(f => f.Name);
-                if (dataItemNames.Any(din =>
-                                          functionNames.Any(
-                                              fn =>
-                                                  fn.Contains(din[0]) &&
-                                                  fn.Contains(din[1]))))
-                {
-                    Gui.DocumentViews.Remove(multipleFunctionView);
-                }
-            }
-        }
-
+        
         private static string[][] GetDataItemNames(IEnumerable<WaterFlowFMModel> fmModels)
         {
             FileBasedFeatureCoverage[] coverages = fmModels.Where(m => m.OutputHisFileStore != null)
