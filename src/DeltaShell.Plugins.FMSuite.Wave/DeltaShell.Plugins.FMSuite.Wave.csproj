@@ -226,6 +226,8 @@
     <Compile Include="IO\MdwFile.cs" />
     <Compile Include="IO\MdwBoundaryCategoryGeometryExtender.cs" />
     <Compile Include="IO\MdwBoundaryCategoriesCreator.cs" />
+    <Compile Include="IO\MeteoFileProperty.cs" />
+    <Compile Include="IO\MeteoFileReader.cs" />
     <Compile Include="IO\SpectrumDataComponentVisitor.cs" />
     <Compile Include="IO\SpectrumParametersVisitor.cs" />
     <Compile Include="IO\WavmFileFunctionStore.cs" />
@@ -302,7 +304,7 @@
     <None Include="Boundaries\BoundaryModel.cd" />
     <None Include="Boundaries\ConditionDefinitions\ConditionDefinition.cd" />
     <None Include="dwave-properties.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="run_wave.bat">

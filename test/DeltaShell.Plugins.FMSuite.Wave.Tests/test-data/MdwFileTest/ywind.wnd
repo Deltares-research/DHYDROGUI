@@ -1,0 +1,19 @@
+FileVersion      = 1.03
+filetype         = meteo_on_equidistant_grid
+NODATA_value     = -999
+n_cols           = 2
+n_rows           = 2
+grid_unit        = m
+x_llcorner       = 1.00E+03
+y_llcorner       = 1.00E+03
+dx               = 2.44E+04
+dy               = 3.00E+04
+n_quantity       = 1
+quantity1        = y_wind
+unit1            = m s-1
+TIME = 0.000000 hours since 2000-07-14 00:00:00 +00:00
+    0.   0.
+    0.   0. 
+TIME = 1.000000 hours since 2000-07-14 00:00:00 +00:00
+    0.   0.
+    0.   0. 

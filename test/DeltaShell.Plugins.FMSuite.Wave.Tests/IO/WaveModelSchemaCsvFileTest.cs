@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             ModelPropertySchema<WaveModelPropertyDefinition> modelPropertySchema =
                 new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(
                     "plugins\\DeltaShell.Plugins.FMSuite.Wave\\dwave-properties.csv", "MdwGroup");
-            Assert.AreEqual(75, modelPropertySchema.PropertyDefinitions.Count);
+            Assert.AreEqual(76, modelPropertySchema.PropertyDefinitions.Count);
             Assert.AreEqual(6, modelPropertySchema.ModelDefinitionCategory.Count);
 
             KeyValuePair<string, WaveModelPropertyDefinition> propertyDefinitionBedFrictionCoef =
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             ModelPropertySchema<WaveModelPropertyDefinition> modelPropertySchema =
                 new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(
                     "plugins\\DeltaShell.Plugins.FMSuite.Wave\\dwave-properties.csv", "MdwGroup");
-            Assert.AreEqual(75, modelPropertySchema.PropertyDefinitions.Count);
+            Assert.AreEqual(76, modelPropertySchema.PropertyDefinitions.Count);
             Assert.AreEqual(6, modelPropertySchema.ModelDefinitionCategory.Count);
 
             KeyValuePair<string, WaveModelPropertyDefinition> propertyDefinitionBedFriction =

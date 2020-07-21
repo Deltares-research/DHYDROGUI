@@ -404,6 +404,8 @@
     <Compile Include="IO\MdwBoundaryCategoryConditionsExtenderTest.cs" />
     <Compile Include="IO\MdwBoundaryCategoryGeometryExtenderTest.cs" />
     <Compile Include="IO\MdwFileTest.cs" />
+    <Compile Include="IO\MeteoFilePropertyTest.cs" />
+    <Compile Include="IO\MeteoFileReaderTest.cs" />
     <Compile Include="IO\SpectrumDataComponentVisitorTest.cs" />
     <Compile Include="IO\SpectrumParametersVisitorTest.cs" />
     <Compile Include="IO\WaveModelSchemaCsvFileTest.cs" />

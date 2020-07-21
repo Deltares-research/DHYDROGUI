@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
@@ -31,6 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     [TestFixture]
     public class MdwFileTest
     {
+        private readonly string testDataPath = Path.Combine(TestHelper.GetTestDataDirectory(), nameof(MdwFileTest));
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadAndWriteMdwFile()
@@ -705,15 +708,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             TimerMethod_LoadTimeDependentSpatiallyVaryingBoundary(mdwPath);
         }
 
-        /// <summary>
-        /// Method to test by dot Trace. Should be public for setting thresholds.
-        /// </summary>
-        /// <param name="mdwPath"> The Mdw file path. </param>
-        public static void TimerMethod_LoadTimeDependentSpatiallyVaryingBoundary(string mdwPath)
-        {
-            new MdwFile().Load(mdwPath);
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void Load_FileBasedUniformBoundary_LoadsBoundaryCorrectly()
@@ -819,6 +813,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(WaveDirectionalSpaceType.Sector)]
         [TestCase(WaveDirectionalSpaceType.Circle)]
         [Category(TestCategory.DataAccess)]
@@ -856,43 +851,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
-        private static string CreateMdwFileWithSpectralDomainData(string tempDirPath, SpectralDomainData domainData)
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_WithXYComponentMeteoFiles_LoadsFilesCorrectly()
         {
-            string filePath = Path.Combine(tempDirPath, "file.mdw");
-            string directionalSpaceTypeValue = domainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle
-                                                   ? "circle"
-                                                   : "sector";
+            // Setup
+            string mdwPath = Path.Combine(testDataPath, "Wind.mdw");
 
-            string[] content =
-            {
-                "[Domain]",
-                $"DirSpace  = {directionalSpaceTypeValue}",
-                $"NDir      = {domainData.NDir}",
-                $"StartDir  = {ToDoubleString(domainData.StartDir)}",
-                $"EndDir    = {ToDoubleString(domainData.EndDir)}",
-                $"FreqMin   = {ToDoubleString(domainData.FreqMin)}",
-                $"FreqMax   = {ToDoubleString(domainData.FreqMax)}",
-                $"NFreq     = {domainData.NFreq}",
-                "[Output]",
-                "[General]"
-            };
+            // Call
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
 
-            File.WriteAllLines(filePath, content);
-
-            return filePath;
+            // Assert
+            Assert.That(modelDefinition.TimePointData.MeteoData.XComponentFilePath, Is.EqualTo("xwind.wnd"));
+            Assert.That(modelDefinition.TimePointData.MeteoData.YComponentFilePath, Is.EqualTo("ywind.wnd"));
         }
 
-        private static string ToDoubleString(double value)
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_WithInvalidXYComponentMeteoFiles_LogsErrorMessages()
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            // Setup
+            string mdwPath = Path.Combine(testDataPath, "InvalidWind.mdw");
+
+            // Call
+            void Call() => new MdwFile().Load(mdwPath);
+
+            // Assert
+            string logMessage = TestHelper.GetAllRenderedMessages(Call).ElementAt(1);
+            Assert.That(logMessage, Is.EqualTo("During loading the D-Waves model the following errors were reported:" + Environment.NewLine +
+                                               "- Could not find meteo file for 'x_wind'" + Environment.NewLine +
+                                               "- Could not find meteo file for 'y_wind'"));
         }
 
-        private static double GetRandomRoundedValue(Random random)
-        {
-            const int factor = 10000000;
-            return Math.Floor(random.NextDouble() * factor) / factor;
-        }
-
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -941,6 +932,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -979,6 +971,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -1042,6 +1035,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -1083,6 +1077,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
@@ -1111,6 +1106,73 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
                 Assert.That(boundaryContainer.FilePathForBoundariesPerFile, Is.EqualTo(string.Empty));
             }
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_WithWindXYComponentMeteoFilesAndOldMeteoFilePropertyInModel_MdwFileShouldContainCorrectMeteoFiles(bool switchTo)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                modelDefinition.Properties.First(p => p.PropertyDefinition.FilePropertyName == KnownWaveProperties.MeteoFile).Value = "wind.wnd";
+
+                modelDefinition.TimePointData.WindDataType = InputFieldDataType.FromInputFiles;
+                modelDefinition.TimePointData.MeteoData.FileType = WindDefinitionType.WindXWindY;
+                modelDefinition.TimePointData.MeteoData.XComponentFilePath = Path.Combine(testDataPath, "xwind.wnd");
+                modelDefinition.TimePointData.MeteoData.YComponentFilePath = Path.Combine(testDataPath, "ywind.wnd");
+
+                string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
+
+                // Call
+                new MdwFile {MdwFilePath = saveFilePath}.SaveTo(saveFilePath, modelDefinition, switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+
+                string[] meteoFileLines = File.ReadAllLines(saveFilePath).Where(l => l.Contains(KnownWaveProperties.MeteoFile)).ToArray();
+                Assert.That(meteoFileLines.Length, Is.EqualTo(2));
+                AssertPropertyLine(meteoFileLines[0], KnownWaveProperties.MeteoFile, "xwind.wnd");
+                AssertPropertyLine(meteoFileLines[1], KnownWaveProperties.MeteoFile, "ywind.wnd");
+            }
+        }
+
+        /// <summary>
+        /// Method to test by dot Trace. Should be public for setting thresholds.
+        /// </summary>
+        /// <param name="mdwPath"> The Mdw file path. </param>
+        public static void TimerMethod_LoadTimeDependentSpatiallyVaryingBoundary(string mdwPath)
+        {
+            new MdwFile().Load(mdwPath);
+        }
+
+        private static string CreateMdwFileWithSpectralDomainData(string tempDirPath, SpectralDomainData domainData)
+        {
+            string filePath = Path.Combine(tempDirPath, "file.mdw");
+            string directionalSpaceTypeValue = domainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle
+                                                   ? "circle"
+                                                   : "sector";
+
+            string[] content = {"[Domain]", $"DirSpace  = {directionalSpaceTypeValue}", $"NDir      = {domainData.NDir}", $"StartDir  = {ToDoubleString(domainData.StartDir)}", $"EndDir    = {ToDoubleString(domainData.EndDir)}", $"FreqMin   = {ToDoubleString(domainData.FreqMin)}", $"FreqMax   = {ToDoubleString(domainData.FreqMax)}", $"NFreq     = {domainData.NFreq}", "[Output]", "[General]"};
+
+            File.WriteAllLines(filePath, content);
+
+            return filePath;
+        }
+
+        private static string ToDoubleString(double value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        private static double GetRandomRoundedValue(Random random)
+        {
+            const int factor = 10000000;
+            return Math.Floor(random.NextDouble() * factor) / factor;
         }
 
         private static void AssertPropertyLine(string line, string propertyName, string value)
@@ -1208,9 +1270,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(supportPointData.Spreading.SpreadingPower, Is.EqualTo(spreading));
         }
 
-        private static void AssertCorrectWaveEnergyFunction(
-            IWaveEnergyFunction<DegreesDefinedSpreading> waveEnergyFunction, int i, DateTime date,
-            double height, double period, double direction, double spreading)
+        private static void AssertCorrectWaveEnergyFunction(IWaveEnergyFunction<DegreesDefinedSpreading> waveEnergyFunction, int i, DateTime date,
+                                                            double height, double period, double direction, double spreading)
         {
             Assert.That(waveEnergyFunction.TimeArgument.Values[i], Is.EqualTo(date));
             Assert.That(waveEnergyFunction.HeightComponent.Values[i], Is.EqualTo(height));
@@ -1242,12 +1303,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             string filePath = Path.Combine(tempDirPath, "file.mdw");
 
-            string[] content =
-            {
-                "[Domain]",
-                "[Output]",
-                "[General]"
-            };
+            string[] content = {"[Domain]", "[Output]", "[General]"};
 
             File.WriteAllLines(filePath, content);
 
