@@ -286,10 +286,8 @@
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />
     <Compile Include="MapLayers\Editors\CrossSectionEditorTest.cs" />
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataViewTest.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ProxyProfileMutatorTest.cs" />
     <Compile Include="Forms\CrossSectionView\SectionsTableViewTest.cs" />
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightViewTest.cs" />
     <Compile Include="Forms\CrossSectionView\SummerdikeViewTest.cs" />
     <Compile Include="Forms\CrossSectionView\ZWSectionsViewModelTest.cs" />
     <Compile Include="Forms\CrossSectionView\ZWSectionsViewTest.cs" />

@@ -286,7 +286,6 @@
       <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\CrossSectionView\CrossSectionProfileMutatorProvider.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionStandardShapeViewFactory.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ICrossSectionProfileMutator.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ImmutableProfileMutator.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ProxyProfileMutator.cs" />
@@ -302,43 +301,6 @@
     </Compile>
     <Compile Include="Forms\CrossSectionView\SectionsTableView.Designer.cs">
       <DependentUpon>SectionsTableView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\Sections\CrossSectionDefinitionViewSectionRenderer.cs" />
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataView.Designer.cs">
-      <DependentUpon>CrossSectionStandardDataView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeArchView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeArchView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeArchView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeRoundView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeRoundView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeRoundView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeSteelCunetteView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeSteelCunetteView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeSteelCunetteView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeTrapeziumView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeTrapeziumView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeTrapeziumView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeWidthHeightView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\CrossSectionView\SummerDikeView.cs">
       <SubType>UserControl</SubType>
@@ -577,26 +539,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrossSectionView\SectionsTableView.resx">
       <DependentUpon>SectionsTableView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataView.resx">
-      <DependentUpon>CrossSectionStandardDataView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeArchView.resx">
-      <DependentUpon>CrossSectionStandardShapeArchView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeRoundView.resx">
-      <DependentUpon>CrossSectionStandardShapeRoundView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeSteelCunetteView.resx">
-      <DependentUpon>CrossSectionStandardShapeSteelCunetteView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeTrapeziumView.resx">
-      <DependentUpon>CrossSectionStandardShapeTrapeziumView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightView.resx">
-      <DependentUpon>CrossSectionStandardShapeWidthHeightView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrossSectionView\SummerDikeView.resx">
       <DependentUpon>SummerDikeView.cs</DependentUpon>
