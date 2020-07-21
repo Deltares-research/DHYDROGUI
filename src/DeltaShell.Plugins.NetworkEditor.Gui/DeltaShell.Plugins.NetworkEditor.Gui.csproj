@@ -188,7 +188,6 @@
     <Compile Include="Commands\NetworkEditorHelper.cs" />
     <Compile Include="Commands\OpenCaseAnalysisViewCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Commands\ShowCrossSectionHistoryCommand.cs" />
     <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
@@ -286,10 +285,8 @@
     <Compile Include="Forms\ComputationalGridDialog.Designer.cs">
       <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionPresenter.cs" />
     <Compile Include="Forms\CrossSectionView\CrossSectionProfileMutatorProvider.cs" />
     <Compile Include="Forms\CrossSectionView\CrossSectionStandardShapeViewFactory.cs" />
-    <Compile Include="Forms\CrossSectionView\ICrossSectionHistoryCapableView.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ICrossSectionProfileMutator.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ImmutableProfileMutator.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ProxyProfileMutator.cs" />
@@ -396,9 +393,6 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\ChannelTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CompositeStructureTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionNodePresenterIconHelper.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionSectionTypesTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionSectionTypeTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\DrainageBasinTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />

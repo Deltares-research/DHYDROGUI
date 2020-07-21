@@ -20,18 +20,6 @@
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
 
-        <fluent:RibbonTabItem x:Name="tabCrossSectionTools" Header="Cross-Section Tools" Group="{Binding ElementName=geospatialContextualGroup}">
-            <fluent:RibbonGroupBox Header="Show/Hide">
-                <fluent:ToggleButton x:Name="ButtonShowCrossSectionHistory"
-                                     Header="Cross-Sections History"
-                                     ToolTip="Show Cross-Sections History"
-                                     LargeIcon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\clock.png"
-                                     Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\clock.png"
-                                     Click="ButtonShowCrossSectionHistory_Click"
-                                     SizeDefinition="Large,Middle,Small" />
-            </fluent:RibbonGroupBox>
-        </fluent:RibbonTabItem>
-
         <fluent:RibbonTabItem Header="Map" x:Name="tabRegion" Group="{Binding ElementName=geospatialContextualGroup}" ReduceOrder="HydroRegion,HydroNetwork,DrainageBasin,NetworkCoverage,Analysis" fluent:KeyTip.Keys="M">
             <fluent:RibbonGroupBox Header="Network" x:Name="HydroNetwork" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkGroup.png" fluent:KeyTip.Keys="ZN">
 

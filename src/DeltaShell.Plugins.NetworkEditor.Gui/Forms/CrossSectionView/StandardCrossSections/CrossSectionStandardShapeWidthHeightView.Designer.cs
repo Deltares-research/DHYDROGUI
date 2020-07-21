@@ -32,13 +32,13 @@
             this.labelWidth = new System.Windows.Forms.Label();
             this.labelHeight = new System.Windows.Forms.Label();
             this.textBoxWidth = new System.Windows.Forms.TextBox();
-            this.crossSectionStandardShapeWidthHeightBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.textBoxHeight = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeWidthHeightBindingSource)).BeginInit();
+            this.label1 = new System.Windows.Forms.Label();
+            this.crossSectionStandardShapeWidthHeightBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeWidthHeightBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // labelWidth
@@ -69,10 +69,6 @@
             this.textBoxWidth.Size = new System.Drawing.Size(86, 20);
             this.textBoxWidth.TabIndex = 2;
             // 
-            // crossSectionStandardShapeWidthHeightBindingSource
-            // 
-            this.crossSectionStandardShapeWidthHeightBindingSource.DataSource = typeof(DelftTools.Hydro.CrossSections.StandardShapes.CrossSectionStandardShapeWidthHeightBase);
-            // 
             // textBoxHeight
             // 
             this.textBoxHeight.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeWidthHeightBindingSource, "Height", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
@@ -86,7 +82,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
             this.tableLayoutPanel1.Controls.Add(this.label2, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBoxHeight, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.textBoxWidth, 1, 1);
@@ -102,16 +98,6 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(205, 56);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(187, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(15, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "m";
-            // 
             // label2
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -122,6 +108,20 @@
             this.label2.TabIndex = 5;
             this.label2.Text = "m";
             // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(187, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(15, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "m";
+            // 
+            // crossSectionStandardShapeWidthHeightBindingSource
+            // 
+            this.crossSectionStandardShapeWidthHeightBindingSource.DataSource = typeof(DelftTools.Hydro.CrossSections.StandardShapes.CrossSectionStandardShapeWidthHeightBase);
+            // 
             // CrossSectionStandardShapeWidthHeightView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -129,9 +129,9 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "CrossSectionStandardShapeWidthHeightView";
             this.Size = new System.Drawing.Size(205, 56);
-            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeWidthHeightBindingSource)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeWidthHeightBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

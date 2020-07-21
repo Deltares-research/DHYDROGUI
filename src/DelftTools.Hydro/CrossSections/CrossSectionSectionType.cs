@@ -6,6 +6,7 @@ using DelftTools.Utils.Data;
 namespace DelftTools.Hydro.CrossSections
 {
     [Entity(FireOnCollectionChange = false)]
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class CrossSectionSectionType : Unique<long>, INameable, ICloneable
     {
         public virtual string Name { get; set; }

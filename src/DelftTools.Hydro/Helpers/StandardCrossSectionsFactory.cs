@@ -8,6 +8,7 @@ namespace DelftTools.Hydro.Helpers
     /// <summary>
     /// Provides factory methods to created stand Cs's like like eggshape,cunette etc
     /// </summary>
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public static class StandardCrossSectionsFactory
     {
         public static CrossSectionDefinitionZW GetTabulatedCrossSectionFromTrapezium(

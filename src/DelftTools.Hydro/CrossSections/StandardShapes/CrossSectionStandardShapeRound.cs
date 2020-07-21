@@ -1,8 +1,10 @@
-﻿using DelftTools.Hydro.Helpers;
+﻿using System;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeRound : CrossSectionStandardShapeBase
     {

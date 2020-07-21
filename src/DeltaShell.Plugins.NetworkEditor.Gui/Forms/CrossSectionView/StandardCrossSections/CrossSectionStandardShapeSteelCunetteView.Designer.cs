@@ -32,28 +32,28 @@
             this.labelWidth = new System.Windows.Forms.Label();
             this.labelHeight = new System.Windows.Forms.Label();
             this.textBoxRadiusR = new System.Windows.Forms.TextBox();
-            this.crossSectionStandardShapeSteelCunetteBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.textBoxHeight = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.textBoxAngleA1 = new System.Windows.Forms.TextBox();
+            this.textBoxAngleA = new System.Windows.Forms.TextBox();
+            this.textBoxRadiusR3 = new System.Windows.Forms.TextBox();
+            this.textBoxRadiusR2 = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.textBoxRadiusR1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.textBoxRadiusR2 = new System.Windows.Forms.TextBox();
-            this.textBoxRadiusR3 = new System.Windows.Forms.TextBox();
-            this.textBoxAngleA = new System.Windows.Forms.TextBox();
-            this.textBoxAngleA1 = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeSteelCunetteBindingSource)).BeginInit();
+            this.crossSectionStandardShapeSteelCunetteBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeSteelCunetteBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // labelWidth
@@ -84,10 +84,6 @@
             this.textBoxRadiusR.Size = new System.Drawing.Size(81, 20);
             this.textBoxRadiusR.TabIndex = 1;
             // 
-            // crossSectionStandardShapeSteelCunetteBindingSource
-            // 
-            this.crossSectionStandardShapeSteelCunetteBindingSource.DataSource = typeof(DelftTools.Hydro.CrossSections.StandardShapes.CrossSectionStandardShapeSteelCunette);
-            // 
             // textBoxHeight
             // 
             this.textBoxHeight.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeSteelCunetteBindingSource, "Height", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
@@ -111,7 +107,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 31F));
             this.tableLayoutPanel1.Controls.Add(this.textBoxAngleA1, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this.textBoxAngleA, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.textBoxRadiusR3, 1, 4);
@@ -150,6 +146,58 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(205, 181);
             this.tableLayoutPanel1.TabIndex = 5;
+            // 
+            // textBoxAngleA1
+            // 
+            this.textBoxAngleA1.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeSteelCunetteBindingSource, "AngleA1", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxAngleA1.Location = new System.Drawing.Point(90, 153);
+            this.textBoxAngleA1.Name = "textBoxAngleA1";
+            this.textBoxAngleA1.Size = new System.Drawing.Size(81, 20);
+            this.textBoxAngleA1.TabIndex = 19;
+            // 
+            // textBoxAngleA
+            // 
+            this.textBoxAngleA.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeSteelCunetteBindingSource, "AngleA", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxAngleA.Location = new System.Drawing.Point(90, 128);
+            this.textBoxAngleA.Name = "textBoxAngleA";
+            this.textBoxAngleA.Size = new System.Drawing.Size(81, 20);
+            this.textBoxAngleA.TabIndex = 18;
+            // 
+            // textBoxRadiusR3
+            // 
+            this.textBoxRadiusR3.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeSteelCunetteBindingSource, "RadiusR3", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxRadiusR3.Location = new System.Drawing.Point(90, 103);
+            this.textBoxRadiusR3.Name = "textBoxRadiusR3";
+            this.textBoxRadiusR3.Size = new System.Drawing.Size(81, 20);
+            this.textBoxRadiusR3.TabIndex = 17;
+            // 
+            // textBoxRadiusR2
+            // 
+            this.textBoxRadiusR2.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeSteelCunetteBindingSource, "RadiusR2", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxRadiusR2.Location = new System.Drawing.Point(90, 78);
+            this.textBoxRadiusR2.Name = "textBoxRadiusR2";
+            this.textBoxRadiusR2.Size = new System.Drawing.Size(81, 20);
+            this.textBoxRadiusR2.TabIndex = 16;
+            // 
+            // label8
+            // 
+            this.label8.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(177, 56);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(15, 13);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "m";
+            // 
+            // label7
+            // 
+            this.label7.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(177, 31);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(15, 13);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "m";
             // 
             // textBoxRadiusR1
             // 
@@ -209,26 +257,6 @@
             this.label6.TabIndex = 9;
             this.label6.Text = "m";
             // 
-            // label7
-            // 
-            this.label7.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(177, 31);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(15, 13);
-            this.label7.TabIndex = 10;
-            this.label7.Text = "m";
-            // 
-            // label8
-            // 
-            this.label8.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(177, 56);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(15, 13);
-            this.label8.TabIndex = 11;
-            this.label8.Text = "m";
-            // 
             // label9
             // 
             this.label9.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -269,37 +297,9 @@
             this.label12.TabIndex = 15;
             this.label12.Text = "deg";
             // 
-            // textBoxRadiusR2
+            // crossSectionStandardShapeSteelCunetteBindingSource
             // 
-            this.textBoxRadiusR2.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeSteelCunetteBindingSource, "RadiusR2", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
-            this.textBoxRadiusR2.Location = new System.Drawing.Point(90, 78);
-            this.textBoxRadiusR2.Name = "textBoxRadiusR2";
-            this.textBoxRadiusR2.Size = new System.Drawing.Size(81, 20);
-            this.textBoxRadiusR2.TabIndex = 16;
-            // 
-            // textBoxRadiusR3
-            // 
-            this.textBoxRadiusR3.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeSteelCunetteBindingSource, "RadiusR3", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
-            this.textBoxRadiusR3.Location = new System.Drawing.Point(90, 103);
-            this.textBoxRadiusR3.Name = "textBoxRadiusR3";
-            this.textBoxRadiusR3.Size = new System.Drawing.Size(81, 20);
-            this.textBoxRadiusR3.TabIndex = 17;
-            // 
-            // textBoxAngleA
-            // 
-            this.textBoxAngleA.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeSteelCunetteBindingSource, "AngleA", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
-            this.textBoxAngleA.Location = new System.Drawing.Point(90, 128);
-            this.textBoxAngleA.Name = "textBoxAngleA";
-            this.textBoxAngleA.Size = new System.Drawing.Size(81, 20);
-            this.textBoxAngleA.TabIndex = 18;
-            // 
-            // textBoxAngleA1
-            // 
-            this.textBoxAngleA1.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.crossSectionStandardShapeSteelCunetteBindingSource, "AngleA1", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
-            this.textBoxAngleA1.Location = new System.Drawing.Point(90, 153);
-            this.textBoxAngleA1.Name = "textBoxAngleA1";
-            this.textBoxAngleA1.Size = new System.Drawing.Size(81, 20);
-            this.textBoxAngleA1.TabIndex = 19;
+            this.crossSectionStandardShapeSteelCunetteBindingSource.DataSource = typeof(DelftTools.Hydro.CrossSections.StandardShapes.CrossSectionStandardShapeSteelCunette);
             // 
             // CrossSectionStandardShapeSteelCunetteView
             // 
@@ -308,9 +308,9 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "CrossSectionStandardShapeSteelCunetteView";
             this.Size = new System.Drawing.Size(205, 181);
-            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeSteelCunetteBindingSource)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeSteelCunetteBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

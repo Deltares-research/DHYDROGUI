@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Reflection;
@@ -6,6 +7,7 @@ using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     [Entity(FireOnCollectionChange = false)]
     public abstract class CrossSectionStandardShapeBase : Unique<long>, ICrossSectionStandardShape
     {

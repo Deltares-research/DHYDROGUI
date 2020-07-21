@@ -39,8 +39,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
     //class is swiss army knife..todo identify separate responsibilities and split it
     public class HydroRegionEditorMapTool : MapTool, IHydroNetworkEditorMapTool
     {
-        public const string AddPointCrossSectionToolName = "add point cross-section";
-        public const string AddLineCrossSectionToolName = "add line cross-section";
+        //public const string AddPointCrossSectionToolName = "add point cross-section";
+        //public const string AddLineCrossSectionToolName = "add line cross-section";
         public const string AddChannelScribleToolName = "add branch (scribble way)";
         public const string AddChannelToolName = "add channel";
         public const string AddCatchmentToolName = "add catchment";
@@ -76,12 +76,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private static bool TopologyRulesEnabledState;
 
-        private static readonly Cursor PointCrossSectionCuror = MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmall);
+        //private static readonly Cursor PointCrossSectionCuror = MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmall);
         private static readonly Cursor NewInsertNodeCursor = MapCursors.CreateArrowOverlayCuror(Resources.NodeOnMultipleBranches);
         private static readonly Cursor NewLateralSourceCursor = MapCursors.CreateArrowOverlayCuror(Resources.LateralSourceSmall);
         private static readonly Cursor NewPumpCursor = MapCursors.CreateArrowOverlayCuror(Resources.PumpSmall);
         private static readonly Cursor AddCompositeStructureCursor = MapCursors.CreateArrowOverlayCuror(Resources.StructureFeatureSmall);
-        private static readonly Cursor NewLineCrossSectionCursor = MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmallXYZ);
+        //private static readonly Cursor NewLineCrossSectionCursor = MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmallXYZ);
         private static readonly Cursor NewRetentionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Retention);
         private static readonly Cursor NewObservationPointToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Observation);
         private static readonly Cursor AddNewWeirCursor = MapCursors.CreateArrowOverlayCuror(Resources.WeirSmall);
@@ -251,15 +251,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var newInsertNodeTool = new NewPointFeatureTool<HydroNode>(InsertNodeToolName) { Cursor = NewInsertNodeCursor };
             AddMapTool(newInsertNodeTool);
 
-            var newPointCrossSectionTool = new NewPointFeatureTool<CrossSection>(AddPointCrossSectionToolName) { Cursor = PointCrossSectionCuror };
-            AddMapTool(newPointCrossSectionTool);
+            //var newPointCrossSectionTool = new NewPointFeatureTool<CrossSection>(AddPointCrossSectionToolName) { Cursor = PointCrossSectionCuror };
+            //AddMapTool(newPointCrossSectionTool);
 
-            var newLineCrossSectionTool = new NewLineTool(FeatureTypeLayerFilter<CrossSection>, AddLineCrossSectionToolName)
-            {
-                AutoCurve = true,
-                Cursor = NewLineCrossSectionCursor
-            };
-            AddMapTool(newLineCrossSectionTool);
+            //var newLineCrossSectionTool = new NewLineTool(FeatureTypeLayerFilter<CrossSection>, AddLineCrossSectionToolName)
+            //{
+            //    AutoCurve = true,
+            //    Cursor = NewLineCrossSectionCursor
+            //};
+            //AddMapTool(newLineCrossSectionTool);
 
             var newStructureFeatureTool = new NewPointFeatureTool<CompositeBranchStructure>(AddCompositeStructureToolName) { Cursor = AddCompositeStructureCursor };
             AddMapTool(newStructureFeatureTool);

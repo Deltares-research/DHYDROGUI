@@ -1,9 +1,11 @@
-﻿using DelftTools.Hydro.Helpers;
+﻿using System;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Aop;
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
 {
     [Entity(FireOnCollectionChange = false)]
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class CrossSectionStandardShapeArch : CrossSectionStandardShapeBase
     {
         private double arcHeight;
