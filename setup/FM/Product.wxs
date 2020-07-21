@@ -17,21 +17,21 @@
   <?ifdef var.RWS?>
   <?define Delft3DPackageName="D-HYDRO"?>
   <?define registrationFeature="D-HYDRO"?>
-  <?define registrationVersion="1.6"?>
+  <?define registrationVersion="1.7"?>
   <?else?>
   <?ifdef var.NOWAQ?>
   <?define Delft3DPackageName="Delft3D FM HM"?>
   <?define registrationFeature="Delft3D_FM_Hyd-Mor"?>
-  <?define registrationVersion="1.6"?>
+  <?define registrationVersion="1.7"?>
   <?else?>
   <?ifdef var.NOKERNELS?>
   <?define Delft3DPackageName="Delft3D FM HMWQ"?>
   <?define registrationFeature="Delft3D_FM_OSS"?>
-  <?define registrationVersion="1.6"?>
+  <?define registrationVersion="1.7"?>
   <?else?>
   <?define Delft3DPackageName="Delft3D FM HMWQ"?>
   <?define registrationFeature="Delft3D_FM_Hyd-Mor_And_Waq"?>
-  <?define registrationVersion="1.6"?>
+  <?define registrationVersion="1.7"?>
   <?endif?>
   <?endif?>
   <?endif?>
