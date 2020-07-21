@@ -1,7 +1,9 @@
-﻿using DelftTools.Hydro.CrossSections;
+﻿using System;
+using DelftTools.Hydro.CrossSections;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMutators
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class ProxyProfileMutator : ICrossSectionProfileMutator
     {
         private readonly CrossSectionDefinitionProxy crossSectionDefinition;

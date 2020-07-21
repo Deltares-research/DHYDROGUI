@@ -238,18 +238,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     v.SetCreateFeatureRowFunction(feature => new GatePropertiesRow((IGate) feature));
                 }
             };
-            yield return new ViewInfo<ICrossSectionDefinition, CrossSectionDefinitionView>
-            {
-                AfterCreate = (v, o) =>
-                {
-                    v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
-
-                    //get the network that has this definition.
-                    IHydroNetwork network = Gui.Application.Project.GetAllItemsRecursive().OfType<IHydroNetwork>().FirstOrDefault(n => n.SharedCrossSectionDefinitions.Contains(o));
-                    CrossSectionDefinitionViewModel viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(o, network);
-                    v.ViewModel = viewModel;
-                }
-            };
             yield return new ViewInfo<Embankment, IGeometry, GeometryEditor>
             {
                 GetViewData = (v) => v.Geometry,
@@ -824,10 +812,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
                 HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
                 region = HydroRegionEditorHelper.RootGetHydroRegion(mapView);
-            }
-            else if (activeView is CrossSectionDefinitionView)
-            {
-                region = (activeView as CrossSectionDefinitionView).ViewModel.HydroNetwork;
             }
             else if (activeView != null)
             {
