@@ -3,6 +3,7 @@ using DelftTools.Controls;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     internal class CrossSectionPresenter : ICanvasEditor
     {
         /*CrossSectionView CrossSectionView { get; set; }

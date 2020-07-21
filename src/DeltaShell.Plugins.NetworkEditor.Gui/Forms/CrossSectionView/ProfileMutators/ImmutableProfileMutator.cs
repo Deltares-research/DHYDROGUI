@@ -5,6 +5,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
     /// <summary>
     /// Profile mutator that can not mutate anything! Used for standard crosssections
     /// </summary>
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class ImmutableProfileMutator : ICrossSectionProfileMutator
     {
         public bool CanDelete

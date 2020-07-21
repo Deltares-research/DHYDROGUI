@@ -297,13 +297,6 @@
     <Compile Include="Forms\CrossSectionView\CrossSectionPresenter.cs" />
     <Compile Include="Forms\CrossSectionView\CrossSectionProfileMutatorProvider.cs" />
     <Compile Include="Forms\CrossSectionView\CrossSectionStandardShapeViewFactory.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionView.Designer.cs">
-      <DependentUpon>CrossSectionView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionViewModel.cs" />
     <Compile Include="Forms\CrossSectionView\ICrossSectionHistoryCapableView.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileChartView.cs">
       <SubType>UserControl</SubType>
@@ -604,9 +597,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrossSectionView\CrossSectionDefinitionView.resx">
       <DependentUpon>CrossSectionDefinitionView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\CrossSectionView.resx">
-      <DependentUpon>CrossSectionView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrossSectionView\ProfileChartView.resx">
       <DependentUpon>ProfileChartView.cs</DependentUpon>

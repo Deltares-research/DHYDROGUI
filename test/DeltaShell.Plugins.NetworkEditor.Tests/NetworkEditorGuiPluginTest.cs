@@ -195,20 +195,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                     () =>
                     {
                         gui.CommandHandler.OpenView(cs1);
-                        var csView = (CrossSectionView) gui.DocumentViews.ActiveView;
-                        ITreeNode cs1Node = treeView.GetNodeByTag(cs1);
+                       ITreeNode cs1Node = treeView.GetNodeByTag(cs1);
                         ITreeNode cs2Node = treeView.GetNodeByTag(cs2);
 
                         int propBefore = TestReferenceHelper.FindEventSubscriptions(cs2);
-                        var chartView = (ChartView) csView.Controls.Find("chartView", true)[0];
-
-                        object innerChart = TypeUtils.GetField(chartView.Chart, "chart");
-                        object innerTools = TypeUtils.GetPropertyValue(innerChart, "Tools");
-                        var toolsBefore = (int) TypeUtils.GetPropertyValue(innerTools, "Count");
-
+                        
+                        
                         treeView.SelectedNode = cs2Node;
-
-                        Assert.AreEqual(cs2, csView.Data);
 
                         treeView.SelectedNode = cs1Node;
                         treeView.SelectedNode = cs2Node;
@@ -220,10 +213,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                         Thread.Sleep(100);
 
                         int propAfter = TestReferenceHelper.FindEventSubscriptions(cs2);
-                        var toolsAfter = (int) TypeUtils.GetPropertyValue(innerTools, "Count");
-
+                        
                         Assert.AreEqual(propBefore, propAfter, "#event leaks");
-                        Assert.AreEqual(toolsBefore, toolsAfter, "#tools leaks");
                     });
             }
         }

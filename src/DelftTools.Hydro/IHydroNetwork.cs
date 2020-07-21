@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
@@ -15,6 +16,7 @@ namespace DelftTools.Hydro
         IEnumerable<IPipe> Pipes { get; }
         IEnumerable<IChannel> Channels { get; }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         IEnumerable<ICrossSection> CrossSections { get; }
 
         IEnumerable<IStructure1D> Structures { get; }
@@ -34,9 +36,13 @@ namespace DelftTools.Hydro
         IEnumerable<IManhole> Manholes { get; }
         IEnumerable<IGully> Gullies { get; }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         IEventedList<CrossSectionSectionType> CrossSectionSectionTypes { get; }
+
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         IEventedList<ICrossSectionDefinition> SharedCrossSectionDefinitions { get; }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         ICrossSectionDefinition DefaultCrossSectionDefinition { get; set; }
 
         INode GetNodeByName(string nodeName);

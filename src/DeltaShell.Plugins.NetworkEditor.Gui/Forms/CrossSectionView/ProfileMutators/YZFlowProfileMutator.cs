@@ -4,6 +4,7 @@ using DelftTools.Hydro.CrossSections.DataSets;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMutators
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class YZFlowProfileMutator : ICrossSectionProfileMutator
     {
         private CrossSectionDefinitionYZ crossSectionDefinition;

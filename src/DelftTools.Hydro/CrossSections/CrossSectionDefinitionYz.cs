@@ -15,6 +15,7 @@ using NetTopologySuite.LinearReferencing;
 namespace DelftTools.Hydro.CrossSections
 {
     [Entity(FireOnCollectionChange = false)]
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class CrossSectionDefinitionYZ : CrossSectionDefinition
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSectionDefinitionYZ));

@@ -11,6 +11,7 @@ using GeoAPI.Geometries;
 namespace DelftTools.Hydro.CrossSections
 {
     [Entity(FireOnCollectionChange = false)]
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class CrossSectionDefinitionXYZ : CrossSectionDefinition
     {
         private bool isEditingDataTable;

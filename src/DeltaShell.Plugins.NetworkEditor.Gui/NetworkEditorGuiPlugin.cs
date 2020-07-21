@@ -238,15 +238,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     v.SetCreateFeatureRowFunction(feature => new GatePropertiesRow((IGate) feature));
                 }
             };
-            yield return new ViewInfo<ICrossSection, CrossSectionView>
-            {
-                Description = "Cross-section view",
-                AfterCreate = (v, o) =>
-                {
-                    v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
-                    v.EditDefinitionClicked += (s, e) => Gui.CommandHandler.OpenView(e.Item);
-                }
-            };
             yield return new ViewInfo<ICrossSectionDefinition, CrossSectionDefinitionView>
             {
                 AfterCreate = (v, o) =>
@@ -834,14 +825,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
                 region = HydroRegionEditorHelper.RootGetHydroRegion(mapView);
             }
-            else if (activeView is CrossSectionView)
-            {
-                var crossSection = activeView.Data as ICrossSection;
-                if (crossSection != null)
-                {
-                    region = (IHydroRegion) crossSection.Network;
-                }
-            }
             else if (activeView is CrossSectionDefinitionView)
             {
                 region = (activeView as CrossSectionDefinitionView).ViewModel.HydroNetwork;
@@ -889,20 +872,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 Gui.Selection = hydroRegionTreeView.TreeView.SelectedNode.Tag;
 
                 settingGuiSelection = false;
-            }
-
-            var crossSection = Gui.Selection as ICrossSection;
-
-            if (crossSection == null)
-            {
-                return;
-            }
-
-            IEnumerable<CrossSectionView> crossSectionViews = Gui.DocumentViews.OfType<CrossSectionView>();
-
-            foreach (CrossSectionView view in crossSectionViews.Where(v => !v.Locked))
-            {
-                view.Data = crossSection;
             }
         }
 

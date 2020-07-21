@@ -4,6 +4,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMutator
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public static class CrossSectionProfileMutatorProvider
     {
         public static ICrossSectionProfileMutator GetFlowProfileMutator(this ICrossSectionDefinition crossSectionDefinition)
