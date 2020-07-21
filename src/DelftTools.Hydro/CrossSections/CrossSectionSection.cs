@@ -6,6 +6,7 @@ namespace DelftTools.Hydro.CrossSections
 {
     [Serializable]
     [Entity(FireOnCollectionChange = false)]
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class CrossSectionSection : Unique<long>
     {
         public virtual double MinY { get; set; }

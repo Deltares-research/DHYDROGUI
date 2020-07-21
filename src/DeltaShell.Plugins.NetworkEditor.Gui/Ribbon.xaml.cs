@@ -34,12 +34,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
         private ICommand addNewBranchCommand = new AddNewBranchCommand();
         private ICommand addNewBranchScribbleCommand = new AddNewBranchUsingScribbleModeCommand();
-        private ICommand addNewCrossSectionYZCommand = new AddNewCrossSectionYZCommand();
-        private ICommand addNewCrossSectionZWCommand = new AddNewCrossSectionZWCommand();
-        private ICommand addNewCrossSectionXYZCommand = new AddNewCrossSectionXYZCommand();
-        private ICommand addNewCrossSectionStandardCommand = new AddNewCrossSectionStandardCommand();
-        private ICommand addNewCrossSectionDefaultCommand = new AddNewDefaultCrossSectionCommand();
-        private ICommand addNewCrossSectionInterpolatedCommand = new AddInterpolatedCrossSectionCommand();
         private ICommand addNewPumpCommand = new AddNewPumpCommand();
         private ICommand addNewWeirCommand = new AddNewWeirCommand();
         private ICommand addNewCulvertCommand = new AddNewCulvertCommand();
@@ -89,12 +83,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return showHydroRegionContentsCommand;
                 yield return addNewBranchCommand;
                 yield return addNewBranchScribbleCommand;
-                yield return addNewCrossSectionYZCommand;
-                yield return addNewCrossSectionZWCommand;
-                yield return addNewCrossSectionXYZCommand;
-                yield return addNewCrossSectionStandardCommand;
-                yield return addNewCrossSectionDefaultCommand;
-                yield return addNewCrossSectionInterpolatedCommand;
                 yield return addNewPumpCommand;
                 yield return addNewWeirCommand;
                 yield return addNewCulvertCommand;
@@ -147,14 +135,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             // branch tools
             ButtonAddNewBranch.SetState(addNewBranchCommand, showNetworkTools);
             ButtonAddNewBranchScribble.SetState(addNewBranchScribbleCommand, showNetworkTools);
-
-            // crossSection tools
-            ButtonAddNewCrossSectionYZ.SetState(addNewCrossSectionYZCommand, showNetworkTools);
-            ButtonAddNewCrossSectionZW.SetState(addNewCrossSectionZWCommand, showNetworkTools);
-            ButtonAddNewCrossSectionXYZ.SetState(addNewCrossSectionXYZCommand, showNetworkTools);
-            ButtonAddNewCrossSectionStandard.SetState(addNewCrossSectionStandardCommand, showNetworkTools);
-            ButtonAddNewCrossSectionDefault.SetState(addNewCrossSectionDefaultCommand, showNetworkTools);
-            ButtonAddNewCrossSectionInterpolated.SetState(addNewCrossSectionInterpolatedCommand, showNetworkTools);
 
             // structure tools
             ButtonAddNewPump.SetState(addNewPumpCommand, showNetworkTools);
@@ -311,42 +291,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewBranchScribble_Click(object sender, RoutedEventArgs e)
         {
             addNewBranchScribbleCommand.Execute();
-            ValidateItems();
-        }
-        
-        private void ButtonAddNewCrossSectionYZ_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionYZCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionZW_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionZWCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionXYZ_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionXYZCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionStandard_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionStandardCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionDefault_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionDefaultCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionInterpolated_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionInterpolatedCommand.Execute();
             ValidateItems();
         }
 

@@ -13,6 +13,7 @@ using NetTopologySuite.Extensions.Networks;
 namespace DelftTools.Hydro.CrossSections
 {
     [Entity(FireOnCollectionChange = false)]
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class CrossSectionDefinitionProxy : Unique<long>, ICrossSectionDefinition, ISummerDikeEnabledDefinition
     {
         private IGeometry geometry;

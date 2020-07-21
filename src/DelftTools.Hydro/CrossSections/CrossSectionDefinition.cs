@@ -15,6 +15,7 @@ using NetTopologySuite.Extensions.Networks;
 namespace DelftTools.Hydro.CrossSections
 {
     [Entity]
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public abstract class CrossSectionDefinition : EditableObjectUnique<long>, ICrossSectionDefinition
     {
         public const string MainSectionName = "Main";

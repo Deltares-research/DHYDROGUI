@@ -37,6 +37,10 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ControlzEx">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51432-beta\lib\net461\DeltaShell\ControlzEx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Controls">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51432-beta\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
@@ -166,18 +170,11 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Commands\AddInterpolatedCrossSectionCommand.cs" />
     <Compile Include="Commands\AddNewBranchCommand.cs" />
     <Compile Include="Commands\AddNewBranchUsingScribbleModeCommand.cs" />
     <Compile Include="Commands\AddNewBridgeCommand.cs" />
     <Compile Include="Commands\AddNewCatchmentCommand.cs" />
-    <Compile Include="Commands\AddNewCrossSectionCommandBase.cs" />
-    <Compile Include="Commands\AddNewCrossSectionStandardCommand.cs" />
-    <Compile Include="Commands\AddNewCrossSectionXYZCommand.cs" />
-    <Compile Include="Commands\AddNewCrossSectionYZCommand.cs" />
-    <Compile Include="Commands\AddNewCrossSectionZWCommand.cs" />
     <Compile Include="Commands\AddNewCulvertCommand.cs" />
-    <Compile Include="Commands\AddNewDefaultCrossSectionCommand.cs" />
     <Compile Include="Commands\AddNewDrainageBasinFeatureCommand.cs" />
     <Compile Include="Commands\AddNewExtraResistanceCommand.cs" />
     <Compile Include="Commands\AddNewLateralSourceCommand.cs" />

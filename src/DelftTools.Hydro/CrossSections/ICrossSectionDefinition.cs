@@ -10,6 +10,7 @@ using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.CrossSections
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public interface ICrossSectionDefinition : ICloneable, IUnique<long>, ICopyFrom, INameable, IEditableObject
     {
         /// <summary>

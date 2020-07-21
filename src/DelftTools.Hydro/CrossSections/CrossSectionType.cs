@@ -1,5 +1,8 @@
+using System;
+
 namespace DelftTools.Hydro.CrossSections
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public enum CrossSectionType
     {
         /// <summary>

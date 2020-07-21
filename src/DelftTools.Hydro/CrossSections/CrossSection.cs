@@ -13,6 +13,7 @@ using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 namespace DelftTools.Hydro.CrossSections
 {
     [Entity]
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class CrossSection : BranchFeatureHydroObject, ICrossSection, IEditableObject
     {
         private readonly Stack<IEditAction> editActions = new Stack<IEditAction>();

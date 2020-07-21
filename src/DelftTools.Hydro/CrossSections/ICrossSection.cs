@@ -1,7 +1,9 @@
-﻿using GeoAPI.Extensions.Networks;
+﻿using System;
+using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.CrossSections
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public interface ICrossSection : IBranchFeature, IHydroNetworkFeature
     {
         ICrossSectionDefinition Definition { get; }
