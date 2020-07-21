@@ -303,13 +303,6 @@
     <Compile Include="Forms\CrossSectionView\YZTableView.Designer.cs">
       <DependentUpon>YZTableView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\ZWSectionsView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\ZWSectionsView.Designer.cs">
-      <DependentUpon>ZWSectionsView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\ZWSectionsViewModel.cs" />
     <Compile Include="Forms\FMWeirView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -534,9 +527,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrossSectionView\YZTableView.resx">
       <DependentUpon>YZTableView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\ZWSectionsView.resx">
-      <DependentUpon>ZWSectionsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FMWeirView.resx">
       <DependentUpon>FMWeirView.cs</DependentUpon>

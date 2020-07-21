@@ -287,8 +287,6 @@
     <Compile Include="MapLayers\Editors\CrossSectionEditorTest.cs" />
     <Compile Include="Forms\CrossSectionView\SectionsTableViewTest.cs" />
     <Compile Include="Forms\CrossSectionView\SummerdikeViewTest.cs" />
-    <Compile Include="Forms\CrossSectionView\ZWSectionsViewModelTest.cs" />
-    <Compile Include="Forms\CrossSectionView\ZWSectionsViewTest.cs" />
     <Compile Include="Forms\CrossSectionView\YZTableViewTest.cs" />
     <Compile Include="Forms\GridProperties\FeaturePropertiesTest.cs" />
     <Compile Include="Forms\ImportBranchFeatureDialogTest.cs" />
