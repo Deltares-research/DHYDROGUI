@@ -285,17 +285,6 @@
     <Compile Include="Forms\ComputationalGridDialog.Designer.cs">
       <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionProfileMutatorProvider.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ICrossSectionProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ImmutableProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ProxyProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\XYZFlowProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\XYZProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\YZFlowProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\YZProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWFlowProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWProfileMutatorBase.cs" />
     <Compile Include="Forms\CrossSectionView\SectionsTableView.cs">
       <SubType>UserControl</SubType>
     </Compile>

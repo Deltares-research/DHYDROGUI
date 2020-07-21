@@ -240,7 +240,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaLayerTest.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\YZProfileMutatorTest.cs" />
     <Compile Include="Forms\GridProperties\CatchmentPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\CrossSectionDefinitionPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\CrossSectionSectionTypePropertiesTest.cs" />
@@ -286,13 +285,10 @@
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />
     <Compile Include="MapLayers\Editors\CrossSectionEditorTest.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ProxyProfileMutatorTest.cs" />
     <Compile Include="Forms\CrossSectionView\SectionsTableViewTest.cs" />
     <Compile Include="Forms\CrossSectionView\SummerdikeViewTest.cs" />
     <Compile Include="Forms\CrossSectionView\ZWSectionsViewModelTest.cs" />
     <Compile Include="Forms\CrossSectionView\ZWSectionsViewTest.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\XYZProfileMutatorTest.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWProfileMutatorTest.cs" />
     <Compile Include="Forms\CrossSectionView\YZTableViewTest.cs" />
     <Compile Include="Forms\GridProperties\FeaturePropertiesTest.cs" />
     <Compile Include="Forms\ImportBranchFeatureDialogTest.cs" />

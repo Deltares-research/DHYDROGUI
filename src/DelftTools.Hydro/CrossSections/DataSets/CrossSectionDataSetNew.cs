@@ -9,6 +9,7 @@ using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro.CrossSections.DataSets
 {
+    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public class CrossSectionDataSet
     {
         public abstract class CrossSectionXYZDataTable : LightDataTable<CrossSectionXYZRow>
@@ -76,6 +77,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             }
         }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         public class CrossSectionXYZRow : CrossSectionYZRow
         {
             public CrossSectionXYZRow()
@@ -91,6 +93,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             }
         }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         public abstract class CrossSectionYZDataTable : LightDataTable<CrossSectionYZRow>
         {
             protected CrossSectionYZDataTable() {}
@@ -141,6 +144,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             }
         }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         public class CrossSectionYZRow : LightDataRow
         {
             public CrossSectionYZRow()
@@ -179,6 +183,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             }
         }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         public abstract class CrossSectionZWDataTable : LightDataTable<CrossSectionZWRow>
         {
             protected CrossSectionZWDataTable() {}
@@ -220,6 +225,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             }
         }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         public class CrossSectionZWRow : LightDataRow
         {
             public CrossSectionZWRow()
