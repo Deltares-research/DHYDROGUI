@@ -5,6 +5,7 @@ __maintainer__ = "Maarten Tegelaers, Prisca van der Sluis"
 __email__ = "Maarten.Tegelaers@deltares.nl"
 __status__ = "Development"
 
+import argparse
 import subprocess
 
 
@@ -48,8 +49,8 @@ def get_version(branch_name: str) -> str:
     return branch_name[16:]
 
 
-def set_version_parameter(version: str):
-    set_build_parameter("D-HYDRO_ReleaseVersion", version)
+def set_version_parameter(variable_name: str, version: str):
+    set_build_parameter(variable_name, version)
 
 
 def report_failure(branch_name: str):
@@ -60,11 +61,23 @@ def report_failure(branch_name: str):
     print(service_msg)
 
 
+def parse_arguments():
+    """
+    Parse the arguments with which this script was called through
+    argparse.ArgumentParser
+    """
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--variable_name", default="D-HYDRO_ReleaseVersion",  help="The prefix variable name to write to.")
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
+    args = parse_arguments()
     branch_name = get_branch_name()
 
     if verify_branch(branch_name):
         version = get_version(branch_name)
-        set_version_parameter(version)
+        set_version_parameter(args.variable_name, version)
     else:
         report_failure(branch_name)
