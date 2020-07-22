@@ -285,7 +285,6 @@
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />
     <Compile Include="MapLayers\Editors\CrossSectionEditorTest.cs" />
-    <Compile Include="Forms\CrossSectionView\YZTableViewTest.cs" />
     <Compile Include="Forms\GridProperties\FeaturePropertiesTest.cs" />
     <Compile Include="Forms\ImportBranchFeatureDialogTest.cs" />
     <Compile Include="Forms\StructureFeatureView\BridgeViewTest.cs" />
@@ -310,8 +309,6 @@
     <Compile Include="NetworkEditorTestHelper.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Forms\StructureFeatureView\PumpViewTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaViewTest.cs">
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\PierWeirFormulaViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewTest.cs" />
@@ -377,6 +374,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Forms\ChartEditors\ChartShapes\" />
+    <Folder Include="Forms\CrossSectionView\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

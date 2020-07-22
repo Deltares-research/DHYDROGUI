@@ -193,7 +193,6 @@
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
-    <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureWithAttributesProperties.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestValidationRule.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestWidthValidationRule.cs" />
@@ -283,12 +282,6 @@
     </Compile>
     <Compile Include="Forms\ComputationalGridDialog.Designer.cs">
       <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\YZTableView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\YZTableView.Designer.cs">
-      <DependentUpon>YZTableView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FMWeirView.cs">
       <SubType>UserControl</SubType>
@@ -402,12 +395,6 @@
     <Compile Include="Forms\StructureFeatureView\PumpView.Designer.cs">
       <DependentUpon>PumpView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaView.Designer.cs">
-      <DependentUpon>FreeFormWeirFormulaView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -506,9 +493,6 @@
       <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\YZTableView.resx">
-      <DependentUpon>YZTableView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FMWeirView.resx">
       <DependentUpon>FMWeirView.cs</DependentUpon>
     </EmbeddedResource>
@@ -540,10 +524,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\PumpView.resx">
       <DependentUpon>PumpView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaView.resx">
-      <DependentUpon>FreeFormWeirFormulaView.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.resx">

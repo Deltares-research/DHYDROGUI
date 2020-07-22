@@ -16,7 +16,6 @@ using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;

@@ -24,7 +24,6 @@ using DeltaShell.Plugins.HydroNetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
