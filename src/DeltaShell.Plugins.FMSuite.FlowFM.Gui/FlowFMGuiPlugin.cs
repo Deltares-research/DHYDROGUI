@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -944,26 +943,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
         }
         
-        private static string[][] GetDataItemNames(IEnumerable<WaterFlowFMModel> fmModels)
-        {
-            FileBasedFeatureCoverage[] coverages = fmModels.Where(m => m.OutputHisFileStore != null)
-                                                           .SelectMany(fm => fm.OutputHisFileStore.Functions.OfType<FileBasedFeatureCoverage>())
-                                                           .Where(c => c != null)
-                                                           .ToArray();
-            if (!coverages.Any())
-            {
-                return new string[0][];
-            }
-
-            string[][] dataItemNames = coverages.Select(fc =>
-                                                            new[]
-                                                            {
-                                                                fc.Name,
-                                                                fc.Features.OfType<INameable>().FirstOrDefault()?.Name
-                                                            }).ToArray();
-            return dataItemNames;
-        }
-
         [InvokeRequired]
         private void CloseViewDataForOutdatedStore(FMHisFileFunctionStore fmHisFileFunctionStore)
         {
