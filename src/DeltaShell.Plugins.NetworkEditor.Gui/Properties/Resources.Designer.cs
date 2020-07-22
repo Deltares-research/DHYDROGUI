@@ -61,26 +61,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap AddDefaultCrossSectionDefinition {
-            get {
-                object obj = ResourceManager.GetObject("AddDefaultCrossSectionDefinition", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap AddInterpolatedCrossSection {
-            get {
-                object obj = ResourceManager.GetObject("AddInterpolatedCrossSection", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         public static byte[] AddPointCursor {
@@ -262,41 +242,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionSectionTypeAdd {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionSectionTypeAdd", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cross section type.
         /// </summary>
         public static string CrossSectionSectionTypeProperties_DisplayName {
             get {
                 return ResourceManager.GetString("CrossSectionSectionTypeProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionSectionTypes {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionSectionTypes", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionSmallWithExclamation {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionSmallWithExclamation", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

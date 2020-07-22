@@ -333,7 +333,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void ButtonMenuFeatureCutClick(object sender, EventArgs e) {}
 
-
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         private void AddSectionTypeToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (SelectedNetwork != null)
@@ -348,16 +348,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             }
         }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         private void ZWTabulatedToolStripMenuItemClick(object sender, EventArgs e)
         {
             AddDefinitionToNetwork(CrossSectionDefinitionZW.CreateDefault());
         }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         private void YZToolStripMenuItemClick(object sender, EventArgs e)
         {
             AddDefinitionToNetwork(CrossSectionDefinitionYZ.CreateDefault());
         }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         private void AddDefinitionToNetwork(ICrossSectionDefinition definition)
         {
             if (SelectedNetwork != null)
@@ -368,7 +371,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 SelectedNetwork.SharedCrossSectionDefinitions.Add(definition);
             }
         }
-        
+
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         private void ShowUsageToolStripMenuItemClick(object sender, EventArgs e)
         {
             var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;
@@ -398,6 +402,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             }
         }
 
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         private void SetAsDefaultToolStripMenuItemClick(object sender, EventArgs e)
         {
             var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;
@@ -409,6 +414,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         }
 
         //todo: move this to validation quick-fix someday
+        [Obsolete("D3DFMIQ-1923 remove cross section")]
         private void PlaceOnEmptyBranchesToolStripMenuItemClick(object sender, EventArgs e)
         {
             var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;
