@@ -67,6 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string FlowWindUsage = "FlowWind";
         public const string MaxIter = "MaxIter";
 
+        public const string MeteoQuantityField = "quantity1";
+        public const string MeteoXComponentValue = "x_wind";
+        public const string MeteoYComponentValue = "y_wind";
+
         #region Wave boundary conditions
 
         public const string Name = "Name";

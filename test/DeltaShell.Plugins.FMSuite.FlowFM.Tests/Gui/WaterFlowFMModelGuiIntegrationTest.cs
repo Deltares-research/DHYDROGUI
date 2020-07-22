@@ -695,7 +695,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
 
             // 2. Set up test action
-            Action<IApplication> testAction = app => app.CloseProject();
+            Action<IGui> testAction = gui => gui.CommandHandler.CloseProject();
 
             // 3. Run and verify test
             AssertMultipleFunctionViewClosedAsExpected(fileLocation, testAction);
@@ -709,13 +709,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
 
             // 2. Set up test action
-            Action<IApplication> testAction = (app) =>
+            Action<IGui> testAction = gui =>
             {
-                WaterFlowFMModel[] models = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().ToArray();
+                WaterFlowFMModel[] models = gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>().ToArray();
                 Assert.That(models.Any(), Is.True, "No WaterFlowFMModels were added to the project.");
                 foreach (WaterFlowFMModel waterFlowFmModel in models)
                 {
-                    app.Project.RootFolder.Items.Remove(waterFlowFmModel);
+                    gui.Application.Project.RootFolder.Items.Remove(waterFlowFmModel);
                 }
             };
 
@@ -961,7 +961,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static void AssertMultipleFunctionViewClosedAsExpected(string filePath, Action<IApplication> applicationAction)
+        private static void AssertMultipleFunctionViewClosedAsExpected(string filePath, Action<IGui> guiAction)
         {
             using (var dsProjLocation = new TemporaryDirectory())
             {
@@ -987,27 +987,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     WaterFlowFMModel fmModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
 
-                    FileBasedFeatureCoverage dataItem = fmModel.OutputHisFileStore.Functions
+                    TimeSeries hisTimeSerie = fmModel.OutputHisFileStore.Functions
+                                                 .OfType<TimeSeries>()
+                                                 .FirstOrDefault();
+                    Assert.That(hisTimeSerie, Is.Not.Null, "No timeserie was found.");
+
+                    FileBasedFeatureCoverage hisCoverage = fmModel.OutputHisFileStore.Functions
                                                                .OfType<FileBasedFeatureCoverage>()
                                                                .FirstOrDefault();
-                    Assert.That(dataItem, Is.Not.Null, "No output coverage was found.");
-                    // 3.1. We need the function to also include the feature name as it would be done if DS would create the
-                    // MultipleFunctionView.
-                    string dataItemName = dataItem.Name + ' ' + dataItem.Features.OfType<INameable>().FirstOrDefault()?.Name;
-                    dataItem.Name = dataItemName;
+                    Assert.That(hisCoverage, Is.Not.Null, "No output coverage was found.");
+
+                    // Simulate behaviour what normally will be done if you select observation cross section and then query timeseries
+                    IFunction hisTimeSerieForObsCrossSection = hisCoverage.GetTimeSeries(fmModel.Area.ObservationCrossSections.FirstOrDefault());
+                    Assert.That(hisCoverage, Is.Not.Null, "No output coverage for the observation cross section was found.");
+                    hisTimeSerieForObsCrossSection.Parent = hisCoverage;
+                    var list = new List<IFunction>{hisTimeSerieForObsCrossSection};
+                    
 
                     // 4. Do test action
                     Action mainWindowShown = () =>
                     {
                         Assert.That(gui.DocumentViews.Any(), Is.False);
 
-                        // 4.1. Create and add new MultipleFunctionView
-                        var functionView = new MultipleFunctionView {Functions = new List<IFunction> {dataItem}};
-                        gui.DocumentViews.Add(functionView);
-                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Count(), Is.EqualTo(1), "No MultipleFunction view was generated.");
+                        // 4.1. Open MultipleFunctionView for his TimeSerie
+                        gui.CommandHandler.OpenView(hisTimeSerie);
+
+                        // Normally called by the QueryTimeSeriesMapTool
+                        gui.CommandHandler.OpenView(list);
+
+                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Count(), Is.EqualTo(2), "No MultipleFunction view was generated.");
 
                         // 5. Do action
-                        applicationAction(app);
+                        guiAction(gui);
 
                         // 6. Verify final expectations
                         Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Any(), Is.False, "Not all views were closed correctly.");

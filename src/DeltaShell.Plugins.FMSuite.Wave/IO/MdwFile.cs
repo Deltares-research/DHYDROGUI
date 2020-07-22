@@ -120,20 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 #region Not synchronized with modeldefintionproperties, since property is missing in csv file
 
-                DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
-                if (modelDefinition.TimePointData.WindDataType == InputFieldDataType.FromInputFiles)
-                {
-                    List<string> meteoFiles = GetMeteoFiles(modelDefinition.TimePointData.MeteoData);
-                    meteoFiles.ForEach((mf, i) =>
-                    {
-                        generalCategory.SetProperty(KnownWaveProperties.MeteoFile, meteoFiles[i]);
-                        CopyModelFile(meteoFiles[i], sourceDir, targetDir);
-                    });
-                }
-                else if (modelDefinition.TimePointData.WindDataType != InputFieldDataType.FromInputFiles)
-                {
-                    generalCategory.SetProperty(KnownWaveProperties.MeteoFile, string.Empty);
-                }
+                SaveMeteoFile(modelDefinition, mdwCategories, sourceDir, targetDir);
 
                 #endregion
 
@@ -188,6 +175,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             logHandler.LogReport();
         }
 
+        private static void SaveMeteoFile(WaveModelDefinition modelDefinition, IEnumerable<DelftIniCategory> mdwCategories, string sourceDir, string targetDir)
+        {
+            DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
+
+            generalCategory.RemoveAllPropertiesWhere(prop => prop.Name == KnownWaveProperties.MeteoFile);
+
+            if (modelDefinition.TimePointData.WindDataType == InputFieldDataType.FromInputFiles)
+            {
+                List<string> meteoFiles = GetMeteoFiles(modelDefinition.TimePointData.MeteoData);
+                meteoFiles.ForEach((mf, i) =>
+                {
+                    generalCategory.AddProperty(KnownWaveProperties.MeteoFile, meteoFiles[i]);
+                    CopyModelFile(meteoFiles[i], sourceDir, targetDir);
+                });
+            }
+            else if (modelDefinition.TimePointData.WindDataType != InputFieldDataType.FromInputFiles)
+            {
+                generalCategory.SetProperty(KnownWaveProperties.MeteoFile, string.Empty);
+            }
+        }
+
         public WaveModelDefinition Load(string filePath)
         {
             var logHandler = new LogHandler(Resources.MdwFile_Load_loading_the_D_Waves_model, log);
@@ -224,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             // time frame
-            modelDefinition.TimePointData = CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out IList<DateTime> _);
+            modelDefinition.TimePointData = CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out IList<DateTime> _, logHandler);
 
             ReadWaveBoundaries(modelDefinition, mdwCategories, mdwDir, logHandler);
 
@@ -883,7 +891,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         }
 
         private WaveInputFieldData CreateTimePointData(IEnumerable<DelftIniCategory> mdwCategories,
-                                                       DateTime referenceDate, out IList<DateTime> times)
+                                                       DateTime referenceDate, out IList<DateTime> times,
+                                                       ILogHandler logHandler)
         {
             var timePointData = new WaveInputFieldData
             {
@@ -908,7 +917,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             if (meteoFiles.Any())
             {
                 timePointData.WindDataType = InputFieldDataType.FromInputFiles;
-                timePointData.MeteoData = CreateMeteoDataFromFiles(meteoFiles);
+                timePointData.MeteoData = CreateMeteoDataFromFiles(meteoFiles, logHandler);
             }
 
             if (timePointData.HydroDataType == InputFieldDataType.Constant)
@@ -984,7 +993,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return timePointData;
         }
 
-        private WaveMeteoData CreateMeteoDataFromFiles(IReadOnlyCollection<string> meteoFiles)
+        private WaveMeteoData CreateMeteoDataFromFiles(IReadOnlyCollection<string> meteoFiles, ILogHandler logHandler)
         {
             List<string> spwFiles = meteoFiles.Where(mf => mf.EndsWith(".spw")).ToList();
             List<string> otherFiles = meteoFiles.Where(mf => !mf.EndsWith(".spw")).ToList();
@@ -1018,8 +1027,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 data = new WaveMeteoData
                 {
                     FileType = WindDefinitionType.WindXWindY,
-                    XComponentFilePath = Path.Combine(MdwFilePath, otherFiles[1]),
-                    YComponentFilePath = Path.Combine(MdwFilePath, otherFiles[1])
+                    XComponentFilePath = GetMeteoFile(otherFiles, KnownWaveProperties.MeteoXComponentValue, logHandler),
+                    YComponentFilePath = GetMeteoFile(otherFiles, KnownWaveProperties.MeteoYComponentValue, logHandler)
                 };
             }
             else
@@ -1035,6 +1044,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             return data;
+        }
+
+        private string GetMeteoFile(IEnumerable<string> meteoFiles, string quantityParameterValue, ILogHandler logHandler)
+        {
+            var meteoFileReader = new MeteoFileReader();
+
+            foreach (string otherFile in meteoFiles)
+            {
+                string filePath = Path.Combine(Path.GetDirectoryName(MdwFilePath), otherFile);
+                IEnumerable<MeteoFileProperty> meteoProperties = meteoFileReader.Read(filePath);
+
+                if (meteoProperties.First(mp => mp.Property == KnownWaveProperties.MeteoQuantityField).Value == quantityParameterValue)
+                {
+                    return otherFile;
+                }
+            }
+
+            logHandler.ReportError(string.Format(Resources.MdwFile_Could_not_find_meteo_file_for__0__, quantityParameterValue));
+            return string.Empty;
         }
 
         private IEnumerable<WaveObstacle> CreateObstacleData(DelftIniCategory generalCategory,

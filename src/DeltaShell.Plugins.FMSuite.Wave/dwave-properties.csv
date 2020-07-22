@@ -27,6 +27,7 @@ Output,COMWriteInterval,General,Communication,Communication interval,Double,60.0
 Output,AppendCOM,General,Communication,Append to com file,true|false,false,,,,WriteCOM,,,,,Upon writing to communication file(s) overwrite the previous data (false) or append to the data series (true),
 Output,MassFluxToCOM,General,Communication,Mass flux to com,true|false,true,,,,WriteCOM,,,,,write mass fluxes due to wave to communication file(s),
 General,TSeriesFile,,,Timeseries File,FileName,,,,True,,,,,,,
+General,MeteoFile,General,,Meteo File,FileName,,,,,False,,,,,,
 General,SimMode,General,Simulation mode,Simulation mode:stationary|non-stationary,stationary|non-stationary,stationary,,,,,,,,,,
 General,TimeStep,General,Simulation mode,D-Waves time step,Double,10,1,,,SimMode=1,,,,,Time step in case of non-stationary simulation, min
 General,TimeInterval,General,Simulation mode,D-Waves time interval,Double,60,,,,SimMode=1,,,,,Time interval in case of non-stationary simulation, min

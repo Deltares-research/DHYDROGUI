@@ -137,13 +137,6 @@
       <FileName>Forms\SettingsWpf\DoubleWrapper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf.WpfCustomTimeSpan">
-    <Position X="5.25" Y="6.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAIAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Forms\SettingsWpf\WpfCustomTimeSpan.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Xceed.Wpf.Toolkit.TimeSpanUpDown" Collapsed="true">
     <Position X="5.25" Y="5.5" Width="2" />
     <TypeIdentifier />

@@ -1,0 +1,91 @@
+﻿using System;
+using System.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
+{
+    /// <summary>
+    /// Helper class which contains methods to support the loading of a <see cref="WaveModelDefinition"/>.
+    /// </summary>
+    public static class WaveModelDefinitionLoadHelper
+    {
+        /// <summary>
+        /// Transfers the definitions from the <paramref name="loadedDefinition"/> to the <paramref name="targetDefinition"/>.
+        /// </summary>
+        /// <param name="targetDefinition">The <see cref="WaveModelDefinition"/> to transfer the properties to.</param>
+        /// <param name="loadedDefinition">The <see cref="WaveModelDefinition"/> that contains the properties to transfer.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is <c>null</c>.</exception>
+        public static void TransferLoadedProperties(WaveModelDefinition targetDefinition, WaveModelDefinition loadedDefinition)
+        {
+            if (targetDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(targetDefinition));
+            }
+
+            if (loadedDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(loadedDefinition));
+            }
+
+            targetDefinition.OuterDomain = loadedDefinition.OuterDomain;
+
+            targetDefinition.ObservationPoints.AddRange(loadedDefinition.ObservationPoints);
+            targetDefinition.ObservationCrossSections.AddRange(loadedDefinition.ObservationCrossSections);
+            targetDefinition.Obstacles.AddRange(loadedDefinition.Obstacles);
+
+            TransferProperties(targetDefinition, loadedDefinition.Properties);
+            TransferTimePointData(targetDefinition.TimePointData, loadedDefinition.TimePointData);
+            TransferBoundaryContainer(targetDefinition.BoundaryContainer, loadedDefinition.BoundaryContainer);
+        }
+
+        private static void TransferTimePointData(WaveInputFieldData targetTimePointData, WaveInputFieldData loadedTimePointData)
+        {
+            targetTimePointData.HydroDataType = loadedTimePointData.HydroDataType;
+            targetTimePointData.WindDataType = loadedTimePointData.WindDataType;
+            targetTimePointData.WaterLevelConstant = loadedTimePointData.WaterLevelConstant;
+            targetTimePointData.VelocityXConstant = loadedTimePointData.VelocityXConstant;
+            targetTimePointData.VelocityYConstant = loadedTimePointData.VelocityYConstant;
+            targetTimePointData.WindSpeedConstant = loadedTimePointData.WindSpeedConstant;
+            targetTimePointData.WindDirectionConstant = loadedTimePointData.WindDirectionConstant;
+
+            targetTimePointData.InputFields = loadedTimePointData.InputFields;
+
+            TransferMeteoData(targetTimePointData.MeteoData, loadedTimePointData.MeteoData);
+        }
+
+        private static void TransferMeteoData(WaveMeteoData targetMeteoData, WaveMeteoData loadedMeteoData)
+        {
+            targetMeteoData.FileType = loadedMeteoData.FileType;
+            targetMeteoData.XYVectorFilePath = loadedMeteoData.XYVectorFilePath;
+            targetMeteoData.XComponentFilePath = loadedMeteoData.XComponentFilePath;
+            targetMeteoData.YComponentFilePath = loadedMeteoData.YComponentFilePath;
+            targetMeteoData.HasSpiderWeb = loadedMeteoData.HasSpiderWeb;
+            targetMeteoData.SpiderWebFilePath = loadedMeteoData.SpiderWebFilePath;
+        }
+
+        private static void TransferBoundaryContainer(IBoundaryContainer targetBoundaryContainer, IBoundaryContainer loadedBoundaryContainer)
+        {
+            targetBoundaryContainer.UpdateGridBoundary(loadedBoundaryContainer.GetGridBoundary());
+            if (loadedBoundaryContainer.DefinitionPerFileUsed)
+            {
+                targetBoundaryContainer.DefinitionPerFileUsed = true;
+                targetBoundaryContainer.FilePathForBoundariesPerFile = loadedBoundaryContainer.FilePathForBoundariesPerFile;
+            }
+            else
+            {
+                targetBoundaryContainer.Boundaries.AddRange(loadedBoundaryContainer.Boundaries);
+            }
+        }
+
+        private static void TransferProperties(WaveModelDefinition targetDefinition,
+                                               IEnumerable<WaveModelProperty> loadedProperties)
+        {
+            foreach (WaveModelProperty loadedProperty in loadedProperties)
+            {
+                targetDefinition.SetModelProperty(loadedProperty.PropertyDefinition.FileCategoryName,
+                                                  loadedProperty.PropertyDefinition.FilePropertyName,
+                                                  loadedProperty);
+            }
+        }
+    }
+}
