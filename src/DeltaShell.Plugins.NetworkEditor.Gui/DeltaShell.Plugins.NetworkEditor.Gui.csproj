@@ -316,7 +316,6 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentTypesNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\ChannelTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CompositeStructureTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionNodePresenterIconHelper.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\DrainageBasinTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />
@@ -328,8 +327,6 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RetentionNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RunoffBoundariesTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RunoffBoundaryTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\SharedCrossSectionDefinitionsTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\SharedCrossSectionDefinitionTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantsTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\TreeViewBranchFeatureNodeSorter.cs" />

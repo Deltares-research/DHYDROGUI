@@ -34,7 +34,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.buttonMenuBranchDelete = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchRename = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.buttonMenuBranchAddCS = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchAddWeir = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchAddPump = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchCulvert = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
@@ -225,7 +224,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.buttonMenuBranchDelete,
             this.buttonMenuBranchRename,
             this.toolStripSeparator1,
-            this.buttonMenuBranchAddCS,
             this.buttonMenuBranchAddWeir,
             this.buttonMenuBranchAddPump,
             this.buttonMenuBranchCulvert,
@@ -269,14 +267,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(193, 6);
-            // 
-            // buttonMenuBranchAddCS
-            // 
-            this.buttonMenuBranchAddCS.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.CrossSectionSmall;
-            this.buttonMenuBranchAddCS.Name = "buttonMenuBranchAddCS";
-            this.buttonMenuBranchAddCS.Size = new System.Drawing.Size(196, 22);
-            this.buttonMenuBranchAddCS.Text = "Add &Cross Section YZ...";
-            this.buttonMenuBranchAddCS.Click += new System.EventHandler(this.HandleButtonAddCrossSectionClick);
             // 
             // buttonMenuBranchAddWeir
             // 

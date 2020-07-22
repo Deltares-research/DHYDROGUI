@@ -145,20 +145,8 @@
   <data name="CrossSectionSectionTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CrossSectionSectionTypes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="CrossSectionSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CrossSectionSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="CrossSectionSmallWithExclamation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CrossSectionSmallWithExclamation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CrossSectionSmallXYZ" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CrossSectionSmallXYZ.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CrossSectionStandardSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CrossSectionStandardSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CrossSectionTabulatedSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CrossSectionTabulatedSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="CulvertSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CulvertSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -304,9 +292,6 @@
   </data>
   <data name="runoff" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\runoff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SharedCrossSectionDefinitions" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SharedCrossSectionDefinitions.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="show_only_selection" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\show_only_selection.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

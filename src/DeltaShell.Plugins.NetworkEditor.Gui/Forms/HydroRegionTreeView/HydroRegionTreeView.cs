@@ -40,7 +40,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private ContextMenuStrip contextMenuBranch;
         private ClonableToolStripMenuItem buttonMenuBranchDelete;
         private ClonableToolStripMenuItem buttonMenuBranchRename;
-        private ClonableToolStripMenuItem buttonMenuBranchAddCS;
         private IHydroRegion region;
         private ContextMenuStrip contextMenuCrossSectionSectionTypes;
 
@@ -179,8 +178,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 new LateralSourceTreeViewNodePresenter(guiPlugin),
                 new RetentionNodePresenter(guiPlugin),
                 new ObservationPointTreeViewNodePresenter(guiPlugin),
-                new SharedCrossSectionDefinitionTreeViewNodePresenter(guiPlugin),
-                new SharedCrossSectionDefinitionsTreeViewNodePresenter(guiPlugin),
                 new NetworkRoutesTreeViewNodePresenter(guiPlugin),
                 new NetworkRouteTreeViewNodePresenter(guiPlugin),
                 new CompositeStructureTreeViewNodePresenter(guiPlugin),
@@ -336,37 +333,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void ButtonMenuFeatureCutClick(object sender, EventArgs e) {}
 
-        private void HandleButtonAddCrossSectionClick(object sender, EventArgs e)
-        {
-            var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel == null)
-            {
-                return;
-            }
-
-            var formPasteCrossSection = new FormPasteBranchFeature
-            {
-                Branch = channel,
-                Title =
-                    "Insert new default cross section into channel."
-            };
-            formPasteCrossSection.textBoxShift.Enabled = true;
-            formPasteCrossSection.textBoxShift.Visible = true;
-            formPasteCrossSection.labelShift.Visible = true;
-
-            if (DialogResult.OK != formPasteCrossSection.ShowDialog())
-            {
-                return;
-            }
-
-            ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.YZ, channel,
-                                                                    formPasteCrossSection.Chainage);
-            channel.BranchFeatures.Add(crossSection);
-
-            crossSection.Definition.ShiftLevel(formPasteCrossSection.Shift);
-            crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(region, crossSection);
-            gui.Selection = crossSection;
-        }
 
         private void AddSectionTypeToolStripMenuItemClick(object sender, EventArgs e)
         {
