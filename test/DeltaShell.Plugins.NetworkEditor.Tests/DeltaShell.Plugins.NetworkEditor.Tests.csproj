@@ -285,8 +285,6 @@
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />
     <Compile Include="MapLayers\Editors\CrossSectionEditorTest.cs" />
-    <Compile Include="Forms\CrossSectionView\SectionsTableViewTest.cs" />
-    <Compile Include="Forms\CrossSectionView\SummerdikeViewTest.cs" />
     <Compile Include="Forms\CrossSectionView\YZTableViewTest.cs" />
     <Compile Include="Forms\GridProperties\FeaturePropertiesTest.cs" />
     <Compile Include="Forms\ImportBranchFeatureDialogTest.cs" />
