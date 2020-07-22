@@ -28,6 +28,7 @@ class RunConfig(object):
                        deltashell_root: Path,
                        only_update_bin: bool,
                        rebuild_framework: bool,
+                       add_plugins: bool,
                        use_revision: bool,
                        compile: bool,
                        verbose: bool):
@@ -35,6 +36,7 @@ class RunConfig(object):
         self._deltashell_root = deltashell_root
         self._only_update_bin = only_update_bin
         self._rebuild_framework = rebuild_framework
+        self._add_plugins = add_plugins
         self._use_revision = use_revision
         self._compile = compile
         self._verbose = verbose
@@ -45,6 +47,7 @@ class RunConfig(object):
                          Path(args.delta_shell_framework_root),
                          args.update_only_bin,
                          args.rebuild_framework,
+                         args.add_plugins_to_framework,
                          args.use_revision, 
                          not args.skip_compile,
                          not args.quiet)
@@ -64,6 +67,10 @@ class RunConfig(object):
     @property
     def rebuild_framework(self) -> bool:
         return self._rebuild_framework
+
+    @property
+    def add_plugins(self) -> bool:
+        return self._add_plugins
 
     @property
     def use_revision(self) -> bool:
@@ -245,46 +252,58 @@ def clean_framework_bin(deltashell_root: Path,
 
 
 def clean_framework(run_config: RunConfig):
-    if run_config.rebuild_framework:
-        try:
-            clean_framework_bin(run_config.deltashell_root,
-                                run_config.verbose)
-        except Exception as e:
-            print(f"Could not clean the bin folder of the framework: {str(e)}")
-            return
+    try:
+        clean_framework_bin(run_config.deltashell_root,
+                            run_config.verbose)
+    except Exception as e:
+        print(f"Could not clean the bin folder of the framework: {str(e)}")
+        return
 
 def get_devenv() -> Path:
     return next(Path("C:\PROGRA~2\Microsoft Visual Studio").glob("**/devenv.com"), None)
 
 
-def compile_framework(run_config):
+def compile_solution(solution_path: Path):
     """
-    Compile the framework at run_config.deltashell_root with debug settings
+    Compile the solution at solution_path with debug settings
 
-    :param run_config: the run configuration
+    :param solution_path: the path to the solution.
     """
-    if run_config.verbose:
-        print("Compiling framework ...")
-
-    solution_path = run_config.deltashell_root / Path("Framework.sln")
-
-    # Restore packages
     subprocess.call(["nuget.exe", "restore", str(solution_path),])
 
-    # Compile framework
     devenv = get_devenv()
 
     if not devenv:
         raise Exception("Could not locate devenv.com...")
 
-    # We build the solution twice, because sometimes the first build will have failed projects
-    # This could be further optimised by verifying that no failed projects occurred after building
-    # the project once.
-    subprocess.call([str(devenv), str(solution_path), "/Build", "debug"])
-    subprocess.call([str(devenv), str(solution_path), "/Build", "debug"])
+    subprocess.call([str(devenv), str(solution_path), "/Rebuild", "debug", "/NoSplash"])
+    subprocess.call([str(devenv), str(solution_path), "/Rebuild", "debug", "/NoSplash"])
 
-    if run_config.verbose:
-        print(f"\nCompiled the framework at {str(run_config.deltashell_root)}")
+
+def compile_framework(run_config: RunConfig):
+    """
+    Compile the framework at run_config.deltashell_root with debug settings
+
+    :param run_config: the run configuration
+    """
+    solution_path = run_config.deltashell_root / Path("Framework.sln")
+    compile_solution(solution_path)
+
+
+def get_msbuild() -> Path:
+    return next(Path("C:\PROGRA~2\Microsoft Visual Studio").glob("**/msbuild.exe"), None)
+
+def compile_dhydro(run_config: RunConfig):
+    """
+    Compile dhydro at run_config.dhydro_root with debug settings
+
+    :param run_config: the run configuration
+    """
+    solution_path = run_config.dhydro_root / Path("NGHS.sln")
+    msbuild = get_msbuild()
+    
+    subprocess.call(["nuget.exe", "restore", str(solution_path),])
+    subprocess.call([str(msbuild), str(solution_path), "/t:Build", "/property:Configuration=Debug"])
 
 
 def get_framework_version(dhydro_root: Path, 
@@ -322,7 +341,7 @@ def update_framework_in_dhydro(run_config: RunConfig):
     :type run_config: RunConfig
     """
     try:
-        if run_config.only_update_bin:
+        if run_config.only_update_bin and not run_config.add_plugins:
             target_path = run_config.dhydro_root / Path("bin/Debug/")
         else:
             framework_package_name = get_framework_version(run_config.dhydro_root, run_config.verbose)
@@ -339,6 +358,49 @@ def update_framework_in_dhydro(run_config: RunConfig):
         return
 
 
+def update_plugins_in_framework(run_config: RunConfig):
+    """
+    Update the framework plugins from the D-HYDRO repository in the framework bin.
+
+    :param run_config: The run config
+    :type run_config: RunConfig
+    """
+    try:
+        # the following files need to be copied
+        # Note that adding new project will potentially break this script
+        plugin_folders = [ "DeltaShell.Dimr"
+                         , "DeltaShell.NGHS"
+                         , "DeltaShell.Plugins.DelftModels"
+                         , "DeltaShell.Plugins.FMSuite"
+                         , "DeltaShell.Plugins.NetworkEditor"
+                         ]
+
+        deltashell_files = [ "DelftTools.Hydro", "DeltaShell.NGHS" ]
+
+        framework_bin_path = run_config.deltashell_root / Path("bin/Debug/")
+        dhydro_bin_path = run_config.dhydro_root / Path("bin/Debug")
+
+        for plugin in plugin_folders:
+            for p in (dhydro_bin_path / Path("plugins")).glob(f"{plugin}*"):
+                print(str(p))
+                copy_tree(str(p), str(framework_bin_path / Path("plugins") / p.name))
+
+        for file_set in deltashell_files:
+            for p in (dhydro_bin_path / Path("DeltaShell")).glob(f"{file_set}*"):
+                print(str(p))
+                shutil.copy(str(p), framework_bin_path / Path("DeltaShell") / p.name)
+
+        print("Updated D-HYDRO in framework ...")
+    except Exception as e:
+        print(f"Could not update framework: {str(e)}")
+        return
+
+
+def add_plugins_to_framework(run_config: RunConfig):
+    compile_dhydro(run_config)
+    update_plugins_in_framework(run_config)
+
+
 def run(run_config: RunConfig):
     """
     Update the framework package of the specified svn repository with compiled
@@ -350,15 +412,18 @@ def run(run_config: RunConfig):
     try:
         validate(run_config)
 
-        if run_config.compile:
+        if run_config.compile or run_config.add_plugins:
             if run_config.use_revision:
                 update_revision(run_config)
-            if run_config.rebuild_framework:
+            if run_config.rebuild_framework or run_config.add_plugins:
                 clean_framework(run_config)
 
             compile_framework(run_config)
 
         update_framework_in_dhydro(run_config)
+
+        if run_config.add_plugins:
+            add_plugins_to_framework(run_config)
     except:
         return
 
@@ -387,6 +452,9 @@ def get_args():
     parser.add_argument("--skip_compile",
                         action="store_true",
                         help="Skip the compilation step of this program and use the Debug bin as is.")
+    parser.add_argument("--add_plugins_to_framework",
+                        action="store_true",
+                        help="Compiles the D-HYDRO solution and copies the relevant dlls back to the framework. Note this ignores the update_only_bin flag.")
     parser.add_argument("--quiet", 
                         action="store_true",
                         help="Flag to suppress (some of) the messages printed by this script.")
