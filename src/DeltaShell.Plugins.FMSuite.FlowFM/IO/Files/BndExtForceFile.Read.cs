@@ -8,10 +8,13 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
@@ -28,15 +31,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             bndExtFilePath = bndExtForceFilePath;
             bndExtSubFilesReferenceFilePath = bndExtForceSubFilesReferenceFilePath;
 
-            IList<DelftIniCategory> bndBlocks;
-            using (var fileStream = new FileStream(bndExtForceFilePath, FileMode.Open, FileAccess.Read))
+            IList<DelftIniCategory> categories;
+          
+            using (var fileStream = new FileStream(bndExtForceFilePath, FileMode.Open, FileAccess.ReadWrite))
             {
-                bndBlocks = new DelftIniReader().ReadDelftIniFile(fileStream, bndExtForceFilePath);
+                categories = new MduDelftIniReader().ReadDelftIniFile(fileStream, bndExtForceFilePath);
+                RemoveRedundantProperties(categories, modelDefinition);
+                UpdateLegacyNames(categories);
             }
 
-            ReadPolyLines(bndBlocks, modelDefinition);
+            ReadPolyLines(categories, modelDefinition);
+            
+            ReadBoundaryConditions(categories, modelDefinition);
+        }
 
-            ReadBoundaryConditions(bndBlocks, modelDefinition);
+        private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition)
+        {
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
+            categories.ForEach(category =>
+            {
+                category.RemoveAllPropertiesWhere(p => definition.ContainsProperty(p.Name) && p.Value == string.Empty);
+                category.RemoveAllPropertiesWhere(p => backwardsCompatibilityHelper.IsObsoletePropertyName(p.Name));
+            });
+        }
+
+        private static void UpdateLegacyNames(IEnumerable<DelftIniCategory> categories)
+        {
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
+
+            categories.SelectMany(cat => cat.Properties)
+                      .ForEach(prop => prop.Name = backwardsCompatibilityHelper.GetUpdatedPropertyName(prop.Name) ?? prop.Name);
         }
 
         private string GetFullPathForReading(string relativePath)
