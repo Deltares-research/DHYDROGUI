@@ -38,9 +38,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             var dateTime = new DateTime(2000, 1, 1, 0, 0, 0);
             // create network
             INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
-            var crossSectionDefinition = new CrossSectionDefinitionYZ("Cross Section");
-            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches[0], crossSectionDefinition, 0);
-
+            
             //IFeatureCoverage featureCoverage = new FeatureCoverage(); { HydroNetwork = network };
             var featureCoverage = new FeatureCoverage("Test");
             IVariable timeVariable = new Variable<DateTime>("time");
@@ -49,7 +47,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             featureCoverage.Arguments.Add(timeVariable);
             featureCoverage.Arguments.Add(featureVariable);
             featureCoverage.Components.Add(new Variable<double>("value"));
-            featureCoverage[dateTime, cs] = 17.0;
 
             //save 
             using (NHibernateProjectRepository projectRepository = factory.CreateNew())
@@ -85,16 +82,13 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
 
             // create network
             INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
-            var crossSectionDefinition = CrossSectionDefinitionYZ.CreateDefault();
-            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches[0], crossSectionDefinition, 0);
-
+           
             //IFeatureCoverage featureCoverage = new FeatureCoverage(); { HydroNetwork = network };
             var featureCoverage = new FeatureCoverage("Test");
             var featureVariable = new Variable<IBranchFeature>("feature");
 
             featureCoverage.Arguments.Add(featureVariable);
             featureCoverage.Components.Add(new Variable<double>("value"));
-            featureCoverage[cs] = 17.0;
 
             //save 
             using (NHibernateProjectRepository projectRepository = factory.CreateNew())

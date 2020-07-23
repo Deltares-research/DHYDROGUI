@@ -79,8 +79,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private static readonly Cursor NewRetentionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Retention);
         private static readonly Cursor NewObservationPointToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Observation);
         private static readonly Cursor AddNewWeirCursor = MapCursors.CreateArrowOverlayCuror(Resources.WeirSmall);
-        private static readonly Cursor NewCulvertToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.CulvertSmall);
-        private static readonly Cursor NewBridgeToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.BridgeSmall);
         private static readonly Cursor NewExtraResistanceToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.ExtraResistanceSmall);
         private static readonly Cursor NewWwtpToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.wwtp);
         private static readonly Cursor NewRunoffBoundaryToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.runoff);
@@ -271,12 +269,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var newWeirTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
                   && layer.DataSource.FeatureType == typeof(Weir) && layer.DataSource is HydroNetworkFeatureCollection, AddWeirToolName) { Cursor = AddNewWeirCursor };
             AddMapTool(newWeirTool);
-
-            var newCulvertTool = new NewPointFeatureTool<Culvert>(AddCulvertToolName) { Cursor = NewCulvertToolCursor };
-            AddMapTool(newCulvertTool);
-
-            var newBridgeTool = new NewPointFeatureTool<Bridge>(AddBridgeToolName) { Cursor = NewBridgeToolCursor };
-            AddMapTool(newBridgeTool);
 
             var newExtraResistanceTool = new NewPointFeatureTool<ExtraResistance>(AddExtraResistanceToolName) { Cursor = NewExtraResistanceToolCursor };
             AddMapTool(newExtraResistanceTool);

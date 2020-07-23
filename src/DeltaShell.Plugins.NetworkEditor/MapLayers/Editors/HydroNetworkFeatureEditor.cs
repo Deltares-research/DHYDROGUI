@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
@@ -116,20 +115,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             var vectorLayer = layer as VectorLayer;
             VectorStyle vectorStyle = vectorLayer != null ? vectorLayer.Style : null;
 
-            if (layer != null && layer.Name == "Cross Sections")
-            {
-                // hack used for default geometry before feature cross section has been created.
-                featureInteractor = new CrossSectionInteractor(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is ICompositeBranchStructure)
+            
+            if (feature is ICompositeBranchStructure)
             {
                 featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
             }
-            else if (feature is ICrossSection)
-            {
-                featureInteractor = new CrossSectionInteractor(layer, feature, vectorStyle, Network) {SnapRules = {}};
-            }
-            else if (feature is INode)
+           else if (feature is INode)
             {
                 featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
             }

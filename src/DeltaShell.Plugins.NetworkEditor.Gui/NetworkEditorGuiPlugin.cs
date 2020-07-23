@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -659,21 +658,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 Gui.DocumentViews.Remove(view);
             }
-
-            IView[] csDefinitionViews =
-                Gui.DocumentViews.Where(
-                    v => v.Data is ICrossSectionDefinition &&
-                         network.BranchFeatures.OfType<ICrossSection>()
-                                .Any(
-                                    cs =>
-                                        cs.Definition is CrossSectionDefinitionProxy &&
-                                        ((CrossSectionDefinitionProxy) cs.Definition).InnerDefinition.Equals(v.Data))).ToArray();
-
-            foreach (IView view in csDefinitionViews)
-            {
-                Gui.DocumentViews.Remove(view);
-            }
-
+            
             // remove network layer from all maps
             MapView[] mapViews = Gui.DocumentViews.AllViews.OfType<MapView>().ToArray();
             foreach (MapView view in mapViews)

@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DelftTools.Hydro.CrossSections;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro.Helpers
@@ -107,21 +104,9 @@ namespace DelftTools.Hydro.Helpers
 
             return GetSnakeHydroNetwork(generateIDs, points.ToArray());
         }
-
-        public static ICrossSection AddCrossSectionDefinitionToBranch(IBranch branch,
-                                                                      ICrossSectionDefinition crossSectionDefinition,
-                                                                      double offset)
-        {
-            var branchFeature = new CrossSection(crossSectionDefinition);
-            branchFeature.Name = "cross_section";
-            NetworkHelper.AddBranchFeatureToBranch(branchFeature, branch, offset);
-            return branchFeature;
-        }
-
+        
         private static void AddSnakeNetwork(bool generateIDs, Point[] points, IHydroNetwork network)
         {
-            var crossSectionType = new CrossSectionSectionType {Name = "FlutPleen"};
-            network.CrossSectionSectionTypes.Add(crossSectionType);
             for (var i = 0; i < points.Length; i++)
             {
                 string nodeName = "node" + (i + 1);

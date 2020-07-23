@@ -192,26 +192,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             {
                 var crossData = new CrossData();
 
-                if (!channel.CrossSections.Any())
-                {
-                    Log.Warn(string.Format(
-                                 "Channel '{0}' has no cross-sections; no embankments created for this channel.",
-                                 channel.Name));
-                    continue;
-                }
-
-                bool crossFound = channel.CrossSections.Any(
-                    c => c.CrossSectionType == CrossSectionType.YZ ||
-                         c.CrossSectionType == CrossSectionType.ZW);
-
-                if (!crossFound)
-                {
-                    Log.Warn(string.Format(
-                                 "No suitable cross-sectons found in channel '{0}'; no embankments created for this channel.",
-                                 channel.Name));
-                    continue;
-                }
-
                 var coordinatesLeft = new List<Coordinate>();
                 var coordinatesRight = new List<Coordinate>();
 
@@ -624,23 +604,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 leftHeight = new List<double>();
                 rightHeight = new List<double>();
 
-                List<ICrossSection> sortedCrossSections = channel.CrossSections.Where(
-                                                                     c => c.CrossSectionType == CrossSectionType.YZ ||
-                                                                          c.CrossSectionType == CrossSectionType.ZW)
-                                                                 .OrderBy(c => c.Chainage).ToList();
-                foreach (ICrossSection cross in sortedCrossSections)
-                {
-                    chainage.Add(cross.Chainage);
-
-                    leftSide.Add(Math.Abs(cross.Definition.Left - cross.Definition.Thalweg));
-                    rightSide.Add(Math.Abs((cross.Definition.Left + cross.Definition.Width) -
-                                           cross.Definition.Thalweg));
-
-                    leftHeight.Add(cross.Definition.LeftEmbankment);
-                    rightHeight.Add(cross.Definition.RightEmbankment);
-                }
-
-                passedFirst = false;
+               passedFirst = false;
                 lastReached = false;
                 begChainage = chainage.First();
                 if (chainage.Count == 1)

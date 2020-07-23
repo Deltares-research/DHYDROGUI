@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api.Delegates;
 using SharpMap.Api.Editors;
 using SharpMap.Editors;
@@ -21,8 +18,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         private IFeature lastFeature;
         private IGeometry lastGeometry;
-        private IList<ICrossSection> originalRelatedFeatures;
-        private IList<ICrossSection> clonedRelatedFeatures;
 
         public IHydroNetwork Network { get; set; }
 
@@ -43,22 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 fractions, trackerIndices, FallOffPolicy);
             // performance improvement: test with dottrace show LineString.get_Length as a very expensive operation
             // locally store the length. This is relevant for branches with many coordinates and many cross sections.
-            for (var i = 0; i < newFractions.Count; i++)
-            {
-                UpdateCrossSectionGeometry(clonedRelatedFeatures[i], newLineString, i, newFractions, branch);
-            }
-        }
-
-        private void UpdateCrossSectionGeometry(ICrossSection crossSection, ILineString newLineString, int i, IList<double> newFractions, IChannel branch)
-        {
-            if (!branch.IsLengthCustom)
-            {
-                crossSection.Chainage = BranchFeature.SnapChainage(newLineString.Length, newLineString.Length * newFractions[i]);
-            }
-            else
-            {
-                crossSection.Chainage = crossSection.Chainage; //hack: invalidate geometry
-            }
+            
         }
 
         /// <summary>
@@ -83,12 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             IList<double> newFractions = BranchToBranchFeatureService.UpdateNewFractions((ILineString) lastGeometry,
                                                                                          newLineString, fractions, trackerIndices, FallOffPolicy);
 
-            // Only update non geometry based cross sections
-            var fractionIndex = 0;
-            foreach (ICrossSection crossSection in branch.CrossSections.Where(c => !c.GeometryBased))
-            {
-                UpdateCrossSectionGeometry(crossSection, newLineString, fractionIndex++, newFractions, branch);
-            }
+
         }
 
         private IFeatureRelationInteractor CloneRule()
@@ -124,26 +99,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         {
             lastFeature = branch;
             lastGeometry = (IGeometry) branch.Geometry.Clone();
-            originalRelatedFeatures = new List<ICrossSection>();
-            clonedRelatedFeatures = new List<ICrossSection>();
             fractions.Clear();
             double length = branch.Length;
-            foreach (ICrossSection crossSection in branch.CrossSections)
-            {
-                if (!crossSection.Definition.GeometryBased)
-                {
-                    fractions.Add(crossSection.Chainage / length); // = optimization of GeometryHelper.LineStringGetFraction
-                    originalRelatedFeatures.Add(crossSection);
-                    var clone = (ICrossSection) crossSection.Clone();
-                    clone.Branch = cloneBranch;
-                    cloneBranch.BranchFeatures.Add(clone);
-                    clonedRelatedFeatures.Add(clone);
-                    if (null != addRelatedFeature)
-                    {
-                        addRelatedFeature(activeRules, crossSection, clone, level);
-                    }
-                }
-            }
         }
 
         private List<IFeatureRelationInteractor> activeRules = new List<IFeatureRelationInteractor>();

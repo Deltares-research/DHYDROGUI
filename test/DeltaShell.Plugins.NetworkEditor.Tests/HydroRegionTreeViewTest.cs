@@ -1,26 +1,17 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using DelftTools.Controls;
-using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters;
-using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Control = System.Windows.Controls.Control;
-using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
@@ -250,63 +241,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow);
             }
-        }
-
-        [Test]
-        public void CheckCrossSectionSort()
-        {
-            //stubs
-            var parentNode = mocks.Stub<ITreeNode>();
-            var childNode1 = mocks.Stub<ITreeNode>();
-            var childNode2 = mocks.Stub<ITreeNode>();
-            var pluginGui = mocks.Stub<GuiPlugin>();
-            var treeView = mocks.Stub<ITreeView>();
-
-            var nodes = new List<ITreeNode>();
-            var cs1 = new CrossSection(new CrossSectionDefinitionXYZ("100")) {Chainage = 100};
-            var cs2 = new CrossSection(new CrossSectionDefinitionXYZ("200")) {Chainage = 200};
-            var channel = new Channel();
-            childNode1.Tag = cs1;
-            childNode2.Tag = cs2;
-
-            var channelpresenter = new ChannelTreeViewNodePresenter(pluginGui);
-
-            Expect.Call(parentNode.Nodes).Return(nodes).Repeat.Any();
-            Expect.Call(parentNode.IsLoaded).Return(false);
-            Expect.Call(parentNode.GetNodeByTag(cs1)).Return(childNode1);
-            Expect.Call(treeView.GetNodeByTag(cs1)).Return(childNode1);
-            Expect.Call(childNode1.Parent).Return(parentNode).Repeat.Any();
-            mocks.ReplayAll();
-            parentNode.Nodes.Add(childNode2);
-            parentNode.Nodes.Add(childNode1);
-
-            //actual test, presenter should change the order of nodes
-            Assert.AreEqual(nodes[0].Tag, cs2); //before sort
-            channelpresenter.UpdateNode(null, parentNode, channel);
-            Assert.AreEqual(nodes[0].Tag, cs1); // after first sort
-
-            //offset updated, presenter should change the order of nodes once again
-            cs1.Chainage = 300;
-            channelpresenter.UpdateNode(null, parentNode, channel);
-            Assert.AreEqual(nodes[0].Tag, cs2); //after second sort
-        }
-
-        [Test]
-        public void NotifyNetworkCollectionChangedAfterAddingSectionType()
-        {
-            var network = new HydroNetwork();
-            //register to collectionchanged of network
-            var callCount = 0;
-            ((INotifyCollectionChange) network).CollectionChanged +=
-                delegate { callCount++; };
-            //add a new section type results in only one call!
-            network.CrossSectionSectionTypes.Add(new CrossSectionSectionType() {Name = "test"});
-            Assert.AreEqual(1, callCount);
-        }
-
-        private static ITreeNode GetSharedDefinitionsRootNode(HydroRegionTreeView hydroRegionTreeView)
-        {
-            return hydroRegionTreeView.TreeView.Nodes[0].Nodes[1];
         }
     }
 }

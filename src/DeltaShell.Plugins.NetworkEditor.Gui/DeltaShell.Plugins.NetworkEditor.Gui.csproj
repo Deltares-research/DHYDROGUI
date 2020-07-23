@@ -196,10 +196,6 @@
     <Compile Include="Forms\PropertyGrid\FeatureWithAttributesProperties.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestValidationRule.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestWidthValidationRule.cs" />
-    <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">
-      <DependentUpon>CulvertViewWpf.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\CulvertViewWpfModel.cs" />
     <Compile Include="Forms\StructureFeatureView\DoubleTextBoxWithLabelAndUnitControl.xaml.cs">
       <DependentUpon>DoubleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
     </Compile>
@@ -251,14 +247,8 @@
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\CrestShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\FreeFormatWeirEditor.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\GatedWeirShapeEditor.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\BridgeInSideViewShape.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\BridgeInStructureViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\BroadCrestShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\CrestShapeFeature.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\CrossSectionInSideViewShape.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\CulvertInSideViewShape.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\CulvertInStructureViewShape.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\CulvertStyling.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\ExtraResistanceInSideViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\ExtraResistanceInStructureViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\FreeFormatWeirShapeFeature.cs" />
@@ -358,12 +348,6 @@
     <Compile Include="Forms\PropertyGrid\TimeDependency.cs" />
     <Compile Include="Forms\PropertyGrid\WasteWaterTreatmentPlantProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WeirFormulaProperties.cs" />
-    <Compile Include="Forms\StructureFeatureView\BridgeView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\BridgeView.Designer.cs">
-      <DependentUpon>BridgeView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -496,10 +480,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportBranchFeatureDialog.resx">
       <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StructureFeatureView\BridgeView.resx">
-      <DependentUpon>BridgeView.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\ExtraResistanceView.resx">
       <DependentUpon>ExtraResistanceView.cs</DependentUpon>
@@ -782,10 +762,6 @@
     <Resource Include="Resources\cut.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Forms\StructureFeatureView\CulvertViewWpf.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Forms\StructureFeatureView\DoubleTextBoxWithLabelAndUnitControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

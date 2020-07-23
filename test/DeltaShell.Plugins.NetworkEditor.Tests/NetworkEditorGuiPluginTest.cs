@@ -1,17 +1,10 @@
 using System;
 using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DelftTools.TestUtils.TestReferenceHelper;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -20,10 +13,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
-using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpTestsEx;
 using Control = System.Windows.Controls.Control;
@@ -108,113 +98,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                                             treeView.SelectedNode = treeView.AllLoadedNodes.First(n => n.Text == "Shared Cross Section Definitions");
                                             Assert.AreEqual(network, treeView.Data);
                                         });
-            }
-        }
-
-        [Test]
-        public void SelectingAnotherCrossSectionInNetworkTreeCleansViewCorrectly_Tools7425()
-        {
-            using (var gui = new DeltaShellGui())
-            {
-                IApplication app = gui.Application;
-
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-
-                gui.Run();
-
-                app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
-
-                var network = new HydroNetwork();
-                app.Project.RootFolder.Add(network);
-                var branch1 = new Branch
-                {
-                    Geometry = new LineString(new[]
-                    {
-                        new Coordinate(0, 0),
-                        new Coordinate(100, 0)
-                    })
-                };
-                NetworkHelper.AddChannelToHydroNetwork(network, branch1);
-
-                ICrossSection cs1 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, CrossSectionDefinitionYZ.CreateDefault("cs1"), 15);
-                ICrossSection cs2 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, CrossSectionDefinitionYZ.CreateDefault("cs2"), 30);
-
-                var main = new CrossSectionSectionType {Name = "Main"};
-                var fp1 = new CrossSectionSectionType {Name = "FloodPlain1"};
-
-                cs1.Definition.Sections.Add(new CrossSectionSection
-                {
-                    MinY = 0,
-                    MaxY = 25,
-                    SectionType = fp1
-                });
-                cs1.Definition.Sections.Add(new CrossSectionSection
-                {
-                    MinY = 25,
-                    MaxY = 75,
-                    SectionType = main
-                });
-                cs1.Definition.Sections.Add(new CrossSectionSection
-                {
-                    MinY = 75,
-                    MaxY = 100,
-                    SectionType = fp1
-                });
-                cs1.Name = "cs1";
-
-                cs2.Definition.Sections.Add(new CrossSectionSection
-                {
-                    MinY = 0,
-                    MaxY = 20,
-                    SectionType = fp1
-                });
-                cs2.Definition.Sections.Add(new CrossSectionSection
-                {
-                    MinY = 20,
-                    MaxY = 80,
-                    SectionType = main
-                });
-                cs2.Definition.Sections.Add(new CrossSectionSection
-                {
-                    MinY = 80,
-                    MaxY = 100,
-                    SectionType = fp1
-                });
-                cs2.Name = "cs2";
-
-                TreeView treeView = gui.ToolWindowViews.AllViews.OfType<HydroRegionTreeView>().First().TreeView;
-
-                WpfTestHelper.ShowModal(
-                    (Control) gui.MainWindow,
-                    () =>
-                    {
-                        gui.CommandHandler.OpenView(cs1);
-                       ITreeNode cs1Node = treeView.GetNodeByTag(cs1);
-                        ITreeNode cs2Node = treeView.GetNodeByTag(cs2);
-
-                        int propBefore = TestReferenceHelper.FindEventSubscriptions(cs2);
-                        
-                        
-                        treeView.SelectedNode = cs2Node;
-
-                        treeView.SelectedNode = cs1Node;
-                        treeView.SelectedNode = cs2Node;
-                        treeView.SelectedNode = cs1Node;
-
-                        // give delayed event handler some time
-                        Thread.Sleep(100);
-                        Application.DoEvents();
-                        Thread.Sleep(100);
-
-                        int propAfter = TestReferenceHelper.FindEventSubscriptions(cs2);
-                        
-                        Assert.AreEqual(propBefore, propAfter, "#event leaks");
-                    });
             }
         }
     }
