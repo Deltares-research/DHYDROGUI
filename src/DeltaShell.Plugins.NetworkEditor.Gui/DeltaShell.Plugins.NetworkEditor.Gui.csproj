@@ -337,12 +337,9 @@
       <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\PropertyGrid\CatchmentProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\CrossSectionDefinitionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\CrossSectionSectionTypeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DrainageBasinProperties.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureCoverageProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\FreeFormWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\GatedWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\GateProperties.cs" />
     <Compile Include="Forms\PropertyGrid\GeneralStructureWeirFormulaProperties.cs" />

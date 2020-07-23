@@ -188,7 +188,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
-            yield return new PropertyInfo<ICrossSectionDefinition, CrossSectionDefinitionProperties>();
             yield return new PropertyInfo<IHydroNode, HydroNodeProperties>();
             yield return new PropertyInfo<IHydroNetwork, HydroNetworkProperties>();
             yield return new PropertyInfo<DrainageBasin, DrainageBasinProperties>();
@@ -202,7 +201,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<RunoffBoundary, RunoffBoundaryProperties>();
             yield return new PropertyInfo<NetworkLocation, NetworkLocationProperties>();
             yield return new PropertyInfo<NetworkSegment, NetworkSegmentProperties>();
-            yield return new PropertyInfo<CrossSectionSectionType, CrossSectionSectionTypeProperties>();
             yield return new PropertyInfo<HydroLink, HydroLinkProperties>();
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
         }
