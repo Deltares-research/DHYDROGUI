@@ -38,10 +38,6 @@
   <ItemGroup>
     <Compile Include="CatchmentTest.cs" />
     <Compile Include="ChannelTest.cs" />
-    <Compile Include="DataSets\FastDataTableTestHelper.cs" />
-    <Compile Include="DataSets\FastXYZDataTableTest.cs" />
-    <Compile Include="DataSets\FastYZDataTableTest.cs" />
-    <Compile Include="DataSets\FastZWDataTableTest.cs" />
     <Compile Include="DrainageBasinTest.cs" />
     <Compile Include="Forms\NetworkCoverageFunctionViewTest.cs" />
     <Compile Include="GroupableFeatureComparerTest.cs" />

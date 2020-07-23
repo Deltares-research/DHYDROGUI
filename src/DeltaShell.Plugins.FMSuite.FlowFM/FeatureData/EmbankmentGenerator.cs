@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Networks;

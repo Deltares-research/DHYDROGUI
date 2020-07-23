@@ -159,11 +159,6 @@
     <Compile Include="Catchment.cs" />
     <Compile Include="CatchmentType.cs" />
     <Compile Include="Channel.cs" />
-    <Compile Include="CrossSections\DataSets\CrossSectionDataSetNew.cs" />
-    <Compile Include="CrossSections\DataSets\LightDataTable.cs" />
-    <Compile Include="CrossSections\DataSets\FastXYZDataTable.cs" />
-    <Compile Include="CrossSections\DataSets\FastYZDataTable.cs" />
-    <Compile Include="CrossSections\DataSets\FastZWDataTable.cs" />
     <Compile Include="CulvertFrictionType.cs" />
     <Compile Include="DrainageBasin.cs" />
     <Compile Include="Embankment.cs" />
@@ -257,7 +252,6 @@
     <Compile Include="Structures\WeirFormula\PierWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\RiverWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\SimpleWeirFormula.cs" />
-    <Compile Include="CrossSections\HeightFlowStorageWidth.cs" />
     <Compile Include="HydroTimeSeriesFactory.cs" />
     <Compile Include="StructureType.cs" />
     <Compile Include="Structures\ThinDam2D.cs" />
