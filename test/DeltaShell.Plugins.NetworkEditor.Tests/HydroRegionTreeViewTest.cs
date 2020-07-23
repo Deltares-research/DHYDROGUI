@@ -31,30 +31,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void ShowTreeView()
-        {
-            var pluginGui = mocks.Stub<GuiPlugin>();
-            var gui = mocks.Stub<IGui>();
-
-            pluginGui.Gui = gui;
-
-            var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
-
-            var branch = new Channel();
-            var crossSection = new CrossSectionDefinitionXYZ("Nummer 1");
-            var crossSection2 = new CrossSectionDefinitionXYZ("Nummer 2");
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSection, 400);
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSection2, 0);
-
-            network.Branches.Add(branch);
-            networkTreeView.Region = network;
-
-            WindowsFormsTestHelper.ShowModal(new Form {Controls = {networkTreeView}});
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
         public void ShowTreeViewWithRegion()
         {
             var pluginGui = mocks.Stub<GuiPlugin>();
@@ -129,138 +105,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                     new Form {Controls = {hydroRegionTreeView}}, f => { hydroRegionTreeView.Region = basin; }
                 );
             }
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void RemoveCrossSectionDefinitionShowsMessageBoxIfInUse()
-        {
-            var pluginGui = mocks.Stub<GuiPlugin>();
-            var gui = mocks.Stub<IGui>();
-
-            pluginGui.Gui = gui;
-
-            var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
-
-            var branch = new Channel();
-            var crossSectionDef = new CrossSectionDefinitionYZ("Nummer 1");
-            var proxyDef = new CrossSectionDefinitionProxy(crossSectionDef);
-            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, proxyDef, 10.0);
-
-            network.SharedCrossSectionDefinitions.Add(crossSectionDef);
-            network.Branches.Add(branch);
-
-            networkTreeView.Dock = DockStyle.Fill;
-            networkTreeView.Region = network;
-
-            ITreeNodePresenter definitionNodePresenter = networkTreeView.TreeView.GetTreeViewNodePresenter(crossSectionDef, null);
-
-            var customMessageBox = mocks.StrictMock<IMessageBox>();
-            MessageBox.CustomMessageBox = customMessageBox;
-
-            var callcount = 0;
-
-            //select definition to remove
-            networkTreeView.TreeView.SelectedNode = GetSharedDefinitionsRootNode(networkTreeView).Nodes[0];
-
-            customMessageBox.Expect(mb => mb.Show(null, null, MessageBoxButtons.OKCancel)).IgnoreArguments().Return(
-                DialogResult.Cancel).Repeat.Any().WhenCalled(m => callcount++);
-
-            customMessageBox.Replay();
-
-            definitionNodePresenter.RemoveNodeData(null, crossSectionDef);
-            Assert.AreEqual(1, callcount); //make sure a messagebox was shown
-
-            callcount = 0;
-            cs.MakeDefinitionLocal();
-            definitionNodePresenter.RemoveNodeData(null, crossSectionDef);
-            Assert.AreEqual(0, callcount); //make sure messagebox was not shown
-
-            customMessageBox.VerifyAllExpectations();
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void IfUserOKsMessageBoxCrossSectionDefinitionIsMadeLocal()
-        {
-            var pluginGui = mocks.Stub<GuiPlugin>();
-            var gui = mocks.Stub<IGui>();
-
-            pluginGui.Gui = gui;
-
-            var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
-
-            var branch = new Channel();
-            var crossSectionDef = new CrossSectionDefinitionYZ("Nummer 1");
-
-            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, new CrossSectionDefinitionProxy(crossSectionDef), 10.0);
-            cs.Name = "test1";
-
-            ICrossSection cs2 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, new CrossSectionDefinitionProxy(crossSectionDef), 10.0);
-            cs2.Name = "test2";
-
-            network.SharedCrossSectionDefinitions.Add(crossSectionDef);
-            network.Branches.Add(branch);
-
-            networkTreeView.Dock = DockStyle.Fill;
-            networkTreeView.Region = network;
-
-            ITreeNodePresenter definitionNodePresenter = networkTreeView.TreeView.GetTreeViewNodePresenter(crossSectionDef, null);
-
-            var customMessageBox = mocks.StrictMock<IMessageBox>();
-            MessageBox.CustomMessageBox = customMessageBox;
-
-            //select definition to remove
-            networkTreeView.TreeView.SelectedNode = GetSharedDefinitionsRootNode(networkTreeView).Nodes[0];
-
-            customMessageBox.Expect(mb => mb.Show(null, null, MessageBoxButtons.OKCancel)).IgnoreArguments().Return(
-                DialogResult.OK).Repeat.AtLeastOnce().WhenCalled(m =>
-                                                                     Assert.AreEqual("The cross section definition you are trying to delete is being used. If you continue, the definition will be replaced by local copies in each cross section. Are you sure you want to continue?\n\nThe following cross sections use this definition:\ntest1\ntest2", m.Arguments[0]));
-
-            customMessageBox.Replay();
-
-            Assert.IsTrue(cs.Definition.IsProxy);
-
-            definitionNodePresenter.RemoveNodeData(null, crossSectionDef);
-
-            Assert.IsFalse(cs.Definition.IsProxy);
-
-            customMessageBox.VerifyAllExpectations();
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void ShowTreeViewWithSharedCrossSectionDefinitions()
-        {
-            var pluginGui = mocks.Stub<GuiPlugin>();
-            var gui = mocks.Stub<IGui>();
-
-            pluginGui.Gui = gui;
-
-            var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
-
-            var branch = new Channel();
-            var crossSectionDef1 = new CrossSectionDefinitionYZ("Nummer 1");
-            var crossSectionDef2 = new CrossSectionDefinitionZW("Nummer 2");
-
-            network.SharedCrossSectionDefinitions.Add(crossSectionDef1);
-            network.SharedCrossSectionDefinitions.Add(crossSectionDef2);
-
-            networkTreeView.Dock = DockStyle.Fill;
-            networkTreeView.Region = network;
-
-            var f = new Form();
-            f.Controls.Add(networkTreeView);
-
-            network.Branches.Add(branch);
-
-            //enforce ordering
-            Assert.AreEqual("Shared Cross Section Definitions", GetSharedDefinitionsRootNode(networkTreeView).Text);
-
-            WindowsFormsTestHelper.ShowModal(f);
         }
 
         [Test]
@@ -360,45 +204,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             WindowsFormsTestHelper.ShowModal(f);
         }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void MutatingSharedDefinitionsUpdatesTreeView()
-        {
-            LogHelper.ConfigureLogging(Level.Debug);
-            var pluginGui = mocks.Stub<GuiPlugin>();
-            var gui = mocks.Stub<IGui>();
-
-            pluginGui.Gui = gui;
-
-            var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
-
-            WindowsFormsTestHelper.Show(networkTreeView);
-
-            var crossSectionDef = new CrossSectionDefinitionZW("Nummer 1");
-            network.SharedCrossSectionDefinitions.Add(crossSectionDef);
-
-            networkTreeView.Region = network;
-
-            ITreeNode sharedList = GetSharedDefinitionsRootNode(networkTreeView);
-
-            Assert.AreEqual(1, sharedList.Nodes.Count);
-
-            var crossSectionDef2 = new CrossSectionDefinitionYZ("Nummer 2");
-            network.SharedCrossSectionDefinitions.Add(crossSectionDef2);
-            networkTreeView.WaitUntilAllEventsAreProcessed();
-
-            Assert.AreEqual(2, sharedList.Nodes.Count);
-
-            network.SharedCrossSectionDefinitions.Remove(crossSectionDef);
-            networkTreeView.WaitUntilAllEventsAreProcessed();
-
-            Assert.AreEqual(1, sharedList.Nodes.Count);
-
-            WindowsFormsTestHelper.CloseAll();
-        }
-
+        
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowTreeViewWithObservationPoints()
