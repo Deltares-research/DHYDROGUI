@@ -6,8 +6,8 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <PublicReleaseVersion>2020.05</PublicReleaseVersion>
-    <ReleaseVersion>4.0.0</ReleaseVersion>
+    <PublicReleaseVersion>2021.01</PublicReleaseVersion>
+    <ReleaseVersion>4.0.1</ReleaseVersion>
     <!-- This is the product name -->
     <ApplicationName>D-HYDRO Suite</ApplicationName>
     <ProductName>$(ApplicationName) ($(PublicReleaseVersion))</ProductName>
