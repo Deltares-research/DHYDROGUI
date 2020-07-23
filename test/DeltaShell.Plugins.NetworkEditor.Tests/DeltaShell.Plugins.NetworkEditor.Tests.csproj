@@ -241,8 +241,6 @@
   <ItemGroup>
     <Compile Include="AreaLayerTest.cs" />
     <Compile Include="Forms\GridProperties\CatchmentPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\CrossSectionDefinitionPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\CrossSectionSectionTypePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\DiscretizationPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\DrainageBasinPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\FeatureCoveragePropertiesTest.cs" />
