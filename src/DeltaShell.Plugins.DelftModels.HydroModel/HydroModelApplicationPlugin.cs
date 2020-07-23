@@ -87,6 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaveFailed -= ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened -= ApplicationProjectOpened;
                     Application.ProjectClosing -= ApplicationProjectClosing;
+                    Application.AfterRun -= ApplicationRemoveProjectExporter;
                 }
 
                 base.Application = value;
@@ -99,8 +100,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaved += ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened += ApplicationProjectOpened;
                     Application.ProjectClosing += ApplicationProjectClosing;
+                    Application.AfterRun += ApplicationRemoveProjectExporter;
                 }
             }
+        }
+
+        private void ApplicationRemoveProjectExporter()
+        {
+            var exporters = (List<IFileExporter>)Application.FileExporters;
+            exporters.RemoveAll(e => e is IProjectItemExporter);
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
@@ -142,8 +150,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             var initializeThread = new Thread(InitializeModelBuilder) {Priority = ThreadPriority.BelowNormal};
             initializeThread.Start();
-
+          
             base.Activate();
+
         }
 
         public override IEnumerable<IFileExporter> GetFileExporters()
