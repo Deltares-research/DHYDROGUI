@@ -273,7 +273,6 @@
     <Compile Include="Gui\Editors\Boundaries\Converters\NotNullToBooleanConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\TypeToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\TypeToVisibilityConverterTest.cs" />
-    <Compile Include="Gui\Editors\Boundaries\Converters\UnitStringToUnitDisplayStringConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\DirectionalSpreadingViewTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\ForcingViewTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\PeriodViewTypeTest.cs" />

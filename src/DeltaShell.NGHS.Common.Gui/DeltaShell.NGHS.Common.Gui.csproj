@@ -76,6 +76,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\UnitStringToUnitDisplayStringConverter.cs" />
     <Compile Include="DeltaresColor.cs" />
     <Compile Include="Layers\ILayerSubProvider.cs" />
     <Compile Include="Layers\MapLayerProvider.cs" />

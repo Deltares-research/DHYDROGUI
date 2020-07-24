@@ -7,7 +7,7 @@
              xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
              xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonElements"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:converters="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters"
+             xmlns:converters="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>

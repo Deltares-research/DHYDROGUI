@@ -156,7 +156,6 @@
     <Compile Include="Editors\Boundaries\Converters\NotNullToBooleanConverter.cs" />
     <Compile Include="Editors\Boundaries\Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Editors\Boundaries\Converters\TypeToVisibilityConverter.cs" />
-    <Compile Include="Editors\Boundaries\Converters\UnitStringToUnitDisplayStringConverter.cs" />
     <Compile Include="Editors\Boundaries\Enums\DirectionalSpreadingViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\ForcingViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\PeriodViewType.cs" />
