@@ -76,6 +76,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\LabeledCheckBox.xaml.cs">
+      <DependentUpon>LabeledCheckBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\UnitStringToUnitDisplayStringConverter.cs" />
     <Compile Include="DeltaresColor.cs" />
     <Compile Include="Layers\ILayerSubProvider.cs" />
@@ -95,6 +98,10 @@
   <ItemGroup />
   <ItemGroup>
     <Page Include="CommonSettingsStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\LabeledCheckBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
