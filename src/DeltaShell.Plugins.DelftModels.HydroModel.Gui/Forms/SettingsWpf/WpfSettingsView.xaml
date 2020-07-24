@@ -18,7 +18,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Styles/CommonSettingsStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.NGHS.Common.Gui;component/CommonSettingsStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <settingsWpf:WpfEnumConverter x:Key="GuiEnumConverter" />

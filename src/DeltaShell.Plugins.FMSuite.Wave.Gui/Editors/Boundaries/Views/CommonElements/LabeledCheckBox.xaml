@@ -9,7 +9,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.DelftModels.HydroModel.Gui;component/Forms/Styles/CommonSettingsStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.NGHS.Common.Gui;component/CommonSettingsStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
