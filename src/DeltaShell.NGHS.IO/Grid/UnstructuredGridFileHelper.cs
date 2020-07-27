@@ -25,7 +25,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(UnstructuredGridFileHelper));
 
-        public static UnstructuredGrid LoadFromFile(string path, bool loadFlowLinksAndCells = false)
+        public static UnstructuredGrid LoadFromFile(string path, 
+                                                    bool loadFlowLinksAndCells = false, 
+                                                    bool callCreateCells = false)
         {
             if (!File.Exists(path) || Path.GetFileName(path) == null)
             {
@@ -36,9 +38,9 @@ namespace DeltaShell.NGHS.IO.Grid
             switch (GetConvention(path))
             {
                 case GridApiDataSet.DataSetConventions.CONV_UGRID:
-                    using (var fmUGridAdaptor = new UGridToUnstructuredGridAdapter(path))
+                    using (var fmUGridAdapter = new UGridToUnstructuredGridAdapter(path))
                     {
-                        return fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
+                        return fmUGridAdapter.GetUnstructuredGridFromUGridMeshId(1, callCreateCells: callCreateCells);
                     }
                 case GridApiDataSet.DataSetConventions.CONV_OTHER:
                     return loadFlowLinksAndCells

@@ -504,7 +504,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private static UnstructuredGrid ReadGridFromNetFile(string netFilePath)
         {
-            return UnstructuredGridFileHelper.LoadFromFile(netFilePath);
+            return UnstructuredGridFileHelper.LoadFromFile(netFilePath, callCreateCells: true);
         }
 
         // Can be further optimized by letting InsertGrid accept lists of coverages

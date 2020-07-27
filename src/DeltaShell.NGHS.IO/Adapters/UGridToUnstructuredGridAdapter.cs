@@ -16,7 +16,9 @@ namespace DeltaShell.NGHS.IO.Adapters
 
         public UGrid uGrid { get; set; }
 
-        public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int meshId, bool oneBased = false)
+        public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int meshId, 
+                                                                   bool oneBased = false, 
+                                                                   bool callCreateCells = false)
         {
             if (meshId > uGrid.GetNumberOf2DMeshes() || meshId <= 0)
             {
@@ -33,7 +35,10 @@ namespace DeltaShell.NGHS.IO.Adapters
                 uGrid.FaceNodesByMeshId[meshId - 1],
                 oneBased: oneBased);
 
-            CreateCells(grid);
+            if (callCreateCells)
+            {
+                CreateCells(grid);
+            }
 
             if (grid != null)
             {
