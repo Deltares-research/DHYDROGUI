@@ -363,34 +363,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
-        public void SettingFeaturesAgainAfterSaveShouldThrowException()
-        {
-            var coverage = new FeatureCoverage();
-
-            var store = new NetCdfFunctionStore();
-            store.CreateNew(TestHelper.GetCurrentMethodName() + ".nc");
-            store.Functions.Add(coverage);
-
-            coverage.Components.Add(new Variable<double>("value"));
-            coverage.Arguments.Add(new Variable<IFeature>("feature"));
-
-            IList<double> allValues = coverage.GetValues<double>();
-            Assert.AreEqual(2, allValues.Count);
-
-            var valuesArray = new[]
-            {
-                1.0,
-                2.0
-            };
-            coverage.SetValues(valuesArray);
-
-            var exceptions = 0;
-            var expectedMessage = "Changing the feature list after setting and persisting spatial data values is not allowed!";
-
-            exceptions.Should("Expected two exceptions to be thrown").Be.EqualTo(2);
-        }
-
-        [Test]
         public void ModifyingInternalCollectionInFeaturesAfterSaveShouldNotThrowException()
         {
             var hydroNode = new HydroNode

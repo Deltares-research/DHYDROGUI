@@ -62,61 +62,10 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             {
                 //reload
                 Project retrievedProject = projectRepository.Open(path);
-                INetwork retrievedNetwork = retrievedProject.GetAllItemsRecursive().OfType<INetwork>().FirstOrDefault();
                 IFeatureCoverage retrievedFeatureCoverage = retrievedProject.GetAllItemsRecursive().OfType<IFeatureCoverage>().FirstOrDefault();
-                IBranchFeature retrievedCrossSection = retrievedNetwork.Branches[0].BranchFeatures[0];
 
                 //compare
-                Assert.AreEqual(retrievedCrossSection, retrievedFeatureCoverage.FeatureVariable.Values[0]);
                 Assert.AreEqual(featureCoverage.Components[0].Values.Count, retrievedFeatureCoverage.Components[0].Values.Count);
-                Assert.AreEqual((double) retrievedFeatureCoverage[dateTime, retrievedCrossSection], 17.0, 1.0e-6);
-            }
-        }
-
-        [Test]
-        public void RemovingFeatureCoverageDoesNotRemoveFeatures()
-        {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            // create network
-            INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
-           
-            //IFeatureCoverage featureCoverage = new FeatureCoverage(); { HydroNetwork = network };
-            var featureCoverage = new FeatureCoverage("Test");
-            var featureVariable = new Variable<IBranchFeature>("feature");
-
-            featureCoverage.Arguments.Add(featureVariable);
-            featureCoverage.Components.Add(new Variable<double>("value"));
-
-            //save 
-            using (NHibernateProjectRepository projectRepository = factory.CreateNew())
-            {
-                projectRepository.Create(path);
-
-                var project = new Project();
-                project.RootFolder.Add(new DataItem(network));
-                var featureCoverageDataItem = new DataItem(featureCoverage);
-                project.RootFolder.Add(featureCoverageDataItem);
-
-                projectRepository.SaveOrUpdate(project);
-
-                //remove featurecoverage (shouln't cascade remove features from network
-                project.RootFolder.Items.Remove(featureCoverageDataItem);
-
-                projectRepository.SaveOrUpdate(project);
-            }
-
-            using (NHibernateProjectRepository projectRepository = factory.CreateNew())
-            {
-                //reload
-                Project retrievedProject = projectRepository.Open(path);
-                INetwork retrievedNetwork = retrievedProject.GetAllItemsRecursive().OfType<INetwork>().FirstOrDefault();
-                //var retrievedFeatureCoverage = retrievedProject.GetAllItemsRecursive().OfType<IFeatureCoverage>().FirstOrDefault();
-
-                //check the crossection was really removed from the coverage
-                //Assert.AreEqual(0,retrievedFeatureCoverage.Features.Count);
-                //check the crossection is still network
-                Assert.AreEqual(1, retrievedNetwork.BranchFeatures.Count());
             }
         }
     }
