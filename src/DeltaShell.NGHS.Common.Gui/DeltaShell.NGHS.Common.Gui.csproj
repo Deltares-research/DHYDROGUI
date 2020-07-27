@@ -32,6 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DelftTools.Controls.Wpf, Version=1.5.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51449-beta\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Shell.Core, Version=1.5.0.51449-beta, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51449-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
@@ -79,6 +84,9 @@
     <Compile Include="Components\LabeledCheckBox.xaml.cs">
       <DependentUpon>LabeledCheckBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\LabeledValueBox.xaml.cs">
+      <DependentUpon>LabeledValueBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\UnitStringToUnitDisplayStringConverter.cs" />
     <Compile Include="DeltaresColor.cs" />
     <Compile Include="Layers\ILayerSubProvider.cs" />
@@ -102,6 +110,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Components\LabeledCheckBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\LabeledValueBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

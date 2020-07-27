@@ -10,6 +10,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:shapes="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes"
              xmlns:waveBoundaryConditionEditor="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor"
+             xmlns:components="clr-namespace:DeltaShell.NGHS.Common.Gui.Components;assembly=DeltaShell.NGHS.Common.Gui"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance waveBoundaryConditionEditor:BoundaryWideParametersViewModel}">
     <UserControl.Resources>
@@ -49,13 +50,13 @@
                                     SelectedItem="{Binding Path=ShapeType}"
                                     ItemsSource="{Binding Path=ShapeTypeList}"
                                     ItemTemplate="{StaticResource TypeLabeledComboBoxTemplate}" />
-            <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+            <components:LabeledValueBox Visibility="{Binding Path=ShapeType, 
                                                          Converter={StaticResource TypeToVisibilityConverter},
                                                          ConverterParameter={x:Type shapes:JonswapViewShape}}"
                                     Label="Peak Enhancement Factor:"
                                     ValueContent="{Binding Path=Shape.PeakEnhancementFactor}"
                                     Unit="-" />
-            <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+            <components:LabeledValueBox Visibility="{Binding Path=ShapeType, 
                                                          Converter={StaticResource TypeToVisibilityConverter},
                                                          ConverterParameter={x:Type shapes:GaussViewShape}}"
                                     Label="Gaussian Spread:"
