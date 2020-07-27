@@ -413,11 +413,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             var node1 = new HydroNode("node1");
             var node2 = new HydroNode("node2");
-            var node3 = new HydroNode("node3");
 
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
-            network.Nodes.Add(node3);
 
             var branch1 = new Channel("branch1", node1, node2) {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")};
             var branch2 = new Channel("branch2", node1, node2) {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")};
@@ -468,13 +466,13 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             //test
             Assert.IsAssignableFrom(typeof(NetCdfFunctionStore), retrievedFeatureCoverage.Store);
-            Assert.AreEqual(3, retrievedFeatureCoverage.Features.Count);
-            Assert.AreEqual(3, retrievedFeatureCoverage.FeatureVariable.Values.Count);
+            Assert.AreEqual(2, retrievedFeatureCoverage.Features.Count);
+            Assert.AreEqual(2, retrievedFeatureCoverage.FeatureVariable.Values.Count);
             Assert.AreEqual(retrievedFeatureCoverage.Features[0], retrievedFeatureCoverage.Arguments[0].Values[0]);
-            Assert.IsAssignableFrom(typeof(Weir), retrievedFeatureCoverage.Arguments[0].Values[1]);
-            Assert.IsAssignableFrom(typeof(Gate), retrievedFeatureCoverage.Arguments[0].Values[2]);
-            Assert.AreEqual(1.0, retrievedFeatureCoverage.Components[0].Values[0]);
-            Assert.AreEqual(2.0, retrievedFeatureCoverage.Components[0].Values[1]);
+            Assert.IsAssignableFrom(typeof(Weir), retrievedFeatureCoverage.Arguments[0].Values[0]);
+            Assert.IsAssignableFrom(typeof(Gate), retrievedFeatureCoverage.Arguments[0].Values[1]);
+            Assert.AreEqual(2.0, retrievedFeatureCoverage.Components[0].Values[0]);
+            Assert.AreEqual(3.0, retrievedFeatureCoverage.Components[0].Values[1]);
 
             store.Dispose();
         }

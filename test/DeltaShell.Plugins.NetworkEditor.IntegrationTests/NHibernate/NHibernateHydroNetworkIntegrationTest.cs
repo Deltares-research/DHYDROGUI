@@ -557,59 +557,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
-        public void ReloadNetworkDoesWorkWithNotifyCollectionChanged()
-        {
-            var network = new HydroNetwork();
-
-            INode fromNode = new HydroNode
-            {
-                Name = "From",
-                Network = network,
-                Geometry = new Point(1000, 1000)
-            };
-            INode toNode = new HydroNode
-            {
-                Name = "To",
-                Network = network,
-                Geometry = new Point(1000, 1500)
-            };
-            network.Nodes.Add(fromNode);
-            network.Nodes.Add(toNode);
-
-            IChannel branch = CreateChannel(fromNode, toNode);
-            network.Branches.Add(branch);
-
-           
-            var callCount = 0;
-            ((INotifyCollectionChange) network.Branches[0]).CollectionChanged += delegate { callCount++; };
-            network.Branches[0].BranchFeatures.RemoveAt(0);
-            Assert.AreEqual(1, callCount);
-
-            //save
-            var project = new Project();
-            project.RootFolder.Add(new DataItem(network));
-
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            ProjectRepository.Create(path);
-            ProjectRepository.SaveOrUpdate(project);
-            ProjectRepository.Close();
-
-            //reopen
-            Project retrievedProject = ProjectRepository.Open(path);
-            var retrievedNetwork = (IHydroNetwork) retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
-
-            //remove a crossSection and get Notified at the network level.
-            callCount = 0;
-            IBranch retrievedBranch = retrievedNetwork.Branches[0];
-            retrievedBranch.BranchFeatures.CollectionChanged += delegate { callCount++; };
-            //crossSections is just a filtered view of branchfeatures.
-            ((IList) retrievedBranch.BranchFeatures).RemoveAt(0);
-
-            Assert.AreEqual(0, retrievedBranch.BranchFeatures.Count);
-            Assert.AreEqual(1, callCount);
-        }
-
-        [Test]
         public void WriteAndReadProjectNetworkContainingAllSubItems()
         {
             var network = new HydroNetwork();
@@ -688,7 +635,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                     callCount++;
                     Debug.WriteLine(string.Format("{0} sent a {1} for {2}", sender, e.Action, e.GetRemovedOrAddedItem()));
                 };
-           
 
             //save it to a project.
             var project = new Project();
@@ -701,7 +647,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             //remove a brachfeature should result in a single changed event;
             Assert.AreEqual(3, callCount);
-            
         }
 
         [Test]
