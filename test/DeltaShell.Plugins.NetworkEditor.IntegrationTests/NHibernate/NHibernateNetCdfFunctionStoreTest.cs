@@ -255,68 +255,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             store.Dispose();
         }
-        
-        [Test]
-        public void SaveAndRetrieveFeatureCoverageWithNetCdfAndThenClone()
-        {
-            var repo = new MockRepository();
-            var featureMock1 = repo.DynamicMultiMock<IFeature>(typeof(INameable));
-            ((INameable) featureMock1).Name = "feature1-clone";
-            var featureMock2 = repo.DynamicMultiMock<IFeature>(typeof(INameable));
-            ((INameable) featureMock2).Name = "feature2-clone";
-
-            repo.ReplayAll();
-
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            //feature coverage
-            var featureCoverage = new FeatureCoverage("test");
-
-            using (var store = new NetCdfFunctionStore())
-            {
-                store.CreateNew(TestHelper.GetCurrentMethodName() + ".nc");
-                store.Functions.Add(featureCoverage);
-                featureCoverage.Components.Add(new Variable<double>("value"));
-                featureCoverage.Arguments.Add(new Variable<IFeature>("feature"));
-                // Pump BranchStructure Weir IStructure
-
-                for (var i = 0; i < featureCoverage.Features.Count; i++)
-                {
-                    featureCoverage[featureCoverage.Features[i]] = Convert.ToDouble(i);
-                }
-
-                projectRepository.Create(path);
-
-                //save
-                var project = new Project();
-                project.RootFolder.Add(new DataItem(featureCoverage, DataItemRole.Output));
-                projectRepository.SaveOrUpdate(project);
-
-                //reload
-                Project retrievedProject = projectRepository.Open(path);
-                IDataItem[] retrievedDataItems = retrievedProject.RootFolder.DataItems.ToArray();
-                var retrievedFeatureCoverage = (IFeatureCoverage) retrievedDataItems[0].Value;
-
-                //clone
-                var clonedFeatureCoverage = (IFeatureCoverage) retrievedFeatureCoverage.Clone();
-                retrievedProject.RootFolder.Add(clonedFeatureCoverage);
-
-                FeatureCoverage.RefreshAfterClone(
-                    clonedFeatureCoverage,
-                    retrievedFeatureCoverage.Features,
-                    new[]
-                    {
-                        featureMock1,
-                        featureMock2
-                    });
-                Assert.AreEqual(2, clonedFeatureCoverage.FeatureVariable.Values.Count);
-
-                for (var i = 0; i < featureCoverage.Features.Count; i++)
-                {
-                    Assert.AreEqual(clonedFeatureCoverage[clonedFeatureCoverage.Features[i]], Convert.ToDouble(i));
-                }
-            }
-        }
 
         [Test]
         public void ModifyingInternalCollectionInFeaturesAfterSaveShouldNotThrowException()
