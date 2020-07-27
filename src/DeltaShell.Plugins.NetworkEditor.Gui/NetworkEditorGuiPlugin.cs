@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             get
             {
-                return new Ribbon();
+                return new Ribbon(Gui);
             }
         }
 

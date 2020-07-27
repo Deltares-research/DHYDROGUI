@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Hydro;
+using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
@@ -71,6 +72,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             InitializeComponent();
             tabRegion.Group = geospatialContextualGroup;
+        }
+
+        public Ribbon(IGui gui): this()
+        {
+            gui.MainWindow.SetActiveRibbonTab("Home");
         }
 
         public IEnumerable<ICommand> Commands
