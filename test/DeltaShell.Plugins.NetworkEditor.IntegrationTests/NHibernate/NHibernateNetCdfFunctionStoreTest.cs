@@ -255,51 +255,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             store.Dispose();
         }
-
-        [Test]
-        public void SaveAndRetrieveFeatureCoverageWithNetCdf()
-        {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            
-            //feature coverage
-            var featureCoverage = new FeatureCoverage("test");
-
-            var store = new NetCdfFunctionStore();
-            store.CreateNew(TestHelper.GetCurrentMethodName() + ".nc");
-            store.Functions.Add(featureCoverage);
-
-            featureCoverage.Components.Add(new Variable<double>("value"));
-            featureCoverage.Arguments.Add(new Variable<IFeature>("feature")); // Pump BranchStructure Weir IStructure
-
-            for (var i = 0; i < featureCoverage.Features.Count; i++)
-            {
-                featureCoverage[featureCoverage.Features[i]] = Convert.ToDouble(i);
-            }
-
-            projectRepository.Create(path);
-
-            //save
-            var project = new Project();
-            project.RootFolder.Add(new DataItem(featureCoverage, DataItemRole.Output));
-            projectRepository.SaveOrUpdate(project);
-
-            //reload
-            Project retrievedProject = projectRepository.Open(path);
-            IDataItem[] retrievedDataItems = retrievedProject.RootFolder.DataItems.ToArray();
-            var retrievedFeatureCoverage = (IFeatureCoverage) retrievedDataItems[0].Value;
-
-            //test
-            Assert.IsAssignableFrom(typeof(NetCdfFunctionStore), retrievedFeatureCoverage.Store);
-            Assert.AreEqual(retrievedFeatureCoverage.Features[0], retrievedFeatureCoverage.Arguments[0].Values[0]);
-
-            for (var i = 0; i < featureCoverage.Features.Count; i++)
-            {
-                Assert.AreEqual(retrievedFeatureCoverage[retrievedFeatureCoverage.Features[i]], Convert.ToDouble(i));
-            }
-
-            store.Dispose();
-        }
-
+        
         [Test]
         public void SaveAndRetrieveFeatureCoverageWithNetCdfAndThenClone()
         {

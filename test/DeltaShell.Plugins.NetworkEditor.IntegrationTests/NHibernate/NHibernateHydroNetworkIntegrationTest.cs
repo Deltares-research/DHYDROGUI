@@ -599,57 +599,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
-        public void SaveNetworkAndCheckCollectionChangedForBranchFeatures()
-        {
-            //create a network
-            var network = new HydroNetwork();
-
-            INode fromNode = new HydroNode
-            {
-                Name = "From",
-                Network = network,
-                Geometry = new Point(1000, 1000)
-            };
-            INode toNode = new HydroNode
-            {
-                Name = "To",
-                Network = network,
-                Geometry = new Point(1000, 1500)
-            };
-            network.Nodes.Add(fromNode);
-            network.Nodes.Add(toNode);
-
-            IChannel branch = CreateChannel(fromNode, toNode);
-            network.Branches.Add(branch);
-            var networkLocation = new NetworkLocation(branch, 10);
-
-            networkLocation.Geometry = new WKTReader().Read("LINESTRING(20 20,20 30,30 30,30 20,40 20)");
-
-            branch.BranchFeatures.Add(networkLocation);
-            
-            //register to collectionchanged of network
-            var callCount = 0;
-            ((INotifyCollectionChange) network).CollectionChanged +=
-                delegate(object sender, NotifyCollectionChangedEventArgs e)
-                {
-                    callCount++;
-                    Debug.WriteLine(string.Format("{0} sent a {1} for {2}", sender, e.Action, e.GetRemovedOrAddedItem()));
-                };
-
-            //save it to a project.
-            var project = new Project();
-            project.RootFolder.Add(new DataItem(network));
-
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            ProjectRepository.Create(path);
-            ProjectRepository.SaveOrUpdate(project);
-
-            //remove a brachfeature should result in a single changed event;
-            Assert.AreEqual(3, callCount);
-        }
-
-        [Test]
         public void SaveLoadChannel()
         {
             //save it to a project.
