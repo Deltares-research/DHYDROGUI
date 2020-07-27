@@ -6,12 +6,14 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Fluent;
+using NetTopologySuite.Utilities;
 using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
@@ -76,6 +78,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public Ribbon(IGui gui): this()
         {
+            Ensure.NotNull(gui, nameof(gui));
             gui.MainWindow.SetActiveRibbonTab("Home");
         }
 
