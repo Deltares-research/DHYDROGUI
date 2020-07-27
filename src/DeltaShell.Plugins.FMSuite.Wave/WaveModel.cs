@@ -53,7 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private static readonly string GridPropertyName = nameof(WaveDomainData.Grid);
         private readonly BoundaryContainerSyncService boundaryContainerSyncService;
 
-        private readonly string tempWorkingDirectory;
         private readonly DimrRunner runner;
         private ICoordinateSystem coordinateSystem;
         private string progressText;
@@ -85,8 +84,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             dataItems.Add(new DataItem(new TextDocument(true) {Name = "Swan run log"}, DataItemRole.Output,
                                        SwanLogDataItemTag));
-
-            tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
             InitializeCouplingTime();
 
