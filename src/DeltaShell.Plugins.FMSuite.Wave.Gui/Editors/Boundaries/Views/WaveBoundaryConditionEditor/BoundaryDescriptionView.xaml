@@ -6,7 +6,6 @@
              xmlns:converters="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Converters"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:enums="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums"
-             xmlns:commonElements="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonElements"
              xmlns:components="clr-namespace:DeltaShell.NGHS.Common.Gui.Components;assembly=DeltaShell.NGHS.Common.Gui"
              mc:Ignorable="d"
              d:DesignHeight="150" d:DesignWidth="600">
@@ -38,11 +37,11 @@
         <StackPanel Margin="10">
             <components:LabeledValueBox Label="Name:"
                                         ValueContent="{Binding Path=Name}" />
-            <commonElements:LabeledComboBox Label="Forcing Type:"
+            <components:LabeledComboBox Label="Forcing Type:"
                                             SelectedItem="{Binding Path=ForcingType}"
                                             ItemsSource="{Binding Source={StaticResource ForcingTypes}}"
                                             ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
-            <commonElements:LabeledComboBox Label="Spatial Definition:"
+            <components:LabeledComboBox Label="Spatial Definition:"
                                             SelectedItem="{Binding Path=SpatialDefinition}"
                                             ItemsSource="{Binding Source={StaticResource SpatialDefinitions}}"
                                             ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />

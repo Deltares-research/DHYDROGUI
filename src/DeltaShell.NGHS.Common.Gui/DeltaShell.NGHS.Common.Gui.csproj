@@ -84,6 +84,9 @@
     <Compile Include="Components\LabeledCheckBox.xaml.cs">
       <DependentUpon>LabeledCheckBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\LabeledComboBox.xaml.cs">
+      <DependentUpon>LabeledComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Components\LabeledValueBox.xaml.cs">
       <DependentUpon>LabeledValueBox.xaml</DependentUpon>
     </Compile>
@@ -110,6 +113,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Components\LabeledCheckBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\LabeledComboBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

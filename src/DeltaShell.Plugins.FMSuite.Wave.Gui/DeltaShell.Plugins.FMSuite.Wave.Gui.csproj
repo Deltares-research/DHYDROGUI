@@ -212,9 +212,6 @@
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointDataComponentViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointViewModel.cs" />
-    <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml.cs">
-      <DependentUpon>LabeledComboBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\FileBasedParametersView.xaml.cs">
       <DependentUpon>FileBasedParametersView.xaml</DependentUpon>
     </Compile>
@@ -456,10 +453,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -551,6 +544,7 @@
     <Content Include="Resources\folder_domain.png" />
     <Content Include="Resources\domain.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
