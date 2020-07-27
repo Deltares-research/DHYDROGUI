@@ -1315,7 +1315,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     string line;
                     while ((line = file.ReadLine()) != null)
                     {
-                        if (line.Contains("locationfile") || line.Contains("forcingfile"))
+                        if (line.Contains("locationFile") || line.Contains("forcingFile"))
                         {
                             CheckIfSubFilesMentionedInBndExtForceFileAreWrittenRelativeToThisFile(line, saveBndExtFilePath);
                         }

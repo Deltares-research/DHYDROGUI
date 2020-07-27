@@ -1,14 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 {
-    public partial class MeteoFileSelectionControl : UserControl
+    public partial class MeteoFileSelectionControl : UserControl, INotifyPropertyChanged
     {
-        private string label;
-
-        private string fileName;
-
         public MeteoFileSelectionControl()
         {
             InitializeComponent();
@@ -28,11 +26,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         public string FileName
         {
-            get => fileName;
+            get => meteoFileBox.Text;
             set
             {
-                fileName = value;
-                meteoFileBox.Text = fileName;
+                if (FileName == value)
+                {
+                    return;
+                }
+
+                meteoFileBox.Text = value;
+                OnPropertyChanged();
             }
         }
 
@@ -40,11 +43,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                fileName = ImportIntoDirectory != null
+                FileName = ImportIntoDirectory != null
                                ? ImportIntoDirectory(openFileDialog1.FileName)
                                : openFileDialog1.FileName;
-                meteoFileBox.Text = fileName;
             }
+        }
+        
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
