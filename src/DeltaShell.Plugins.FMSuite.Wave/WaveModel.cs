@@ -51,9 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModel));
 
         private static readonly string GridPropertyName = nameof(WaveDomainData.Grid);
-
-        private readonly MdwFile mdwFile = new MdwFile();
-
         private readonly BoundaryContainerSyncService boundaryContainerSyncService;
 
         private readonly string tempWorkingDirectory;
@@ -282,9 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public MdwFile MdwFile => mdwFile;
-
-        public string WorkingDirectory => ExplicitWorkingDirectory ?? tempWorkingDirectory;
+        public MdwFile MdwFile { get; } = new MdwFile();
 
         [PropertyGrid]
         [DisplayName("Validate before run")]
@@ -502,7 +497,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 Directory.CreateDirectory(targetDir);
             }
 
-            mdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
+            MdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
 
             // write spatial data:
             SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
@@ -583,7 +578,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             EndEdit();
 
             // grid(s) transformed, sync data to disk:
-            string modelDir = Path.GetDirectoryName(mdwFile.MdwFilePath);
+            string modelDir = Path.GetDirectoryName(MdwFile.MdwFilePath);
             foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(OuterDomain))
             {
                 string targetGridFileName = Path.Combine(modelDir, domain.GridFileName);
@@ -904,7 +899,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             model.MdwFile.MdwFilePath = mdwFilePath;
             model.Name = Path.GetFileNameWithoutExtension(mdwFilePath);
 
-            WaveModelDefinition loadedModelDefinition = model.mdwFile.Load(mdwFilePath);
+            WaveModelDefinition loadedModelDefinition = model.MdwFile.Load(mdwFilePath);
             if (model.ModelDefinition != null)
             {
                 WaveModelDefinitionLoadHelper.TransferLoadedProperties(model.ModelDefinition, loadedModelDefinition);
@@ -1239,7 +1234,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void OnSave()
         {
-            ModelSaveTo(mdwFile.MdwFilePath, true);
+            ModelSaveTo(MdwFile.MdwFilePath, true);
         }
 
         private void OnCopyTo(string targetMdwFilePath)
@@ -1249,13 +1244,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void OnSwitchTo(string newMdwFilePath)
         {
-            if (mdwFile.MdwFilePath == null)
+            if (MdwFile.MdwFilePath == null)
             {
                 BuildModel(model => BuildModelFromMdw(model, newMdwFilePath), true);
             }
             else
             {
-                mdwFile.MdwFilePath = newMdwFilePath;
+                MdwFile.MdwFilePath = newMdwFilePath;
             }
         }
 
@@ -1328,7 +1323,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </summary>
         public bool CopyFromWorkingDirectory { get; }
 
-        public virtual string MdwFilePath => mdwFile?.MdwFilePath;
+        public virtual string MdwFilePath => MdwFile?.MdwFilePath;
 
         void IFileBased.CreateNew(string mdwPath)
         {
