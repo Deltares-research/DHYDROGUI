@@ -35,6 +35,7 @@
                  TextAlignment="Right"
                  VerticalAlignment="Center"
                  Style="{StaticResource ControlStyle}"
+                 HorizontalAlignment="Stretch"
                  attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
         <TextBlock Grid.Column="2"
                    Text="{Binding ElementName=LabeledValueBoxControl, Path=Unit, Converter={StaticResource UnitStringToUnitDisplayStringConverter}}"
