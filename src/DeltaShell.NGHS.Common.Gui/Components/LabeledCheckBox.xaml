@@ -29,6 +29,7 @@
                    Style="{StaticResource LabelTextBlockStyle}" />
         <CheckBox Grid.Column="1"
                   IsChecked="{Binding ElementName=LabeledCheckBoxControl, Path=IsChecked}"
-                  Style="{StaticResource ControlStyle}" />
+                  Style="{StaticResource ControlStyle}" 
+                  VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

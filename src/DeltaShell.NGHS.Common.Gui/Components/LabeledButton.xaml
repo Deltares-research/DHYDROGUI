@@ -29,7 +29,8 @@
                    Style="{StaticResource LabelTextBlockStyle}" />
         <Button Grid.Column="1"
                 Style="{StaticResource ControlStyle}"
-                Command="{Binding ElementName=LabeledButtonControl, Path=ButtonCommand}">
+                Command="{Binding ElementName=LabeledButtonControl, Path=ButtonCommand}"
+                VerticalAlignment="Center">
             <TextBlock Text="{Binding ElementName=LabeledButtonControl, Path=ButtonLabel}"
                        Style="{StaticResource LabelTextBlockStyle}"/>
         </Button>
