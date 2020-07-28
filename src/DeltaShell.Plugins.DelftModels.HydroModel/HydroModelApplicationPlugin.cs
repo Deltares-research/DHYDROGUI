@@ -136,7 +136,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
                     },
                     AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
-                    CreateModel = owner => HydroModel.BuildModel(modelGroup)
+                    CreateModel = owner =>
+                    {
+                        var hydroModel = HydroModel.BuildModel(modelGroup);
+                        hydroModel.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
+                        return hydroModel;
+                    }
                 };
             }
         }
@@ -162,7 +167,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList());
+            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList(), 
+                                                     () => Application.WorkDirectory);
         }
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
@@ -179,7 +185,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private void ApplicationProjectOpened(Project project)
         {
             // relink all dataitems (between rtc and flowFM) for all hydromodels
-            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm => hm.RelinkDataItems());
+            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
+            {
+                hm.RelinkDataItems();
+                hm.WorkingDirectoryPathFunc =
+                    () => Application.WorkDirectory;
+            });
 
             Application.Project.CollectionChanging += OnProjectCollectionChanging;
             Application.Project.PropertyChanged += OnProjectPropertyChanged;

@@ -22,6 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         private readonly Func<IList<IDimrModelFileImporter>> getDimrModelFileImporters;
 
+        private readonly Func<string> StoreWorkingDirectoryPathFunc;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DHydroConfigXmlImporter"/> class
         /// with the specified read function and dimrFileImporters.
@@ -40,10 +42,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// with the default read function and the specified dimrFileImporters.
         /// </summary>
         /// <param name="dimrFileImporters">The DIMR file importers.</param>
-        public DHydroConfigXmlImporter(Func<IList<IDimrModelFileImporter>> dimrFileImporters) : this(
+        /// <param name="getWorkingDirectoryPathFunc"> Func for retrieving working directory
+        /// from the framework.</param>
+        public DHydroConfigXmlImporter(Func<IList<IDimrModelFileImporter>> dimrFileImporters, Func<string> getWorkingDirectoryPathFunc) : this(
             HydroModelReader.Read,
-            dimrFileImporters) {}
-
+            dimrFileImporters)
+        {
+            StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
+        }
+        
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public string Name => "DIMR Configuration File (*.xml)";
@@ -105,6 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             try
             {
                 HydroModel importedModel = Read(path);
+                importedModel.WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc;
 
                 var targetModel = target as HydroModel;
                 if (targetModel != null)

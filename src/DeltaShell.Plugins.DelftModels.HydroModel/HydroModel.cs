@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -21,6 +22,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -37,6 +39,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     [Entity(FireOnCollectionChange = false)]
     public partial class HydroModel : TimeDependentModelBase, IHydroModel, ICompositeActivity, IFileBased, IModelMerge, IDisposable
     {
+        private const string DimrRunLogfileDataItemTag = "DimrRunLog";
+        private const string DIMR_RUN_LOGFILE_NAME = "dimr_redirected.log";
+        
         private const string HydroRegionTag = "RootHydroRegion";
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModel));
 
@@ -54,6 +59,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private ICompositeActivity currentWorkflow;
         private CompositeHydroModelWorkFlowData currentWorkFlowData;
+
+        /// <summary>
+        /// Func for retrieving the current working directory set in the framework.
+        /// </summary>
+        public virtual Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
 
         public virtual bool ReadOnly { get; set; }
 
@@ -757,15 +767,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 try
                 {
-                    PrepareWorkDirectory();
-
                     List<IDimrModel> dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
                                                                  .Plus(CurrentWorkflow as IDimrModel).Where(dm => dm != null)
                                                                  .ToList();
 
                     dimrModels.ForEach(m =>
                     {
-                        m.ExplicitWorkingDirectory = Path.Combine(ExplicitWorkingDirectory, m.DirectoryName);
+                        m.ExplicitWorkingDirectory = Path.Combine(WorkingDirectoryPath, m.DirectoryName);
                         m.RunsInIntegratedModel = true;
                         m.DisconnectOutput();
 
@@ -778,8 +786,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         return;
                     }
 
+                    ClearFolder(WorkingDirectoryPath);
+
                     var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
-                    if (!dHydroConfigXmlExporter.Export(this, Path.Combine(ExplicitWorkingDirectory, "dimr.xml")))
+                    if (!dHydroConfigXmlExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml")))
                     {
                         Status = ActivityStatus.Failed;
                         return;
@@ -802,7 +812,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     dimrApi.KernelDirs = kernelDirectories;
                     dimrApi.DimrRefDate = StartTime;
 
-                    int returnCode = dimrApi.Initialize(Path.Combine(ExplicitWorkingDirectory, "dimr.xml"));
+                    int returnCode = dimrApi.Initialize(Path.Combine(WorkingDirectoryPath, "dimr.xml"));
                     if (returnCode != 0)
                     {
                         throw new DimrErrorCodeException(Status, returnCode);
@@ -829,6 +839,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
+        private static void ClearFolder(string folderPath)
+        {
+            var dir = new DirectoryInfo(folderPath);
+
+            foreach (FileInfo fi in dir.GetFiles())
+            {
+                FileUtils.DeleteIfExists(fi.FullName);
+            }
+
+            foreach (DirectoryInfo di in dir.GetDirectories())
+            {
+                ClearFolder(di.FullName);
+                FileUtils.DeleteIfExists(di.FullName);
+            }
+        }
+
         private string GetKernelDirectories(IEnumerable<IDimrModel> dimrModels)
         {
             try
@@ -842,19 +868,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        private void PrepareWorkDirectory()
+        /// <summary>
+        /// Property for retrieving the current working directory set in the framework
+        /// and adding subfolder with model name.
+        /// </summary>
+        public virtual string WorkingDirectoryPath
         {
-            string workDirectory = ExplicitWorkingDirectory;
-            if (ExplicitWorkingDirectory == null)
-            {
-                string dirPath = Path.GetDirectoryName(path) ?? Environment.CurrentDirectory;
-                workDirectory = Path.Combine(dirPath, Name.Replace(' ', '_') + "_output");
-                ExplicitWorkingDirectory = workDirectory;
-            }
-
-            FileUtils.CreateDirectoryIfNotExists(workDirectory);
+            get => Path.Combine(WorkingDirectoryPathFunc(), Name);
+            set => throw new NotSupportedException("The working directory for running the model is not set");
         }
-
+        
         public virtual ValidationReport Validate()
         {
             return new HydroModelValidator().Validate(this);
@@ -901,7 +924,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             if (DoDimrRun())
             {
-                string validPath = ExplicitWorkingDirectory;
+                string validPath = WorkingDirectoryPath;
                 if (!Directory.Exists(validPath))
                 {
                     return;
@@ -923,7 +946,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
                 }
 
-                DimrRunner.ConnectDimrRunLogFile(this);
+                ConnectDimrRunLogFile();
             }
             else
             {
@@ -1334,6 +1357,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             return base.IsLinkAllowed(source, target);
+        }
+
+        private void ConnectDimrRunLogFile()
+        {
+           
+            string dimrLogDirectory = WorkingDirectoryPath;
+
+            string completeDimrLogFilename = Path.Combine(dimrLogDirectory, DIMR_RUN_LOGFILE_NAME);
+            if (!File.Exists(completeDimrLogFilename))
+            {
+                return;
+            }
+
+            //add an dimr run log output dataitem with the log...
+            IDataItem logDataItem = DataItems.FirstOrDefault(di => di.Tag == DimrRunLogfileDataItemTag);
+            if (logDataItem == null)
+            {
+                var textDocument = new TextDocument(true) { Name = "Dimr Run Log" };
+
+                logDataItem = new DataItem(textDocument, DataItemRole.Output, DimrRunLogfileDataItemTag);
+                DataItems.Add(logDataItem);
+            }
+
+            using (Stream objStream = File.OpenRead(completeDimrLogFilename))
+            {
+                // Read data from file
+                byte[] arrData =
+                    {};
+                var stringBuilder = new StringBuilder();
+                // Read data from file until read position is not equals to length of file
+                while (objStream.Position != objStream.Length)
+                {
+                    // Read number of remaining bytes to read
+                    long lRemainingBytes = objStream.Length - objStream.Position;
+
+                    // If bytes to read greater than 2 mega bytes size create array of 2 mega bytes
+                    // Else create array of remaining bytes
+                    if (lRemainingBytes > 262144)
+                    {
+                        arrData = new byte[262144];
+                    }
+                    else
+                    {
+                        arrData = new byte[lRemainingBytes];
+                    }
+
+                    // Read data from file
+                    objStream.Read(arrData, 0, arrData.Length);
+
+                    stringBuilder.Append(Encoding.UTF8.GetString(arrData, 0, arrData.Length));
+                }
+
+                ((TextDocument)logDataItem.Value).Content = stringBuilder.ToString();
+            }
         }
 
         #endregion
