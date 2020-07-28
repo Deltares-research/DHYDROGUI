@@ -16,6 +16,30 @@ namespace DeltaShell.NGHS.IO.Adapters
 
         public UGrid uGrid { get; set; }
 
+        /// <summary>
+        /// Gets the unstructured grid associated UGrid mesh identifier from this
+        /// <see cref="UGridToUnstructuredGridAdapter"/>.
+        /// </summary>
+        /// <param name="meshId">The mesh identifier.</param>
+        /// <param name="oneBased">
+        /// Whether the mesh associated with the meshID is one-based (fortran),
+        /// or zero based (C-based).</param>
+        /// <param name="callCreateCells">
+        /// Whether to call CreateCells for the retrieved grid.
+        /// </param>
+        /// <returns>
+        /// The grid associated with the <paramref name="meshId"/>
+        /// of this <see cref="UGridToUnstructuredGridAdapter"/>
+        /// </returns>
+        /// <remarks>
+        /// CreateCells will recalculate the cell centers using the kernel.
+        /// This will ensure the correct cell centers will be used for spatial
+        /// operations. This should be called for input grids that are used for
+        /// spatial operations. This SHOULD NOT be called for output grids.
+        /// CreateCells will reshuffle the indices. When this is called for output
+        /// grids, the data associated with cells will be incorrect, if the indices
+        /// are reshuffled.
+        /// </remarks>
         public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int meshId, 
                                                                    bool oneBased = false, 
                                                                    bool callCreateCells = false)

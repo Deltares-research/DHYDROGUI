@@ -25,6 +25,27 @@ namespace DeltaShell.NGHS.IO.Grid
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(UnstructuredGridFileHelper));
 
+        /// <summary>
+        /// Load the <see cref="UnstructuredGrid"/> from the file specified
+        /// at <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">The path to the unstructured grid.</param>
+        /// <param name="loadFlowLinksAndCells">if set to <c>true</c> [load flow links and cells].</param>
+        /// <param name="callCreateCells">
+        /// if set to <c>true</c> and the grid is in UGrid convention then CreateCells will be called.
+        /// </param>
+        /// <returns>
+        /// The first grid stored in <paramref name="path"/>
+        /// </returns>
+        /// <remarks>
+        /// CreateCells will recalculate the cell centers using the kernel.
+        /// This will ensure the correct cell centers will be used for spatial
+        /// operations. This should be called for input grids that are used for
+        /// spatial operations. This SHOULD NOT be called for output grids.
+        /// CreateCells will reshuffle the indices. When this is called for output
+        /// grids, the data associated with cells will be incorrect, if the indices
+        /// are reshuffled.
+        /// </remarks>
         public static UnstructuredGrid LoadFromFile(string path, 
                                                     bool loadFlowLinksAndCells = false, 
                                                     bool callCreateCells = false)
