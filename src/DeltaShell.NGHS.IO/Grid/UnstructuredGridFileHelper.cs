@@ -30,9 +30,15 @@ namespace DeltaShell.NGHS.IO.Grid
         /// at <paramref name="path"/>.
         /// </summary>
         /// <param name="path">The path to the unstructured grid.</param>
-        /// <param name="loadFlowLinksAndCells">if set to <c>true</c> [load flow links and cells].</param>
+        /// <param name="loadFlowLinksAndCells">
+        /// if set to <c>true</c> [load flow links and cells].
+        ///
+        /// <paramref name="loadFlowLinksAndCells"/> defaults to false.
+        /// </param>
         /// <param name="callCreateCells">
         /// if set to <c>true</c> and the grid is in UGrid convention then CreateCells will be called.
+        /// 
+        /// <paramref name="callCreateCells"/> defaults to false.
         /// </param>
         /// <returns>
         /// The first grid stored in <paramref name="path"/>

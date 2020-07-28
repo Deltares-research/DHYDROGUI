@@ -17,15 +17,19 @@ namespace DeltaShell.NGHS.IO.Adapters
         public UGrid uGrid { get; set; }
 
         /// <summary>
-        /// Gets the unstructured grid associated UGrid mesh identifier from this
-        /// <see cref="UGridToUnstructuredGridAdapter"/>.
+        /// Gets the unstructured grid associated UGrid mesh identifier.
         /// </summary>
         /// <param name="meshId">The mesh identifier.</param>
         /// <param name="oneBased">
         /// Whether the mesh associated with the meshID is one-based (fortran),
-        /// or zero based (C-based).</param>
+        /// or zero based (C-based).
+        ///
+        /// <paramref name="oneBased"/> defaults to false.
+        /// </param>
         /// <param name="callCreateCells">
         /// Whether to call CreateCells for the retrieved grid.
+        /// 
+        /// <paramref name="callCreateCells"/> defaults to false.
         /// </param>
         /// <returns>
         /// The grid associated with the <paramref name="meshId"/>
