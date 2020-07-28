@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Utils;
@@ -17,6 +18,7 @@ namespace DelftTools.Hydro.Structures
         FromRight
     }
 
+    [Obsolete("D3DFMIQ-2083 Remove obsolete 1D functionality")]
     public interface IGate : IStructure1D
     {
         /// <summary>

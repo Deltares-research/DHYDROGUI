@@ -9,7 +9,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro.Structures.WeirFormula
 {
     [Entity(FireOnCollectionChange = false)]
-    [Obsolete("D3DFMIQ-1923 remove cross section")]
+    [Obsolete("D3DFMIQ-2083 Remove obsolete 1D functionality")]
     public class FreeFormWeirFormula : EditableObjectUnique<long>, IWeirFormula
     {
         private IGeometry shape;

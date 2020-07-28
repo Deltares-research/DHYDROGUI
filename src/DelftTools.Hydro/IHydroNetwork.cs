@@ -7,7 +7,6 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DelftTools.Hydro
 {
-    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public interface IHydroNetwork : INetwork, IHydroRegion
     {
         IEventedList<Route> Routes { get; }

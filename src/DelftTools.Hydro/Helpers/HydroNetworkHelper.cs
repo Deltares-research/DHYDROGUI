@@ -10,9 +10,8 @@ namespace DelftTools.Hydro.Helpers
 {
     /// <summary>
     /// Utility class to work with networks
-    /// todo: move calculation grid generation to DiscretizationHelper?
     /// </summary>
-    // TODO: split into NetworkHelper and HydroNetworkHelper?
+    [Obsolete("D3DFMIQ-2083 Remove obsolete 1D functionality")]
     public class HydroNetworkHelper
     {
         /// <summary>

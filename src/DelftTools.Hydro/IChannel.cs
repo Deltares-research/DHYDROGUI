@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
@@ -6,7 +5,6 @@ using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {
-    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public interface IChannel : IBranch, IHydroNetworkFeature, IItemContainer
     {
         //reintroducing members for databinding.

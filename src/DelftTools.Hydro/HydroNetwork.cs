@@ -18,7 +18,6 @@ namespace DelftTools.Hydro
     /// </summary>
     [DisplayName("Hydro Network")]
     [Entity]
-    [Obsolete("D3DFMIQ-1923 remove cross section")]
     public partial class HydroNetwork : Network, IHydroNetwork
     {
         public const string ImportBranchesActionName = "Import branches";
