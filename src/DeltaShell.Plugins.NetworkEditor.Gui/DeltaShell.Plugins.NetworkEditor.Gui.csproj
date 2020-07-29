@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -213,6 +213,15 @@
     </Compile>
     <Compile Include="Editors\Structures\Views\Components\LabeledTimeSeriesView.xaml.cs">
       <DependentUpon>LabeledTimeSeriesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\WeirFormulaViews\GeneralStructureView.xaml.cs">
+      <DependentUpon>GeneralStructureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\WeirFormulaViews\SimpleWeirView.xaml.cs">
+      <DependentUpon>SimpleWeirView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\StructureView.xaml.cs">
+      <DependentUpon>StructureView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
@@ -985,7 +994,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Editors\Structures\Views\WeirFormulaViews\GatedWeirView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\WeirFormulaViews\GatePropertiesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Editors\Structures\Views\Components\LabeledTimeSeriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\WeirFormulaViews\GeneralStructureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\WeirFormulaViews\SimpleWeirView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\StructureView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1083,6 +1112,7 @@
     <Resource Include="Resources\enclosure.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Editors\Structures\ViewModels\" />
     <Folder Include="Forms\Feature2DEditors\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
