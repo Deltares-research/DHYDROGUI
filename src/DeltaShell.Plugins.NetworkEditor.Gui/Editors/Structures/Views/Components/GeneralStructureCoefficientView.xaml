@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components.GeneralStructureCoefficientView"
+             x:Name="GeneralStructureCoefficientViewControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.NGHS.Common.Gui;component/CommonSettingsStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="10 0 10 0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Style="{StaticResource GridStyle}"
+              Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelLength}" />
+                <ColumnDefinition Width="{StaticResource ControlLength}" />
+                <ColumnDefinition Width="{StaticResource ControlLength}" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="{Binding ElementName=GeneralStructureCoefficientViewControl, Path=Label}"
+                       Style="{StaticResource LabelTextBlockStyle}" />
+            <TextBox Grid.Column="1"
+                     Text="{Binding ElementName=GeneralStructureCoefficientViewControl, Path=ValueContentFirst}"
+                     TextAlignment="Right"
+                     VerticalAlignment="Center"
+                     Style="{StaticResource ControlStyle}"
+                     HorizontalAlignment="Stretch"
+                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
+            <TextBox Grid.Column="2"
+                     Text="{Binding ElementName=GeneralStructureCoefficientViewControl, Path=ValueContentSecond}"
+                     TextAlignment="Right"
+                     VerticalAlignment="Center"
+                     Style="{StaticResource ControlStyle}"
+                     HorizontalAlignment="Stretch"
+                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
+        </Grid>
+    </Grid>
+</UserControl>

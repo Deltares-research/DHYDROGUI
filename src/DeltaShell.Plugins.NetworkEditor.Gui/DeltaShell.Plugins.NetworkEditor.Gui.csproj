@@ -196,6 +196,9 @@
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
+    <Compile Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml.cs">
+      <DependentUpon>GeneralStructureCoefficientView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Structures\Views\LabeledTimeSeriesView.xaml.cs">
       <DependentUpon>LabeledTimeSeriesView.xaml</DependentUpon>
     </Compile>
@@ -958,6 +961,14 @@
     <Resource Include="Resources\cut.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\LabeledTimeSeriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Forms\StructureFeatureView\CulvertViewWpf.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
