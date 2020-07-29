@@ -199,8 +199,17 @@
     <Compile Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml.cs">
       <DependentUpon>GeneralStructureCoefficientView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\Structures\Views\Components\StructuresComboBox.xaml.cs">
+      <DependentUpon>StructuresComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Structures\Views\Components\StructuresValueBox.xaml.cs">
       <DependentUpon>StructuresValueBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\WeirFormulaViews\GatedWeirView.xaml.cs">
+      <DependentUpon>GatedWeirView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\WeirFormulaViews\GatePropertiesView.xaml.cs">
+      <DependentUpon>GatePropertiesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\Structures\Views\Components\LabeledTimeSeriesView.xaml.cs">
       <DependentUpon>LabeledTimeSeriesView.xaml</DependentUpon>
@@ -965,6 +974,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\StructuresComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
