@@ -199,7 +199,7 @@
     <Compile Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml.cs">
       <DependentUpon>GeneralStructureCoefficientView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Structures\Views\LabeledTimeSeriesView.xaml.cs">
+    <Compile Include="Editors\Structures\Views\Components\LabeledTimeSeriesView.xaml.cs">
       <DependentUpon>LabeledTimeSeriesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
@@ -965,7 +965,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\Structures\Views\LabeledTimeSeriesView.xaml">
+    <Page Include="Editors\Structures\Views\Components\LabeledTimeSeriesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

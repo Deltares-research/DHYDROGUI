@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.LabeledTimeSeriesView"
+﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components.LabeledTimeSeriesView"
              x:Name="LabeledTimeSeriesViewControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -15,7 +15,7 @@
             <BooleanToVisibilityConverter />
         </valueConverters:ValueConverterGroup>
     </UserControl.Resources>
-    <Grid Margin="10">
+    <Grid Margin="10 0 10 0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -34,7 +34,6 @@
                                                        Converter={StaticResource BooleanToVisibilityConverter}}"
                                   Grid.Column="0"/>
         <CheckBox VerticalAlignment="Center"
-                  DockPanel.Dock="Right"
                   Grid.Column="1"
                   IsChecked="{Binding ElementName=LabeledTimeSeriesViewControl, Path=IsTimeSeries}"/>
     </Grid>

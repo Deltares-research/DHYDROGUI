@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using DeltaShell.NGHS.Common.Gui.Components;
 
-namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components
 {
     /// <summary>
     /// Interaction logic for LabeledTimeSeriesView.xaml
