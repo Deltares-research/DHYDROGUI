@@ -12,11 +12,24 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 {
+    /// <summary>
+    /// Importer for importing D-Waves models from .mdw files.
+    /// </summary>
+    /// <seealso cref="IFileImporter" />
     public class WaveModelFileImporter : IFileImporter
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaveModelFileImporter));
         private readonly Func<string> getWorkingDirectoryPathFunc;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaveModelFileImporter"/> class.
+        /// </summary>
+        /// <param name="getWorkingDirectoryPathFunc">
+        /// The function to retrieve the working directory path.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="getWorkingDirectoryPathFunc"/> is <c>null</c>.
+        /// </exception>
         public WaveModelFileImporter(Func<string> getWorkingDirectoryPathFunc)
         {
             Ensure.NotNull(getWorkingDirectoryPathFunc, nameof(getWorkingDirectoryPathFunc));
