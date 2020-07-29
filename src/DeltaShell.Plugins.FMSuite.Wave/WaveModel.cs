@@ -19,6 +19,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
@@ -1257,6 +1258,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             public const string Cartesian = "Cartesian";
         }
 
+        /// <summary>
+        /// Gets or sets the function to retrieve the working directory path.
+        /// </summary>
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
+
         #region IFileBased and NHibernate
 
         //tells NHibernate we need to be saved
@@ -1435,10 +1441,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
 
+        /// <summary>
+        /// Gets the dimr export directory path.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        /// Thrown when this property is set, because the model should use the application's working directory.
+        /// </exception>
         public virtual string DimrExportDirectoryPath
         {
-            get => ExplicitWorkingDirectory;
-            set => ExplicitWorkingDirectory = value;
+            get => Path.Combine(WorkingDirectoryPathFunc(), Name);
+            set => throw new NotSupportedException("Cannot set dimr export directory.");
         }
 
         public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;

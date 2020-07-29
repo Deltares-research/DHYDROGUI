@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
@@ -14,6 +15,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
     public class WaveModelFileImporter : IFileImporter
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaveModelFileImporter));
+        private readonly Func<string> getWorkingDirectoryPathFunc;
+
+        public WaveModelFileImporter(Func<string> getWorkingDirectoryPathFunc)
+        {
+            Ensure.NotNull(getWorkingDirectoryPathFunc, nameof(getWorkingDirectoryPathFunc));
+
+            this.getWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
+        }
 
         public string Name => "Waves Model";
 
@@ -52,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         {
             try
             {
-                var importedWaveModel = new WaveModel(path);
+                var importedWaveModel = new WaveModel(path) {WorkingDirectoryPathFunc = getWorkingDirectoryPathFunc};
 
                 //replace the Wave Model
                 var targetWaveModel = target as WaveModel;
