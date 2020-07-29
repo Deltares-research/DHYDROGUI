@@ -29,7 +29,8 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0"
                    Text="{Binding ElementName=LabeledValueBoxControl, Path=Label}"
-                   Style="{StaticResource LabelTextBlockStyle}" />
+                   Style="{StaticResource LabelTextBlockStyle}" 
+                   VerticalAlignment="Center"/>
         <TextBox Grid.Column="1"
                  Text="{Binding ElementName=LabeledValueBoxControl, Path=ValueContent}"
                  TextAlignment="Right"
@@ -40,6 +41,7 @@
         <TextBlock Grid.Column="2"
                    Text="{Binding ElementName=LabeledValueBoxControl, Path=Unit, Converter={StaticResource UnitStringToUnitDisplayStringConverter}}"
                    Style="{StaticResource LabelTextBlockStyle}"
-                   Width="{StaticResource UnitWidth}" />
+                   Width="{StaticResource UnitWidth}"
+                   VerticalAlignment="Center"/>
     </Grid>
 </UserControl>
