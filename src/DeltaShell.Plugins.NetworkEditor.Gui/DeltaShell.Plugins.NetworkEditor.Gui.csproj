@@ -202,6 +202,12 @@
     <Compile Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml.cs">
       <DependentUpon>GeneralStructureCoefficientView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\Structures\Views\Components\GeneralStructureStreamFieldsHeaderView.xaml.cs">
+      <DependentUpon>GeneralStructureStreamFieldsHeaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\Components\GeneralStructureStreamFieldsView.xaml.cs">
+      <DependentUpon>GeneralStructureStreamFieldsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Structures\Views\Components\LabeledTimeSeriesHeaderView.xaml.cs">
       <DependentUpon>LabeledTimeSeriesHeaderView.xaml</DependentUpon>
     </Compile>
@@ -993,6 +999,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\GeneralStructureStreamFieldsHeaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\GeneralStructureStreamFieldsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
