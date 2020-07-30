@@ -7,13 +7,22 @@
              xmlns:components="clr-namespace:DeltaShell.NGHS.Common.Gui.Components;assembly=DeltaShell.NGHS.Common.Gui"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Margin="10 0 10 0">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/Editors/Structures/Views/StructureStyling.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Style="{StaticResource StructuresControl}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="{StaticResource BoxColumn}"/>
+            <ColumnDefinition Width="{StaticResource IsTimeSeriesColumn}"/>
         </Grid.ColumnDefinitions>
-        <components:LabeledValueBox Grid.Column="0" Label="{Binding ElementName=StructuresValueBoxControl, Path=Label}"
-                                                    ValueContent="{Binding ElementName=StructuresValueBoxControl, Path=ValueContent}"
-                                                    Unit="{Binding ElementName=StructuresValueBoxControl, Path=Unit}"/>
+        <components:LabeledValueBox Grid.Column="0" 
+                                    Label="{Binding ElementName=StructuresValueBoxControl, Path=Label}"
+                                    ValueContent="{Binding ElementName=StructuresValueBoxControl, Path=ValueContent}"
+                                    Unit="{Binding ElementName=StructuresValueBoxControl, Path=Unit}"/>
     </Grid>
 </UserControl>
