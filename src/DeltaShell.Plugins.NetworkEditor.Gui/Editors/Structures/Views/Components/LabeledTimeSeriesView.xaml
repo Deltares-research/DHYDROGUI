@@ -9,31 +9,40 @@
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="800">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <valueConverters:ValueConverterGroup x:Key="InverseBooleanToVisibilityConverter">
-            <valueConverters:InverseBooleanConverter />
-            <BooleanToVisibilityConverter />
-        </valueConverters:ValueConverterGroup>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/Editors/Structures/Views/StructureStyling.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <valueConverters:ValueConverterGroup x:Key="InverseBooleanToVisibilityConverter">
+                <valueConverters:InverseBooleanConverter />
+                <BooleanToVisibilityConverter />
+            </valueConverters:ValueConverterGroup>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Margin="10 0 10 0">
+
+    <Grid Style="{StaticResource StructuresControl}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="{StaticResource BoxColumn}"/>
+            <ColumnDefinition Width="{StaticResource IsTimeSeriesColumn}"/>
         </Grid.ColumnDefinitions>
-        <components:LabeledValueBox Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
-                                    ValueContent="{Binding ElementName=LabeledTimeSeriesViewControl, Path=SingleValueContent}"
-                                    Unit="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Unit}"
-                                    Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
-                                                         Path=IsTimeSeries, 
-                                                         Converter={StaticResource InverseBooleanToVisibilityConverter}}"
-                                    Grid.Column="0"/>
-        <components:LabeledButton Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
-                                  ButtonLabel="Time Series"
-                                  Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
-                                                       Path=IsTimeSeries, 
-                                                       Converter={StaticResource BooleanToVisibilityConverter}}"
-                                  Grid.Column="0"/>
-        <CheckBox VerticalAlignment="Center"
+        <StackPanel Grid.Column="0">
+            <components:LabeledValueBox Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
+                                        ValueContent="{Binding ElementName=LabeledTimeSeriesViewControl, Path=SingleValueContent}"
+                                        Unit="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Unit}"
+                                        Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
+                                                            Path=IsTimeSeries, 
+                                                            Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+            <components:LabeledButton Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
+                                      ButtonLabel="Time Series"
+                                      Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
+                                                           Path=IsTimeSeries, 
+                                                           Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+        <CheckBox Grid.ColumnSpan="1"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Center"
                   Grid.Column="1"
                   IsChecked="{Binding ElementName=LabeledTimeSeriesViewControl, Path=IsTimeSeries}"/>
     </Grid>
