@@ -7,33 +7,63 @@
              xmlns:weirFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.WeirFormulaViews"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Margin="10">
-        <GroupBox Header="Sill">
-            <StackPanel>
-                <components:LabeledTimeSeriesView Label="Crest level"
-                                             Unit ="m AD"/>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/Editors/Structures/Views/StructureStyling.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
-                <components:StructuresValueBox Label="Crest width"
-                                               Unit="m"/>
-            </StackPanel>
+    <StackPanel Style="{StaticResource StructuresView}">
+        <GroupBox Header="Sill">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LeftPane}"/>
+                    <ColumnDefinition Width="{StaticResource RightPane}"/>
+                </Grid.ColumnDefinitions>
+            
+                <weirFormulaViews:WeirPropertiesView Grid.Column="0"/>
+            
+                <StackPanel Grid.Column="1">
+                    <components:GeneralStructureStreamFieldsHeaderView></components:GeneralStructureStreamFieldsHeaderView>
+                    <components:GeneralStructureStreamFieldsView/>
+                    <components:GeneralStructureStreamFieldsView/>
+                </StackPanel>
+            </Grid>
         </GroupBox>
 
         <weirFormulaViews:GatePropertiesView/>
 
         <GroupBox Header="Coefficients">
-            <StackPanel>
-                <components:GeneralStructureCoefficientView Label="Free gate flow"/>
-                <components:GeneralStructureCoefficientView Label="Drowned gate flow"/>
-                <components:GeneralStructureCoefficientView Label="Free  weir flow"/>
-                <components:GeneralStructureCoefficientView Label="Drowned weir flow"/>
-                <components:GeneralStructureCoefficientView Label="Contraction coefficient"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LeftPane}"/>
+                    <ColumnDefinition Width="{StaticResource RightPane}"/>
+                </Grid.ColumnDefinitions>
+           
+                <StackPanel Grid.Column="0">
+                    <components:GeneralStructureCoefficientHeaderView/>
+                    <components:GeneralStructureCoefficientView Label="Free gate flow"/>
+                    <components:GeneralStructureCoefficientView Label="Drowned gate flow"/>
+                    <components:GeneralStructureCoefficientView Label="Free weir flow"/>
+                    <components:GeneralStructureCoefficientView Label="Drowned weir flow"/>
+                    <components:GeneralStructureCoefficientView Label="Contraction coefficient"/>
+                </StackPanel>
+            </Grid>
         </GroupBox>
 
         <GroupBox Header="Extra Resistance">
-            <StackPanel>
-                <components:StructuresValueBox Label="Extra resistance"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LeftPane}"/>
+                    <ColumnDefinition Width="{StaticResource RightPane}"/>
+                </Grid.ColumnDefinitions>
+            
+                <StackPanel Grid.Column="0">
+                    <components:StructuresValueBox Label="Extra resistance"/>
+                </StackPanel>
+            </Grid>
         </GroupBox>
     </StackPanel>
 </UserControl>
