@@ -6,22 +6,34 @@
              xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/Editors/Structures/Views/StructureStyling.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <GroupBox Header="Gate">
-        <StackPanel>
-            <components:LabeledTimeSeriesView Label="Gate lower edge level"
-                                              Unit="m AD"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LeftPane}"/>
+                <ColumnDefinition Width="{StaticResource RightPane}"/>
+            </Grid.ColumnDefinitions>
 
-            <components:StructuresValueBox Label="Gate height"
-                                           Unit="m"/>
-
-            <components:StructuresValueBox Label="Gate opening height"
-                                           Unit="m" 
-                                           IsEnabled="False"/>
-
-            <components:StructuresValueBox Label="Horizontal opening width"
-                                           Unit="m"/>
-
-            <components:StructuresComboBox Label="Horizontal opening direction"/>
-        </StackPanel>
+            <StackPanel Grid.Column="0">
+                <components:LabeledTimeSeriesHeaderView/>
+                <components:LabeledTimeSeriesView Label="Gate lower edge level"
+                                                  Unit="m AD"/>
+                <components:StructuresValueBox Label="Gate height"
+                                               Unit="m"/>
+                <components:StructuresValueBox Label="Gate opening height"
+                                               Unit="m" 
+                                               IsEnabled="False"/>
+                <components:StructuresValueBox Label="Horizontal opening width"
+                                               Unit="m"/>
+                <components:StructuresComboBox Label="Horizontal opening direction"/>
+            </StackPanel>
+        </Grid>
     </GroupBox>
 </UserControl>
