@@ -199,6 +199,9 @@
     <Compile Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml.cs">
       <DependentUpon>GeneralStructureCoefficientView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\Structures\Views\Components\LabeledTimeSeriesHeaderView.xaml.cs">
+      <DependentUpon>LabeledTimeSeriesHeaderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Structures\Views\Components\StructuresComboBox.xaml.cs">
       <DependentUpon>StructuresComboBox.xaml</DependentUpon>
     </Compile>
@@ -983,6 +986,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\LabeledTimeSeriesHeaderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
