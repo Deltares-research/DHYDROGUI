@@ -25,7 +25,36 @@ namespace DeltaShell.NGHS.IO.Grid
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(UnstructuredGridFileHelper));
 
-        public static UnstructuredGrid LoadFromFile(string path, bool loadFlowLinksAndCells = false)
+        /// <summary>
+        /// Load the <see cref="UnstructuredGrid"/> from the file specified
+        /// at <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">The path to the unstructured grid.</param>
+        /// <param name="loadFlowLinksAndCells">
+        /// if set to <c>true</c> [load flow links and cells].
+        ///
+        /// <paramref name="loadFlowLinksAndCells"/> defaults to false.
+        /// </param>
+        /// <param name="callCreateCells">
+        /// if set to <c>true</c> and the grid is in UGrid convention then CreateCells will be called.
+        /// 
+        /// <paramref name="callCreateCells"/> defaults to false.
+        /// </param>
+        /// <returns>
+        /// The first grid stored in <paramref name="path"/>
+        /// </returns>
+        /// <remarks>
+        /// CreateCells will recalculate the cell centers using the kernel.
+        /// This will ensure the correct cell centers will be used for spatial
+        /// operations. This should be called for input grids that are used for
+        /// spatial operations. This SHOULD NOT be called for output grids.
+        /// CreateCells will reshuffle the indices. When this is called for output
+        /// grids, the data associated with cells will be incorrect, if the indices
+        /// are reshuffled.
+        /// </remarks>
+        public static UnstructuredGrid LoadFromFile(string path, 
+                                                    bool loadFlowLinksAndCells = false, 
+                                                    bool callCreateCells = false)
         {
             if (!File.Exists(path) || Path.GetFileName(path) == null)
             {
@@ -36,9 +65,9 @@ namespace DeltaShell.NGHS.IO.Grid
             switch (GetConvention(path))
             {
                 case GridApiDataSet.DataSetConventions.CONV_UGRID:
-                    using (var fmUGridAdaptor = new UGridToUnstructuredGridAdapter(path))
+                    using (var fmUGridAdapter = new UGridToUnstructuredGridAdapter(path))
                     {
-                        return fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
+                        return fmUGridAdapter.GetUnstructuredGridFromUGridMeshId(1, callCreateCells: callCreateCells);
                     }
                 case GridApiDataSet.DataSetConventions.CONV_OTHER:
                     return loadFlowLinksAndCells
