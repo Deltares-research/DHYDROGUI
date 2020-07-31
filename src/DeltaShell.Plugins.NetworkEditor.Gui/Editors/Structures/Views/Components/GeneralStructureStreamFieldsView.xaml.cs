@@ -10,30 +10,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
     {
         public static readonly DependencyProperty Upstream1Property = 
             DependencyProperty.Register(nameof(Upstream1), 
-                                        typeof(double), 
+                                        typeof(string), 
                                         typeof(GeneralStructureStreamFieldsView), 
-                                        new FrameworkPropertyMetadata(default(double),
+                                        new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public static readonly DependencyProperty Upstream2Property = 
             DependencyProperty.Register(nameof(Upstream2), 
-                                        typeof(double), 
+                                        typeof(string), 
                                         typeof(GeneralStructureStreamFieldsView), 
-                                        new FrameworkPropertyMetadata(default(double),
+                                        new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public static readonly DependencyProperty Downstream1Property = 
             DependencyProperty.Register(nameof(Downstream1), 
-                                        typeof(double), 
+                                        typeof(string), 
                                         typeof(GeneralStructureStreamFieldsView), 
-                                        new FrameworkPropertyMetadata(default(double),
+                                        new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public static readonly DependencyProperty Downstream2Property = 
             DependencyProperty.Register(nameof(Downstream2), 
-                                        typeof(double), 
+                                        typeof(string), 
                                         typeof(GeneralStructureStreamFieldsView), 
-                                        new FrameworkPropertyMetadata(default(double),
+                                        new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public GeneralStructureStreamFieldsView()
@@ -41,27 +41,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
             InitializeComponent();
         }
 
-        public double Upstream1
+        public string Upstream1
         {
-            get => (double) GetValue(Upstream1Property);
+            get => (string) GetValue(Upstream1Property);
             set => SetValue(Upstream1Property, value);
         }
 
-        public double Upstream2
+        public string Upstream2
         {
-            get => (double) GetValue(Upstream2Property);
+            get => (string) GetValue(Upstream2Property);
             set => SetValue(Upstream2Property, value);
         }
 
-        public double Downstream1
+        public string Downstream1
         {
-            get => (double) GetValue(Downstream1Property);
+            get => (string) GetValue(Downstream1Property);
             set => SetValue(Downstream1Property, value);
         }
 
-        public double Downstream2
+        public string Downstream2
         {
-            get => (double) GetValue(Downstream2Property);
+            get => (string) GetValue(Downstream2Property);
             set => SetValue(Downstream2Property, value);
         }
     }

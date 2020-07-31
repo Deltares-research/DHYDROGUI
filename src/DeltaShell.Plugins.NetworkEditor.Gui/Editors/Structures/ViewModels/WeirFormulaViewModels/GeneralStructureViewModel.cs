@@ -33,13 +33,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
 
         public override FormulaViewType FormulaViewType => FormulaViewType.GeneralStructure;
 
+        private static double? ToNullableValue(double value) =>
+            double.IsNaN(value) ? null : (double?) value;
+
         /// <summary>
         /// Gets or sets the Upstream1 width.
         /// </summary>
-        public double Upstream1Width
+        public double? Upstream1Width
         {
-            get => formula.WidthStructureLeftSide; 
-            set => formula.WidthStructureLeftSide = value;
+            get => ToNullableValue(formula.WidthStructureLeftSide); 
+            set => formula.WidthStructureLeftSide = value ?? double.NaN;
         }
 
         /// <summary>
@@ -54,10 +57,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <summary>
         /// Gets or sets the Upstream2 width.
         /// </summary>
-        public double Upstream2Width
+        public double? Upstream2Width
         {
-            get => formula.WidthLeftSideOfStructure; 
-            set => formula.WidthLeftSideOfStructure = value;
+            get => ToNullableValue(formula.WidthLeftSideOfStructure); 
+            set => formula.WidthLeftSideOfStructure = value ?? double.NaN;
         }
 
         /// <summary>
@@ -72,10 +75,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <summary>
         /// Gets or sets the Downstream1 width.
         /// </summary>
-        public double Downstream1Width
+        public double? Downstream1Width
         {
-            get => formula.WidthStructureRightSide; 
-            set => formula.WidthStructureRightSide = value;
+            get => ToNullableValue(formula.WidthStructureRightSide); 
+            set => formula.WidthStructureRightSide = value ?? double.NaN;
         }
 
         /// <summary>
@@ -90,10 +93,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <summary>
         /// Gets or sets the Downstream2 width.
         /// </summary>
-        public double Downstream2Width
+        public double? Downstream2Width
         {
-            get => formula.WidthRightSideOfStructure; 
-            set => formula.WidthRightSideOfStructure = value;
+            get => ToNullableValue(formula.WidthRightSideOfStructure); 
+            set => formula.WidthRightSideOfStructure = value ?? double.NaN;
         }
 
         /// <summary>

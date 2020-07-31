@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
              xmlns:weirFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.WeirFormulaViews"
+             xmlns:structureFeatureView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -12,6 +13,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/Editors/Structures/Views/StructureStyling.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <structureFeatureView:EmptyDoubleValueConverter x:Key="NullableValueConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -32,10 +34,10 @@
                                                                  Upstream2="{Binding Path=Upstream2Level}"
                                                                  Downstream1="{Binding Path=Downstream1Level}"
                                                                  Downstream2="{Binding Path=Downstream2Level}"/>
-                    <components:GeneralStructureStreamFieldsView Upstream1="{Binding Path=Upstream1Width}"
-                                                                 Upstream2="{Binding Path=Upstream2Width}"
-                                                                 Downstream1="{Binding Path=Downstream1Width}"
-                                                                 Downstream2="{Binding Path=Downstream2Width}"/>
+                    <components:GeneralStructureStreamFieldsView Upstream1="{Binding Path=Upstream1Width, Converter={StaticResource NullableValueConverter}}"
+                                                                 Upstream2="{Binding Path=Upstream2Width, Converter={StaticResource NullableValueConverter}}"
+                                                                 Downstream1="{Binding Path=Downstream1Width, Converter={StaticResource NullableValueConverter}}"
+                                                                 Downstream2="{Binding Path=Downstream2Width, Converter={StaticResource NullableValueConverter}}"/>
                 </StackPanel>
             </Grid>
         </GroupBox>
