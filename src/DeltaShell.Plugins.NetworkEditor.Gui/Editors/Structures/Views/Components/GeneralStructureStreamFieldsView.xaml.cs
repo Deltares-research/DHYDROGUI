@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components
 {
@@ -20,9 +8,61 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
     /// </summary>
     public partial class GeneralStructureStreamFieldsView : UserControl
     {
+        public static readonly DependencyProperty Upstream1Property = 
+            DependencyProperty.Register(nameof(Upstream1), 
+                                        typeof(double), 
+                                        typeof(GeneralStructureStreamFieldsView), 
+                                        new FrameworkPropertyMetadata(default(double),
+                                                                      FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public static readonly DependencyProperty Upstream2Property = 
+            DependencyProperty.Register(nameof(Upstream2), 
+                                        typeof(double), 
+                                        typeof(GeneralStructureStreamFieldsView), 
+                                        new FrameworkPropertyMetadata(default(double),
+                                                                      FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public static readonly DependencyProperty Downstream1Property = 
+            DependencyProperty.Register(nameof(Downstream1), 
+                                        typeof(double), 
+                                        typeof(GeneralStructureStreamFieldsView), 
+                                        new FrameworkPropertyMetadata(default(double),
+                                                                      FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public static readonly DependencyProperty Downstream2Property = 
+            DependencyProperty.Register(nameof(Downstream2), 
+                                        typeof(double), 
+                                        typeof(GeneralStructureStreamFieldsView), 
+                                        new FrameworkPropertyMetadata(default(double),
+                                                                      FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
         public GeneralStructureStreamFieldsView()
         {
             InitializeComponent();
+        }
+
+        public double Upstream1
+        {
+            get => (double) GetValue(Upstream1Property);
+            set => SetValue(Upstream1Property, value);
+        }
+
+        public double Upstream2
+        {
+            get => (double) GetValue(Upstream2Property);
+            set => SetValue(Upstream2Property, value);
+        }
+
+        public double Downstream1
+        {
+            get => (double) GetValue(Downstream1Property);
+            set => SetValue(Downstream1Property, value);
+        }
+
+        public double Downstream2
+        {
+            get => (double) GetValue(Downstream2Property);
+            set => SetValue(Downstream2Property, value);
         }
     }
 }
