@@ -36,6 +36,7 @@
                                                             Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
             <components:LabeledButton Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
                                       ButtonLabel="Time Series"
+                                      ButtonCommand="{Binding ElementName=LabeledTimeSeriesViewControl, Path=TimeSeriesCommand}"
                                       Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
                                                            Path=IsTimeSeries, 
                                                            Converter={StaticResource BooleanToVisibilityConverter}}"/>

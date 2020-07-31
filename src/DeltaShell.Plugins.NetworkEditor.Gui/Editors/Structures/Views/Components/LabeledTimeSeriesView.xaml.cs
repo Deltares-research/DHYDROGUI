@@ -1,6 +1,12 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
+using System.Windows.Input;
+using DelftTools.Controls.Wpf.Commands;
+using DelftTools.Functions;
 using DeltaShell.NGHS.Common.Gui.Components;
+using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
+using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components
 {
@@ -38,6 +44,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
+        /// The time series property
+        /// </summary>
+        public static readonly DependencyProperty TimeSeriesProperty = 
+            DependencyProperty.Register(nameof(TimeSeries), 
+                                        typeof(TimeSeries), 
+                                        typeof(LabeledTimeSeriesView), 
+                                        new PropertyMetadata(default(TimeSeries)));
+
+        /// <summary>
         /// The is time series property
         /// </summary>
         public static readonly DependencyProperty IsTimeSeriesProperty = 
@@ -52,6 +67,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         public LabeledTimeSeriesView()
         {
             InitializeComponent();
+
+            TimeSeriesCommand = new RelayCommand((_) => OnTimeSeriesClick());
         }
         
         /// <summary>
@@ -73,6 +90,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         }
 
         /// <summary>
+        /// Gets or sets the time series.
+        /// </summary>
+        public TimeSeries TimeSeries
+        {
+            get => (TimeSeries) GetValue(TimeSeriesProperty);
+            set => SetValue(TimeSeriesProperty, value);
+        }
+
+
+        /// <summary>
         /// Gets or sets the unit of this <see cref="LabeledValueBox"/>.
         /// </summary>
         public string Unit
@@ -90,5 +117,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
             set => SetValue(IsTimeSeriesProperty, value);
         }
 
+        /// <summary>
+        /// Gets the open time series editor command.
+        /// </summary>
+        public ICommand TimeSeriesCommand { get; }
+
+        private void OnTimeSeriesClick()
+        {
+            var dialogData = (TimeSeries) TimeSeries.Clone(true);
+            var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = $@"{Label} time series",
+                ColumnNames = new[]
+                {
+                    "Date time",
+                    $"{Label} [{Unit}]"
+                },
+                ChartViewOption = ChartViewOptions.AllSeries,
+                Data = dialogData,
+                ShowOnlyFirstWordInColumnHeadersOnLoad = false
+            };
+
+            if (DialogResult.OK != editFunctionDialog.ShowDialog())
+            {
+                return;
+            }
+
+            TimeSeries.Time.Clear();
+            TimeSeries.Components[0].Clear();
+
+            TimeSeries.Time.SetValues(dialogData.Time.Values);
+            TimeSeries.Components[0].SetValues(dialogData.Components[0].Values);
+        }
     }
 }
