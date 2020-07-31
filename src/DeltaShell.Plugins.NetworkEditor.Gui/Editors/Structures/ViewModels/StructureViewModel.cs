@@ -100,7 +100,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
                 case FormulaViewType.SimpleGate:
                     return new GatedWeirFormula(true);
                 case FormulaViewType.GeneralStructure:
-                    return new GeneralStructureWeirFormula();
+                    return new GeneralStructureWeirFormula()
+                    {
+                        BedLevelStructureCentre = weir.CrestLevel,
+                        WidthStructureCentre = weir.CrestWidth,
+                        WidthStructureLeftSide = double.NaN,
+                        WidthStructureRightSide = double.NaN,
+                        WidthLeftSideOfStructure = double.NaN,
+                        WidthRightSideOfStructure = double.NaN
+                    };
                 default:
                     throw new System.ArgumentOutOfRangeException(nameof(value));
             }
