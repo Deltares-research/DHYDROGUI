@@ -404,6 +404,10 @@
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
+      <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
+      <Name>DeltaShell.NGHS.IO.TestUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
       <Project>{4A0F7700-AA64-463F-A602-8C15E3886EC5}</Project>
       <Name>DeltaShell.NGHS.TestUtils</Name>
