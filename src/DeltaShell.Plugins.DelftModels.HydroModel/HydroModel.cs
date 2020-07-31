@@ -59,12 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private ICompositeActivity currentWorkflow;
         private CompositeHydroModelWorkFlowData currentWorkFlowData;
-
-        /// <summary>
-        /// Func for retrieving the current working directory set in the framework.
-        /// </summary>
-        public virtual Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
-
+        
         public virtual bool ReadOnly { get; set; }
 
         /// <summary>
@@ -118,6 +113,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 activity.Dispose();
             }
         }
+
+        #endregion
+
+        #region Working Directory
+        
+        /// <summary>
+        /// Func for retrieving the current working directory set in the framework.
+        /// </summary>
+        public virtual Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
+
+        /// <summary>
+        /// Property for retrieving the current working directory set in the framework
+        /// and adding subfolder with model name.
+        /// </summary>
+        public virtual string WorkingDirectoryPath => Path.Combine(WorkingDirectoryPathFunc(), Name);
 
         #endregion
 
@@ -868,16 +878,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        /// <summary>
-        /// Property for retrieving the current working directory set in the framework
-        /// and adding subfolder with model name.
-        /// </summary>
-        public virtual string WorkingDirectoryPath
-        {
-            get => Path.Combine(WorkingDirectoryPathFunc(), Name);
-            set => throw new NotSupportedException("The working directory for running the model is not set");
-        }
-        
         public virtual ValidationReport Validate()
         {
             return new HydroModelValidator().Validate(this);

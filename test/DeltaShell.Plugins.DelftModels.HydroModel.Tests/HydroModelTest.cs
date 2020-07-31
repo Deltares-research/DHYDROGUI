@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
@@ -9,6 +10,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -487,6 +489,32 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.That(((IDimrModel)firstDummyActivity).RunsInIntegratedModel, Is.False);
                 Assert.That(((IDimrModel)secondDummyActivity).RunsInIntegratedModel, Is.True);
             }
+        }
+
+        [Test]
+        public void WorkingDirectoryPath_ShouldReturnCombinationOfInvokedWorkingDirectoryPathFuncAndModelName()
+        {
+            // Arrange
+            var hydroModel = new HydroModel
+            {
+                Name = "Model",
+                WorkingDirectoryPathFunc = () => "TestWorkingDirectory"
+            };
+
+            // Act, Assert
+            Assert.AreEqual(Path.Combine(hydroModel.WorkingDirectoryPathFunc(),
+                                         hydroModel.Name), hydroModel.WorkingDirectoryPath);
+        }
+
+        [Test]
+        public void WorkingDirectoryPathFunc_ShouldReturnDefaultDeltaShellWorkingDirectory()
+        {
+            // Arrange
+            var hydroModel = new HydroModel();
+
+            // Act, Assert
+            Assert.AreEqual(DefaultModelSettings.DefaultDeltaShellWorkingDirectory, 
+                            hydroModel.WorkingDirectoryPathFunc());
         }
 
         private class TimeDepModel : TimeDependentModelBase
