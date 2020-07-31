@@ -198,6 +198,7 @@
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
     <Compile Include="Editors\Structures\Enums\FormulaViewType.cs" />
     <Compile Include="Editors\Structures\ViewModels\StructureViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GatedWeirViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\SimpleWeirViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\WeirPropertiesViewModel.cs" />
