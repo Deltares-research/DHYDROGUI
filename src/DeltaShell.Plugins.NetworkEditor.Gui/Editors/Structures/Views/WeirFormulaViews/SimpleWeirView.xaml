@@ -23,7 +23,8 @@
                     <ColumnDefinition Width="{StaticResource RightPane}"/>
                 </Grid.ColumnDefinitions>
 
-                <weirFormulaViews:WeirPropertiesView Grid.Column="0"/>
+                <weirFormulaViews:WeirPropertiesView Grid.Column="0"
+                                                     DataContext="{Binding WeirPropertiesViewModel}"/>
             </Grid>
         </GroupBox>
 
@@ -34,7 +35,8 @@
                     <ColumnDefinition Width="{StaticResource RightPane}"/>
                 </Grid.ColumnDefinitions>
                 
-                <components:StructuresValueBox Label="Contraction coefficient"/>
+                <components:StructuresValueBox Label="Contraction coefficient"
+                                               ValueContent="{Binding Path=ContractionCoefficient}"/>
             </Grid>
         </GroupBox>
     </StackPanel>
