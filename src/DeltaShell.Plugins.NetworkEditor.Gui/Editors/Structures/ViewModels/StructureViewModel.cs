@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -12,9 +13,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
     /// <see cref="StructureViewModel"/> defines the view model for the
     /// <see cref="Views.StructureView"/>.
     /// </summary>
-    public sealed class StructureViewModel : INotifyPropertyChanged
+    public sealed class StructureViewModel : INotifyPropertyChanged, IDisposable
     {
         private readonly IWeir weir;
+        private readonly WeirPropertiesViewModel weirPropertiesViewModel;
 
         /// <summary>
         /// Creates a new <see cref="StructureViewModel"/>.
@@ -28,9 +30,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
             Ensure.NotNull(weir, nameof(weir));
             this.weir = weir;
 
-            var weirProperties = new WeirPropertiesViewModel(weir);
-            WeirViewModel = ConstructWeirViewModel(weir.WeirFormula, weirProperties);
-
+            weirPropertiesViewModel = new WeirPropertiesViewModel(weir);
+            WeirViewModel = ConstructWeirViewModel(weir.WeirFormula, weirPropertiesViewModel);
         }
 
         private static WeirViewModel ConstructWeirViewModel(IWeirFormula weirFormula,
@@ -120,5 +121,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <remarks>
+        /// Note that this class is sealed, and no un-managed resources need to be
+        /// released, as such we do not need to use an isDisposing approach.
+        /// </remarks>
+        public void Dispose()
+        {
+            if (hasDisposed)
+            {
+                return;
+            }
+
+            weirPropertiesViewModel.Dispose();
+            hasDisposed = true;
+        }
+
+        private bool hasDisposed = false;
     }
 }
