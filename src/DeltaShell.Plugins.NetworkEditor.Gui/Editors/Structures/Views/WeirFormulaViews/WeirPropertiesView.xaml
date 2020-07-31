@@ -9,8 +9,12 @@
     <StackPanel>
         <components:LabeledTimeSeriesHeaderView/>
         <components:LabeledTimeSeriesView Label="Crest level"
-                                          Unit ="m AD"/>
+                                          SingleValueContent="{Binding CrestLevel}"
+                                          TimeSeries="{Binding CrestLevelTimeSeries}"
+                                          Unit ="m AD"
+                                          IsTimeSeries="{Binding UseCrestLevelTimeSeries}"/>
         <components:StructuresValueBox Label="Crest width"
+                                       ValueContent="{Binding CrestWidth}"
                                        Unit="m"/>
     </StackPanel>
 </UserControl>
