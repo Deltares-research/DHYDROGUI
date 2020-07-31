@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="weir"/> is <c>null</c>.
         /// </exception>
-        public StructureViewModel(IWeir weir)
+        public StructureViewModel(Weir2D weir)
         {
             Ensure.NotNull(weir, nameof(weir));
             this.weir = weir;

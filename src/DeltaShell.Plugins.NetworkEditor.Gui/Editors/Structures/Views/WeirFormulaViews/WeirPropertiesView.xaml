@@ -13,7 +13,8 @@
 
     <StackPanel>
         <components:LabeledTimeSeriesHeaderView/>
-        <components:LabeledTimeSeriesView Label="Crest level"
+        <components:LabeledTimeSeriesView StructureName="{Binding StructureName}"
+                                          Label="Crest level"
                                           SingleValueContent="{Binding CrestLevel}"
                                           TimeSeries="{Binding CrestLevelTimeSeries}"
                                           Unit ="m AD"

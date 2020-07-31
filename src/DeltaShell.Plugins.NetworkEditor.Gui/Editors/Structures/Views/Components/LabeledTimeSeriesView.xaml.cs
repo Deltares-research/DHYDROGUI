@@ -16,6 +16,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
     public partial class LabeledTimeSeriesView : UserControl
     {
         /// <summary>
+        /// The structure name property
+        /// </summary>
+        public static readonly DependencyProperty StructureNameProperty = 
+            DependencyProperty.Register(nameof(StructureName), 
+                                        typeof(string), 
+                                        typeof(LabeledTimeSeriesView), 
+                                        new PropertyMetadata(default(string)));
+
+        /// <summary>
         /// The label property
         /// </summary>
         public static readonly DependencyProperty LabelProperty = 
@@ -59,7 +68,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
             DependencyProperty.Register(nameof(IsTimeSeries),
                                         typeof(bool), 
                                         typeof(LabeledTimeSeriesView), 
-                                        new PropertyMetadata(default(bool)));
+                                        new FrameworkPropertyMetadata(default(bool),
+                                                                      FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
         /// Creates a new <see cref="LabeledTimeSeriesView"/>.
@@ -68,6 +78,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         {
             TimeSeriesCommand = new RelayCommand((_) => OnTimeSeriesClick());
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the structure.
+        /// </summary>
+        public string StructureName
+        {
+            get => (string) GetValue(StructureNameProperty);
+            set => SetValue(StructureNameProperty, value);
         }
         
         /// <summary>
@@ -126,7 +145,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
             var dialogData = (TimeSeries) TimeSeries.Clone(true);
             var editFunctionDialog = new EditFunctionDialog
             {
-                Text = $@"{Label} time series",
+                Text = $@"{Label} time series for {StructureName}.",
                 ColumnNames = new[]
                 {
                     "Date time",

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
@@ -9,9 +11,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// <see cref="WeirPropertiesViewModel"/> provides the view model of the
     /// <see cref="Views.WeirFormulaViews.WeirPropertiesView"/>.
     /// </summary>
-    public sealed class WeirPropertiesViewModel
+    public sealed class WeirPropertiesViewModel : INotifyPropertyChanged, IDisposable
     {
-        private readonly IWeir weir;
+        private readonly IReadOnlyDictionary<string, string> PropertyMapping =
+            new Dictionary<string, string>()
+            {
+                { nameof(Weir2D.CrestLevel), nameof(CrestLevel) },
+                { nameof(Weir2D.UseCrestLevelTimeSeries), nameof(UseCrestLevelTimeSeries) },
+                { nameof(Weir2D.CrestLevelTimeSeries), nameof(CrestLevelTimeSeries) },
+                { nameof(Weir2D.CrestWidth), nameof(CrestWidth) },
+                { nameof(Weir2D.Name), nameof(StructureName) },
+            };
+
+        private readonly Weir2D weir;
 
         /// <summary>
         /// Creates a new <see cref="WeirPropertiesViewModel"/>.
@@ -20,10 +32,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="weir"/> is <c>null</c>.
         /// </exception>
-        public WeirPropertiesViewModel(IWeir weir)
+        public WeirPropertiesViewModel(Weir2D weir)
         {
             Ensure.NotNull(weir, nameof(weir));
             this.weir = weir;
+
+            Subscribe();
         }
 
         /// <summary>
@@ -58,5 +72,79 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
             get => !double.IsNaN(weir.CrestWidth) ? (double?) weir.CrestWidth : null;
             set => weir.CrestWidth = value ?? double.NaN;
         }
+
+        /// <summary>
+        /// Gets or sets the name of the structure.
+        /// </summary>
+        public string StructureName
+        {
+            get => weir.Name;
+            set => weir.Name = value;
+        }
+
+        private void Subscribe()
+        {
+            weir.PropertyChanged += PropagatePropertyChanged;
+        }
+
+        /// <summary>
+        /// Propagates the property changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="PropertyChangedEventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This leverages the PostSharp Entity properties of the <see cref="Weir2D"/>. Unfortunately,
+        /// their exist no proper way to pass messages around within DeltaShell / D-HYDRO. Instead we
+        /// abuse callbacks. This means that the only way to determine whether the underlying domain is
+        /// updated, is by adding callbacks to the property changed events. Instead of creating a significant
+        /// amount of boilerplate, we propagate the property changed events here. Ideally however, this type
+        /// of synchronisation would not be necessary, and instead we would use messages to achieve a cleaner
+        /// architecture.
+        /// </remarks>
+        private void PropagatePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!Equals(sender, weir) || !IsObservedProperty(e.PropertyName))
+            {
+                return;
+            }
+
+            OnPropertyChanged(PropertyMapping[e.PropertyName]);
+        }
+
+        private bool IsObservedProperty(string propertyName) =>
+            PropertyMapping.ContainsKey(propertyName);
+
+        private void Unsubscribe()
+        {
+            weir.PropertyChanged -= PropagatePropertyChanged;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <remarks>
+        /// Note that this class is sealed, and no un-managed resources need to be
+        /// released, as such we do not need to use an isDisposing approach.
+        /// </remarks>
+        public void Dispose()
+        {
+            if (hasDisposed)
+            {
+                return;
+            }
+
+            Unsubscribe();
+
+            hasDisposed = true;
+        }
+
+        private bool hasDisposed = false;
     }
 }
