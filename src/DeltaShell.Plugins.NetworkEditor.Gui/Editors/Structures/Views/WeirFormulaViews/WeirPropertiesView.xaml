@@ -4,8 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
+             xmlns:structureFeatureView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <structureFeatureView:EmptyDoubleValueConverter x:Key="NullableValueConverter" />
+    </UserControl.Resources>
+
     <StackPanel>
         <components:LabeledTimeSeriesHeaderView/>
         <components:LabeledTimeSeriesView Label="Crest level"
@@ -14,7 +19,7 @@
                                           Unit ="m AD"
                                           IsTimeSeries="{Binding UseCrestLevelTimeSeries}"/>
         <components:StructuresValueBox Label="Crest width"
-                                       ValueContent="{Binding CrestWidth}"
+                                       ValueContent="{Binding CrestWidth, Converter={StaticResource NullableValueConverter}}"
                                        Unit="m"/>
     </StackPanel>
 </UserControl>

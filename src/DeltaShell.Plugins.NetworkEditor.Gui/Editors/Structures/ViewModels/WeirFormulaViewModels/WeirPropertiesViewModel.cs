@@ -1,4 +1,5 @@
-﻿using DelftTools.Functions;
+﻿using System;
+using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Guards;
 
@@ -52,10 +53,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <summary>
         /// Gets or sets the width of the crest.
         /// </summary>
-        public double CrestWidth
+        public double? CrestWidth
         {
-            get => weir.CrestWidth;
-            set => weir.CrestWidth = value;
+            get => !double.IsNaN(weir.CrestWidth) ? (double?) weir.CrestWidth : null;
+            set => weir.CrestWidth = value ?? double.NaN;
         }
     }
 }
