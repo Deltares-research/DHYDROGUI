@@ -2,11 +2,62 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels"
              xmlns:weirFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.WeirFormulaViews"
+             xmlns:converters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:enums="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Enums"
+             xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/Editors/Structures/Views/StructureStyling.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type viewModels:SimpleWeirViewModel}">
+                <weirFormulaViews:SimpleWeirView DataContext="{Binding}" />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:GatedWeirViewModel}">
+                <weirFormulaViews:GatedWeirView DataContext="{Binding}" />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:GeneralStructureViewModel}">
+                <weirFormulaViews:GeneralStructureView DataContext="{Binding}" />
+            </DataTemplate>
+         
+            <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
+         
+            <DataTemplate x:Key="EnumLabeledComboBoxTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+            </DataTemplate>
+         
+            <ObjectDataProvider x:Key="FormulaViewTypes"
+                                MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="enums:FormulaViewType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <StackPanel Margin="10">
-        <weirFormulaViews:GeneralStructureView/>
+        <GroupBox Header="Structure Type" Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{StaticResource LeftPane}"/>
+                    <ColumnDefinition Width="{StaticResource RightPane}"/>
+                </Grid.ColumnDefinitions>
+
+                <components:StructuresComboBox Grid.Column="0"  
+                                               Label="Structure type:"
+                                               SelectedItem="{Binding Path=FormulaViewType}"
+                                               ItemsSource="{Binding Source={StaticResource FormulaViewTypes}}"
+                                               ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
+                </Grid>
+        </GroupBox>
+
+        <ContentControl Content="{Binding Path=WeirViewModel}" />
     </StackPanel>
 </UserControl>
