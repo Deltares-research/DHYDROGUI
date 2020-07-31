@@ -24,7 +24,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
             DependencyProperty.Register(nameof(ValueContentFirst), 
                                         typeof(string), 
                                         typeof(GeneralStructureCoefficientView), 
-                                        new PropertyMetadata(default(string)));
+                                        new FrameworkPropertyMetadata(default(string),
+                                                                      FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
         /// The value content second property
@@ -33,7 +34,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
             DependencyProperty.Register(nameof(ValueContentSecond), 
                                         typeof(string), 
                                         typeof(GeneralStructureCoefficientView), 
-                                        new PropertyMetadata(default(string)));
+                                        new FrameworkPropertyMetadata(default(string),
+                                                                      FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
         /// Creates a new <see cref="GeneralStructureCoefficientView"/>.
