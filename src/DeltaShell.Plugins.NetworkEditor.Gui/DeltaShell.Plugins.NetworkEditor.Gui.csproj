@@ -204,6 +204,9 @@
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\SimpleWeirViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\WeirPropertiesViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\WeirViewModel.cs" />
+    <Compile Include="Editors\Structures\Views\Components\GateOpeningHeightCalculatedFieldView.xaml.cs">
+      <DependentUpon>GateOpeningHeightCalculatedFieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Structures\Views\Components\GeneralStructureCoefficientHeaderView.xaml.cs">
       <DependentUpon>GeneralStructureCoefficientHeaderView.xaml</DependentUpon>
     </Compile>
@@ -1005,6 +1008,10 @@
     <Resource Include="Resources\cut.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\Structures\Views\Components\GateOpeningHeightCalculatedFieldView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Editors\Structures\Views\Components\GeneralStructureCoefficientHeaderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
