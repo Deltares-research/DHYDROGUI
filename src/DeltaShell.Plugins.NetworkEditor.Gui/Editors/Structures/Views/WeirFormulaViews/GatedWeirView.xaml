@@ -23,10 +23,11 @@
                     <ColumnDefinition Width="{StaticResource RightPane}"/>
                 </Grid.ColumnDefinitions>
 
-                <weirFormulaViews:WeirPropertiesView Grid.Column="0"/>
+                <weirFormulaViews:WeirPropertiesView Grid.Column="0"
+                                                     DataContext="{Binding WeirPropertiesViewModel}"/>
             </Grid>
         </GroupBox>
 
-        <weirFormulaViews:GatePropertiesView/>
+        <weirFormulaViews:GatePropertiesView DataContext="{Binding GatePropertiesViewModel}"/>
     </StackPanel>
 </UserControl>
