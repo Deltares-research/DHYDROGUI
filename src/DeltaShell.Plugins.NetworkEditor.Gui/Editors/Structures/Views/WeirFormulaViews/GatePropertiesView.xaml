@@ -48,10 +48,10 @@
                 <components:StructuresValueBox Label="Gate height"
                                                ValueContent="{Binding GateHeight}"
                                                Unit="m"/>
-                <components:StructuresValueBox Label="Gate opening height"
-                                               ValueContent="{Binding GateOpeningHeight}"
-                                               Unit="m" 
-                                               IsEnabled="False"/>
+                <components:GateOpeningHeightCalculatedFieldView CrestLevel="{Binding Path=WeirPropertiesViewModel.CrestLevel}"
+                                                                    GateLowerEdgeLevel="{Binding Path=GateLowerEdgeLevel}"
+                                                                    IsUsingCrestLevelTimeSeries="{Binding Path=WeirPropertiesViewModel.UseCrestLevelTimeSeries}"
+                                                                    IsUsingGateLowerEdgeLevelTimeSeries="{Binding Path=UseGateLowerEdgeLevelTimeSeries}"/>
                 <components:LabeledTimeSeriesView StructureName="{Binding Path=WeirPropertiesViewModel.StructureName}"
                                                   Label="Horizontal opening width"
                                                   SingleValueContent="{Binding HorizontalOpeningWidth}"
