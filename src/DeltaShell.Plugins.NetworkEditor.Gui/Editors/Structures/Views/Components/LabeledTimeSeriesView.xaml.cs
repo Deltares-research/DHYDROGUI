@@ -66,9 +66,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         /// </summary>
         public LabeledTimeSeriesView()
         {
-            InitializeComponent();
-
             TimeSeriesCommand = new RelayCommand((_) => OnTimeSeriesClick());
+            InitializeComponent();
         }
         
         /// <summary>
