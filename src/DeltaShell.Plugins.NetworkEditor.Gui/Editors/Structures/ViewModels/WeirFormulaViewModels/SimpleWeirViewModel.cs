@@ -1,0 +1,43 @@
+﻿using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Enums;
+
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
+{
+    /// <summary>
+    /// <see cref="SimpleWeirViewModel"/> defines the view model for the
+    /// <see cref="Views.WeirFormulaViews.SimpleWeirView"/>.
+    /// </summary>
+    /// <seealso cref="WeirViewModel" />
+    public sealed class SimpleWeirViewModel : WeirViewModel
+    {
+        private readonly SimpleWeirFormula formula;
+
+        /// <summary>
+        /// Creates a new <see cref="SimpleWeirViewModel"/>.
+        /// </summary>
+        /// <param name="formula">The formula.</param>
+        /// <param name="weirPropertiesViewModel">The weir properties view model.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        public SimpleWeirViewModel(SimpleWeirFormula formula, 
+                                   WeirPropertiesViewModel weirPropertiesViewModel) : 
+            base(weirPropertiesViewModel)
+        {
+            Ensure.NotNull(formula, nameof(formula));
+            this.formula = formula;
+        }
+
+        /// <summary>
+        /// Gets or sets the contraction coefficient.
+        /// </summary>
+        public double ContractionCoefficient
+        {
+            get => formula.LateralContraction;
+            set => formula.LateralContraction = value;
+        }
+
+        public override FormulaViewType FormulaViewType => FormulaViewType.SimpleWeir;
+    }
+}

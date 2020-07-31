@@ -199,6 +199,7 @@
     <Compile Include="Editors\Structures\Enums\FormulaViewType.cs" />
     <Compile Include="Editors\Structures\ViewModels\StructureViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\SimpleWeirViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\WeirPropertiesViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\WeirViewModel.cs" />
     <Compile Include="Editors\Structures\Views\Components\GeneralStructureCoefficientHeaderView.xaml.cs">
