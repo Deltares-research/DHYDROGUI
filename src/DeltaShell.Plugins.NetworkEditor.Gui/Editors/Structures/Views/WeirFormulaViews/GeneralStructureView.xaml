@@ -23,17 +23,24 @@
                     <ColumnDefinition Width="{StaticResource RightPane}"/>
                 </Grid.ColumnDefinitions>
             
-                <weirFormulaViews:WeirPropertiesView Grid.Column="0"/>
+                <weirFormulaViews:WeirPropertiesView Grid.Column="0"
+                                                     DataContext="{Binding WeirPropertiesViewModel}"/>
             
                 <StackPanel Grid.Column="1">
-                    <components:GeneralStructureStreamFieldsHeaderView></components:GeneralStructureStreamFieldsHeaderView>
-                    <components:GeneralStructureStreamFieldsView/>
-                    <components:GeneralStructureStreamFieldsView/>
+                    <components:GeneralStructureStreamFieldsHeaderView/>
+                    <components:GeneralStructureStreamFieldsView Upstream1="{Binding Path=Upstream1Level}"
+                                                                 Upstream2="{Binding Path=Upstream2Level}"
+                                                                 Downstream1="{Binding Path=Downstream1Level}"
+                                                                 Downstream2="{Binding Path=Downstream2Level}"/>
+                    <components:GeneralStructureStreamFieldsView Upstream1="{Binding Path=Upstream1Width}"
+                                                                 Upstream2="{Binding Path=Upstream2Width}"
+                                                                 Downstream1="{Binding Path=Downstream1Width}"
+                                                                 Downstream2="{Binding Path=Downstream2Width}"/>
                 </StackPanel>
             </Grid>
         </GroupBox>
 
-        <weirFormulaViews:GatePropertiesView/>
+        <weirFormulaViews:GatePropertiesView DataContext="{Binding GatePropertiesViewModel}"/>
 
         <GroupBox Header="Coefficients">
             <Grid>
@@ -44,11 +51,21 @@
            
                 <StackPanel Grid.Column="0">
                     <components:GeneralStructureCoefficientHeaderView/>
-                    <components:GeneralStructureCoefficientView Label="Free gate flow"/>
-                    <components:GeneralStructureCoefficientView Label="Drowned gate flow"/>
-                    <components:GeneralStructureCoefficientView Label="Free weir flow"/>
-                    <components:GeneralStructureCoefficientView Label="Drowned weir flow"/>
-                    <components:GeneralStructureCoefficientView Label="Contraction coefficient"/>
+                    <components:GeneralStructureCoefficientView Label="Free gate flow"
+                                                                ValueContentFirst="{Binding FreeGateFlowPositive}"
+                                                                ValueContentSecond="{Binding FreeGateFlowNegative}"/>
+                    <components:GeneralStructureCoefficientView Label="Drowned gate flow"
+                                                                ValueContentFirst="{Binding DrownedGateFlowPositive}"
+                                                                ValueContentSecond="{Binding DrownedGateFlowNegative}"/>
+                    <components:GeneralStructureCoefficientView Label="Free weir flow"
+                                                                ValueContentFirst="{Binding FreeWeirFlowPositive}"
+                                                                ValueContentSecond="{Binding FreeWeirFlowNegative}"/>
+                    <components:GeneralStructureCoefficientView Label="Drowned weir flow"
+                                                                ValueContentFirst="{Binding DrownedWeirFlowPositive}"
+                                                                ValueContentSecond="{Binding DrownedWeirFlowNegative}"/>
+                    <components:GeneralStructureCoefficientView Label="Contraction coefficient"
+                                                                ValueContentFirst="{Binding ContractionCoefficientPositive}"
+                                                                ValueContentSecond="{Binding ContractionCoefficientNegative}"/>
                 </StackPanel>
             </Grid>
         </GroupBox>
@@ -61,7 +78,8 @@
                 </Grid.ColumnDefinitions>
             
                 <StackPanel Grid.Column="0">
-                    <components:StructuresValueBox Label="Extra resistance"/>
+                    <components:StructuresValueBox Label="Extra resistance"
+                                                   ValueContent="{Binding Path=ExtraResistance}"/>
                 </StackPanel>
             </Grid>
         </GroupBox>
