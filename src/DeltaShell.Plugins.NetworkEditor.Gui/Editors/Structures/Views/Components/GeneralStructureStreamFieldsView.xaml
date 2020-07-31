@@ -15,8 +15,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Style="{StaticResource GridStyle}"
-          Grid.Column="0">
+    <Grid Style="{StaticResource GridStyle}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{StaticResource ControlLength}" />
             <ColumnDefinition Width="{StaticResource ControlLength}" />
