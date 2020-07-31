@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using NUnit.Framework;
@@ -535,6 +536,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             readFunc.VerifyAllExpectations();
 
             Assert.That(result, Is.EqualTo(null), "Expected returned model to be null:");
+        }
+
+        [Test]
+        public void ImportItem_ShouldSetWorkingDirectoryPathFunInImportedHydroModel()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string dimrFilePathInTemp = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(Path.Combine("FileReader", "dimr.xml"));
+                const string applicationWorkingDirectory = "TestWorkingDirectory";
+
+                var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>(),
+                                                           () => applicationWorkingDirectory);
+
+                // Act
+                object importedModel = importer.ImportItem(dimrFilePathInTemp, null);
+
+                // Assert
+                Assert.AreEqual(applicationWorkingDirectory, ((HydroModel)importedModel).WorkingDirectoryPathFunc());
+            }
         }
 
         #endregion
