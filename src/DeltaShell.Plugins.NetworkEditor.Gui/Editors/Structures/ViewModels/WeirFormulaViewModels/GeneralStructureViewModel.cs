@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
             Ensure.NotNull(formula, nameof(formula));
 
             this.formula = formula;
-            GatePropertiesViewModel = new GatePropertiesViewModel(formula, false);
+            GatePropertiesViewModel = new GatePropertiesViewModel(formula, weirPropertiesViewModel, false);
         }
 
         public override FormulaViewType FormulaViewType => FormulaViewType.GeneralStructure;

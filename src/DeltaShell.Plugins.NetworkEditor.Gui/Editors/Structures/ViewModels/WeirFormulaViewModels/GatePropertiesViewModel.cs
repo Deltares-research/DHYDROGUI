@@ -17,18 +17,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// Creates a new <see cref="GatePropertiesViewModel"/>.
         /// </summary>
         /// <param name="formula">The formula.</param>
+        /// <param name="weirPropertiesViewModel">The weir properties view model.</param>
         /// <param name="canChooseGateOpeningDirection">
         /// if set to <c>true</c> then the gate opening direction can be set.
         /// </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="formula"/> is <c>null</c>.
+        /// Thrown when <paramref name="formula"/> or
+        /// <paramref name="weirPropertiesViewModel"/> is <c>null</c>.
         /// </exception>
         public GatePropertiesViewModel(IGatedWeirFormula formula,
+                                       WeirPropertiesViewModel weirPropertiesViewModel,
                                        bool canChooseGateOpeningDirection)
         {
             Ensure.NotNull(formula, nameof(formula));
+            Ensure.NotNull(weirPropertiesViewModel, nameof(weirPropertiesViewModel));
 
             this.formula = formula;
+            WeirPropertiesViewModel = weirPropertiesViewModel;
             CanChooseGateOpeningDirection = canChooseGateOpeningDirection;
         }
 
@@ -104,6 +109,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
             get => formula.HorizontalDoorOpeningDirection;
             set => formula.HorizontalDoorOpeningDirection = value;
         }
+
+        /// <summary>
+        /// Gets the weir properties view model.
+        /// </summary>
+        public WeirPropertiesViewModel WeirPropertiesViewModel { get; }
 
         /// <summary>
         /// Gets a value indicating whether the gate opening direction can be

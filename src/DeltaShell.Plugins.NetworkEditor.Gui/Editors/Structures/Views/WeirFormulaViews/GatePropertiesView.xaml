@@ -39,7 +39,8 @@
 
             <StackPanel Grid.Column="0">
                 <components:LabeledTimeSeriesHeaderView/>
-                <components:LabeledTimeSeriesView Label="Gate lower edge level"
+                <components:LabeledTimeSeriesView StructureName="{Binding Path=WeirPropertiesViewModel.StructureName}"
+                                                  Label="Gate lower edge level"
                                                   SingleValueContent="{Binding GateLowerEdgeLevel}"
                                                   TimeSeries="{Binding GateLowerEdgeLevelTimeSeries}"
                                                   IsTimeSeries="{Binding UseGateLowerEdgeLevelTimeSeries}"
@@ -51,7 +52,8 @@
                                                ValueContent="{Binding GateOpeningHeight}"
                                                Unit="m" 
                                                IsEnabled="False"/>
-                <components:LabeledTimeSeriesView Label="Horizontal opening width"
+                <components:LabeledTimeSeriesView StructureName="{Binding Path=WeirPropertiesViewModel.StructureName}"
+                                                  Label="Horizontal opening width"
                                                   SingleValueContent="{Binding HorizontalOpeningWidth}"
                                                   TimeSeries="{Binding HorizontalOpeningWidthTimeSeries}"
                                                   IsTimeSeries="{Binding UseHorizontalOpeningWidthTimeSeries}"

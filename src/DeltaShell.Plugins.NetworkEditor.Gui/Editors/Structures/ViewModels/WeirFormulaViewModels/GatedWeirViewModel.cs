@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
             base(weirPropertiesViewModel)
         {
             Ensure.NotNull(formula, nameof(formula));
-            GatePropertiesViewModel = new GatePropertiesViewModel(formula, true);
+            GatePropertiesViewModel = new GatePropertiesViewModel(formula, weirPropertiesViewModel, true);
         }
 
         /// <summary>
