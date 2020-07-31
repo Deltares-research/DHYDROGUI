@@ -185,9 +185,12 @@ namespace DeltaShell.Dimr
             }
 
             model.ConnectOutput(outputDirectory);
-            ConnectDimrRunLogFile(model);
-        }
 
+            string dimrLogDirectory = model is IDimrModel dimrModel ? 
+                                          dimrModel.DimrExportDirectoryPath : model.ExplicitWorkingDirectory;
+            DimrRunHelper.ConnectDimrRunLogFile(model, dimrLogDirectory);
+        }
+        
         public static string GenerateDimrXML(IDimrModel dimrModel, string workDirectory)
         {
             // generate dimconfig
@@ -240,63 +243,7 @@ namespace DeltaShell.Dimr
                 dimrApi.SetValues(key, values);
             }
         }
-
-        public static void ConnectDimrRunLogFile(IModel model)
-        {
-            var dimrModel = model as IDimrModel;
-            var dimrLogDirectory = "";
-
-            dimrLogDirectory = dimrModel != null ? dimrModel.DimrExportDirectoryPath : model.ExplicitWorkingDirectory;
-
-            string completeDimrLogFilename = Path.Combine(dimrLogDirectory, DIMR_RUN_LOGFILE_NAME);
-            if (!File.Exists(completeDimrLogFilename))
-            {
-                return;
-            }
-
-            //add an dimr run log output dataitem with the log...
-            IDataItem logDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunLogfileDataItemTag);
-            if (logDataItem == null)
-            {
-                var textDocument = new TextDocument(true) {Name = "Dimr Run Log"};
-
-                logDataItem = new DataItem(textDocument, DataItemRole.Output, DimrRunLogfileDataItemTag);
-                model.DataItems.Add(logDataItem);
-            }
-
-            using (Stream objStream = File.OpenRead(completeDimrLogFilename))
-            {
-                // Read data from file
-                byte[] arrData =
-                    {};
-                var stringBuilder = new StringBuilder();
-                // Read data from file until read position is not equals to length of file
-                while (objStream.Position != objStream.Length)
-                {
-                    // Read number of remaining bytes to read
-                    long lRemainingBytes = objStream.Length - objStream.Position;
-
-                    // If bytes to read greater than 2 mega bytes size create array of 2 mega bytes
-                    // Else create array of remaining bytes
-                    if (lRemainingBytes > 262144)
-                    {
-                        arrData = new byte[262144];
-                    }
-                    else
-                    {
-                        arrData = new byte[lRemainingBytes];
-                    }
-
-                    // Read data from file
-                    objStream.Read(arrData, 0, arrData.Length);
-
-                    stringBuilder.Append(Encoding.UTF8.GetString(arrData, 0, arrData.Length));
-                }
-
-                ((TextDocument) logDataItem.Value).Content = stringBuilder.ToString();
-            }
-        }
-
+        
         private void ValidateExportAndInitialize(bool disconnectOutput)
         {
             // validate the model

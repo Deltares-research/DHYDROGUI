@@ -39,9 +39,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     [Entity(FireOnCollectionChange = false)]
     public partial class HydroModel : TimeDependentModelBase, IHydroModel, ICompositeActivity, IFileBased, IModelMerge, IDisposable
     {
-        private const string DimrRunLogfileDataItemTag = "DimrRunLog";
-        private const string DIMR_RUN_LOGFILE_NAME = "dimr_redirected.log";
-        
         private const string HydroRegionTag = "RootHydroRegion";
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModel));
 
@@ -796,7 +793,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         return;
                     }
 
-                    ClearFolder(WorkingDirectoryPath);
+                    FileUtils.DeleteIfExists(WorkingDirectoryPath);
+                    Directory.CreateDirectory(WorkingDirectoryPath);
 
                     var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
                     if (!dHydroConfigXmlExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml")))
@@ -848,23 +846,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 CurrentWorkflow.Initialize();
             }
         }
-
-        private static void ClearFolder(string folderPath)
-        {
-            var dir = new DirectoryInfo(folderPath);
-
-            foreach (FileInfo fi in dir.GetFiles())
-            {
-                FileUtils.DeleteIfExists(fi.FullName);
-            }
-
-            foreach (DirectoryInfo di in dir.GetDirectories())
-            {
-                ClearFolder(di.FullName);
-                FileUtils.DeleteIfExists(di.FullName);
-            }
-        }
-
+        
         private string GetKernelDirectories(IEnumerable<IDimrModel> dimrModels)
         {
             try
@@ -945,8 +927,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     CurrentWorkflowIsDimr.ConnectOutput(validPath);
                     CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
                 }
-
-                ConnectDimrRunLogFile();
+                
+                DimrRunHelper.ConnectDimrRunLogFile(this, WorkingDirectoryPath);
             }
             else
             {
@@ -972,7 +954,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
             }
         }
-
+        
         #endregion
 
         #region Region
@@ -1358,61 +1340,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             return base.IsLinkAllowed(source, target);
         }
-
-        private void ConnectDimrRunLogFile()
-        {
-           
-            string dimrLogDirectory = WorkingDirectoryPath;
-
-            string completeDimrLogFilename = Path.Combine(dimrLogDirectory, DIMR_RUN_LOGFILE_NAME);
-            if (!File.Exists(completeDimrLogFilename))
-            {
-                return;
-            }
-
-            //add an dimr run log output dataitem with the log...
-            IDataItem logDataItem = DataItems.FirstOrDefault(di => di.Tag == DimrRunLogfileDataItemTag);
-            if (logDataItem == null)
-            {
-                var textDocument = new TextDocument(true) { Name = "Dimr Run Log" };
-
-                logDataItem = new DataItem(textDocument, DataItemRole.Output, DimrRunLogfileDataItemTag);
-                DataItems.Add(logDataItem);
-            }
-
-            using (Stream objStream = File.OpenRead(completeDimrLogFilename))
-            {
-                // Read data from file
-                byte[] arrData =
-                    {};
-                var stringBuilder = new StringBuilder();
-                // Read data from file until read position is not equals to length of file
-                while (objStream.Position != objStream.Length)
-                {
-                    // Read number of remaining bytes to read
-                    long lRemainingBytes = objStream.Length - objStream.Position;
-
-                    // If bytes to read greater than 2 mega bytes size create array of 2 mega bytes
-                    // Else create array of remaining bytes
-                    if (lRemainingBytes > 262144)
-                    {
-                        arrData = new byte[262144];
-                    }
-                    else
-                    {
-                        arrData = new byte[lRemainingBytes];
-                    }
-
-                    // Read data from file
-                    objStream.Read(arrData, 0, arrData.Length);
-
-                    stringBuilder.Append(Encoding.UTF8.GetString(arrData, 0, arrData.Length));
-                }
-
-                ((TextDocument)logDataItem.Value).Content = stringBuilder.ToString();
-            }
-        }
-
+        
         #endregion
     }
 }
