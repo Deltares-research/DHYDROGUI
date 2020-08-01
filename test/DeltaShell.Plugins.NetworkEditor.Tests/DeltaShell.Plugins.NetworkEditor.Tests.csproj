@@ -263,6 +263,7 @@
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\WeirPropertiesViewModelTest.cs" />
     <Compile Include="Gui\Layers\NetworkEditorMapLayerProviderCreatorTest.cs" />
     <Compile Include="Gui\Layers\Providers\BridgePillarsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\DryAreasLayerProviderTest.cs" />
@@ -368,6 +369,11 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
+      <Project>{4a0f7700-aa64-463f-a602-8c15e3886ec5}</Project>
+      <Name>DeltaShell.NGHS.TestUtils</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
