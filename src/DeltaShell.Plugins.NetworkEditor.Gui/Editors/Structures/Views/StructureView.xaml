@@ -10,7 +10,7 @@
              xmlns:enums="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Enums"
              xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="920">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -42,22 +42,24 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <StackPanel Margin="10">
-        <GroupBox Header="Structure Type" Margin="10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="{StaticResource LeftPane}"/>
-                    <ColumnDefinition Width="{StaticResource RightPane}"/>
-                </Grid.ColumnDefinitions>
-
-                <components:StructuresComboBox Grid.Column="0"  
-                                               Label="Structure type:"
-                                               SelectedItem="{Binding Path=FormulaViewType}"
-                                               ItemsSource="{Binding Source={StaticResource FormulaViewTypes}}"
-                                               ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
-                </Grid>
-        </GroupBox>
-
-        <ContentControl Content="{Binding Path=WeirViewModel}" />
-    </StackPanel>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <StackPanel Margin="10" MinWidth="920">
+            <GroupBox Header="Structure Type" Margin="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource LeftPane}"/>
+                        <ColumnDefinition Width="{StaticResource RightPane}"/>
+                    </Grid.ColumnDefinitions>
+        
+                    <components:StructuresComboBox Grid.Column="0"  
+                                                   Label="Structure type:"
+                                                   SelectedItem="{Binding Path=FormulaViewType}"
+                                                   ItemsSource="{Binding Source={StaticResource FormulaViewTypes}}"
+                                                   ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
+                    </Grid>
+            </GroupBox>
+        
+            <ContentControl Content="{Binding Path=WeirViewModel}" />
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
