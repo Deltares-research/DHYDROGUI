@@ -68,8 +68,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double Upstream2Level
         {
-            get => formula.BedLevelLeftSideStructure; 
-            set => formula.BedLevelLeftSideStructure = value;
+            get => formula.BedLevelLeftSideOfStructure; 
+            set => formula.BedLevelLeftSideOfStructure= value;
         }
 
         /// <summary>
@@ -104,8 +104,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double Downstream2Level
         {
-            get => formula.BedLevelRightSideStructure; 
-            set => formula.BedLevelRightSideStructure = value;
+            get => formula.BedLevelRightSideOfStructure; 
+            set => formula.BedLevelRightSideOfStructure= value;
         }
 
         /// <summary>
