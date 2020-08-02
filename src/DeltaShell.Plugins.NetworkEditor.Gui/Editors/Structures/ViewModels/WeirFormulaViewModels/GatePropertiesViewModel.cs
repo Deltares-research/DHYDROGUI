@@ -72,11 +72,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         }
 
         /// <summary>
-        /// Gets or sets the height of the gate opening.
-        /// </summary>
-        public double GateOpeningHeight { get; set; }
-
-        /// <summary>
         /// Gets or sets the width of the horizontal opening.
         /// </summary>
         public double HorizontalOpeningWidth
