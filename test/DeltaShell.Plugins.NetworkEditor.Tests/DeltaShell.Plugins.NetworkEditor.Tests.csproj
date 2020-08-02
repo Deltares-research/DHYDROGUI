@@ -265,6 +265,7 @@
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\GatedWeirViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\GatePropertiesViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\GeneralStructureViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\SimpleWeirViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\WeirPropertiesViewModelTest.cs" />
     <Compile Include="Gui\Layers\NetworkEditorMapLayerProviderCreatorTest.cs" />
