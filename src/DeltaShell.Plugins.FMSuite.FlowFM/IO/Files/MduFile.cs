@@ -12,6 +12,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Grid;
@@ -574,8 +575,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IList<WaterFlowFMProperty> properties, IMduFileWriteConfig config)
         {
             WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            WriteLine("# Deltares, Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " +
-                      FMDllVersion);
+            WriteLine($"# Deltares, Delft3D FM {ComponentVersions.FMSuiteVersion}, " +
+                      $"Plugin D-FLOW FM Version {FMSuiteFlowModelVersion}, " +
+                      $"D-Flow FM Version {FMDllVersion}");
             SetValueToPropertyIfExists(properties, KnownProperties.Version, FMDllVersion);
             SetValueToPropertyIfExists(properties, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
             IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup =
