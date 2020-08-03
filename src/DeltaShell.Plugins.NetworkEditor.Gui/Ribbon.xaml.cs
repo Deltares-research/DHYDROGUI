@@ -13,7 +13,6 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Fluent;
-using NetTopologySuite.Utilities;
 using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
@@ -38,8 +37,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewBranchScribbleCommand = new AddNewBranchUsingScribbleModeCommand();
         private ICommand addNewPumpCommand = new AddNewPumpCommand();
         private ICommand addNewWeirCommand = new AddNewWeirCommand();
-        private ICommand addNewCulvertCommand = new AddNewCulvertCommand();
-        private ICommand addNewBridgeCommand = new AddNewBridgeCommand();
         private ICommand addNewExtraResistanceCommand = new AddNewExtraResistanceCommand();
         private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
@@ -91,8 +88,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewBranchScribbleCommand;
                 yield return addNewPumpCommand;
                 yield return addNewWeirCommand;
-                yield return addNewCulvertCommand;
-                yield return addNewBridgeCommand;
                 yield return addNewExtraResistanceCommand;
                 yield return addNewLateralSourceCommand;
                 yield return addNewRetentionCommand;
@@ -144,8 +139,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             // structure tools
             ButtonAddNewPump.SetState(addNewPumpCommand, showNetworkTools);
             ButtonAddNewWeir.SetState(addNewWeirCommand, showNetworkTools);
-            ButtonAddNewCulvert.SetState(addNewCulvertCommand, showNetworkTools);
-            ButtonAddNewBridge.SetState(addNewBridgeCommand, showNetworkTools);
             ButtonAddNewExtraResistance.SetState(addNewExtraResistanceCommand, showNetworkTools);
             ButtonAddNewLateralSource.SetState(addNewLateralSourceCommand, showNetworkTools);
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
@@ -295,18 +288,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewWeir_Click(object sender, RoutedEventArgs e)
         {
             addNewWeirCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCulvert_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCulvertCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewBridge_Click(object sender, RoutedEventArgs e)
-        {
-            addNewBridgeCommand.Execute();
             ValidateItems();
         }
 

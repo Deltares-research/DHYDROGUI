@@ -172,9 +172,7 @@
     </Compile>
     <Compile Include="Commands\AddNewBranchCommand.cs" />
     <Compile Include="Commands\AddNewBranchUsingScribbleModeCommand.cs" />
-    <Compile Include="Commands\AddNewBridgeCommand.cs" />
     <Compile Include="Commands\AddNewCatchmentCommand.cs" />
-    <Compile Include="Commands\AddNewCulvertCommand.cs" />
     <Compile Include="Commands\AddNewDrainageBasinFeatureCommand.cs" />
     <Compile Include="Commands\AddNewExtraResistanceCommand.cs" />
     <Compile Include="Commands\AddNewLateralSourceCommand.cs" />
