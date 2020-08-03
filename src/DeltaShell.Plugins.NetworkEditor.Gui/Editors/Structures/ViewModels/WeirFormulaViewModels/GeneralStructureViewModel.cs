@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures.WeirFormula;
+﻿using System.ComponentModel;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Enums;
 
@@ -9,6 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// <see cref="Views.WeirFormulaViews.GeneralStructureView"/>.
     /// </summary>
     /// <seealso cref="WeirViewModel" />
+    [Description("General Structure")]
     public sealed class GeneralStructureViewModel : WeirViewModel
     {
         private readonly GeneralStructureWeirFormula formula;

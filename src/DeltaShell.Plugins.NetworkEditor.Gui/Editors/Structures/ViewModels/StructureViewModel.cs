@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DelftTools.Hydro.Structures;
@@ -74,14 +75,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
         private WeirViewModel weirViewModel;
 
         /// <summary>
-        /// Gets or sets the type of the formula view.
+        /// Gets the list of WeirFormula types available.
         /// </summary>
-        public FormulaViewType FormulaViewType
+        public IReadOnlyList<Type> FormulaTypeList { get; } = 
+            new[]
+            {
+                typeof(SimpleWeirViewModel), 
+                typeof(GatedWeirViewModel), 
+                typeof(GeneralStructureViewModel)
+            };
+
+        /// <summary>
+        /// Gets or sets the type of the FormulaType.
+        /// </summary>
+        /// <remarks>
+        /// This value is expected to be a child class of <see cref="WeirViewModel"/>.
+        /// </remarks>
+        public Type FormulaType
         {
-            get => WeirViewModel.FormulaViewType;
+            get => WeirViewModel.GetType();
             set
             {
-                if (value == FormulaViewType)
+                if (value == FormulaType)
                 {
                     return;
                 }
@@ -92,27 +107,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
             }
         }
 
-        private IWeirFormula GetFormulaOfType(FormulaViewType value)
+        private IWeirFormula GetFormulaOfType(Type value)
         {
-            switch (value)
+            if (value == typeof(SimpleWeirViewModel))
             {
-                case FormulaViewType.SimpleWeir:
-                    return new SimpleWeirFormula();
-                case FormulaViewType.SimpleGate:
-                    return new GatedWeirFormula(true);
-                case FormulaViewType.GeneralStructure:
-                    return new GeneralStructureWeirFormula()
-                    {
-                        BedLevelStructureCentre = weir.CrestLevel,
-                        WidthStructureCentre = weir.CrestWidth,
-                        WidthStructureLeftSide = double.NaN,
-                        WidthStructureRightSide = double.NaN,
-                        WidthLeftSideOfStructure = double.NaN,
-                        WidthRightSideOfStructure = double.NaN
-                    };
-                default:
-                    throw new System.ArgumentOutOfRangeException(nameof(value));
+                return new SimpleWeirFormula();
             }
+
+            if (value == typeof(GatedWeirViewModel))
+            {
+                return new GatedWeirFormula(true);
+            }
+            if (value == typeof(GeneralStructureViewModel)) {
+                return new GeneralStructureWeirFormula()
+                {
+                    BedLevelStructureCentre = weir.CrestLevel,
+                    WidthStructureCentre = weir.CrestWidth,
+                    WidthStructureLeftSide = double.NaN,
+                    WidthStructureRightSide = double.NaN,
+                    WidthLeftSideOfStructure = double.NaN,
+                    WidthRightSideOfStructure = double.NaN
+                };
+            }
+            
+            throw new ArgumentOutOfRangeException(nameof(value));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

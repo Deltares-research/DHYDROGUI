@@ -5,10 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels"
              xmlns:weirFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.WeirFormulaViews"
-             xmlns:converters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:enums="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Enums"
              xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
+             xmlns:convertersCommon="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="920">
     <UserControl.Resources>
@@ -16,6 +14,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/Editors/Structures/Views/StructureStyling.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <convertersCommon:TypeToDescriptionConverter x:Key="TypeToDescriptionConverter" />
 
             <DataTemplate DataType="{x:Type viewModels:SimpleWeirViewModel}">
                 <weirFormulaViews:SimpleWeirView DataContext="{Binding}" />
@@ -27,18 +27,10 @@
                 <weirFormulaViews:GeneralStructureView DataContext="{Binding}" />
             </DataTemplate>
          
-            <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
-         
-            <DataTemplate x:Key="EnumLabeledComboBoxTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+            <DataTemplate x:Key="TypeLabeledComboBoxTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource TypeToDescriptionConverter}}" />
             </DataTemplate>
          
-            <ObjectDataProvider x:Key="FormulaViewTypes"
-                                MethodName="GetValues" ObjectType="{x:Type system:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="enums:FormulaViewType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -53,9 +45,9 @@
         
                     <components:StructuresComboBox Grid.Column="0"  
                                                    Label="Structure type:"
-                                                   SelectedItem="{Binding Path=FormulaViewType}"
-                                                   ItemsSource="{Binding Source={StaticResource FormulaViewTypes}}"
-                                                   ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
+                                                   SelectedItem="{Binding Path=FormulaType}"
+                                                   ItemsSource="{Binding Path=FormulaTypeList}"
+                                                   ItemTemplate="{StaticResource TypeLabeledComboBoxTemplate}" />
                     </Grid>
             </GroupBox>
         
