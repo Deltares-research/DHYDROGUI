@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationPluginHelperTest.cs" />
+    <Compile Include="ComponentVersionsTest.cs" />
     <Compile Include="DefaultModelSettingsTest.cs" />
     <Compile Include="IO\FilesManagerTest.cs" />
     <Compile Include="Logging\LogHandlerTest.cs" />
