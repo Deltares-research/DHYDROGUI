@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void GetName_ReturnsCorrectResult()
+        public void GetName_ReturnsCorrectName()
         {
             // Setup
             var importer = new WaveModelFileImporter(() => null);
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void GetCategory_ReturnsCorrectResult()
+        public void GetCategory_ReturnsCorrectCategory()
         {
             // Setup
             var importer = new WaveModelFileImporter(() => null);
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void GetDescription_ReturnsCorrectResult()
+        public void GetDescription_ReturnsCorrectDescription()
         {
             // Setup
             var importer = new WaveModelFileImporter(() => null);
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void GetImage_ReturnsCorrectResult()
+        public void GetImage_ReturnsNotNull()
         {
             // Setup
             var importer = new WaveModelFileImporter(() => null);
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void GetSupportedItemTypes_ReturnsCorrectResult()
+        public void GetSupportedItemTypes_ReturnsCorrectCollection()
         {
             // Setup
             var importer = new WaveModelFileImporter(() => null);
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void GetOpenViewAfterImport_ReturnsCorrectResult()
+        public void GetOpenViewAfterImport_ReturnsTrue()
         {
             // Setup
             var importer = new WaveModelFileImporter(() => null);
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void GetCanImportOnRootLevel_ReturnsCorrectResult()
+        public void GetCanImportOnRootLevel_ReturnsTrue()
         {
             // Setup
             var importer = new WaveModelFileImporter(() => null);
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void GetFileFilter_ReturnsCorrectResult()
+        public void GetFileFilter_ReturnsCorrectFileFilter()
         {
             // Setup
             var importer = new WaveModelFileImporter(() => null);
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void ImportItem_ReturnsCorrectResult()
+        public void ImportItem_TargetNull_ReturnsImportedWaveModel()
         {
             // Setup
             string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void ImportItem_TargetWaveModel_WithFolderOwner_ReturnsCorrectResult()
+        public void ImportItem_TargetWaveModel_WithFolderOwner_ReturnsImportedWaveModel()
         {
             // Setup
             string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
@@ -241,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void ImportItem_TargetWaveModel_WithCompositeActivityOwner_ReturnsCorrectResult()
+        public void ImportItem_TargetWaveModel_WithCompositeActivityOwner_ReturnsCompositeActivityWithImportedWaveModel()
         {
             // Setup
             string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
@@ -267,7 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void ImportItem_TargetCompositeActivity_ReturnsCorrectResult()
+        public void ImportItem_TargetCompositeActivity_ReturnsCompositeActivityWithImportedWaveModel()
         {
             // Setup
             string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");

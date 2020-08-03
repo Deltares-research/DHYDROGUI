@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             // Setup
             Func<string> func = () => "working_dir";
-            using (var model = new WaveModel(){WorkingDirectoryPathFunc = func})
+            using (var model = new WaveModel {WorkingDirectoryPathFunc = func})
             {
                 // Call
                 Func<string> result = model.WorkingDirectoryPathFunc;

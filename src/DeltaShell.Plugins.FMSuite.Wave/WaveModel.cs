@@ -361,6 +361,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override IBasicModelInterface BMIEngine => runner.Api;
 
+        /// <summary>
+        /// Gets or sets the function to retrieve the working directory path.
+        /// </summary>
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
+
         public void AddSubDomain(IWaveDomainData domain, IWaveDomainData subDomain)
         {
             domain.SubDomains.Add(subDomain);
@@ -1257,11 +1262,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             public const string Spherical = "Spherical";
             public const string Cartesian = "Cartesian";
         }
-
-        /// <summary>
-        /// Gets or sets the function to retrieve the working directory path.
-        /// </summary>
-        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
 
         #region IFileBased and NHibernate
 

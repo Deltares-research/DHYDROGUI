@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using NSubstitute;
@@ -67,7 +68,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void SetApplication_UnsubscribesOriginalApplication()
+        public void SetApplication_SubscribesApplication()
+        {
+            // Setup
+            var plugin = new WaveApplicationPlugin();
+            var model = new WaveModel();
+            Project project = GetProject(model);
+            IApplication application = GetApplication(project, "application_working_directory");
+
+            // Call
+            plugin.Application = application;
+
+            // Assert
+            application.Received(1).ProjectOpened += Arg.Any<Action<Project>>();
+            application.DidNotReceiveWithAnyArgs().ProjectOpened -= Arg.Any<Action<Project>>();
+
+            Assert.That(plugin.Application, Is.SameAs(application));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenWaveApplicationPluginWithAnApplication_WhenProjectOpenedEventIsRaised_WorkingDirectoryPathFuncIsSetOnWaveModel()
         {
             // Setup
             var plugin = new WaveApplicationPlugin();
@@ -77,18 +98,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             string defaultWorkingDir = model.WorkingDirectoryPathFunc();
 
-            // Call
             plugin.Application = application;
 
-            // Raise event
+            // Call
             application.ProjectOpened += Raise.Event<Action<Project>>(project);
 
             // Assert
-            application.Received(1).ProjectOpened += Arg.Any<Action<Project>>();
-            application.DidNotReceiveWithAnyArgs().ProjectOpened -= Arg.Any<Action<Project>>();
-
-            Assert.That(plugin.Application, Is.SameAs(application));
-
             string appWorkingDir = model.WorkingDirectoryPathFunc();
             Assert.That(appWorkingDir, Is.Not.EqualTo(defaultWorkingDir));
             Assert.That(appWorkingDir, Is.EqualTo("application_working_directory"));
@@ -96,7 +111,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void SetApplication_SubscribesAndUnsubscribesApplication()
+        public void SetApplication_UnsubscribesOriginalApplication()
+        {
+            // Setup
+            var plugin = new WaveApplicationPlugin();
+            var model = new WaveModel();
+            Project project = GetProject(model);
+            IApplication application1 = GetApplication(project, "application1_working_directory");
+            IApplication application2 = GetApplication(GetProject(new WaveModel()), "application2_working_directory");
+
+            plugin.Application = application1;
+            application1.ClearReceivedCalls();
+
+            // Calls
+            plugin.Application = application2;
+
+            // Assert
+            Assert.That(plugin.Application, Is.SameAs(application2));
+
+            application1.DidNotReceiveWithAnyArgs().ProjectOpened += Arg.Any<Action<Project>>();
+            application1.Received(1).ProjectOpened -= Arg.Any<Action<Project>>();
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenWaveApplicationPluginWithAnApplication_WhenApplicationIsSetWithNewApplication_AndProjectOpenedEventIsRaised_WorkingDirectoryPathFuncNotSetOnOriginalWaveModel()
         {
             // Setup
             var plugin = new WaveApplicationPlugin();
@@ -108,23 +147,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             string defaultWorkingDir = model.WorkingDirectoryPathFunc();
 
             plugin.Application = application1;
-            application1.ClearReceivedCalls();
-
-            // Calls
             plugin.Application = application2;
 
-            // Raise event
+            // Call
             application1.ProjectOpened += Raise.Event<Action<Project>>(project);
 
             // Assert
-            Assert.That(plugin.Application, Is.SameAs(application2));
-
-            application1.DidNotReceiveWithAnyArgs().ProjectOpened += Arg.Any<Action<Project>>();
-            application1.Received(1).ProjectOpened -= Arg.Any<Action<Project>>();
-
-            application2.Received(1).ProjectOpened += Arg.Any<Action<Project>>();
-            application2.DidNotReceiveWithAnyArgs().ProjectOpened -= Arg.Any<Action<Project>>();
-
             Assert.That(model.WorkingDirectoryPathFunc(), Is.EqualTo(defaultWorkingDir));
         }
 
@@ -144,6 +172,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             Contains<WaveDepthFileImporter>(importers);
             Contains<WaveBoundaryFileImporter>(importers);
             Contains<WavmFileImporter>(importers);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetFileImporters_ReturnsCorrectWaveModelFileImporter()
+        {
+            // Given
+            var plugin = new WaveApplicationPlugin();
+            IApplication application = GetApplication(new Project(), "application_working_directory");
+
+            plugin.Application = application;
+
+            // When
+            IEnumerable<IFileImporter> importers = plugin.GetFileImporters();
+
+            // Then
+            WaveModelFileImporter importer = importers.OfType<WaveModelFileImporter>().FirstOrDefault();
+            Assert.That(importer, Is.Not.Null);
+
+            AssertCorrectWaveModelFileImporter(importer, "application_working_directory");
+        }
+
+        private static void AssertCorrectWaveModelFileImporter(WaveModelFileImporter importer, string expectedWorkingDirectory)
+        {
+            string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
+            using (var temp = new TemporaryDirectory())
+            {
+                string filePath = temp.CopyTestDataFileToTempDirectory(testFilePath);
+
+                var model = (WaveModel) importer.ImportItem(filePath);
+
+                Assert.That(model.WorkingDirectoryPathFunc, Is.Not.Null);
+                Assert.That(model.WorkingDirectoryPathFunc(), Is.EqualTo(expectedWorkingDirectory));
+            }
         }
 
         private static IApplication GetApplication(Project project, string workingDir)
