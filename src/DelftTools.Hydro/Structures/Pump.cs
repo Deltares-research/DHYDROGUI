@@ -14,7 +14,6 @@ namespace DelftTools.Hydro.Structures
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
-    [Obsolete("D3DFMIQ-2083 Remove obsolete 1D functionality")]
     public class Pump : BranchStructure, IPump
     {
         private bool canBeTimedependent;
