@@ -263,11 +263,12 @@
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\GatedWeirViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\GatePropertiesViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\GeneralStructureViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\SimpleWeirViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\WeirPropertiesViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\StructureViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatedWeirViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GeneralStructureViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\SimpleWeirViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\WeirPropertiesViewModelTest.cs" />
     <Compile Include="Gui\Layers\NetworkEditorMapLayerProviderCreatorTest.cs" />
     <Compile Include="Gui\Layers\Providers\BridgePillarsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\DryAreasLayerProviderTest.cs" />

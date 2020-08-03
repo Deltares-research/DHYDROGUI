@@ -3,7 +3,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewModels
+namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
     [TestFixture]
     public class GatedWeirViewModelTest

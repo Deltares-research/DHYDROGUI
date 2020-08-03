@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
         /// Creates a new <see cref="StructureViewModel"/>.
         /// </summary>
         /// <param name="weir">The weir.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="weir"/> is <c>null</c>.
         /// </exception>
         public StructureViewModel(Weir2D weir)
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
                     return new GeneralStructureViewModel(generalStructureWeirFormula, 
                                                          weirProperties);
                 default:
-                    throw new System.ArgumentOutOfRangeException(nameof(weirFormula));
+                    throw new ArgumentOutOfRangeException(nameof(weirFormula));
             }
         }
 
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
                 };
             }
             
-            throw new ArgumentOutOfRangeException(nameof(value));
+            throw new ArgumentException($"Type {value.FullName} is not a supported {nameof(WeirViewModel)}");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
