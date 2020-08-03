@@ -63,6 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         public GateOpeningHeightCalculatedFieldView()
         {
             InitializeComponent();
+            CalculatedValue = GateLowerEdgeLevel - CrestLevel;
         }
 
         /// <summary>

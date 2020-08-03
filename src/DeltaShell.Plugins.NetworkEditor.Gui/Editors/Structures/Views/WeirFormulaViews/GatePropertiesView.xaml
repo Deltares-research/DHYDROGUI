@@ -49,9 +49,9 @@
                                                ValueContent="{Binding GateHeight}"
                                                Unit="m"/>
                 <components:GateOpeningHeightCalculatedFieldView CrestLevel="{Binding Path=WeirPropertiesViewModel.CrestLevel}"
-                                                                    GateLowerEdgeLevel="{Binding Path=GateLowerEdgeLevel}"
-                                                                    IsUsingCrestLevelTimeSeries="{Binding Path=WeirPropertiesViewModel.UseCrestLevelTimeSeries}"
-                                                                    IsUsingGateLowerEdgeLevelTimeSeries="{Binding Path=UseGateLowerEdgeLevelTimeSeries}"/>
+                                                                 GateLowerEdgeLevel="{Binding Path=GateLowerEdgeLevel}"
+                                                                 IsUsingCrestLevelTimeSeries="{Binding Path=WeirPropertiesViewModel.UseCrestLevelTimeSeries}"
+                                                                 IsUsingGateLowerEdgeLevelTimeSeries="{Binding Path=UseGateLowerEdgeLevelTimeSeries}"/>
                 <components:LabeledTimeSeriesView StructureName="{Binding Path=WeirPropertiesViewModel.StructureName}"
                                                   Label="Horizontal opening width"
                                                   SingleValueContent="{Binding HorizontalOpeningWidth}"

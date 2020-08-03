@@ -17,5 +17,6 @@
                                                           Path=CalculatedValue,
                                                           Converter={StaticResource NullableValueConverter}}"
                                    Unit="m"
-                                   IsEnabled="False"/>
+                                   IsEnabled="False"
+                                   Foreground="Gray"/>
 </UserControl>
