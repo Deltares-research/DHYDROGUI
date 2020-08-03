@@ -120,6 +120,7 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginHelperTest.cs" />
     <Compile Include="DefaultModelSettingsTest.cs" />
+    <Compile Include="Gui\Converters\TypeToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Converters\UnitStringToUnitDisplayStringConverterTest.cs" />
     <Compile Include="IO\FilesManagerTest.cs" />
     <Compile Include="Logging\LogHandlerTest.cs" />

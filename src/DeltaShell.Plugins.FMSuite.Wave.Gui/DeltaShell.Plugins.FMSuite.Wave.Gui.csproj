@@ -154,7 +154,6 @@
     </Compile>
     <Compile Include="Buttons\SelectSp2FileButton.cs" />
     <Compile Include="Editors\Boundaries\Converters\NotNullToBooleanConverter.cs" />
-    <Compile Include="Editors\Boundaries\Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Editors\Boundaries\Converters\TypeToVisibilityConverter.cs" />
     <Compile Include="Editors\Boundaries\Enums\DirectionalSpreadingViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\ForcingViewType.cs" />

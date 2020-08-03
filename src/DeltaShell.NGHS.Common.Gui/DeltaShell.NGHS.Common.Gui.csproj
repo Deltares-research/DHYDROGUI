@@ -93,6 +93,7 @@
     <Compile Include="Components\LabeledValueBox.xaml.cs">
       <DependentUpon>LabeledValueBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Converters\UnitStringToUnitDisplayStringConverter.cs" />
     <Compile Include="DeltaresColor.cs" />
     <Compile Include="Layers\ILayerSubProvider.cs" />
