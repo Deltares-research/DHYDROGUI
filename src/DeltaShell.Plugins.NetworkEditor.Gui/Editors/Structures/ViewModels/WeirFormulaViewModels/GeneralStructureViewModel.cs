@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Enums;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
@@ -32,8 +31,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
             this.formula = formula;
             GatePropertiesViewModel = new GatePropertiesViewModel(formula, weirPropertiesViewModel, false);
         }
-
-        public override FormulaViewType FormulaViewType => FormulaViewType.GeneralStructure;
 
         private static double? ToNullableValue(double value) =>
             double.IsNaN(value) ? null : (double?) value;

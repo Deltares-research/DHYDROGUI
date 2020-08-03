@@ -196,7 +196,6 @@
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
-    <Compile Include="Editors\Structures\Enums\FormulaViewType.cs" />
     <Compile Include="Editors\Structures\ViewModels\StructureViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GatedWeirViewModel.cs" />
     <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModel.cs" />

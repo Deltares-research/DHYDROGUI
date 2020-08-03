@@ -1,5 +1,4 @@
 ﻿using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Enums;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
@@ -26,10 +25,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// Gets the weir properties view model.
         /// </summary>
         public WeirPropertiesViewModel WeirPropertiesViewModel { get; }
-
-        /// <summary>
-        /// Gets the type of the formula view.
-        /// </summary>
-        public abstract FormulaViewType FormulaViewType { get; }
     }
 }

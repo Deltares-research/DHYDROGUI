@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Enums;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
@@ -33,7 +32,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// Gets the gate properties view model.
         /// </summary>
         public GatePropertiesViewModel GatePropertiesViewModel { get; }
-
-        public override FormulaViewType FormulaViewType => FormulaViewType.SimpleGate;
     }
 }
