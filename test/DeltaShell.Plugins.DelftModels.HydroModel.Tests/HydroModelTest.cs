@@ -468,7 +468,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        public void GivenAHydroModel_WhenOnInitializeIsCalled_ThenTheExportShouldBeDoneToApplicationWorkingDirectory()
+        public void GivenAHydroModel_WhenOnInitializeIsCalled_ThenTheExportShouldBeDoneToWorkingDirectoryOfModel()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -478,33 +478,85 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     const string hydroModelName = "TestModel";
                     hydroModel.Name = hydroModelName;
                     hydroModel.WorkingDirectoryPathFunc = () => tempDirectory.Path;
-                    
-                    IActivity activity = Substitute.For<IActivity, IDimrModel>();
+
+                    string oldFilePath = Path.Combine(hydroModel.WorkingDirectoryPath, "test.txt");
+
+                    FileUtils.DeleteIfExists(hydroModel.WorkingDirectoryPath);
+                    Directory.CreateDirectory(hydroModel.WorkingDirectoryPath);
+
+                    using (FileStream fs = File.Create(oldFilePath))
+                    {
+                        byte[] info = new UTF8Encoding(true).GetBytes("test");
+                        fs.Write(info, 0, info.Length);
+                    }
+
+                    var activity = Substitute.For<IDimrModel>();
                     const string modelDirectoryName = "flowfm";
                     const string modelMduFileName = "fm.mdu";
-                    ((IDimrModel) activity).Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
-                    ((IDimrModel) activity).ExporterType.Returns(typeof(SimpleFileExporter));
-                    ((IDimrModel) activity).GetExporterPath(Arg.Is(Path.Combine(tempDirectory.Path, hydroModelName, modelDirectoryName)))
-                                           .Returns(Path.Combine(tempDirectory.Path, hydroModelName, modelDirectoryName, modelMduFileName));
+                    activity.Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
+                    activity.ExporterType.Returns(typeof(SimpleFileExporter));
+                    activity.GetExporterPath(Arg.Is(Path.Combine(hydroModel.WorkingDirectoryPath, modelDirectoryName)))
+                            .Returns(Path.Combine(hydroModel.WorkingDirectoryPath, modelDirectoryName, modelMduFileName));
                     ((IDimrModel) activity).DirectoryName.Returns(modelDirectoryName);
 
                     var workflow = new SequentialActivity {Activities = {activity}};
 
                     hydroModel.Activities.Add(activity);
                     hydroModel.CurrentWorkflow = workflow;
-
-                    FileUtils.DeleteIfExists(hydroModel.WorkingDirectoryPath);
-
+                    
                     // Act
                     hydroModel.Initialize();
 
                     // Assert
                     Assert.IsTrue(File.Exists(Path.Combine(hydroModel.WorkingDirectoryPath, "dimr.xml")));
                     Assert.IsTrue(File.Exists(Path.Combine(hydroModel.WorkingDirectoryPath, modelDirectoryName, modelMduFileName)));
+                    // Check if working directory was cleared before export.
+                    Assert.IsFalse(File.Exists(Path.Combine(hydroModel.WorkingDirectoryPath, "test.txt")));
                 }
             }
         }
 
+        [Test]
+        public void GivenAHydroModel_WhenOnCleanupIsCalled_ThenTheOutputShouldBeConnected()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                using (var hydroModel = new HydroModel())
+                {
+                    // Arrange
+                    const string hydroModelName = "TestModel";
+                    hydroModel.Name = hydroModelName;
+                    hydroModel.WorkingDirectoryPathFunc = () => tempDirectory.Path;
+
+                    FileUtils.CreateDirectoryIfNotExists(hydroModel.WorkingDirectoryPath);
+
+                    string path = Path.Combine(hydroModel.WorkingDirectoryPath, "dimr_redirected.log");
+                    const string text = "This is some text in the file.";
+
+                    using (FileStream fs = File.Create(path))
+                    {
+                        byte[] info = new UTF8Encoding(true).GetBytes(text);
+                        fs.Write(info, 0, info.Length);
+                    }
+
+                    var activity = Substitute.For<IDimrModel>();
+                    activity.DimrModelRelativeOutputDirectory.Returns("");
+
+                    var workflow = new SequentialActivity {Activities = {activity}};
+
+                    hydroModel.Activities.Add(activity);
+                    hydroModel.CurrentWorkflow = workflow;
+                    
+                    // Act
+                    hydroModel.Cleanup();
+
+                    // Assert
+                    activity.Received(1).ConnectOutput(hydroModel.WorkingDirectoryPath);
+                    Assert.AreEqual(text, ((TextDocument)hydroModel.DataItems.First(di => di.Tag == "DimrRunLog").Value).Content);
+
+                }
+            }
+        }
         [Test]
         [Category(TestCategory.Integration)]
         public void GivenHydroModel_WhenChangeCurrentWorkflow_ThenUpdatesRunsInIntegratedModelProperties()
