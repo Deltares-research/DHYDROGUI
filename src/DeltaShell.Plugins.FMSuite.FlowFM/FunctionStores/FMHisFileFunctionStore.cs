@@ -65,6 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             foreach (NetCdfVariableInfo timeVariable in dataVariables.Where(v => v.IsTimeDependent))
             {
                 NetCdfVariable netcdfVariable = timeVariable.NetCdfDataVariable;
+                NetCdfDataType type = netCdfFile.GetVariableDataType(netcdfVariable);
+                if (type != NetCdfDataType.NcDoublePrecision) continue;
                 List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
 
                 string variableName = netCdfFile.GetVariableName(netcdfVariable);
