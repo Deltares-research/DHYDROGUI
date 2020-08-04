@@ -9,17 +9,23 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -32,6 +38,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
             Assert.AreEqual(10, store.Functions.Count);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenFMOutputHisFileWithPumpAndWeirAndStationsAndGateAndGeneralStructureWhenCreatingStoreThenFunctionsCorrectlyInitialized()
+        {
+            var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\D3DFMIQ-2084.nc"));
+            Assert.AreEqual(74, store.Functions.Count);
+            var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_structure_discharge");
+            Assert.That(pumpFunction, Is.Not.Null);
+            Assert.AreEqual(289, pumpFunction.GetValues().Count);
+            Assert.AreEqual(289, pumpFunction.Time.Values.Count);
+            Assert.AreEqual(1, pumpFunction.Arguments[1].Values.Count);
+
+            var weirFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name== "weirgen_discharge");
+            Assert.That(weirFunction, Is.Not.Null);
+            Assert.AreEqual(289, weirFunction.GetValues().Count);
+            Assert.AreEqual(289, weirFunction.Time.Values.Count);
+            Assert.AreEqual(1, weirFunction.Arguments[1].Values.Count);
+
+            var stationFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name== "waterlevel");
+            Assert.That(stationFunction, Is.Not.Null);
+            Assert.AreEqual(289*2, stationFunction.GetValues().Count);
+            Assert.AreEqual(289, stationFunction.Time.Values.Count);
+            Assert.AreEqual(2, stationFunction.Arguments[1].Values.Count);
+
+            var gateFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name== "gategen_discharge");
+            Assert.That(gateFunction, Is.Not.Null);
+            Assert.AreEqual(289, gateFunction.GetValues().Count);
+            Assert.AreEqual(289, gateFunction.Time.Values.Count);
+            Assert.AreEqual(1, gateFunction.Arguments[1].Values.Count);
+
+
+            var generalStructureFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name== "general_structure_discharge");
+            Assert.That(generalStructureFunction, Is.Not.Null);
+            Assert.AreEqual(289, generalStructureFunction.GetValues().Count);
+            Assert.AreEqual(289, generalStructureFunction.Time.Values.Count);
+            Assert.AreEqual(1, generalStructureFunction.Arguments[1].Values.Count);
+
         }
 
         [Test]
