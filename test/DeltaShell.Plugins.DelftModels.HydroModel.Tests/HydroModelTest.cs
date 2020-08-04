@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.IO.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
+using Arg = NSubstitute.Arg;
+using File = System.IO.File;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
@@ -459,7 +466,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.That(testAction, Throws.Nothing);
             Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Failed));
         }
-        
+
+        [Test]
+        public void GivenAHydroModel_WhenOnInitializeIsCalled_ThenTheExportShouldBeDoneToApplicationWorkingDirectory()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                using (var hydroModel = new HydroModel())
+                {
+                    // Arrange
+                    const string hydroModelName = "TestModel";
+                    hydroModel.Name = hydroModelName;
+                    hydroModel.WorkingDirectoryPathFunc = () => tempDirectory.Path;
+                    
+                    IActivity activity = Substitute.For<IActivity, IDimrModel>();
+                    const string modelDirectoryName = "flowfm";
+                    const string modelMduFileName = "fm.mdu";
+                    ((IDimrModel) activity).Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
+                    ((IDimrModel) activity).ExporterType.Returns(typeof(SimpleFileExporter));
+                    ((IDimrModel) activity).GetExporterPath(Arg.Is(Path.Combine(tempDirectory.Path, hydroModelName, modelDirectoryName)))
+                                           .Returns(Path.Combine(tempDirectory.Path, hydroModelName, modelDirectoryName, modelMduFileName));
+                    ((IDimrModel) activity).DirectoryName.Returns(modelDirectoryName);
+
+                    var workflow = new SequentialActivity {Activities = {activity}};
+
+                    hydroModel.Activities.Add(activity);
+                    hydroModel.CurrentWorkflow = workflow;
+
+                    FileUtils.DeleteIfExists(hydroModel.WorkingDirectoryPath);
+
+                    // Act
+                    hydroModel.Initialize();
+
+                    // Assert
+                    Assert.IsTrue(File.Exists(Path.Combine(hydroModel.WorkingDirectoryPath, "dimr.xml")));
+                    Assert.IsTrue(File.Exists(Path.Combine(hydroModel.WorkingDirectoryPath, modelDirectoryName, modelMduFileName)));
+                }
+            }
+        }
+
         [Test]
         [Category(TestCategory.Integration)]
         public void GivenHydroModel_WhenChangeCurrentWorkflow_ThenUpdatesRunsInIntegratedModelProperties()
@@ -515,6 +560,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Act, Assert
             Assert.AreEqual(DefaultModelSettings.DefaultDeltaShellWorkingDirectory, 
                             hydroModel.WorkingDirectoryPathFunc());
+        }
+
+        private class SimpleFileExporter : IFileExporter
+        {
+            public string Name { get; }
+
+            public string Category { get; }
+
+            public string Description { get; }
+
+            public bool Export(object item, string path)
+            {
+                using (FileStream fs = File.Create(path))
+                {
+                    byte[] info = new UTF8Encoding(true).GetBytes("This is some text in the file.");
+                    fs.Write(info, 0, info.Length);
+                }
+
+                return true;
+            }
+
+            public IEnumerable<Type> SourceTypes()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool CanExportFor(object item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string FileFilter { get; }
+
+            public Bitmap Icon { get; }
         }
 
         private class TimeDepModel : TimeDependentModelBase

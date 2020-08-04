@@ -9,24 +9,24 @@ namespace DeltaShell.Dimr
 {
     public static class DimrRunHelper
     {
-        private const string DIMR_RUN_LOGFILE_NAME = "dimr_redirected.log";
-        private const string DimrRunLogfileDataItemTag = "DimrRunLog";
+        private const string dimrRunLogfileName = "dimr_redirected.log";
+        private const string dimrRunLogfileDataItemTag = "DimrRunLog";
 
         public static void ConnectDimrRunLogFile(IModel model, string dimrLogDirectory)
         {
-            string completeDimrLogFilename = Path.Combine(dimrLogDirectory, DIMR_RUN_LOGFILE_NAME);
+            string completeDimrLogFilename = Path.Combine(dimrLogDirectory, dimrRunLogfileName);
             if (!File.Exists(completeDimrLogFilename))
             {
                 return;
             }
 
             //add an dimr run log output dataitem with the log...
-            IDataItem logDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunLogfileDataItemTag);
+            IDataItem logDataItem = model.DataItems.FirstOrDefault(di => di.Tag == dimrRunLogfileDataItemTag);
             if (logDataItem == null)
             {
                 var textDocument = new TextDocument(true) {Name = "Dimr Run Log"};
 
-                logDataItem = new DataItem(textDocument, DataItemRole.Output, DimrRunLogfileDataItemTag);
+                logDataItem = new DataItem(textDocument, DataItemRole.Output, dimrRunLogfileDataItemTag);
                 model.DataItems.Add(logDataItem);
             }
 
