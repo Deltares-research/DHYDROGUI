@@ -38,8 +38,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
         public override IEnumerable GetChildNodeObjects(INetwork network, ITreeNode node)
         {
             yield return ((IHydroNetwork) network).Routes;
-            yield return ((IHydroNetwork) network).SharedCrossSectionDefinitions;
-            yield return ((IHydroNetwork) network).CrossSectionSectionTypes;
 
             foreach (IBranch branch in network.Branches)
             {

@@ -37,6 +37,10 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ControlzEx">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51432-beta\lib\net461\DeltaShell\ControlzEx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Controls">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51470-beta\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
@@ -166,18 +170,9 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Commands\AddInterpolatedCrossSectionCommand.cs" />
     <Compile Include="Commands\AddNewBranchCommand.cs" />
     <Compile Include="Commands\AddNewBranchUsingScribbleModeCommand.cs" />
-    <Compile Include="Commands\AddNewBridgeCommand.cs" />
     <Compile Include="Commands\AddNewCatchmentCommand.cs" />
-    <Compile Include="Commands\AddNewCrossSectionCommandBase.cs" />
-    <Compile Include="Commands\AddNewCrossSectionStandardCommand.cs" />
-    <Compile Include="Commands\AddNewCrossSectionXYZCommand.cs" />
-    <Compile Include="Commands\AddNewCrossSectionYZCommand.cs" />
-    <Compile Include="Commands\AddNewCrossSectionZWCommand.cs" />
-    <Compile Include="Commands\AddNewCulvertCommand.cs" />
-    <Compile Include="Commands\AddNewDefaultCrossSectionCommand.cs" />
     <Compile Include="Commands\AddNewDrainageBasinFeatureCommand.cs" />
     <Compile Include="Commands\AddNewExtraResistanceCommand.cs" />
     <Compile Include="Commands\AddNewLateralSourceCommand.cs" />
@@ -191,20 +186,14 @@
     <Compile Include="Commands\NetworkEditorHelper.cs" />
     <Compile Include="Commands\OpenCaseAnalysisViewCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Commands\ShowCrossSectionHistoryCommand.cs" />
     <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
-    <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureWithAttributesProperties.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestValidationRule.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestWidthValidationRule.cs" />
-    <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">
-      <DependentUpon>CulvertViewWpf.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\CulvertViewWpfModel.cs" />
     <Compile Include="Forms\StructureFeatureView\DoubleTextBoxWithLabelAndUnitControl.xaml.cs">
       <DependentUpon>DoubleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
     </Compile>
@@ -256,14 +245,8 @@
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\CrestShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\FreeFormatWeirEditor.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\GatedWeirShapeEditor.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\BridgeInSideViewShape.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\BridgeInStructureViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\BroadCrestShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\CrestShapeFeature.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\CrossSectionInSideViewShape.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\CulvertInSideViewShape.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\CulvertInStructureViewShape.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\CulvertStyling.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\ExtraResistanceInSideViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\ExtraResistanceInStructureViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\FreeFormatWeirShapeFeature.cs" />
@@ -288,104 +271,6 @@
     <Compile Include="Forms\ComputationalGridDialog.Designer.cs">
       <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionDefinitionView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionDefinitionView.Designer.cs">
-      <DependentUpon>CrossSectionDefinitionView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionDefinitionViewHistoryController.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionDefinitionViewModel.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionDefinitionViewModelProvider.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionPresenter.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionProfileMutatorProvider.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionStandardShapeViewFactory.cs" />
-    <Compile Include="Forms\CrossSectionView\CrossSectionView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionView.Designer.cs">
-      <DependentUpon>CrossSectionView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\CrossSectionViewModel.cs" />
-    <Compile Include="Forms\CrossSectionView\ICrossSectionHistoryCapableView.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileChartView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\ProfileChartView.Designer.cs">
-      <DependentUpon>ProfileChartView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ICrossSectionProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ImmutableProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ProxyProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\XYZFlowProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\XYZProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\YZFlowProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\YZProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWFlowProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWProfileMutator.cs" />
-    <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWProfileMutatorBase.cs" />
-    <Compile Include="Forms\CrossSectionView\SectionsTableView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\SectionsTableView.Designer.cs">
-      <DependentUpon>SectionsTableView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\Sections\CrossSectionDefinitionViewSectionRenderer.cs" />
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataView.Designer.cs">
-      <DependentUpon>CrossSectionStandardDataView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeArchView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeArchView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeArchView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeRoundView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeRoundView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeRoundView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeSteelCunetteView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeSteelCunetteView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeSteelCunetteView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeTrapeziumView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeTrapeziumView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeTrapeziumView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightView.Designer.cs">
-      <DependentUpon>CrossSectionStandardShapeWidthHeightView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\SummerDikeView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\SummerDikeView.Designer.cs">
-      <DependentUpon>SummerDikeView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\YZTableView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\YZTableView.Designer.cs">
-      <DependentUpon>YZTableView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\ZWSectionsView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\ZWSectionsView.Designer.cs">
-      <DependentUpon>ZWSectionsView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CrossSectionView\ZWSectionsViewModel.cs" />
     <Compile Include="Forms\FMWeirView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -419,10 +304,6 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentTypesNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\ChannelTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CompositeStructureTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionNodePresenterIconHelper.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionSectionTypesTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionSectionTypeTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\DrainageBasinTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />
@@ -434,8 +315,6 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RetentionNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RunoffBoundariesTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RunoffBoundaryTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\SharedCrossSectionDefinitionsTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\SharedCrossSectionDefinitionTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantsTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\TreeViewBranchFeatureNodeSorter.cs" />
@@ -446,12 +325,9 @@
       <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\PropertyGrid\CatchmentProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\CrossSectionDefinitionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\CrossSectionSectionTypeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DrainageBasinProperties.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureCoverageProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\FreeFormWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\GatedWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\GateProperties.cs" />
     <Compile Include="Forms\PropertyGrid\GeneralStructureWeirFormulaProperties.cs" />
@@ -470,18 +346,6 @@
     <Compile Include="Forms\PropertyGrid\TimeDependency.cs" />
     <Compile Include="Forms\PropertyGrid\WasteWaterTreatmentPlantProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WeirFormulaProperties.cs" />
-    <Compile Include="Forms\SimpleProgress.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SimpleProgress.Designer.cs">
-      <DependentUpon>SimpleProgress.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\BridgeView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\BridgeView.Designer.cs">
-      <DependentUpon>BridgeView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -500,12 +364,6 @@
     </Compile>
     <Compile Include="Forms\StructureFeatureView\PumpView.Designer.cs">
       <DependentUpon>PumpView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaView.Designer.cs">
-      <DependentUpon>FreeFormWeirFormulaView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.cs">
       <SubType>UserControl</SubType>
@@ -605,48 +463,6 @@
       <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\CrossSectionDefinitionView.resx">
-      <DependentUpon>CrossSectionDefinitionView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\CrossSectionView.resx">
-      <DependentUpon>CrossSectionView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\ProfileChartView.resx">
-      <DependentUpon>ProfileChartView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\SectionsTableView.resx">
-      <DependentUpon>SectionsTableView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardDataView.resx">
-      <DependentUpon>CrossSectionStandardDataView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeArchView.resx">
-      <DependentUpon>CrossSectionStandardShapeArchView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeRoundView.resx">
-      <DependentUpon>CrossSectionStandardShapeRoundView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeSteelCunetteView.resx">
-      <DependentUpon>CrossSectionStandardShapeSteelCunetteView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeTrapeziumView.resx">
-      <DependentUpon>CrossSectionStandardShapeTrapeziumView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionStandardShapeWidthHeightView.resx">
-      <DependentUpon>CrossSectionStandardShapeWidthHeightView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\SummerDikeView.resx">
-      <DependentUpon>SummerDikeView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\YZTableView.resx">
-      <DependentUpon>YZTableView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CrossSectionView\ZWSectionsView.resx">
-      <DependentUpon>ZWSectionsView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FMWeirView.resx">
       <DependentUpon>FMWeirView.cs</DependentUpon>
     </EmbeddedResource>
@@ -663,13 +479,6 @@
     <EmbeddedResource Include="Forms\ImportBranchFeatureDialog.resx">
       <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SimpleProgress.resx">
-      <DependentUpon>SimpleProgress.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StructureFeatureView\BridgeView.resx">
-      <DependentUpon>BridgeView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\ExtraResistanceView.resx">
       <DependentUpon>ExtraResistanceView.cs</DependentUpon>
     </EmbeddedResource>
@@ -678,10 +487,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\PumpView.resx">
       <DependentUpon>PumpView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\FreeFormWeirFormulaView.resx">
-      <DependentUpon>FreeFormWeirFormulaView.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.resx">
@@ -955,10 +760,6 @@
     <Resource Include="Resources\cut.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Forms\StructureFeatureView\CulvertViewWpf.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Forms\StructureFeatureView\DoubleTextBoxWithLabelAndUnitControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
