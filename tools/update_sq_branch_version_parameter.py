@@ -69,6 +69,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--variable_name", default="D-HYDRO_ReleaseVersion",  help="The prefix variable name to write to.")
+    parser.add_argument("--skip_verification", action="store_true", help="Flag to skip verification.")
     return parser.parse_args()
 
 
@@ -76,8 +77,13 @@ if __name__ == "__main__":
     args = parse_arguments()
     branch_name = get_branch_name()
 
-    if verify_branch(branch_name):
-        version = get_version(branch_name)
-        set_version_parameter(args.variable_name, version)
+    # Set the variable directly to the variable name.
+    if args.skip_verification:
+        set_version_parameter(args.variable_name, branch_name)
+    # Verify the variable to be a release branch.
     else:
-        report_failure(branch_name)
+        if verify_branch(branch_name):
+            version = get_version(branch_name)
+            set_version_parameter(args.variable_name, version)
+        else:
+            report_failure(branch_name)
