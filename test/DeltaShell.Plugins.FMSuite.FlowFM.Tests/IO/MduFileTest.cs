@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Write_WritesExpectedMetaDataInformation()
+        public void Write_Always_WritesExpectedMetaDataInformation()
         {
             // Setup
             var mduFile = new MduFile();
