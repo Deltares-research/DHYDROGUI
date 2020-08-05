@@ -65,6 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             foreach (NetCdfVariableInfo timeVariable in dataVariables.Where(v => v.IsTimeDependent))
             {
                 NetCdfVariable netcdfVariable = timeVariable.NetCdfDataVariable;
+                NetCdfDataType type = netCdfFile.GetVariableDataType(netcdfVariable);
+                if (type != NetCdfDataType.NcDoublePrecision) continue;
                 List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
 
                 string variableName = netCdfFile.GetVariableName(netcdfVariable);
@@ -218,7 +220,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private readonly IList<KeyValuePair<string, string>> generalStuctures = new List<KeyValuePair<string, string>>()
         {
             new KeyValuePair<string, string>("general_structure_name", featureNameGeneralStructures),
+            new KeyValuePair<string, string>("general_structure_id", featureNameGeneralStructures),
             new KeyValuePair<string, string>("weirgen_name", featureNameWeirgens),
+            new KeyValuePair<string, string>("weirgen_id", featureNameWeirgens),
             new KeyValuePair<string, string>("gategen_name", featureNameGategens)
         };
 
@@ -229,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private void InitializePumpFeatures(IEnumerable<IFeature> pumpFeatures)
         {
             // Extract all possible pumps for later pairing with features
-            IList<string> pumpNames = GetNetCdfFeatureVariableNames("pump_name");
+            IList<string> pumpNames = GetNetCdfFeatureVariableNames("pump_id");
             if (!pumpNames.Any())
             {
                 return;
@@ -310,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private void InitializeStationFeatures(IEnumerable<Feature2D> modelObsPoints)
         {
             // Extract all possible station ids for later pairing with features
-            IList<string> stationIds = GetNetCdfFeatureVariableNames("station_id");
+            IList<string> stationIds = GetNetCdfFeatureVariableNames("station_name");
             if (!stationIds.Any())
             {
                 return;

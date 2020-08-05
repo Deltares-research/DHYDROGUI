@@ -30,14 +30,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             network.Branches.Add(new Channel());
             network.Branches[0].BranchFeatures.Add(new Pump());
             network.Branches[0].BranchFeatures.Add(new Weir());
-            network.Branches[0].BranchFeatures.Add(new Bridge());
             network.Branches[0].BranchFeatures.Add(new Gate());
 
             HydroNetworkFeatureCollection channelFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
             HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
             HydroNetworkFeatureCollection pumpFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
             HydroNetworkFeatureCollection weirFeatureCollection = GetHydroNetworkFeatureCollection<Weir>(network);
-            HydroNetworkFeatureCollection bridgeFeatureCollection = GetHydroNetworkFeatureCollection<Bridge>(network);
             HydroNetworkFeatureCollection gateFeatureCollection = GetHydroNetworkFeatureCollection<Gate>(network);
 
             Assert.AreEqual(1, channelFeatureCollection.Features.Count);
@@ -45,7 +43,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
 
             Assert.AreEqual(1, pumpFeatureCollection.Features.Count);
             Assert.AreEqual(1, weirFeatureCollection.Features.Count);
-            Assert.AreEqual(1, bridgeFeatureCollection.Features.Count);
             Assert.AreEqual(1, gateFeatureCollection.Features.Count);
         }
 

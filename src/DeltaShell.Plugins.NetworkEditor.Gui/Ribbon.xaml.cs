@@ -4,9 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Hydro;
+using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
@@ -34,21 +35,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
         private ICommand addNewBranchCommand = new AddNewBranchCommand();
         private ICommand addNewBranchScribbleCommand = new AddNewBranchUsingScribbleModeCommand();
-        private ICommand addNewCrossSectionYZCommand = new AddNewCrossSectionYZCommand();
-        private ICommand addNewCrossSectionZWCommand = new AddNewCrossSectionZWCommand();
-        private ICommand addNewCrossSectionXYZCommand = new AddNewCrossSectionXYZCommand();
-        private ICommand addNewCrossSectionStandardCommand = new AddNewCrossSectionStandardCommand();
-        private ICommand addNewCrossSectionDefaultCommand = new AddNewDefaultCrossSectionCommand();
-        private ICommand addNewCrossSectionInterpolatedCommand = new AddInterpolatedCrossSectionCommand();
         private ICommand addNewPumpCommand = new AddNewPumpCommand();
         private ICommand addNewWeirCommand = new AddNewWeirCommand();
-        private ICommand addNewCulvertCommand = new AddNewCulvertCommand();
-        private ICommand addNewBridgeCommand = new AddNewBridgeCommand();
         private ICommand addNewExtraResistanceCommand = new AddNewExtraResistanceCommand();
         private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
-        private ICommand showCrossSectionHistoryCommand = new ShowCrossSectionHistoryCommand();
         private ICommand addNewCatchmentPolderCommand = new AddNewCatchmentCommand.AddNewPolderCommand();
         private ICommand addNewCatchmentPavedCommand = new AddNewCatchmentCommand.AddNewPavedCommand();
         private ICommand addNewCatchmentUnpavedCommand = new AddNewCatchmentCommand.AddNewUnpavedCommand();
@@ -79,7 +71,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             InitializeComponent();
             tabRegion.Group = geospatialContextualGroup;
-            tabCrossSectionTools.Group = crossSectionContextualGroup;
+        }
+
+        public Ribbon(IGui gui): this()
+        {
+            Ensure.NotNull(gui, nameof(gui));
+            gui.MainWindow.SetActiveRibbonTab("Home");
         }
 
         public IEnumerable<ICommand> Commands
@@ -89,21 +86,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return showHydroRegionContentsCommand;
                 yield return addNewBranchCommand;
                 yield return addNewBranchScribbleCommand;
-                yield return addNewCrossSectionYZCommand;
-                yield return addNewCrossSectionZWCommand;
-                yield return addNewCrossSectionXYZCommand;
-                yield return addNewCrossSectionStandardCommand;
-                yield return addNewCrossSectionDefaultCommand;
-                yield return addNewCrossSectionInterpolatedCommand;
                 yield return addNewPumpCommand;
                 yield return addNewWeirCommand;
-                yield return addNewCulvertCommand;
-                yield return addNewBridgeCommand;
                 yield return addNewExtraResistanceCommand;
                 yield return addNewLateralSourceCommand;
                 yield return addNewRetentionCommand;
                 yield return addNewObservationPointCommand;
-                yield return showCrossSectionHistoryCommand;
                 yield return addNewCatchmentPolderCommand;
                 yield return addNewCatchmentPavedCommand;
                 yield return addNewCatchmentUnpavedCommand;
@@ -148,26 +136,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewBranch.SetState(addNewBranchCommand, showNetworkTools);
             ButtonAddNewBranchScribble.SetState(addNewBranchScribbleCommand, showNetworkTools);
 
-            // crossSection tools
-            ButtonAddNewCrossSectionYZ.SetState(addNewCrossSectionYZCommand, showNetworkTools);
-            ButtonAddNewCrossSectionZW.SetState(addNewCrossSectionZWCommand, showNetworkTools);
-            ButtonAddNewCrossSectionXYZ.SetState(addNewCrossSectionXYZCommand, showNetworkTools);
-            ButtonAddNewCrossSectionStandard.SetState(addNewCrossSectionStandardCommand, showNetworkTools);
-            ButtonAddNewCrossSectionDefault.SetState(addNewCrossSectionDefaultCommand, showNetworkTools);
-            ButtonAddNewCrossSectionInterpolated.SetState(addNewCrossSectionInterpolatedCommand, showNetworkTools);
-
             // structure tools
             ButtonAddNewPump.SetState(addNewPumpCommand, showNetworkTools);
             ButtonAddNewWeir.SetState(addNewWeirCommand, showNetworkTools);
-            ButtonAddNewCulvert.SetState(addNewCulvertCommand, showNetworkTools);
-            ButtonAddNewBridge.SetState(addNewBridgeCommand, showNetworkTools);
             ButtonAddNewExtraResistance.SetState(addNewExtraResistanceCommand, showNetworkTools);
             ButtonAddNewLateralSource.SetState(addNewLateralSourceCommand, showNetworkTools);
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
             ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
-
-            ButtonShowCrossSectionHistory.SetState(showCrossSectionHistoryCommand);
-
+            
             // catchment tools
             ButtonAddNewCatchmentPolder.SetState(addNewCatchmentPolderCommand, showBasinTools);
             ButtonAddNewCatchmentPaved.SetState(addNewCatchmentPavedCommand, showBasinTools);
@@ -210,11 +186,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (tabGroupName == geospatialContextualGroup.Name && tabName == tabRegion.Name)
             {
                 return IsActiveViewMapViewWithRegion();
-            }
-
-            if (tabGroupName == crossSectionContextualGroup.Name && tabName == tabCrossSectionTools.Name)
-            {
-                return IsCrossSectionViewActive();
             }
 
             return false;
@@ -273,12 +244,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ComboBoxSelectNetworkCoverage.SelectionChanged += ComboBoxSelectNetworkCoverageSelectionChanged;
         }
 
-        private static bool IsCrossSectionViewActive()
-        {
-            return NetworkEditorGuiPlugin.Instance != null &&
-                   NetworkEditorGuiPlugin.Instance.Gui.DocumentViews.ActiveView is ICrossSectionHistoryCapableView;
-        }
-
         private bool IsActiveViewMapViewWithRegion()
         {
             MapView mapView = NetworkEditorGuiPlugin.GetFocusedMapView();
@@ -313,42 +278,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             addNewBranchScribbleCommand.Execute();
             ValidateItems();
         }
-        
-        private void ButtonAddNewCrossSectionYZ_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionYZCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionZW_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionZWCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionXYZ_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionXYZCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionStandard_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionStandardCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionDefault_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionDefaultCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCrossSectionInterpolated_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCrossSectionInterpolatedCommand.Execute();
-            ValidateItems();
-        }
 
         private void ButtonAddNewPump_Click(object sender, RoutedEventArgs e)
         {
@@ -359,18 +288,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewWeir_Click(object sender, RoutedEventArgs e)
         {
             addNewWeirCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCulvert_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCulvertCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewBridge_Click(object sender, RoutedEventArgs e)
-        {
-            addNewBridgeCommand.Execute();
             ValidateItems();
         }
 
@@ -395,12 +312,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewObservationPoint_Click(object sender, RoutedEventArgs e)
         {
             addNewObservationPointCommand.Execute();
-            ValidateItems();
-        }
-        
-        private void ButtonShowCrossSectionHistory_Click(object sender, RoutedEventArgs e)
-        {
-            showCrossSectionHistoryCommand.Execute();
             ValidateItems();
         }
 
