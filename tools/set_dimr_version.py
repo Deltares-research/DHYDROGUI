@@ -156,7 +156,7 @@ def get_relevant_log_msgs(file_path: Path,
     Exceptions:
         Thrown when no previous revision could be located.
     """
-    if is_last_revision(file_path, rev_number):
+    if is_last_revision(file_path, rev_number, username, password):
         svn_cmd = f"svn log {file_path} --limit 2 --xml"
 
     else:
@@ -200,7 +200,7 @@ def run(rev_number: int,
     if verbose:
         print(f"Setting the '{build_param}' build parameter")
 
-    curr_log_msg, prev_log_msg = get_relevant_log_msgs(working_directory, rev_number)
+    curr_log_msg, prev_log_msg = get_relevant_log_msgs(working_directory, rev_number, username, password)
     
     curr_version_number = extract_version_number_from_svn_log_msg(curr_log_msg, verbose)
 
