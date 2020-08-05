@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -49,6 +52,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //                             mduName     |  fixedWeirPlizFileName   | weirScheme | columnDifference | expectedSubMsgFormat
                 yield return new TestCaseData("FlowFM3.mdu", "TwoFixedWeirs_fxw.pliz", 6, 5, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored);
                 yield return new TestCaseData("FlowFM2.mdu", "TwoFixedWeirs_fxw2.pliz", 9, 7, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_WritesExpectedMetaDataInformation()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var config = MockRepository.GenerateStub<IMduFileWriteConfig>();
+
+            using(IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew())
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string writeFilePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
+
+                // Call
+                mduFile.Write(writeFilePath, modelDefinition, null, null, config);
+
+                // Assert
+                string [] lines = File.ReadAllLines(writeFilePath);
+                Assembly waterFlowFMAssembly = typeof(WaterFlowFMModel).Assembly;
+
+                string expectedMetaDataString = $"# Deltares, Delft3D FM {ComponentVersions.FMSuiteVersion}, " +
+                                           $"Plugin D-FLOW FM Version {waterFlowFMAssembly.GetName().Version}, " +
+                                           $"D-Flow FM Version {api.GetVersionString()}";
+
+                Assert.That(lines[1], Is.EqualTo(expectedMetaDataString));
             }
         }
 
