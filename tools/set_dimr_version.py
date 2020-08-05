@@ -184,7 +184,7 @@ def run(rev_number: int,
         working_directory: Path,
         build_param: str,
         username: str,
-        password: str
+        password: str,
         verbose=False) -> None:
     """
     Execute this script.
