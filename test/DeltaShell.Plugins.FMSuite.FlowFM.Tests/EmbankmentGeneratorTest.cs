@@ -1034,21 +1034,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IList<Embankment> embankmentDefinitions = new List<Embankment>();
 
             // generate and merge left embankments
-            bool result = EmbankmentGenerator.GenerateEmbankments(network.Branches.Cast<Channel>().ToList(), embankmentDefinitions, false,
+            bool result = EmbankmentGenerator.GenerateEmbankments(network.Branches.Cast<Channel>().ToList(), embankmentDefinitions, 
                                                                   10.0d, true, false, true);
             Assert.IsTrue(result);
             Assert.AreEqual(1, embankmentDefinitions.Count); // automatic merging should result in 1 embankment
 
             // generate and merge right embankments
             embankmentDefinitions.Clear();
-            result = EmbankmentGenerator.GenerateEmbankments(network.Branches.Cast<Channel>().ToList(), embankmentDefinitions, false,
+            result = EmbankmentGenerator.GenerateEmbankments(network.Branches.Cast<Channel>().ToList(), embankmentDefinitions, 
                                                              10.0d, false, true, true);
             Assert.IsTrue(result);
             Assert.AreEqual(1, embankmentDefinitions.Count); // automatic merging should result in 1 embankment
 
             // generate and merge left and right embankments
             embankmentDefinitions.Clear();
-            result = EmbankmentGenerator.GenerateEmbankments(network.Branches.Cast<Channel>().ToList(), embankmentDefinitions, false,
+            result = EmbankmentGenerator.GenerateEmbankments(network.Branches.Cast<Channel>().ToList(), embankmentDefinitions, 
                                                              10.0d, true, true, true);
             Assert.IsTrue(result);
             Assert.AreEqual(2, embankmentDefinitions.Count); // automatic merging should result in 2 embankments
@@ -1097,7 +1097,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // generate and merge left and right embankments
             embankmentDefinitions.Clear();
-            result = EmbankmentGenerator.GenerateEmbankments(network2.Branches.Cast<Channel>().ToList(), embankmentDefinitions, false,
+            result = EmbankmentGenerator.GenerateEmbankments(network2.Branches.Cast<Channel>().ToList(), embankmentDefinitions, 
                                                              10.0d, true, true, true);
             Assert.IsTrue(result);
             Assert.AreEqual(2, embankmentDefinitions.Count); // automatic merging should result in 2 embankments
@@ -1159,7 +1159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // generate and merge left and right embankments
             embankmentDefinitions.Clear();
-            result = EmbankmentGenerator.GenerateEmbankments(network3.Branches.Cast<Channel>().ToList(), embankmentDefinitions, false,
+            result = EmbankmentGenerator.GenerateEmbankments(network3.Branches.Cast<Channel>().ToList(), embankmentDefinitions, 
                                                              10.0d, true, true, true);
             Assert.IsTrue(result);
             Assert.AreEqual(6, embankmentDefinitions.Count); // no merge attempted

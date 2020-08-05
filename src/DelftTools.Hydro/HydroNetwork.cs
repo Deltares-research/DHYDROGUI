@@ -7,7 +7,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
-using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 
@@ -20,10 +19,6 @@ namespace DelftTools.Hydro
     [Entity]
     public partial class HydroNetwork : Network, IHydroNetwork
     {
-        public const string ImportBranchesActionName = "Import branches";
-        public const string CrossSectionSectionFormat = "Section{0:D3}";
-        private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetwork));
-
         private IEventedList<Route> routes;
 
 

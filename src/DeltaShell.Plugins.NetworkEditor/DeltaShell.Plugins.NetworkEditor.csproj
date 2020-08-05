@@ -198,7 +198,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollection.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\BranchToCrossSectionRelationInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\StructureFeatureToStructureRelationInteractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NetworkEditorApplicationPlugin.cs" />

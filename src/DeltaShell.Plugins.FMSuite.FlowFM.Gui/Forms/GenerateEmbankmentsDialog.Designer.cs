@@ -32,7 +32,6 @@
             this.CancelButton = new System.Windows.Forms.Button();
             this.checkBoxGenerateLeftEmbankments = new System.Windows.Forms.CheckBox();
             this.checkBoxGenerateRightEmbankments = new System.Windows.Forms.CheckBox();
-            this.radioButtonCrossSectionBased = new System.Windows.Forms.RadioButton();
             this.radioButtonConstantDistance = new System.Windows.Forms.RadioButton();
             this.constantDistanceTextBox = new DelftTools.Controls.Swf.Editors.NumEdit();
             this.checkBoxAutomaticMerge = new System.Windows.Forms.CheckBox();
@@ -84,16 +83,6 @@
             this.checkBoxGenerateRightEmbankments.Text = "Generate right embankments";
             this.checkBoxGenerateRightEmbankments.UseVisualStyleBackColor = true;
             // 
-            // radioButtonCrossSectionBased
-            // 
-            this.radioButtonCrossSectionBased.AutoSize = true;
-            this.radioButtonCrossSectionBased.Location = new System.Drawing.Point(12, 12);
-            this.radioButtonCrossSectionBased.Name = "radioButtonCrossSectionBased";
-            this.radioButtonCrossSectionBased.Size = new System.Drawing.Size(120, 17);
-            this.radioButtonCrossSectionBased.TabIndex = 8;
-            this.radioButtonCrossSectionBased.Text = "Cross-section based";
-            this.radioButtonCrossSectionBased.UseVisualStyleBackColor = true;
-            // 
             // radioButtonConstantDistance
             // 
             this.radioButtonConstantDistance.AutoSize = true;
@@ -138,7 +127,6 @@
             this.Controls.Add(this.checkBoxAutomaticMerge);
             this.Controls.Add(this.constantDistanceTextBox);
             this.Controls.Add(this.radioButtonConstantDistance);
-            this.Controls.Add(this.radioButtonCrossSectionBased);
             this.Controls.Add(this.checkBoxGenerateRightEmbankments);
             this.Controls.Add(this.checkBoxGenerateLeftEmbankments);
             this.Controls.Add(this.CancelButton);
@@ -162,7 +150,6 @@
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.CheckBox checkBoxGenerateLeftEmbankments;
         private System.Windows.Forms.CheckBox checkBoxGenerateRightEmbankments;
-        private System.Windows.Forms.RadioButton radioButtonCrossSectionBased;
         private System.Windows.Forms.RadioButton radioButtonConstantDistance;
         private DelftTools.Controls.Swf.Editors.NumEdit constantDistanceTextBox;
         private System.Windows.Forms.CheckBox checkBoxAutomaticMerge;

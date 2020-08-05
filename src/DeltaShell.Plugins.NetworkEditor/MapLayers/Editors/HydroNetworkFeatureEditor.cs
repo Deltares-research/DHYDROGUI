@@ -45,7 +45,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             }
             else if (feature is IChannel)
             {
-                yield return new BranchToCrossSectionRelationInteractor();
                 yield return new BranchToBranchFeatureRelationInteractor<CompositeBranchStructure>();
                 yield return new BranchToBranchFeatureRelationInteractor<NetworkLocation>();
                 yield return new BranchToBranchFeatureRelationInteractor<LateralSource>();

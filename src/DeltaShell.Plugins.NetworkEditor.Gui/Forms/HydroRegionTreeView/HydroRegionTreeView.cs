@@ -103,11 +103,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             return null;
         }
 
-        public void WaitUntilAllEventsAreProcessed()
-        {
-            TreeView.WaitUntilAllEventsAreProcessed();
-        }
-
         public new void Dispose()
         {
             gui.SelectionChanged -= GuiSelectionChanged;
@@ -115,15 +110,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         }
 
         private IHydroRegion SelectedRegion { get; set; }
-
-        private IHydroNetwork SelectedNetwork
-        {
-            get
-            {
-                return SelectedRegion as IHydroNetwork;
-            }
-        }
-
+        
         private void AddNodePresenters(GuiPlugin guiPlugin)
         {
             var treeNodePresenters = new ITreeNodePresenter[]
