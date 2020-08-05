@@ -1,13 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
@@ -19,11 +16,8 @@ namespace DeltaShell.Dimr
 {
     public class DimrRunner
     {
-        public const string DimrRunLogfileDataItemTag = "DimrRunLog";
         private const decimal fileVersion = 1;
         private const string createdBy = "Deltares, Coupling Team";
-        private const string DIMR_RUN_LOGFILE_NAME = "dimr_redirected.log";
-
         private static readonly ILog log = LogManager.GetLogger(typeof(DimrRunner));
 
         private static readonly dimrDocumentationXML documentation = new dimrDocumentationXML
@@ -72,7 +66,7 @@ namespace DeltaShell.Dimr
 
         public void OnInitialize()
         {
-            model.DataItems.RemoveAllWhere(di => di.Tag == DimrRunLogfileDataItemTag);
+            model.DataItems.RemoveAllWhere(di => di.Tag == DimrRunHelper.dimrRunLogfileDataItemTag);
             if (model.RunsInIntegratedModel)
             {
                 return;

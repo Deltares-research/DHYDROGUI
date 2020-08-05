@@ -7,11 +7,24 @@ using DelftTools.Utils;
 
 namespace DeltaShell.Dimr
 {
+    /// <summary>
+    /// DimrRunHelper contains generic logic for running models
+    /// by using the DimrRunner or HydroModel run logic.
+    /// </summary>
     public static class DimrRunHelper
     {
+        /// <summary>
+        /// DataItem tag name.
+        /// </summary>
+        public const string dimrRunLogfileDataItemTag = "DimrRunLog";
         private const string dimrRunLogfileName = "dimr_redirected.log";
-        private const string dimrRunLogfileDataItemTag = "DimrRunLog";
-
+        
+        /// <summary>
+        /// Method for reading the DimrRunLog file.
+        /// </summary>
+        /// <param name="model"> The model of the run</param>
+        /// <param name="dimrLogDirectory"> The directory where
+        /// the log file should be after a run.</param>
         public static void ConnectDimrRunLogFile(IModel model, string dimrLogDirectory)
         {
             string completeDimrLogFilename = Path.Combine(dimrLogDirectory, dimrRunLogfileName);
@@ -32,8 +45,6 @@ namespace DeltaShell.Dimr
 
             using (Stream objStream = File.OpenRead(completeDimrLogFilename))
             {
-                // Read data from file
-                byte[] arrData = {};
                 var stringBuilder = new StringBuilder();
                 // Read data from file until read position is not equals to length of file
                 while (objStream.Position != objStream.Length)
@@ -43,14 +54,7 @@ namespace DeltaShell.Dimr
 
                     // If bytes to read greater than 2 mega bytes size create array of 2 mega bytes
                     // Else create array of remaining bytes
-                    if (lRemainingBytes > 262144)
-                    {
-                        arrData = new byte[262144];
-                    }
-                    else
-                    {
-                        arrData = new byte[lRemainingBytes];
-                    }
+                    byte[] arrData = lRemainingBytes > 262144 ? new byte[262144] : new byte[lRemainingBytes];
 
                     // Read data from file
                     objStream.Read(arrData, 0, arrData.Length);
