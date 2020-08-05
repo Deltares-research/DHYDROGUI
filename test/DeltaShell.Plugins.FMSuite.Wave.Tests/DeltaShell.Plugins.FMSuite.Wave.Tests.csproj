@@ -422,7 +422,6 @@
     <Compile Include="Gui\WaveTimePointValidatorTest.cs" />
     <Compile Include="WaveApplicationPluginTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
-    <Compile Include="WaveModelApiTest.cs" />
     <Compile Include="WaveModelRunTest.cs" />
     <Compile Include="WaveModelSaveLoadTest.cs" />
     <Compile Include="WaveModelTest.cs" />

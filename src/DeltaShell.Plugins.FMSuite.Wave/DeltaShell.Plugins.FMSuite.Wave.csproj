@@ -120,12 +120,8 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Api\IWaveModelApi.cs" />
-    <Compile Include="Api\RemoteWaveModelApi.cs" />
     <Compile Include="Api\WaveEnvironmentConstants.cs" />
     <Compile Include="Api\WaveEnvironmentHelper.cs" />
-    <Compile Include="Api\WaveModelApi.cs" />
-    <Compile Include="Api\WaveModelDll.cs" />
     <Compile Include="Boundaries\BoundaryContainer.cs" />
     <Compile Include="Boundaries\BoundaryContainerSyncService.cs" />
     <Compile Include="Boundaries\CachedBoundary.cs" />
