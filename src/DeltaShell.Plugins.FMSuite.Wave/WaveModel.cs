@@ -60,7 +60,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private readonly DimrRunner runner;
         private ICoordinateSystem coordinateSystem;
         private string progressText;
-        private IWaveModelApi waveApi;
 
         private IWaveDomainData outerDomain;
         private string previousGridName;
@@ -540,11 +539,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public void Dispose()
         {
-            if (waveApi != null)
-            {
-                waveApi.Dispose();
-            }
-
             RestoreEnvironment();
         }
 
@@ -667,19 +661,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             previousProgress = ProgressPercentage;
             runner.OnProgressChanged();
             base.OnProgressChanged();
-        }
-
-        protected override void OnCancel()
-        {
-            if (waveApi == null)
-            {
-                return; // we never got past validation..
-            }
-
-            waveApi.Dispose();
-            waveApi = null;
-
-            base.OnCancel();
         }
 
         protected virtual void ReconnectWavmFile(string outputPath)
