@@ -1091,14 +1091,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [EditAction]
         public virtual string DimrExportDirectoryPath
         {
-            get
-            {
-                return ExplicitWorkingDirectory;
-            }
-            set
-            {
-                ExplicitWorkingDirectory = value;
-            }
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
         }
 
         public virtual string DimrModelRelativeWorkingDirectory
