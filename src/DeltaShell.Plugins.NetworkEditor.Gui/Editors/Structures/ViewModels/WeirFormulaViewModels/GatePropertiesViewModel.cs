@@ -1,4 +1,6 @@
-﻿using DelftTools.Functions;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
@@ -9,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// <see cref="GatePropertiesViewModel"/> defines the view model for the
     /// <see cref="Views.WeirFormulaViews.GatePropertiesView"/>.
     /// </summary>
-    public sealed class GatePropertiesViewModel
+    public sealed class GatePropertiesViewModel : INotifyPropertyChanged
     {
         private readonly IGatedWeirFormula formula;
 
@@ -43,7 +45,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double GateLowerEdgeLevel
         {
             get => formula.LowerEdgeLevel;
-            set => formula.LowerEdgeLevel = value;
+            set
+            {
+                // The floating point values are provided by the user in an entry
+                // As such no error can be introduced, and either values or the same
+                // or they should be updated.
+                if (value == GateLowerEdgeLevel)
+                {
+                    return;
+                }
+
+                formula.LowerEdgeLevel = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -53,7 +67,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public bool UseGateLowerEdgeLevelTimeSeries
         {
             get => formula.UseLowerEdgeLevelTimeSeries;
-            set => formula.UseLowerEdgeLevelTimeSeries = value;
+            set
+            {
+                if (value == UseGateLowerEdgeLevelTimeSeries)
+                {
+                    return;
+                }
+
+                formula.UseLowerEdgeLevelTimeSeries = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -68,7 +91,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double GateHeight
         {
             get => formula.DoorHeight;
-            set => formula.DoorHeight = value;
+            set
+            {
+                if (value == GateHeight)
+                {
+                    return;
+                }
+
+                formula.DoorHeight = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -77,7 +109,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double HorizontalOpeningWidth
         {
             get => formula.HorizontalDoorOpeningWidth;
-            set => formula.HorizontalDoorOpeningWidth = value;
+            set
+            {
+                if (value == HorizontalOpeningWidth)
+                {
+                    return;
+                }
+
+                formula.HorizontalDoorOpeningWidth = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -87,7 +128,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public bool UseHorizontalOpeningWidthTimeSeries
         {
             get => formula.UseHorizontalDoorOpeningWidthTimeSeries;
-            set => formula.UseHorizontalDoorOpeningWidthTimeSeries = value;
+            set
+            {
+                if (value == UseHorizontalOpeningWidthTimeSeries)
+                {
+                    return;
+                }
+                
+                formula.UseHorizontalDoorOpeningWidthTimeSeries = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -102,7 +152,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public GateOpeningDirection GateOpeningDirection
         {
             get => formula.HorizontalDoorOpeningDirection;
-            set => formula.HorizontalDoorOpeningDirection = value;
+            set
+            {
+                if (value == GateOpeningDirection)
+                {
+                    return;
+                }
+                
+                formula.HorizontalDoorOpeningDirection = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -115,5 +174,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// chosen.
         /// </summary>
         public bool CanChooseGateOpeningDirection { get; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -1,5 +1,8 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System.ComponentModel;
+using AutoFixture;
+using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
 using NUnit.Framework;
 
@@ -36,6 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                                                             canChooseGateOpeningDirection);
 
                 // Assert
+                Assert.That(viewModel, Is.InstanceOf(typeof(INotifyPropertyChanged)));
                 Assert.That(viewModel.WeirPropertiesViewModel, 
                             Is.SameAs(weirPropertiesViewModel));
                 Assert.That(viewModel.CanChooseGateOpeningDirection,
@@ -92,11 +96,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double lowerEdgeLevel = 20.0;
 
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Call
                 viewModel.GateLowerEdgeLevel = lowerEdgeLevel;
@@ -104,6 +111,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 // Assert
                 Assert.That(viewModel.GateLowerEdgeLevel, Is.EqualTo(lowerEdgeLevel));
                 Assert.That(formula.LowerEdgeLevel, Is.EqualTo(lowerEdgeLevel));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
+                Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                            Is.EqualTo(nameof(viewModel.GateLowerEdgeLevel)));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+            }
+        }
+
+        [Test]
+        public void GateLowerEdgeLevel_SameValue_DoesNotFirePropertyChanged()
+        {
+            // Setup
+            var fixture = new Fixture();
+            var lowerEdgeLevel = fixture.Create<double>();
+            var formula = new GatedWeirFormula(true) { LowerEdgeLevel = lowerEdgeLevel };
+            var weir2D = new Weir2D { WeirFormula = formula };
+
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
+            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            {
+                var viewModel = new GatePropertiesViewModel(formula,
+                                                            weirPropertiesViewModel,
+                                                            true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+
+                // Call
+                viewModel.GateLowerEdgeLevel = lowerEdgeLevel;
+
+                // Assert
+                Assert.That(viewModel.GateLowerEdgeLevel, Is.EqualTo(lowerEdgeLevel));
+                Assert.That(formula.LowerEdgeLevel, Is.EqualTo(lowerEdgeLevel));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
             }
         }
 
@@ -116,11 +163,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             bool useGateLowerEdgeLevel = !formula.UseLowerEdgeLevelTimeSeries;
 
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Call
                 viewModel.UseGateLowerEdgeLevelTimeSeries = useGateLowerEdgeLevel;
@@ -130,8 +180,51 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(useGateLowerEdgeLevel));
                 Assert.That(formula.UseLowerEdgeLevelTimeSeries, 
                             Is.EqualTo(useGateLowerEdgeLevel));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
+                Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                            Is.EqualTo(nameof(viewModel.UseGateLowerEdgeLevelTimeSeries)));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
             }
         }
+
+        [Test]
+        public void UseGateLowerEdgeLevelTimeSeries_SameValue_DoesNotFirePropertyChanged()
+        {
+            // Setup
+            var formula = new GatedWeirFormula(true);
+            var weir2D = new Weir2D { WeirFormula = formula };
+
+            bool useGateLowerEdgeLevel = formula.UseLowerEdgeLevelTimeSeries;
+
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
+            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            {
+                var viewModel = new GatePropertiesViewModel(formula,
+                                                            weirPropertiesViewModel,
+                                                            true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+
+                // Call
+                viewModel.UseGateLowerEdgeLevelTimeSeries = useGateLowerEdgeLevel;
+
+                // Assert
+                Assert.That(viewModel.UseGateLowerEdgeLevelTimeSeries, 
+                            Is.EqualTo(useGateLowerEdgeLevel));
+                Assert.That(formula.UseLowerEdgeLevelTimeSeries, 
+                            Is.EqualTo(useGateLowerEdgeLevel));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+            }
+        }
+
 
         [Test]
         public void GateHeight_PropagatesSetCorrectly()
@@ -142,11 +235,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double gateHeight = 20.0;
 
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Call
                 viewModel.GateHeight = gateHeight;
@@ -154,6 +250,45 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 // Assert
                 Assert.That(viewModel.GateHeight, Is.EqualTo(gateHeight));
                 Assert.That(formula.DoorHeight, Is.EqualTo(gateHeight));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
+                Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                            Is.EqualTo(nameof(viewModel.GateHeight)));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+            }
+        }
+
+        [Test]
+        public void GateHeight_SameValue_DoesNotFirePropertyChanged()
+        {
+            // Setup
+            const double gateHeight = 20.0;
+            var formula = new GatedWeirFormula(true) { DoorHeight = gateHeight };
+            var weir2D = new Weir2D { WeirFormula = formula };
+
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
+            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            {
+                var viewModel = new GatePropertiesViewModel(formula,
+                                                            weirPropertiesViewModel,
+                                                            true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+
+                // Call
+                viewModel.GateHeight = gateHeight;
+
+                // Assert
+                Assert.That(viewModel.GateHeight, Is.EqualTo(gateHeight));
+                Assert.That(formula.DoorHeight, Is.EqualTo(gateHeight));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
             }
         }
 
@@ -166,11 +301,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double openingWidth = 20.0;
 
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Call
                 viewModel.HorizontalOpeningWidth = openingWidth;
@@ -178,8 +316,47 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 // Assert
                 Assert.That(viewModel.HorizontalOpeningWidth, Is.EqualTo(openingWidth));
                 Assert.That(formula.HorizontalDoorOpeningWidth, Is.EqualTo(openingWidth));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
+                Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                            Is.EqualTo(nameof(viewModel.HorizontalOpeningWidth)));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
             }
-            
+        }
+
+        [Test]
+        public void HorizontalOpeningWidth_SameValue_DoesNotFirePropertyChanged()
+        {
+            // Setup
+            const double openingWidth = 20.0;
+
+            var formula = new GatedWeirFormula(true) { HorizontalDoorOpeningWidth = openingWidth };
+            var weir2D = new Weir2D { WeirFormula = formula };
+
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
+            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            {
+                var viewModel = new GatePropertiesViewModel(formula,
+                                                            weirPropertiesViewModel,
+                                                            true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+
+                // Call
+                viewModel.HorizontalOpeningWidth = openingWidth;
+
+                // Assert
+                Assert.That(viewModel.HorizontalOpeningWidth, Is.EqualTo(openingWidth));
+                Assert.That(formula.HorizontalDoorOpeningWidth, Is.EqualTo(openingWidth));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+            }
         }
 
         [Test]
@@ -192,11 +369,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             bool useHorizontalDoorOpeningWidthTimeSeries = 
                 !formula.UseHorizontalDoorOpeningWidthTimeSeries;
 
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Call
                 viewModel.UseHorizontalOpeningWidthTimeSeries = 
@@ -207,6 +387,50 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(useHorizontalDoorOpeningWidthTimeSeries));
                 Assert.That(formula.UseHorizontalDoorOpeningWidthTimeSeries, 
                             Is.EqualTo(useHorizontalDoorOpeningWidthTimeSeries));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
+                Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                            Is.EqualTo(nameof(viewModel.UseHorizontalOpeningWidthTimeSeries)));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+            }
+        }
+
+        [Test]
+        public void UseHorizontalOpeningWidthTimeSeries_SameValue_DoesNotFirePropertyChanged()
+        {
+            // Setup
+            var formula = new GatedWeirFormula(true);
+            var weir2D = new Weir2D { WeirFormula = formula };
+
+            bool useHorizontalDoorOpeningWidthTimeSeries = 
+                formula.UseHorizontalDoorOpeningWidthTimeSeries;
+
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
+            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            {
+                var viewModel = new GatePropertiesViewModel(formula,
+                                                            weirPropertiesViewModel,
+                                                            true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+
+                // Call
+                viewModel.UseHorizontalOpeningWidthTimeSeries = 
+                    useHorizontalDoorOpeningWidthTimeSeries;
+
+                // Assert
+                Assert.That(viewModel.UseHorizontalOpeningWidthTimeSeries, 
+                            Is.EqualTo(useHorizontalDoorOpeningWidthTimeSeries));
+                Assert.That(formula.UseHorizontalDoorOpeningWidthTimeSeries, 
+                            Is.EqualTo(useHorizontalDoorOpeningWidthTimeSeries));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
             }
         }
 
@@ -223,12 +447,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             const GateOpeningDirection openingDirection =
                 GateOpeningDirection.Symmetric;
 
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Call
                 viewModel.GateOpeningDirection = openingDirection;
@@ -238,6 +464,53 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(openingDirection));
                 Assert.That(formula.HorizontalDoorOpeningDirection, 
                             Is.EqualTo(openingDirection));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
+                Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                            Is.EqualTo(nameof(viewModel.GateOpeningDirection)));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+            }
+        }
+
+        [Test]
+        public void GateOpeningDirection_SameValue_DoesNotFirePropertyChanged()
+        {
+            // Setup
+            const GateOpeningDirection openingDirection =
+                GateOpeningDirection.Symmetric;
+
+            var formula = new GatedWeirFormula(true)
+            {
+                HorizontalDoorOpeningDirection = openingDirection,
+            };
+
+            var weir2D = new Weir2D { WeirFormula = formula };
+
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+
+            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            {
+                var viewModel = new GatePropertiesViewModel(formula,
+                                                            weirPropertiesViewModel,
+                                                            true);
+                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+
+                // Call
+                viewModel.GateOpeningDirection = openingDirection;
+
+                // Assert
+                Assert.That(viewModel.GateOpeningDirection, 
+                            Is.EqualTo(openingDirection));
+                Assert.That(formula.HorizontalDoorOpeningDirection, 
+                            Is.EqualTo(openingDirection));
+
+                Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
+
+                // Clean up
+                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
             }
         }
     }
