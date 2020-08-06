@@ -27,28 +27,24 @@
                  TextAlignment="Right"
                  VerticalAlignment="Center"
                  Style="{StaticResource ControlStyle}"
-                 HorizontalAlignment="Stretch"
                  attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
         <TextBox Grid.Column="1"
                  Text="{Binding ElementName=GeneralStructureStreamFieldsViewControl, Path=Upstream2}"
                  TextAlignment="Right"
                  VerticalAlignment="Center"
                  Style="{StaticResource ControlStyle}"
-                 HorizontalAlignment="Stretch"
                  attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
         <TextBox Grid.Column="2"
                  Text="{Binding ElementName=GeneralStructureStreamFieldsViewControl, Path=Downstream1}"
                  TextAlignment="Right"
                  VerticalAlignment="Center"
                  Style="{StaticResource ControlStyle}"
-                 HorizontalAlignment="Stretch"
                  attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
         <TextBox Grid.Column="3"
                  Text="{Binding ElementName=GeneralStructureStreamFieldsViewControl, Path=Downstream2}"
                  TextAlignment="Right"
                  VerticalAlignment="Center"
                  Style="{StaticResource ControlStyle}"
-                 HorizontalAlignment="Stretch"
                  attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
     </Grid>
 </UserControl>

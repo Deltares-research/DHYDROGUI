@@ -38,14 +38,12 @@
                      TextAlignment="Right"
                      VerticalAlignment="Center"
                      Style="{StaticResource ControlStyle}"
-                     HorizontalAlignment="Stretch"
                      attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
             <TextBox Grid.Column="2"
                      Text="{Binding ElementName=GeneralStructureCoefficientViewControl, Path=ValueContentSecond}"
                      TextAlignment="Right"
                      VerticalAlignment="Center"
                      Style="{StaticResource ControlStyle}"
-                     HorizontalAlignment="Stretch"
                      attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
         </Grid>
     </Grid>
