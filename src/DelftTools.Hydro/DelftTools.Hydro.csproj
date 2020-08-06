@@ -79,33 +79,33 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=1.5.0.51457-beta, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+    <Reference Include="DelftTools.Shell.Core, Version=1.5.0.51475-beta, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -117,11 +117,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
@@ -129,12 +129,12 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="QuickGraph">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -154,41 +154,11 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="BedLevelNetworkCoverageBuilder.cs" />
     <Compile Include="BranchFeatureHydroObject.cs" />
     <Compile Include="BranchStructure.cs" />
     <Compile Include="Catchment.cs" />
     <Compile Include="CatchmentType.cs" />
     <Compile Include="Channel.cs" />
-    <Compile Include="CrossSections\CrossSection.cs" />
-    <Compile Include="CrossSections\CrossSectionDefinitionExtensions.cs" />
-    <Compile Include="CrossSections\CrossSectionDefinitionProxy.cs" />
-    <Compile Include="CrossSections\CrossSectionDefinitionStandard.cs" />
-    <Compile Include="CrossSections\CrossSectionDefinitionZw.cs" />
-    <Compile Include="CrossSections\DataSets\CrossSectionDataSetNew.cs" />
-    <Compile Include="CrossSections\DataSets\LightDataTable.cs" />
-    <Compile Include="CrossSections\ICrossSectionLocation.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeArch.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeBase.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeCunette.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeEgg.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeElliptical.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeRectangle.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeRound.cs" />
-    <Compile Include="CrossSections\CrossSectionStandardShapeType.cs" />
-    <Compile Include="CrossSections\CrossSectionZWExtensions.cs" />
-    <Compile Include="CrossSections\CrossSectionSectionType.cs" />
-    <Compile Include="CrossSections\CrossSectionDefinitionXYZ.cs" />
-    <Compile Include="CrossSections\CrossSectionDefinitionYz.cs" />
-    <Compile Include="CrossSections\DataSets\FastXYZDataTable.cs" />
-    <Compile Include="CrossSections\DataSets\FastYZDataTable.cs" />
-    <Compile Include="CrossSections\DataSets\FastZWDataTable.cs" />
-    <Compile Include="CrossSections\ICrossSection.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeWidthHeightBase.cs" />
-    <Compile Include="CrossSections\StandardShapes\ICrossSectionStandardShape.cs" />
-    <Compile Include="CrossSections\ISummerDikeEnabledDefinition.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeSteelCunette.cs" />
-    <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeTrapezium.cs" />
     <Compile Include="CulvertFrictionType.cs" />
     <Compile Include="DrainageBasin.cs" />
     <Compile Include="Embankment.cs" />
@@ -212,9 +182,7 @@
     <Compile Include="FrictionTypeConverter.cs" />
     <Compile Include="Helpers\ActivitiesExtensions.cs" />
     <Compile Include="Helpers\ActivityExtensions.cs" />
-    <Compile Include="Helpers\CrossSectionConverter.cs" />
     <Compile Include="Helpers\ICoordinateSystemExtensions.cs" />
-    <Compile Include="Helpers\StandardCrossSectionsFactory.cs" />
     <Compile Include="Helpers\ThreadingHelper.cs" />
     <Compile Include="HydroArea.cs" />
     <Compile Include="HydroRegion.cs" />
@@ -232,17 +200,11 @@
     <Compile Include="LandBoundary2D.cs" />
     <Compile Include="ObservationCrossSection2D.cs" />
     <Compile Include="ObservationPoint.cs" />
-    <Compile Include="CrossSections\CrossSectionDefinition.cs" />
-    <Compile Include="CrossSections\CrossSectionSection.cs" />
-    <Compile Include="Helpers\CrossSectionValidator.cs" />
-    <Compile Include="CrossSections\CrossSectionType.cs" />
     <Compile Include="FlowDirection.cs" />
-    <Compile Include="Helpers\CrossSectionHelper.cs" />
     <Compile Include="Helpers\HydroNetworkHelper.cs" />
     <Compile Include="HydroNetwork.cs" />
     <Compile Include="HydroNode.cs" />
     <Compile Include="IChannel.cs" />
-    <Compile Include="CrossSections\ICrossSectionDefinition.cs" />
     <Compile Include="IHydroNetwork.cs" />
     <Compile Include="IHydroNetworkFeature.cs" />
     <Compile Include="IHydroNode.cs" />
@@ -259,17 +221,12 @@
     <Compile Include="RoughnessType.cs" />
     <Compile Include="RoughnessTypeDefaults.cs" />
     <Compile Include="RunoffBoundary.cs" />
-    <Compile Include="Structures\Bridge.cs" />
     <Compile Include="Structures\BridgeFrictionType.cs" />
     <Compile Include="Structures\CompositeBranchStructure.cs" />
-    <Compile Include="Structures\Culvert.cs" />
-    <Compile Include="Structures\Culvert350LegacyLoader.cs" />
     <Compile Include="Structures\ExtraResistance.cs" />
     <Compile Include="Structures\Gate.cs" />
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
-    <Compile Include="Structures\IBridge.cs" />
     <Compile Include="Structures\ICompositeBranchStructure.cs" />
-    <Compile Include="Structures\ICulvert.cs" />
     <Compile Include="Structures\IExtraResistance.cs" />
     <Compile Include="Structures\IFrictionData.cs" />
     <Compile Include="Structures\IGate.cs" />
@@ -295,8 +252,6 @@
     <Compile Include="Structures\WeirFormula\PierWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\RiverWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\SimpleWeirFormula.cs" />
-    <Compile Include="CrossSections\HeightFlowStorageWidth.cs" />
-    <Compile Include="CrossSections\SummerDike.cs" />
     <Compile Include="HydroTimeSeriesFactory.cs" />
     <Compile Include="StructureType.cs" />
     <Compile Include="Structures\ThinDam2D.cs" />
@@ -344,9 +299,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Channel.hbm.xml" />
-    <EmbeddedResource Include="CrossSections\CrossSection.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="HydroNetwork.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -376,17 +328,6 @@
     <EmbeddedResource Include="Structures\WeirFormula\SimpleWeirFormula.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Structures\Culvert.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Structures\Bridge.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CrossSections\CrossSectionSection.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Structures\ExtraResistance.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -396,45 +337,7 @@
     <EmbeddedResource Include="ObservationPoint.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CrossSections\CrossSectionSectionType.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CrossSections\CrossSectionDefinitionZW.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CrossSections\CrossSectionDefinitionYZ.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CrossSections\CrossSectionDefinitionXYZ.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Retention.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CrossSections\CrossSectionDefinition.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CrossSections\CrossSectionDefinitionProxy.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CrossSections\CrossSectionDefinitionStandard.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CrossSections\StandardShapes\CrossSectionStandardShape.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Catchment.hbm.xml" />
@@ -501,9 +404,6 @@
     <EmbeddedResource Include="Embankment.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Structures\Culvert.3.5.0.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="HydroNetwork.3.5.1.hbm.xml" />
   </ItemGroup>
   <ItemGroup />
@@ -526,8 +426,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.5.0.51457-beta\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\build\net461\DeltaShell.Framework.targets')" />
 </Project>

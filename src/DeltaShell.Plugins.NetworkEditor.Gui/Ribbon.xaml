@@ -20,18 +20,6 @@
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
 
-        <fluent:RibbonTabItem x:Name="tabCrossSectionTools" Header="Cross-Section Tools" Group="{Binding ElementName=geospatialContextualGroup}">
-            <fluent:RibbonGroupBox Header="Show/Hide">
-                <fluent:ToggleButton x:Name="ButtonShowCrossSectionHistory"
-                                     Header="Cross-Sections History"
-                                     ToolTip="Show Cross-Sections History"
-                                     LargeIcon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\clock.png"
-                                     Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\clock.png"
-                                     Click="ButtonShowCrossSectionHistory_Click"
-                                     SizeDefinition="Large,Middle,Small" />
-            </fluent:RibbonGroupBox>
-        </fluent:RibbonTabItem>
-
         <fluent:RibbonTabItem Header="Map" x:Name="tabRegion" Group="{Binding ElementName=geospatialContextualGroup}" ReduceOrder="HydroRegion,HydroNetwork,DrainageBasin,NetworkCoverage,Analysis" fluent:KeyTip.Keys="M">
             <fluent:RibbonGroupBox Header="Network" x:Name="HydroNetwork" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkGroup.png" fluent:KeyTip.Keys="ZN">
 
@@ -40,20 +28,9 @@
                 <fluent:ToggleButton x:Name="ButtonAddNewBranchScribble" Header="Add Branch (Freeform)" ToolTip="Add new branch (Freeform)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches11.png" Click="ButtonAddNewBranchScribble_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="F" />
                 <Separator />
 
-                <!-- cross-sections -->
-                <fluent:ToggleButton x:Name="ButtonAddNewCrossSectionYZ" Header="Add CrossSection (YZ)" ToolTip="Add CrossSection (YZ)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\CrossSectionSmall.png" Click="ButtonAddNewCrossSectionYZ_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCrossSectionZW" Header="Add CrossSection (ZW)" ToolTip="Add CrossSection (ZW)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\CrossSectionTabulatedSmall.png" Click="ButtonAddNewCrossSectionZW_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCrossSectionXYZ" Header="Add CrossSection (XYZ)" ToolTip="Add CrossSection (XYZ)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\CrossSectionSmallXYZ.png" Click="ButtonAddNewCrossSectionXYZ_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCrossSectionStandard" Header="Add CrossSection (Standard)" ToolTip="Add CrossSection (Standard)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\CrossSectionStandardSmall.png" Click="ButtonAddNewCrossSectionStandard_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCrossSectionDefault" Header="Add CrossSection (Default)" ToolTip="Add CrossSection (Default)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\AddDefaultCrossSectionDefinition.png" Click="ButtonAddNewCrossSectionDefault_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCrossSectionInterpolated" Header="Add CrossSection (Interpolated)" ToolTip="Add CrossSection (Interpolated)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\AddInterpolatedCrossSection.png" Click="ButtonAddNewCrossSectionInterpolated_Click" SizeDefinition="Small,Small,Small" />
-                <Separator />
-
                 <!-- structures -->
                 <fluent:ToggleButton x:Name="ButtonAddNewPump" Header="Add Pump" ToolTip="Add Pump" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\PumpSmall.png" Click="ButtonAddNewPump_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewWeir" Header="Add Weir" ToolTip="Add Weir" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\WeirSmall.png" Click="ButtonAddNewWeir_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCulvert" Header="Add Culvert" ToolTip="Add Culvert" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\CulvertSmall.png" Click="ButtonAddNewCulvert_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewBridge" Header="Add Bridge" ToolTip="Add Bridge" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\BridgeSmall.png" Click="ButtonAddNewBridge_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewExtraResistance" Header="Add Extra Resistance" ToolTip="Add Extra Resistance" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\ExtraResistanceSmall.png" Click="ButtonAddNewExtraResistance_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewLateralSource" Header="Add Lateral Source" ToolTip="Add Lateral Source" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\LateralSourceSmall.png" Click="ButtonAddNewLateralSource_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewRetention" Header="Add Retention" ToolTip="Add Retention" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Retention.png" Click="ButtonAddNewRetention_Click" SizeDefinition="Small,Small,Small" />

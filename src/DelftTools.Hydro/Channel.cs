@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -64,11 +63,8 @@ namespace DelftTools.Hydro
                 // properties e.g. public virtual IEnumerable<IPump> Pumps { get; private set; }
                 // will have performance impact. Possible issue in implementation of propertychanged aspect
                 // check with performance tests in HydroNetworkTest
-                crossSections = BranchFeatures.OfType<ICrossSection>();
                 structures = BranchFeatures.OfType<IStructure1D>();
                 pumps = BranchFeatures.OfType<IPump>();
-                culverts = BranchFeatures.OfType<ICulvert>();
-                bridges = BranchFeatures.OfType<IBridge>();
                 weirs = BranchFeatures.OfType<IWeir>();
                 gates = BranchFeatures.OfType<IGate>();
                 branchSources = BranchFeatures.OfType<LateralSource>();
@@ -129,25 +125,16 @@ namespace DelftTools.Hydro
 
         #region IChannel Members
 
-        private IEnumerable<ICrossSection> crossSections;
         private IEnumerable<IStructure1D> structures;
         private IEnumerable<IPump> pumps;
-        private IEnumerable<ICulvert> culverts;
-        private IEnumerable<IBridge> bridges;
         private IEnumerable<IWeir> weirs;
         private IEnumerable<IGate> gates;
         private IEnumerable<LateralSource> branchSources;
         private IEnumerable<ObservationPoint> observationPoints;
 
-        public virtual IEnumerable<ICrossSection> CrossSections => crossSections;
-
         public virtual IEnumerable<IStructure1D> Structures => structures;
 
         public virtual IEnumerable<IPump> Pumps => pumps;
-
-        public virtual IEnumerable<ICulvert> Culverts => culverts;
-
-        public virtual IEnumerable<IBridge> Bridges => bridges;
 
         public virtual IEnumerable<IWeir> Weirs => weirs;
 

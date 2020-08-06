@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
-using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 
@@ -21,35 +19,19 @@ namespace DelftTools.Hydro
     [Entity]
     public partial class HydroNetwork : Network, IHydroNetwork
     {
-        public const string ImportBranchesActionName = "Import branches";
-        public const string CrossSectionSectionFormat = "Section{0:D3}";
-        private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetwork));
-
         private IEventedList<Route> routes;
 
-        private IEventedList<ICrossSectionDefinition> sharedCrossSectionDefinitions;
-
-        private IEventedList<CrossSectionSectionType> crossSectionSectionTypes;
 
         public HydroNetwork()
         {
             Name = "network1";
-            CrossSectionSectionTypes = new EventedList<CrossSectionSectionType>();
-            SharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition>();
-            Routes = new EventedList<Route>();
-
-            var section = new CrossSectionSectionType {Name = "Main"};
-
-            CrossSectionSectionTypes.Add(section);
+           Routes = new EventedList<Route>();
 
             Links = new EventedList<HydroLink>();
             SubRegions = new EventedList<IRegion>();
         }
 
-        [Aggregation]
-        public virtual ICrossSectionDefinition DefaultCrossSectionDefinition { get; set; }
-
-        public virtual IEventedList<Route> Routes
+      public virtual IEventedList<Route> Routes
         {
             get => routes;
             protected set
@@ -68,45 +50,7 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual IEventedList<ICrossSectionDefinition> SharedCrossSectionDefinitions
-        {
-            get => sharedCrossSectionDefinitions;
-            protected set
-            {
-                if (sharedCrossSectionDefinitions != null)
-                {
-                    sharedCrossSectionDefinitions.CollectionChanging -= SharedCrossSectionDefinitionsCollectionChanging;
-                }
-
-                sharedCrossSectionDefinitions = value;
-                if (sharedCrossSectionDefinitions != null)
-                {
-                    sharedCrossSectionDefinitions.CollectionChanging += SharedCrossSectionDefinitionsCollectionChanging;
-                }
-            }
-        }
-
-        public virtual IEventedList<CrossSectionSectionType> CrossSectionSectionTypes
-        {
-            get => crossSectionSectionTypes;
-            set
-            {
-                if (crossSectionSectionTypes != null)
-                {
-                    crossSectionSectionTypes.CollectionChanging -= SectionTypesCollectionChanging;
-                    ((INotifyPropertyChanged) crossSectionSectionTypes).PropertyChanged -= SectionTypesPropertyChanged;
-                }
-
-                crossSectionSectionTypes = value;
-                if (crossSectionSectionTypes != null)
-                {
-                    crossSectionSectionTypes.CollectionChanging += SectionTypesCollectionChanging;
-                    ((INotifyPropertyChanged) crossSectionSectionTypes).PropertyChanged += SectionTypesPropertyChanged;
-                }
-            }
-        }
-
-        public override IEventedList<IBranch> Branches
+       public override IEventedList<IBranch> Branches
         {
             get => base.Branches;
             set
@@ -121,13 +65,10 @@ namespace DelftTools.Hydro
                 Structures = BranchFeatures.OfType<IStructure1D>(); // TODO: join with node features (manholes)
                 CompositeBranchStructures = BranchFeatures.OfType<ICompositeBranchStructure>();
 
-                CrossSections = BranchFeatures.OfType<ICrossSection>();
                 Pumps = BranchFeatures.OfType<IPump>();
                 Weirs = BranchFeatures.OfType<IWeir>();
                 Gates = BranchFeatures.OfType<IGate>();
                 Gullies = BranchFeatures.OfType<IGully>();
-                Culverts = BranchFeatures.OfType<ICulvert>();
-                Bridges = BranchFeatures.OfType<IBridge>();
                 ExtraResistances = BranchFeatures.OfType<IExtraResistance>();
                 LateralSources = BranchFeatures.OfType<ILateralSource>();
                 Retentions = BranchFeatures.OfType<IRetention>();
@@ -155,14 +96,11 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<IManhole> Manholes { get; protected set; }
 
         public virtual IEnumerable<IStructure1D> Structures { get; protected set; }
-        public virtual IEnumerable<ICompositeBranchStructure> CompositeBranchStructures { get; protected set; }
-        public virtual IEnumerable<ICrossSection> CrossSections { get; protected set; }
+        public virtual IEnumerable<ICompositeBranchStructure> CompositeBranchStructures { get; protected set; } 
         public virtual IEnumerable<IPump> Pumps { get; protected set; }
         public virtual IEnumerable<IWeir> Weirs { get; protected set; }
         public virtual IEnumerable<IGate> Gates { get; protected set; }
         public virtual IEnumerable<IGully> Gullies { get; protected set; }
-        public virtual IEnumerable<ICulvert> Culverts { get; protected set; }
-        public virtual IEnumerable<IBridge> Bridges { get; protected set; }
         public virtual IEnumerable<IExtraResistance> ExtraResistances { get; protected set; }
         public virtual IEnumerable<ILateralSource> LateralSources { get; protected set; }
         public virtual IEnumerable<IRetention> Retentions { get; protected set; }
@@ -210,32 +148,12 @@ namespace DelftTools.Hydro
             {
                 yield return node;
             }
-
-            foreach (CrossSectionSectionType crossSectionSectionType in CrossSectionSectionTypes)
-            {
-                yield return crossSectionSectionType;
-            }
         }
 
         public override object Clone()
         {
             var clone = (HydroNetwork) base.Clone();
-            clone.crossSectionSectionTypes.Clear();
-            foreach (CrossSectionSectionType crossSectionSectionType in CrossSectionSectionTypes)
-            {
-                clone.crossSectionSectionTypes.Add((CrossSectionSectionType) crossSectionSectionType.Clone());
-            }
-
-            foreach (ICrossSectionDefinition definition in SharedCrossSectionDefinitions)
-            {
-                var definitionClone = (ICrossSectionDefinition) definition.Clone();
-                clone.SharedCrossSectionDefinitions.Add(definitionClone);
-                if (Equals(definition, DefaultCrossSectionDefinition))
-                {
-                    clone.DefaultCrossSectionDefinition = definitionClone;
-                }
-            }
-
+            
             foreach (Route route in Routes)
             {
                 var clonedRoute = (Route) route.Clone();
@@ -243,33 +161,7 @@ namespace DelftTools.Hydro
                 clone.Routes.Add(clonedRoute);
             }
 
-            //update sectiontypes in cloned definitions
-            IEnumerable<ICrossSectionDefinition> clonedLocalDefinitions =
-                clone.CrossSections.Select(cs => cs.Definition).Where(def => !def.IsProxy);
-            IEnumerable<CrossSectionSection> allClonedSections =
-                clone.SharedCrossSectionDefinitions.Concat(clonedLocalDefinitions).SelectMany(def => def.Sections);
-
-            foreach (CrossSectionSection clonedSection in allClonedSections)
-            {
-                //is this a valid situation???
-                if (clonedSection.SectionType != null)
-                {
-                    clonedSection.SectionType =
-                        clone.CrossSectionSectionTypes.FirstOrDefault(
-                            type => type.Name == clonedSection.SectionType.Name);
-                }
-            }
-
-            //rewire proxy crosssection))))
-            foreach (CrossSectionDefinitionProxy proxy in clone
-                                                          .CrossSections.Select(c => c.Definition)
-                                                          .OfType<CrossSectionDefinitionProxy>())
-            {
-                int index = SharedCrossSectionDefinitions.IndexOf(proxy.InnerDefinition);
-                proxy.InnerDefinition = clone.SharedCrossSectionDefinitions[index];
-            }
-
-            foreach (IRegion subRegion in SubRegions)
+           foreach (IRegion subRegion in SubRegions)
             {
                 clone.SubRegions.Add((IHydroRegion) subRegion.Clone());
             }

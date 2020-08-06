@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -96,94 +94,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(0, branch1.Geometry.Coordinates[4].Y);
             Assert.AreEqual(50, branch1.Geometry.Coordinates[5].X);
             Assert.AreEqual(0, branch1.Geometry.Coordinates[5].Y);
-        }
-
-        /// <summary>
-        /// Create branch of length 50 and add cross section at position 25
-        /// O------x------x--CS--x------x------x
-        /// 0     10     20  25 30     40     50
-        /// if tracker at 10 is moved expect CS not to move
-        /// </summary>
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void MoveBranchWithCrossSectionTestNoFallOffPolicyAt10()
-        {
-            ChannelInteractor interactor;
-            ICrossSection crossSection = AddCrossSection(out interactor);
-            interactor.Network = network;
-            interactor.Start();
-            interactor.SetTrackerSelection(interactor.Trackers[1], true);
-            interactor.MoveTracker(interactor.Trackers[1], 0, 10);
-            interactor.Stop();
-
-            Assert.AreEqual(0, crossSection.Geometry.Coordinates[0].Y);
-            Assert.AreEqual(25, crossSection.Geometry.Coordinates[0].X);
-        }
-
-        /// <summary>
-        /// Create branch of length 50 and add cross section at position 25
-        /// O------x------x--CS--x------x------x
-        /// 0     10     20  25 30     40     50
-        /// if tracker at 20 is moved expect CS to move within subsection (20-30) -> X constant, y changes
-        /// </summary>
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void MoveBranchWithCrossSectionTestNoFallOffPolicyAt20()
-        {
-            ChannelInteractor interactor;
-            ICrossSection crossSection = AddCrossSection(out interactor);
-            interactor.Network = network;
-            interactor.Start();
-            interactor.SetTrackerSelection(interactor.Trackers[2], true);
-            interactor.MoveTracker(interactor.Trackers[2], 0, 10);
-            interactor.Stop();
-
-            Assert.AreNotEqual(0, crossSection.Geometry.Coordinates[0].Y);
-            Assert.AreEqual(25, crossSection.Geometry.Coordinates[0].X);
-        }
-
-        /// <summary>
-        /// Create branch of length 50 and add cross section at position 25
-        /// O------x------x--CS--x------x------x
-        /// 0     10     20  25 30     40     50
-        /// if tracker at 30 is moved expect CS to move within subsection (20-30) -> X constant, y changes
-        /// </summary>
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void MoveBranchWithCrossSectionTestNoFallOffPolicyAt30()
-        {
-            ChannelInteractor interactor;
-            ICrossSection crossSection = AddCrossSection(out interactor);
-            interactor.Network = network;
-            interactor.Start();
-            interactor.SetTrackerSelection(interactor.Trackers[3], true);
-            interactor.MoveTracker(interactor.Trackers[3], 0, 10);
-            interactor.Stop();
-
-            Assert.AreNotEqual(0, crossSection.Geometry.Coordinates[0].Y);
-            Assert.AreEqual(25, crossSection.Geometry.Coordinates[0].X);
-        }
-
-        /// <summary>
-        /// Create branch of length 50 and add cross section at position 25
-        /// O------x------x--CS--x------x------x
-        /// 0     10     20  25 30     40     50
-        /// if tracker at 40 is moved expect CS not to move
-        /// </summary>
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void MoveBranchWithCrossSectionTestNoFallOffPolicyAt40()
-        {
-            ChannelInteractor interactor;
-            ICrossSection crossSection = AddCrossSection(out interactor);
-            interactor.Network = network;
-            interactor.Start();
-            interactor.SetTrackerSelection(interactor.Trackers[4], true);
-            interactor.MoveTracker(interactor.Trackers[4], 0, 10);
-            interactor.Stop();
-
-            Assert.AreEqual(0, crossSection.Geometry.Coordinates[0].Y);
-            Assert.AreEqual(25, crossSection.Geometry.Coordinates[0].X);
         }
 
         [Test]
@@ -556,21 +466,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(2, hydroNetwork.Branches.Count);
             Assert.AreEqual(hydroNode3, hydroNetwork.Branches[1].Source);
             Assert.AreEqual(hydroNode2b, hydroNetwork.Branches[1].Target);
-        }
-
-        private ICrossSection AddCrossSection(out ChannelInteractor interactor)
-        {
-            var crossSection = new CrossSectionDefinitionYZ();
-            crossSection.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(2, -2, 0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(4, 0, 0);
-
-            //CrossSectionHelper.CalculateYZProfileFromGeometry(crossSection.Profile, crossSection.Geometry);
-            ICrossSection crossSectionBranchFeature = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, crossSection, 25.0);
-
-            interactor = new ChannelInteractor(null, branch1, null, null);
-
-            return crossSectionBranchFeature;
         }
     }
 }
