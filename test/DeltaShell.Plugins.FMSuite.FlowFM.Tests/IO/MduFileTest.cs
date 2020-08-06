@@ -76,8 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string[] lines = File.ReadAllLines(writeFilePath);
                 Assembly waterFlowFMAssembly = typeof(WaterFlowFMModel).Assembly;
 
-                string expectedMetaDataString = $"# Deltares, Delft3D FM {ComponentVersions.FMSuiteVersion}, " +
-                                                $"Plugin D-FLOW FM Version {waterFlowFMAssembly.GetName().Version}, " +
+                string expectedMetaDataString = $"# Deltares, Plugin D-FLOW FM Version {waterFlowFMAssembly.GetName().Version}, " +
                                                 $"D-Flow FM Version {api.GetVersionString()}";
 
                 Assert.That(lines[1], Is.EqualTo(expectedMetaDataString));
