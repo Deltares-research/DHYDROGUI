@@ -61,7 +61,6 @@
     <Compile Include="IO\IFilesManager.cs" />
     <Compile Include="Logging\ILogHandler.cs" />
     <Compile Include="Logging\LogHandler.cs" />
-    <Compile Include="ComponentVersions.cs" />
     <Compile Include="SystemEnvironment.cs" />
     <Compile Include="IEnvironment.cs" />
     <Compile Include="ILinkedDataItemsModel.cs" />
