@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Aop;
@@ -8,6 +9,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro.Structures.WeirFormula
 {
     [Entity(FireOnCollectionChange = false)]
+    [Obsolete("D3DFMIQ-2083 Remove obsolete 1D functionality")]
     public class FreeFormWeirFormula : EditableObjectUnique<long>, IWeirFormula
     {
         private IGeometry shape;

@@ -1,39 +1,30 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.Enums;
-using SharpMap.Api.Layers;
 using SharpMap.Converters.WellKnownText;
-using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using SharpMap.UI.Forms;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
@@ -73,14 +64,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             });
 
             var definitionName = "test";
-            var def = new CrossSectionDefinitionZW(definitionName);
-
-            network.SharedCrossSectionDefinitions.Add(def);
 
             HydroNetwork retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
-
-            Assert.AreEqual(1, retrievedNetwork.SharedCrossSectionDefinitions.Count);
-            Assert.AreEqual(definitionName, retrievedNetwork.SharedCrossSectionDefinitions[0].Name);
         }
 
         [Test]
@@ -113,17 +98,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             });
 
             var definitionName = "test";
-            var def = new CrossSectionDefinitionZW(definitionName);
-
-            network.SharedCrossSectionDefinitions.Add(def);
-            network.DefaultCrossSectionDefinition = def;
 
             HydroNetwork retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
-
-            Assert.AreEqual(1, retrievedNetwork.SharedCrossSectionDefinitions.Count);
-            Assert.AreEqual(definitionName, retrievedNetwork.SharedCrossSectionDefinitions[0].Name);
-            Assert.AreNotEqual(definitionName, retrievedNetwork.DefaultCrossSectionDefinition);
-            Assert.AreSame(retrievedNetwork.DefaultCrossSectionDefinition, retrievedNetwork.SharedCrossSectionDefinitions[0]);
         }
 
         [Test]
@@ -149,14 +125,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 }),
                 LongName = "Channel"
             };
-            var crossSection = new CrossSection(new CrossSectionDefinitionStandard())
-            {
-                Network = network,
-                Branch = channel1,
-                Geometry = new Point(5, 0),
-                Chainage = 5.0
-            };
-            channel1.BranchFeatures.Add(crossSection);
+           
             network.Nodes.AddRange(new[]
             {
                 node1,
@@ -409,186 +378,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(pump.LongName, retrievedPump.LongName);
         }
 
-        [Test]
-        public void SaveLoadCulvert()
-        {
-            // add culvert
-            var culvert = new Culvert
-            {
-                Chainage = 22,
-                Geometry = new Point(5, 0),
-                Width = 20,
-                Height = 15,
-                CulvertType = CulvertType.InvertedSiphon,
-                SiphonOnLevel = 2,
-                SiphonOffLevel = 1,
-                IsGated = true,
-                GateInitialOpening = 5,
-                Length = 10,
-                InletLevel = 6,
-                OutletLevel = 8,
-                InletLossCoefficient = 4,
-                OutletLossCoefficient = 6,
-                BendLossCoefficient = 2,
-                FlowDirection = FlowDirection.Both,
-                GeometryType = CulvertGeometryType.Tabulated,
-                OffsetY = 66,
-                Friction = 1.44,
-                FrictionType = CulvertFrictionType.StricklerKs,
-                GroundLayerEnabled = false,
-                GroundLayerRoughness = 0.25,
-                GroundLayerThickness = 1.25
-            };
+        
 
-            culvert.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
-            {
-                new HeightFlowStorageWidth(3, 2, 1)
-            });
+        
 
-            culvert.GateOpeningLossCoefficientFunction[4.0] = 2.5;
-
-            Culvert retrievedCulvert = SaveLoadStructure(culvert, TestHelper.GetCurrentMethodName() + ".dsproj");
-            Assert.AreEqual(culvert.Chainage, retrievedCulvert.Chainage);
-            Assert.AreEqual(culvert.Geometry, retrievedCulvert.Geometry);
-            Assert.AreEqual(culvert.Width, retrievedCulvert.Width);
-            Assert.AreEqual(culvert.Height, retrievedCulvert.Height);
-            Assert.AreEqual(culvert.CulvertType, retrievedCulvert.CulvertType);
-            Assert.AreEqual(culvert.SiphonOnLevel, retrievedCulvert.SiphonOnLevel);
-            Assert.AreEqual(culvert.SiphonOffLevel, retrievedCulvert.SiphonOffLevel);
-            Assert.AreEqual(culvert.IsGated, retrievedCulvert.IsGated);
-            Assert.AreEqual(culvert.GateInitialOpening, retrievedCulvert.GateInitialOpening);
-            Assert.AreEqual(culvert.Length, retrievedCulvert.Length);
-            Assert.AreEqual(culvert.InletLevel, retrievedCulvert.InletLevel);
-            Assert.AreEqual(culvert.OutletLevel, retrievedCulvert.OutletLevel);
-            Assert.AreEqual(culvert.InletLossCoefficient, retrievedCulvert.InletLossCoefficient);
-            Assert.AreEqual(culvert.OutletLossCoefficient, retrievedCulvert.OutletLossCoefficient);
-            Assert.AreEqual(culvert.BendLossCoefficient, retrievedCulvert.BendLossCoefficient);
-            Assert.AreEqual(culvert.FlowDirection, retrievedCulvert.FlowDirection);
-            Assert.AreEqual(culvert.GeometryType, retrievedCulvert.GeometryType);
-            Assert.AreEqual(culvert.OffsetY, retrievedCulvert.OffsetY);
-            Assert.AreEqual(culvert.Friction, retrievedCulvert.Friction);
-            Assert.AreEqual(culvert.FrictionType, retrievedCulvert.FrictionType);
-
-            Assert.AreEqual(culvert.GroundLayerEnabled, retrievedCulvert.GroundLayerEnabled);
-            Assert.AreEqual(culvert.GroundLayerRoughness, retrievedCulvert.GroundLayerRoughness);
-            Assert.AreEqual(culvert.GroundLayerThickness, retrievedCulvert.GroundLayerThickness);
-
-            //check the cross-section
-            Assert.AreEqual(1, retrievedCulvert.TabulatedCrossSectionDefinition.ZWDataTable.Count);
-            Assert.AreEqual(culvert.TabulatedCrossSectionDefinition.ZWDataTable[0].Z, retrievedCulvert.TabulatedCrossSectionDefinition.ZWDataTable[0].Z);
-
-            Assert.AreEqual(culvert.TabulatedCrossSectionDefinition.ZWDataTable[0].Width, retrievedCulvert.TabulatedCrossSectionDefinition.ZWDataTable[0].Width);
-
-            //check the gateopening function
-            Assert.AreEqual(1, retrievedCulvert.GateOpeningLossCoefficientFunction.Arguments[0].Values.Count);
-            Assert.AreEqual(2.5, retrievedCulvert.GateOpeningLossCoefficientFunction[4.0]);
-        }
-
-        [Test]
-        public void SaveLoadBridge()
-        {
-            var bridge = new Bridge("Name");
-            //geometry stuff
-            bridge.BottomLevel = 1.0;
-            bridge.Width = 20;
-            bridge.Height = 5.0;
-            bridge.OffsetY = 22.0;
-            bridge.BridgeType = BridgeType.Tabulated;
-            //also store some tabulated data
-            bridge.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
-            {
-                new HeightFlowStorageWidth(50, 10, 10)
-            });
-            //friction and length
-            bridge.FrictionType = BridgeFrictionType.StricklerKn;
-            bridge.Friction = 0.01;
-            bridge.Length = 33.0;
-            //flow direction
-            bridge.AllowPositiveFlow = true;
-            bridge.AllowNegativeFlow = false;
-            //groundlayer
-            bridge.GroundLayerEnabled = true;
-            bridge.GroundLayerRoughness = 0.02;
-            bridge.GroundLayerThickness = 1.1;
-            //loss
-            bridge.InletLossCoefficient = 1.2;
-            bridge.OutletLossCoefficient = 3.3;
-            //pillar-specific settings
-            bridge.PillarWidth = 55.66;
-            bridge.ShapeFactor = 0.567;
-
-            //setup repo.
-            Bridge retrievedBridge = SaveLoadStructure(bridge, TestHelper.GetCurrentMethodName() + ".dsproj");
-
-            //assert
-            Assert.AreEqual(bridge.Name, retrievedBridge.Name);
-            Assert.AreEqual(bridge.BottomLevel, retrievedBridge.BottomLevel);
-            Assert.AreEqual(bridge.Width, retrievedBridge.Width);
-            Assert.AreEqual(bridge.Height, retrievedBridge.Height);
-            Assert.AreEqual(bridge.OffsetY, retrievedBridge.OffsetY);
-            Assert.AreEqual(bridge.BridgeType, retrievedBridge.BridgeType);
-            //also store some tabulated data
-            Assert.AreEqual(bridge.TabulatedCrossSectionDefinition.ZWDataTable.Count,
-                            retrievedBridge.TabulatedCrossSectionDefinition.ZWDataTable.Count);
-            //friction and length
-            Assert.AreEqual(bridge.FrictionType, retrievedBridge.FrictionType);
-            Assert.AreEqual(bridge.Friction, retrievedBridge.Friction);
-            Assert.AreEqual(bridge.Length, retrievedBridge.Length);
-            //flow direction
-            Assert.AreEqual(bridge.AllowPositiveFlow, retrievedBridge.AllowPositiveFlow);
-            Assert.AreEqual(bridge.AllowNegativeFlow, retrievedBridge.AllowNegativeFlow);
-            //groundlayer
-            Assert.AreEqual(bridge.GroundLayerEnabled, retrievedBridge.GroundLayerEnabled);
-            Assert.AreEqual(bridge.GroundLayerRoughness, retrievedBridge.GroundLayerRoughness);
-            Assert.AreEqual(bridge.GroundLayerThickness, retrievedBridge.GroundLayerThickness);
-            //loss
-            Assert.AreEqual(bridge.InletLossCoefficient, retrievedBridge.InletLossCoefficient);
-            Assert.AreEqual(bridge.OutletLossCoefficient, retrievedBridge.OutletLossCoefficient);
-            //pillar-specific settings
-            Assert.AreEqual(bridge.PillarWidth, retrievedBridge.PillarWidth);
-            Assert.AreEqual(bridge.ShapeFactor, retrievedBridge.ShapeFactor);
-        }
-
-        [Test]
-        public void MoveCulvertToOtherBranch2Issue4237()
-        {
-            //demonstrates issue 4237..
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            using (NHibernateProjectRepository repository = factory.CreateNew())
-            {
-                repository.Create(path);
-
-                Project project = repository.GetProject();
-
-                //create a L-shaped network with a culvert 
-                IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(20, 0), new Point(20, 20));
-                IBranch branch1 = hydroNetwork.Branches[0];
-                IBranch branch2 = hydroNetwork.Branches[1];
-
-                var culvert = Culvert.CreateDefault();
-                branch1.BranchFeatures.Add(culvert);
-                culvert.Branch = branch1;
-
-                //add it to a project and save
-                project.RootFolder.Add(hydroNetwork);
-                repository.SaveOrUpdate(project);
-
-                branch1.BranchFeatures.Remove(culvert);
-                branch2.BranchFeatures.Add(culvert);
-                culvert.Branch = branch2;
-
-                repository.SaveOrUpdate(project);
-            }
-
-            //relead culvert
-            using (NHibernateProjectRepository repository = factory.CreateNew())
-            {
-                repository.Open(path);
-                Culvert culvert = repository.GetProject().GetAllItemsRecursive().OfType<Culvert>().FirstOrDefault();
-
-                Assert.IsNotNull(culvert);
-            }
-        }
+        
 
         [Test]
         public void SaveLoadWeir()
@@ -763,68 +557,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
-        public void ReloadNetworkDoesWorkWithNotifyCollectionChanged()
-        {
-            var network = new HydroNetwork();
-
-            INode fromNode = new HydroNode
-            {
-                Name = "From",
-                Network = network,
-                Geometry = new Point(1000, 1000)
-            };
-            INode toNode = new HydroNode
-            {
-                Name = "To",
-                Network = network,
-                Geometry = new Point(1000, 1500)
-            };
-            network.Nodes.Add(fromNode);
-            network.Nodes.Add(toNode);
-
-            IChannel branch = CreateChannel(fromNode, toNode);
-            network.Branches.Add(branch);
-
-            ICrossSection crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
-            {
-                new Coordinate(1.0, 1.0, 0.0),
-                new Coordinate(2.0, 1.0, 0.1),
-                new Coordinate(3.0, 1.0, 0.1),
-                new Coordinate(4.0, 1.0, 0.1)
-            });
-            branch.BranchFeatures.Add(crossSection);
-            var callCount = 0;
-            ((INotifyCollectionChange) network.Branches[0]).CollectionChanged += delegate { callCount++; };
-            network.Branches[0].BranchFeatures.RemoveAt(0);
-            Assert.AreEqual(1, callCount);
-            //readd the branch
-            branch.BranchFeatures.Add(crossSection);
-
-            //save
-            var project = new Project();
-            project.RootFolder.Add(new DataItem(network));
-
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            ProjectRepository.Create(path);
-            ProjectRepository.SaveOrUpdate(project);
-            ProjectRepository.Close();
-
-            //reopen
-            Project retrievedProject = ProjectRepository.Open(path);
-            var retrievedNetwork = (IHydroNetwork) retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
-
-            //remove a crossSection and get Notified at the network level.
-            callCount = 0;
-            IBranch retrievedBranch = retrievedNetwork.Branches[0];
-            retrievedBranch.BranchFeatures.CollectionChanged += delegate { callCount++; };
-            //crossSections is just a filtered view of branchfeatures.
-            ((IList) retrievedBranch.BranchFeatures).RemoveAt(0);
-
-            Assert.AreEqual(0, retrievedBranch.BranchFeatures.Count);
-            Assert.AreEqual(1, callCount);
-        }
-
-        [Test]
         public void WriteAndReadProjectNetworkContainingAllSubItems()
         {
             var network = new HydroNetwork();
@@ -846,16 +578,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             IChannel branch = CreateChannel(fromNode, toNode);
             network.Branches.Add(branch);
-
-            ICrossSection crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
-            {
-                new Coordinate(1.0, 1.0, 0.0),
-                new Coordinate(2.0, 1.0, 0.1),
-                new Coordinate(3.0, 1.0, 0.1),
-                new Coordinate(4.0, 1.0, 0.1)
-            });
-            branch.BranchFeatures.Add(crossSection);
-
+            
             network.Name = "NetworkWithAllSubItems";
             var project = new Project();
             project.RootFolder.Add(new DataItem(network));
@@ -873,75 +596,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             Assert.AreEqual(2, network2.Nodes.Count);
             Assert.AreEqual(1, network2.Branches.Count);
-            Assert.AreEqual(1, network2.CrossSections.Count());
-        }
-
-        [Test]
-        public void SaveNetworkAndCheckCollectionChangedForBranchFeatures()
-        {
-            //create a network
-            var network = new HydroNetwork();
-
-            INode fromNode = new HydroNode
-            {
-                Name = "From",
-                Network = network,
-                Geometry = new Point(1000, 1000)
-            };
-            INode toNode = new HydroNode
-            {
-                Name = "To",
-                Network = network,
-                Geometry = new Point(1000, 1500)
-            };
-            network.Nodes.Add(fromNode);
-            network.Nodes.Add(toNode);
-
-            IChannel branch = CreateChannel(fromNode, toNode);
-            network.Branches.Add(branch);
-            var networkLocation = new NetworkLocation(branch, 10);
-
-            networkLocation.Geometry = new WKTReader().Read("LINESTRING(20 20,20 30,30 30,30 20,40 20)");
-
-            branch.BranchFeatures.Add(networkLocation);
-            ICrossSection crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
-            {
-                new Coordinate(1.0, 1.0, 0.0),
-                new Coordinate(2.0, 1.0, 0.1),
-                new Coordinate(3.0, 1.0, 0.1),
-                new Coordinate(4.0, 1.0, 0.1)
-            });
-
-            //register to collectionchanged of network
-            var callCount = 0;
-            ((INotifyCollectionChange) network).CollectionChanged +=
-                delegate(object sender, NotifyCollectionChangedEventArgs e)
-                {
-                    callCount++;
-                    Debug.WriteLine(string.Format("{0} sent a {1} for {2}", sender, e.Action, e.GetRemovedOrAddedItem()));
-                };
-            //add a cross section results in only one call!
-            branch.BranchFeatures.Add(crossSection);
-
-            Assert.AreEqual(1, callCount);
-            branch.BranchFeatures.Remove(crossSection);
-            Assert.AreEqual(2, callCount);
-            branch.BranchFeatures.Add(crossSection);
-            Assert.AreEqual(3, callCount);
-
-            //save it to a project.
-            var project = new Project();
-            project.RootFolder.Add(new DataItem(network));
-
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            ProjectRepository.Create(path);
-            ProjectRepository.SaveOrUpdate(project);
-
-            //remove a brachfeature should result in a single changed event;
-            Assert.AreEqual(3, callCount);
-            branch.BranchFeatures.Remove(crossSection);
-            Assert.AreEqual(4, callCount);
         }
 
         [Test]

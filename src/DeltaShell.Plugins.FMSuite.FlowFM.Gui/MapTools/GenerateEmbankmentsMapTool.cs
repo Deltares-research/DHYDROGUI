@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 embankmentDefinitions.Clear();
             }
 
-            EmbankmentGenerator.GenerateEmbankments(branches, embankmentDefinitions, generateEmbankmentsDialog.CrossSectionBased,
+            EmbankmentGenerator.GenerateEmbankments(branches, embankmentDefinitions,
                                                     generateEmbankmentsDialog.ConstantDistance, generateEmbankmentsDialog.GenerateLeftEmbankments,
                                                     generateEmbankmentsDialog.GenerateRightEmbankments, generateEmbankmentsDialog.MergeAutomatically);
         }

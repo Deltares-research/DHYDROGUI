@@ -2,8 +2,6 @@
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -38,9 +36,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             var dateTime = new DateTime(2000, 1, 1, 0, 0, 0);
             // create network
             INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
-            var crossSectionDefinition = new CrossSectionDefinitionYZ("Cross Section");
-            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches[0], crossSectionDefinition, 0);
-
+            
             //IFeatureCoverage featureCoverage = new FeatureCoverage(); { HydroNetwork = network };
             var featureCoverage = new FeatureCoverage("Test");
             IVariable timeVariable = new Variable<DateTime>("time");
@@ -49,7 +45,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             featureCoverage.Arguments.Add(timeVariable);
             featureCoverage.Arguments.Add(featureVariable);
             featureCoverage.Components.Add(new Variable<double>("value"));
-            featureCoverage[dateTime, cs] = 17.0;
 
             //save 
             using (NHibernateProjectRepository projectRepository = factory.CreateNew())
@@ -67,64 +62,10 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             {
                 //reload
                 Project retrievedProject = projectRepository.Open(path);
-                INetwork retrievedNetwork = retrievedProject.GetAllItemsRecursive().OfType<INetwork>().FirstOrDefault();
                 IFeatureCoverage retrievedFeatureCoverage = retrievedProject.GetAllItemsRecursive().OfType<IFeatureCoverage>().FirstOrDefault();
-                IBranchFeature retrievedCrossSection = retrievedNetwork.Branches[0].BranchFeatures[0];
 
                 //compare
-                Assert.AreEqual(retrievedCrossSection, retrievedFeatureCoverage.FeatureVariable.Values[0]);
                 Assert.AreEqual(featureCoverage.Components[0].Values.Count, retrievedFeatureCoverage.Components[0].Values.Count);
-                Assert.AreEqual((double) retrievedFeatureCoverage[dateTime, retrievedCrossSection], 17.0, 1.0e-6);
-            }
-        }
-
-        [Test]
-        public void RemovingFeatureCoverageDoesNotRemoveFeatures()
-        {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            // create network
-            INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
-            var crossSectionDefinition = CrossSectionDefinitionYZ.CreateDefault();
-            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches[0], crossSectionDefinition, 0);
-
-            //IFeatureCoverage featureCoverage = new FeatureCoverage(); { HydroNetwork = network };
-            var featureCoverage = new FeatureCoverage("Test");
-            var featureVariable = new Variable<IBranchFeature>("feature");
-
-            featureCoverage.Arguments.Add(featureVariable);
-            featureCoverage.Components.Add(new Variable<double>("value"));
-            featureCoverage[cs] = 17.0;
-
-            //save 
-            using (NHibernateProjectRepository projectRepository = factory.CreateNew())
-            {
-                projectRepository.Create(path);
-
-                var project = new Project();
-                project.RootFolder.Add(new DataItem(network));
-                var featureCoverageDataItem = new DataItem(featureCoverage);
-                project.RootFolder.Add(featureCoverageDataItem);
-
-                projectRepository.SaveOrUpdate(project);
-
-                //remove featurecoverage (shouln't cascade remove features from network
-                project.RootFolder.Items.Remove(featureCoverageDataItem);
-
-                projectRepository.SaveOrUpdate(project);
-            }
-
-            using (NHibernateProjectRepository projectRepository = factory.CreateNew())
-            {
-                //reload
-                Project retrievedProject = projectRepository.Open(path);
-                INetwork retrievedNetwork = retrievedProject.GetAllItemsRecursive().OfType<INetwork>().FirstOrDefault();
-                //var retrievedFeatureCoverage = retrievedProject.GetAllItemsRecursive().OfType<IFeatureCoverage>().FirstOrDefault();
-
-                //check the crossection was really removed from the coverage
-                //Assert.AreEqual(0,retrievedFeatureCoverage.Features.Count);
-                //check the crossection is still network
-                Assert.AreEqual(1, retrievedNetwork.BranchFeatures.Count());
             }
         }
     }
