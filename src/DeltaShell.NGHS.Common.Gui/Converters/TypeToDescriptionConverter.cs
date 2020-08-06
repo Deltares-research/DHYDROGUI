@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using DeltaShell.NGHS.Common.Gui.Properties;
 
 namespace DeltaShell.NGHS.Common.Gui.Converters
 {
@@ -14,7 +15,7 @@ namespace DeltaShell.NGHS.Common.Gui.Converters
     /// </summary>
     /// <seealso cref="IValueConverter"/>
     [ValueConversion(typeof(Type), typeof(string))]
-    public class TypeToDescriptionConverter : IValueConverter
+    public sealed class TypeToDescriptionConverter : IValueConverter
     {
         /// <summary>
         /// Converts a <see cref="Type"/> to its DescriptionAttribute.
@@ -43,7 +44,7 @@ namespace DeltaShell.NGHS.Common.Gui.Converters
         /// <exception cref="NotSupportedException"/>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotSupportedException("Converting strings to Types is currently not supported.");
+            throw new NotSupportedException(Resources.TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_not_supported_);
         }
 
         private static string GetDescription(Type type)
