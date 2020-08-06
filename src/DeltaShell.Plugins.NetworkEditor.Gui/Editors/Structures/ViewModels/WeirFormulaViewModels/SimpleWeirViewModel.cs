@@ -36,7 +36,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double ContractionCoefficient
         {
             get => formula.LateralContraction;
-            set => formula.LateralContraction = value;
+            set
+            {
+                // The floating point values are provided by the user in an entry
+                // As such no error can be introduced, and either values or the same
+                // or they should be updated.
+                if (value == ContractionCoefficient)
+                {
+                    return;
+                }
+                
+                formula.LateralContraction = value;
+                OnPropertyChanged();
+            }
         }
     }
 }

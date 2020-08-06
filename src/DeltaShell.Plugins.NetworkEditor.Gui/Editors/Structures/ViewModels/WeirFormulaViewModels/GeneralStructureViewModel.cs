@@ -40,8 +40,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double? Upstream1Width
         {
-            get => ToNullableValue(formula.WidthStructureLeftSide); 
-            set => formula.WidthStructureLeftSide = value ?? double.NaN;
+            get => ToNullableValue(formula.WidthStructureLeftSide);
+            set
+            {
+                // The floating point values are provided by the user in an entry
+                // As such no error can be introduced, and either values or the same
+                // or they should be updated.
+                if (value == Upstream1Width)
+                {
+                    return;
+                }
+
+                formula.WidthStructureLeftSide = value ?? double.NaN;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -49,8 +61,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double Upstream1Level
         {
-            get => formula.BedLevelLeftSideStructure; 
-            set => formula.BedLevelLeftSideStructure = value;
+            get => formula.BedLevelLeftSideStructure;
+            set
+            {
+                if (value == Upstream1Level)
+                {
+                    return;
+                }
+
+                formula.BedLevelLeftSideStructure = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -58,8 +79,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double? Upstream2Width
         {
-            get => ToNullableValue(formula.WidthLeftSideOfStructure); 
-            set => formula.WidthLeftSideOfStructure = value ?? double.NaN;
+            get => ToNullableValue(formula.WidthLeftSideOfStructure);
+            set
+            {
+                if (value == Upstream2Width)
+                {
+                    return;
+                }
+
+                formula.WidthLeftSideOfStructure = value ?? double.NaN;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -67,8 +97,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double Upstream2Level
         {
-            get => formula.BedLevelLeftSideOfStructure; 
-            set => formula.BedLevelLeftSideOfStructure= value;
+            get => formula.BedLevelLeftSideOfStructure;
+            set
+            {
+                if (value == Upstream2Level)
+                {
+                    return;
+                }
+
+                formula.BedLevelLeftSideOfStructure = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -76,8 +115,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double? Downstream1Width
         {
-            get => ToNullableValue(formula.WidthStructureRightSide); 
-            set => formula.WidthStructureRightSide = value ?? double.NaN;
+            get => ToNullableValue(formula.WidthStructureRightSide);
+            set
+            {
+                if (value == Downstream1Width)
+                {
+                    return;
+                }
+
+                formula.WidthStructureRightSide = value ?? double.NaN;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -85,8 +133,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double Downstream1Level
         {
-            get => formula.BedLevelRightSideStructure; 
-            set => formula.BedLevelRightSideStructure = value;
+            get => formula.BedLevelRightSideStructure;
+            set
+            {
+                if (value == Downstream1Level)
+                {
+                    return;
+                }
+
+                formula.BedLevelRightSideStructure = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -94,8 +151,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double? Downstream2Width
         {
-            get => ToNullableValue(formula.WidthRightSideOfStructure); 
-            set => formula.WidthRightSideOfStructure = value ?? double.NaN;
+            get => ToNullableValue(formula.WidthRightSideOfStructure);
+            set
+            {
+                if (value == Downstream2Width)
+                {
+                    return;
+                }
+
+                formula.WidthRightSideOfStructure = value ?? double.NaN;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -103,8 +169,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double Downstream2Level
         {
-            get => formula.BedLevelRightSideOfStructure; 
-            set => formula.BedLevelRightSideOfStructure= value;
+            get => formula.BedLevelRightSideOfStructure;
+            set
+            {
+                if (value == Downstream2Level)
+                {
+                    return;
+                }
+                
+                formula.BedLevelRightSideOfStructure = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -118,7 +193,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double FreeGateFlowPositive
         {
             get => formula.PositiveFreeGateFlow;
-            set => formula.PositiveFreeGateFlow = value;
+            set
+            {
+                if (value == FreeGateFlowPositive)
+                {
+                    return;
+                }
+
+                formula.PositiveFreeGateFlow = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -127,7 +211,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double FreeGateFlowNegative
         {
             get => formula.NegativeFreeGateFlow;
-            set => formula.NegativeFreeGateFlow = value;
+            set
+            {
+                if (value == FreeGateFlowNegative)
+                {
+                    return;
+                }
+
+                formula.NegativeFreeGateFlow = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -136,7 +229,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double DrownedGateFlowPositive
         {
             get => formula.PositiveDrownedGateFlow;
-            set => formula.PositiveDrownedGateFlow = value;
+            set
+            {
+                if (value == DrownedGateFlowPositive)
+                {
+                    return;
+                }
+
+                formula.PositiveDrownedGateFlow = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -145,7 +247,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double DrownedGateFlowNegative
         {
             get => formula.NegativeDrownedGateFlow;
-            set => formula.NegativeDrownedGateFlow = value;
+            set
+            {
+                if (value == DrownedGateFlowNegative)
+                {
+                    return;
+                }
+
+                formula.NegativeDrownedGateFlow = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -154,7 +265,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double FreeWeirFlowPositive
         {
             get => formula.PositiveFreeWeirFlow;
-            set => formula.PositiveFreeWeirFlow = value;
+            set
+            {
+                if (value == FreeWeirFlowPositive)
+                {
+                    return;
+                }
+                
+                formula.PositiveFreeWeirFlow = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -163,7 +283,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double FreeWeirFlowNegative
         {
             get => formula.NegativeFreeWeirFlow;
-            set => formula.NegativeFreeWeirFlow = value;
+            set
+            {
+                if (value == FreeWeirFlowNegative)
+                {
+                    return;
+                }
+                
+                formula.NegativeFreeWeirFlow = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -172,7 +301,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double DrownedWeirFlowPositive
         {
             get => formula.PositiveDrownedWeirFlow;
-            set => formula.PositiveDrownedWeirFlow = value;
+            set
+            {
+                if (value == DrownedWeirFlowPositive)
+                {
+                    return;
+                }
+
+                formula.PositiveDrownedWeirFlow = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -181,7 +319,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double DrownedWeirFlowNegative
         {
             get => formula.NegativeDrownedWeirFlow;
-            set => formula.NegativeDrownedWeirFlow = value;
+            set
+            {
+                if (value == DrownedWeirFlowNegative)
+                {
+                    return;
+                }
+
+                formula.NegativeDrownedWeirFlow = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -190,7 +337,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double ContractionCoefficientPositive
         {
             get => formula.PositiveContractionCoefficient;
-            set => formula.PositiveContractionCoefficient = value;
+            set
+            {
+                if (value == ContractionCoefficientPositive)
+                {
+                    return;
+                }
+
+                formula.PositiveContractionCoefficient = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -199,7 +355,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double ContractionCoefficientNegative
         {
             get => formula.NegativeContractionCoefficient;
-            set => formula.NegativeContractionCoefficient = value;
+            set
+            {
+                if (value == ContractionCoefficientNegative)
+                {
+                    return;
+                }
+                
+                formula.NegativeContractionCoefficient = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -208,7 +373,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         public double ExtraResistance
         {
             get => formula.ExtraResistance;
-            set => formula.ExtraResistance = value;
+            set
+            {
+                if (value == ExtraResistance)
+                {
+                    return;
+                }
+
+                formula.ExtraResistance = value;
+                OnPropertyChanged();
+            }
         }
     }
 }

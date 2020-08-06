@@ -1,4 +1,6 @@
-﻿using DelftTools.Utils.Guards;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
@@ -6,7 +8,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// <see cref="WeirViewModel"/> acts as the base class for all weir
     /// formula view models.
     /// </summary>
-    public abstract class WeirViewModel
+    public abstract class WeirViewModel : INotifyPropertyChanged
     {
         /// <summary>
         /// Creates a new <see cref="WeirViewModel"/>.
@@ -25,5 +27,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// Gets the weir properties view model.
         /// </summary>
         public WeirPropertiesViewModel WeirPropertiesViewModel { get; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

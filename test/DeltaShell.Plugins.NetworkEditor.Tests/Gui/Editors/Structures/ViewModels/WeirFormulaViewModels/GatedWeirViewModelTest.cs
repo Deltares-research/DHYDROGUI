@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System.ComponentModel;
+using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
 using NUnit.Framework;
@@ -24,6 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
                 // Assert
                 Assert.That(viewModel.GatePropertiesViewModel, Is.Not.Null);
+                Assert.That(viewModel, Is.InstanceOf(typeof(INotifyPropertyChanged)));
                 Assert.That(viewModel.WeirPropertiesViewModel, Is.SameAs(weirPropertiesViewModel));
             }
         }
