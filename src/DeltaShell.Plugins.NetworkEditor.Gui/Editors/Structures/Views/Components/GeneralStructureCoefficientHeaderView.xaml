@@ -22,10 +22,10 @@
         <Grid Style="{StaticResource GridStyle}"
               Grid.Column="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{StaticResource LabelLength}" />
-                <ColumnDefinition Width="{StaticResource ControlLength}" />
-                <ColumnDefinition Width="{StaticResource ControlLength}" />
-                <ColumnDefinition Width="{StaticResource UnitLength}" />
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                <ColumnDefinition Width="{StaticResource UnitWidth}" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" 
                        Text="Positive"

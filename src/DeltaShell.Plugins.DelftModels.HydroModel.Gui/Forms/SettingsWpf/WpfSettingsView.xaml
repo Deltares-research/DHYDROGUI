@@ -143,9 +143,9 @@
             <DataTemplate x:Key="TextBoxTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{StaticResource LabelLength}" />
-                        <ColumnDefinition Width="{StaticResource ControlLength}" />
-                        <ColumnDefinition Width="{StaticResource UnitLength}" />
+                        <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                        <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                        <ColumnDefinition Width="{StaticResource UnitWidth}" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding Label}" Style="{StaticResource LabelTextBlockStyle}" />
                     <TextBox Grid.Column="1"
@@ -163,7 +163,7 @@
                     <TextBlock Grid.Column="2"
                                Text="{Binding UnitSymbol}"
                                Style="{StaticResource LabelTextBlockStyle}"
-                               Width="{StaticResource UnitWidth}"
+                               Width="{StaticResource UnitWidthValue}"
                                Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource InverseBoolToVisibility}}" />
                     <Button Grid.Column="2"
                             VerticalAlignment="Center"
@@ -183,9 +183,9 @@
             <DataTemplate x:Key="CheckboxTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{StaticResource LabelLength}" />
-                        <ColumnDefinition Width="{StaticResource ControlLength}" />
-                        <ColumnDefinition Width="{StaticResource UnitLength}" />
+                        <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                        <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                        <ColumnDefinition Width="{StaticResource UnitWidth}" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
                                Text="{Binding Label}"
@@ -200,9 +200,9 @@
             <DataTemplate x:Key="DateTimeTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{StaticResource LabelLength}" />
-                        <ColumnDefinition Width="{StaticResource ControlLength}" />
-                        <ColumnDefinition Width="{StaticResource UnitLength}" />
+                        <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                        <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                        <ColumnDefinition Width="{StaticResource UnitWidth}" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
                                Text="{Binding Label}"
@@ -222,9 +222,9 @@
             <DataTemplate x:Key="DateTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{StaticResource LabelLength}" />
-                        <ColumnDefinition Width="{StaticResource ControlLength}" />
-                        <ColumnDefinition Width="{StaticResource UnitLength}" />
+                        <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                        <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                        <ColumnDefinition Width="{StaticResource UnitWidth}" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
                                Text="{Binding Label}"
@@ -246,9 +246,9 @@
             <DataTemplate x:Key="TimeSpanTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{StaticResource LabelLength}" />
-                        <ColumnDefinition Width="{StaticResource ControlLength}" />
-                        <ColumnDefinition Width="{StaticResource UnitLength}" />
+                        <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                        <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                        <ColumnDefinition Width="{StaticResource UnitWidth}" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{Binding Label}"
                                Style="{StaticResource LabelTextBlockStyle}" />
@@ -260,9 +260,9 @@
             <DataTemplate x:Key="ComboBoxTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{StaticResource LabelLength}" />
-                        <ColumnDefinition Width="{StaticResource ControlLength}" />
-                        <ColumnDefinition Width="{StaticResource UnitLength}" />
+                        <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                        <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                        <ColumnDefinition Width="{StaticResource UnitWidth}" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
                                Text="{Binding Label}"
@@ -284,9 +284,9 @@
             <DataTemplate x:Key="ListTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
                 <Grid Style="{StaticResource GridStyle}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="{StaticResource LabelLength}" />
-                        <ColumnDefinition Width="{StaticResource ControlLength}" />
-                        <ColumnDefinition Width="{StaticResource UnitLength}" />
+                        <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                        <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                        <ColumnDefinition Width="{StaticResource UnitWidth}" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
                                Text="{Binding Label}"

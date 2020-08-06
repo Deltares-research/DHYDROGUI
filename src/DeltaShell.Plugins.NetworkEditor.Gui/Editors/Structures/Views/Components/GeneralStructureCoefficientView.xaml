@@ -24,10 +24,10 @@
         <Grid Grid.Column="0"
               Style="{StaticResource GridStyle}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{StaticResource LabelLength}" />
-                <ColumnDefinition Width="{StaticResource ControlLength}" />
-                <ColumnDefinition Width="{StaticResource ControlLength}" />
-                <ColumnDefinition Width="{StaticResource UnitLength}" />
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                <ColumnDefinition Width="{StaticResource ControlWidth}" />
+                <ColumnDefinition Width="{StaticResource UnitWidth}" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0"

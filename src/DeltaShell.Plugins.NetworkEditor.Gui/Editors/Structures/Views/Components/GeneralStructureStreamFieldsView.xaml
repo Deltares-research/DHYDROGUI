@@ -17,10 +17,10 @@
 
     <Grid Style="{StaticResource GridStyle}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{StaticResource ControlLength}" />
-            <ColumnDefinition Width="{StaticResource ControlLength}" />
-            <ColumnDefinition Width="{StaticResource ControlLength}" />
-            <ColumnDefinition Width="{StaticResource ControlLength}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
         </Grid.ColumnDefinitions>
         <TextBox Grid.Column="0"
                  Text="{Binding ElementName=GeneralStructureStreamFieldsViewControl, Path=Upstream1}"

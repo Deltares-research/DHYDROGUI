@@ -16,8 +16,6 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converters:UnitStringToUnitDisplayStringConverter x:Key="UnitStringToUnitDisplayStringConverter" />
-
-            <system:Double x:Key="UnitWidth">47</system:Double>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -27,9 +25,9 @@
                  of them is designed as a grid with three columns, the first describing 
                  the label, then the value and then an optional unit. This unit is not 
                  relevant for combo boxes, and as such not set. -->
-            <ColumnDefinition Width="{StaticResource LabelLength}" />
-            <ColumnDefinition Width="{StaticResource ControlLength}" />
-            <ColumnDefinition Width="{StaticResource UnitLength}" />
+            <ColumnDefinition Width="{StaticResource LabelWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource UnitWidth}" />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0"
                    Text="{Binding ElementName=LabeledValueBoxControl, Path=Label}"
@@ -43,6 +41,6 @@
         <TextBlock Grid.Column="2"
                    Text="{Binding ElementName=LabeledValueBoxControl, Path=Unit, Converter={StaticResource UnitStringToUnitDisplayStringConverter}}"
                    Style="{StaticResource LabelTextBlockStyle}"
-                   Width="{StaticResource UnitWidth}"/>
+                   Width="{StaticResource UnitWidthValue}"/>
     </Grid>
 </UserControl>

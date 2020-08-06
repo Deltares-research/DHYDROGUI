@@ -16,10 +16,10 @@
     <Grid Style="{StaticResource GridStyle}"
           Grid.Column="0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{StaticResource ControlLength}" />
-            <ColumnDefinition Width="{StaticResource ControlLength}" />
-            <ColumnDefinition Width="{StaticResource ControlLength}" />
-            <ColumnDefinition Width="{StaticResource ControlLength}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
+            <ColumnDefinition Width="{StaticResource ControlWidth}" />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" 
                    Text="Upstream 1" 
