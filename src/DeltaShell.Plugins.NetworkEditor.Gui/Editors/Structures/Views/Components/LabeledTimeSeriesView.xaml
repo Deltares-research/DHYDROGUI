@@ -33,13 +33,15 @@
                                         Unit="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Unit}"
                                         Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
                                                             Path=IsTimeSeries, 
-                                                            Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                                            Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                        VerticalAlignment="Center"/>
             <components:LabeledButton Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
                                       ButtonLabel="Time Series"
                                       ButtonCommand="{Binding ElementName=LabeledTimeSeriesViewControl, Path=TimeSeriesCommand}"
                                       Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
                                                            Path=IsTimeSeries, 
-                                                           Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                           Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        VerticalAlignment="Center"/>
         </StackPanel>
         <CheckBox Grid.Column="1"
                   VerticalAlignment="Center"

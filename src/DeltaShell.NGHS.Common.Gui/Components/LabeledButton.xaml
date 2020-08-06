@@ -26,15 +26,13 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0"
                    Text="{Binding ElementName=LabeledButtonControl, Path=Label}"
-                   Style="{StaticResource LabelTextBlockStyle}" 
-                   VerticalAlignment="Center" />
+                   Style="{StaticResource LabelTextBlockStyle}" />
         <Button Grid.Column="1"
                 Style="{StaticResource ControlStyle}"
                 Command="{Binding ElementName=LabeledButtonControl, Path=ButtonCommand}"
                 VerticalAlignment="Center">
             <TextBlock Text="{Binding ElementName=LabeledButtonControl, Path=ButtonLabel}"
-                       Style="{StaticResource LabelTextBlockStyle}"
-                       VerticalAlignment="Center"/>
+                       Style="{StaticResource LabelTextBlockStyle}" />
         </Button>
     </Grid>
 </UserControl>
