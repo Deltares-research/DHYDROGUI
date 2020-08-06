@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     var waveBoundaryFileImporter = new WaveBoundaryFileImporter();
                     var boundaryFileImportActivity = mocks.Stub<FileImportActivity>(waveBoundaryFileImporter, waveModel.OuterDomain);
 
-                    var waveModelFileImporter = new WaveModelFileImporter();
+                    var waveModelFileImporter = new WaveModelFileImporter(() => null);
                     var modelFileImportActivity = mocks.Stub<FileImportActivity>(waveModelFileImporter, waveModel.OuterDomain);
 
                     var waveGridFileImporter = new WaveGridFileImporter(waveGuiPlugin.Name, () => new[]

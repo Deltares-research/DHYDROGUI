@@ -399,6 +399,7 @@
     <Compile Include="IO\Importers\WaveBoundaryFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveDepthFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveGridFileImporterTests.cs" />
+    <Compile Include="IO\Importers\WaveModelFileImporterTest.cs" />
     <Compile Include="IO\MdwBoundaryCategoriesCreatorTest.cs" />
     <Compile Include="IO\MdwBoundaryCategoryConditionsExtenderTest.cs" />
     <Compile Include="IO\MdwBoundaryCategoryGeometryExtenderTest.cs" />
