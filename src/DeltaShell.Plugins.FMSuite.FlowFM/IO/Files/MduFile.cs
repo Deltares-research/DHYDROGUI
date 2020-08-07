@@ -759,13 +759,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void UpdateFixedWeirs(HydroArea hydroArea, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
         {
+            Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> mapping = allFixedWeirsAndCorrespondingProperties.ToDictionary(p => p.Feature);
+
             //fix attributes for fixed weirs. Create attributes from modelfeaturecoordinatdata.
             foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
             {
                 fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
 
-                ModelFeatureCoordinateData<FixedWeir> correspondingModelFeatureCoordinateData =
-                    allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
+                ModelFeatureCoordinateData<FixedWeir> correspondingModelFeatureCoordinateData = mapping[fixedWeir];
 
                 if (correspondingModelFeatureCoordinateData == null)
                 {
