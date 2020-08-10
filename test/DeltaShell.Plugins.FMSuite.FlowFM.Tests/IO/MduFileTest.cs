@@ -1241,5 +1241,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.That(result, Is.EqualTo(expected));
         }
+
+        [Test]
+        [Category(NghsTestCategory.PerformanceDotTrace)]
+        public void Write_ManyFixedWeirs()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            HydroArea hydroArea = GetHydroAreaWithManyFixedWeirs();
+            IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirData = GetFixedWeirData(hydroArea);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDir.Path, "model.mdu");
+
+                // Call
+                mduFile.Write(filePath, new WaterFlowFMModelDefinition(), hydroArea, fixedWeirData);
+            }
+        }
+
+        private static HydroArea GetHydroAreaWithManyFixedWeirs()
+        {
+            var hydroArea = new HydroArea();
+
+            for (var i = 0; i < 100000; i++)
+            {
+                var fixedWeir = new FixedWeir
+                {
+                    GroupName = "fixed_weirs.pliz",
+                    Geometry = new LineString(new[] {new Coordinate(i, i + 1), new Coordinate(i, i)})
+                };
+                hydroArea.FixedWeirs.Add(fixedWeir);
+            }
+
+            return hydroArea;
+        }
+
+        private static IEnumerable<ModelFeatureCoordinateData<FixedWeir>> GetFixedWeirData(HydroArea hydroArea)
+        {
+            return hydroArea.FixedWeirs.Select(fw => new ModelFeatureCoordinateData<FixedWeir> {Feature = fw}).ToList();
+        }
     }
 }
