@@ -1,12 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DHYDRO.TestModels.DFlowFM;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
@@ -169,6 +173,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     Assert.That(model.OutputClassMapFileStore, Is.Not.Null, "Output files should be loaded.");
                 }
             }
+        }
+
+        [Test]
+        [Category(NghsTestCategory.PerformanceDotTrace)]
+        public void ConnectOutput_Performance()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string modelDirPath = DFlowFMModelRepository.CopyWesternscheldtModelTo(tempDir.Path);
+                string mduFilePath = GetMduFilePath(modelDirPath);
+                string outputDir = GenerateOutput(mduFilePath);
+
+                var model = new WaterFlowFMModel();
+
+                // Call
+                model.ConnectOutput(outputDir);
+            }
+        }
+
+        private static string GenerateOutput(string mduFilePath)
+        {
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduFilePath);
+
+            ActivityRunner.RunActivity(model);
+
+            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
+
+            return model.WorkingOutputDirectoryPath;
+        }
+
+        private static string GetMduFilePath(string path)
+        {
+            return new DirectoryInfo(path).EnumerateFiles()
+                                          .First(f => f.Name.EndsWith(".mdu", StringComparison.Ordinal))
+                                          .FullName;
         }
     }
 }
