@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string writeFilePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
 
                 // Call
-                mduFile.Write(writeFilePath, modelDefinition, null, null, config);
+                mduFile.Write(writeFilePath, modelDefinition, null, new List<ModelFeatureCoordinateData<FixedWeir>>(), config);
 
                 lines = File.ReadAllLines(writeFilePath);
             }
@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             mduFile.Write(testFile,
                           modelDefinition,
                           hydroArea,
-                          null,
+                          new List<ModelFeatureCoordinateData<FixedWeir>>(),
                           mduFileWriteConfig,
                           false,
                           sedimentData);
@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             try
             {
-                mduFile.Write(testFile, modelDefinition, hydroArea, null);
+                mduFile.Write(testFile, modelDefinition, hydroArea, new List<ModelFeatureCoordinateData<FixedWeir>>());
             }
             catch (Exception e)
             {
@@ -338,6 +338,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        public void Write_AllFixedWeirsAndCorrespondingPropertiesNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var mduFile = new MduFile();
+
+            // Call
+            void Call() => mduFile.Write("path", new WaterFlowFMModelDefinition(), new HydroArea(), null);
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("allFixedWeirsAndCorrespondingProperties"));
+        }
+
+        [Test]
         public void Test_MduFile_Write_WithBridgePillars_Writes_BridgePillars_Entry_AndFile()
         {
             string tempFileName = Path.GetTempFileName();
@@ -362,7 +376,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             try
             {
-                mduFile.Write(testFile, modelDefinition, hydroArea, null);
+                mduFile.Write(testFile, modelDefinition, hydroArea, new List<ModelFeatureCoordinateData<FixedWeir>>());
             }
             catch (Exception e)
             {
@@ -1069,7 +1083,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string writeFilePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
 
                 // Call
-                mduFile.Write(writeFilePath, modelDefinition, null, null, config);
+                mduFile.Write(writeFilePath, modelDefinition, null, new List<ModelFeatureCoordinateData<FixedWeir>>(), config);
 
                 lines = File.ReadAllLines(writeFilePath);
             }
@@ -1226,6 +1240,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var result = TypeUtils.CallPrivateMethod<bool>(mduFile, "IsNetfileCoordinateSystemUpToDate", modelDefinition, netFilePath);
 
             Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        [Category(NghsTestCategory.PerformanceDotTrace)]
+        public void Write_ManyFixedWeirs()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            HydroArea hydroArea = GetHydroAreaWithManyFixedWeirs();
+            IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirData = GetFixedWeirData(hydroArea);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDir.Path, "model.mdu");
+
+                // Call
+                mduFile.Write(filePath, new WaterFlowFMModelDefinition(), hydroArea, fixedWeirData);
+            }
+        }
+
+        private static HydroArea GetHydroAreaWithManyFixedWeirs()
+        {
+            var hydroArea = new HydroArea();
+
+            for (var i = 0; i < 100000; i++)
+            {
+                var fixedWeir = new FixedWeir
+                {
+                    GroupName = "fixed_weirs.pliz",
+                    Geometry = new LineString(new[] {new Coordinate(i, i + 1), new Coordinate(i, i)})
+                };
+                hydroArea.FixedWeirs.Add(fixedWeir);
+            }
+
+            return hydroArea;
+        }
+
+        private static IEnumerable<ModelFeatureCoordinateData<FixedWeir>> GetFixedWeirData(HydroArea hydroArea)
+        {
+            return hydroArea.FixedWeirs.Select(fw => new ModelFeatureCoordinateData<FixedWeir> {Feature = fw}).ToList();
         }
     }
 }

@@ -95,6 +95,95 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        public void Constructor_SetsDefaultWorkingDirectoryPathFunc()
+        {
+            // Call
+            using (var model = new WaveModel())
+            {
+                // Assert
+                Assert.That(model.WorkingDirectoryPathFunc, Is.Not.Null);
+                Assert.That(model.WorkingDirectoryPathFunc(), Is.EqualTo($"{Path.GetTempPath()}DeltaShell_Working_Directory"));
+            }
+        }
+
+        [Test]
+        public void GetWorkingDirectoryPathFunc_ReturnsCorrectFunc()
+        {
+            // Setup
+            Func<string> func = () => "working_dir";
+            using (var model = new WaveModel {WorkingDirectoryPathFunc = func})
+            {
+                // Call
+                Func<string> result = model.WorkingDirectoryPathFunc;
+
+                // Assert
+                Assert.That(result, Is.SameAs(func));
+            }
+        }
+
+        [Test]
+        public void GetDimrExportDirectoryPath_ReturnsCorrectPath()
+        {
+            // Setup
+            using (var model = new WaveModel
+            {
+                WorkingDirectoryPathFunc = () => "working_dir",
+                Name = "model_name"
+            })
+            {
+                // Call
+                string result = model.DimrExportDirectoryPath;
+
+                // Assert
+                Assert.That(result, Is.EqualTo("working_dir\\model_name"));
+            }
+        }
+
+        [Test]
+        public void SetDimrExportDirectoryPath_ThrowsNotSupportedException()
+        {
+            // Setup
+            using (var model = new WaveModel())
+            {
+                // Call
+                void Call() => model.DimrExportDirectoryPath = "some_path";
+
+                // Assert
+                Assert.That(Call, Throws.TypeOf<NotSupportedException>()
+                                        .With.Message.EqualTo("Cannot set dimr export directory."));
+            }
+        }
+
+        private sealed class PathProvider
+        {
+            public string Path { get; set; }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void DimrExportDirectoryPath_ShouldAlwaysBeUpToDate()
+        {
+            // Setup
+            var provider = new PathProvider {Path = "orig_working_dir"};
+
+            using (var model = new WaveModel
+            {
+                Name = "model_name",
+                WorkingDirectoryPathFunc = () => provider.Path
+            })
+            {
+                // Precondition
+                Assert.That(model.DimrExportDirectoryPath, Is.EqualTo("orig_working_dir\\model_name"));
+
+                // Call
+                provider.Path = "new_working_dir";
+
+                // Assert
+                Assert.That(model.DimrExportDirectoryPath, Is.EqualTo("new_working_dir\\model_name"));
+            }
+        }
+
+        [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void ReadTestModelFromFile()

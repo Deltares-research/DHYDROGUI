@@ -6,14 +6,36 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 {
+    /// <summary>
+    /// Importer for importing D-Waves models from .mdw files.
+    /// </summary>
+    /// <seealso cref="IFileImporter" />
     public class WaveModelFileImporter : IFileImporter
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaveModelFileImporter));
+        private readonly Func<string> getWorkingDirectoryPathFunc;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaveModelFileImporter"/> class.
+        /// </summary>
+        /// <param name="getWorkingDirectoryPathFunc">
+        /// The function to retrieve the working directory path.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="getWorkingDirectoryPathFunc"/> is <c>null</c>.
+        /// </exception>
+        public WaveModelFileImporter(Func<string> getWorkingDirectoryPathFunc)
+        {
+            Ensure.NotNull(getWorkingDirectoryPathFunc, nameof(getWorkingDirectoryPathFunc));
+
+            this.getWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
+        }
 
         public string Name => "Waves Model";
 
@@ -52,25 +74,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         {
             try
             {
-                var importedWaveModel = new WaveModel(path);
+                var importedWaveModel = new WaveModel(path) {WorkingDirectoryPathFunc = getWorkingDirectoryPathFunc};
 
                 //replace the Wave Model
-                var targetWaveModel = target as WaveModel;
-                if (targetWaveModel != null)
+                if (target is WaveModel targetWaveModel)
                 {
                     IProjectItem parent = targetWaveModel.Owner();
 
                     //add / replace the Wave Model in the project
-                    var folder = parent as Folder;
-                    if (folder != null)
+                    if (parent is Folder folder)
                     {
                         folder.Items.Remove(targetWaveModel);
                         folder.Items.Add(importedWaveModel);
                     }
 
                     //add / replace the Wave Model in the integrated model
-                    var compositeActivity = parent as ICompositeActivity;
-                    if (compositeActivity != null)
+                    if (parent is ICompositeActivity compositeActivity)
                     {
                         importedWaveModel.MoveModelIntoIntegratedModel(null, compositeActivity);
                         return compositeActivity;
@@ -80,8 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                 }
 
                 //add / replace the Wave Model in the integrated model
-                var hydroModel = target as ICompositeActivity;
-                if (hydroModel != null)
+                if (target is ICompositeActivity hydroModel)
                 {
                     importedWaveModel.MoveModelIntoIntegratedModel(null, hydroModel);
                     return hydroModel;

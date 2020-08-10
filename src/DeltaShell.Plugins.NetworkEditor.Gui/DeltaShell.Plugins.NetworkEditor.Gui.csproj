@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
@@ -984,4 +985,992 @@
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.5.0.51475-beta\build\net461\DeltaShell.Framework.targets')" />
+=======
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DeltaShell.Plugins.NetworkEditor.Gui</RootNamespace>
+    <AssemblyName>DeltaShell.Plugins.NetworkEditor.Gui</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ControlzEx">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\ControlzEx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Functions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Core, Version=1.5.0.51485-beta, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Units">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Utils">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Fluent">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\Fluent.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI.CoordinateSystems">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net40-full\log4net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Extensions">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.UI">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Fluent.Ribbon.3.6.1.236\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
+      <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
+    </Compile>
+    <Compile Include="Commands\AddNewBranchCommand.cs" />
+    <Compile Include="Commands\AddNewBranchUsingScribbleModeCommand.cs" />
+    <Compile Include="Commands\AddNewCatchmentCommand.cs" />
+    <Compile Include="Commands\AddNewDrainageBasinFeatureCommand.cs" />
+    <Compile Include="Commands\AddNewExtraResistanceCommand.cs" />
+    <Compile Include="Commands\AddNewLateralSourceCommand.cs" />
+    <Compile Include="Commands\AddNewLinkCommand.cs" />
+    <Compile Include="Commands\AddNewNetworkLocationCommand.cs" />
+    <Compile Include="Commands\AddNewObservationPointCommand.cs" />
+    <Compile Include="Commands\AddNewPumpCommand.cs" />
+    <Compile Include="Commands\AddNewRetentionCommand.cs" />
+    <Compile Include="Commands\AddNewWeirCommand.cs" />
+    <Compile Include="Commands\NetworkEditorCommand.cs" />
+    <Compile Include="Commands\NetworkEditorHelper.cs" />
+    <Compile Include="Commands\OpenCaseAnalysisViewCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />
+    <Compile Include="Editors\FMGatePropertiesRow.cs" />
+    <Compile Include="Editors\FMPumpPropertiesRow.cs" />
+    <Compile Include="Editors\FMWeirPropertiesRow.cs" />
+    <Compile Include="Editors\Structures\ViewModels\StructureViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GatedWeirViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GeneralStructureViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\SimpleWeirViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\WeirPropertiesViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\WeirViewModel.cs" />
+    <Compile Include="Editors\Structures\Views\Components\GateOpeningHeightCalculatedFieldView.xaml.cs">
+      <DependentUpon>GateOpeningHeightCalculatedFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\Components\GeneralStructureCoefficientHeaderView.xaml.cs">
+      <DependentUpon>GeneralStructureCoefficientHeaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml.cs">
+      <DependentUpon>GeneralStructureCoefficientView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\Components\GeneralStructureStreamFieldsHeaderView.xaml.cs">
+      <DependentUpon>GeneralStructureStreamFieldsHeaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\Components\GeneralStructureStreamFieldsView.xaml.cs">
+      <DependentUpon>GeneralStructureStreamFieldsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\Components\LabeledTimeSeriesHeaderView.xaml.cs">
+      <DependentUpon>LabeledTimeSeriesHeaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\Components\StructuresComboBox.xaml.cs">
+      <DependentUpon>StructuresComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\Components\StructuresValueBox.xaml.cs">
+      <DependentUpon>StructuresValueBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\WeirFormulaViews\GatedWeirView.xaml.cs">
+      <DependentUpon>GatedWeirView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\WeirFormulaViews\GatePropertiesView.xaml.cs">
+      <DependentUpon>GatePropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\Components\LabeledTimeSeriesView.xaml.cs">
+      <DependentUpon>LabeledTimeSeriesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\WeirFormulaViews\GeneralStructureView.xaml.cs">
+      <DependentUpon>GeneralStructureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\WeirFormulaViews\SimpleWeirView.xaml.cs">
+      <DependentUpon>SimpleWeirView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\StructureView.xaml.cs">
+      <DependentUpon>StructureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Structures\Views\WeirFormulaViews\WeirPropertiesView.xaml.cs">
+      <DependentUpon>WeirPropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
+    <Compile Include="Forms\PropertyGrid\FeatureWithAttributesProperties.cs" />
+    <Compile Include="Forms\StructureFeatureView\CrestValidationRule.cs" />
+    <Compile Include="Forms\StructureFeatureView\CrestWidthValidationRule.cs" />
+    <Compile Include="Forms\StructureFeatureView\DoubleTextBoxWithLabelAndUnitControl.xaml.cs">
+      <DependentUpon>DoubleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\EmptyDoubleValueConverter.cs" />
+    <Compile Include="Forms\StructureFeatureView\SingleTextBoxWithLabelAndUnitControl.xaml.cs">
+      <DependentUpon>SingleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirViewModelDesignerDataContext.cs" />
+    <Compile Include="Forms\AreaStructureView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\AreaStructureView.Designer.cs">
+      <DependentUpon>AreaStructureView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CaseAnalysis\CoverageAnalysisView.cs" />
+    <Compile Include="Forms\CaseAnalysis\CoverageAnalysisView.Designer.cs">
+      <DependentUpon>CoverageAnalysisView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperations.cs" />
+    <Compile Include="Forms\ChartEditors\ChartDrawingContext.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapeEditors\CircleShapeEditor.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapeEditors\CompositeShapeEditor.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapeEditors\IShapeFeatureEditor.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapeEditors\PolygonEditor.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapeEditors\RectangleShapeEditor.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapeEditors\ShapeFeatureEditor.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapeEditors\SymbolShapeEditor.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\CircleShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\CompositeShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\FixedRectangleShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\IShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\PolygonShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\RectangleSeriesShapeEditor.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\RectangleSeriesShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\RectangleShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\ShapeFeatureBase.cs" />
+    <Compile Include="Forms\ChartEditors\ChartShapes\SymbolShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\IChartDrawingContext.cs" />
+    <Compile Include="Forms\ChartEditors\IShapeLayerTool.cs" />
+    <Compile Include="Forms\ChartEditors\ShapeDeletePointTool.cs" />
+    <Compile Include="Forms\ChartEditors\ShapeEventArgs.cs" />
+    <Compile Include="Forms\ChartEditors\ShapeHoverTool.cs" />
+    <Compile Include="Forms\ChartEditors\ShapeInsertPointTool.cs" />
+    <Compile Include="Forms\ChartEditors\ShapeLayerTool.cs" />
+    <Compile Include="Forms\ChartEditors\ShapeModifyTool.cs" />
+    <Compile Include="Forms\ChartEditors\ShapeMoveTool.cs" />
+    <Compile Include="Forms\ChartEditors\ShapeSelectTool.cs" />
+    <Compile Include="Forms\ChartEditors\ShapeTool.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\CrestShapeEditor.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\FreeFormatWeirEditor.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\GatedWeirShapeEditor.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\BroadCrestShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\CrestShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\ExtraResistanceInSideViewShape.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\ExtraResistanceInStructureViewShape.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\FreeFormatWeirShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\GatedWeirShape.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\HoverRectangle.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\HoverText.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\IHover.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\IHoverText.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\PumpInSideViewShape.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\PumpInStructureViewShape.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\RoundCrestShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\StructureShapeStyleProvider.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\StructureSideViewShape.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\ThalWegInStructureView.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\TriangularCrestShapeFeature.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirInSideViewShape.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirInStructureViewShape.cs" />
+    <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirShapeFeature.cs" />
+    <Compile Include="Forms\ComputationalGridDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ComputationalGridDialog.Designer.cs">
+      <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FMWeirView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\FMWeirView.Designer.cs">
+      <DependentUpon>FMWeirView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormLevelShift.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormLevelShift.Designer.cs">
+      <DependentUpon>FormLevelShift.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormPasteCrossSection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormPasteCrossSection.Designer.cs">
+      <DependentUpon>FormPasteCrossSection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GatePropertiesRow.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\BranchFeatureComparer.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\HydroRegionTreeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\HydroRegionTreeView\HydroRegionTreeView.Designer.cs">
+      <DependentUpon>HydroRegionTreeView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\BranchFeatureTreeViewNodePresenterBase.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentsTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentTypeNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentTypesNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\ChannelTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CompositeStructureTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\DrainageBasinTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\LateralSourceTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\NetworkRoutesTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\NetworkRouteTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\NetworkTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\ObservationPointTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RetentionNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RunoffBoundariesTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RunoffBoundaryTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantsTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantTreeViewNodePresenter.cs" />
+    <Compile Include="Forms\HydroRegionTreeView\TreeViewBranchFeatureNodeSorter.cs" />
+    <Compile Include="Forms\ImportBranchFeatureDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImportBranchFeatureDialog.Designer.cs">
+      <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PropertyGrid\CatchmentProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\DrainageBasinProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\FeatureCoverageProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\GatedWeirFormulaProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\GateProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\GeneralStructureWeirFormulaProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\HydroLinkProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\HydroNodeProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\HydroRegionProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\NetworkCoverageProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\NetworkLocationProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\HydroNetworkProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\HydroAreaProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\NetworkSegmentProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\PierWeirFormulaProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\RiverWeirFormulaProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\RunoffBoundaryProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\SimpleWeirFormulaProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\TimeDependency.cs" />
+    <Compile Include="Forms\PropertyGrid\WasteWaterTreatmentPlantProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\WeirFormulaProperties.cs" />
+    <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.Designer.cs">
+      <DependentUpon>ExtraResistanceView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\GateView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\GateView.Designer.cs">
+      <DependentUpon>GateView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\GateViewData.cs" />
+    <Compile Include="Forms\StructureFeatureView\PumpView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\PumpView.Designer.cs">
+      <DependentUpon>PumpView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.Designer.cs">
+      <DependentUpon>GatedWeirFormulaView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaView.Designer.cs">
+      <DependentUpon>GeneralStructureWeirFormulaView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\PierWeirFormulaView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\PierWeirFormulaView.Designer.cs">
+      <DependentUpon>PierWeirFormulaView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaView.Designer.cs">
+      <DependentUpon>RiverWeirFormulaView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaView.Designer.cs">
+      <DependentUpon>SimpleWeirFormulaView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirView.Designer.cs">
+      <DependentUpon>WeirView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirViewData.cs" />
+    <Compile Include="Forms\StructureFeatureView\WeirViewValidationResult.cs" />
+    <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
+    <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
+    <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
+    <Compile Include="Layers\Providers\BridgePillarsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\DryAreasLayerProvider.cs" />
+    <Compile Include="Layers\Providers\DryPointsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\EmbankmentsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\EnclosuresLayerProvider.cs" />
+    <Compile Include="Layers\Providers\FeaturesLayerProvider.cs" />
+    <Compile Include="Layers\Providers\FixedWeirsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\GroupableFeature2DPolygonsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\HydroAreaLayerProvider.cs" />
+    <Compile Include="Layers\Providers\HydroRegionLayerProvider.cs" />
+    <Compile Include="Layers\Providers\LandBoundariesLayerProvider.cs" />
+    <Compile Include="Layers\Providers\ObservationCrossSectionsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\ObservationPointsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\PumpsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\ThinDamsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\WeirsLayerProvider.cs" />
+    <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />
+    <Compile Include="MapTools\IHydroNetworkEditorMapTool.cs" />
+    <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
+    <Compile Include="NetworkEditorGuiPlugin.cs" />
+    <Compile Include="ProjectExplorer\HydroAreaProjectTreeViewNodePresenter.cs" />
+    <Compile Include="ProjectExplorer\HydroRegionProjectTreeViewNodePresenter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Ribbon.xaml.cs">
+      <DependentUpon>Ribbon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\EnumToDescriptionConverter.cs" />
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewWpf.xaml.cs">
+      <DependentUpon>GeneralStructureWeirFormulaViewWpf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\SelectableWeirFormulaType.cs" />
+    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewWpf.xaml.cs">
+      <DependentUpon>SimpleWeirFormulaViewWpf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirViewWpf.xaml.cs">
+      <DependentUpon>WeirViewWpf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StructureFeatureView\WeirViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\AreaStructureView.resx">
+      <DependentUpon>AreaStructureView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CaseAnalysis\CoverageAnalysisView.resx">
+      <DependentUpon>CoverageAnalysisView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ComputationalGridDialog.resx">
+      <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FMWeirView.resx">
+      <DependentUpon>FMWeirView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormLevelShift.resx">
+      <DependentUpon>FormLevelShift.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormPasteCrossSection.resx">
+      <DependentUpon>FormPasteCrossSection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HydroRegionTreeView\HydroRegionTreeView.resx">
+      <DependentUpon>HydroRegionTreeView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImportBranchFeatureDialog.resx">
+      <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StructureFeatureView\ExtraResistanceView.resx">
+      <DependentUpon>ExtraResistanceView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StructureFeatureView\GateView.resx">
+      <DependentUpon>GateView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StructureFeatureView\PumpView.resx">
+      <DependentUpon>PumpView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.resx">
+      <DependentUpon>GatedWeirFormulaView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaView.resx">
+      <DependentUpon>GeneralStructureWeirFormulaView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\PierWeirFormulaView.resx">
+      <DependentUpon>PierWeirFormulaView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaView.resx">
+      <DependentUpon>RiverWeirFormulaView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaView.resx">
+      <DependentUpon>SimpleWeirFormulaView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StructureFeatureView\WeirView.resx">
+      <DependentUpon>WeirView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
+      <Project>{9f94f7fe-c79c-4e32-b3dc-a11c01b79349}</Project>
+      <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
+      <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
+      <Name>DeltaShell.Plugins.NetworkEditor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\AddDefaultCrossSectionDefinition.png" />
+    <Resource Include="Resources\AddDefaultCrossSectionDefinition.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AddInterpolatedCrossSection.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Boundary.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\BridgeSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\case_analysis.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\catchment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\copyhs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CrossSectionSectionType.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CrossSectionSectionTypeAdd.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CrossSectionSectionTypes.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CrossSectionSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CrossSectionSmallWithExclamation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CrossSectionSmallXYZ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CrossSectionStandardSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CrossSectionTabulatedSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CulvertSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\definition.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\definitiondefault.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\definitiontemplate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\DeleteHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\DiffuseSource.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\basin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ExtraResistanceSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\favorite.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\generatepoints.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\greenhouse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\GridPoint.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\GridPointFixed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hide_empty_tabs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hydrolink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\region.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\LateralSourceMap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\LateralSourceSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\network_crs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\network_branches.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NetworkLocationSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\network_branches11.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\network_branches1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Node.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NodeOnMultipleBranches.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NodeOnSingleBranch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Observation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\openwater.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\out_of_sync_overlay.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pastehs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\paved.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\polder_empty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\propertieshs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\PumpSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\PumpSmallLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\PumpSmallNegative.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\PumpSmallPositive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\PumpSmallRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\relational.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\removepoints.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Retention.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\route.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Route-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\routes.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\runoff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SharedCrossSectionDefinitions.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\show_only_selection.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\sideview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\StructureFeatureSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\table_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\table_delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\unpaved.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\WeirSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\wwtp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AddPointCursor.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cut1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Editors\Structures\Views\Components\GateOpeningHeightCalculatedFieldView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\GeneralStructureCoefficientHeaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\GeneralStructureCoefficientView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\GeneralStructureStreamFieldsHeaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\GeneralStructureStreamFieldsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\LabeledTimeSeriesHeaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\StructuresComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\StructuresValueBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\StructureStyling.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\WeirFormulaViews\GatedWeirView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\WeirFormulaViews\GatePropertiesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\Components\LabeledTimeSeriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\WeirFormulaViews\GeneralStructureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\WeirFormulaViews\SimpleWeirView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\StructureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Structures\Views\WeirFormulaViews\WeirPropertiesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\StructureFeatureView\DoubleTextBoxWithLabelAndUnitControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\StructureFeatureView\SingleTextBoxWithLabelAndUnitControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ribbon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewWpf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewWpf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\StructureFeatureView\WeirViewWpf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hbv.png" />
+    <Resource Include="Resources\sacramento.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AnalysisGroup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\basinGroup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NetworkCoverageGroup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NetworkGroup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\RegionGroup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\globe-green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\thindam.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Weir.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Gate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\landboundary.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\dry_point.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\dry_area.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\fixedweir.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pump.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\observationcs2d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\hydroarea.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Embankment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\clock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\import.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\enclosure.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Forms\Feature2DEditors\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
+    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\build\net461\DeltaShell.Framework.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.5.0.51485-beta\build\net461\DeltaShell.Framework.targets')" />
+>>>>>>> master
 </Project>

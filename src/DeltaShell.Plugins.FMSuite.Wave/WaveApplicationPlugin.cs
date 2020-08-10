@@ -6,6 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
@@ -18,6 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     [Extension(typeof(IPlugin))]
     public class WaveApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
+        private IApplication application;
+
         public override string Name => "Delft3D Wave";
 
         public override string DisplayName => "D-Waves Plugin";
@@ -49,13 +52,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     !(owner is ICompositeActivity) // Allow "standalone" wave models
                     || !((ICompositeActivity) owner).Activities.OfType<WaveModel>().Any() &&
                     owner is IHydroModel, // Don't allow multiple wave models in one composite activity
-                CreateModel = t => new WaveModel()
+                CreateModel = t => new WaveModel {WorkingDirectoryPathFunc = () => Application.WorkDirectory}
             };
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new WaveModelFileImporter();
+            yield return new WaveModelFileImporter(() => Application.WorkDirectory);
             yield return new WaveGridFileImporter(Name, GetModels);
             yield return new WaveDepthFileImporter(Name, GetModels);
             yield return new WaveBoundaryFileImporter();
@@ -77,6 +80,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             yield return new WaveDataAccessListener();
+        }
+
+        public override IApplication Application
+        {
+            get => application;
+            set
+            {
+                if (application != null)
+                {
+                    application.ProjectOpened -= Application_ProjectOpened;
+                }
+
+                application = value;
+
+                if (application != null)
+                {
+                    application.ProjectOpened += Application_ProjectOpened;
+                }
+            }
+        }
+
+        private void Application_ProjectOpened(Project project)
+        {
+            project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>()
+                   .ForEach(m => m.WorkingDirectoryPathFunc = () => application.WorkDirectory);
         }
     }
 }
