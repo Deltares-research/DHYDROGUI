@@ -154,9 +154,7 @@
     </Compile>
     <Compile Include="Buttons\SelectSp2FileButton.cs" />
     <Compile Include="Editors\Boundaries\Converters\NotNullToBooleanConverter.cs" />
-    <Compile Include="Editors\Boundaries\Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Editors\Boundaries\Converters\TypeToVisibilityConverter.cs" />
-    <Compile Include="Editors\Boundaries\Converters\UnitStringToUnitDisplayStringConverter.cs" />
     <Compile Include="Editors\Boundaries\Enums\DirectionalSpreadingViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\ForcingViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\PeriodViewType.cs" />
@@ -213,15 +211,6 @@
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointDataComponentViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointViewModel.cs" />
-    <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledCheckBox.xaml.cs">
-      <DependentUpon>LabeledCheckBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml.cs">
-      <DependentUpon>LabeledComboBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledValueBox.xaml.cs">
-      <DependentUpon>LabeledValueBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\FileBasedParametersView.xaml.cs">
       <DependentUpon>FileBasedParametersView.xaml</DependentUpon>
     </Compile>
@@ -463,18 +452,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Editors\Boundaries\Views\CommonElements\LabeledCheckBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Editors\Boundaries\Views\CommonElements\LabeledValueBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -566,6 +543,7 @@
     <Content Include="Resources\folder_domain.png" />
     <Content Include="Resources\domain.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
