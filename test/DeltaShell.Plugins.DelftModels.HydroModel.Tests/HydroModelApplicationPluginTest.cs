@@ -360,8 +360,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             ModelInfo modelInfos = appPlugin.GetModelInfos().First();
 
             // Assert
-            IModel returnedModel = modelInfos.CreateModel(Substitute.For<IProjectItem>());
-            var hydroModel = returnedModel as HydroModel;
+            var hydroModel = modelInfos.CreateModel(Substitute.For<IProjectItem>()) as HydroModel;
             Assert.IsNotNull(hydroModel);
             Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
 
@@ -371,6 +370,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GetFileImporters_ShouldReturnDimrXmlImporterWhichCreatesAHydroModelUsingApplicationWorkingDirectory()
         {
             using (var tempDirectory = new TemporaryDirectory())

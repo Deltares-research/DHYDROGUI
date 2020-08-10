@@ -2,6 +2,7 @@
 using System.Text;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -14,6 +15,7 @@ namespace DeltaShell.Dimr.Tests
     public class DimrRunHelperTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ConnectDimrRunLogFile_ShouldReadLogFileAndStoreInfoInDataItem()
         {
             using (var tempDirectory = new TemporaryDirectory())

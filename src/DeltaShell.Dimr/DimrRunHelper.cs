@@ -20,11 +20,16 @@ namespace DeltaShell.Dimr
         private const string dimrRunLogfileName = "dimr_redirected.log";
         
         /// <summary>
-        /// Method for reading the DimrRunLog file.
+        /// Method for reading the DimrRunLog file and storing the content
+        /// in a TextDocument.
         /// </summary>
         /// <param name="model"> The model of the run</param>
-        /// <param name="dimrLogDirectory"> The directory where
-        /// the log file should be after a run.</param>
+        /// <param name="dimrLogDirectory">
+        /// The directory where the log file should be after a run.
+        /// </param>
+        /// <remarks>
+        /// If the log file does not exist, this method will do nothing.
+        /// </remarks>
         public static void ConnectDimrRunLogFile(IModel model, string dimrLogDirectory)
         {
             string completeDimrLogFilename = Path.Combine(dimrLogDirectory, dimrRunLogfileName);
@@ -33,8 +38,16 @@ namespace DeltaShell.Dimr
                 return;
             }
 
-            //add an dimr run log output dataitem with the log...
+            IDataItem logDataItem = GetLogDataItem(model);
+
+            ((TextDocument) logDataItem.Value).Content = ReadLogFile(completeDimrLogFilename);
+        }
+
+        private static IDataItem GetLogDataItem(IModel model)
+        {
             IDataItem logDataItem = model.DataItems.FirstOrDefault(di => di.Tag == dimrRunLogfileDataItemTag);
+            
+            //add an dimr run log output dataitem if needed.
             if (logDataItem == null)
             {
                 var textDocument = new TextDocument(true) {Name = "Dimr Run Log"};
@@ -43,9 +56,15 @@ namespace DeltaShell.Dimr
                 model.DataItems.Add(logDataItem);
             }
 
+            return logDataItem;
+        }
+
+        private static string ReadLogFile(string completeDimrLogFilename)
+        {
+            var stringBuilder = new StringBuilder();
+            
             using (Stream objStream = File.OpenRead(completeDimrLogFilename))
             {
-                var stringBuilder = new StringBuilder();
                 // Read data from file until read position is not equals to length of file
                 while (objStream.Position != objStream.Length)
                 {
@@ -61,9 +80,9 @@ namespace DeltaShell.Dimr
 
                     stringBuilder.Append(Encoding.UTF8.GetString(arrData, 0, arrData.Length));
                 }
-
-                ((TextDocument) logDataItem.Value).Content = stringBuilder.ToString();
             }
+
+            return stringBuilder.ToString();
         }
     }
 }

@@ -18,6 +18,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
@@ -113,11 +114,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         #endregion
 
         #region Working Directory
+
+        private Func<string> workingDirectoryPathFunc = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
         
         /// <summary>
         /// Func for retrieving the current working directory set in the framework.
         /// </summary>
-        public virtual Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
+        public virtual Func<string> WorkingDirectoryPathFunc
+        {
+            get => workingDirectoryPathFunc;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                workingDirectoryPathFunc = value;
+            }
+        } 
 
         /// <summary>
         /// Property for retrieving the current working directory set in the framework

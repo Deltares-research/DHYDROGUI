@@ -34,6 +34,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             Assert.That(model, Is.TypeOf<HydroModel>());
         }
 
+        [Test]
+        public void Constructor_WhenGetWorkingDirectoryPathFuncIsNull_ShouldThrownArgumentNullException()
+        {
+            void Call() => new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>(), null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("getWorkingDirectoryPathFunc"));
+
+        }
         /// <summary>
         /// WHEN SupportedItemTypes is retrieved
         /// THEN a set containing ICompositeActivity is returned
@@ -539,6 +547,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ImportItem_ShouldSetWorkingDirectoryPathFunInImportedHydroModel()
         {
             using (var tempDirectory = new TemporaryDirectory())

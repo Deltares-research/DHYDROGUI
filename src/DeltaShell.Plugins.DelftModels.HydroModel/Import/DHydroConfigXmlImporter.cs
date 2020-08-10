@@ -7,6 +7,7 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
@@ -48,6 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             HydroModelReader.Read,
             dimrFileImporters)
         {
+            Ensure.NotNull(getWorkingDirectoryPathFunc, nameof(getWorkingDirectoryPathFunc));
             StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
         }
         

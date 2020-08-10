@@ -183,6 +183,7 @@
     <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
       <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
       <Name>DeltaShell.NGHS.IO.TestUtils</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
