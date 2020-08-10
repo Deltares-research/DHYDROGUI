@@ -10,6 +10,7 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.Common.Logging;
@@ -146,6 +147,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <remarks>
         /// If <paramref name="config"/> is null, the default MduFileWriteConfig will be used.
         /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="allFixedWeirsAndCorrespondingProperties"/> is <c>null</c>.
+        /// </exception>
         public void Write(string targetMduFilePath,
                           WaterFlowFMModelDefinition modelDefinition,
                           HydroArea hydroArea,
@@ -154,6 +158,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                           bool switchTo = true,
                           ISedimentModelData sedimentModelData = null)
         {
+            Ensure.NotNull(allFixedWeirsAndCorrespondingProperties, nameof(allFixedWeirsAndCorrespondingProperties));
+
             if (config == null)
             {
                 config = new MduFileWriteConfig();
