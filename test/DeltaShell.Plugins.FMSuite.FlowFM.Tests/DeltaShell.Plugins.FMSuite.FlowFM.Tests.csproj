@@ -144,6 +144,12 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51484-beta\lib\net461\plugins\DeltaShell.Plugins.Toolbox.Gui\DeltaShell.Plugins.Toolbox.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DHYDRO.TestModels.Common, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DHYDRO.TestModels.DFlowFM.1.0.2\lib\net461\DHYDRO.TestModels.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="DHYDRO.TestModels.DFlowFM, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DHYDRO.TestModels.DFlowFM.1.0.2\lib\net461\DHYDRO.TestModels.DFlowFM.dll</HintPath>
+    </Reference>
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
     </Reference>
@@ -556,8 +562,10 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.5.0.51484-beta\tools\mkl
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.5.0.51484-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.5.0.51484-beta\build\net461\DeltaShell.Framework.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.1.5.0.51484-beta\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.1.5.0.51484-beta\build\net40\DeltaShell.TestProject.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DHYDRO.TestModels.DFlowFM.1.0.2\build\DHYDRO.TestModels.DFlowFM.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DHYDRO.TestModels.DFlowFM.1.0.2\build\DHYDRO.TestModels.DFlowFM.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.1.5.0.51484-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.5.0.51484-beta\build\net461\DeltaShell.Framework.targets')" />
   <Import Project="..\..\packages\DeltaShell.TestProject.1.5.0.51484-beta\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.1.5.0.51484-beta\build\net40\DeltaShell.TestProject.targets')" />
+  <Import Project="..\..\packages\DHYDRO.TestModels.DFlowFM.1.0.2\build\DHYDRO.TestModels.DFlowFM.targets" Condition="Exists('..\..\packages\DHYDRO.TestModels.DFlowFM.1.0.2\build\DHYDRO.TestModels.DFlowFM.targets')" />
 </Project>
