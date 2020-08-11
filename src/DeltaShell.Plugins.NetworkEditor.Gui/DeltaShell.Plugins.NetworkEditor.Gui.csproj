@@ -483,7 +483,6 @@
     </Compile>
     <Compile Include="Converters\EnumToDescriptionConverter.cs" />
     <Compile Include="Forms\StructureFeatureView\SelectableWeirFormulaType.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\AreaStructureView.resx">
