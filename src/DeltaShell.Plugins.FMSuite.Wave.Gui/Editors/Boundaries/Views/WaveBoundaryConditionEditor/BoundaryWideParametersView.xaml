@@ -8,14 +8,13 @@
              xmlns:shapes="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes"
              xmlns:waveBoundaryConditionEditor="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor"
              xmlns:components="clr-namespace:DeltaShell.NGHS.Common.Gui.Components;assembly=DeltaShell.NGHS.Common.Gui"
-             xmlns:converters="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Converters"
              xmlns:convertersWave="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters"
              xmlns:convertersCommon="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance waveBoundaryConditionEditor:BoundaryWideParametersViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
+            <convertersCommon:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
             <convertersWave:TypeToVisibilityConverter x:Key="TypeToVisibilityConverter" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <convertersCommon:TypeToDescriptionConverter x:Key="TypeToDescriptionConverter" />
