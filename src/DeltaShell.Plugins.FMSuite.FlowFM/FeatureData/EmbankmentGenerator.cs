@@ -376,32 +376,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
             return 0;
         }
-
-        private static Coordinate GetPointFromChainage(double startchainage, double chainage, Coordinate point1,
-                                                       Coordinate point2)
-        {
-            var chainagePoint = new Coordinate();
-            double factor = (chainage - startchainage) / point1.Distance(point2);
-
-            if (Math.Abs(point2.X - point1.X) < 1.0E-8)
-            {
-                chainagePoint.X = point1.X;
-            }
-            else
-            {
-                chainagePoint.X = point1.X + ((point2.X - point1.X) * factor);
-            }
-
-            if (Math.Abs(point2.Y - point1.Y) < 1.0E-8)
-            {
-                chainagePoint.Y = point1.Y;
-            }
-            else
-            {
-                chainagePoint.Y = point1.Y + ((point2.Y - point1.Y) * factor);
-            }
-
-            return chainagePoint;
-        }
     }
 }

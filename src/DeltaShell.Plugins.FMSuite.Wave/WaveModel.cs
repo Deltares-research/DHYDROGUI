@@ -19,6 +19,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
@@ -51,16 +52,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModel));
 
         private static readonly string GridPropertyName = nameof(WaveDomainData.Grid);
-
-        private readonly MdwFile mdwFile = new MdwFile();
-
         private readonly BoundaryContainerSyncService boundaryContainerSyncService;
 
-        private readonly string tempWorkingDirectory;
         private readonly DimrRunner runner;
         private ICoordinateSystem coordinateSystem;
         private string progressText;
-        private IWaveModelApi waveApi;
 
         private IWaveDomainData outerDomain;
         private string previousGridName;
@@ -88,8 +84,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             dataItems.Add(new DataItem(new TextDocument(true) {Name = "Swan run log"}, DataItemRole.Output,
                                        SwanLogDataItemTag));
-
-            tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
             InitializeCouplingTime();
 
@@ -282,9 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public MdwFile MdwFile => mdwFile;
-
-        public string WorkingDirectory => ExplicitWorkingDirectory ?? tempWorkingDirectory;
+        public MdwFile MdwFile { get; } = new MdwFile();
 
         [PropertyGrid]
         [DisplayName("Validate before run")]
@@ -367,6 +359,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         public override IBasicModelInterface BMIEngine => runner.Api;
+
+        /// <summary>
+        /// Gets or sets the function to retrieve the working directory path.
+        /// </summary>
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
 
         public void AddSubDomain(IWaveDomainData domain, IWaveDomainData subDomain)
         {
@@ -502,7 +499,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 Directory.CreateDirectory(targetDir);
             }
 
-            mdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
+            MdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
 
             // write spatial data:
             SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
@@ -540,11 +537,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public void Dispose()
         {
-            if (waveApi != null)
-            {
-                waveApi.Dispose();
-            }
-
             RestoreEnvironment();
         }
 
@@ -583,7 +575,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             EndEdit();
 
             // grid(s) transformed, sync data to disk:
-            string modelDir = Path.GetDirectoryName(mdwFile.MdwFilePath);
+            string modelDir = Path.GetDirectoryName(MdwFile.MdwFilePath);
             foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(OuterDomain))
             {
                 string targetGridFileName = Path.Combine(modelDir, domain.GridFileName);
@@ -667,19 +659,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             previousProgress = ProgressPercentage;
             runner.OnProgressChanged();
             base.OnProgressChanged();
-        }
-
-        protected override void OnCancel()
-        {
-            if (waveApi == null)
-            {
-                return; // we never got past validation..
-            }
-
-            waveApi.Dispose();
-            waveApi = null;
-
-            base.OnCancel();
         }
 
         protected virtual void ReconnectWavmFile(string outputPath)
@@ -904,7 +883,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             model.MdwFile.MdwFilePath = mdwFilePath;
             model.Name = Path.GetFileNameWithoutExtension(mdwFilePath);
 
-            WaveModelDefinition loadedModelDefinition = model.mdwFile.Load(mdwFilePath);
+            WaveModelDefinition loadedModelDefinition = model.MdwFile.Load(mdwFilePath);
             if (model.ModelDefinition != null)
             {
                 WaveModelDefinitionLoadHelper.TransferLoadedProperties(model.ModelDefinition, loadedModelDefinition);
@@ -1239,7 +1218,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void OnSave()
         {
-            ModelSaveTo(mdwFile.MdwFilePath, true);
+            ModelSaveTo(MdwFile.MdwFilePath, true);
         }
 
         private void OnCopyTo(string targetMdwFilePath)
@@ -1249,13 +1228,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void OnSwitchTo(string newMdwFilePath)
         {
-            if (mdwFile.MdwFilePath == null)
+            if (MdwFile.MdwFilePath == null)
             {
                 BuildModel(model => BuildModelFromMdw(model, newMdwFilePath), true);
             }
             else
             {
-                mdwFile.MdwFilePath = newMdwFilePath;
+                MdwFile.MdwFilePath = newMdwFilePath;
             }
         }
 
@@ -1328,7 +1307,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </summary>
         public bool CopyFromWorkingDirectory { get; }
 
-        public virtual string MdwFilePath => mdwFile?.MdwFilePath;
+        public virtual string MdwFilePath => MdwFile?.MdwFilePath;
 
         void IFileBased.CreateNew(string mdwPath)
         {
@@ -1443,10 +1422,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
 
+        /// <summary>
+        /// Gets the dimr export directory path.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        /// Thrown when this property is set, because the model should use the application's working directory.
+        /// </exception>
         public virtual string DimrExportDirectoryPath
         {
-            get => ExplicitWorkingDirectory;
-            set => ExplicitWorkingDirectory = value;
+            get => Path.Combine(WorkingDirectoryPathFunc(), Name);
+            set => throw new NotSupportedException("Cannot set dimr export directory.");
         }
 
         public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;

@@ -1262,15 +1262,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(0, 100)
                     })
                 });
-                area.FixedWeirs.Add(new FixedWeir
+                var fixedWeir = new FixedWeir
                 {
                     GroupName = fixedWeirGroupName,
-                    Geometry = new LineString(new[]
-                    {
-                        new Coordinate(0, 0),
-                        new Coordinate(0, 100)
-                    })
-                });
+                    Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 100)})
+                };
+                area.FixedWeirs.Add(fixedWeir);
                 area.ThinDams.Add(new ThinDam2D
                 {
                     GroupName = thinDamGroupName,
@@ -1282,7 +1279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 });
 
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>> {new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir}};
                 mduFile.Write(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
                 Assert.That(File.Exists(obsCrsFileName));
                 Assert.That(File.Exists(fixedWeirFileName));
@@ -1324,15 +1321,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(0, 100)
                     })
                 });
-                area.FixedWeirs.Add(new FixedWeir
+                var fixedWeir = new FixedWeir
                 {
                     GroupName = fixedWeirGroupName,
-                    Geometry = new LineString(new[]
-                    {
-                        new Coordinate(0, 0),
-                        new Coordinate(0, 100)
-                    })
-                });
+                    Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 100)})
+                };
+                area.FixedWeirs.Add(fixedWeir);
                 area.ThinDams.Add(new ThinDam2D
                 {
                     GroupName = thinDamGroupName,
@@ -1344,7 +1338,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 });
 
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
+                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>() {new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir}};
 
                 mduFile.Write(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
                 Assert.That(File.Exists(obsCrsFileName));
