@@ -185,7 +185,6 @@
     <Compile Include="Commands\NetworkEditorCommand.cs" />
     <Compile Include="Commands\NetworkEditorHelper.cs" />
     <Compile Include="Commands\OpenCaseAnalysisViewCommand.cs" />
-    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
