@@ -498,9 +498,6 @@
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewWpf.xaml.cs">
       <DependentUpon>SimpleWeirFormulaViewWpf.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirViewWpf.xaml.cs">
-      <DependentUpon>WeirViewWpf.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -893,10 +890,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewWpf.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\StructureFeatureView\WeirViewWpf.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
