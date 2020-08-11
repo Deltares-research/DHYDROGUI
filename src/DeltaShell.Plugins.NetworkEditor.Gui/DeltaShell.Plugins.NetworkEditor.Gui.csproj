@@ -244,7 +244,7 @@
     </Compile>
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureWithAttributesProperties.cs" />
-    <Compile Include="Forms\StructureFeatureView\EmptyDoubleValueConverter.cs" />
+    <Compile Include="Converters\EmptyDoubleValueConverter.cs" />
     <Compile Include="Forms\AreaStructureView.cs">
       <SubType>UserControl</SubType>
     </Compile>
