@@ -252,7 +252,6 @@
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryGeometryView.xaml.cs">
       <DependentUpon>BoundaryGeometryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\EnumToDescriptionConverter.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\FilePathToFileNameConverter.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeToBooleanConverter.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeToVisibilityConverter.cs" />
