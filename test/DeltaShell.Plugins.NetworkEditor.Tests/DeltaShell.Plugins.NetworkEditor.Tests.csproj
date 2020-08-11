@@ -253,8 +253,6 @@
     <Compile Include="Forms\GridProperties\NetworkSegmentPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\RunoffBoundaryPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\WasteWaterTreatmentPlantPropertiesTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\CrestValidationRuleTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\CrestWidthValidationRuleTest.cs" />
     <Compile Include="Forms\StructureFeatureView\EmptyDoubleValueConverterTest.cs" />
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
