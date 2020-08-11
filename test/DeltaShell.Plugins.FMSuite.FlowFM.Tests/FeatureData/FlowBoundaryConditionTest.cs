@@ -504,12 +504,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             IUnit variableUnit = condition.VariableUnit;
 
             // Assert
-            // Old style assert, use this if consistency is valued over new style
-            Assert.IsTrue(variableUnit.GetType() == typeof(Unit));
-            Assert.AreEqual(unitDescription, variableUnit.Name);
-            Assert.AreEqual(unit, variableUnit.Symbol);
-
-            // New style
             Assert.That(variableUnit, Is.TypeOf<Unit>());
             Assert.That(variableUnit.Name, Is.EqualTo(unitDescription));
             Assert.That(variableUnit.Symbol, Is.EqualTo(unit));
