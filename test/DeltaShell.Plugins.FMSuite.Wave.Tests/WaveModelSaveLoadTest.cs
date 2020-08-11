@@ -10,6 +10,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
@@ -17,6 +18,7 @@ using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
+using Does = NUnit.Framework.Does;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 {
@@ -281,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 app.SaveProjectAs(secondPath);
 
                 string targetDir = Path.Combine(secondPath + "_data", model.Name);
-                Assert.IsTrue(File.Exists(Path.Combine(targetDir, model.Name + ".mdw")));
+                Assert.IsTrue(File.Exists(Path.Combine(targetDir, "input", model.Name + ".mdw")));
             }
         }
 
@@ -366,11 +368,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 Assert.That(File.Exists(waveOutputFilePath), Is.True);
                 Assert.That(waveModel.WavmFunctionStores.Single().Functions, Is.Empty);
 
+                string saveModelDir = tempDirectory.CreateDirectory("Waves");
+
                 // Call
-                waveModel.ModelSaveTo(mdwFilePath, true);
+                waveModel.ModelSaveTo(Path.Combine(saveModelDir, "input", "Waves.mdw"), true);
 
                 // Assert
-                Assert.That(File.Exists(waveOutputFilePath), Is.False);
+                Assert.That(Path.Combine(saveModelDir, "output", "wavm-Waves.nc"), Does.Not.Exist());
             }
         }
 
