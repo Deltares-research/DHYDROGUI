@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Converters
     /// </summary>
     /// <seealso cref="System.Windows.Data.IValueConverter"/>
     /// <inheritdoc cref="IValueConverter"/>
+    [ValueConversion(typeof(double), typeof(string))]
     public class EmptyDoubleValueConverter : IValueConverter
     {
         /// <inheritdoc cref="IValueConverter"/>
