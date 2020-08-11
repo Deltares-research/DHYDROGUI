@@ -481,7 +481,6 @@
     <Compile Include="Ribbon.xaml.cs">
       <DependentUpon>Ribbon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\EnumToDescriptionConverter.cs" />
     <Compile Include="Forms\StructureFeatureView\SelectableWeirFormulaType.cs" />
   </ItemGroup>
   <ItemGroup>
