@@ -246,14 +246,7 @@
     <Compile Include="Forms\PropertyGrid\FeatureWithAttributesProperties.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestValidationRule.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestWidthValidationRule.cs" />
-    <Compile Include="Forms\StructureFeatureView\DoubleTextBoxWithLabelAndUnitControl.xaml.cs">
-      <DependentUpon>DoubleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\EmptyDoubleValueConverter.cs" />
-    <Compile Include="Forms\StructureFeatureView\SingleTextBoxWithLabelAndUnitControl.xaml.cs">
-      <DependentUpon>SingleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirViewModelDesignerDataContext.cs" />
     <Compile Include="Forms\AreaStructureView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -491,13 +484,7 @@
       <DependentUpon>Ribbon.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\EnumToDescriptionConverter.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewWpf.xaml.cs">
-      <DependentUpon>GeneralStructureWeirFormulaViewWpf.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\SelectableWeirFormulaType.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewWpf.xaml.cs">
-      <DependentUpon>SimpleWeirFormulaViewWpf.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -873,25 +860,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\StructureFeatureView\DoubleTextBoxWithLabelAndUnitControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\StructureFeatureView\SingleTextBoxWithLabelAndUnitControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Ribbon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewWpf.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewWpf.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
