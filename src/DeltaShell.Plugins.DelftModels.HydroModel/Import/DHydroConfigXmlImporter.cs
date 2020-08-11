@@ -31,9 +31,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// </summary>
         /// <param name="readFunc">The read function.</param>
         /// <param name="dimrFileImporters">The DIMR file importers.</param>
+        /// <param name="getWorkingDirectoryPathFunc">
+        /// Func for retrieving working directory
+        /// from the framework.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="getWorkingDirectoryPathFunc"/> is null.
+        /// </exception>
         public DHydroConfigXmlImporter(Func<string, IList<IDimrModelFileImporter>, HydroModel> readFunc,
-                                       Func<IList<IDimrModelFileImporter>> dimrFileImporters)
+                                       Func<IList<IDimrModelFileImporter>> dimrFileImporters, Func<string> getWorkingDirectoryPathFunc)
         {
+            Ensure.NotNull(getWorkingDirectoryPathFunc, nameof(getWorkingDirectoryPathFunc));
+            StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
+
             this.readFunc = readFunc;
             getDimrModelFileImporters = dimrFileImporters;
         }
@@ -47,11 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// from the framework.</param>
         public DHydroConfigXmlImporter(Func<IList<IDimrModelFileImporter>> dimrFileImporters, Func<string> getWorkingDirectoryPathFunc) : this(
             HydroModelReader.Read,
-            dimrFileImporters)
-        {
-            Ensure.NotNull(getWorkingDirectoryPathFunc, nameof(getWorkingDirectoryPathFunc));
-            StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
-        }
+            dimrFileImporters, getWorkingDirectoryPathFunc) {}
         
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]

@@ -116,10 +116,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         #region Working Directory
 
         private Func<string> workingDirectoryPathFunc = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
-        
+
         /// <summary>
         /// Func for retrieving the current working directory set in the framework.
         /// </summary>
+        /// /// <exception cref="ArgumentNullException">
+        /// Thrown when value is null.
+        /// </exception>
         public virtual Func<string> WorkingDirectoryPathFunc
         {
             get => workingDirectoryPathFunc;

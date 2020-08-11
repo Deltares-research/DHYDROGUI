@@ -354,7 +354,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Any();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             // When | Then
 
@@ -385,7 +385,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Any();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             Assert.Throws<Exception>(() => importer.ImportItem(path), errorMsg);
             readFunc.VerifyAllExpectations();
@@ -416,7 +416,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Once();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             // When
             object result = importer.ImportItem(path, null);
@@ -454,7 +454,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Once();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             // When
             var result = (HydroModel) importer.ImportItem(path, folder);
@@ -497,7 +497,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Once();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             // When
             var result = (HydroModel) importer.ImportItem(path, prevModel);
@@ -535,7 +535,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Once();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>()) {ShouldCancel = true};
+                                                       () => new List<IDimrModelFileImporter>(), () => null) {ShouldCancel = true};
 
             // When
             object result = importer.ImportItem(path, null);
