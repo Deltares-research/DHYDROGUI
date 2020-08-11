@@ -34,7 +34,7 @@ if __name__ == "__main__":
     root_path = Path(args.svn_root_path)
     version_number = args.version_number
         
-    revision_number = f"{version_number}{args.postfix if args.postfix else ""}"
+    revision_number = f"{version_number}{args.postfix if args.postfix else ''}"
 
     project_file_paths = search_files(root_path, '.csproj')
     
