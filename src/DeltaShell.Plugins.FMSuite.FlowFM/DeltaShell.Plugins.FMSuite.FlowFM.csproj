@@ -118,6 +118,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51496\lib\net461\DeltaShell\System.ValueTuple.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
