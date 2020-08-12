@@ -33,13 +33,16 @@ if __name__ == "__main__":
     args = get_args()
     root_path = Path(args.svn_root_path)
     version_number = args.version_number
-        
-    revision_number = f"{version_number}{args.postfix if args.postfix else ''}"
+
+    if arg.postfix:
+        revision_number = f"{args.postfix}.{version_number}"
+    else:
+        revision_number = f"{version_number}"
 
     project_file_paths = search_files(root_path, '.csproj')
     
-    version_regex = r'1\.5\.0\.\d{5}(?:-beta)?(?:-SIGNED)?'
-    new_version_string = f"1.5.0.{revision_number}"
+    version_regex = r'1\.6\.0(?:-beta)?(?:-SIGNED)?.(?:.{7})?\\?'
+    new_version_string = f"1.6.0-{revision_number}"
 
     find_and_replace_csproj = [
         (re.compile(f'DeltaShell\\.Framework\\.{version_regex}'),   f"DeltaShell.Framework.{new_version_string}"),
