@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.Validation;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
@@ -18,7 +18,7 @@ using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
-using Does = NUnit.Framework.Does;
+using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 {
@@ -30,11 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadEmptyWaveModel()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 var path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
@@ -57,11 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadCoordinateSystem()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 var path = "coords.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
@@ -86,11 +80,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadImportedWaveModel()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 var path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
@@ -116,11 +107,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadImportedWaveModelTwiceWithoutEventLeaks()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 var path = "mdw.dsproj";
                 app.SaveProjectAs(path);
 
@@ -158,12 +146,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadWaveModelPersistsCoupledStartTime()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                //Plugins needed to save the project
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 var path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
@@ -193,12 +177,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadWaveModelPersistsCoupledStopTime()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                //Plugins needed to save the project
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 var path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
@@ -228,12 +208,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void SaveLoadWaveModelPersistsCoupledTimeStep()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                //Plugins needed to save the project
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 var path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
@@ -263,11 +239,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void ImportModelSaveAsConfirmFilesAreCopiedAlong()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 var path = "mdw_grid.dsproj";
                 var secondPath = "target_mdw_grid.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
@@ -290,11 +263,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void WaveAddDeleteDomainsSaveLoadTest()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 var projPath = "modelSaveLoadDomainsTest.dsproj";
                 app.SaveProjectAs(projPath); // save to initialize file repository..
 
@@ -323,11 +293,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void WaveBathymetryDefinitionsSaveLoadTest()
         {
-            using (var app = new DeltaShellApplication())
+            using (DeltaShellApplication app = GetRunningApplication())
             {
-                LoadRequiredPlugins(app);
-                app.Run();
-
                 const string projPath = "bathySaveLoadTest.dsproj";
                 app.SaveProjectAs(projPath); // save to initialize file repository..
 
@@ -374,43 +341,81 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 waveModel.ModelSaveTo(Path.Combine(saveModelDir, "input", "Waves.mdw"), true);
 
                 // Assert
-                Assert.That(Path.Combine(saveModelDir, "output", "wavm-Waves.nc"), Does.Not.Exist());
+                Assert.That(Path.Combine(saveModelDir, "output", "wavm-Waves.nc"), NUnit.Framework.Does.Not.Exist());
             }
         }
 
         [Test]
         public void WaveOutputSaveLoadTest()
         {
-            using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+            using (DeltaShellApplication app = GetRunningApplication())
+            using (var tempDir = new TemporaryDirectory())
             {
-                LoadRequiredPlugins(app);
-                app.Run();
+                RunModel(tempDir, app.Project.RootFolder);
 
-                const string projPath = "outputSaveLoadTest.dsproj";
-
-                string path = TestHelper.GetTestFilePath(@"obw\obw.mdw");
-                string localPath = TestHelper.CreateLocalCopy(path);
-
-                var model = new WaveModel(localPath) {Name = "outputSaveLoadTest"};
-
-                app.Project.RootFolder.Add(model);
-
-                ValidationReport report = model.Validate();
-
-                ActivityRunner.RunActivity(model);
+                string projPath = Path.Combine(tempDir.Path, "project.dsproj");
 
                 app.SaveProjectAs(projPath);
+
+                AssertFileStructure(projPath);
+
                 app.CloseProject();
 
                 app.OpenProject(projPath);
-                var loadedModel = app.Project.RootFolder.Items[0] as WaveModel;
 
-                WavmFileFunctionStore functionStore = loadedModel.WavmFunctionStores.FirstOrDefault();
+                using (var loadedModel = (WaveModel) app.Project.RootFolder.Items[0])
+                {
+                    WavmFileFunctionStore functionStore = loadedModel.WavmFunctionStores.First();
+                    Assert.That(functionStore.Functions[0].Components[0].GetValues(), Is.Not.Empty);
+                }
 
-                Assert.IsNotNull(functionStore);
-
-                Assert.IsTrue(functionStore.Functions.First().Components[0].GetValues().Count > 0);
+                app.CloseProject();
             }
+        }
+
+        private static DeltaShellApplication GetRunningApplication()
+        {
+            var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
+            LoadRequiredPlugins(app);
+            app.Run();
+
+            return app;
+        }
+
+        private static void RunModel(TemporaryDirectory tempDir, Folder rootFolder)
+        {
+            string mdwDirPath = tempDir.CopyDirectoryToTempDirectory(TestHelper.GetTestFilePath(@"obw"));
+            string mdwFilePath = Path.Combine(mdwDirPath, "obw.mdw");
+
+            using (var model = new WaveModel(mdwFilePath))
+            {
+                rootFolder.Add(model);
+
+                ActivityRunner.RunActivity(model);
+            }
+        }
+
+        private static string AssertExists(string dir, string relPath)
+        {
+            string path = Path.Combine(dir, relPath);
+            Assert.That(path, Does.Exist);
+
+            return path;
+        }
+
+        private static void AssertFileStructure(string projPath)
+        {
+            string modelFolder = AssertExists(projPath + "_data", "obw");
+            string inputFolder = AssertExists(modelFolder, "input");
+            string outputFolder = AssertExists(modelFolder, "output");
+
+            AssertExists(inputFolder, "coastw.grd");
+            AssertExists(inputFolder, "coastw20.dep");
+            AssertExists(inputFolder, "obw.mdw");
+            AssertExists(inputFolder, "obw.obs");
+            AssertExists(inputFolder, "obw.pol");
+            AssertExists(inputFolder, "points.xy");
+            AssertExists(outputFolder, "wavm-obw.nc");
         }
 
         private static void LoadRequiredPlugins(DeltaShellApplication app)
