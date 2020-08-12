@@ -34,7 +34,7 @@ if __name__ == "__main__":
     root_path = Path(args.svn_root_path)
     version_number = args.version_number
 
-    if arg.postfix:
+    if args.postfix:
         revision_number = f"{args.postfix}.{version_number}"
     else:
         revision_number = f"{version_number}"
