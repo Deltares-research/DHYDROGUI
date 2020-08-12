@@ -763,16 +763,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static void UpdateFixedWeirs(HydroArea hydroArea, IEnumerable<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties)
+        private static void UpdateFixedWeirs(HydroArea hydroArea, Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirPropertiesMapping)
         {
-            Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> mapping = allFixedWeirsAndCorrespondingProperties.ToDictionary(p => p.Feature);
-
             //fix attributes for fixed weirs. Create attributes from modelfeaturecoordinatdata.
             foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
             {
                 fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
 
-                ModelFeatureCoordinateData<FixedWeir> correspondingModelFeatureCoordinateData = mapping[fixedWeir];
+                ModelFeatureCoordinateData<FixedWeir> correspondingModelFeatureCoordinateData = fixedWeirPropertiesMapping[fixedWeir];
 
                 if (correspondingModelFeatureCoordinateData == null)
                 {
@@ -983,7 +981,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams.ToList(),
                           ref thinDamFile, FileConstants.ThinDamPliFileExtension, FileConstants.ThinDamPlizFileExtension);
 
-            UpdateFixedWeirs(hydroArea, allFixedWeirsAndCorrespondingProperties);
+            UpdateFixedWeirs(hydroArea, allFixedWeirsAndCorrespondingProperties.ToDictionary(p => p.Feature));
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.FixedWeirFile,
                           hydroArea.FixedWeirs.ToList(),
