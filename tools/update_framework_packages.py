@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     project_file_paths = search_files(root_path, '.csproj')
     
-    version_regex = r'1\.6\.0(?:-beta)?(?:-SIGNED)?.(?:.{7})?\\?'
+    version_regex = r'1\.6\.0(?:-beta)?(?:-SIGNED)?.(?:.{7})?'
     new_version_string = f"1.6.0-{revision_number}"
 
     find_and_replace_csproj = [
