@@ -7,6 +7,8 @@ using System.Windows.Forms.Integration;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels;
+using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
@@ -75,24 +77,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 return;
             }
 
-            if (structure is IPump)
+            if (structure is IPump pump)
             {
                 StructureControl = new PumpView
                 {
                     Dock = DockStyle.Fill,
-                    Data = (IPump) structure
+                    Data = pump
                 };
                 structureViewPanel.AutoScrollMinSize = new Size(StructureControl.Width, StructureControl.Height);
                 structureViewPanel.Controls.Add(StructureControl);
                 return;
             }
 
-            if (structure is IWeir)
+            if (structure is Weir2D weir)
             {
                 var controlHost = new ElementHost
                 {
                     Dock = DockStyle.Fill,
-                    Child = new WeirViewWpf {Data = structure}
+                    Child = new StructureView { DataContext = new StructureViewModel(weir) }
                 };
                 StructureControl = controlHost;
                 structureViewPanel.AutoScrollMinSize = new Size(StructureControl.Width, StructureControl.Height);

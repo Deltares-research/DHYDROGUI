@@ -3,21 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:common="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonElements"
              xmlns:enums="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums"
-             xmlns:convertersBoundaries="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters"
-             xmlns:convertersCommon="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Converters"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:shapes="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes"
              xmlns:waveBoundaryConditionEditor="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor"
+             xmlns:components="clr-namespace:DeltaShell.NGHS.Common.Gui.Components;assembly=DeltaShell.NGHS.Common.Gui"
+             xmlns:convertersWave="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters"
+             xmlns:convertersCommon="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance waveBoundaryConditionEditor:BoundaryWideParametersViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <convertersCommon:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
-            <convertersBoundaries:TypeToVisibilityConverter x:Key="TypeToVisibilityConverter" />
+            <convertersWave:TypeToVisibilityConverter x:Key="TypeToVisibilityConverter" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <convertersBoundaries:TypeToDescriptionConverter x:Key="TypeToDescriptionConverter" />
+            <convertersCommon:TypeToDescriptionConverter x:Key="TypeToDescriptionConverter" />
 
             <DataTemplate x:Key="TypeLabeledComboBoxTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource TypeToDescriptionConverter}}" />
@@ -45,27 +45,27 @@
 
     <GroupBox Header="Parameters">
         <StackPanel Margin="10" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
-            <common:LabeledComboBox Label="Shape:"
+            <components:LabeledComboBox Label="Shape:"
                                     SelectedItem="{Binding Path=ShapeType}"
                                     ItemsSource="{Binding Path=ShapeTypeList}"
                                     ItemTemplate="{StaticResource TypeLabeledComboBoxTemplate}" />
-            <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
-                                                         Converter={StaticResource TypeToVisibilityConverter},
-                                                         ConverterParameter={x:Type shapes:JonswapViewShape}}"
+            <components:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+                                                     Converter={StaticResource TypeToVisibilityConverter},
+                                                     ConverterParameter={x:Type shapes:JonswapViewShape}}"
                                     Label="Peak Enhancement Factor:"
                                     ValueContent="{Binding Path=Shape.PeakEnhancementFactor}"
                                     Unit="-" />
-            <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
-                                                         Converter={StaticResource TypeToVisibilityConverter},
-                                                         ConverterParameter={x:Type shapes:GaussViewShape}}"
+            <components:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+                                                     Converter={StaticResource TypeToVisibilityConverter},
+                                                     ConverterParameter={x:Type shapes:GaussViewShape}}"
                                     Label="Gaussian Spread:"
                                     ValueContent="{Binding Path=Shape.GaussianSpread}"
                                     Unit="-" />
-            <common:LabeledComboBox Label="Period:"
+            <components:LabeledComboBox Label="Period:"
                                     SelectedItem="{Binding Path=PeriodType}"
                                     ItemsSource="{Binding Source={StaticResource PeriodTypes}}"
                                     ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
-            <common:LabeledComboBox Label="Directional Spreading:"
+            <components:LabeledComboBox Label="Directional Spreading:"
                                     SelectedItem="{Binding Path=DirectionalSpreadingType}"
                                     ItemsSource="{Binding Source={StaticResource SpreadingTypes}}"
                                     ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />

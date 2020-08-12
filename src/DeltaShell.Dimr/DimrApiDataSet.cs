@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
@@ -16,9 +15,6 @@ namespace DeltaShell.Dimr
         /// The DIMR DLL name
         /// </summary>
         public const string DimrDllName = "dimr_dll.dll";
-
-        [Obsolete("No longer used, use the Dll instead.")]
-        public const string DimrExeName = "dimr.exe";
 
         /// <summary>
         /// The feedback level key
@@ -62,16 +58,6 @@ namespace DeltaShell.Dimr
         /// Gets the DIMR DLL path.
         /// </summary>
         public static string DimrDllPath => Path.Combine(KernelsDirectory, ARCH, dimrFolderName, standardBinFolderName);
-
-        /// <summary>
-        /// Gets the dimr executable path.
-        /// </summary>
-        public static string DimrExePath => Path.Combine(KernelsDirectory, ARCH, dimrFolderName, standardBinFolderName);
-
-        /// <summary>
-        /// Gets the wave DLL path.
-        /// </summary>
-        public static string WaveDllPath => Path.Combine(KernelsDirectory, ARCH, waveFolderName, standardBinFolderName);
 
         /// <summary>
         /// Gets the wave executable path.

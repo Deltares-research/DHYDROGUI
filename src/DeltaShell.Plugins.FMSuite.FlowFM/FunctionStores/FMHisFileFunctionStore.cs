@@ -236,7 +236,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             IList<string> pumpNames = GetNetCdfFeatureVariableNames("pump_id");
             if (!pumpNames.Any())
             {
-                return;
+                pumpNames = GetNetCdfFeatureVariableNames("pump_name");
+                if (!pumpNames.Any())
+                {
+                    return;
+                }
             }
 
             var results = new List<IFeature>();
@@ -317,7 +321,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             IList<string> stationIds = GetNetCdfFeatureVariableNames("station_name");
             if (!stationIds.Any())
             {
-                return;
+                stationIds = GetNetCdfFeatureVariableNames("station_id");
+                if (!stationIds.Any())
+                {
+                    return;
+                }
             }
 
             // Get all coordinates available.

@@ -33,10 +33,8 @@ if __name__ == "__main__":
     args = get_args()
     root_path = Path(args.svn_root_path)
     version_number = args.version_number
-    
-    # -beta is currently the default, due to DS Framework being in beta. This should be removed 
-    # once the framework is officially released.
-    revision_number = "{}{}".format(version_number, args.postfix if args.postfix else "-beta")
+        
+    revision_number = f"{version_number}{args.postfix if args.postfix else ''}"
 
     project_file_paths = search_files(root_path, '.csproj')
     
