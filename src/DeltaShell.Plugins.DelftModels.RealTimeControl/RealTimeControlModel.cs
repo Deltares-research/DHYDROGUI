@@ -1091,8 +1091,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [EditAction]
         public virtual string DimrExportDirectoryPath
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         public virtual string DimrModelRelativeWorkingDirectory

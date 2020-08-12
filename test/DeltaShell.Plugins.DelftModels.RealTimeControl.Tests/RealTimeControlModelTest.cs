@@ -823,7 +823,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
-        public void DimrExportDirectoryPath_ForGet_ShouldReturnNotImplementedException()
+        public void DimrExportDirectoryPath_ForGet_ShouldReturnNotSupportedException()
         {
             // Arrange
             var model = new RealTimeControlModel();
@@ -835,7 +835,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
 
             // Assert
-            Assert.Throws<NotImplementedException>(Call);
+            Assert.Throws<NotSupportedException>(Call);
         }
 
         [Test]
@@ -851,7 +851,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
 
             // Assert
-            Assert.Throws<NotImplementedException>(Call);
+            Assert.Throws<NotSupportedException>(Call);
         }
 
         # endregion
