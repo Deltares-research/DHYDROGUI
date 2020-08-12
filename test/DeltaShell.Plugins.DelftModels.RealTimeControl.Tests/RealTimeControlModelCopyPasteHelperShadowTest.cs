@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
@@ -66,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Setup
             var shapes = new[] {new TestShape(), new TestShape(), new TestShape()};
             RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
-            
+
             // Call
             helper.SetCopiedData(shapes);
 
@@ -79,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void GivenHelperWithSetData_WhenClearingCopiedData_ThenDataIsClearedAndDataSetFalse()
         {
             // Given
-            var shapes = new[] { new TestShape(), new TestShape(), new TestShape() };
+            var shapes = new[] {new TestShape(), new TestShape(), new TestShape()};
             RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
 
             helper.SetCopiedData(shapes);
@@ -93,6 +97,52 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Then
             Assert.That(helper.IsDataSet, Is.False);
             Assert.That(helper.CopiedShapes, Is.Empty);
+        }
+
+        [Test]
+        public void CopyShapesToController_ControllerNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+
+            // Call
+            TestDelegate call = () => helper.CopyShapesToController(null, Point.Empty);
+
+            // Assert
+            Assert.That(call, Throws.TypeOf<ArgumentNullException>()
+                                    .With.Property(nameof(ArgumentNullException.ParamName))
+                                    .EqualTo("controller"));
+        }
+
+
+        [Test]
+        public void GivenHelperWithoutData_WhenCopyShapesToController_ThenNothingHappens()
+        {
+            // Given
+            var controller = Substitute.For<IControlGroupEditorController>();
+            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            
+            // Precondition
+            Assert.That(helper.CopiedShapes, Is.Empty);
+
+            // When
+            helper.CopyShapesToController(controller, Point.Empty);
+
+            // Then
+            controller.DidNotReceiveWithAnyArgs().AddConnections(null, null, null, null);
+            controller.DidNotReceiveWithAnyArgs().AddShapesToControlGroupAndPlace(null, null, null, null, null, null, Point.Empty);
+        }
+
+        public interface IControlGroupEditorController
+        {
+            void AddShapesToControlGroupAndPlace(IList<RuleBase> rules, IList<ConditionBase> conditions,
+                                                 IList<Input> inputs, IList<Output> outputs,
+                                                 IList<SignalBase> signals, IList<MathematicalExpression> mathExpressions,
+                                                 Point mea);
+
+            void AddConnections(IList<RuleBase> rules, IList<ConditionBase> conditions,
+                                IList<SignalBase> signals, IList<MathematicalExpression> mathExpressions,
+                                bool skipValidation = false);
         }
 
         private class TestShape : ShapeBase
@@ -139,8 +189,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             /// Sets the copied data to the helper.
             /// </summary>
             /// <param name="shapes">The collection of <see cref="ShapeBase"/> to set.</param>
-            /// <exception cref="ArgumentNullException">Thrown when <paramref name="shapes"/>
-            /// is <c>null</c>.</exception>
+            /// <exception cref="ArgumentNullException">
+            /// Thrown when <paramref name="shapes"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void SetCopiedData(IEnumerable<ShapeBase> shapes)
             {
                 if (shapes == null)
@@ -159,6 +211,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             {
                 IsDataSet = false;
                 copiedShapes.Clear();
+            }
+
+            /// <summary>
+            /// Copies the shapes to the <see cref="IControlGroupEditorController"/>.
+            /// </summary>
+            /// <param name="controller">
+            /// The <see cref="ControlGroupEditorController"/> to copy the shapes to.
+            /// </param>
+            /// <param name="mea">The location to place the copied shapes at.</param>
+            /// <exception cref="ArgumentNullException">Thrown when <paramref name="controller"/> is <c>null</c>.</exception>
+            public void CopyShapesToController(IControlGroupEditorController controller, Point mea)
+            {
+                if (controller == null)
+                {
+                    throw new ArgumentNullException(nameof(controller));
+                }
             }
         }
     }
