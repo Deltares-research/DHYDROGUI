@@ -136,7 +136,7 @@ def get_new_build(user: str, password: str, build_config: str, revision_number: 
     revision_number : str
         The revision number of the build to be retrieved.
     """
-    build_url = "{}buildType:{},revision:{},count:1".format(BUILDS_ROOT, 
+    build_url = "{}buildType:{},number:{},count:1".format(BUILDS_ROOT,
                                                             build_config, 
                                                             revision_number)
 
