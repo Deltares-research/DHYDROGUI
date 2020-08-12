@@ -10,15 +10,15 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.DelftModels.HydroModel.Gui;component/Forms/Styles/CommonSettingsStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.NGHS.Common.Gui;component/CommonSettingsStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel>
         <Grid Style="{StaticResource GridStyle}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{StaticResource LabelLength}" />
-                <ColumnDefinition Width="{StaticResource ControlLength}" />
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition Width="{StaticResource ControlWidth}" />
                 <ColumnDefinition Width="70" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0"
