@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
@@ -20,6 +19,7 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
@@ -35,6 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
     /// </summary>
     public class FMHisFileFunctionStore : FMNetCdfFileFunctionStore
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(FMHisFileFunctionStore));
         private const string standardNameAttribute = "standard_name";
         private const string longNameAttribute = "long_name";
         private const string unitAttribute = "units";
@@ -85,16 +86,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
                 if (timeVariable.NumDimensions >= 2)
                 {
+                    string secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
                     string nodeCoordinatesVariableNames = netCdfFile.GetAttributeValue(netcdfVariable, coordinatesAttribute);
                     //check if this variable can be mapped to an input or created feature
-                    if (!dimensions
-                        .Select(netCdfFile.GetDimensionName)
-                        .Where(coordinateKeyByDimensionNameDictionary.ContainsKey)
-                        .Any(dimensionName => 
-                                 nodeCoordinatesVariableNames
-                                     .Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()
-                                     .Any(coordinateVariableName => coordinateKeyByDimensionNameDictionary[dimensionName]
-                                              .Equals(coordinateVariableName, StringComparison.InvariantCultureIgnoreCase)))) continue;
+                    if (!CanBeMappedToFeatureName(dimensions, nodeCoordinatesVariableNames)) 
+                        log.Warn($"Cannot map dimension {secondDimensionName} to input or generated features, this maybe an old formatted his file. Using backward compatibility to read file");
 
                     var coverage = new FileBasedFeatureCoverage(coverageLongName)
                     {
@@ -103,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         CoordinateSystem = CoordinateSystem
                     };
 
-                    string secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
+                    
                     var featureVariable = new Variable<IFeature>
                     {
                         IsEditable = false,
@@ -155,6 +151,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 yield return function;
             }
         }
+
+        private bool CanBeMappedToFeatureName(NetCdfDimension[] dimensions, string nodeCoordinatesVariableNames)
+        {
+            var separators = new[] { " " };
+            return dimensions
+                   .Select(netCdfFile.GetDimensionName)
+                   .Where(coordinateKeyByDimensionNameDictionary.ContainsKey)
+                   .Any(dimensionName => 
+                            nodeCoordinatesVariableNames
+                                .Split(separators, StringSplitOptions.RemoveEmptyEntries)
+                                .Any(coordinateVariableName => coordinateKeyByDimensionNameDictionary[dimensionName]
+                                         .Equals(coordinateVariableName, StringComparison.InvariantCultureIgnoreCase)));
+        }
+
         private Variable<T> GenerateOutputVariable<T>(string variableName, string unitSymbol)
         {
             var outputVariable = new Variable<T>
@@ -177,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             // which will be the dimension name of the feature
             // second dimension name will be string length
 
-            const string geometryTypeAttribute = "geometry_type"; ;
+            const string geometryTypeAttribute = "geometry_type";
             const string nodeCoordinatesAttribute = "node_coordinates";
             const string nodeCoordinatesXSubStringSearchValue = "x";
             const string nodeCoordinatesYSubStringSearchValue = "y";
@@ -247,10 +257,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                             coordinates.Add(new Coordinate((double) nodeXCoordinatesValues.GetValue(i + j), (double) nodeYCoordinatesValues.GetValue(i + j)));
                         }
 
-                        yield return new LineString(coordinates.ToArray());
+                        yield return coordinates.Count == 1
+                                         ? (IGeometry) new Point(coordinates[0])
+                                         : new LineString(coordinates.ToArray());
                         break;
                 }
-            };
+            }
         }
 
         private Array LoadCoordinatesValues(string nodeCoordinatesVariableNames, string nodeCoordinatesSubStringSearchValue)
@@ -346,7 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private const string featureNameWeirgens = "weirgens";
         private const string featureNameGategens = "gategens";
         private const string featureNamePumps = "pumps";
-       
+        
         // Mapping dictionary used to relate under which name is an IFeature stored in the NetCdfFile.
         private readonly IDictionary<string, IEnumerable<IFeature>> featuresDictionary = new Dictionary<string, IEnumerable<IFeature>>();
 
@@ -360,10 +372,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private readonly IDictionary<string, IEnumerable<IGeometry>> geometryByDimensionNameDictionary = new Dictionary<string, IEnumerable<IGeometry>>();
 
         // Mapping dictionary used to relate under which name are Features stored in the Coverages.
-        private IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
+        private readonly IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
        
         // Mapping dictionary used to relate under which name are FeatureTypes are mapped.
-        private IDictionary<string, Type> mapTypeDictionary = 
+        private readonly IDictionary<string, Type> mapTypeDictionary = 
         new Dictionary<string, Type>()
         {
             {featureNameStations, typeof(GroupableFeature2DPoint)},
@@ -374,7 +386,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {featureNamePumps, typeof(IPump)}
         };
         // Mapping dictionary used to relate under which name are FeatureTypes are mapped.
-        private IDictionary<string, Func<IWeirFormula>> weirFormulaByDimensionName = 
+        private readonly IDictionary<string, Func<IWeirFormula>> weirFormulaByDimensionName = 
         new Dictionary<string, Func<IWeirFormula>>()
         {
             {featureNameGeneralStructures, () => new GeneralStructureWeirFormula()},
@@ -386,10 +398,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private IDictionary<Type, Func<string, IGeometry, IWeirFormula, IFeature>> mapTypeGenerateDictionary = 
         new Dictionary<Type, Func<string, IGeometry, IWeirFormula, IFeature>>()
         {
-            {typeof(GroupableFeature2DPoint), CreateFeature2D},
-            {typeof(ObservationCrossSection2D), CreateFeature2D},
+            {typeof(GroupableFeature2DPoint), (name, geometry, _) => CreateFeature2D(name, geometry)},
+            {typeof(ObservationCrossSection2D), (name, geometry, _) => CreateFeature2D(name, geometry)},
             {typeof(IWeir), CreateGeneralStructureFromNetCdf},
-            {typeof(IPump),(name, geometry, formula) => new Pump2D(name){Geometry = geometry}}
+            {typeof(IPump),(name, geometry, _) => new Pump2D(name){Geometry = geometry}}
             
         };
 
@@ -405,12 +417,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 for (var i =0; i < timeSeriesIdsByDimensionNameDictionary[dimensionName].Count(); i++)
                 {
                     var name = timeSeriesIdsByDimensionNameDictionary[dimensionName].ElementAt(i);
-                    var type = mapTypeDictionary[dimensionName];
+                    IFeature validFeature = null;
+                    Type type = null;
+                    if (mapTypeDictionary.ContainsKey(dimensionName))
+                    {
+                        type = mapTypeDictionary[dimensionName];
+                        validFeature = features?.FirstOrDefault(m => m.GetType().Implements(type) && m is INameable feature && feature.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    }
+                    else
+                    {
+                        log.Warn($"could not find type for this dimension name {dimensionName}, can not safely map the dimension features to input or generate a structure of this type. Skipping reading");
+                        continue;
+                    }
 
-                    IFeature validFeature = features?.FirstOrDefault(m => m.GetType().Implements(type) && m is INameable feature && feature.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                     if (validFeature == null)
                     {
-
                         validFeature = CreateFeatureFromNetCdf(name, type, geometryByDimensionNameDictionary.ContainsKey(dimensionName) ? geometryByDimensionNameDictionary[dimensionName].ElementAt(i) : null, weirFormulaByDimensionName.ContainsKey(dimensionName) ? weirFormulaByDimensionName[dimensionName]() : null);
                     }
 
@@ -423,7 +444,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private IFeature CreateFeatureFromNetCdf(string name, Type type, IGeometry geometry, IWeirFormula formula)
         {
-            if (mapTypeGenerateDictionary.ContainsKey(type))
+            if (type != null && mapTypeGenerateDictionary.ContainsKey(type))
             {
                 return mapTypeGenerateDictionary[type](name, geometry, formula);
             }
@@ -492,43 +513,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         #region IFeature helpers
 
-        private static IGeometry CreateLineString(int i, Array xs, Array ys)
-        {
-            if (xs is null || ys is null)
-            {
-                return null;
-            }
-
-            var coordinates = new List<Coordinate>();
-            int arrayLength = xs.GetLength(1);
-            for (var j = 0; j < arrayLength; j++)
-            {
-                var x = (double) xs.GetValue(i, j);
-                var y = (double) ys.GetValue(i, j);
-
-                if (x < NetCdfConstants.FillValues.NcFillFloat) // use default fill value here..
-                {
-                    coordinates.Add(new Coordinate(x, y));
-                }
-            }
-
-            var geometry = new LineString(coordinates.ToArray());
-            return geometry;
-        }
-
-        private static IGeometry CreatePoint(int i, Array xs, Array ys)
-        {
-            if (xs is null || ys is null)
-            {
-                return null;
-            }
-
-            var xValue = (double) xs.GetValue(i);
-            var yValue = (double) ys.GetValue(i);
-            return new Point(xValue, yValue);
-        }
-
-        private static Feature2D CreateFeature2D(string idName, IGeometry geometry, IWeirFormula formula)
+        private static Feature2D CreateFeature2D(string idName, IGeometry geometry)
         {
             return new Feature2D
             {
@@ -542,7 +527,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             return new Weir2D
             {
                 Name = name,
-                WeirFormula = formula
+                WeirFormula = formula,
+                Geometry = geometry
             };
         }
 
