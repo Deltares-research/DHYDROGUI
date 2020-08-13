@@ -873,7 +873,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                                               model.GetFilePathFromHydroDynamics));
                 view.FunctionCreators.Add(FunctionTypeCreatorFactory.CreateSegmentFileCreator());
 
-                view.IsDefaultValueCellReadOnly = function => function.IsFromHydroDynamics();
+                view.IsDefaultValueCellReadOnly = function => function.IsFromHydroDynamics() || function.IsUnstructuredGridCellCoverage();
 
                 ExcludeBloomParametersFromFunctionListView(view);
                 view.UpdateTableView();
