@@ -288,6 +288,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IFunction timeSeriesForPoint = waterLevelFunction.GetTimeSeries(waterLevelFunction.Features.Skip(1).First());
             Assert.AreEqual(388, timeSeriesForPoint.GetValues().Count);
             Assert.AreEqual(0.1957, (double) timeSeriesForPoint.GetValues()[50], 0.001);
+            Assert.AreEqual(new DateTime(1999, 12, 16), waterLevelFunction.Time.Values.First());
+            Assert.AreEqual("(POR)", waterLevelFunction.Arguments[1].Values.OfType<Feature2D>().First().Name);
+            Assert.AreEqual("(POR)", waterLevelFunction.Features.OfType<Feature2D>().First().Name);
+            Assert.AreEqual(1.5d, (double)waterLevelFunction.Components[0].Values[0], 0.001);
+            Assert.AreEqual("m", waterLevelFunction.Components[0].Unit.Symbol);
+            Assert.AreEqual( new Point( new Coordinate(502049, 4205261)),  waterLevelFunction.Features.OfType<Feature2D>().First().Geometry);
         }
 
         [Test]
