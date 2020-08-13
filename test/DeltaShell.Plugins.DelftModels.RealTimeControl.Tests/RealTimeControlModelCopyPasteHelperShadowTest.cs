@@ -219,13 +219,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Feature = outputFeature
             };
 
+            const string ruleName = "Rule";
             var clonedRule = Substitute.For<RuleBase>();
-            clonedRule.Name = "Rule";
+            clonedRule.Name = ruleName;
             clonedRule.Inputs = new EventedList<IInput>();
             clonedRule.Outputs = new EventedList<Output>();
 
             var rule = Substitute.For<RuleBase>();
-            rule.Name = "Rule";
+            rule.Name = ruleName;
             rule.Inputs = new EventedList<IInput>(new[] {input});
             rule.Outputs = new EventedList<Output>(new[] {output});
             rule.Clone().Returns(clonedRule);
@@ -310,11 +311,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             const string signalName = "Signal";
             var clonedSignal = Substitute.For<SignalBase>();
             clonedSignal.Name = signalName;
-            
+
             var signal = Substitute.For<SignalBase>();
             signal.Name = signalName;
-            signal.Inputs = new EventedList<Input>(new []{input});
-            signal.RuleBases = new EventedList<RuleBase>(new []{rule});
+            signal.Inputs = new EventedList<Input>(new[] {input});
+            signal.RuleBases = new EventedList<RuleBase>(new[] {rule});
             signal.Clone().Returns(clonedSignal);
 
             var controlGroup = new ControlGroup();
@@ -322,7 +323,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             controlGroup.Signals.Add(signal);
             controlGroup.Rules.Add(rule);
 
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
@@ -350,21 +351,82 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 IEnumerable<RuleShape> ruleShapes = actualShapes.OfType<RuleShape>();
                 Assert.That(ruleShapes.Count(), Is.EqualTo(2));
                 IEnumerable<RuleBase> rules = ruleShapes.Select(r => r.Tag).Cast<RuleBase>();
-                CollectionAssert.AreEqual(new[] { rule.Name, "Rule - Copy 1" }, rules.Select(r => r.Name));
+                CollectionAssert.AreEqual(new[] {rule.Name, "Rule - Copy 1"}, rules.Select(r => r.Name));
                 Assert.That(rules.SelectMany(r => r.Inputs), Is.Empty); // The rules do not have any inputs or outputs and should remain empty
                 Assert.That(rules.SelectMany(r => r.Outputs), Is.Empty);
 
                 IEnumerable<SignalShape> signalShapes = actualShapes.OfType<SignalShape>();
                 Assert.That(signalShapes.Count(), Is.EqualTo(2));
-                IEnumerable<SignalBase> actualSignals  = signalShapes.Select(r => r.Tag).Cast<SignalBase>();
+                IEnumerable<SignalBase> actualSignals = signalShapes.Select(r => r.Tag).Cast<SignalBase>();
 
                 SignalBase originalSignal = actualSignals.Single(s => string.Equals(s.Name, signal.Name));
                 CollectionAssert.AreEqual(signal.Inputs, originalSignal.Inputs);
                 CollectionAssert.AreEqual(signal.RuleBases, originalSignal.RuleBases);
 
                 SignalBase copiedSignal = actualSignals.Single(s => string.Equals(s.Name, "Signal - Copy 1"));
-                Assert.That(copiedSignal.Inputs.Single(), Is.Not.SameAs(input)); // There are only two inputs present, therefore the new rule should not match the original input
+                Assert.That(copiedSignal.Inputs.Single(), Is.Not.SameAs(input));   // There are only two inputs present, therefore the new rule should not match the original input
                 Assert.That(copiedSignal.RuleBases.Single(), Is.Not.SameAs(rule)); // Similar for the rules
+            }
+        }
+
+        [Test]
+        public void GivenHelperWithMathematicalExpressionData_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        {
+            // Given
+            IFeature inputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
+            var input = new Input
+            {
+                Name = "Input",
+                Feature = inputFeature
+            };
+
+            var expression = new MathematicalExpression
+            {
+                Name = "Expression",
+                Expression = "Potato"
+            };
+            expression.Inputs.Add(input);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.Inputs.Add(input);
+            controlGroup.MathematicalExpressions.Add(expression);
+
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
+            {
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+
+                RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+                helper.SetCopiedData(shapes);
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Has.Count.EqualTo(2));
+
+                // When
+                helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes.Count(), Is.EqualTo(4));
+
+                IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
+                Assert.That(inputShapes.Count(), Is.EqualTo(2));
+
+                IEnumerable<Input> actualInputs = inputShapes.Select(s => s.Tag).Cast<Input>();
+                Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, inputFeature)), Is.True);
+                Assert.That(actualInputs.All(i => string.Equals(i.Name, input.Name)), Is.True);
+
+                IEnumerable<MathematicalExpressionShape> mathematicalExpressionShapes = actualShapes.OfType<MathematicalExpressionShape>();
+                Assert.That(mathematicalExpressionShapes.Count(), Is.EqualTo(2));
+
+                IEnumerable<MathematicalExpression> actualMathematicalExpressions = mathematicalExpressionShapes.Select(s => s.Tag).Cast<MathematicalExpression>();
+                Assert.That(actualMathematicalExpressions.All(e => string.Equals(e.Expression, expression.Expression)), Is.True);
+
+                MathematicalExpression originalExpression = actualMathematicalExpressions.Single(o => string.Equals(o.Name, expression.Name));
+                CollectionAssert.AreEqual(expression.Inputs, originalExpression.Inputs);
+
+                MathematicalExpression copiedExpression = actualMathematicalExpressions.Single(s => string.Equals(s.Name, "Expression - Copy 1"));
+                Assert.That(copiedExpression.Inputs.Single(), Is.Not.SameAs(input)); // There are only two inputs present, therefore the new rule should not match the original input
             }
         }
 
@@ -463,11 +525,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 Dictionary<RuleBase, RuleBase> ruleMapping = CopyRules(inputMapping, outputMapping);
                 List<SignalBase> copiedSignals = CopySignals(inputMapping, ruleMapping);
-                
+                List<MathematicalExpression> copiedMathematicalExpressions = CopyMathematicalExpressions(inputMapping);
+
                 ControlGroup controlGroup = controller.ControlGroup;
                 List<RuleBase> copiedRules = ruleMapping.Values.ToList();
                 RenameCopiedDataWithUniqueNames(copiedRules, controlGroup.Rules, "Rule");
                 RenameCopiedDataWithUniqueNames(copiedSignals, controlGroup.Signals, "Signal");
+                RenameCopiedDataWithUniqueNames(copiedMathematicalExpressions, controlGroup.MathematicalExpressions, "Expression");
 
                 List<Output> copiedOutputs = outputMapping.Values.ToList();
                 ResetOutputs(copiedOutputs);
@@ -476,10 +540,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                                                            inputMapping.Values.ToList(),
                                                            copiedOutputs,
                                                            copiedSignals,
-                                                           new List<MathematicalExpression>(),
+                                                           copiedMathematicalExpressions,
                                                            mea);
 
-                controller.AddConnections(copiedRules, new List<ConditionBase>(), copiedSignals, new List<MathematicalExpression>(), true);
+                controller.AddConnections(copiedRules, new List<ConditionBase>(), copiedSignals, copiedMathematicalExpressions, true);
             }
 
             private Dictionary<T, T> CopyConnectionPointData<T>() where T : ConnectionPoint
@@ -495,7 +559,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
 
             private Dictionary<RuleBase, RuleBase> CopyRules(IReadOnlyDictionary<Input, Input> inputMapping,
-                                             IReadOnlyDictionary<Output, Output> outputMapping)
+                                                             IReadOnlyDictionary<Output, Output> outputMapping)
             {
                 IEnumerable<RuleBase> rules = copiedShapes.Select(s => s.Tag).OfType<RuleBase>();
 
@@ -528,6 +592,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 return copiedSignals;
             }
 
+            private List<MathematicalExpression> CopyMathematicalExpressions(IReadOnlyDictionary<Input, Input> inputMapping)
+            {
+                IEnumerable<MathematicalExpression> mathematicalExpressions = copiedShapes.Select(s => s.Tag).OfType<MathematicalExpression>();
+
+                var copiedMathematicalExpressions = new List<MathematicalExpression>();
+                foreach (MathematicalExpression mathematicalExpression in mathematicalExpressions)
+                {
+                    var copiedMathematicalExpression = (MathematicalExpression) mathematicalExpression.Clone();
+                    SetInputs(copiedMathematicalExpression.Inputs, mathematicalExpression.Inputs, inputMapping);
+                    copiedMathematicalExpressions.Add(copiedMathematicalExpression);
+                }
+
+                return copiedMathematicalExpressions;
+            }
+
             private static void ResetOutputs(IEnumerable<Output> outputs)
             {
                 foreach (Output output in outputs)
@@ -554,7 +633,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 var inputsToAdd = new List<Input>();
                 foreach (IInput sourceInput in sourceInputs)
                 {
-                    var castInput = (Input)sourceInput;
+                    var castInput = (Input) sourceInput;
                     inputsToAdd.Add(inputMapping[castInput]);
                 }
 
