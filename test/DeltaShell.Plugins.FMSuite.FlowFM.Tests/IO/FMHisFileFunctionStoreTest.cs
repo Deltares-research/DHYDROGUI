@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFMOutputHisFileWithPumpAndWeirAndStationsAndGateAndGeneralStructureWhenCreatingStoreThenFunctionsCorrectlyInitialized()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\D3DFMIQ-2084.nc"));
-            Assert.AreEqual(73, store.Functions.Count);
+            Assert.AreEqual(74, store.Functions.Count);
             var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_structure_discharge");
             Assert.That(pumpFunction, Is.Not.Null);
             Assert.AreEqual(289, pumpFunction.GetValues().Count);
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var store = model.OutputHisFileStore;
 
-                Assert.AreEqual(77, store.Functions.Count);
+                Assert.AreEqual(78, store.Functions.Count);
                 var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_s1up");
                 Assert.That(pumpFunction, Is.Not.Null);
                 Assert.AreEqual(5, pumpFunction.GetValues().Count);
