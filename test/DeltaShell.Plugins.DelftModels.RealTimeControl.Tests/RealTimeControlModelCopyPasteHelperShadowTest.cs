@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Controls.Swf.Graph;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
@@ -19,6 +19,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     [TestFixture]
     public class RealTimeControlModelCopyPasteHelperShadowTest
     {
+        [SetUp]
+        public void Setup()
+        {
+            // As the helper is a singleton, reset its state before every test begins
+            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            helper.ClearData();
+
+            // Precondition
+            Assert.That(helper.CopiedShapes, Is.Empty);
+            Assert.That(helper.IsDataSet, Is.False);
+        }
+
         [Test]
         public void Instance_Always_ReturnsSameInstance()
         {
@@ -137,6 +149,53 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Then
             controller.DidNotReceiveWithAnyArgs().AddConnections(null, null, null, null);
             controller.DidNotReceiveWithAnyArgs().AddShapesToControlGroupAndPlace(null, null, null, null, null, null, Point.Empty);
+        }
+
+        [Test]
+        public void GivenHelperWithOutputData_WhenCopyShapesToController_ThenMessageLoggedAndCopiedShapeReset()
+        {
+            // Given
+            IFeature outputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
+            var output = new Output
+            {
+                Name = "Output",
+                Feature = outputFeature
+            };
+
+            var controlGroup = new ControlGroup();
+            controlGroup.Outputs.Add(output);
+
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
+            {
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+
+                RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+                helper.SetCopiedData(shapes);
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Has.Count.EqualTo(1));
+
+                // When
+                Action call = () => helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                string expectedMessage = $"It is not possible to copy and paste internal data for control group outputs, the connection to {output.Name} will be reset.";
+                TestHelper.AssertLogMessageIsGenerated(call, expectedMessage);
+
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes.Count(), Is.EqualTo(2));
+
+                IEnumerable<OutputItemShape> outputShapes = actualShapes.OfType<OutputItemShape>();
+                Assert.That(outputShapes.Count(), Is.EqualTo(2));
+                IEnumerable<Output> actualOutputs = outputShapes.Select(s => s.Tag).Cast<Output>();
+
+                Output originalOutput = actualOutputs.Single(o => string.Equals(o.Name, output.Name));
+                Assert.That(originalOutput.Feature, Is.SameAs(outputFeature));
+
+                Output copiedOutput = actualOutputs.Single(o => string.Equals(o.Name, "[Not Set]"));
+                Assert.That(copiedOutput.Feature, Is.Null);
+            }
         }
 
         [Test]
@@ -337,10 +396,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 List<Output> copiedOutputs = outputMapping.Values.ToList();
                 ResetOutputs(copiedOutputs);
                 controller.AddShapesToControlGroupAndPlace(copiedRules,
-                                                           new List<ConditionBase>(), 
+                                                           new List<ConditionBase>(),
                                                            inputMapping.Values.ToList(),
                                                            copiedOutputs,
-                                                           new List<SignalBase>(), 
+                                                           new List<SignalBase>(),
                                                            new List<MathematicalExpression>(),
                                                            mea);
 
@@ -359,7 +418,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 return mapping;
             }
 
-            private List<RuleBase> CopyRules(IReadOnlyDictionary<Input, Input> inputMapping, 
+            private List<RuleBase> CopyRules(IReadOnlyDictionary<Input, Input> inputMapping,
                                              IReadOnlyDictionary<Output, Output> outputMapping)
             {
                 IEnumerable<RuleBase> rules = copiedShapes.Select(s => s.Tag).OfType<RuleBase>();
