@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
-        public void GivenHelperWithOutputData_WhenCopyShapesToController_ThenMessageLoggedAndCopiedShapeReset()
+        public void GivenHelperWithOutputData_WhenCopyShapesToController_ThenMessageLoggedAndCopiedOutputReset()
         {
             // Given
             IFeature outputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
@@ -430,6 +430,227 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
         }
 
+        [Test]
+        public void GivenHelperWithConditionBasedNothingConnected_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        {
+            // Given
+            const string conditionName = "Condition";
+            var clonedCondition = Substitute.For<ConditionBase>();
+            clonedCondition.Name = conditionName;
+
+            var conditionBase = Substitute.For<ConditionBase>();
+            conditionBase.Name = conditionName;
+            conditionBase.Clone().Returns(clonedCondition);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.Conditions.Add(conditionBase);
+
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
+            {
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+
+                RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+                helper.SetCopiedData(shapes);
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Has.Count.EqualTo(1));
+
+                // When
+                helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes.Count(), Is.EqualTo(2));
+
+                IEnumerable<ConditionShape> conditionShapes = actualShapes.OfType<ConditionShape>();
+                Assert.That(conditionShapes.Count(), Is.EqualTo(2));
+
+                IEnumerable<ConditionBase> actualConditions = conditionShapes.Select(r => r.Tag).Cast<ConditionBase>();
+                Assert.That(actualConditions.All(c => c.Input == null), Is.True);
+                CollectionAssert.AreEqual(new[] {conditionBase.Name, "Condition - Copy 1"}, actualConditions.Select(c => c.Name));
+                Assert.That(actualConditions.SelectMany(c => c.TrueOutputs), Is.Empty); // No outputs are present and should remain empty
+                Assert.That(actualConditions.SelectMany(c => c.FalseOutputs), Is.Empty);
+            }
+        }
+
+        [Test]
+        public void GivenHelperWithConditionBaseConnectedWithRules_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        {
+            // Note the ConditionBase only accepts:
+            // - RuleBase
+            // - MathematicalExpression
+            // - SignalBase
+            // - ConditionBase
+            // as valid objects for the TrueOutputs and FalseOutputs collection.
+            // 
+            // As such, the RTC objects Input and Output are not considered as valid items and are ignored for the tests.
+
+            // Given
+            IFeature inputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
+            var input = new Input
+            {
+                Name = "Input",
+                Feature = inputFeature
+            };
+
+            const string ruleTrueOutputName = "RuleTrueOutput";
+            var clonedTrueOutputRule = Substitute.For<RuleBase>();
+            clonedTrueOutputRule.Name = ruleTrueOutputName;
+
+            var ruleTrueOutput = Substitute.For<RuleBase>();
+            ruleTrueOutput.Name = ruleTrueOutputName;
+            ruleTrueOutput.Clone().Returns(clonedTrueOutputRule);
+
+            const string ruleFalseOutputName = "RuleFalseOutput";
+            var clonedFalseOutputRule = Substitute.For<RuleBase>();
+            clonedFalseOutputRule.Name = ruleFalseOutputName;
+
+            var ruleFalseOutput = Substitute.For<RuleBase>();
+            ruleFalseOutput.Name = ruleFalseOutputName;
+            ruleFalseOutput.Clone().Returns(clonedFalseOutputRule);
+
+            const string conditionName = "Condition";
+            var clonedCondition = Substitute.For<ConditionBase>();
+            clonedCondition.Name = conditionName;
+
+            var conditionBase = Substitute.For<ConditionBase>();
+            conditionBase.Name = conditionName;
+            conditionBase.Input = input;
+            conditionBase.TrueOutputs.Add(ruleTrueOutput);
+            conditionBase.FalseOutputs.Add(ruleFalseOutput);
+            conditionBase.Clone().Returns(clonedCondition);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.Inputs.Add(input);
+            controlGroup.Conditions.Add(conditionBase);
+            controlGroup.Rules.AddRange(new[] {ruleTrueOutput, ruleFalseOutput});
+
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
+            {
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+
+                RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+                helper.SetCopiedData(shapes);
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Has.Count.EqualTo(4));
+
+                // When
+                helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes.Count(), Is.EqualTo(8));
+
+                IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
+                Assert.That(inputShapes.Count(), Is.EqualTo(2));
+
+                IEnumerable<Input> actualInputs = inputShapes.Select(s => s.Tag).Cast<Input>();
+                Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, inputFeature)), Is.True);
+                Assert.That(actualInputs.All(i => string.Equals(i.Name, input.Name)), Is.True);
+
+                IEnumerable<RuleShape> ruleShapes = actualShapes.OfType<RuleShape>();
+                Assert.That(ruleShapes.Count(), Is.EqualTo(4));
+                IEnumerable<RuleBase> rules = ruleShapes.Select(r => r.Tag).Cast<RuleBase>();
+                CollectionAssert.AreEquivalent(new[] {ruleTrueOutputName, ruleFalseOutputName, "Rule - Copy 1", "Rule - Copy 2"}, rules.Select(r => r.Name));
+                Assert.That(rules.SelectMany(r => r.Inputs), Is.Empty); // The rules do not have any inputs or outputs and should remain empty
+                Assert.That(rules.SelectMany(r => r.Outputs), Is.Empty);
+
+                IEnumerable<ConditionShape> conditionShapes = actualShapes.OfType<ConditionShape>();
+                Assert.That(conditionShapes.Count(), Is.EqualTo(2));
+                IEnumerable<ConditionBase> actualConditions = conditionShapes.Select(r => r.Tag).Cast<ConditionBase>();
+
+                ConditionBase originalCondition = actualConditions.Single(s => string.Equals(s.Name, conditionBase.Name));
+                Assert.That(originalCondition.Input, Is.SameAs(input));
+                CollectionAssert.AreEqual(conditionBase.TrueOutputs, originalCondition.TrueOutputs);
+                CollectionAssert.AreEqual(conditionBase.FalseOutputs, originalCondition.FalseOutputs);
+
+                ConditionBase copiedCondition = actualConditions.Single(s => string.Equals(s.Name, "Condition - Copy 1"));
+                Assert.That(copiedCondition.Input, Is.Not.SameAs(input));                           // There are only two inputs present, therefore the new rule should not match the original input
+                Assert.That(copiedCondition.TrueOutputs.Single(), Is.Not.SameAs(ruleTrueOutput));   // Similar for the true outputs
+                Assert.That(copiedCondition.FalseOutputs.Single(), Is.Not.SameAs(ruleFalseOutput)); // Similar for the false outputs
+            }
+        }
+
+        [Test]
+        public void GivenHelperWithConditionBaseConnectedWithMathematicalExpressions_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        {
+            // Note the ConditionBase only accepts:
+            // - RuleBase
+            // - MathematicalExpression
+            // - SignalBase
+            // - ConditionBase
+            // as valid objects for the TrueOutputs and FalseOutputs collection.
+            // 
+            // As such, the RTC objects Input and Output are not considered as valid items and are ignored for the tests.
+
+            // Given
+            IFeature inputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
+            var input = new Input
+            {
+                Name = "Input",
+                Feature = inputFeature
+            };
+
+            var expressionTrueOutput = new MathematicalExpression
+            {
+                Name = "TrueOutputExpression",
+                Expression = "TruePotato"
+            };
+            var expressionFalseOutput = new MathematicalExpression
+            {
+                Name = "FalseOutputExpression",
+                Expression = "FalsePotato"
+            };
+
+            // When
+
+            // Then
+        }
+
+        [Test]
+        public void GivenHelperWithConditionBaseConnectedWithSignals_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        {
+            // Note the ConditionBase only accepts:
+            // - RuleBase
+            // - MathematicalExpression
+            // - SignalBase
+            // - ConditionBase
+            // as valid objects for the TrueOutputs and FalseOutputs collection.
+            // 
+            // As such, the RTC objects Input and Output are not considered as valid items and are ignored for the tests.
+
+            // Given
+            IFeature inputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
+            var input = new Input
+            {
+                Name = "Input",
+                Feature = inputFeature
+            };
+
+            const string signalTrueOutputName = "SignalTrueOutput";
+            var clonedTrueOutputSignal = Substitute.For<SignalBase>();
+            clonedTrueOutputSignal.Name = signalTrueOutputName;
+
+            var signalTrueOutput = Substitute.For<SignalBase>();
+            signalTrueOutput.Name = signalTrueOutputName;
+            signalTrueOutput.Clone().Returns(clonedTrueOutputSignal);
+
+            const string signalFalseOutputName = "SignalFalseOutput";
+            var clonedFalseOutputSignal = Substitute.For<SignalBase>();
+            clonedFalseOutputSignal.Name = signalFalseOutputName;
+
+            var signalFalseOutput = Substitute.For<SignalBase>();
+            signalFalseOutput.Name = signalFalseOutputName;
+            signalFalseOutput.Clone().Returns(clonedFalseOutputSignal);
+
+            // When
+
+            // Then
+        }
+
         private class TestShape : ShapeBase
         {
             protected override void Initialize() {}
@@ -527,23 +748,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 List<SignalBase> copiedSignals = CopySignals(inputMapping, ruleMapping);
                 List<MathematicalExpression> copiedMathematicalExpressions = CopyMathematicalExpressions(inputMapping);
 
+                List<ConditionBase> copiedConditions = CopyConditions(inputMapping, ruleMapping);
+
                 ControlGroup controlGroup = controller.ControlGroup;
                 List<RuleBase> copiedRules = ruleMapping.Values.ToList();
                 RenameCopiedDataWithUniqueNames(copiedRules, controlGroup.Rules, "Rule");
                 RenameCopiedDataWithUniqueNames(copiedSignals, controlGroup.Signals, "Signal");
                 RenameCopiedDataWithUniqueNames(copiedMathematicalExpressions, controlGroup.MathematicalExpressions, "Expression");
+                RenameCopiedDataWithUniqueNames(copiedConditions, controlGroup.Conditions, "Condition");
 
                 List<Output> copiedOutputs = outputMapping.Values.ToList();
                 ResetOutputs(copiedOutputs);
                 controller.AddShapesToControlGroupAndPlace(copiedRules,
-                                                           new List<ConditionBase>(),
+                                                           copiedConditions,
                                                            inputMapping.Values.ToList(),
                                                            copiedOutputs,
                                                            copiedSignals,
                                                            copiedMathematicalExpressions,
                                                            mea);
 
-                controller.AddConnections(copiedRules, new List<ConditionBase>(), copiedSignals, copiedMathematicalExpressions, true);
+                controller.AddConnections(copiedRules, copiedConditions, copiedSignals, copiedMathematicalExpressions, true);
             }
 
             private Dictionary<T, T> CopyConnectionPointData<T>() where T : ConnectionPoint
@@ -607,6 +831,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 return copiedMathematicalExpressions;
             }
 
+            private List<ConditionBase> CopyConditions(IReadOnlyDictionary<Input, Input> inputMapping,
+                                                       IReadOnlyDictionary<RuleBase, RuleBase> ruleMapping)
+            {
+                IEnumerable<ConditionBase> conditions = copiedShapes.Select(s => s.Tag).OfType<ConditionBase>();
+
+                var copiedConditions = new List<ConditionBase>();
+
+                Dictionary<RtcBaseObject, RtcBaseObject> rtcObjectMapping = ruleMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key,
+                                                                                                     kvp => (RtcBaseObject) kvp.Value);
+                foreach (ConditionBase condition in conditions)
+                {
+                    var copiedCondition = (ConditionBase) condition.Clone();
+
+                    copiedCondition.Input = condition.Input == null ? null : inputMapping[(Input) condition.Input];
+                    SetOutputs(copiedCondition.TrueOutputs, condition.TrueOutputs, rtcObjectMapping);
+                    SetOutputs(copiedCondition.FalseOutputs, condition.FalseOutputs, rtcObjectMapping);
+                    copiedConditions.Add(copiedCondition);
+                }
+
+                return copiedConditions;
+            }
+
+            private static void SetOutputs(IEventedList<RtcBaseObject> targetOutputs, IEnumerable<RtcBaseObject> sourceOutput, IReadOnlyDictionary<RtcBaseObject, RtcBaseObject> outputMapping)
+            {
+                var objectsToBeAdded = new List<RtcBaseObject>();
+                foreach (RtcBaseObject rtcBaseObject in sourceOutput)
+                {
+                    objectsToBeAdded.Add(outputMapping[rtcBaseObject]);
+                }
+
+                targetOutputs.AddRange(objectsToBeAdded);
+            }
+
             private static void ResetOutputs(IEnumerable<Output> outputs)
             {
                 foreach (Output output in outputs)
@@ -665,13 +922,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                     return;
                 }
 
-                var existingNames = new HashSet<string>(originalData.Select(d => d.Name));
+                List<T> currentObjects = originalData.ToList();
+                var existingNames = new HashSet<string>(currentObjects.Select(d => d.Name));
                 foreach (T copy in copiedData)
                 {
                     if (existingNames.Contains(copy.Name))
                     {
-                        copy.Name = RealTimeControlModelHelper.GetUniqueName(objName + " - Copy {0}",
-                                                                             originalData, "Copy");
+                        string uniqueName = RealTimeControlModelHelper.GetUniqueName(objName + " - Copy {0}",
+                                                                                     currentObjects, "Copy");
+                        copy.Name = uniqueName;
+                        existingNames.Add(uniqueName);
+                        currentObjects.Add(copy);
                     }
                 }
             }
