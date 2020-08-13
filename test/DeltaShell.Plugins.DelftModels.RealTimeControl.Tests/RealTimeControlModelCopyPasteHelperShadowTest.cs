@@ -133,25 +133,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
-        [Ignore]
-        public void GivenHelperWithoutData_WhenCopyShapesToController_ThenNothingHappens()
-        {
-            // Given
-            var controller = Substitute.For<IControlGroupEditorController>();
-            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
-
-            // Precondition
-            Assert.That(helper.CopiedShapes, Is.Empty);
-
-            // When
-            helper.CopyShapesToController(null, Point.Empty);
-
-            // Then
-            controller.DidNotReceiveWithAnyArgs().AddConnections(null, null, null, null);
-            controller.DidNotReceiveWithAnyArgs().AddShapesToControlGroupAndPlace(null, null, null, null, null, null, Point.Empty);
-        }
-
-        [Test]
         public void GivenHelperWithOutputData_WhenCopyShapesToController_ThenMessageLoggedAndCopiedShapeReset()
         {
             // Given
@@ -281,18 +262,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.That(copiedRule.Inputs.Single(), Is.Not.SameAs(input)); // There are only two inputs present, therefore the new rule should not match the original input
                 Assert.That(copiedRule.Outputs.Single(), Is.SameAs(copiedOutput));
             }
-        }
-
-        public interface IControlGroupEditorController
-        {
-            void AddShapesToControlGroupAndPlace(IList<RuleBase> rules, IList<ConditionBase> conditions,
-                                                 IList<Input> inputs, IList<Output> outputs,
-                                                 IList<SignalBase> signals, IList<MathematicalExpression> mathExpressions,
-                                                 Point mea);
-
-            void AddConnections(IList<RuleBase> rules, IList<ConditionBase> conditions,
-                                IList<SignalBase> signals, IList<MathematicalExpression> mathExpressions,
-                                bool skipValidation = false);
         }
 
         private class TestShape : ShapeBase
