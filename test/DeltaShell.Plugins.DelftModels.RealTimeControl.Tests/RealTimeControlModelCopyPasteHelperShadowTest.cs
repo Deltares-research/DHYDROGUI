@@ -133,6 +133,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        public void GivenHelperWithoutData_WhenCopyShapesToController_ThenNoChange()
+        {
+            // Given
+            using (var controlGroupEditor = new ControlGroupEditor {Data = new ControlGroup()})
+            {
+                RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Is.Empty);
+                Assert.That(helper.IsDataSet, Is.False);
+
+                // When
+                helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes, Is.Empty);
+            }
+        }
+
+        [Test]
         public void GivenHelperWithOutputData_WhenCopyShapesToController_ThenMessageLoggedAndCopiedShapeReset()
         {
             // Given
@@ -417,7 +439,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
 
             /// <summary>
-            /// Copies the shapes to the <see cref="IControlGroupEditorController"/>.
+            /// Copies the shapes to the <see cref="ControlGroupEditorController"/>.
             /// </summary>
             /// <param name="controller">
             /// The <see cref="ControlGroupEditorController"/> to copy the shapes to.
