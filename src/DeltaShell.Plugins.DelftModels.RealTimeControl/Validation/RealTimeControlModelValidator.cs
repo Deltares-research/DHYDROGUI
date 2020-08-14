@@ -24,11 +24,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             var validationReports = new List<ValidationReport>
             {
                 ValidateRealTimeControlModel(rootObject),
-                RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(true,
-                                                                           rootObject.SaveStateStartTime,
-                                                                           rootObject.SaveStateStopTime,
-                                                                           rootObject.SaveStateTimeStep,
-                                                                           rootObject),
+
+                // TODO D3DFMIQ-2077
+
                 ValidateRestartInputState(rootObject)
             };
             validationReports.AddRange(
