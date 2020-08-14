@@ -54,12 +54,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).SetValueAsString("1");
 
-            // make sure on save / export, restart file + mdu are up to date and could be ran standalone with correct info
-            if (switchTo)
-            {
-                SaveRestartInfo(mduPath);
-            }
-
             if (switchTo)
             {
                 RenameSubFilesIfApplicable();

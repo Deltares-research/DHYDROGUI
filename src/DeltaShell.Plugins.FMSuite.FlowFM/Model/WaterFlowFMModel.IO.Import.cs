@@ -284,7 +284,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
 
             FireImportProgressChanged("Loading restart", 2, TotalImportSteps);
-            LoadRestartInfo(mduFilePath);
 
             // sync the heat flux model, because events are off during reading
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
