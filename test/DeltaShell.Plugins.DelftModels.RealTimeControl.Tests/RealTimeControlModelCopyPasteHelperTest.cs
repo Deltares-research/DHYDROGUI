@@ -518,7 +518,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
-        public void GivenHelperWithConditionBasedNothingConnected_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        public void GivenHelperWithConditionBaseNothingConnected_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
         {
             // Given
             const string conditionName = "Condition";
@@ -563,6 +563,71 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 ConditionBase copiedCondition = actualConditions.Single(c => string.Equals(c.Name, "Condition - Copy 1"));
                 Assert.That(copiedCondition, Is.Not.SameAs(conditionBase));
+            }
+        }
+
+        [Test]
+        public void GivenHelperWithConditionBaseAndMathematicalExpressionAsInput_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        {
+            // Given
+            var input = new MathematicalExpression
+            {
+                Name = "Input",
+                Expression = "ExpressionForTheInput"
+            };
+
+            const string conditionName = "Condition";
+            var clonedCondition = Substitute.For<ConditionBase>();
+            clonedCondition.Name = conditionName;
+
+            var conditionBase = Substitute.For<ConditionBase>();
+            conditionBase.Name = conditionName;
+            conditionBase.Input = input;
+            conditionBase.Clone().Returns(clonedCondition);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.Conditions.Add(conditionBase);
+            controlGroup.MathematicalExpressions.Add(input);
+
+            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            {
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+
+                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                helper.SetCopiedData(shapes);
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Has.Count.EqualTo(2));
+
+                // When
+                helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes.Count(), Is.EqualTo(4));
+
+                const int expectedNrOfInputs = 2;
+                IEnumerable<MathematicalExpressionShape> expressionShapes = actualShapes.OfType<MathematicalExpressionShape>();
+                Assert.That(expressionShapes.Count(), Is.EqualTo(expectedNrOfInputs));
+                IEnumerable<MathematicalExpression> expressions = expressionShapes.Select(i => i.Tag).Cast<MathematicalExpression>();
+                AssertExpressionWithoutInput(expressions, input.Name, input, true);
+                AssertExpressionWithoutInput(expressions, "Expression - Copy 1", input);
+
+                IEnumerable<ConditionShape> conditionShapes = actualShapes.OfType<ConditionShape>();
+                Assert.That(conditionShapes.Count(), Is.EqualTo(2));
+
+                IEnumerable<ConditionBase> actualConditions = conditionShapes.Select(r => r.Tag).Cast<ConditionBase>();
+                Assert.That(actualConditions.SelectMany(c => c.TrueOutputs), Is.Empty); // No outputs are present and should remain empty
+                Assert.That(actualConditions.SelectMany(c => c.FalseOutputs), Is.Empty);
+
+                ConditionBase originalCondition = actualConditions.Single(c => string.Equals(c.Name, conditionBase.Name));
+                Assert.That(originalCondition, Is.SameAs(conditionBase));
+                Assert.That(originalCondition.Input, Is.SameAs(input));
+                
+                ConditionBase copiedCondition = actualConditions.Single(c => string.Equals(c.Name, "Condition - Copy 1"));
+                Assert.That(copiedCondition, Is.Not.SameAs(conditionBase));
+                Assert.That(copiedCondition.Input, Is.Not.SameAs(input));
             }
         }
 

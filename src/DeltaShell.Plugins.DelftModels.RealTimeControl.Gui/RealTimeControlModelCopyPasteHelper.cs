@@ -216,11 +216,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
             var copiedConditions = new List<ConditionBase>();
             var conditionMapping = new Dictionary<RtcBaseObject, RtcBaseObject>();
+
+            Dictionary<IInput, IInput> iInputMapping = GetIInputMapping(inputMapping, expressionMapping);
             foreach (ConditionBase condition in conditions)
             {
                 var copiedCondition = (ConditionBase) condition.Clone();
 
-                copiedCondition.Input = condition.Input == null ? null : inputMapping[(Input) condition.Input];
+                copiedCondition.Input = condition.Input == null ? null : iInputMapping[condition.Input];
                 conditionMapping[condition] = copiedCondition;
                 copiedConditions.Add(copiedCondition);
             }
@@ -271,9 +273,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                                       IReadOnlyDictionary<Input, Input> inputMapping,
                                       IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping)
         {
-            Dictionary<IInput, IInput> iInputMapping = inputMapping.ToDictionary(kvp => (IInput)kvp.Key, kvp => (IInput)kvp.Value)
-                                                                   .Concat(expressionMapping.ToDictionary(kvp => (IInput)kvp.Key, kvp => (IInput)kvp.Value))
-                                                                   .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            Dictionary<IInput, IInput> iInputMapping = GetIInputMapping(inputMapping, expressionMapping);
 
             var inputsToAdd = new List<IInput>();
             foreach (IInput sourceInput in sourceInputs)
@@ -283,6 +283,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             }
 
             targetInputs.AddRange(inputsToAdd);
+        }
+
+        private static Dictionary<IInput, IInput> GetIInputMapping(IReadOnlyDictionary<Input, Input> inputMapping,
+                                                                   IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping)
+        {
+            Dictionary<IInput, IInput> iInputMapping = inputMapping.ToDictionary(kvp => (IInput) kvp.Key, kvp => (IInput) kvp.Value)
+                                                                   .Concat(expressionMapping.ToDictionary(kvp => (IInput) kvp.Key, kvp => (IInput) kvp.Value))
+                                                                   .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return iInputMapping;
         }
 
         private static void SetInputs(IEventedList<Input> targetInputs,
