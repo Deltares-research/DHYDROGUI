@@ -1314,26 +1314,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         protected virtual Queue<DateTime> outputWriteTimesQueue { get; set; }
 
-        IModelState IStateAwareModelEngine.GetCopyOfCurrentState()
-        {
-            return ModelStateHandler.GetState();
-        }
-
-        void IStateAwareModelEngine.SetState(IModelState modelState)
-        {
-            ModelStateHandler.FeedStateToModel(modelState);
-        }
-
-        void IStateAwareModelEngine.ReleaseState(IModelState modelState)
-        {
-            ModelStateHandler.ReleaseState(modelState);
-        }
-
-        IModelState IStateAwareModelEngine.CreateStateFromFile(string persistentStateFilePath)
-        {
-            return ModelStateHandler.CreateStateFromFile(Name, persistentStateFilePath);
-        }
-
         #region Save State: Time Range
 
         public virtual DateTime SaveStateStartTime { get; set; }
@@ -1353,17 +1333,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 time += SaveStateTimeStep;
             }
-        }
-
-        void IStateAwareModelEngine.SaveStateToFile(IModelState modelState, string persistentStateFilePath)
-        {
-            modelState.MetaData = new ModelStateMetaData
-            {
-                ModelTypeId = "RealTimeControlModel",
-                Version = SupportedMetaDataVersions.Last(),
-                Attributes = GetMetaDataRequirements(SupportedMetaDataVersions.Last())
-            };
-            ModelStateHandler.SaveStateToFile(modelState, persistentStateFilePath);
         }
 
         public virtual void ValidateInputState(out IEnumerable<string> errors, out IEnumerable<string> warnings)

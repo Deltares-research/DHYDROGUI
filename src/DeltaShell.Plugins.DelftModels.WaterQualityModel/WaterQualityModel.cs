@@ -45,7 +45,7 @@ using SharpMap.Api.SpatialOperations;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 {
     [Entity]
-    public class WaterQualityModel : TimeDependentModelBase, IStateAwareModelEngine, IDisposable
+    public class WaterQualityModel : TimeDependentModelBase, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
 

@@ -2,7 +2,7 @@
 
 namespace DeltaShell.Dimr
 {
-    public interface IDimrStateAwareModel : IStateAwareModelEngine
+    public interface IDimrStateAwareModel
     {
         void PrepareRestart();
         void WriteRestartFiles();

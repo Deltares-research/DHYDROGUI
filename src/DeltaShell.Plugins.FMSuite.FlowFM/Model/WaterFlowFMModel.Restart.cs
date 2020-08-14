@@ -103,45 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public virtual void ImportRestartFile(string restartFilePath)
         {
-            string fileName = Path.GetFileName(restartFilePath);
-            string[] splitFileName = fileName.Split(new[]
-            {
-                '_',
-                '.'
-            }, StringSplitOptions.RemoveEmptyEntries);
-            int length = splitFileName.Length;
-            if (length < 5 || splitFileName[length - 2] != "rst")
-            {
-                throw new ArgumentException(
-                    string.Format(Resources.WaterFlowFMModel_ImportRestartFile_Invalid_restart_file_name__0___your_file_should_be_formatted_as__name__yyyyMMdd_HHmmss_1_, fileName,
-                                  FileConstants.RestartFileExtension));
-            }
-
-            if (splitFileName.Last() != "nc")
-            {
-                throw new ArgumentException($"Invalid restart file {fileName}: not a NetCDF file.");
-            }
-
-            string dateTimeString = string.Concat(splitFileName[length - 4], splitFileName[length - 3]);
-            if (!DateTime.TryParseExact(dateTimeString, "yyyyMMddHHmmss", CultureInfo.InvariantCulture,
-                                        DateTimeStyles.None, out DateTime dateTime))
-            {
-                throw new ArgumentException(
-                    string.Format(Resources.WaterFlowFMModel_ImportRestartFile_Invalid_restart_file_name__0___your_file_should_be_formatted_as__name__yyyyMMdd_HHmmss_1_, fileName,
-                                  FileConstants.RestartFileExtension));
-            }
-
-            ModelStateHandler.ModelWorkingDirectory = Path.GetDirectoryName(Path.GetFullPath(MduFilePath));
-            string destFileName = Path.Combine(ModelStateHandler.ModelWorkingDirectory, fileName);
-            if (Path.GetFullPath(restartFilePath) != Path.GetFullPath(destFileName))
-            {
-                File.Copy(restartFilePath, destFileName, true);
-            }
-
-            outAndInFileNames[0].First = Path.GetFullPath(destFileName);
-            outAndInFileNames[0].Second = fileName;
-            RestartInput = CreateRestartState(this, ModelStateHandler.GetState(), dateTime);
-            UseRestart = true;
+            // TODO D3DFMIQ-2075
         }
 
         public virtual void ValidateInputState(out IEnumerable<string> errors, out IEnumerable<string> warnings)
@@ -162,63 +124,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 };
                 warnings = Enumerable.Empty<string>();
             }
-        }
-
-        IModelState IStateAwareModelEngine.GetCopyOfCurrentState()
-        {
-            ModelFileBasedStateHandler modelFileBasedStateHandler = ModelStateHandler;
-
-            // modify Out filename list to account for CurrentTime (instance is same as used inside ModelStateHandler)
-            string restartFileName = $"{Name}_{CurrentTime:yyyyMMdd_HHmmss}{FileConstants.RestartFileExtension}";
-            outAndInFileNames[0].First = Path.Combine(ModelDefinition.OutputDirectoryName, restartFileName);
-            outAndInFileNames[0].Second = restartFileName; //out and in is the same
-
-            return modelFileBasedStateHandler.GetState();
-        }
-
-        void IStateAwareModelEngine.SetState(IModelState modelState)
-        {
-            ModelStateHandler.FeedStateToModel(modelState);
-        }
-
-        void IStateAwareModelEngine.ReleaseState(IModelState modelState)
-        {
-            ModelStateHandler.ReleaseState(modelState);
-        }
-
-        IModelState IStateAwareModelEngine.CreateStateFromFile(string persistentStateFilePath)
-        {
-            return ModelStateHandler.CreateStateFromFile(Name, persistentStateFilePath);
-        }
-
-        public virtual IEnumerable<DateTime> GetRestartWriteTimes()
-        {
-            if (UseSaveStateTimeRange)
-            {
-                if (SaveStateTimeStep.Ticks == 0L)
-                {
-                    yield break; //interval 0 would cause infinite loop; break
-                }
-
-                DateTime time = SaveStateStartTime;
-                while (time <= SaveStateStopTime)
-                {
-                    yield return time;
-
-                    time += SaveStateTimeStep;
-                }
-            }
-        }
-
-        void IStateAwareModelEngine.SaveStateToFile(IModelState modelState, string persistentStateFilePath)
-        {
-            modelState.MetaData = new ModelStateMetaData
-            {
-                ModelTypeId = ModelTypeId,
-                Version = SupportedMetaDataVersions.Last(),
-                Attributes = GetMetaDataRequirements(SupportedMetaDataVersions.Last())
-            };
-            ModelStateHandler.SaveStateToFile(modelState, persistentStateFilePath);
         }
 
         public override bool IsDataItemActive(IDataItem dataItem)
