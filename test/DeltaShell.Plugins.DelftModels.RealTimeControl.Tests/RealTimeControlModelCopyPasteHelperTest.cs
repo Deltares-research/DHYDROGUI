@@ -456,7 +456,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
-        public void GivenHelperWithMathematicalExpressionData_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        public void GivenHelperWithMathematicalExpressionDataAndInputAsInput_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
         {
             // Given
             IFeature inputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
@@ -514,6 +514,60 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 MathematicalExpression copiedExpression = actualMathematicalExpressions.Single(s => string.Equals(s.Name, "Expression - Copy 1"));
                 Assert.That(copiedExpression, Is.Not.SameAs(expression));
                 Assert.That(copiedExpression.Inputs.Single(), Is.Not.SameAs(input)); // There are only two inputs present, therefore the new rule should not match the original input
+            }
+        }
+
+        [Test]
+        public void GivenHelperWithMathematicalExpressionDataAndMathematicalExpressionAsInput_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        {
+            // Given
+            var inputExpression = new MathematicalExpression
+            {
+                Name = "InputExpression",
+                Expression = "InputPotato"
+            };
+
+            var expression = new MathematicalExpression
+            {
+                Name = "Expression",
+                Expression = "Potato"
+            };
+            expression.Inputs.Add(inputExpression);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.MathematicalExpressions.AddRange(new []{inputExpression, expression});
+
+            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            {
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+
+                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                helper.SetCopiedData(shapes);
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Has.Count.EqualTo(2));
+
+                // When
+                helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes.Count(), Is.EqualTo(4));
+
+                IEnumerable<MathematicalExpressionShape> mathematicalExpressionShapes = actualShapes.OfType<MathematicalExpressionShape>();
+                Assert.That(mathematicalExpressionShapes.Count(), Is.EqualTo(4));
+                IEnumerable<MathematicalExpression> actualMathematicalExpressions = mathematicalExpressionShapes.Select(s => s.Tag).Cast<MathematicalExpression>();
+                AssertExpressionWithoutInput(actualMathematicalExpressions, inputExpression.Name, inputExpression, true); // These expressions represent the inputs
+                AssertExpressionWithoutInput(actualMathematicalExpressions, "Expression - Copy 1", inputExpression);
+
+                MathematicalExpression originalExpression = actualMathematicalExpressions.Single(o => string.Equals(o.Name, expression.Name));
+                Assert.That(originalExpression, Is.SameAs(expression));
+                CollectionAssert.AreEqual(expression.Inputs, originalExpression.Inputs);
+
+                MathematicalExpression copiedExpression = actualMathematicalExpressions.Single(s => string.Equals(s.Name, "Expression - Copy 2"));
+                Assert.That(copiedExpression, Is.Not.SameAs(expression));
+                Assert.That(copiedExpression.Inputs.Single(), Is.Not.SameAs(inputExpression)); // There are only two inputs present, therefore the new rule should not match the original input
             }
         }
 

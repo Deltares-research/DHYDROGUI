@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
@@ -201,8 +202,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             foreach (MathematicalExpression mathematicalExpression in mathematicalExpressions)
             {
                 var copiedMathematicalExpression = (MathematicalExpression) mathematicalExpression.Clone();
-                SetInputs(copiedMathematicalExpression.Inputs, mathematicalExpression.Inputs, inputMapping, new Dictionary<MathematicalExpression, MathematicalExpression>());
                 expressionMapping[mathematicalExpression] = copiedMathematicalExpression;
+            }
+
+            // Gather all the objects that can be connected to a condition in the true and false outputs
+            // Then set the input, as a mathematical expression can have a mathematical expression as an input.
+            // Failing to comply will result in a KeyNotFoundException.
+            foreach ((MathematicalExpression source, MathematicalExpression target) in expressionMapping)
+            {
+                SetInputs(target.Inputs, source.Inputs, inputMapping, expressionMapping);
             }
 
             return expressionMapping;
@@ -247,8 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private static void SetOutputs(IEventedList<RtcBaseObject> targetOutputs,
                                        IEnumerable<RtcBaseObject> sourceOutput,
-                                       IReadOnlyDictionary<RtcBaseObject,
-                                           RtcBaseObject> outputMapping)
+                                       IReadOnlyDictionary<RtcBaseObject, RtcBaseObject> outputMapping)
         {
             var objectsToBeAdded = new List<RtcBaseObject>();
             foreach (RtcBaseObject rtcBaseObject in sourceOutput)
