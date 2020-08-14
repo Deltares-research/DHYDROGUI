@@ -3,7 +3,6 @@ using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
 using ValidationAspects;

@@ -14,7 +14,6 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -1303,13 +1302,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         #endregion
 
         #region State Aware Model
-        
-        private IFeature lastRelinkedFeature;
 
-        private static readonly int[] SupportedMetaDataVersions = new[]
-        {
-            1
-        };
+        private IFeature lastRelinkedFeature;
 
         protected virtual Queue<DateTime> outputWriteTimesQueue { get; set; }
 
@@ -1322,46 +1316,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public virtual TimeSpan SaveStateTimeStep { get; set; }
 
         #endregion
-
-        private Dictionary<string, string> GetMetaDataRequirements(int version)
-        {
-            if (version == 1)
-            {
-                var ruleTypesPerControlGroup = "";
-                foreach (ControlGroup controlGroup in ControlGroups.OrderBy(cg => cg.Name))
-                {
-                    ruleTypesPerControlGroup += controlGroup.Rules.Aggregate("(", (current, rule) => current + rule.GetType().Name + ",");
-                    ruleTypesPerControlGroup += "),";
-                }
-
-                var conditionTypesPerControlGroup = "";
-                foreach (ControlGroup controlGroup in ControlGroups.OrderBy(cg => cg.Name))
-                {
-                    conditionTypesPerControlGroup += controlGroup.Conditions.Aggregate("(", (current, condition) => current + condition.GetType().Name + ",");
-                    conditionTypesPerControlGroup += "),";
-                }
-
-                return new Dictionary<string, string>
-                {
-                    {"NrOfControlGroups", ControlGroups.Count.ToString(CultureInfo.InvariantCulture)},
-                    {
-                        "NrOfRulesPerControlGroups", ControlGroups.OrderBy(cg => cg.Name)
-                                                                  .Select(cg => cg.Rules.Count)
-                                                                  .Aggregate("", (current, rulesCount) => current + rulesCount + ",")
-                    },
-                    {"RuleTypesPerControlGroup", ruleTypesPerControlGroup},
-                    {
-                        "NrOfConditionsPerControlGroups", ControlGroups.OrderBy(cg => cg.Name)
-                                                                       .Select(cg => cg.Conditions.Count)
-                                                                       .Aggregate("", (current, conditionsCount) => current + conditionsCount + ",")
-                    },
-                    {"ConditionTypesPerControlGroup", conditionTypesPerControlGroup}
-                };
-            }
-
-            throw new NotImplementedException(string.Format("Meta data version {0} for model type {1} is not supported",
-                                                            version, "RealTimeControlModel"));
-        }
 
         #endregion
 

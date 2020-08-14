@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;

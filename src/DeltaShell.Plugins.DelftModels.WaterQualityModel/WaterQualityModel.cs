@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +11,6 @@ using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
@@ -852,30 +850,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             valueConverter.SpatialOperationSet.Execute();
         }
 
-        private Dictionary<string, string> GetMetaDataRequirements(int version)
-        {
-            if (version != 1)
-            {
-                throw new NotImplementedException(string.Format(
-                                                      "Meta data version {0} for model type {1} is not supported",
-                                                      version, "WaterQualityModel"));
-            }
-
-            return new Dictionary<string, string> {{"CorrectForEvap", ModelSettings.CorrectForEvaporation.ToString()}};
-        }
-
-        private Dictionary<string, string> GetOptionalMetaDataRequirements(int version)
-        {
-            if (version != 1)
-            {
-                throw new NotImplementedException(string.Format(
-                                                      "Meta data version {0} for model type {1} is not supported",
-                                                      version, "WaterQualityModel"));
-            }
-
-            return new Dictionary<string, string> {{"NrOfActiveSubstances", SubstanceProcessLibrary.ActiveSubstances.Count().ToString(CultureInfo.InvariantCulture)}};
-        }
-
         private void HandleNewHydroDynamicsFunctionDataSet(IDataItemSet functionCollection, string functionName)
         {
             IDataItem dataItem =
@@ -997,11 +971,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         #endregion
 
         #region Fields
-
-        private static readonly int[] SupportedMetaDataVersions =
-        {
-            1
-        };
 
         private double progressPercentage;
         private bool enableMarkOutputOutOfSync;

@@ -1,34 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     // The Restart related code for WaterFlowFM..
     public partial class WaterFlowFMModel
     {
-        private const string ModelTypeId = "FMModel";
-
         private const string RestartInfoPath = "restart.meta";
-
-        private static readonly int[] SupportedMetaDataVersions = new[]
-        {
-            1
-        };
-
-        private readonly IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames =
-            new List<DelftTools.Utils.Tuple<string, string>>();
 
         public virtual bool UseSaveStateTimeRange
         {
@@ -219,21 +204,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             string combinationPath = Path.Combine(directoryName,
                                                   normalizedFilePath);
             return combinationPath;
-        }
-
-        private Dictionary<string, string> GetMetaDataRequirements(int version)
-        {
-            if (version == 1)
-            {
-                return new Dictionary<string, string>
-                {
-                    {"NrOfVertices", Grid.Vertices.Count.ToString(CultureInfo.InvariantCulture)},
-                    {"NrOfEdges", Grid.Edges.Count.ToString(CultureInfo.InvariantCulture)}
-                    // todo
-                };
-            }
-
-            throw new NotImplementedException($"Meta data version {version} for model type {ModelTypeId} is not supported");
         }
     }
 
