@@ -97,10 +97,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
             Dictionary<Input, Input> inputMapping = CopyConnectionPointData<Input>();
             Dictionary<Output, Output> outputMapping = CopyConnectionPointData<Output>();
-
-            Dictionary<RuleBase, RuleBase> ruleMapping = CopyRules(inputMapping, outputMapping);
-            List<SignalBase> copiedSignals = CopySignals(inputMapping, ruleMapping);
             Dictionary<MathematicalExpression, MathematicalExpression> mathematicalExpressionMapping = CopyMathematicalExpressions(inputMapping);
+
+            Dictionary<RuleBase, RuleBase> ruleMapping = CopyRules(inputMapping, mathematicalExpressionMapping, outputMapping);
+            List<SignalBase> copiedSignals = CopySignals(inputMapping, ruleMapping);
             List<ConditionBase> copiedConditions = CopyConditions(inputMapping, ruleMapping, mathematicalExpressionMapping);
 
             ControlGroup controlGroup = controller.ControlGroup;
@@ -159,6 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         }
 
         private Dictionary<RuleBase, RuleBase> CopyRules(IReadOnlyDictionary<Input, Input> inputMapping,
+                                                         IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping,
                                                          IReadOnlyDictionary<Output, Output> outputMapping)
         {
             IEnumerable<RuleBase> rules = copiedShapes.Select(s => s.Tag).OfType<RuleBase>();
@@ -167,7 +168,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             foreach (RuleBase rule in rules)
             {
                 var copiedRule = (RuleBase) rule.Clone();
-                SetInputs(copiedRule.Inputs, rule.Inputs, inputMapping);
+                SetInputs(copiedRule.Inputs, rule.Inputs, inputMapping, expressionMapping);
                 SetOutputs(copiedRule, rule, outputMapping);
                 mapping[rule] = copiedRule;
             }
@@ -200,7 +201,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             foreach (MathematicalExpression mathematicalExpression in mathematicalExpressions)
             {
                 var copiedMathematicalExpression = (MathematicalExpression) mathematicalExpression.Clone();
-                SetInputs(copiedMathematicalExpression.Inputs, mathematicalExpression.Inputs, inputMapping);
+                SetInputs(copiedMathematicalExpression.Inputs, mathematicalExpression.Inputs, inputMapping, new Dictionary<MathematicalExpression, MathematicalExpression>());
                 expressionMapping[mathematicalExpression] = copiedMathematicalExpression;
             }
 
@@ -267,13 +268,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private static void SetInputs(IEventedList<IInput> targetInputs,
                                       IEnumerable<IInput> sourceInputs,
-                                      IReadOnlyDictionary<Input, Input> inputMapping)
+                                      IReadOnlyDictionary<Input, Input> inputMapping,
+                                      IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping)
         {
-            var inputsToAdd = new List<Input>();
+            Dictionary<IInput, IInput> iInputMapping = inputMapping.ToDictionary(kvp => (IInput)kvp.Key, kvp => (IInput)kvp.Value)
+                                                                   .Concat(expressionMapping.ToDictionary(kvp => (IInput)kvp.Key, kvp => (IInput)kvp.Value))
+                                                                   .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            var inputsToAdd = new List<IInput>();
             foreach (IInput sourceInput in sourceInputs)
             {
-                var castInput = (Input) sourceInput;
-                inputsToAdd.Add(inputMapping[castInput]);
+                IInput castInput = sourceInput;
+                inputsToAdd.Add(iInputMapping[castInput]);
             }
 
             targetInputs.AddRange(inputsToAdd);

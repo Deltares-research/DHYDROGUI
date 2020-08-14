@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
-        public void GivenHelperWithRuleBasedData_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        public void GivenHelperWithRuleBasedDataAndInputAsInput_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
         {
             // Given
             IFeature inputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
@@ -259,6 +259,93 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.That(inputShapes.Count(), Is.EqualTo(expectedNrOfInputs));
                 IEnumerable<Input> inputs = inputShapes.Select(i => i.Tag).Cast<Input>();
                 AssertInputs(inputs, input, expectedNrOfInputs);
+
+                IEnumerable<OutputItemShape> outputShapes = actualShapes.OfType<OutputItemShape>();
+                Assert.That(outputShapes.Count(), Is.EqualTo(2));
+                IEnumerable<Output> actualOutputs = outputShapes.Select(s => s.Tag).Cast<Output>();
+
+                Output originalOutput = actualOutputs.Single(o => string.Equals(o.Name, output.Name));
+                Assert.That(originalOutput, Is.SameAs(output));
+                Assert.That(originalOutput.Feature, Is.SameAs(outputFeature));
+
+                Output copiedOutput = actualOutputs.Single(o => string.Equals(o.Name, "[Not Set]"));
+                Assert.That(copiedOutput, Is.Not.SameAs(output));
+                Assert.That(copiedOutput.Feature, Is.Null);
+
+                IEnumerable<RuleShape> ruleShapes = actualShapes.OfType<RuleShape>();
+                Assert.That(ruleShapes.Count(), Is.EqualTo(2));
+
+                IEnumerable<RuleBase> rules = ruleShapes.Select(r => r.Tag).Cast<RuleBase>();
+                RuleBase originalRule = rules.Single(r => string.Equals(r.Name, rule.Name));
+                Assert.That(originalRule, Is.SameAs(rule));
+                CollectionAssert.AreEqual(rule.Inputs, originalRule.Inputs);
+                CollectionAssert.AreEqual(rule.Outputs, originalRule.Outputs);
+
+                RuleBase copiedRule = rules.Single(r => string.Equals(r.Name, "Rule - Copy 1"));
+                Assert.That(copiedRule, Is.Not.SameAs(rule));
+                Assert.That(copiedRule.Inputs.Single(), Is.Not.SameAs(input)); // There are only two inputs present, therefore the new rule should not match the original input
+                Assert.That(copiedRule.Outputs.Single(), Is.SameAs(copiedOutput));
+            }
+        }
+
+        [Test]
+        public void GivenHelperWithRuleBasedDataAndMathematicalExpressionAsInput_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        {
+            // Given
+            var input = new MathematicalExpression
+            {
+                Name = "ExpressionName",
+                Expression = "Expression"
+            };
+
+            IFeature outputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
+            var output = new Output
+            {
+                Name = "Output",
+                Feature = outputFeature
+            };
+
+            const string ruleName = "Rule";
+            var clonedRule = Substitute.For<RuleBase>();
+            clonedRule.Name = ruleName;
+            clonedRule.Inputs = new EventedList<IInput>();
+            clonedRule.Outputs = new EventedList<Output>();
+
+            var rule = Substitute.For<RuleBase>();
+            rule.Name = ruleName;
+            rule.Inputs = new EventedList<IInput>(new[] {input});
+            rule.Outputs = new EventedList<Output>(new[] {output});
+            rule.Clone().Returns(clonedRule);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.Rules.Add(rule);
+            controlGroup.MathematicalExpressions.Add(input);
+            controlGroup.Outputs.Add(output);
+
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
+            {
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+
+                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                helper.SetCopiedData(shapes);
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Has.Count.EqualTo(3));
+
+                // When
+                helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes.Count(), Is.EqualTo(6));
+
+                const int expectedNrOfInputs = 2;
+                IEnumerable<MathematicalExpressionShape> expressionShapes = actualShapes.OfType<MathematicalExpressionShape>();
+                Assert.That(expressionShapes.Count(), Is.EqualTo(expectedNrOfInputs));
+                IEnumerable<MathematicalExpression> expressions = expressionShapes.Select(i => i.Tag).Cast<MathematicalExpression>();
+                AssertExpressionWithoutInput(expressions, input.Name, input, true);
+                AssertExpressionWithoutInput(expressions, "Expression - Copy 1", input);
 
                 IEnumerable<OutputItemShape> outputShapes = actualShapes.OfType<OutputItemShape>();
                 Assert.That(outputShapes.Count(), Is.EqualTo(2));
