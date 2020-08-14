@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                                 .Concat(expressionMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key, kvp => (RtcBaseObject) kvp.Value))
                                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            // Then set all the values
+            // Then set all the values or a KeyNotFoundException can be thrown as the ConditionBases are not mapped yet.
             foreach (ConditionBase originalCondition in conditions)
             {
                 var copiedCondition = (ConditionBase) conditionMapping[originalCondition];

@@ -388,7 +388,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
 
             RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
-            if (helper.IsDataSet && !helper.CopiedShapes.Any())
+            if (helper.IsDataSet && !selectedShapes.Any())
             {
                 graphControl.ContextMenuItems.Add(new MenuItem("Paste", PasteAction));
             }
