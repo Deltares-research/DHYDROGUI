@@ -256,32 +256,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
                 Assert.That(inputShapes.Count(), Is.EqualTo(2));
-
-                IEnumerable<Input> actualInputs = inputShapes.Select(s => s.Tag).Cast<Input>();
-                Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, inputFeature)), Is.True);
-                Assert.That(actualInputs.All(i => string.Equals(i.Name, input.Name)), Is.True);
+                AssertInputs(inputShapes, input, 2);
 
                 IEnumerable<OutputItemShape> outputShapes = actualShapes.OfType<OutputItemShape>();
                 Assert.That(outputShapes.Count(), Is.EqualTo(2));
                 IEnumerable<Output> actualOutputs = outputShapes.Select(s => s.Tag).Cast<Output>();
 
                 Output originalOutput = actualOutputs.Single(o => string.Equals(o.Name, output.Name));
+                Assert.That(originalOutput, Is.SameAs(output));
                 Assert.That(originalOutput.Feature, Is.SameAs(outputFeature));
 
                 Output copiedOutput = actualOutputs.Single(o => string.Equals(o.Name, "[Not Set]"));
+                Assert.That(copiedOutput, Is.Not.SameAs(output));
                 Assert.That(copiedOutput.Feature, Is.Null);
 
                 IEnumerable<RuleShape> ruleShapes = actualShapes.OfType<RuleShape>();
                 Assert.That(ruleShapes.Count(), Is.EqualTo(2));
 
                 IEnumerable<RuleBase> rules = ruleShapes.Select(r => r.Tag).Cast<RuleBase>();
-                CollectionAssert.AreEqual(new[] {rule.Name, "Rule - Copy 1"}, rules.Select(r => r.Name));
-
-                RuleBase originalRule = rules.First();
+                RuleBase originalRule = rules.Single(r => string.Equals(r.Name, rule.Name));
+                Assert.That(originalRule, Is.SameAs(rule));
                 CollectionAssert.AreEqual(rule.Inputs, originalRule.Inputs);
                 CollectionAssert.AreEqual(rule.Outputs, originalRule.Outputs);
 
-                RuleBase copiedRule = rules.Last();
+                RuleBase copiedRule = rules.Single(r => string.Equals(r.Name, "Rule - Copy 1"));
+                Assert.That(copiedRule, Is.Not.SameAs(rule));
                 Assert.That(copiedRule.Inputs.Single(), Is.Not.SameAs(input)); // There are only two inputs present, therefore the new rule should not match the original input
                 Assert.That(copiedRule.Outputs.Single(), Is.SameAs(copiedOutput));
             }
@@ -301,8 +300,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             const string ruleName = "Rule";
             var clonedRule = Substitute.For<RuleBase>();
             clonedRule.Name = ruleName;
-            clonedRule.Inputs = new EventedList<IInput>();
-            clonedRule.Outputs = new EventedList<Output>();
 
             var rule = Substitute.For<RuleBase>();
             rule.Name = ruleName;
@@ -342,28 +339,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.That(actualShapes.Count(), Is.EqualTo(6));
 
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
-                Assert.That(inputShapes.Count(), Is.EqualTo(2));
-
-                IEnumerable<Input> actualInputs = inputShapes.Select(s => s.Tag).Cast<Input>();
-                Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, inputFeature)), Is.True);
-                Assert.That(actualInputs.All(i => string.Equals(i.Name, input.Name)), Is.True);
+                Assert.That(inputShapes.Distinct().Count(), Is.EqualTo(2));
+                AssertInputs(inputShapes, input, 2);
 
                 IEnumerable<RuleShape> ruleShapes = actualShapes.OfType<RuleShape>();
                 Assert.That(ruleShapes.Count(), Is.EqualTo(2));
                 IEnumerable<RuleBase> rules = ruleShapes.Select(r => r.Tag).Cast<RuleBase>();
-                CollectionAssert.AreEqual(new[] {rule.Name, "Rule - Copy 1"}, rules.Select(r => r.Name));
-                Assert.That(rules.SelectMany(r => r.Inputs), Is.Empty); // The rules do not have any inputs or outputs and should remain empty
-                Assert.That(rules.SelectMany(r => r.Outputs), Is.Empty);
+                AssertRuleWithoutInputsAndOutputs(rules, ruleName, rule, true);
+                AssertRuleWithoutInputsAndOutputs(rules, "Rule - Copy 1", rule);
 
                 IEnumerable<SignalShape> signalShapes = actualShapes.OfType<SignalShape>();
                 Assert.That(signalShapes.Count(), Is.EqualTo(2));
                 IEnumerable<SignalBase> actualSignals = signalShapes.Select(r => r.Tag).Cast<SignalBase>();
 
                 SignalBase originalSignal = actualSignals.Single(s => string.Equals(s.Name, signal.Name));
+                Assert.That(originalSignal, Is.SameAs(signal));
                 CollectionAssert.AreEqual(signal.Inputs, originalSignal.Inputs);
                 CollectionAssert.AreEqual(signal.RuleBases, originalSignal.RuleBases);
 
                 SignalBase copiedSignal = actualSignals.Single(s => string.Equals(s.Name, "Signal - Copy 1"));
+                Assert.That(copiedSignal, Is.Not.SameAs(signal));
                 Assert.That(copiedSignal.Inputs.Single(), Is.Not.SameAs(input));   // There are only two inputs present, therefore the new rule should not match the original input
                 Assert.That(copiedSignal.RuleBases.Single(), Is.Not.SameAs(rule)); // Similar for the rules
             }
@@ -411,10 +406,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
                 Assert.That(inputShapes.Count(), Is.EqualTo(2));
-
-                IEnumerable<Input> actualInputs = inputShapes.Select(s => s.Tag).Cast<Input>();
-                Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, inputFeature)), Is.True);
-                Assert.That(actualInputs.All(i => string.Equals(i.Name, input.Name)), Is.True);
+                AssertInputs(inputShapes, input, 2);
 
                 IEnumerable<MathematicalExpressionShape> mathematicalExpressionShapes = actualShapes.OfType<MathematicalExpressionShape>();
                 Assert.That(mathematicalExpressionShapes.Count(), Is.EqualTo(2));
@@ -423,9 +415,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.That(actualMathematicalExpressions.All(e => string.Equals(e.Expression, expression.Expression)), Is.True);
 
                 MathematicalExpression originalExpression = actualMathematicalExpressions.Single(o => string.Equals(o.Name, expression.Name));
+                Assert.That(originalExpression, Is.SameAs(expression));
                 CollectionAssert.AreEqual(expression.Inputs, originalExpression.Inputs);
 
                 MathematicalExpression copiedExpression = actualMathematicalExpressions.Single(s => string.Equals(s.Name, "Expression - Copy 1"));
+                Assert.That(copiedExpression, Is.Not.SameAs(expression));
                 Assert.That(copiedExpression.Inputs.Single(), Is.Not.SameAs(input)); // There are only two inputs present, therefore the new rule should not match the original input
             }
         }
@@ -468,9 +462,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 IEnumerable<ConditionBase> actualConditions = conditionShapes.Select(r => r.Tag).Cast<ConditionBase>();
                 Assert.That(actualConditions.All(c => c.Input == null), Is.True);
-                CollectionAssert.AreEqual(new[] {conditionBase.Name, "Condition - Copy 1"}, actualConditions.Select(c => c.Name));
                 Assert.That(actualConditions.SelectMany(c => c.TrueOutputs), Is.Empty); // No outputs are present and should remain empty
                 Assert.That(actualConditions.SelectMany(c => c.FalseOutputs), Is.Empty);
+
+                ConditionBase originalCondition = actualConditions.Single(c => string.Equals(c.Name, conditionBase.Name));
+                Assert.That(originalCondition, Is.SameAs(conditionBase));
+
+                ConditionBase copiedCondition = actualConditions.Single(c => string.Equals(c.Name, "Condition - Copy 1"));
+                Assert.That(copiedCondition, Is.Not.SameAs(conditionBase));
             }
         }
 
@@ -546,17 +545,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
                 Assert.That(inputShapes.Count(), Is.EqualTo(2));
-
-                IEnumerable<Input> actualInputs = inputShapes.Select(s => s.Tag).Cast<Input>();
-                Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, inputFeature)), Is.True);
-                Assert.That(actualInputs.All(i => string.Equals(i.Name, input.Name)), Is.True);
+                AssertInputs(inputShapes, input, 2);
 
                 IEnumerable<RuleShape> ruleShapes = actualShapes.OfType<RuleShape>();
                 Assert.That(ruleShapes.Count(), Is.EqualTo(4));
                 IEnumerable<RuleBase> rules = ruleShapes.Select(r => r.Tag).Cast<RuleBase>();
-                CollectionAssert.AreEquivalent(new[] {ruleTrueOutputName, ruleFalseOutputName, "Rule - Copy 1", "Rule - Copy 2"}, rules.Select(r => r.Name));
-                Assert.That(rules.SelectMany(r => r.Inputs), Is.Empty); // The rules do not have any inputs or outputs and should remain empty
-                Assert.That(rules.SelectMany(r => r.Outputs), Is.Empty);
+                AssertRuleWithoutInputsAndOutputs(rules, ruleTrueOutputName, ruleTrueOutput, true);
+                AssertRuleWithoutInputsAndOutputs(rules, "Rule - Copy 1", ruleTrueOutput);
+                AssertRuleWithoutInputsAndOutputs(rules, ruleFalseOutputName, ruleFalseOutput, true);
+                AssertRuleWithoutInputsAndOutputs(rules, "Rule - Copy 2", ruleFalseOutput);
 
                 IEnumerable<ConditionShape> conditionShapes = actualShapes.OfType<ConditionShape>();
                 Assert.That(conditionShapes.Count(), Is.EqualTo(2));
@@ -641,16 +638,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
                 Assert.That(inputShapes.Count(), Is.EqualTo(2));
-
-                IEnumerable<Input> actualInputs = inputShapes.Select(s => s.Tag).Cast<Input>();
-                Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, inputFeature)), Is.True);
-                Assert.That(actualInputs.All(i => string.Equals(i.Name, input.Name)), Is.True);
+                AssertInputs(inputShapes, input, 2);
 
                 IEnumerable<MathematicalExpressionShape> mathematicalExpressionShapes = actualShapes.OfType<MathematicalExpressionShape>();
                 Assert.That(mathematicalExpressionShapes.Count(), Is.EqualTo(4));
-                IEnumerable<MathematicalExpression> expression = mathematicalExpressionShapes.Select(r => r.Tag).Cast<MathematicalExpression>();
-                CollectionAssert.AreEquivalent(new[] {expressionTrueOutput.Name, expressionFalseOutput.Name, "Expression - Copy 1", "Expression - Copy 2"}, expression.Select(r => r.Name));
-                Assert.That(expression.SelectMany(r => r.Inputs), Is.Empty); // The expressions do not have any inputs or outputs and should remain empty
+                IEnumerable<MathematicalExpression> expressions = mathematicalExpressionShapes.Select(r => r.Tag).Cast<MathematicalExpression>();
+                AssertExpressionWithoutInput(expressions, expressionTrueOutput.Name, expressionTrueOutput, true);
+                AssertExpressionWithoutInput(expressions, "Expression - Copy 1", expressionTrueOutput);
+                AssertExpressionWithoutInput(expressions, expressionFalseOutput.Name, expressionFalseOutput, true);
+                AssertExpressionWithoutInput(expressions, "Expression - Copy 2", expressionFalseOutput);
 
                 IEnumerable<ConditionShape> conditionShapes = actualShapes.OfType<ConditionShape>();
                 Assert.That(conditionShapes.Count(), Is.EqualTo(2));
@@ -713,6 +709,43 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // When
 
             // Then
+        }
+
+        private static void AssertRuleWithoutInputsAndOutputs(IEnumerable<RuleBase> rules,
+                                                              string ruleName,
+                                                              RuleBase referenceRule,
+                                                              bool isSameAsReferenceRule = false)
+        {
+            RuleBase rule = rules.Single(r => string.Equals(r.Name, ruleName));
+            Assert.That(rule.Inputs, Is.Empty);
+            Assert.That(rule.Outputs, Is.Empty);
+            Assert.That(rule, isSameAsReferenceRule
+                                  ? Is.SameAs(referenceRule)
+                                  : Is.Not.SameAs(referenceRule));
+        }
+
+        private static void AssertExpressionWithoutInput(IEnumerable<MathematicalExpression> expressions,
+                                                         string expressionName,
+                                                         MathematicalExpression referenceExpression,
+                                                         bool isSameAsReferenceExpression = false)
+        {
+            MathematicalExpression expression = expressions.Single(r => string.Equals(r.Name, expressionName));
+            Assert.That(expression.Inputs, Is.Empty);
+            Assert.That(expression.Expression, Is.EqualTo(referenceExpression.Expression));
+            Assert.That(expression, isSameAsReferenceExpression
+                                        ? Is.SameAs(referenceExpression)
+                                        : Is.Not.SameAs(referenceExpression));
+        }
+
+        private static void AssertInputs(IEnumerable<InputItemShape> actualInputShapes,
+                                         Input originalInput,
+                                         int expectedNrOfInputs)
+        {
+            IEnumerable<Input> actualInputs = actualInputShapes.Select(s => s.Tag).Cast<Input>();
+
+            Assert.That(actualInputs.Distinct().Count(), Is.EqualTo(expectedNrOfInputs));
+            Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, originalInput.Feature)), Is.True);
+            Assert.That(actualInputs.All(i => string.Equals(i.Name, originalInput.Name)), Is.True);
         }
 
         private class TestShape : ShapeBase
