@@ -422,13 +422,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void PasteAction(object sender, EventArgs e)
         {
-            IEnumerable<ShapeBase> clipBoardRtcObjects = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
-
             Point mea = PointToClient(MousePosition);
-            if (clipBoardRtcObjects.Any())
+            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            if (helper.IsDataSet)
             {
-                RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(
-                    clipBoardRtcObjects, controller, mea);
+                helper.CopyShapesToController(controller, mea);
+                helper.ClearData();
             }
         }
 
