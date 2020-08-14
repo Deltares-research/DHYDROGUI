@@ -367,7 +367,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private void Application_ProjectClosing(Project project)
         {
-            RealTimeControlModelCopyPasteHelper.CopiedShapes = null;
+            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            helper.ClearData();
         }
 
         private void AddNewControlGroupToolStripMenuItemClick(object sender, EventArgs e)

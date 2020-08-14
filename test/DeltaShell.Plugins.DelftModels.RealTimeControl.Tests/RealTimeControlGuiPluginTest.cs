@@ -25,6 +25,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Category(TestCategory.Slow)]
         public void ReleaseCopiedBranchFeatureOnProjectClosing()
         {
+            // Setup
+            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            helper.ClearData();
+
+            // Precondition
+            // Note: the helper is a singleton, so for every test make sure 
+            // that the helper is in a clear state
+            Assert.That(helper.IsDataSet, Is.False);
+            Assert.That(helper.CopiedShapes, Is.Empty);
+
+
             var gui = mocks.DynamicMock<IGui>();
             var documentViews = mocks.DynamicMock<IViewList>();
             using (var clipboardMock = new ClipboardMock())
@@ -51,14 +62,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 var pluginGui = new RealTimeControlGuiPlugin {Gui = gui};
                 pluginGui.Activate();
 
-                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(new ShapeBase[]
-                {
-                    new RuleShape()
-                });
-                Assert.IsTrue(RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet());
+                // Precondition
+                helper.SetCopiedData(new ShapeBase[] {new RuleShape()});
+                Assert.IsTrue(helper.IsDataSet);
+                CollectionAssert.IsNotEmpty(helper.CopiedShapes);
 
+                // Call
                 projectClosingRaiser.Raise(project);
-                Assert.IsFalse(RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet());
+
+                // Assert
+                Assert.IsFalse(helper.IsDataSet);
+                CollectionAssert.IsEmpty(helper.CopiedShapes);
             }
         }
 
