@@ -323,7 +323,6 @@
     <Compile Include="RealTimeControlApplicationPluginTest.cs" />
     <Compile Include="RealTimeControlModelANDandORTest.cs" />
     <Compile Include="RealTimeControlModelCopyPasteHelperShadowTest.cs" />
-    <Compile Include="RealTimeControlModelCopyPasteHelperTest.cs" />
     <Compile Include="RealTimeControlModelExtensionsTest.cs" />
     <Compile Include="RealTimeControlModelTest.cs" />
     <Compile Include="RealTimeControlGuiPluginTest.cs" />
