@@ -254,9 +254,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
                 Assert.That(actualShapes.Count(), Is.EqualTo(6));
 
+                const int expectedNrOfInputs = 2;
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
-                Assert.That(inputShapes.Count(), Is.EqualTo(2));
-                AssertInputs(inputShapes, input, 2);
+                Assert.That(inputShapes.Count(), Is.EqualTo(expectedNrOfInputs));
+                IEnumerable<Input> inputs = inputShapes.Select(i => i.Tag).Cast<Input>();
+                AssertInputs(inputs, input, expectedNrOfInputs);
 
                 IEnumerable<OutputItemShape> outputShapes = actualShapes.OfType<OutputItemShape>();
                 Assert.That(outputShapes.Count(), Is.EqualTo(2));
@@ -338,9 +340,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
                 Assert.That(actualShapes.Count(), Is.EqualTo(6));
 
+                const int expectedNrOfInputs = 2;
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
-                Assert.That(inputShapes.Distinct().Count(), Is.EqualTo(2));
-                AssertInputs(inputShapes, input, 2);
+                Assert.That(inputShapes.Count(), Is.EqualTo(expectedNrOfInputs));
+                IEnumerable<Input> inputs = inputShapes.Select(i => i.Tag).Cast<Input>();
+                AssertInputs(inputs, input, expectedNrOfInputs);
 
                 IEnumerable<RuleShape> ruleShapes = actualShapes.OfType<RuleShape>();
                 Assert.That(ruleShapes.Count(), Is.EqualTo(2));
@@ -404,9 +408,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
                 Assert.That(actualShapes.Count(), Is.EqualTo(4));
 
+                const int expectedNrOfInputs = 2;
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
-                Assert.That(inputShapes.Count(), Is.EqualTo(2));
-                AssertInputs(inputShapes, input, 2);
+                Assert.That(inputShapes.Count(), Is.EqualTo(expectedNrOfInputs));
+                IEnumerable<Input> inputs = inputShapes.Select(i => i.Tag).Cast<Input>();
+                AssertInputs(inputs, input, expectedNrOfInputs);
 
                 IEnumerable<MathematicalExpressionShape> mathematicalExpressionShapes = actualShapes.OfType<MathematicalExpressionShape>();
                 Assert.That(mathematicalExpressionShapes.Count(), Is.EqualTo(2));
@@ -543,9 +549,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
                 Assert.That(actualShapes.Count(), Is.EqualTo(8));
 
+                const int expectedNrOfInputs = 2;
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
-                Assert.That(inputShapes.Count(), Is.EqualTo(2));
-                AssertInputs(inputShapes, input, 2);
+                Assert.That(inputShapes.Count(), Is.EqualTo(expectedNrOfInputs));
+                IEnumerable<Input> inputs = inputShapes.Select(i => i.Tag).Cast<Input>();
+                AssertInputs(inputs, input, expectedNrOfInputs);
 
                 IEnumerable<RuleShape> ruleShapes = actualShapes.OfType<RuleShape>();
                 Assert.That(ruleShapes.Count(), Is.EqualTo(4));
@@ -636,9 +644,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
                 Assert.That(actualShapes.Count(), Is.EqualTo(8));
 
+                const int expectedNrOfInputs = 2;
                 IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
-                Assert.That(inputShapes.Count(), Is.EqualTo(2));
-                AssertInputs(inputShapes, input, 2);
+                Assert.That(inputShapes.Count(), Is.EqualTo(expectedNrOfInputs));
+                IEnumerable<Input> inputs = inputShapes.Select(i => i.Tag).Cast<Input>();
+                AssertInputs(inputs, input, expectedNrOfInputs);
 
                 IEnumerable<MathematicalExpressionShape> mathematicalExpressionShapes = actualShapes.OfType<MathematicalExpressionShape>();
                 Assert.That(mathematicalExpressionShapes.Count(), Is.EqualTo(4));
@@ -711,12 +721,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Then
         }
 
-        private static void AssertRuleWithoutInputsAndOutputs(IEnumerable<RuleBase> rules,
+        private static void AssertRuleWithoutInputsAndOutputs(IEnumerable<RuleBase> actualRules,
                                                               string ruleName,
                                                               RuleBase referenceRule,
                                                               bool isSameAsReferenceRule = false)
         {
-            RuleBase rule = rules.Single(r => string.Equals(r.Name, ruleName));
+            RuleBase rule = actualRules.Single(r => string.Equals(r.Name, ruleName));
             Assert.That(rule.Inputs, Is.Empty);
             Assert.That(rule.Outputs, Is.Empty);
             Assert.That(rule, isSameAsReferenceRule
@@ -724,12 +734,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                                   : Is.Not.SameAs(referenceRule));
         }
 
-        private static void AssertExpressionWithoutInput(IEnumerable<MathematicalExpression> expressions,
+        private static void AssertExpressionWithoutInput(IEnumerable<MathematicalExpression> actualExpressions,
                                                          string expressionName,
                                                          MathematicalExpression referenceExpression,
                                                          bool isSameAsReferenceExpression = false)
         {
-            MathematicalExpression expression = expressions.Single(r => string.Equals(r.Name, expressionName));
+            MathematicalExpression expression = actualExpressions.Single(r => string.Equals(r.Name, expressionName));
             Assert.That(expression.Inputs, Is.Empty);
             Assert.That(expression.Expression, Is.EqualTo(referenceExpression.Expression));
             Assert.That(expression, isSameAsReferenceExpression
@@ -737,13 +747,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                                         : Is.Not.SameAs(referenceExpression));
         }
 
-        private static void AssertInputs(IEnumerable<InputItemShape> actualInputShapes,
+        private static void AssertInputs(IEnumerable<Input> actualInputs,
                                          Input originalInput,
                                          int expectedNrOfInputs)
         {
-            IEnumerable<Input> actualInputs = actualInputShapes.Select(s => s.Tag).Cast<Input>();
-
-            Assert.That(actualInputs.Distinct().Count(), Is.EqualTo(expectedNrOfInputs));
+            Assert.That(actualInputs.Distinct().Count(), Is.EqualTo(expectedNrOfInputs)); // Perform a distinct check to ensure all references are different
             Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, originalInput.Feature)), Is.True);
             Assert.That(actualInputs.All(i => string.Equals(i.Name, originalInput.Name)), Is.True);
         }
