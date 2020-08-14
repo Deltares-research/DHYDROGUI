@@ -41,7 +41,7 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, IDimrStateAwareModel, IFileBased,
+    public partial class WaterFlowFMModel : TimeDependentModelBase, IFileBased,
                                             IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel,
                                             IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
     {

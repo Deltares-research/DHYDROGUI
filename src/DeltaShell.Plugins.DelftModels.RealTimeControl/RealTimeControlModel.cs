@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Projectexplorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -1660,36 +1660,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             base.OnCleanup();
             runner.OnCleanup();
-        }
-
-        #endregion
-
-        #region Implementation of IDimrStateAwareModel
-
-        public virtual void PrepareRestart()
-        {
-            ModelStateHandler.ModelWorkingDirectory = ExplicitWorkingDirectory;
-            if (UseRestart)
-            {
-                if (RestartInput.IsEmpty)
-                {
-                    throw new InvalidOperationException("Cannot use restart; restart empty!");
-                }
-
-                ModelStateHandler.FeedStateToModel(ModelStateHandler.CreateStateFromFile(Name, RestartInput.Path));
-            }
-
-            ClearStatesIfRequired();
-        }
-
-        public virtual void WriteRestartFiles()
-        {
-            WriteRestartIfRequired(false);
-        }
-
-        public virtual void FinalizeRestart()
-        {
-            WriteRestartIfRequired(true);
         }
 
         #endregion

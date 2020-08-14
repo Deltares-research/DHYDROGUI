@@ -705,12 +705,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     {
                         Status = ActivityStatus.Done;
                     }
-
-                    if (Status != ActivityStatus.Done)
-                    {
-                        currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>()
-                                       .ForEach(m => m.WriteRestartFiles());
-                    }
                 }
                 catch (Exception e)
                 {
@@ -813,8 +807,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
                                    .ForEach(m => m.CurrentTime = CurrentTime);
                     OnProgressChanged();
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>()
-                                   .ForEach(m => m.PrepareRestart());
                 }
                 catch (DimrErrorCodeException e)
                 {
@@ -939,7 +931,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             if (DoDimrRun() && dimrApi != null)
             {
                 dimrApi.Finish();
-                currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>().ForEach(m => m.FinalizeRestart());
             }
             else
             {

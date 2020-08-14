@@ -1752,26 +1752,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        public virtual IModelState GetCopyOfCurrentState()
-        {
-            return modelStateHandler.GetState();
-        }
-
-        public virtual void SetState(IModelState modelState)
-        {
-            modelStateHandler.FeedStateToModel(modelState);
-        }
-
-        public virtual void ReleaseState(IModelState modelState)
-        {
-            modelStateHandler.ReleaseState(modelState);
-        }
-
-        public virtual IModelState CreateStateFromFile(string persistentStateFilePath)
-        {
-            return modelStateHandler.CreateStateFromFile(Name, persistentStateFilePath);
-        }
-
         public virtual IEnumerable<DateTime> GetRestartWriteTimes()
         {
             if (UseSaveStateTimeRange)
@@ -1784,17 +1764,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     time += SaveStateTimeStep;
                 }
             }
-        }
-
-        public virtual void SaveStateToFile(IModelState modelState, string persistentStateFilePath)
-        {
-            modelState.MetaData = new ModelStateMetaData
-            {
-                ModelTypeId = "WaterQualityModel",
-                Version = SupportedMetaDataVersions.Last(),
-                Attributes = GetMetaDataRequirements(SupportedMetaDataVersions.Last())
-            };
-            modelStateHandler.SaveStateToFile(modelState, persistentStateFilePath);
         }
 
         #endregion

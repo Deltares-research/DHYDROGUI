@@ -298,27 +298,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             throw new NotImplementedException($"Meta data version {version} for model type {ModelTypeId} is not supported");
         }
-
-        #region Implementation of IDimrStateAwareModel
-
-        public virtual void PrepareRestart()
-        {
-            string workDirectory = ExplicitWorkingDirectory ?? FileUtils.CreateTempDirectory();
-            InitializeRestart(workDirectory);
-            ClearStatesIfRequired();
-        }
-
-        public virtual void WriteRestartFiles()
-        {
-            WriteRestartIfRequired(false);
-        }
-
-        public virtual void FinalizeRestart()
-        {
-            WriteRestartIfRequired(true);
-        }
-
-        #endregion
     }
 
     // serializable
