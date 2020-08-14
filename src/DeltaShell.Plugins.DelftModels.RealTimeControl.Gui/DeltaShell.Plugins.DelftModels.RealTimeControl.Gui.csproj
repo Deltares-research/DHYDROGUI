@@ -114,6 +114,7 @@
     <Compile Include="RealTimeControlGuiPlugin.cs" />
     <Compile Include="RealTimeControlMapLayerProvider.cs" />
     <Compile Include="RealTimeControlModelCopyPasteHelper.cs" />
+    <Compile Include="RealTimeControlModelCopyPasteHelperShadow.cs" />
     <Compile Include="RealTimeControlModelProperties.cs" />
   </ItemGroup>
   <ItemGroup>
