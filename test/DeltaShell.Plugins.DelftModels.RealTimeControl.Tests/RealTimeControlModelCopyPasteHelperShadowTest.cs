@@ -772,46 +772,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
         }
 
-        [Test]
-        public void GivenHelperWithConditionBaseConnectedWithSignals_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
-        {
-            // Note the ConditionBase only accepts:
-            // - RuleBase
-            // - MathematicalExpression
-            // - ConditionBase
-            // as valid objects for the TrueOutputs and FalseOutputs collection.
-            // 
-            // As such, the RTC objects Input and Output are not considered as valid items and are ignored for the tests.
-
-            // Given
-            IFeature inputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
-            var input = new Input
-            {
-                Name = "Input",
-                Feature = inputFeature
-            };
-
-            const string signalTrueOutputName = "SignalTrueOutput";
-            var clonedTrueOutputSignal = Substitute.For<SignalBase>();
-            clonedTrueOutputSignal.Name = signalTrueOutputName;
-
-            var signalTrueOutput = Substitute.For<SignalBase>();
-            signalTrueOutput.Name = signalTrueOutputName;
-            signalTrueOutput.Clone().Returns(clonedTrueOutputSignal);
-
-            const string signalFalseOutputName = "SignalFalseOutput";
-            var clonedFalseOutputSignal = Substitute.For<SignalBase>();
-            clonedFalseOutputSignal.Name = signalFalseOutputName;
-
-            var signalFalseOutput = Substitute.For<SignalBase>();
-            signalFalseOutput.Name = signalFalseOutputName;
-            signalFalseOutput.Clone().Returns(clonedFalseOutputSignal);
-
-            // When
-
-            // Then
-        }
-
         private static void AssertRuleWithoutInputsAndOutputs(IEnumerable<RuleBase> actualRules,
                                                               string ruleName,
                                                               RuleBase referenceRule,
