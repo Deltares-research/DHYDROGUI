@@ -485,7 +485,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Note the ConditionBase only accepts:
             // - RuleBase
             // - MathematicalExpression
-            // - SignalBase
             // - ConditionBase
             // as valid objects for the TrueOutputs and FalseOutputs collection.
             // 
@@ -585,7 +584,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Note the ConditionBase only accepts:
             // - RuleBase
             // - MathematicalExpression
-            // - SignalBase
             // - ConditionBase
             // as valid objects for the TrueOutputs and FalseOutputs collection.
             // 
@@ -681,12 +679,105 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        public void GivenHelperWithConditionBaseConnectedWithConditions_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
+        {
+            // Note the ConditionBase only accepts:
+            // - RuleBase
+            // - MathematicalExpression
+            // - ConditionBase
+            // as valid objects for the TrueOutputs and FalseOutputs collection.
+            // 
+            // As such, the RTC objects Input and Output are not considered as valid items and are ignored for the tests.
+
+            // Given
+            IFeature inputFeature = Substitute.For<IFeature, INotifyPropertyChanged>();
+            var input = new Input
+            {
+                Name = "Input",
+                Feature = inputFeature
+            };
+
+            const string conditionTrueOutputName = "ConditionTrueOutput";
+            var clonedTrueOutputCondition = Substitute.For<ConditionBase>();
+            clonedTrueOutputCondition.Name = conditionTrueOutputName;
+
+            var conditionTrueOutput = Substitute.For<ConditionBase>();
+            conditionTrueOutput.Name = conditionTrueOutputName;
+            conditionTrueOutput.Clone().Returns(clonedTrueOutputCondition);
+
+            const string conditionFalseOutputName = "ConditionFalseOutput";
+            var clonedFalseOutputCondition = Substitute.For<ConditionBase>();
+            clonedFalseOutputCondition.Name = conditionFalseOutputName;
+
+            var conditionFalseOutput = Substitute.For<ConditionBase>();
+            conditionFalseOutput.Name = conditionFalseOutputName;
+            conditionFalseOutput.Clone().Returns(clonedFalseOutputCondition);
+            
+            const string conditionName = "Condition";
+            var clonedCondition = Substitute.For<ConditionBase>();
+            clonedCondition.Name = conditionName;
+
+            var conditionBase = Substitute.For<ConditionBase>();
+            conditionBase.Name = conditionName;
+            conditionBase.Input = input;
+            conditionBase.TrueOutputs.Add(conditionTrueOutput);
+            conditionBase.FalseOutputs.Add(conditionFalseOutput);
+            conditionBase.Clone().Returns(clonedCondition);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.Inputs.Add(input);
+            controlGroup.Conditions.AddRange(new[] {conditionBase, conditionTrueOutput, conditionFalseOutput});
+
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
+            {
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+
+                RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+                helper.SetCopiedData(shapes);
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Has.Count.EqualTo(4));
+
+                // When
+                helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes.Count(), Is.EqualTo(8));
+
+                const int expectedNrOfInputs = 2;
+                IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
+                Assert.That(inputShapes.Count(), Is.EqualTo(expectedNrOfInputs));
+                IEnumerable<Input> inputs = inputShapes.Select(i => i.Tag).Cast<Input>();
+                AssertInputs(inputs, input, expectedNrOfInputs);
+
+                IEnumerable<ConditionShape> conditionShapes = actualShapes.OfType<ConditionShape>();
+                Assert.That(conditionShapes.Count(), Is.EqualTo(6));
+                IEnumerable<ConditionBase> conditions = conditionShapes.Select(r => r.Tag).Cast<ConditionBase>();
+                AssertConditionsWithoutInputAndOutputs(conditions, conditionTrueOutput.Name, conditionTrueOutput, true);
+                AssertConditionsWithoutInputAndOutputs(conditions, "Condition - Copy 2", conditionTrueOutput);
+                AssertConditionsWithoutInputAndOutputs(conditions, conditionFalseOutput.Name, conditionFalseOutput, true);
+                AssertConditionsWithoutInputAndOutputs(conditions, "Condition - Copy 3", conditionFalseOutput);
+
+                ConditionBase originalCondition = conditions.Single(s => string.Equals(s.Name, conditionBase.Name));
+                Assert.That(originalCondition.Input, Is.SameAs(input));
+                CollectionAssert.AreEqual(conditionBase.TrueOutputs, originalCondition.TrueOutputs);
+                CollectionAssert.AreEqual(conditionBase.FalseOutputs, originalCondition.FalseOutputs);
+
+                ConditionBase copiedCondition = conditions.Single(s => string.Equals(s.Name, "Condition - Copy 1"));
+                Assert.That(copiedCondition.Input, Is.Not.SameAs(input));                                // There are only two inputs present, therefore the new rule should not match the original input
+                Assert.That(copiedCondition.TrueOutputs.Single(), Is.Not.SameAs(conditionTrueOutput));   // Similar for the true outputs
+                Assert.That(copiedCondition.FalseOutputs.Single(), Is.Not.SameAs(conditionFalseOutput)); // Similar for the false outputs
+            }
+        }
+
+        [Test]
         public void GivenHelperWithConditionBaseConnectedWithSignals_WhenCopyShapesToController_ThenShapesAndConnectionsCopied()
         {
             // Note the ConditionBase only accepts:
             // - RuleBase
             // - MathematicalExpression
-            // - SignalBase
             // - ConditionBase
             // as valid objects for the TrueOutputs and FalseOutputs collection.
             // 
@@ -745,6 +836,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.That(expression, isSameAsReferenceExpression
                                         ? Is.SameAs(referenceExpression)
                                         : Is.Not.SameAs(referenceExpression));
+        }
+
+        private static void AssertConditionsWithoutInputAndOutputs(IEnumerable<ConditionBase> actualConditions,
+                                                                   string conditionName,
+                                                                   ConditionBase referenceCondition,
+                                                                   bool isSameAsReferenceCondition = false)
+        {
+            ConditionBase signal = actualConditions.Single(r => string.Equals(r.Name, conditionName));
+            Assert.That(signal.Input, Is.Null);
+            Assert.That(signal.TrueOutputs, Is.Empty);
+            Assert.That(signal.FalseOutputs, Is.Empty);
+            Assert.That(signal, isSameAsReferenceCondition
+                                    ? Is.SameAs(referenceCondition)
+                                    : Is.Not.SameAs(referenceCondition));
         }
 
         private static void AssertInputs(IEnumerable<Input> actualInputs,
@@ -944,21 +1049,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 IEnumerable<ConditionBase> conditions = copiedShapes.Select(s => s.Tag).OfType<ConditionBase>();
 
                 var copiedConditions = new List<ConditionBase>();
-
-                Dictionary<RtcBaseObject, RtcBaseObject> rtcObjectMapping = ruleMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key,
-                                                                                                     kvp => (RtcBaseObject) kvp.Value)
-                                                                                       .Concat(expressionMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key,
-                                                                                                                              kvp => (RtcBaseObject) kvp.Value))
-                                                                                       .ToDictionary(kvp => kvp.Key,
-                                                                                                     kvp => kvp.Value);
+                var conditionMapping = new Dictionary<RtcBaseObject, RtcBaseObject>();
                 foreach (ConditionBase condition in conditions)
                 {
                     var copiedCondition = (ConditionBase) condition.Clone();
 
                     copiedCondition.Input = condition.Input == null ? null : inputMapping[(Input) condition.Input];
-                    SetOutputs(copiedCondition.TrueOutputs, condition.TrueOutputs, rtcObjectMapping);
-                    SetOutputs(copiedCondition.FalseOutputs, condition.FalseOutputs, rtcObjectMapping);
+                    conditionMapping[condition] = copiedCondition;
                     copiedConditions.Add(copiedCondition);
+                }
+
+                // Gather all the objects that can be connected to a condition in the true and false outputs
+                Dictionary<RtcBaseObject, RtcBaseObject> rtcObjectMapping = 
+                    conditionMapping.Concat(ruleMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key,kvp => (RtcBaseObject) kvp.Value))
+                                    .Concat(expressionMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key, kvp => (RtcBaseObject) kvp.Value))
+                                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+                // Then set all the values
+                foreach (ConditionBase originalCondition in conditions)
+                {
+                    var copiedCondition = (ConditionBase) conditionMapping[originalCondition];
+
+                    SetOutputs(copiedCondition.TrueOutputs, originalCondition.TrueOutputs, rtcObjectMapping);
+                    SetOutputs(copiedCondition.FalseOutputs, originalCondition.FalseOutputs, rtcObjectMapping);
                 }
 
                 return copiedConditions;
