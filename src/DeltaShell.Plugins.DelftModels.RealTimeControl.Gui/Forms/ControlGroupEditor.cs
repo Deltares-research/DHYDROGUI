@@ -387,7 +387,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 graphControl.ContextMenuItems.Add(new MenuItem("Copy", CopyAction) {Tag = selectedShapes});
             }
 
-            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
             if (helper.IsDataSet && !helper.CopiedShapes.Any())
             {
                 graphControl.ContextMenuItems.Add(new MenuItem("Paste", PasteAction));
@@ -424,7 +424,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void PasteAction(object sender, EventArgs e)
         {
             Point mea = PointToClient(MousePosition);
-            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
             if (helper.IsDataSet)
             {
                 helper.CopyShapesToController(controller, mea);
@@ -435,7 +435,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void CopyAction(object sender, EventArgs e)
         {
             var menuItem = (MenuItem) sender;
-            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.SetCopiedData((IEnumerable<ShapeBase>)menuItem.Tag);
         }
 

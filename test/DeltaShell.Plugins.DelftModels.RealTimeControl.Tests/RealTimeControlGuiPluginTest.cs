@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void ReleaseCopiedBranchFeatureOnProjectClosing()
         {
             // Setup
-            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.ClearData();
 
             // Precondition

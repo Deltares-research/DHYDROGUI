@@ -13,27 +13,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
     /// <summary>
     /// Helper class to assist with the copy paste actions of the Real Time Control Model.
     /// </summary>
-    public class RealTimeControlModelCopyPasteHelperShadow
+    public class RealTimeControlModelCopyPasteHelper
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(RealTimeControlModelCopyPasteHelperShadow));
+        private static readonly ILog log = LogManager.GetLogger(typeof(RealTimeControlModelCopyPasteHelper));
 
-        private static RealTimeControlModelCopyPasteHelperShadow instance;
+        private static RealTimeControlModelCopyPasteHelper instance;
         private readonly List<ShapeBase> copiedShapes;
 
-        private RealTimeControlModelCopyPasteHelperShadow()
+        private RealTimeControlModelCopyPasteHelper()
         {
             copiedShapes = new List<ShapeBase>();
             IsDataSet = false;
         }
 
         /// <summary>
-        /// Gets the instance of <see cref="RealTimeControlModelCopyPasteHelperShadow"/>.
+        /// Gets the instance of <see cref="RealTimeControlModelCopyPasteHelper"/>.
         /// </summary>
-        public static RealTimeControlModelCopyPasteHelperShadow Instance
+        public static RealTimeControlModelCopyPasteHelper Instance
         {
             get
             {
-                return instance ?? (instance = new RealTimeControlModelCopyPasteHelperShadow());
+                return instance ?? (instance = new RealTimeControlModelCopyPasteHelper());
             }
         }
 

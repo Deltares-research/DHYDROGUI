@@ -367,7 +367,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private void Application_ProjectClosing(Project project)
         {
-            RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.ClearData();
         }
 
