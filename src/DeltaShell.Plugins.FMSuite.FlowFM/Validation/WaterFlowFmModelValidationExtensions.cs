@@ -174,18 +174,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 issues.Add(new ValidationIssue("Input restart state", ValidationSeverity.Error,
                                                "Input restart state is empty; cannot restart."));
             }
-            else
-            {
-                IEnumerable<string> errors, warnings;
-                model.ValidateInputState(out errors, out warnings);
-
-                issues = errors
-                         .Select(error => new ValidationIssue("Input restart state", ValidationSeverity.Error, error))
-                         .ToList();
-                issues.AddRange(warnings.Select(
-                                    warning => new ValidationIssue("Input restart state", ValidationSeverity.Warning,
-                                                                   warning)));
-            }
 
             return new ValidationReport("Input restart state", issues);
         }

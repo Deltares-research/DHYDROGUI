@@ -60,8 +60,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 SaveRestartInfo(mduPath);
             }
 
-            InitializeRestart(dirName);
-
             if (switchTo)
             {
                 RenameSubFilesIfApplicable();

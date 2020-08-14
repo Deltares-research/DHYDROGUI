@@ -1303,8 +1303,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         #endregion
 
         #region State Aware Model
-
-        private ModelFileBasedStateHandler modelStateHandler;
+        
         private IFeature lastRelinkedFeature;
 
         private static readonly int[] SupportedMetaDataVersions = new[]
@@ -1323,35 +1322,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public virtual TimeSpan SaveStateTimeStep { get; set; }
 
         #endregion
-
-        public virtual IEnumerable<DateTime> GetRestartWriteTimes()
-        {
-            DateTime time = SaveStateStartTime;
-            while (time <= SaveStateStopTime)
-            {
-                yield return time;
-
-                time += SaveStateTimeStep;
-            }
-        }
-
-        public virtual void ValidateInputState(out IEnumerable<string> errors, out IEnumerable<string> warnings)
-        {
-            try
-            {
-                var modelState = (ModelStateFilesImpl) ModelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
-                errors = ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions, GetMetaDataRequirements, "RealTimeControlModel");
-                warnings = Enumerable.Empty<string>();
-            }
-            catch (ArgumentException e)
-            {
-                errors = new[]
-                {
-                    e.Message
-                };
-                warnings = Enumerable.Empty<string>();
-            }
-        }
 
         private Dictionary<string, string> GetMetaDataRequirements(int version)
         {
@@ -1391,21 +1361,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             throw new NotImplementedException(string.Format("Meta data version {0} for model type {1} is not supported",
                                                             version, "RealTimeControlModel"));
-        }
-
-        public virtual ModelFileBasedStateHandler ModelStateHandler
-        {
-            get
-            {
-                if (modelStateHandler == null)
-                {
-                    IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames = new List<DelftTools.Utils.Tuple<string, string>>();
-                    outAndInFileNames.Add(new DelftTools.Utils.Tuple<string, string>(RealTimeControlXMLFiles.XmlExportState, RealTimeControlXMLFiles.XmlImportState));
-                    modelStateHandler = new ModelFileBasedStateHandler(Name, outAndInFileNames);
-                }
-
-                return modelStateHandler;
-            }
         }
 
         #endregion
@@ -1608,7 +1563,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             if (RunsInIntegratedModel)
             {
-                ModelStateHandler.ModelWorkingDirectory = ExplicitWorkingDirectory;
                 return;
             }
 

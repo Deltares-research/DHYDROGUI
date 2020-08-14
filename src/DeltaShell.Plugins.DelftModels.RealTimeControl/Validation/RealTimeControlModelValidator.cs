@@ -160,13 +160,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                 return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
             }
 
-            IEnumerable<string> errors, warnings;
-            model.ValidateInputState(out errors, out warnings);
-
-            List<ValidationIssue> issues = errors.Select(error => new ValidationIssue("Input restart state", ValidationSeverity.Error, error)).ToList();
-            issues.AddRange(warnings.Select(warning => new ValidationIssue("Input restart state", ValidationSeverity.Warning, warning)));
-
-            return new ValidationReport("Input restart state", issues);
+            // TODO D3DFMIQ-2077
+            return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
         }
     }
 }

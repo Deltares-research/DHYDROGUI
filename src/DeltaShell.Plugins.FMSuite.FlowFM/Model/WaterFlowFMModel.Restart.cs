@@ -30,8 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private readonly IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames =
             new List<DelftTools.Utils.Tuple<string, string>>();
 
-        private ModelFileBasedStateHandler modelStateHandler;
-
         public virtual bool UseSaveStateTimeRange
         {
             get => WriteRestart;
@@ -106,26 +104,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             // TODO D3DFMIQ-2075
         }
 
-        public virtual void ValidateInputState(out IEnumerable<string> errors, out IEnumerable<string> warnings)
-        {
-            try
-            {
-                var modelState =
-                    (ModelStateFilesImpl) ModelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
-                errors = ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions,
-                                                                GetMetaDataRequirements, ModelTypeId);
-                warnings = Enumerable.Empty<string>();
-            }
-            catch (ArgumentException e)
-            {
-                errors = new[]
-                {
-                    e.Message
-                };
-                warnings = Enumerable.Empty<string>();
-            }
-        }
-
         public override bool IsDataItemActive(IDataItem dataItem)
         {
             if (dataItem.Tag == RestartInputStateTag)
@@ -146,22 +124,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value;
             set => ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value = value;
-        }
-
-        private ModelFileBasedStateHandler ModelStateHandler
-        {
-            get
-            {
-                if (modelStateHandler == null)
-                {
-                    outAndInFileNames.Add(new DelftTools.Utils.Tuple<string, string>(
-                                              "<filled in GetCopyOfCurrentState>",
-                                              "<filled in GetCopyOfCurrentState>"));
-                    modelStateHandler = new ModelFileBasedStateHandler(Name, outAndInFileNames);
-                }
-
-                return modelStateHandler;
-            }
         }
 
         private void SaveRestartInfo(string mduPath)
@@ -257,31 +219,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             string combinationPath = Path.Combine(directoryName,
                                                   normalizedFilePath);
             return combinationPath;
-        }
-
-        private void InitializeRestart(string targetDir)
-        {
-            ModelStateHandler.ModelWorkingDirectory = Path.GetFullPath(targetDir);
-
-            if (!UseRestart)
-            {
-                ModelDefinition.GetModelProperty(KnownProperties.RestartFile).SetValueAsString("");
-                return;
-            }
-
-            // copies file to correct directory and set RestartFile property in mdu
-            IModelState unpackedState = ModelStateHandler.CreateStateFromFile(Name, RestartInput.Path);
-            string restartFileName = Path.GetFileName(((ModelStateFilesImpl) unpackedState)
-                                                      .GetFilesInModelState()
-                                                      .FirstOrDefault(f => f.EndsWith(FileConstants.RestartFileExtension)));
-            if (ModelStateHandler.FeedStateToModel(unpackedState))
-            {
-                ModelDefinition.GetModelProperty(KnownProperties.RestartFile).SetValueAsString(restartFileName);
-            }
-            else
-            {
-                throw new InvalidOperationException("Something went wrong with restart preparations");
-            }
         }
 
         private Dictionary<string, string> GetMetaDataRequirements(int version)

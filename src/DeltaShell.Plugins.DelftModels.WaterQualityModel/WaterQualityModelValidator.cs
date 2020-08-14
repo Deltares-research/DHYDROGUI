@@ -579,18 +579,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 yield break;
             }
 
-            IEnumerable<string> errors, warnings;
-            model.ValidateInputState(out errors, out warnings);
-
-            foreach (string error in errors)
-            {
-                yield return new ValidationIssue(model, ValidationSeverity.Error, error);
-            }
-
-            foreach (string warning in warnings)
-            {
-                yield return new ValidationIssue(model, ValidationSeverity.Warning, warning);
-            }
+            // TODO D3DFMIQ-2076
         }
     }
 }

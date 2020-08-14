@@ -58,14 +58,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             modelSettings = new WaterQualityModelSettings {MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas};
 
-            modelStateHandler = new ModelFileBasedStateHandler(Name,
-                                                               new List<DelftTools.Utils.Tuple<string, string>>
-                                                               {
-                                                                   new DelftTools.Utils.Tuple<string, string>(
-                                                                       FileConstants.RestartFileName,
-                                                                       FileConstants.RestartInFileName)
-                                                               });
-
             InitializeInputDataItems();
             InitializeWaqProcessesRules();
 
@@ -1014,7 +1006,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private double progressPercentage;
         private bool enableMarkOutputOutOfSync;
 
-        private readonly ModelFileBasedStateHandler modelStateHandler;
         private IWaqPreProcessor waqPreProcessor;
         private IWaqProcessor waqProcessor;
         private WaqInitializationSettings waqInitializationSettings;
@@ -1729,45 +1720,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         # endregion
 
-        #region Restart file
-
-        public virtual void ValidateInputState(out IEnumerable<string> errors, out IEnumerable<string> warnings)
-        {
-            try
-            {
-                var modelState =
-                    (ModelStateFilesImpl) modelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
-
-                ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions, GetMetaDataRequirements,
-                                                       GetOptionalMetaDataRequirements, "WaterQualityModel", out errors,
-                                                       out warnings);
-            }
-            catch (ArgumentException e)
-            {
-                errors = new[]
-                {
-                    e.Message
-                };
-                warnings = Enumerable.Empty<string>();
-            }
-        }
-
-        public virtual IEnumerable<DateTime> GetRestartWriteTimes()
-        {
-            if (UseSaveStateTimeRange)
-            {
-                DateTime time = SaveStateStartTime;
-                while (time <= SaveStateStopTime)
-                {
-                    yield return time;
-
-                    time += SaveStateTimeStep;
-                }
-            }
-        }
-
-        #endregion
-
         # region Model
 
         protected override void OnInitialize()
@@ -1788,22 +1740,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             FileUtils.CreateDirectoryIfNotExists(ModelSettings.WorkDirectory);
 
             waqInitializationSettings = WaqInitializationSettingsBuilder.BuildWaqInitializationSettings(this);
-
-            // use the work directory to unzip the restart state to if use restart is true
-            modelStateHandler.ModelWorkingDirectory = ModelSettings.WorkDirectory;
-
-            if (UseRestart)
-            {
-                if (RestartInput.IsEmpty)
-                {
-                    throw new InvalidOperationException("Cannot use restart; restart empty!");
-                }
-
-                modelStateHandler.FeedStateToModel(modelStateHandler.CreateStateFromFile(Name, RestartInput.Path));
-            }
-
-            // use the output directory to find the files to zip if writerestart is true.
-            modelStateHandler.ModelWorkingDirectory = ModelSettings.OutputDirectory;
 
             WaterQualityOutputDisconnector.Disconnect(this);
 
