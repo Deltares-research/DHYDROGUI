@@ -113,20 +113,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             AddDataToController(controller, mea, copiedRules, copiedConditions, copiedInputs, copiedOutputs, copiedSignals, copiedExpressions);
         }
 
-        private static void PostProcessCopiedData(ControlGroup controlGroup,
-                                                  List<RuleBase> copiedRules,
-                                                  List<SignalBase> copiedSignals,
-                                                  List<MathematicalExpression> copiedExpressions,
-                                                  List<ConditionBase> copiedConditions,
-                                                  List<Output> copiedOutputs)
-        {
-            RenameCopiedDataWithUniqueNames(copiedRules, controlGroup.Rules, "Rule");
-            RenameCopiedDataWithUniqueNames(copiedSignals, controlGroup.Signals, "Signal");
-            RenameCopiedDataWithUniqueNames(copiedExpressions, controlGroup.MathematicalExpressions, "Expression");
-            RenameCopiedDataWithUniqueNames(copiedConditions, controlGroup.Conditions, "Condition");
-            ResetOutputs(copiedOutputs);
-        }
-
         private static void AddDataToController(ControlGroupEditorController controller,
                                                 Point mea,
                                                 List<RuleBase> copiedRules,
@@ -146,6 +132,58 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
             controller.AddConnections(copiedRules, copiedConditions, copiedSignals, copiedExpressions, true);
         }
+
+        private static void PostProcessCopiedData(ControlGroup controlGroup,
+                                                  List<RuleBase> copiedRules,
+                                                  List<SignalBase> copiedSignals,
+                                                  List<MathematicalExpression> copiedExpressions,
+                                                  List<ConditionBase> copiedConditions,
+                                                  List<Output> copiedOutputs)
+        {
+            RenameCopiedDataWithUniqueNames(copiedRules, controlGroup.Rules, "Rule");
+            RenameCopiedDataWithUniqueNames(copiedSignals, controlGroup.Signals, "Signal");
+            RenameCopiedDataWithUniqueNames(copiedExpressions, controlGroup.MathematicalExpressions, "Expression");
+            RenameCopiedDataWithUniqueNames(copiedConditions, controlGroup.Conditions, "Condition");
+            ResetOutputs(copiedOutputs);
+        }
+
+        #region Post process helpers
+
+        private static void ResetOutputs(IEnumerable<Output> outputs)
+        {
+            foreach (Output output in outputs)
+            {
+                log.InfoFormat("It is not possible to copy and paste internal data for control group outputs, the connection to {0} will be reset.", output.Name);
+                output.Reset();
+            }
+        }
+
+        private static void RenameCopiedDataWithUniqueNames<T>(IEnumerable<T> copiedData, IEnumerable<T> controllerData, string objName)
+            where T : RtcBaseObject
+        {
+            if (!controllerData.Any())
+            {
+                return;
+            }
+
+            List<T> currentObjects = controllerData.ToList();
+            var existingNames = new HashSet<string>(currentObjects.Select(d => d.Name));
+            foreach (T copy in copiedData)
+            {
+                if (existingNames.Contains(copy.Name))
+                {
+                    string uniqueName = RealTimeControlModelHelper.GetUniqueName(objName + " - Copy {0}",
+                                                                                 currentObjects, "Copy");
+                    copy.Name = uniqueName;
+                    existingNames.Add(uniqueName);
+                    currentObjects.Add(copy);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Copy helpers
 
         private Dictionary<T, T> CopyConnectionPointData<T>() where T : ConnectionPoint
         {
@@ -253,26 +291,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             return copiedConditions;
         }
 
-        private static void SetOutputs(IEventedList<RtcBaseObject> targetOutputs,
-                                       IEnumerable<RtcBaseObject> sourceOutput,
-                                       IReadOnlyDictionary<RtcBaseObject, RtcBaseObject> outputMapping)
-        {
-            var objectsToBeAdded = new List<RtcBaseObject>();
-            foreach (RtcBaseObject rtcBaseObject in sourceOutput)
-            {
-                objectsToBeAdded.Add(outputMapping[rtcBaseObject]);
-            }
+        #endregion
 
-            targetOutputs.AddRange(objectsToBeAdded);
-        }
+        #region Data helpers
 
-        private static void ResetOutputs(IEnumerable<Output> outputs)
+        private static Dictionary<IInput, IInput> GetIInputMapping(IReadOnlyDictionary<Input, Input> inputMapping,
+                                                                   IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping)
         {
-            foreach (Output output in outputs)
-            {
-                log.InfoFormat("It is not possible to copy and paste internal data for control group outputs, the connection to {0} will be reset.", output.Name);
-                output.Reset();
-            }
+            Dictionary<IInput, IInput> iInputMapping = inputMapping.ToDictionary(kvp => (IInput) kvp.Key, kvp => (IInput) kvp.Value)
+                                                                   .Concat(expressionMapping.ToDictionary(kvp => (IInput) kvp.Key, kvp => (IInput) kvp.Value))
+                                                                   .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return iInputMapping;
         }
 
         private static void SetInputs(IEventedList<IInput> targetInputs,
@@ -292,26 +321,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             targetInputs.AddRange(inputsToAdd);
         }
 
-        private static Dictionary<IInput, IInput> GetIInputMapping(IReadOnlyDictionary<Input, Input> inputMapping,
-                                                                   IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping)
-        {
-            Dictionary<IInput, IInput> iInputMapping = inputMapping.ToDictionary(kvp => (IInput) kvp.Key, kvp => (IInput) kvp.Value)
-                                                                   .Concat(expressionMapping.ToDictionary(kvp => (IInput) kvp.Key, kvp => (IInput) kvp.Value))
-                                                                   .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            return iInputMapping;
-        }
-
         private static void SetInputs(IEventedList<Input> targetInputs,
-                                      IEnumerable<IInput> sourceInputs,
+                                      IEnumerable<Input> sourceInputs,
                                       IReadOnlyDictionary<Input, Input> inputMapping)
         {
-            var inputsToAdd = new List<Input>();
-            foreach (IInput sourceInput in sourceInputs)
-            {
-                var castInput = (Input) sourceInput;
-                inputsToAdd.Add(inputMapping[castInput]);
-            }
-
+            IEnumerable<Input> inputsToAdd = sourceInputs.Select(sourceInput => inputMapping[sourceInput]);
             targetInputs.AddRange(inputsToAdd);
         }
 
@@ -319,12 +333,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                                      IEnumerable<RuleBase> sourceRules,
                                      IReadOnlyDictionary<RuleBase, RuleBase> ruleMapping)
         {
-            var rulesToAdd = new List<RuleBase>();
-            foreach (RuleBase sourceInput in sourceRules)
-            {
-                rulesToAdd.Add(ruleMapping[sourceInput]);
-            }
-
+            IEnumerable<RuleBase> rulesToAdd = sourceRules.Select(sourceInput => ruleMapping[sourceInput]);
             targetRules.AddRange(rulesToAdd);
         }
 
@@ -332,31 +341,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                                        RuleBase source,
                                        IReadOnlyDictionary<Output, Output> outputMapping)
         {
-            Output[] outputsToAdd = source.Outputs.Select(sourceOutput => outputMapping[sourceOutput]).ToArray();
+            IEnumerable<Output> outputsToAdd = source.Outputs.Select(sourceOutput => outputMapping[sourceOutput]);
             target.Outputs.AddRange(outputsToAdd);
         }
 
-        private static void RenameCopiedDataWithUniqueNames<T>(IEnumerable<T> copiedData, IEnumerable<T> controllerData, string objName)
-            where T : RtcBaseObject
+        private static void SetOutputs(IEventedList<RtcBaseObject> targetOutputs,
+                                       IEnumerable<RtcBaseObject> sourceOutput,
+                                       IReadOnlyDictionary<RtcBaseObject, RtcBaseObject> outputMapping)
         {
-            if (!controllerData.Any())
+            var objectsToBeAdded = new List<RtcBaseObject>();
+            foreach (RtcBaseObject rtcBaseObject in sourceOutput)
             {
-                return;
+                objectsToBeAdded.Add(outputMapping[rtcBaseObject]);
             }
 
-            List<T> currentObjects = controllerData.ToList();
-            var existingNames = new HashSet<string>(currentObjects.Select(d => d.Name));
-            foreach (T copy in copiedData)
-            {
-                if (existingNames.Contains(copy.Name))
-                {
-                    string uniqueName = RealTimeControlModelHelper.GetUniqueName(objName + " - Copy {0}",
-                                                                                 currentObjects, "Copy");
-                    copy.Name = uniqueName;
-                    existingNames.Add(uniqueName);
-                    currentObjects.Add(copy);
-                }
-            }
+            targetOutputs.AddRange(objectsToBeAdded);
         }
+
+        #endregion
     }
 }
