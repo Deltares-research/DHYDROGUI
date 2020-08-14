@@ -605,9 +605,73 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Expression = "FalsePotato"
             };
 
-            // When
+            const string conditionName = "Condition";
+            var clonedCondition = Substitute.For<ConditionBase>();
+            clonedCondition.Name = conditionName;
 
-            // Then
+            var conditionBase = Substitute.For<ConditionBase>();
+            conditionBase.Name = conditionName;
+            conditionBase.Input = input;
+            conditionBase.TrueOutputs.Add(expressionTrueOutput);
+            conditionBase.FalseOutputs.Add(expressionFalseOutput);
+            conditionBase.Clone().Returns(clonedCondition);
+
+            var controlGroup = new ControlGroup();
+            controlGroup.Inputs.Add(input);
+            controlGroup.Conditions.Add(conditionBase);
+            controlGroup.MathematicalExpressions.AddRange(new[] {expressionTrueOutput, expressionFalseOutput});
+
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
+            {
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+
+                RealTimeControlModelCopyPasteHelperShadow helper = RealTimeControlModelCopyPasteHelperShadow.Instance;
+                helper.SetCopiedData(shapes);
+
+                // Precondition
+                Assert.That(helper.CopiedShapes, Has.Count.EqualTo(4));
+
+                // When
+                helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
+
+                // Then
+                IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
+                Assert.That(actualShapes.Count(), Is.EqualTo(8));
+
+                IEnumerable<InputItemShape> inputShapes = actualShapes.OfType<InputItemShape>();
+                Assert.That(inputShapes.Count(), Is.EqualTo(2));
+
+                IEnumerable<Input> actualInputs = inputShapes.Select(s => s.Tag).Cast<Input>();
+                Assert.That(actualInputs.All(i => ReferenceEquals(i.Feature, inputFeature)), Is.True);
+                Assert.That(actualInputs.All(i => string.Equals(i.Name, input.Name)), Is.True);
+
+                IEnumerable<MathematicalExpressionShape> mathematicalExpressionShapes = actualShapes.OfType<MathematicalExpressionShape>();
+                Assert.That(mathematicalExpressionShapes.Count(), Is.EqualTo(4));
+                IEnumerable<MathematicalExpression> expression = mathematicalExpressionShapes.Select(r => r.Tag).Cast<MathematicalExpression>();
+                CollectionAssert.AreEquivalent(new[] {expressionTrueOutput.Name, expressionFalseOutput.Name, "Expression - Copy 1", "Expression - Copy 2"}, expression.Select(r => r.Name));
+                Assert.That(expression.SelectMany(r => r.Inputs), Is.Empty); // The expressions do not have any inputs or outputs and should remain empty
+
+                IEnumerable<ConditionShape> conditionShapes = actualShapes.OfType<ConditionShape>();
+                Assert.That(conditionShapes.Count(), Is.EqualTo(2));
+                IEnumerable<ConditionBase> actualConditions = conditionShapes.Select(r => r.Tag).Cast<ConditionBase>();
+
+                ConditionBase originalCondition = actualConditions.Single(s => string.Equals(s.Name, conditionBase.Name));
+                Assert.That(originalCondition.Input, Is.SameAs(input));
+                CollectionAssert.AreEqual(conditionBase.TrueOutputs, originalCondition.TrueOutputs);
+                CollectionAssert.AreEqual(conditionBase.FalseOutputs, originalCondition.FalseOutputs);
+
+                ConditionBase copiedCondition = actualConditions.Single(s => string.Equals(s.Name, "Condition - Copy 1"));
+                Assert.That(copiedCondition.Input, Is.Not.SameAs(input)); // There are only two inputs present, therefore the new rule should not match the original input
+
+                var copiedTrueExpression = (MathematicalExpression) copiedCondition.TrueOutputs.Single();
+                Assert.That(copiedTrueExpression, Is.Not.SameAs(expressionTrueOutput)); // Similar for the true outputs
+                Assert.That(copiedTrueExpression.Expression, Is.EqualTo(expressionTrueOutput.Expression));
+
+                var copiedFalseExpression = (MathematicalExpression) copiedCondition.FalseOutputs.Single();
+                Assert.That(copiedFalseExpression, Is.Not.SameAs(expressionFalseOutput)); // Similar for the false outputs
+                Assert.That(copiedFalseExpression.Expression, Is.EqualTo(expressionFalseOutput.Expression));
+            }
         }
 
         [Test]
@@ -746,15 +810,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 Dictionary<RuleBase, RuleBase> ruleMapping = CopyRules(inputMapping, outputMapping);
                 List<SignalBase> copiedSignals = CopySignals(inputMapping, ruleMapping);
-                List<MathematicalExpression> copiedMathematicalExpressions = CopyMathematicalExpressions(inputMapping);
+                Dictionary<MathematicalExpression, MathematicalExpression> mathematicalExpressionMapping = CopyMathematicalExpressions(inputMapping);
 
-                List<ConditionBase> copiedConditions = CopyConditions(inputMapping, ruleMapping);
+                List<ConditionBase> copiedConditions = CopyConditions(inputMapping, ruleMapping, mathematicalExpressionMapping);
 
                 ControlGroup controlGroup = controller.ControlGroup;
                 List<RuleBase> copiedRules = ruleMapping.Values.ToList();
+                List<MathematicalExpression> copiedExpressions = mathematicalExpressionMapping.Values.ToList();
                 RenameCopiedDataWithUniqueNames(copiedRules, controlGroup.Rules, "Rule");
                 RenameCopiedDataWithUniqueNames(copiedSignals, controlGroup.Signals, "Signal");
-                RenameCopiedDataWithUniqueNames(copiedMathematicalExpressions, controlGroup.MathematicalExpressions, "Expression");
+                RenameCopiedDataWithUniqueNames(copiedExpressions, controlGroup.MathematicalExpressions, "Expression");
                 RenameCopiedDataWithUniqueNames(copiedConditions, controlGroup.Conditions, "Condition");
 
                 List<Output> copiedOutputs = outputMapping.Values.ToList();
@@ -764,10 +829,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                                                            inputMapping.Values.ToList(),
                                                            copiedOutputs,
                                                            copiedSignals,
-                                                           copiedMathematicalExpressions,
+                                                           copiedExpressions,
                                                            mea);
 
-                controller.AddConnections(copiedRules, copiedConditions, copiedSignals, copiedMathematicalExpressions, true);
+                controller.AddConnections(copiedRules, copiedConditions, copiedSignals, copiedExpressions, true);
             }
 
             private Dictionary<T, T> CopyConnectionPointData<T>() where T : ConnectionPoint
@@ -816,30 +881,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 return copiedSignals;
             }
 
-            private List<MathematicalExpression> CopyMathematicalExpressions(IReadOnlyDictionary<Input, Input> inputMapping)
+            private Dictionary<MathematicalExpression, MathematicalExpression> CopyMathematicalExpressions(IReadOnlyDictionary<Input, Input> inputMapping)
             {
                 IEnumerable<MathematicalExpression> mathematicalExpressions = copiedShapes.Select(s => s.Tag).OfType<MathematicalExpression>();
 
-                var copiedMathematicalExpressions = new List<MathematicalExpression>();
+                var expressionMapping = new Dictionary<MathematicalExpression, MathematicalExpression>();
                 foreach (MathematicalExpression mathematicalExpression in mathematicalExpressions)
                 {
                     var copiedMathematicalExpression = (MathematicalExpression) mathematicalExpression.Clone();
                     SetInputs(copiedMathematicalExpression.Inputs, mathematicalExpression.Inputs, inputMapping);
-                    copiedMathematicalExpressions.Add(copiedMathematicalExpression);
+                    expressionMapping[mathematicalExpression] = copiedMathematicalExpression;
                 }
 
-                return copiedMathematicalExpressions;
+                return expressionMapping;
             }
 
             private List<ConditionBase> CopyConditions(IReadOnlyDictionary<Input, Input> inputMapping,
-                                                       IReadOnlyDictionary<RuleBase, RuleBase> ruleMapping)
+                                                       IReadOnlyDictionary<RuleBase, RuleBase> ruleMapping,
+                                                       IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping)
             {
                 IEnumerable<ConditionBase> conditions = copiedShapes.Select(s => s.Tag).OfType<ConditionBase>();
 
                 var copiedConditions = new List<ConditionBase>();
 
                 Dictionary<RtcBaseObject, RtcBaseObject> rtcObjectMapping = ruleMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key,
-                                                                                                     kvp => (RtcBaseObject) kvp.Value);
+                                                                                                     kvp => (RtcBaseObject) kvp.Value)
+                                                                                       .Concat(expressionMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key,
+                                                                                                                              kvp => (RtcBaseObject) kvp.Value))
+                                                                                       .ToDictionary(kvp => kvp.Key,
+                                                                                                     kvp => kvp.Value);
                 foreach (ConditionBase condition in conditions)
                 {
                     var copiedCondition = (ConditionBase) condition.Clone();
