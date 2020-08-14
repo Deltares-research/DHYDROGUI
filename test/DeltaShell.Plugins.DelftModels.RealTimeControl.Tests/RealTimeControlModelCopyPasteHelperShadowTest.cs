@@ -957,22 +957,43 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Dictionary<RuleBase, RuleBase> ruleMapping = CopyRules(inputMapping, outputMapping);
                 List<SignalBase> copiedSignals = CopySignals(inputMapping, ruleMapping);
                 Dictionary<MathematicalExpression, MathematicalExpression> mathematicalExpressionMapping = CopyMathematicalExpressions(inputMapping);
-
                 List<ConditionBase> copiedConditions = CopyConditions(inputMapping, ruleMapping, mathematicalExpressionMapping);
 
                 ControlGroup controlGroup = controller.ControlGroup;
                 List<RuleBase> copiedRules = ruleMapping.Values.ToList();
                 List<MathematicalExpression> copiedExpressions = mathematicalExpressionMapping.Values.ToList();
+                List<Output> copiedOutputs = outputMapping.Values.ToList();
+                List<Input> copiedInputs = inputMapping.Values.ToList();
+                PostProcessCopiedData(controlGroup, copiedRules, copiedSignals, copiedExpressions, copiedConditions, copiedOutputs);
+                AddDataToController(controller, mea, copiedRules, copiedConditions, copiedInputs, copiedOutputs, copiedSignals, copiedExpressions);
+            }
+
+            private static void PostProcessCopiedData(ControlGroup controlGroup, 
+                                                      List<RuleBase> copiedRules,
+                                                      List<SignalBase> copiedSignals,
+                                                      List<MathematicalExpression> copiedExpressions, 
+                                                      List<ConditionBase> copiedConditions, 
+                                                      List<Output> copiedOutputs)
+            {
                 RenameCopiedDataWithUniqueNames(copiedRules, controlGroup.Rules, "Rule");
                 RenameCopiedDataWithUniqueNames(copiedSignals, controlGroup.Signals, "Signal");
                 RenameCopiedDataWithUniqueNames(copiedExpressions, controlGroup.MathematicalExpressions, "Expression");
                 RenameCopiedDataWithUniqueNames(copiedConditions, controlGroup.Conditions, "Condition");
-
-                List<Output> copiedOutputs = outputMapping.Values.ToList();
                 ResetOutputs(copiedOutputs);
+            }
+
+            private static void AddDataToController(ControlGroupEditorController controller, 
+                                                    Point mea, 
+                                                    List<RuleBase> copiedRules,
+                                                    List<ConditionBase> copiedConditions, 
+                                                    List<Input> inputs, 
+                                                    List<Output> copiedOutputs,
+                                                    List<SignalBase> copiedSignals,
+                                                    List<MathematicalExpression> copiedExpressions)
+            {
                 controller.AddShapesToControlGroupAndPlace(copiedRules,
                                                            copiedConditions,
-                                                           inputMapping.Values.ToList(),
+                                                           inputs,
                                                            copiedOutputs,
                                                            copiedSignals,
                                                            copiedExpressions,
@@ -1138,15 +1159,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 target.Outputs.AddRange(outputsToAdd);
             }
 
-            private static void RenameCopiedDataWithUniqueNames<T>(IEnumerable<T> copiedData, IEnumerable<T> originalData, string objName)
+            private static void RenameCopiedDataWithUniqueNames<T>(IEnumerable<T> copiedData, IEnumerable<T> controllerData, string objName)
                 where T : RtcBaseObject
             {
-                if (!originalData.Any())
+                if (!controllerData.Any())
                 {
                     return;
                 }
 
-                List<T> currentObjects = originalData.ToList();
+                List<T> currentObjects = controllerData.ToList();
                 var existingNames = new HashSet<string>(currentObjects.Select(d => d.Name));
                 foreach (T copy in copiedData)
                 {
