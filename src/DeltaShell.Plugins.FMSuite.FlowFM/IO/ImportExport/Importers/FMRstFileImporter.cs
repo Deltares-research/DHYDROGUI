@@ -11,7 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
     public class FMRstFileImporter : IFileImporter
     {
-        public Func<FileBasedRestartState, WaterFlowFMModel> GetFMModelForRestartState { get; set; }
+        // TODO D3DFMIQ-2075
+        //public Func<FileBasedRestartState, WaterFlowFMModel> GetFMModelForRestartState { get; set; }
 
         public string Name => "Restart File";
 
@@ -25,7 +26,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         {
             get
             {
-                yield return typeof(FileBasedRestartState);
+                yield break;
+
+                // TODO D3DFMIQ-2075
+                //yield return typeof(FileBasedRestartState);
             }
         }
 
@@ -43,19 +47,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool CanImportOn(object targetObject)
         {
-            return GetFMModelForRestartState != null &&
-                   GetFMModelForRestartState(targetObject as FileBasedRestartState) != null;
+            return false; 
+
+            // TODO D3DFMIQ-2075
+            //return GetFMModelForRestartState != null &&
+            //       GetFMModelForRestartState(targetObject as FileBasedRestartState) != null;
         }
 
         public object ImportItem(string path, object target = null)
         {
-            WaterFlowFMModel model = GetFMModelForRestartState?.Invoke(target as FileBasedRestartState);
+            // TODO D3DFMIQ-2075
+            //WaterFlowFMModel model = GetFMModelForRestartState?.Invoke(target as FileBasedRestartState);
 
-            if (model != null)
-            {
-                model.ImportRestartFile(path);
-                return model.RestartInput;
-            }
+            //if (model != null)
+            //{
+            //    model.ImportRestartFile(path);
+            //    return model.RestartInput;
+            //}
 
             return null;
         }

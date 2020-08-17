@@ -3536,34 +3536,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.IsTrue(File.Exists(stateExportFile));
         }
 
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void RealTimeControlModelCanProduceStateFiles()
-        {
-            string rtcRunDir = Path.Combine(Environment.CurrentDirectory, "realTimeControlModelCanProduceStateFile");
-            FileUtils.DeleteIfExists(rtcRunDir);
-            Directory.CreateDirectory(rtcRunDir);
-            Assert.IsTrue(Directory.Exists(rtcRunDir));
+        // TODO D3DFMIQ-2077
+        //[Test]
+        //[Category(TestCategory.Integration)]
+        //public void RealTimeControlModelCanProduceStateFiles()
+        //{
+        //    string rtcRunDir = Path.Combine(Environment.CurrentDirectory, "realTimeControlModelCanProduceStateFile");
+        //    FileUtils.DeleteIfExists(rtcRunDir);
+        //    Directory.CreateDirectory(rtcRunDir);
+        //    Assert.IsTrue(Directory.Exists(rtcRunDir));
 
-            ControlledTestModel controlledModel;
-            RealTimeControlModel realTimeControlModel;
+        //    ControlledTestModel controlledModel;
+        //    RealTimeControlModel realTimeControlModel;
 
-            RealTimeControlTestHelper.SetupControlledTestModel(out controlledModel, out realTimeControlModel);
-            RealTimeControlTestHelper.SetupHydraulicRuleControlGroup(controlledModel, realTimeControlModel, true);
-            realTimeControlModel.ExplicitWorkingDirectory = rtcRunDir;
+        //    RealTimeControlTestHelper.SetupControlledTestModel(out controlledModel, out realTimeControlModel);
+        //    RealTimeControlTestHelper.SetupHydraulicRuleControlGroup(controlledModel, realTimeControlModel, true);
+        //    realTimeControlModel.ExplicitWorkingDirectory = rtcRunDir;
 
-            // Setup model to generate statefiles            
-            realTimeControlModel.WriteRestart = true;
-            realTimeControlModel.SaveStateStartTime = realTimeControlModel.StartTime;
-            realTimeControlModel.SaveStateStopTime = realTimeControlModel.StopTime;
-            realTimeControlModel.SaveStateTimeStep = realTimeControlModel.TimeStep;
+        //    // Setup model to generate statefiles            
+        //    realTimeControlModel.WriteRestart = true;
+        //    realTimeControlModel.SaveStateStartTime = realTimeControlModel.StartTime;
+        //    realTimeControlModel.SaveStateStopTime = realTimeControlModel.StopTime;
+        //    realTimeControlModel.SaveStateTimeStep = realTimeControlModel.TimeStep;
 
-            // Run the models
-            ActivityRunner.RunActivity(controlledModel);
-            ActivityRunner.RunActivity(realTimeControlModel);
+        //    // Run the models
+        //    ActivityRunner.RunActivity(controlledModel);
+        //    ActivityRunner.RunActivity(realTimeControlModel);
 
-            Assert.AreEqual(6, realTimeControlModel.GetRestartOutputStates().Count());
-        }
+        //    Assert.AreEqual(6, realTimeControlModel.GetRestartOutputStates().Count());
+        //}
 
         #endregion
     }

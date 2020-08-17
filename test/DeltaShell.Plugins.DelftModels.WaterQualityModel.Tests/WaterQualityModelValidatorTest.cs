@@ -1064,69 +1064,73 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         #region Restart
 
-        [Test]
-        public void WaqModelForFractionCalculationWithValidDataAndRestartWithoutMetadataValidation()
-        {
-            WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
+        // TODO D3DFMIQ-2076
+        //[Test]
+        //public void WaqModelForFractionCalculationWithValidDataAndRestartWithoutMetadataValidation()
+        //{
+        //    WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
 
-            string validRestartFilePath =
-                TestHelper.GetTestFilePath("valid_fractions_state_without_metadata_WAQ.zip");
-            waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
-            waterQualityModel.UseRestart = true;
+        //    string validRestartFilePath =
+        //        TestHelper.GetTestFilePath("valid_fractions_state_without_metadata_WAQ.zip");
+        //    waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
+        //    waterQualityModel.UseRestart = true;
 
-            ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
-            Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
-        }
+        //    ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
+        //    Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
+        //}
 
-        [Test]
-        public void WaqModelForFractionCalculationWithFailingOptionalRequirementRestartState()
-        {
-            WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
+        // TODO D3DFMIQ-2076
+        //[Test]
+        //public void WaqModelForFractionCalculationWithFailingOptionalRequirementRestartState()
+        //{
+        //    WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
 
-            string validRestartFilePath =
-                TestHelper.GetTestFilePath("valid_fractions_state_nonmatching_active_WAQ.zip");
-            waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
-            waterQualityModel.UseRestart = true;
+        //    string validRestartFilePath =
+        //        TestHelper.GetTestFilePath("valid_fractions_state_nonmatching_active_WAQ.zip");
+        //    waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
+        //    waterQualityModel.UseRestart = true;
 
-            ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
-            Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
+        //    ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
+        //    Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
 
-            /*
-            Assert.DoesNotThrow(() => WaterQualityModel1DValidator.ValidateStatic(waterQualityModel, true),
-                "Warnings should not be thrown");
+        //    /*
+        //    Assert.DoesNotThrow(() => WaterQualityModel1DValidator.ValidateStatic(waterQualityModel, true),
+        //        "Warnings should not be thrown");
 
-            Assert.DoesNotThrow(() => WaterQualityModel1DValidator.ValidateStatic(waterQualityModel, true),
-                "Active substances not relevant to fractions calculations: shouldn't throw");
-             */
-        }
+        //    Assert.DoesNotThrow(() => WaterQualityModel1DValidator.ValidateStatic(waterQualityModel, true),
+        //        "Active substances not relevant to fractions calculations: shouldn't throw");
+        //     */
+        //}
 
-        [Test]
-        public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleModelTypeValidation()
-        {
-            WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
+        // TODO D3DFMIQ-2076
+        //[Test]
+        //public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleModelTypeValidation()
+        //{
+        //    WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
 
-            string validRestartFilePath =
-                TestHelper.GetTestFilePath("invalid_modeltype_state_WAQ.zip");
-            waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
-            waterQualityModel.UseRestart = true;
+        //    string validRestartFilePath =
+        //        TestHelper.GetTestFilePath("invalid_modeltype_state_WAQ.zip");
+        //    waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
+        //    waterQualityModel.UseRestart = true;
 
-            ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
-            ExpectValidationIssue(report, "Model type of 'test' is not compatible.");
-        }
+        //    ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
+        //    ExpectValidationIssue(report, "Model type of 'test' is not compatible.");
+        //}
 
-        [Test]
-        public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleVersionValidation()
-        {
-            WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
+        // TODO D3DFMIQ-2076
+        //[Test]
+        //public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleVersionValidation()
+        //{
+        //    WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
 
-            string validRestartFilePath =
-                TestHelper.GetTestFilePath("invalid_version_state_WAQ.zip");
-            waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
-            waterQualityModel.UseRestart = true;
+        //    string validRestartFilePath =
+        //        TestHelper.GetTestFilePath("invalid_version_state_WAQ.zip");
+        //    waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
+        //    waterQualityModel.UseRestart = true;
 
-            ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
-            ExpectValidationIssue(report, "Version 2 is not supported.");
-        }
+        //    ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
+        //    ExpectValidationIssue(report, "Version 2 is not supported.");
+        //}
 
         #endregion
 

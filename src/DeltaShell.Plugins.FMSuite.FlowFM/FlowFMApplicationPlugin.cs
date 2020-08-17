@@ -102,7 +102,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new StructuresListImporter(StructuresListType.Weirs) {GetModelForList = GetModelForCollection};
             yield return new FMMapFileImporter();
             yield return new FMHisFileImporter();
-            yield return new FMRstFileImporter {GetFMModelForRestartState = GetFMModelForRestartState};
+
+            // TODO D3DFMIQ-2075
+            //yield return new FMRstFileImporter {GetFMModelForRestartState = GetFMModelForRestartState};
             yield return new BcFileImporter();
             yield return new BcmFileImporter();
             yield return new BoundaryConditionWpsImporter();
@@ -596,12 +598,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                               .FirstOrDefault(m => listSelectors.Any(s => Equals(s(m.Area), target)));
         }
 
-        private WaterFlowFMModel GetFMModelForRestartState(FileBasedRestartState fileBasedRestartState)
-        {
-            return
-                Application.GetAllModelsInProject().OfType<WaterFlowFMModel>()
-                           .FirstOrDefault(m => Equals(m.RestartInput, fileBasedRestartState));
-        }
+        // TODO D3DFMIQ-2075
+        //private WaterFlowFMModel GetFMModelForRestartState(FileBasedRestartState fileBasedRestartState)
+        //{
+        //    return
+        //        Application.GetAllModelsInProject().OfType<WaterFlowFMModel>()
+        //                   .FirstOrDefault(m => Equals(m.RestartInput, fileBasedRestartState));
+        //}
 
         private WaterFlowFMModel GetModelForArea(HydroArea hydroArea)
         {

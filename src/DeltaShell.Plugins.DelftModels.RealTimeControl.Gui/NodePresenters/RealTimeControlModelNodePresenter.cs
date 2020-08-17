@@ -144,7 +144,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         private IEnumerable GetInitialConditions(RealTimeControlModel rtcModel)
         {
-            yield return rtcModel.GetDataItemByValue(rtcModel.RestartInput);
+            yield break;
+
+            // TODO D3DFMIQ-2077
+            // yield return rtcModel.GetDataItemByValue(rtcModel.RestartInput);
         }
 
         private static IEnumerable GetOutputItems(RealTimeControlModel model)
@@ -180,7 +183,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         private static bool IsOutputRestartFile(IDataItem dataItem)
         {
-            return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
+            return false;
+
+            // TODO D3DFMIQ-2077
+            //return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
         }
     }
 }

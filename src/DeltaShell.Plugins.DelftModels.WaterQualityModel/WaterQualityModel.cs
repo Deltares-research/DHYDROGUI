@@ -406,6 +406,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             modelSettings.WorkingDirectoryPathFuncWithModelName = () => Path.Combine(WorkingDirectoryWithoutModelName(), GetWaqDataFolderName());
         }
 
+        // TODO D3DFMIQ-2076
+        public bool UseRestart { get; set; }
+
+        // TODO D3DFMIQ-2076
+        public bool WriteRestart { get; set; }
+
         [EditAction]
         protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

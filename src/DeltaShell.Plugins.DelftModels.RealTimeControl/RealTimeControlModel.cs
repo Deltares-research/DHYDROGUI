@@ -114,6 +114,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
+        // TODO D3DFMIQ-2077
+        public bool UseRestart { get; set; }
+
+        // TODO D3DFMIQ-2077
+        public bool WriteRestart { get; set; }
+
         public virtual int LogLevel { get; set; }
 
         //set this to true when running the model..so the output won't be removed during the run

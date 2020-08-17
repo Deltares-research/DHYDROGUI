@@ -8,6 +8,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     // The Restart related code for WaterFlowFM..
     public partial class WaterFlowFMModel
     {
+        // TODO D3DFMIQ-2075
+        public bool UseRestart { get; set; }
+
         public virtual bool UseSaveStateTimeRange
         {
             get => WriteRestart;
@@ -71,7 +74,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set => ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = value;
         }
 
-        public override bool WriteRestart
+        // TODO D3DFMIQ-2075
+        public bool WriteRestart
         {
             get => (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
             set => ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = value;

@@ -156,7 +156,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)
         {
-            yield return model.GetDataItemByValue(model.RestartInput);
+            // TODO D3DFMIQ-2075
+            //yield return model.GetDataItemByValue(model.RestartInput);
 
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model, model.InitialWaterLevel, ShortCutType.SpatialCoverage);
 
@@ -285,10 +286,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private static IEnumerable GetRestartStates(WaterFlowFMModel data)
         {
-            IEnumerable<IDataItem> restartStates =
-                data.DataItems.Where(
-                    dataItem => dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output);
-            return restartStates;
+            yield break;
+
+            // TODO D3DFMIQ-2075
+            //IEnumerable<IDataItem> restartStates =
+            //    data.DataItems.Where(
+            //        dataItem => dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output);
+            //return restartStates;
         }
 
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaterFlowFMModel model)
