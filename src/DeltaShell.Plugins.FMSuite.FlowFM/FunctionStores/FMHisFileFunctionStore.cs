@@ -347,11 +347,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             if (coordinatesVariableName == null) return Array.Empty<double>();
             NetCdfVariable coordinatesVariable = netCdfFile.GetVariableByName(coordinatesVariableName);
-            if (coordinatesVariable == null) return Array.Empty<double>();
             NetCdfDataType type = netCdfFile.GetVariableDataType(coordinatesVariable);
             if (type != NetCdfDataType.NcDoublePrecision) return Array.Empty<double>();
-            var coordinatesVariableDimensions = netCdfFile.GetDimensions(coordinatesVariable)?.ToArray();
-            return coordinatesVariableDimensions?.Length != 1 ? Array.Empty<double>() : GetNetCdfVariableArray(coordinatesVariableName);
+            var coordinatesVariableDimensions = netCdfFile.GetDimensions(coordinatesVariable).ToArray();
+            return coordinatesVariableDimensions.Length != 1 ? Array.Empty<double>() : GetNetCdfVariableArray(coordinatesVariableName);
         }
 
         private void LoadHisFileVariableNamesByDimensionToMap(NetCdfVariableInfo[] dataVariables)
@@ -597,15 +596,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             foreach (string dimensionName in timeSeriesIdsByDimensionNameDictionary.Keys.Where(mapTypeDictionary.ContainsKey))
             {
-                AddFeaturesToDictionary(dimensionName, GetOrCreateFeatures(features, dimensionName, timeSeriesIdsByDimensionNameDictionary[dimensionName].ToArray()).ToArray());
+                AddFeaturesToDictionary(dimensionName, GetOrCreateFeatures(features, dimensionName));
             }
         }
 
-        private IEnumerable<IFeature> GetOrCreateFeatures(IFeature[] features, string dimensionName, string[] timeSeriesIds)
+        private IEnumerable<IFeature> GetOrCreateFeatures(IFeature[] features, string dimensionName)
         {
-            for (var i = 0; i < timeSeriesIds.Length; i++)
+            for (var i = 0; i < timeSeriesIdsByDimensionNameDictionary[dimensionName].Count(); i++)
             {
-                string name = timeSeriesIds[i];
+                string name = timeSeriesIdsByDimensionNameDictionary[dimensionName].ElementAt(i);
                 Type type = mapTypeDictionary[dimensionName];
                 yield return features?
                                  .FirstOrDefault(m =>
