@@ -297,6 +297,7 @@
     <Compile Include="ImportExport\Export\PidRuleSerializerTest.cs" />
     <Compile Include="ImportExport\Export\RelativeTimRuleSerializerTest.cs" />
     <Compile Include="ImportExport\Export\StandardConditionSerializerTest.cs" />
+    <Compile Include="ImportExport\Export\TimeConditionSerializerTest.cs" />
     <Compile Include="ImportExport\Export\TimeRuleSerializerTest.cs" />
     <Compile Include="ImportExport\DataAccess\ExpressionTreeAssemblerTest.cs" />
     <Compile Include="ImportExport\Helpers\ExpressionNodeEqualityComparer.cs" />
