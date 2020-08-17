@@ -39,16 +39,16 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=1.6.0-beta.0b49ca6ure=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Shell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Gui, Version=1.5.0.51496, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Shell.Gui">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
     </Reference>
-    <Reference Include="DelftTools.Utils, Version=1.5.0.51496, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Utils">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
     </Reference>
@@ -66,7 +66,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="SharpMap.Api, Version=1.5.0.51496, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpMap.Api">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
     </Reference>
