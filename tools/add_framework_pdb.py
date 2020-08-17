@@ -192,7 +192,7 @@ def get_framework_revision(dhydro_root: Path,
     """
     # We use the version specified in a package file to get the accurate 
     # version.
-    version_regex = re.compile(r'DeltaShell\.Framework\.1\.5\.0\.(?P<version>\d{5})(?:-beta)?(?:-SIGNED)?')
+    version_regex = re.compile(r'DeltaShell\.Framework\.1\.6\.0(?:-beta)?(?:-SIGNED)?\.(?P<version>\w{7})')
 
     csproj_files = get_src_csproj_files(dhydro_root)
 
@@ -319,7 +319,7 @@ def get_framework_version(dhydro_root: Path,
     """
     # We use the version specified in a package file to get the accurate 
     # version.
-    version_regex = re.compile(r'(?P<version>DeltaShell\.Framework\.1\.5\.0\.\d{5}(?:-beta)?(?:-SIGNED)?)')
+    version_regex = re.compile(r'DeltaShell\.Framework\.1\.6\.0(?:-beta)?(?:-SIGNED)?\.(?P<version>\w{7})')
 
     csproj_files = get_src_csproj_files(dhydro_root)
 
