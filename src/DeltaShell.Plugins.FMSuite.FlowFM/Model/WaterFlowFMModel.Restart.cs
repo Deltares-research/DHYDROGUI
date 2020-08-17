@@ -84,10 +84,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public override bool IsDataItemActive(IDataItem dataItem)
         {
-            if (dataItem.Tag == RestartInputStateTag)
-            {
-                return UseRestart;
-            }
+            // TODO D3DFMIQ-2075
+            //if (dataItem.Tag == RestartInputStateTag)
+            //{
+            //    return UseRestart;
+            //}
 
             return base.IsDataItemActive(dataItem);
         }
