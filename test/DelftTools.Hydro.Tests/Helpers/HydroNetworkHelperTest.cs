@@ -1,19 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Functions.Filters;
-using DelftTools.Functions.Generic;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
-using DelftTools.TestUtils;
-using DelftTools.Utils;
-using DelftTools.Utils.Collections;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Actions;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -513,33 +501,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             network.Branches.Add(branch1);
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
-
-            var crossSection1 = new CrossSectionDefinitionXYZ
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(15, 20),
-                    new Coordinate(16, 20)
-                })
-            };
-            double offset1 = Math.Sqrt((15 * 15) + (20 * 20));
-            var crossSectionBranchFeature1 = new CrossSection(crossSection1) {Chainage = offset1};
-
-            var crossSection2 = new CrossSectionDefinitionXYZ
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(85, 70),
-                    new Coordinate(86, 70)
-                })
-            };
-            double offset2 = Math.Sqrt((30 * 30) + (40 * 40)) + 40 + Math.Sqrt((15 * 15) + (20 * 20));
-            var crossSectionBranchFeature2 = new CrossSection(crossSection2) {Chainage = offset2};
-
+            
             branch1.Source = node1;
             branch1.Target = node2;
-            NetworkHelper.AddBranchFeatureToBranch(crossSectionBranchFeature1, branch1, crossSectionBranchFeature1.Chainage);
-            NetworkHelper.AddBranchFeatureToBranch(crossSectionBranchFeature2, branch1, crossSectionBranchFeature2.Chainage);
 
             return network;
         }
@@ -590,50 +554,6 @@ namespace DelftTools.Hydro.Tests.Helpers
             branch1.Target = node2;
 
             return network;
-        }
-
-        private static void AddTestStructureAt(IHydroNetwork network, IChannel branch, double offset)
-        {
-            IWeir weir = new Weir {Chainage = offset};
-            var compositeBranchStructure = new CompositeBranchStructure
-            {
-                Network = network,
-                Geometry = new Point(offset, 0),
-                Chainage = offset
-            };
-            compositeBranchStructure.Structures.Add(weir);
-            branch.BranchFeatures.Add(compositeBranchStructure);
-        }
-
-        private static void AddTestCrossSectionAt(IChannel branch, double offset)
-        {
-            var crossSectionXyz = new CrossSectionDefinitionXYZ
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(offset - 1, 0),
-                    new Coordinate(offset + 1, 0)
-                })
-            };
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSectionXyz, offset);
-        }
-
-        private static void AddLateralAt(IChannel branch, double offset)
-        {
-            NetworkHelper.AddBranchFeatureToBranch(new LateralSource(), branch, offset);
-        }
-
-        private static void AddCrossSection(Channel branch, double chainage)
-        {
-            var crossSection = new CrossSectionDefinitionXYZ
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(chainage, 0),
-                    new Coordinate(chainage + 1, 0)
-                })
-            };
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSection, chainage);
         }
     }
 }

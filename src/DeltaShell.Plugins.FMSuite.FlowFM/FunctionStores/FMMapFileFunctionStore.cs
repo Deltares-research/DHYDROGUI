@@ -297,7 +297,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                                                                                     v.NumDimensions <= 2;
             List<NetCdfVariableInfo> timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
             List<UnstructuredGridCoverage> functions =
-                timeDepVariables.SelectMany(ProcessTimeDependentVariable).Where(c => c != null).ToList();
+                timeDepVariables.SelectMany(v => ProcessTimeDependentVariable(v, isUgridConvention))
+                                .Where(c => c != null).ToList();
 
             // Construct custom Velocity Coverage
             if (velocityCoverages.ContainsKey(EastwardSeaWaterVelocityStandardName) &&
@@ -482,7 +483,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         }
 
         private IEnumerable<UnstructuredGridCoverage> ProcessTimeDependentVariable(
-            NetCdfVariableInfo timeDependentVariable)
+            NetCdfVariableInfo timeDependentVariable, bool isUgridConvention)
         {
             UnstructuredGridCoverage coverage = null;
             NetCdfVariable netcdfVariable = timeDependentVariable.NetCdfDataVariable;
@@ -513,9 +514,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                                           ? string.Format("{0} ({1})", longName, netCdfVariableName)
                                           : netCdfVariableName;
 
-            GridApiDataSet.DataSetConventions convention = GetNcFileConvention();
-
-            string location = convention == GridApiDataSet.DataSetConventions.CONV_UGRID
+            string location = isUgridConvention
                                   ? netCdfFile.GetAttributeValue(netcdfVariable,
                                                                  GridApiDataSet.UGridAttributeConstants.Names.Location)
                                   : secondDimensionName; // backwards compatibility

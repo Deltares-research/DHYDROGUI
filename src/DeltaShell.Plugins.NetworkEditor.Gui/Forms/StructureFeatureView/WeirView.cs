@@ -362,12 +362,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 return new PierWeirFormulaView {Data = pierWeirFormula};
             }
 
-            var freeFormWeirFormula = weirFormula as FreeFormWeirFormula;
-            if (freeFormWeirFormula != null)
-            {
-                return new FreeFormWeirFormulaView {Data = freeFormWeirFormula};
-            }
-
             var gatedWeirFormula = weirFormula as GatedWeirFormula;
             if (gatedWeirFormula != null)
             {

@@ -10,6 +10,7 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.Common.Logging;
@@ -146,6 +147,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <remarks>
         /// If <paramref name="config"/> is null, the default MduFileWriteConfig will be used.
         /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="allFixedWeirsAndCorrespondingProperties"/> is <c>null</c>.
+        /// </exception>
         public void Write(string targetMduFilePath,
                           WaterFlowFMModelDefinition modelDefinition,
                           HydroArea hydroArea,
@@ -154,6 +158,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                           bool switchTo = true,
                           ISedimentModelData sedimentModelData = null)
         {
+            Ensure.NotNull(allFixedWeirsAndCorrespondingProperties, nameof(allFixedWeirsAndCorrespondingProperties));
+
             if (config == null)
             {
                 config = new MduFileWriteConfig();
@@ -757,6 +763,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
+        private static void UpdateFixedWeirs(HydroArea hydroArea, Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirPropertiesMapping)
+        {
+            //fix attributes for fixed weirs. Create attributes from modelfeaturecoordinatdata.
+            foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
+            {
+                fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
+
+                ModelFeatureCoordinateData<FixedWeir> correspondingModelFeatureCoordinateData = fixedWeirPropertiesMapping[fixedWeir];
+
+                if (correspondingModelFeatureCoordinateData == null)
+                {
+                    break;
+                }
+
+                for (var index = 0; index < correspondingModelFeatureCoordinateData.DataColumns.Count; index++)
+                {
+                    if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive)
+                    {
+                        break;
+                    }
+
+                    IList dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
+
+                    GeometryPointsSyncedList<double> syncedList;
+                    syncedList = new GeometryPointsSyncedList<double>
+                    {
+                        CreationMethod = (f, i) => 0.0,
+                        Feature = fixedWeir
+                    };
+                    fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] = syncedList;
+
+                    for (var i = 0; i < dataColumnWithData.Count; ++i)
+                    {
+                        syncedList[i] = (double)dataColumnWithData[i];
+                    }
+                }
+            }
+        }
+
         private static void InitializeFeatureWriter<TFeat>(string targetMduFilePath, IList<TFeat> features,
                                                            string extension,
                                                            WaterFlowFMProperty waterFlowFMProperty,
@@ -936,42 +981,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams.ToList(),
                           ref thinDamFile, FileConstants.ThinDamPliFileExtension, FileConstants.ThinDamPlizFileExtension);
 
-            //fix attributes for fixed weirs. Create attributes from modelfeaturecoordinatdata.
-            foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
-            {
-                fixedWeir.Attributes = new DictionaryFeatureAttributeCollection();
-
-                ModelFeatureCoordinateData<FixedWeir> correspondingModelFeatureCoordinateData =
-                    allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-
-                if (correspondingModelFeatureCoordinateData == null)
-                {
-                    break;
-                }
-
-                for (var index = 0; index < correspondingModelFeatureCoordinateData.DataColumns.Count; index++)
-                {
-                    if (!correspondingModelFeatureCoordinateData.DataColumns[index].IsActive)
-                    {
-                        break;
-                    }
-
-                    IList dataColumnWithData = correspondingModelFeatureCoordinateData.DataColumns[index].ValueList;
-
-                    GeometryPointsSyncedList<double> syncedList;
-                    syncedList = new GeometryPointsSyncedList<double>
-                    {
-                        CreationMethod = (f, i) => 0.0,
-                        Feature = fixedWeir
-                    };
-                    fixedWeir.Attributes[PliFile<FixedWeir>.NumericColumnAttributesKeys[index]] = syncedList;
-
-                    for (var i = 0; i < dataColumnWithData.Count; ++i)
-                    {
-                        syncedList[i] = (double) dataColumnWithData[i];
-                    }
-                }
-            }
+            UpdateFixedWeirs(hydroArea, allFixedWeirsAndCorrespondingProperties.ToDictionary(p => p.Feature));
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.FixedWeirFile,
                           hydroArea.FixedWeirs.ToList(),

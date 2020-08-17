@@ -18,17 +18,17 @@
         /// <summary>
         /// The location file property key.
         /// </summary>
-        public const string LocationFileKey = "locationfile";
+        public const string LocationFileKey = "locationFile";
 
         /// <summary>
         /// The forcing file property key.
         /// </summary>
-        public const string ForcingFileKey = "forcingfile";
+        public const string ForcingFileKey = "forcingFile";
 
         /// <summary>
         /// The thatcher harleman time lag property key.
         /// </summary>
-        public const string ThatcherHarlemanTimeLagKey = "return_time";
+        public const string ThatcherHarlemanTimeLagKey = "returnTime";
 
         /// <summary>
         /// The open boundary tolerance property key.

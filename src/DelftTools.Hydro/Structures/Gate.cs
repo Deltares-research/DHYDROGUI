@@ -1,3 +1,4 @@
+using System;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
@@ -5,6 +6,7 @@ using GeoAPI.Extensions.Feature;
 namespace DelftTools.Hydro.Structures
 {
     [Entity(FireOnCollectionChange = false)]
+    [Obsolete("D3DFMIQ-2083 Remove obsolete 1D functionality")]
     public class Gate : BranchStructure, IGate
     {
         public Gate() : this("Gate") {}

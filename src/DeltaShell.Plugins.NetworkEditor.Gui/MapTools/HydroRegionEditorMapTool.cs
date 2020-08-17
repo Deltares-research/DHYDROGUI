@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -39,8 +38,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
     //class is swiss army knife..todo identify separate responsibilities and split it
     public class HydroRegionEditorMapTool : MapTool, IHydroNetworkEditorMapTool
     {
-        public const string AddPointCrossSectionToolName = "add point cross-section";
-        public const string AddLineCrossSectionToolName = "add line cross-section";
         public const string AddChannelScribleToolName = "add branch (scribble way)";
         public const string AddChannelToolName = "add channel";
         public const string AddCatchmentToolName = "add catchment";
@@ -59,7 +56,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string AddBridgeToolName = "add bridge";
         public const string AddExtraResistanceToolName = "add new extra resistance";
         public const string AddNetworkLocationToolName = "add new network location";
-        public const string AddInterpolatedCrossSectionToolName = "add interpolated cross-section";
 
         public const string ThinDamToolName = "Thin dam tool (2D)";
         public const string FixedWeirToolName = "Fixed weir tool (2D)";
@@ -76,22 +72,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private static bool TopologyRulesEnabledState;
 
-        private static readonly Cursor PointCrossSectionCuror = MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmall);
         private static readonly Cursor NewInsertNodeCursor = MapCursors.CreateArrowOverlayCuror(Resources.NodeOnMultipleBranches);
         private static readonly Cursor NewLateralSourceCursor = MapCursors.CreateArrowOverlayCuror(Resources.LateralSourceSmall);
         private static readonly Cursor NewPumpCursor = MapCursors.CreateArrowOverlayCuror(Resources.PumpSmall);
         private static readonly Cursor AddCompositeStructureCursor = MapCursors.CreateArrowOverlayCuror(Resources.StructureFeatureSmall);
-        private static readonly Cursor NewLineCrossSectionCursor = MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmallXYZ);
         private static readonly Cursor NewRetentionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Retention);
         private static readonly Cursor NewObservationPointToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Observation);
         private static readonly Cursor AddNewWeirCursor = MapCursors.CreateArrowOverlayCuror(Resources.WeirSmall);
-        private static readonly Cursor NewCulvertToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.CulvertSmall);
-        private static readonly Cursor NewBridgeToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.BridgeSmall);
         private static readonly Cursor NewExtraResistanceToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.ExtraResistanceSmall);
         private static readonly Cursor NewWwtpToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.wwtp);
         private static readonly Cursor NewRunoffBoundaryToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.runoff);
         private static readonly Cursor NewLinkToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Link);
-        private static readonly Cursor AddInterpolatedCrossSectionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.AddInterpolatedCrossSection);
 
         // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
         private readonly List<IMapTool> mapTools = new List<IMapTool>();
@@ -251,17 +242,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var newInsertNodeTool = new NewPointFeatureTool<HydroNode>(InsertNodeToolName) { Cursor = NewInsertNodeCursor };
             AddMapTool(newInsertNodeTool);
 
-            var newPointCrossSectionTool = new NewPointFeatureTool<CrossSection>(AddPointCrossSectionToolName) { Cursor = PointCrossSectionCuror };
-            AddMapTool(newPointCrossSectionTool);
-
-            var newLineCrossSectionTool = new NewLineTool(FeatureTypeLayerFilter<CrossSection>, AddLineCrossSectionToolName)
-            {
-                AutoCurve = true,
-                Cursor = NewLineCrossSectionCursor
-            };
-            AddMapTool(newLineCrossSectionTool);
-
-            var newStructureFeatureTool = new NewPointFeatureTool<CompositeBranchStructure>(AddCompositeStructureToolName) { Cursor = AddCompositeStructureCursor };
+           var newStructureFeatureTool = new NewPointFeatureTool<CompositeBranchStructure>(AddCompositeStructureToolName) { Cursor = AddCompositeStructureCursor };
             AddMapTool(newStructureFeatureTool);
 
             var newPumpTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
@@ -288,12 +269,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var newWeirTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
                   && layer.DataSource.FeatureType == typeof(Weir) && layer.DataSource is HydroNetworkFeatureCollection, AddWeirToolName) { Cursor = AddNewWeirCursor };
             AddMapTool(newWeirTool);
-
-            var newCulvertTool = new NewPointFeatureTool<Culvert>(AddCulvertToolName) { Cursor = NewCulvertToolCursor };
-            AddMapTool(newCulvertTool);
-
-            var newBridgeTool = new NewPointFeatureTool<Bridge>(AddBridgeToolName) { Cursor = NewBridgeToolCursor };
-            AddMapTool(newBridgeTool);
 
             var newExtraResistanceTool = new NewPointFeatureTool<ExtraResistance>(AddExtraResistanceToolName) { Cursor = NewExtraResistanceToolCursor };
             AddMapTool(newExtraResistanceTool);
@@ -349,9 +324,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
             AddMapTool(new SingleFeature2DLineTool(HydroAreaLayerNames.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
-
-            var addInterpolatedCrossSectionTool = new NewPointFeatureTool(FeatureTypeLayerFilter<CrossSection>, AddInterpolatedCrossSectionToolName) { Cursor = AddInterpolatedCrossSectionToolCursor };
-            AddMapTool(addInterpolatedCrossSectionTool);
 
             MapControl.ActivateTool(MapControl.SelectTool);
         }

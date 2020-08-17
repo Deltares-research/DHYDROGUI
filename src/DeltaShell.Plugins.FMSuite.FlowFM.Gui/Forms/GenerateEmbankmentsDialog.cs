@@ -25,15 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 return double.TryParse(constantDistanceTextBox.Text, out constantDistance) ? constantDistance : double.NaN;
             }
         }
-
-        public bool CrossSectionBased
-        {
-            get
-            {
-                return radioButtonCrossSectionBased.Checked;
-            }
-        }
-
+        
         public bool GenerateLeftEmbankments
         {
             get

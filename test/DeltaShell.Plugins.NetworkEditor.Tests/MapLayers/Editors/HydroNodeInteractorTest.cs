@@ -1,6 +1,4 @@
 ﻿using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
@@ -192,38 +190,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(0, network.Nodes[1].Geometry.Coordinate.Y);
             Assert.AreEqual(60, network.Nodes[2].Geometry.Coordinate.X);
             Assert.AreEqual(0, network.Nodes[2].Geometry.Coordinate.Y);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void MoveNodeWithCrossSectionTest()
-        {
-            var crossSectionDef = new CrossSectionDefinitionYZ();
-
-            ICrossSection crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, crossSectionDef, 10);
-
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(5, -5, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(10, 0, 0);
-
-            var interactor = new HydroNodeInteractor(null, node2, null, null);
-            const double deltaX = 20;
-            const double deltaY = 0;
-
-            // start
-            interactor.Start();
-            interactor.MoveTracker(interactor.Trackers[0], deltaX, deltaY);
-            interactor.Stop();
-            // end
-
-            Assert.AreEqual(40, node2.Geometry.Coordinates[0].X);
-            Assert.AreEqual(0, branch1.Geometry.Coordinates[0].X);
-            Assert.AreEqual(0, branch1.Geometry.Coordinates[0].Y);
-            Assert.AreEqual(40, branch1.Geometry.Coordinates[branch1.Geometry.Coordinates.Length - 1].X);
-            Assert.AreEqual(0, branch1.Geometry.Coordinates[branch1.Geometry.Coordinates.Length - 1].Y);
-
-            Assert.AreEqual(20, crossSection.Geometry.Coordinates[0].X);
-            Assert.AreEqual(0, crossSection.Geometry.Coordinates[0].Y);
         }
 
         [Test]

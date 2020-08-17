@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -351,21 +350,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             if (FeatureType == typeof(Gate))
             {
                 return GetEnumerableList(Network.Gates.OfType<Gate>(), (INotifyCollectionChange) Network);
-            }
-
-            if (FeatureType == typeof(Culvert))
-            {
-                return GetEnumerableList(Network.Culverts.OfType<Culvert>(), (INotifyCollectionChange) Network);
-            }
-
-            if (FeatureType == typeof(Bridge))
-            {
-                return GetEnumerableList(Network.Bridges.OfType<Bridge>(), (INotifyCollectionChange) Network);
-            }
-
-            if (FeatureType == typeof(CrossSection))
-            {
-                return GetEnumerableList(Network.CrossSections.OfType<CrossSection>(), (INotifyCollectionChange) Network);
             }
 
             if (FeatureType == typeof(LateralSource))

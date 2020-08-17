@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
@@ -20,7 +19,6 @@ using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.IO;
-using MessageBox = DelftTools.Controls.Swf.MessageBox;
 using TreeView = DelftTools.Controls.Swf.TreeViewControls.TreeView;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
@@ -40,9 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private ContextMenuStrip contextMenuBranch;
         private ClonableToolStripMenuItem buttonMenuBranchDelete;
         private ClonableToolStripMenuItem buttonMenuBranchRename;
-        private ClonableToolStripMenuItem buttonMenuBranchAddCS;
         private IHydroRegion region;
-        private ContextMenuStrip contextMenuCrossSectionSectionTypes;
 
         public HydroRegionTreeView(GuiPlugin guiPlugin)
         {
@@ -80,43 +76,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 return new MenuItemContextMenuStripAdapter(contextMenuRoutes);
             }
 
-            if (tag is IEventedList<ICrossSectionDefinition>)
-            {
-                return new MenuItemContextMenuStripAdapter(contextMenuSharedCrossSectionDefinitions);
-            }
-
-            if (tag is ICrossSectionDefinition)
-            {
-                var strip = new ContextMenuStrip();
-                strip.Items.Add(buttonDataItemRename);
-                strip.Items.Add(buttonMenuFeatureDelete);
-                strip.Items.Add(showUsageToolStripMenuItem);
-                strip.Items.Add(setAsDefaultToolStripMenuItem);
-                strip.Items.Add(placeOnEmptyBranchesToolStripMenuItem);
-                buttonMenuFeatureDelete.Enabled = true;
-                buttonDataItemRename.Enabled = true;
-                showUsageToolStripMenuItem.Visible = true;
-                setAsDefaultToolStripMenuItem.Visible = true;
-                setAsDefaultToolStripMenuItem.Enabled = SelectedNetwork != null && SelectedNetwork.DefaultCrossSectionDefinition != tag;
-                placeOnEmptyBranchesToolStripMenuItem.Visible = CheckIfExistsEmptyBranchesWithinNetwork();
-                return new MenuItemContextMenuStripAdapter(strip);
-            }
-
-            if (tag is IEventedList<CrossSectionSectionType>)
-            {
-                return new MenuItemContextMenuStripAdapter(contextMenuCrossSectionSectionTypes);
-            }
-
-            if (tag is CrossSectionSectionType)
-            {
-                var strip = new ContextMenuStrip();
-                strip.Items.Add(buttonMenuFeatureDelete);
-                ITreeNodePresenter p = treeNode.Presenter;
-                object parentNodeData = TreeView.SelectedNode.Parent.Tag;
-                buttonMenuFeatureDelete.Enabled = p.CanRemove(parentNodeData, tag);
-                return new MenuItemContextMenuStripAdapter(strip);
-            }
-
             if (tag is IChannel)
             {
                 buttonMenuBranchZoomTo.Enabled = isActiveViewMapView;
@@ -144,11 +103,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             return null;
         }
 
-        public void WaitUntilAllEventsAreProcessed()
-        {
-            TreeView.WaitUntilAllEventsAreProcessed();
-        }
-
         public new void Dispose()
         {
             gui.SelectionChanged -= GuiSelectionChanged;
@@ -156,15 +110,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         }
 
         private IHydroRegion SelectedRegion { get; set; }
-
-        private IHydroNetwork SelectedNetwork
-        {
-            get
-            {
-                return SelectedRegion as IHydroNetwork;
-            }
-        }
-
+        
         private void AddNodePresenters(GuiPlugin guiPlugin)
         {
             var treeNodePresenters = new ITreeNodePresenter[]
@@ -176,14 +122,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 new CatchmentTypesNodePresenter(guiPlugin),
                 new CatchmentTypeNodePresenter(guiPlugin),
                 new ChannelTreeViewNodePresenter(guiPlugin),
-                new CrossSectionTreeViewNodePresenter(guiPlugin),
                 new LateralSourceTreeViewNodePresenter(guiPlugin),
                 new RetentionNodePresenter(guiPlugin),
                 new ObservationPointTreeViewNodePresenter(guiPlugin),
-                new CrossSectionSectionTypeTreeViewNodePresenter(guiPlugin),
-                new CrossSectionSectionTypesTreeViewNodePresenter(guiPlugin),
-                new SharedCrossSectionDefinitionTreeViewNodePresenter(guiPlugin),
-                new SharedCrossSectionDefinitionsTreeViewNodePresenter(guiPlugin),
                 new NetworkRoutesTreeViewNodePresenter(guiPlugin),
                 new NetworkRouteTreeViewNodePresenter(guiPlugin),
                 new CompositeStructureTreeViewNodePresenter(guiPlugin),
@@ -338,139 +279,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         }
 
         private void ButtonMenuFeatureCutClick(object sender, EventArgs e) {}
-
-        private void HandleButtonAddCrossSectionClick(object sender, EventArgs e)
-        {
-            var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel == null)
-            {
-                return;
-            }
-
-            var formPasteCrossSection = new FormPasteBranchFeature
-            {
-                Branch = channel,
-                Title =
-                    "Insert new default cross section into channel."
-            };
-            formPasteCrossSection.textBoxShift.Enabled = true;
-            formPasteCrossSection.textBoxShift.Visible = true;
-            formPasteCrossSection.labelShift.Visible = true;
-
-            if (DialogResult.OK != formPasteCrossSection.ShowDialog())
-            {
-                return;
-            }
-
-            ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.YZ, channel,
-                                                                    formPasteCrossSection.Chainage);
-            channel.BranchFeatures.Add(crossSection);
-
-            crossSection.Definition.ShiftLevel(formPasteCrossSection.Shift);
-            crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(region, crossSection);
-            gui.Selection = crossSection;
-        }
-
-        private void AddSectionTypeToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (SelectedNetwork != null)
-            {
-                var sectionType = new CrossSectionSectionType
-                {
-                    Name = NetworkHelper.GetUniqueName(HydroNetwork.CrossSectionSectionFormat,
-                                                       SelectedNetwork.CrossSectionSectionTypes, "section")
-                };
-
-                SelectedNetwork.CrossSectionSectionTypes.Add(sectionType);
-            }
-        }
-
-        private void ZWTabulatedToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            AddDefinitionToNetwork(CrossSectionDefinitionZW.CreateDefault());
-        }
-
-        private void YZToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            AddDefinitionToNetwork(CrossSectionDefinitionYZ.CreateDefault());
-        }
-
-        private void AddDefinitionToNetwork(ICrossSectionDefinition definition)
-        {
-            if (SelectedNetwork != null)
-            {
-                definition.Name = NetworkHelper.GetUniqueName("CrossSectionDefinition{0:D3}",
-                                                              SelectedNetwork.SharedCrossSectionDefinitions, "");
-
-                SelectedNetwork.SharedCrossSectionDefinitions.Add(definition);
-            }
-        }
         
-        private void ShowUsageToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;
-
-            if (definition != null && SelectedNetwork != null)
-            {
-                IList<ICrossSection> usages = definition.FindUsage(SelectedNetwork);
-
-                string message = string.Format("Cross section definition '{0}' ", definition.Name);
-
-                if (usages.Any())
-                {
-                    string usage = string.Join("\n", usages.Select(
-                                                   x => string.Format(" {0} at {1}, {2:0.###}", x.Name, x.Branch, x.Chainage)).ToArray());
-
-                    message = string.Format("{0} is used in the following cross sections: \n\n{1}",
-                                            message, usage);
-                }
-                else
-                {
-                    message = string.Format("{0} is unused", message);
-                }
-
-                string caption = string.Format("Usage of {0}", definition.Name);
-
-                MessageBox.Show(message, caption);
-            }
-        }
-
-        private void SetAsDefaultToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;
-
-            if (definition != null && SelectedNetwork != null)
-            {
-                SelectedNetwork.DefaultCrossSectionDefinition = definition;
-            }
-        }
-
-        //todo: move this to validation quick-fix someday
-        private void PlaceOnEmptyBranchesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;
-
-            if (definition != null && SelectedNetwork != null)
-            {
-                foreach (IChannel channel in SelectedNetwork.Channels.Where(c => !c.CrossSections.Any()))
-                {
-                    var crossSection = new CrossSection(new CrossSectionDefinitionProxy(definition));
-                    NetworkHelper.AddBranchFeatureToBranch(crossSection, channel, channel.Length / 2.0);
-
-                    crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(SelectedNetwork, crossSection);
-                }
-            }
-        }
-
-        private bool CheckIfExistsEmptyBranchesWithinNetwork()
-        {
-            IEnumerable<IChannel> channelsWithoutCrossSections = SelectedNetwork != null
-                                                                     ? SelectedNetwork.Channels.Where(c => !c.CrossSections.Any())
-                                                                     : new Channel[0];
-            int count = channelsWithoutCrossSections.Count();
-            return count > 0;
-        }
-
         #region IView Members
 
         object IView.Data

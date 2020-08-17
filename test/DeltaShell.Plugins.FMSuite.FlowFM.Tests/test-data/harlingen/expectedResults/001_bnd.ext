@@ -1,40 +1,48 @@
 
 [boundary]
 quantity=waterlevelbnd
-locationfile=071_01.pli
-forcingfile=WaterLevel.bc
+locationFile=071_01.pli
+forcingFile=WaterLevel.bc
+returnTime=0.0000000e+000
 
 [boundary]
 quantity=waterlevelbnd
-locationfile=071_02.pli
-forcingfile=WaterLevel.bc
+locationFile=071_02.pli
+forcingFile=WaterLevel.bc
+returnTime=0.0000000e+000
 
 [boundary]
 quantity=waterlevelbnd
-locationfile=071_03.pli
-forcingfile=WaterLevel.bc
+locationFile=071_03.pli
+forcingFile=WaterLevel.bc
+returnTime=0.0000000e+000
 
 [boundary]
 quantity=salinitybnd
-locationfile=071_01.pli
-forcingfile=Salinity.bc
+locationFile=071_01.pli
+forcingFile=Salinity.bc
+returnTime=0.0000000e+000
 
 [boundary]
 quantity=salinitybnd
-locationfile=071_02.pli
-forcingfile=Salinity.bc
+locationFile=071_02.pli
+forcingFile=Salinity.bc
+returnTime=0.0000000e+000
 
 [boundary]
 quantity=salinitybnd
-locationfile=071_03.pli
-forcingfile=Salinity.bc
+locationFile=071_03.pli
+forcingFile=Salinity.bc
+returnTime=0.0000000e+000
 
 [boundary]
 quantity=salinitybnd
-locationfile=L1.pli
-forcingfile=Salinity.bc
+locationFile=L1.pli
+forcingFile=Salinity.bc
+returnTime=0.0000000e+000
 
 [boundary]
 quantity=dischargebnd
-locationfile=L1.pli
-forcingfile=Discharge.bc
+locationFile=L1.pli
+forcingFile=Discharge.bc
+returnTime=0.0000000e+000

@@ -61,26 +61,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap AddDefaultCrossSectionDefinition {
-            get {
-                object obj = ResourceManager.GetObject("AddDefaultCrossSectionDefinition", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap AddInterpolatedCrossSection {
-            get {
-                object obj = ResourceManager.GetObject("AddInterpolatedCrossSection", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         public static byte[] AddPointCursor {
@@ -205,35 +185,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The entered value is either too large or too small, please enter a number between -1.79769313486232E+308 &amp; 1.79769313486232E+308.
-        /// </summary>
-        public static string CrestValidationRule_Validate_The_entered_value_is_either_too_large_or_too_small__please_enter_a_number_between__1_79769313486232E_308___1_79769313486232E_308 {
-            get {
-                return ResourceManager.GetString("CrestValidationRule_Validate_The_entered_value_is_either_too_large_or_too_small__" +
-                        "please_enter_a_number_between__1_79769313486232E_308___1_79769313486232E_308", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The entered value is not a number, please enter a number greater than 0.
-        /// </summary>
-        public static string CrestValidationRule_Validate_The_entered_value_is_not_a_number__please_enter_a_number_greater_than_0 {
-            get {
-                return ResourceManager.GetString("CrestValidationRule_Validate_The_entered_value_is_not_a_number__please_enter_a_nu" +
-                        "mber_greater_than_0", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The entered value must be greater than 0.
-        /// </summary>
-        public static string CrestValidationRule_Validate_The_entered_value_must_be_greater_than_0 {
-            get {
-                return ResourceManager.GetString("CrestValidationRule_Validate_The_entered_value_must_be_greater_than_0", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cross section definition.
         /// </summary>
         public static string CrossSectionDefinitionProperties_DisplayName {
@@ -262,16 +213,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionSectionTypeAdd {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionSectionTypeAdd", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cross section type.
         /// </summary>
         public static string CrossSectionSectionTypeProperties_DisplayName {
@@ -281,81 +222,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionSectionTypes {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionSectionTypes", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionSmall {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionSmallWithExclamation {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionSmallWithExclamation", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionSmallXYZ {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionSmallXYZ", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionStandardSmall {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionStandardSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionTabulatedSmall {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionTabulatedSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Culvert.
         /// </summary>
         public static string CulvertProperties_DisplayName {
             get {
                 return ResourceManager.GetString("CulvertProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CulvertSmall {
-            get {
-                object obj = ResourceManager.GetObject("CulvertSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -1279,16 +1150,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap SharedCrossSectionDefinitions {
-            get {
-                object obj = ResourceManager.GetObject("SharedCrossSectionDefinitions", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap show_only_selection {
             get {
                 object obj = ResourceManager.GetObject("show_only_selection", resourceCulture);
@@ -1419,25 +1280,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("WeirSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The weir {0} does not support Time Series..
-        /// </summary>
-        public static string WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_ {
-            get {
-                return ResourceManager.GetString("WeirViewModel_EditTimeSeries_The_weir__0__does_not_support_Time_Series_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This formula type: &apos;{0}&apos; is not (yet) supported.
-        /// </summary>
-        public static string WeirViewModel_GetSelectableWeirFormulaType_This_formula_type____0___is_not__yet__supported {
-            get {
-                return ResourceManager.GetString("WeirViewModel_GetSelectableWeirFormulaType_This_formula_type____0___is_not__yet__" +
-                        "supported", resourceCulture);
             }
         }
         

@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -24,7 +23,6 @@ using DeltaShell.Plugins.HydroNetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
@@ -144,7 +142,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             get
             {
-                return new Ribbon();
+                return new Ribbon(Gui);
             }
         }
 
@@ -189,7 +187,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
-            yield return new PropertyInfo<ICrossSectionDefinition, CrossSectionDefinitionProperties>();
             yield return new PropertyInfo<IHydroNode, HydroNodeProperties>();
             yield return new PropertyInfo<IHydroNetwork, HydroNetworkProperties>();
             yield return new PropertyInfo<DrainageBasin, DrainageBasinProperties>();
@@ -203,7 +200,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<RunoffBoundary, RunoffBoundaryProperties>();
             yield return new PropertyInfo<NetworkLocation, NetworkLocationProperties>();
             yield return new PropertyInfo<NetworkSegment, NetworkSegmentProperties>();
-            yield return new PropertyInfo<CrossSectionSectionType, CrossSectionSectionTypeProperties>();
             yield return new PropertyInfo<HydroLink, HydroLinkProperties>();
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
         }
@@ -236,27 +232,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
                     v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
                     v.SetCreateFeatureRowFunction(feature => new GatePropertiesRow((IGate) feature));
-                }
-            };
-            yield return new ViewInfo<ICrossSection, CrossSectionView>
-            {
-                Description = "Cross-section view",
-                AfterCreate = (v, o) =>
-                {
-                    v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
-                    v.EditDefinitionClicked += (s, e) => Gui.CommandHandler.OpenView(e.Item);
-                }
-            };
-            yield return new ViewInfo<ICrossSectionDefinition, CrossSectionDefinitionView>
-            {
-                AfterCreate = (v, o) =>
-                {
-                    v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
-
-                    //get the network that has this definition.
-                    IHydroNetwork network = Gui.Application.Project.GetAllItemsRecursive().OfType<IHydroNetwork>().FirstOrDefault(n => n.SharedCrossSectionDefinitions.Contains(o));
-                    CrossSectionDefinitionViewModel viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(o, network);
-                    v.ViewModel = viewModel;
                 }
             };
             yield return new ViewInfo<Embankment, IGeometry, GeometryEditor>
@@ -683,21 +658,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 Gui.DocumentViews.Remove(view);
             }
-
-            IView[] csDefinitionViews =
-                Gui.DocumentViews.Where(
-                    v => v.Data is ICrossSectionDefinition &&
-                         network.BranchFeatures.OfType<ICrossSection>()
-                                .Any(
-                                    cs =>
-                                        cs.Definition is CrossSectionDefinitionProxy &&
-                                        ((CrossSectionDefinitionProxy) cs.Definition).InnerDefinition.Equals(v.Data))).ToArray();
-
-            foreach (IView view in csDefinitionViews)
-            {
-                Gui.DocumentViews.Remove(view);
-            }
-
+            
             // remove network layer from all maps
             MapView[] mapViews = Gui.DocumentViews.AllViews.OfType<MapView>().ToArray();
             foreach (MapView view in mapViews)
@@ -834,18 +795,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
                 region = HydroRegionEditorHelper.RootGetHydroRegion(mapView);
             }
-            else if (activeView is CrossSectionView)
-            {
-                var crossSection = activeView.Data as ICrossSection;
-                if (crossSection != null)
-                {
-                    region = (IHydroRegion) crossSection.Network;
-                }
-            }
-            else if (activeView is CrossSectionDefinitionView)
-            {
-                region = (activeView as CrossSectionDefinitionView).ViewModel.HydroNetwork;
-            }
             else if (activeView != null)
             {
                 region = activeView.Data as IHydroNetwork;
@@ -889,20 +838,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 Gui.Selection = hydroRegionTreeView.TreeView.SelectedNode.Tag;
 
                 settingGuiSelection = false;
-            }
-
-            var crossSection = Gui.Selection as ICrossSection;
-
-            if (crossSection == null)
-            {
-                return;
-            }
-
-            IEnumerable<CrossSectionView> crossSectionViews = Gui.DocumentViews.OfType<CrossSectionView>();
-
-            foreach (CrossSectionView view in crossSectionViews.Where(v => !v.Locked))
-            {
-                view.Data = crossSection;
             }
         }
 
