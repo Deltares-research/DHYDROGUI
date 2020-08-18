@@ -15,6 +15,11 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// <summary>
         /// Initializes a new instance of the <see cref="RestartFile"/> class.
         /// </summary>
+        public RestartFile() : this(null) {}
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestartFile"/> class.
+        /// </summary>
         /// <param name="path">The path.</param>
         /// <exception cref="ArgumentException">
         /// <paramref name="path"/> contains invalid characters such as ", &, >, or |, or if <paramref name="path"/> is empty.
