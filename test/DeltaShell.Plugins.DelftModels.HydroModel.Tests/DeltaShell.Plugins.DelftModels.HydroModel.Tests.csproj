@@ -75,7 +75,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.TestUtils">
       <HintPath>..\..\packages\DeltaShell.TestProject.1.6.0-beta.0b49ca6\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
@@ -96,7 +96,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.IntegrationTestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DeltaShell.IntegrationTestUtils">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.TestProject.1.6.0-beta.0b49ca6\lib\net40\DeltaShell.IntegrationTestUtils.dll</HintPath>
       <Private>False</Private>
@@ -233,7 +233,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SharpMapTestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpMapTestUtils">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.TestProject.1.6.0-beta.0b49ca6\lib\net40\SharpMapTestUtils.dll</HintPath>
       <Private>False</Private>
