@@ -79,6 +79,7 @@
     <Compile Include="DimrApiFactory.cs" />
     <Compile Include="DimrApiWrapper.cs" />
     <Compile Include="DimrErrorCodeException.cs" />
+    <Compile Include="DimrRunHelper.cs" />
     <Compile Include="DimrRunner.cs" />
     <Compile Include="IDimrApi.cs" />
     <Compile Include="IDimrModel.cs" />
