@@ -214,9 +214,8 @@ def update_framework_revision(deltashell_root: Path,
     """
     # Note we currently not check for modifications, it might be better
     # to do so in the future.
-    p = subprocess.call(["svn", "update",
-                         "-r", "{}".format(revision),
-                         str(deltashell_root)])
+    p = subprocess.call(["git", "-C", str(deltashell_root),
+                         "checkout", "{}".format(revision)])
 
 
 def update_revision(run_config: RunConfig):
@@ -242,12 +241,11 @@ def clean_framework_bin(deltashell_root: Path,
         shutil.rmtree(str(bin_folder_path))
 
     for folder_path in (deltashell_root / Path("packages")).glob("*"):
-        p = subprocess.Popen(["svn", "info", str(folder_path)],
+        p = subprocess.Popen(["git", "-C", str(folder_path), "ls-files"],
                              stdout=subprocess.PIPE)
         output, error = p.communicate()
-        output = output.decode("utf-8")
 
-        if not ("Repository Root:" in output):
+        if not output:
             shutil.rmtree(str(folder_path))
 
 
