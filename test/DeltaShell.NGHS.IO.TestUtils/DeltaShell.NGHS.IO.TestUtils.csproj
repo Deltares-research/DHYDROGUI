@@ -57,7 +57,7 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.TestUtils">
       <HintPath>..\..\packages\DeltaShell.TestProject.1.6.0-beta.11e7767\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
