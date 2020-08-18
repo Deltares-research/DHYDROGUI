@@ -125,7 +125,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.Plugins.Scripting.Gui, Version=1.2.0.35290, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DeltaShell.Plugins.Scripting.Gui">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\plugins\DeltaShell.Plugins.Scripting.Gui\DeltaShell.Plugins.Scripting.Gui.dll</HintPath>
       <Private>False</Private>

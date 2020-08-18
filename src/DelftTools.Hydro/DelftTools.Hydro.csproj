@@ -99,7 +99,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="GeoAPI.CoordinateSystems, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+    <Reference Include="GeoAPI.CoordinateSystems">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
@@ -132,7 +132,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SharpMap, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpMap">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>

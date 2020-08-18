@@ -134,7 +134,7 @@
     <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
-    <Reference Include="Xceed.Wpf.Toolkit, Version=3.3.17121.18230, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
+    <Reference Include="Xceed.Wpf.Toolkit">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\Xceed.Wpf.Toolkit.dll</HintPath>
       <Private>False</Private>
