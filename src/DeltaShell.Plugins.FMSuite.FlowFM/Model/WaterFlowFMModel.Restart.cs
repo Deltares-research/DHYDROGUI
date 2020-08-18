@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
@@ -8,7 +9,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     // The Restart related code for WaterFlowFM..
     public partial class WaterFlowFMModel
     {
-        // TODO D3DFMIQ-2075
+        /// <summary>
+        /// Gets the input restart file.
+        /// </summary>
+        public RestartFile RestartInput { get; } = new RestartFile();
+
         public bool UseRestart { get; set; }
 
         public virtual bool UseSaveStateTimeRange
