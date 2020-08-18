@@ -207,7 +207,7 @@
     <Compile Include="IO\MduFileWriteConfig.cs" />
     <Compile Include="IO\MorphologyBoundaryConditionQuantityType.cs" />
     <Compile Include="IO\Files\Helpers\MorphologySedimentIniFileHelper.cs" />
-    <Compile Include="IO\ImportExport\Importers\FMRstFileImporter.cs" />
+    <Compile Include="IO\ImportExport\Importers\FMRestartFileImporter.cs" />
     <Compile Include="IO\ImportExport\ImportersExporters\PolFileImporterExporter.cs" />
     <Compile Include="IO\DataAccessObjects\UnsupportedFileBasedExtForceFileItem.cs" />
     <Compile Include="IO\Operator.cs" />
