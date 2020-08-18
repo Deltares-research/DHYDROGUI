@@ -407,10 +407,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         // TODO D3DFMIQ-2076
-        public bool UseRestart { get; set; }
+        public virtual bool UseRestart { get; set; }
 
         // TODO D3DFMIQ-2076
-        public bool WriteRestart { get; set; }
+        public virtual bool WriteRestart { get; set; }
 
         [EditAction]
         protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

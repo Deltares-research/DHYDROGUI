@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// </summary>
         public RestartFile RestartInput { get; } = new RestartFile();
 
-        public bool UseRestart { get; set; }
+        public virtual bool UseRestart { get; set; }
 
         public virtual bool UseSaveStateTimeRange
         {
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         // TODO D3DFMIQ-2075
-        public bool WriteRestart
+        public virtual bool WriteRestart
         {
             get => (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
             set => ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = value;
