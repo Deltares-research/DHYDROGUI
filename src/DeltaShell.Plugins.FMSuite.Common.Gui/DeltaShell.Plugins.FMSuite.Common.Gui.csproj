@@ -48,7 +48,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=1.6.0-beta.0b49ca6ure=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Shell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.0b49ca6\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
