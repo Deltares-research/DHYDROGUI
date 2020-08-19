@@ -123,6 +123,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Restart\RestartFileOutputFolder.cs" />
     <Compile Include="Restart\RestartFileContextMenu.cs" />
     <Compile Include="Restart\RestartFileNodePresenter.cs" />
   </ItemGroup>
