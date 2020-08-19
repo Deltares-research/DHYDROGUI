@@ -749,33 +749,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 Assert.That(result, Has.Member(waveBoundary));
             }
         }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void GivenInvalidWaveModel_WhenModelSaveTo_Then_LogsException()
-        {
-            // Given
-            var sphericalCoordinateSystemCode = 4326;
-            var waveModel = new WaveModel()
-            {
-                ModelDefinition = { WaveSetup = true },
-                OuterDomain = new WaveDomainData("wavedomaindata"),
-                CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(sphericalCoordinateSystemCode)
-            };
-            // We assume the model is not valid with the above configuration. If needed modify the model so that it will still fail.
-            Assert.That(waveModel.Validate().ErrorCount, Is.GreaterThan(0));
-            TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
-            {
-                // When
-                Action testAction = () => waveModel.ModelSaveTo(tempDirectory, false);
-                
-                // Then
-                TestHelper.AssertAtLeastOneLogMessagesContains(
-                    testAction,
-                    string.Format(
-                        Resources.WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_saving__Error___0_,
-                        string.Empty));
-            });
-        }
     }
 }
