@@ -99,6 +99,7 @@
     <Compile Include="AssertConstraints\ContainsOnlyConstraint.cs" />
     <Compile Include="AssertConstraints\Does.cs" />
     <Compile Include="AssertConstraints\ExistConstraint.cs" />
+    <Compile Include="AutoFixtureCustomizations\Create.cs" />
     <Compile Include="AutoFixtureCustomizations\RandomEnumCustomization.cs" />
     <Compile Include="AutoFixtureCustomizations\RandomEnumGenerator.cs" />
     <Compile Include="EnumDescriptionTestFixture.cs" />
