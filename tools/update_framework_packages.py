@@ -37,7 +37,7 @@ if __name__ == "__main__":
     nuget_version_tag = f"{args.prefix + '.' if args.prefix else ''}{version_number}"
     project_file_paths = search_files(root_path, '.csproj')
     
-    version_regex = r'1\.6\.0(?:-beta)?(?:-SIGNED)?.(?:.{7})?'
+    version_regex = r'1\.6\.0(?:-beta)?(?:-SIGNED)?(?:(\.|-)\b[0-9a-f]{7})'
     new_version_string = f"1.6.0-{nuget_version_tag}"
 
     find_and_replace_csproj = [
