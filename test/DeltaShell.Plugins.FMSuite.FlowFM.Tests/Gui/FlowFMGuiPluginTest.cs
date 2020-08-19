@@ -117,9 +117,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var treeNode = Substitute.For<ITreeNode>();
             treeNode.Parent.Returns((ITreeNode) null);
 
-            yield return new TestCaseData(restartFile, treeNode, Is.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
-            yield return new TestCaseData(restartFile, new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
-            yield return new TestCaseData(new object(), treeNode, Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
+            yield return new TestCaseData(treeNode, restartFile, Is.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
+            yield return new TestCaseData(treeNode, new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
+            yield return new TestCaseData(new object(), restartFile, Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
             yield return new TestCaseData(new object(), new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
         }
 
