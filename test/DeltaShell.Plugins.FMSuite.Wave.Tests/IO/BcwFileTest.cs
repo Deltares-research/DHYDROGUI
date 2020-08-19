@@ -129,6 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var functions = new List<IFunction>();
             string noValuesComponent = KnownWaveProperties.WaveHeight;
             string expectedErrorMssg = string.Format(Resources.BcwFile_WriteBoundaryData_No_values_given_for__0__, noValuesComponent);
+            string expectedLogMssg = $"While saving the following error was thrown: {expectedErrorMssg}, validate the model for more information.";
 
             // Generate Time series function with no values in one of the components.
             var timeSeriesFunction = new TimeSeries();
@@ -146,9 +147,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             };
             timeSeriesFunction.Arguments[0].Values.Add(new DateTime());
             timeSeriesFunction.Components.AddRange(
-                components.Select(c => new Variable<double>(c){ Unit = dummyUnit}));
+                components.Select(c => new Variable<double>(c) {Unit = dummyUnit}));
             timeSeriesFunction.Components
-                              .Single( c => c.Name.Equals(noValuesComponent))
+                              .Single(c => c.Name.Equals(noValuesComponent))
                               .Values.Clear();
 
             functions.Add(timeSeriesFunction);
@@ -159,11 +160,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             {
                 string filePath = Path.Combine(tempDirectory, fileName);
                 TestDelegate testAction = () => bcwFile.Write(boundaryConditionToFunctionsMappings, filePath);
-                
+
                 // Then
                 Assert.That(testAction, Throws.Nothing);
+                TestHelper.AssertAtLeastOneLogMessagesContains(testAction.Invoke, expectedLogMssg);
             });
         }
+
+
 
         [Test]
         [Category(TestCategory.DataAccess)]
