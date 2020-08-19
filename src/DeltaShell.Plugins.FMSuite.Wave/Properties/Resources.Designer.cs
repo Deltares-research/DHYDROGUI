@@ -61,6 +61,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No values given for {0}..
+        /// </summary>
+        public static string BcwFile_WriteBoundaryData_No_values_given_for__0__ {
+            get {
+                return ResourceManager.GetString("BcwFile_WriteBoundaryData_No_values_given_for__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find meteo file for &apos;{0}&apos;.
         /// </summary>
         public static string MdwFile_Could_not_find_meteo_file_for__0__ {
@@ -481,6 +490,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_f" +
                         "alse_when_using_Spherical_Coordinate_Systems_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error found while saving. Please validate the model before saving. Error: {0}.
+        /// </summary>
+        public static string WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_saving__Error___0_ {
+            get {
+                return ResourceManager.GetString("WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_" +
+                        "saving__Error___0_", resourceCulture);
             }
         }
         

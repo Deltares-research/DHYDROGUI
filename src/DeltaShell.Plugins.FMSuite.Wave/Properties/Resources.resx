@@ -301,4 +301,10 @@
   <data name="MdwFile_Could_not_find_meteo_file_for__0__" xml:space="preserve">
     <value>Could not find meteo file for '{0}'</value>
   </data>
+  <data name="BcwFile_WriteBoundaryData_No_values_given_for__0__" xml:space="preserve">
+    <value>No values given for {0}.</value>
+  </data>
+  <data name="WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_saving__Error___0_" xml:space="preserve">
+    <value>Error found while saving. Please validate the model before saving. Error: {0}</value>
+  </data>
 </root>
