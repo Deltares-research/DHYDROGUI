@@ -1970,6 +1970,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
+        [Test]
+        public void Constructor_CorrectRestartData()
+        {
+            // Call
+            var model = new WaterFlowFMModel();
+
+            // Assert
+            Assert.That(model.UseRestart, Is.False);
+            Assert.That(model.WriteRestart, Is.False);
+            Assert.That(model.RestartInput, Is.Not.Null);
+            Assert.That(model.RestartInput.Path, Is.Null);
+            Assert.That(model.RestartOutput, Is.Not.Null);
+            Assert.That(model.RestartOutput, Is.Empty);
+        }
+
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
         {
             var feature = new Weir2D() {WeirFormula = new SimpleWeirFormula()};
