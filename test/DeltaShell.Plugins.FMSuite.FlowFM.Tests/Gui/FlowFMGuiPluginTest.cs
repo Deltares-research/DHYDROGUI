@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Controls;
@@ -7,11 +9,16 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Gui.Restart;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.CoordinateSystems;
+using NetTopologySuite.IO;
+using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -66,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        public void GivenAFlowFMGuiPlugin_WhenGetProjectTreeViewNodePresentersIsCalled_AnEnumerableContainingAnFMClassMapFileFunctionStoreNodePresenterIsReturned()
+        public void GetProjectTreeViewNodePresenters_ContainsCorrectNodePresenters()
         {
             // Given
             var guiPlugin = new FlowFMGuiPlugin();
@@ -75,9 +82,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             ITreeNodePresenter[] nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
 
             // Then
-            FMClassMapFileFunctionStoreNodePresenter fmClassMapFileFunctionStoreNodePresenter = nodePresenters.OfType<FMClassMapFileFunctionStoreNodePresenter>().SingleOrDefault();
-            Assert.NotNull(fmClassMapFileFunctionStoreNodePresenter);
-            Assert.AreSame(guiPlugin, fmClassMapFileFunctionStoreNodePresenter.GuiPlugin);
+            var classMapFileNodePresenter = Contains<FMClassMapFileFunctionStoreNodePresenter>(nodePresenters);
+            Assert.That(classMapFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+
+            var restartFileNodePresenter = Contains<RestartFileNodePresenter>(nodePresenters);
+            Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+        }
+
+        private static T Contains<T>(ITreeNodePresenter[] source)
+        {
+            List<T> items = source.OfType<T>().ToList();
+            Assert.That(items, Has.Count.EqualTo(1), $"Collection should contain one {typeof(T).Name}");
+
+            return items[0];
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetContextMenuTestCaseData))]
+        public void GetContextMenu_ReturnsCorrectContextMenu(object sender, object data, ExactTypeConstraint typeConstraint)
+        {
+            // Setup
+            var plugin = new FlowFMGuiPlugin();
+
+            // Call
+            IMenuItem contextMenu = plugin.GetContextMenu(sender, data);
+
+            // Assert
+            Assert.That(contextMenu, typeConstraint);
+        }
+
+        private IEnumerable<TestCaseData> GetContextMenuTestCaseData()
+        {
+            var restartFile = new RestartFile();
+            var treeNode = Substitute.For<ITreeNode>();
+            treeNode.Parent.Returns((ITreeNode) null);
+
+            yield return new TestCaseData(restartFile, treeNode, Is.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
+            yield return new TestCaseData(restartFile, new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
+            yield return new TestCaseData(new object(), treeNode, Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
+            yield return new TestCaseData(new object(), new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
         }
 
         [Category(TestCategory.Jira)] // D3DFMIQ-614

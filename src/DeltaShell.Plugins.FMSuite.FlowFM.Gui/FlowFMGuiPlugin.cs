@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Resources;
 using DelftTools.Controls;
+using DelftTools.Controls.Swf;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -19,6 +20,8 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Gui.Restart;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -173,6 +176,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
         }
 
+        public override IMenuItem GetContextMenu(object sender, object data)
+        {
+            if (sender is RestartFile restartFile && data is ITreeNode node)
+            {
+                return new RestartFileContextMenu<WaterFlowFMModel>(restartFile, node);
+            }
+
+            return base.GetContextMenu(sender, data);
+        }
+
         /// <summary>
         /// Gets the project TreeView node presenters.
         /// </summary>
@@ -190,6 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new HeatFluxModelNodePresenter {GuiPlugin = this};
             yield return new WindItemListNodePresenter {GuiPlugin = this};
             yield return new WindItemNodePresenter {GuiPlugin = this};
+            yield return new RestartFileNodePresenter(this);
 
             yield return new Feature2DPolygonTreeViewNodePresenter {GuiPlugin = this};
             yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroAreaLayerNames.LandBoundariesPluralName, Properties.Resources.landboundary) {GuiPlugin = this};
