@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
@@ -1059,78 +1058,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                                           "Load 'T' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
                                           i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
         }
-
-        #endregion
-
-        #region Restart
-
-        // TODO D3DFMIQ-2076
-        //[Test]
-        //public void WaqModelForFractionCalculationWithValidDataAndRestartWithoutMetadataValidation()
-        //{
-        //    WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
-
-        //    string validRestartFilePath =
-        //        TestHelper.GetTestFilePath("valid_fractions_state_without_metadata_WAQ.zip");
-        //    waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
-        //    waterQualityModel.UseRestart = true;
-
-        //    ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
-        //    Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
-        //}
-
-        // TODO D3DFMIQ-2076
-        //[Test]
-        //public void WaqModelForFractionCalculationWithFailingOptionalRequirementRestartState()
-        //{
-        //    WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
-
-        //    string validRestartFilePath =
-        //        TestHelper.GetTestFilePath("valid_fractions_state_nonmatching_active_WAQ.zip");
-        //    waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
-        //    waterQualityModel.UseRestart = true;
-
-        //    ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
-        //    Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
-
-        //    /*
-        //    Assert.DoesNotThrow(() => WaterQualityModel1DValidator.ValidateStatic(waterQualityModel, true),
-        //        "Warnings should not be thrown");
-
-        //    Assert.DoesNotThrow(() => WaterQualityModel1DValidator.ValidateStatic(waterQualityModel, true),
-        //        "Active substances not relevant to fractions calculations: shouldn't throw");
-        //     */
-        //}
-
-        // TODO D3DFMIQ-2076
-        //[Test]
-        //public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleModelTypeValidation()
-        //{
-        //    WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
-
-        //    string validRestartFilePath =
-        //        TestHelper.GetTestFilePath("invalid_modeltype_state_WAQ.zip");
-        //    waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
-        //    waterQualityModel.UseRestart = true;
-
-        //    ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
-        //    ExpectValidationIssue(report, "Model type of 'test' is not compatible.");
-        //}
-
-        // TODO D3DFMIQ-2076
-        //[Test]
-        //public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleVersionValidation()
-        //{
-        //    WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
-
-        //    string validRestartFilePath =
-        //        TestHelper.GetTestFilePath("invalid_version_state_WAQ.zip");
-        //    waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
-        //    waterQualityModel.UseRestart = true;
-
-        //    ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
-        //    ExpectValidationIssue(report, "Version 2 is not supported.");
-        //}
 
         #endregion
 
