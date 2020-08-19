@@ -9,7 +9,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     // The Restart related code for WaterFlowFM..
-    public partial class WaterFlowFMModel : IRestartModel
+    public partial class WaterFlowFMModel
     {
         /// <summary>
         /// Gets the input restart file.
