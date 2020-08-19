@@ -326,7 +326,6 @@
     <Compile Include="RealTimeControlModelExtensionsTest.cs" />
     <Compile Include="RealTimeControlModelTest.cs" />
     <Compile Include="RealTimeControlGuiPluginTest.cs" />
-    <Compile Include="RealTimeControlModel_ModelRunsTest.cs" />
     <Compile Include="RealTimeControlTestHelperTest.cs" />
     <Compile Include="RealTimeControlUserInterfaceIntegrationTests.cs" />
     <Compile Include="RtcDataAccessListenerTest.cs" />
