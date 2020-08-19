@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public override IMenuItem GetContextMenu(object sender, object data)
         {
-            if (sender is RestartFile restartFile && data is ITreeNode node)
+            if (sender is ITreeNode node && data is RestartFile restartFile)
             {
                 return new RestartFileContextMenu<WaterFlowFMModel>(restartFile, node);
             }
