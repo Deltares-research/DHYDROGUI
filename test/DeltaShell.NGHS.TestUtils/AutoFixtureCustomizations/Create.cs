@@ -10,6 +10,7 @@ namespace DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations
     {
         private static readonly IFixture fixture = new Fixture()
                                                    .Customize(new AutoNSubstituteCustomization {ConfigureMembers = true})
+                                                   .Customize(new RandomBooleanSequenceCustomization())
                                                    .Customize(new RandomEnumCustomization());
 
         /// <summary>
