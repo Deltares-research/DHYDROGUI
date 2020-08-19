@@ -61,6 +61,26 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap restart {
+            get {
+                object obj = ResourceManager.GetObject("restart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap restart_empty {
+            get {
+                object obj = ResourceManager.GetObject("restart_empty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Converting strings to Types is currently not supported..
         /// </summary>
         internal static string TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_not_supported_ {

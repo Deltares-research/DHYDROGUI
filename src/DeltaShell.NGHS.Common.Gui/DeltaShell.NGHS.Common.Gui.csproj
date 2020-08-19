@@ -34,6 +34,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DelftTools.Controls, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1865a8a\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls.Swf, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1865a8a\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Controls.Wpf, Version=1.5.0.51496, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1865a8a\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
@@ -47,6 +57,11 @@
     <Reference Include="DelftTools.Shell.Gui, Version=1.5.0.51496, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1865a8a\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui.Swf, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1865a8a\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils, Version=1.5.0.51496, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -107,6 +122,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Restart\RestartFileNodePresenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
@@ -146,6 +162,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\restart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restart_empty.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

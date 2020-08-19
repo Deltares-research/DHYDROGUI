@@ -1,0 +1,71 @@
+﻿using System.Drawing;
+using DelftTools.Controls;
+using DelftTools.Shell.Gui;
+using DelftTools.Shell.Gui.Swf;
+using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.Gui.Properties;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
+
+namespace DeltaShell.NGHS.Common.Gui.Restart
+{
+    /// <summary>
+    /// Node presenter for the project tree for a <seealso cref="RestartFile"/>
+    /// </summary>
+    /// <seealso cref="TreeViewNodePresenterBaseForPluginGui{T}"/>
+    public sealed class RestartFileNodePresenter : TreeViewNodePresenterBaseForPluginGui<RestartFile>
+    {
+        private const string emptyRestartText = "Restart: empty";
+
+        private static readonly Image restartIcon = Resources.restart;
+        private static readonly Image emptyRestartIcon = Resources.restart_empty;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestartFileNodePresenter"/> class.
+        /// </summary>
+        /// <param name="guiPlugin">The GUI plugin.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="guiPlugin"/> is <c>null</c>.
+        /// </exception>
+        public RestartFileNodePresenter(GuiPlugin guiPlugin)
+            : base(guiPlugin)
+        {
+            Ensure.NotNull(guiPlugin, nameof(guiPlugin));
+        }
+
+        /// <summary>
+        /// Updates the specified <paramref name="node"/> node for the corresponding <paramref name="nodeData"/>.
+        /// </summary>
+        /// <param name="parentNode">This parameter is not used. </param>
+        /// <param name="node">The node.</param>
+        /// <param name="nodeData">The restart file as node data. </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="node"/> or <paramref name="nodeData"/> is <c>null</c>.
+        /// </exception>
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, RestartFile nodeData)
+        {
+            Ensure.NotNull(node, nameof(node));
+            Ensure.NotNull(nodeData, nameof(nodeData));
+
+            if (nodeData.IsEmpty)
+            {
+                UpdateEmptyRestartNode(node);
+            }
+            else
+            {
+                UpdateRestartNode(node, nodeData);
+            }
+        }
+
+        private static void UpdateRestartNode(ITreeNode node, RestartFile nodeData)
+        {
+            node.Text = nodeData.Name;
+            node.Image = restartIcon;
+        }
+
+        private static void UpdateEmptyRestartNode(ITreeNode node)
+        {
+            node.Text = emptyRestartText;
+            node.Image = emptyRestartIcon;
+        }
+    }
+}
