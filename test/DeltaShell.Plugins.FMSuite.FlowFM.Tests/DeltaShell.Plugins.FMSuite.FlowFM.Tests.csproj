@@ -429,7 +429,6 @@
     <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
     <Compile Include="WaterFlowFMImportExportTest.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversionTest.cs" />
-    <Compile Include="WaterFlowFMModelRestartIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelTracersTest.cs" />
     <Compile Include="WaterFlowFMResourcesTest.cs" />
     <Compile Include="WaterFlowFMModelDefinitionTest.cs" />
