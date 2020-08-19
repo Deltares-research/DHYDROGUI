@@ -422,7 +422,6 @@
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTest.cs" />
     <Compile Include="WaterFlowFMModel110LegacyLoaderTest.cs" />
-    <Compile Include="WaterFlowFMModelRestartTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.Output.cs" />
