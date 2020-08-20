@@ -2014,6 +2014,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.That(model.RestartInput, Is.SameAs(restartFile));
         }
 
+        [TestCase(null, false)]
+        [TestCase("path/to/the.file", true)]
+        public void GetUseRestart_ReturnsCorrectResult(string filePath, bool expected)
+        {
+            // Setup
+            var model = new WaterFlowFMModel {RestartInput = {Path = filePath}};
+
+            // Call
+            bool result = model.UseRestart;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
         {
             var feature = new Weir2D() {WeirFormula = new SimpleWeirFormula()};

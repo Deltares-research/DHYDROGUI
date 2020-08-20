@@ -172,7 +172,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return;
             }
 
-            UseRestart = true;
             RestartInput = new RestartFile(restartFilePath);
         }
 

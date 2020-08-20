@@ -116,8 +116,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             WaterFlowFMModel model = getModels().First(m => m.RestartInput == target);
 
-            model.UseRestart = true;
-
             return model.RestartInput = new RestartFile(path);
         }
     }

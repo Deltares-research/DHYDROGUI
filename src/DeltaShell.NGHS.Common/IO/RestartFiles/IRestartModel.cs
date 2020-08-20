@@ -8,9 +8,9 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
     public interface IRestartModel
     {
         /// <summary>
-        /// Gets or sets a value indicating whether or not this model uses a restart file.
+        /// Gets the value indicating whether or not this model uses a restart file.
         /// </summary>
-        bool UseRestart { get; set; }
+        bool UseRestart { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not this model should write restart files.

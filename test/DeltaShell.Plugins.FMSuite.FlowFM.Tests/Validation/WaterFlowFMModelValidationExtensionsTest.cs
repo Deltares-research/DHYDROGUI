@@ -34,13 +34,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void CheckThatInitializingFmModelWithSalinityAndTemperatureEnabledNoWarningMessagesAreGiven()
         {
+            // TODO D3DFMIQ-2075
             var model = new WaterFlowFMModel();
             //Enable Salinity and Temperature checkboxes
             WaterFlowFMProperty salinityProperty = model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity);
             WaterFlowFMProperty temperatureProperty = model.ModelDefinition.GetModelProperty(KnownProperties.Temperature);
             //Create a grid
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            model.UseRestart = true;
+            //model.UseRestart = true;
 
             //Validate model
             ValidationReport report = model.Validate();
@@ -151,9 +152,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void ValidateRestartInputReportTestRestartIsEmpty()
         {
+            // TODO D3DFMIQ-2075
             var model = new WaterFlowFMModel();
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            model.UseRestart = true;
+            //model.UseRestart = true;
 
             ValidationReport report = model.Validate();
             Assert.AreEqual(1, report.ErrorCount);

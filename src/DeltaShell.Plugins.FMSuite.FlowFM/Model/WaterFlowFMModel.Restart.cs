@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         // TODO D3DFMIQ-2165
         public IEnumerable<RestartFile> RestartOutput { get; } = Enumerable.Empty<RestartFile>();
 
-        public virtual bool UseRestart { get; set; }
+        public virtual bool UseRestart => !RestartInput.IsEmpty;
 
         public virtual bool UseSaveStateTimeRange
         {
