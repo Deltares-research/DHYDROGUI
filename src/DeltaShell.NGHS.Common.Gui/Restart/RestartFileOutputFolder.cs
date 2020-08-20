@@ -19,6 +19,9 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
         /// Initializes a new instance of the <see cref="RestartFileOutputTreeFolder"/> class.
         /// </summary>
         /// <param name="model">The restart model.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="model"/> is <c>null</c>.
+        /// </exception>
         public RestartFileOutputTreeFolder(IRestartModel model) : base(model,
                                                                        GetDataItems(model).ToList(),
                                                                        folderName,
