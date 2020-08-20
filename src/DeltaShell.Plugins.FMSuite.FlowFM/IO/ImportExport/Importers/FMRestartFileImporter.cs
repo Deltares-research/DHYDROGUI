@@ -12,10 +12,21 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
+    /// <summary>
+    /// Importer for importing restart files for D-Flow FM models.
+    /// </summary>
+    /// <seealso cref="IFileImporter"/>
     public class FMRestartFileImporter : IFileImporter
     {
         private readonly Func<IEnumerable<WaterFlowFMModel>> getModels;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FMRestartFileImporter"/> class.
+        /// </summary>
+        /// <param name="getModels">Func to retrieve the available collection of <seealso cref="WaterFlowFMModel"/>.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="getModels"/> is <c>null</c>.
+        /// </exception>
         public FMRestartFileImporter(Func<IEnumerable<WaterFlowFMModel>> getModels)
         {
             Ensure.NotNull(getModels, nameof(getModels));
@@ -23,14 +34,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             this.getModels = getModels;
         }
 
+        /// <inheritdoc cref="IFileImporter"/>
         public string Name => "Restart File";
 
+        /// <inheritdoc cref="IFileImporter"/>
         public string Category => "NetCdf";
 
+        /// <inheritdoc cref="IFileImporter"/>
         public string Description => string.Empty;
 
+        /// <inheritdoc cref="IFileImporter"/>
         public Bitmap Image => Resources.unstrucModel;
 
+        /// <inheritdoc cref="IFileImporter"/>
         public IEnumerable<Type> SupportedItemTypes
         {
             get
@@ -39,20 +55,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
         }
 
+        /// <inheritdoc cref="IFileImporter"/>
         public bool CanImportOnRootLevel => false;
 
+        /// <inheritdoc cref="IFileImporter"/>
         public string FileFilter => $"FM restart files|*{FileConstants.RestartFileExtension}";
 
+        /// <inheritdoc cref="IFileImporter"/>
         public string TargetDataDirectory { get; set; }
 
+        /// <inheritdoc cref="IFileImporter"/>
         public bool ShouldCancel { get; set; }
 
+        /// <inheritdoc cref="IFileImporter"/>
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
+        /// <inheritdoc cref="IFileImporter"/>
         public bool OpenViewAfterImport { get; private set; }
 
+        /// <summary>
+        /// Indicates whether this importer can import on the specified <paramref name="targetObject"/>.
+        /// </summary>
+        /// <param name="targetObject">Target object to check.</param>
+        /// <returns>
+        /// <c>true</c> when the <paramref name="targetObject"/> is a <see cref="RestartFile"/>;
+        /// otherwise, <c>false</c>.
+        /// </returns>
         public bool CanImportOn(object targetObject) => targetObject is RestartFile;
 
+        /// <summary>
+        /// Imports the restart file with path <paramref name="path"/>
+        /// </summary>
+        /// <param name="path"> The path of the restart file. </param>
+        /// <param name="target"> The target restart file. </param>
+        /// <returns>
+        /// The imported <seealso cref="RestartFile"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="target"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="path"/> is <c>null</c> or empty.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">
+        /// Thrown when the restart file at the specified <paramref name="path"/> does not exist.
+        /// </exception>
         public object ImportItem(string path, object target)
         {
             Ensure.NotNull(target, nameof(target));
