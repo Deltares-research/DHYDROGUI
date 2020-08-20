@@ -121,9 +121,9 @@ def clean_up_build(user: str, password: str, build_info: dict, tag: str) -> None
         unpin_build(user, password, build_id)
 
 
-def get_new_build(user: str, password: str, build_config: str, revision_number: str) -> None:
+def get_new_build(user: str, password: str, build_config: str, git_hash: str) -> None:
     """
-    Get the build from build_config with the specified revision number.
+    Get the build from build_config with the specified git hash number.
 
     Parameters
     ----------
@@ -133,12 +133,12 @@ def get_new_build(user: str, password: str, build_config: str, revision_number: 
         The password to authenticate with.
     build_config : str
         The name of the build configuration of which the build is part.
-    revision_number : str
-        The revision number of the build to be retrieved.
+    git_hash : str
+        The git hash of the build to be retrieved.
     """
-    build_url = "{}buildType:{},revision:{},count:1".format(BUILDS_ROOT, 
+    build_url = "{}buildType:{},number:{},count:1".format(BUILDS_ROOT,
                                                             build_config, 
-                                                            revision_number)
+                                                            git_hash)
 
     new_build_response = requests.get(build_url, 
                                       auth=(user, password), 
@@ -226,7 +226,7 @@ def parse_arguments():
     parser.add_argument("user", help="User to authenticate with.")
     parser.add_argument("password", help="Password to authenticate with.")
     parser.add_argument("tag_string", help="The string that is used to tag the build.")
-    parser.add_argument("revision_number", help="The revision number of the build to be pinned and tagged.")
+    parser.add_argument("git_hash", help="The short git hash of the build to be pinned and tagged.")
 
     return parser.parse_args()
 
@@ -239,7 +239,7 @@ if __name__ == "__main__":
     if old_build_info:
         clean_up_build(args.user, args.password, old_build_info, args.tag_string)
 
-    new_build_info = get_new_build(args.user, args.password, args.build_configuration_id, args.revision_number)
+    new_build_info = get_new_build(args.user, args.password, args.build_configuration_id, args.git_hash)
 
     if new_build_info:
         bag_new_build(args.user, args.password, new_build_info, args.tag_string)

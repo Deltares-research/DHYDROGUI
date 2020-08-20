@@ -23,23 +23,22 @@ def update_files(file_paths, find_and_replace_list, encoding=None):
 def get_args():
     """Parses and returns the arguments"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("svn_root_path", help="Path to the root of the SVN directory")
+    parser.add_argument("root_path", help="Path to the root of the working directory")
     parser.add_argument("version_number", help="Version number of the Framework NuGet package")
-    parser.add_argument("--postfix", help="Add the signed value to the revision number.")
+    parser.add_argument("--prefix", help="Add a prefix value to the nuget version tag (ie 1.2.3-PREFIX.abcdefg)")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = get_args()
-    root_path = Path(args.svn_root_path)
+    root_path = Path(args.root_path)
     version_number = args.version_number
-        
-    revision_number = f"{version_number}{args.postfix if args.postfix else ''}"
 
+    nuget_version_tag = f"{args.prefix + '.' if args.prefix else ''}{version_number}"
     project_file_paths = search_files(root_path, '.csproj')
     
-    version_regex = r'1\.5\.0\.\d{5}(?:-beta)?(?:-SIGNED)?'
-    new_version_string = f"1.5.0.{revision_number}"
+    version_regex = r'1\.6\.0(?:-beta)?(?:-SIGNED)?(?:(\.|-)\b[0-9a-f]{7})?'
+    new_version_string = f"1.6.0-{nuget_version_tag}"
 
     find_and_replace_csproj = [
         (re.compile(f'DeltaShell\\.Framework\\.{version_regex}'),   f"DeltaShell.Framework.{new_version_string}"),
