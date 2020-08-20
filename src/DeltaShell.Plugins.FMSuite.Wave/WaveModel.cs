@@ -20,6 +20,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
@@ -504,7 +505,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             // write spatial data:
             SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
 
-            SaveOutput(targetDir, switchTo);
+            var targetOutputDir = Path.Combine(Path.GetDirectoryName(targetDir), FileConstants.OutputDirectoryName);
+            SaveOutput(targetOutputDir, switchTo);
         }
 
         public void ReloadAllGrids()
@@ -1061,6 +1063,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void SaveOutput(string targetDirectory, bool switchTo)
         {
+            FileUtils.CreateDirectoryIfNotExists(targetDirectory, true);
+
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
             {
                 string oldOutputFilePath = wavmFileFunctionStore.Path;
@@ -1343,7 +1347,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private string GetMdwPathFromDeltaShellPath(string dsPath)
         {
             // dsproj_data/<model name>/<model name>.mdw
-            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, Name + ".mdw"));
+            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, FileConstants.InputDirectoryName, Name + ".mdw"));
         }
 
         #endregion
