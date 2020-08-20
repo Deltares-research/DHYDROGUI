@@ -59,7 +59,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             var menuItem = new ClonableToolStripMenuItem {Text = "Use as restart"};
             menuItem.Click += (s, e) =>
             {
-                model.RestartInput.Path = restartFile.Path;
+                model.RestartInput = restartFile;
                 model.UseRestart = true;
             };
 
@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             menuItem.Enabled = true;
             menuItem.Click += (s, e) =>
             {
-                model.RestartInput.Path = outputRestartFile.Path;
+                model.RestartInput = outputRestartFile;
                 model.UseRestart = true;
             };
 
@@ -99,7 +99,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             };
             menuItem.Click += (s, e) =>
             {
-                model.RestartInput.Path = null;
+                model.RestartInput = new RestartFile();
                 model.UseRestart = false;
             };
 

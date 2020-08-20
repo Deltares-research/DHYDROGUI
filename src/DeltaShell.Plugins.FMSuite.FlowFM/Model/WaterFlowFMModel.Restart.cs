@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
@@ -11,10 +12,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     // The Restart related code for WaterFlowFM..
     public partial class WaterFlowFMModel
     {
+        private RestartFile restartFile = new RestartFile();
+
         /// <summary>
-        /// Gets the input restart file.
+        /// Gets or sets the input restart file.
         /// </summary>
-        public RestartFile RestartInput { get; } = new RestartFile();
+        public RestartFile RestartInput
+        {
+            get => restartFile;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+
+                restartFile = value;
+            }
+        }
 
         // TODO D3DFMIQ-2165
         public IEnumerable<RestartFile> RestartOutput { get; } = Enumerable.Empty<RestartFile>();

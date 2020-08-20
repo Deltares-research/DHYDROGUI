@@ -17,6 +17,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -1983,6 +1984,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.That(model.RestartInput.Path, Is.Null);
             Assert.That(model.RestartOutput, Is.Not.Null);
             Assert.That(model.RestartOutput, Is.Empty);
+        }
+
+        [Test]
+        public void SetRestartInput_Null_ThrowsArgumentNullException()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+
+            // Call
+            void Call() => model.RestartInput = null;
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("value"));
+        }
+
+        [Test]
+        public void SetRestartInput_SetsCorrectly()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var restartFile = new RestartFile();
+
+            // Call
+            model.RestartInput = restartFile;
+
+            // Assert
+            Assert.That(model.RestartInput, Is.SameAs(restartFile));
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
