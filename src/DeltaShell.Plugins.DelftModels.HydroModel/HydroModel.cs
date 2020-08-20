@@ -1126,7 +1126,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 var copyModelsToMerge = new List<IModelMerge>(modelsToMerge);
                 foreach (IModelMerge modelToMerge in copyModelsToMerge)
                 {
-                    if (modelToMerge.DependendModels.Except(mergedModels).Any())
+                    if (modelToMerge.DependentModels.Except(mergedModels).Any())
                     {
                         continue;
                     }
@@ -1150,7 +1150,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependendModelsLookup)
+        public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependentModelsLookup)
         {
             if (!CanMerge(sourceModel))
             {
@@ -1205,7 +1205,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        public virtual IEnumerable<IModelMerge> DependendModels
+        public virtual IEnumerable<IModelMerge> DependentModels
         {
             get
             {

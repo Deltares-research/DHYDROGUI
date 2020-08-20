@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
@@ -23,6 +22,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
     /// <summary>
     /// NotifyPropertyChange attribute should not be necessary because base class
-    /// already has it applied. Projectexplorer does not function correctly when left out.
+    /// already has it applied. Project explorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
     public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel
@@ -99,10 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual RealTimeControlOutputFileFunctionStore OutputFileFunctionStore
         {
-            get
-            {
-                return outputFileFunctionStore;
-            }
+            get => outputFileFunctionStore;
             set
             {
                 outputFileFunctionStore = value;
@@ -119,6 +116,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         // TODO D3DFMIQ-2077
         public virtual bool WriteRestart { get; set; }
+
+        public IEnumerable<RestartFile> RestartOutput { get; } = Enumerable.Empty<RestartFile>();
 
         public virtual int LogLevel { get; set; }
 
@@ -143,24 +142,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual string LastWorkingDirectory { get; protected set; }
 
-        public virtual IEnumerable<IFeatureCoverage> OutputFeatureCoverages
-        {
-            get
-            {
-                return outputFileFunctionStore != null && outputFileFunctionStore.Functions != null
-                           ? outputFileFunctionStore.Functions.OfType<IFeatureCoverage>()
-                           : Enumerable.Empty<IFeatureCoverage>();
-            }
-        }
+        public virtual IEnumerable<IFeatureCoverage> OutputFeatureCoverages =>
+            outputFileFunctionStore != null && outputFileFunctionStore.Functions != null
+                ? outputFileFunctionStore.Functions.OfType<IFeatureCoverage>()
+                : Enumerable.Empty<IFeatureCoverage>();
 
         //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
-            get
-            {
-                return TimeProvider?.StartTime ?? base.StartTime;
-            }
+            get => TimeProvider?.StartTime ?? base.StartTime;
             set
             {
                 if (TimeProvider != null)
@@ -176,10 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [NoNotifyPropertyChange]
         public override DateTime StopTime
         {
-            get
-            {
-                return TimeProvider?.StopTime ?? base.StopTime;
-            }
+            get => TimeProvider?.StopTime ?? base.StopTime;
             set
             {
                 if (TimeProvider != null)
@@ -195,10 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [NoNotifyPropertyChange]
         public override TimeSpan TimeStep
         {
-            get
-            {
-                return TimeProvider?.TimeStep ?? base.TimeStep;
-            }
+            get => TimeProvider?.TimeStep ?? base.TimeStep;
             set
             {
                 if (TimeProvider != null)
@@ -215,10 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [Aggregation]
         public override object Owner
         {
-            get
-            {
-                return base.Owner;
-            }
+            get => base.Owner;
             set
             {
                 base.Owner = value;
@@ -228,10 +210,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual IEventedList<ControlGroup> ControlGroups
         {
-            get
-            {
-                return controlGroups;
-            }
+            get => controlGroups;
             set
             {
                 if (controlGroups != null)
@@ -256,10 +235,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual ICoordinateSystem CoordinateSystem
         {
-            get
-            {
-                return coordinateSystem;
-            }
+            get => coordinateSystem;
             set
             {
                 coordinateSystem = value;
@@ -270,13 +246,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public virtual IEnumerable<IModel> ControlledModels
-        {
-            get
-            {
-                return internalControlledModelsList;
-            }
-        }
+        public virtual IEnumerable<IModel> ControlledModels => internalControlledModelsList;
 
         public override string KernelVersions
         {
@@ -294,7 +264,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public virtual void RefreshInitialState()
         {
             //#$*(# dataitems #$*&#@(
-            //we revert the output/dataitem to its original state here
+            //we revert the output/data item to its original state here
             foreach (ControlGroup controlGroup in ControlGroups)
             {
                 foreach (Output output in controlGroup.Outputs)
@@ -420,10 +390,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         protected virtual IEventedList<IModel> InternalControlledModelsList
         {
-            get
-            {
-                return internalControlledModelsList;
-            }
+            get => internalControlledModelsList;
             set
             {
                 if (internalControlledModelsList != null)
@@ -460,7 +427,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             base.OnDataItemLinking(sender, e);
 
-            if (e.Source.ValueConverter != null && e.Source.ValueConverter.OriginalValue is Output)
+            if (e.Source.ValueConverter?.OriginalValue is Output)
             {
                 e.UseValueFromTarget = true; // makes sure that initial value used by Output is set
             }
@@ -478,11 +445,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             base.OnDataItemLinked(sender, e);
 
             // update feature
-            if (e.Source.ValueConverter != null && e.Source.ValueConverter.OriginalValue is ConnectionPoint)
+            if (e.Source.ValueConverter?.OriginalValue is ConnectionPoint)
             {
                 UpdateFeatureAndParameter(e.Source);
             }
-            else if (e.Target.ValueConverter != null && e.Target.ValueConverter.OriginalValue is ConnectionPoint)
+            else if (e.Target.ValueConverter?.OriginalValue is ConnectionPoint)
             {
                 UpdateFeatureAndParameter(e.Target);
             }
@@ -494,13 +461,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             // update feature
             ConnectionPoint connection = null;
-            if (e.Source.ValueConverter != null && e.Source.ValueConverter.OriginalValue is ConnectionPoint)
+            if (e.Source.ValueConverter?.OriginalValue is ConnectionPoint connectionPoint)
             {
-                connection = (ConnectionPoint) e.Source.ValueConverter.OriginalValue;
+                connection = connectionPoint;
             }
-            else if (e.Target.ValueConverter != null && e.Target.ValueConverter.OriginalValue is ConnectionPoint)
+            else if (e.Target.ValueConverter?.OriginalValue is ConnectionPoint connectionPoint2)
             {
-                connection = (ConnectionPoint) e.Target.ValueConverter.OriginalValue;
+                connection = connectionPoint2;
             }
 
             if (connection != null)
@@ -566,8 +533,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private void OwnerModelsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //todo: test aggregation of list
-            var model = e.GetRemovedOrAddedItem() as IModel;
-            if (model == null || model is RealTimeControlModel)
+            if (!(e.GetRemovedOrAddedItem() is IModel model) || model is RealTimeControlModel)
             {
                 return;
             }
@@ -582,7 +548,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     OnRemoveModel();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidEnumArgumentException(nameof(e.Action), (int) e.Action, typeof(NotifyCollectionChangeAction));
             }
         }
 
@@ -759,8 +725,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private void ControlledModelsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // required for project load
-            var model = e?.GetRemovedOrAddedItem() as IModel;
-            if (model == null)
+            if (!(e?.GetRemovedOrAddedItem() is IModel))
             {
                 return;
             }
@@ -807,7 +772,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             ConnectionPoint connection;
             if (dataItem.LinkedTo != null)
             {
-                if (dataItem.ValueConverter == null || !(dataItem.ValueConverter.OriginalValue is ConnectionPoint))
+                if (!(dataItem.ValueConverter?.OriginalValue is ConnectionPoint))
                 {
                     return;
                 }
@@ -825,7 +790,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ReplaceSingleFeatureInOutputFeatureCoverages(lastRelinkedFeature, connection.Feature); //(part of clone logic)
             }
 
-            if (dataItem.LinkedBy.Count == 0 || dataItem.ValueConverter == null || !(dataItem.ValueConverter.OriginalValue is ConnectionPoint))
+            if (dataItem.LinkedBy.Count == 0 || !(dataItem.ValueConverter?.OriginalValue is ConnectionPoint))
             {
                 return;
             }
@@ -881,55 +846,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         #region Overrides of TimeDependentModelBase
 
-        public override IBasicModelInterface BMIEngine
-        {
-            get
-            {
-                return runner.Api;
-            }
-        }
+        public override IBasicModelInterface BMIEngine => runner.Api;
 
         #endregion
 
-        public virtual string LibraryName
-        {
-            get
-            {
-                return "FBCTools_BMI";
-            }
-        }
+        public virtual string LibraryName => "FBCTools_BMI";
 
-        public virtual string InputFile
-        {
-            get
-            {
-                return ".";
-            }
-        }
+        public virtual string InputFile => ".";
 
-        public virtual string DirectoryName
-        {
-            get
-            {
-                return "rtc";
-            }
-        }
+        public virtual string DirectoryName => "rtc";
 
-        public virtual bool IsMasterTimeStep
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool IsMasterTimeStep => false;
 
-        public virtual string ShortName
-        {
-            get
-            {
-                return "rtc";
-            }
-        }
+        public virtual string ShortName => "rtc";
 
         public virtual string GetItemString(IDataItem dataItem)
         {
@@ -949,7 +878,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
             }
 
-            throw new ArgumentException(string.Format("Could not serialize data item {0} to d-hydro xml", dataItem));
+            throw new ArgumentException($"Could not serialize data item {dataItem} to d-hydro xml");
         }
 
         /// <inheritdoc />
@@ -1006,26 +935,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public virtual Type ExporterType
-        {
-            get
-            {
-                return typeof(RealTimeControlModelExporter);
-            }
-        }
+        public virtual Type ExporterType => typeof(RealTimeControlModelExporter);
 
         public virtual string GetExporterPath(string directoryName)
         {
             return directoryName;
         }
 
-        public virtual string KernelDirectoryLocation
-        {
-            get
-            {
-                return DimrApiDataSet.RtcToolsDllPath;
-            }
-        }
+        public virtual string KernelDirectoryLocation => DimrApiDataSet.RtcToolsDllPath;
 
         public virtual void DisconnectOutput()
         {
@@ -1082,14 +999,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public new virtual ActivityStatus Status
         {
-            get
-            {
-                return base.Status;
-            }
-            set
-            {
-                base.Status = value;
-            }
+            get => base.Status;
+            set => base.Status = value;
         }
 
         [EditAction]
@@ -1098,70 +1009,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [EditAction]
         public virtual string DimrExportDirectoryPath
         {
-            get
-            {
-                return ExplicitWorkingDirectory;
-            }
-            set
-            {
-                ExplicitWorkingDirectory = value;
-            }
+            get => ExplicitWorkingDirectory;
+            set => ExplicitWorkingDirectory = value;
         }
 
-        public virtual string DimrModelRelativeWorkingDirectory
-        {
-            get
-            {
-                return DirectoryName;
-            }
-        }
+        public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;
 
-        public virtual string DimrModelRelativeOutputDirectory
-        {
-            get
-            {
-                return DirectoryName;
-            }
-        }
+        public virtual string DimrModelRelativeOutputDirectory => DirectoryName;
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
         {
-            get
-            {
-                return base.CurrentTime;
-            }
-            set
-            {
-                base.CurrentTime = value;
-            }
+            get => base.CurrentTime;
+            set => base.CurrentTime = value;
         }
 
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)
         {
-            return runner.GetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter));
+            return runner.GetVar($"{Name}/{category}/{itemName}/{parameter}");
         }
 
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
-            runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
+            runner.SetVar($"{Name}/{category}/{itemName}/{parameter}", values);
         }
 
-        public virtual bool CanRunParallel
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool CanRunParallel => false;
 
-        public virtual string MpiCommunicatorString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public virtual string MpiCommunicatorString => null;
 
         public virtual void PrepareForIntegratedModelRun()
         {
@@ -1240,7 +1115,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             IEnumerable<IFeature> childDataItemLocationsFromControlledModels = ControlledModels.SelectMany(m => m.GetChildDataItemLocations(role)).Distinct();
             // The childDataItemLocationsFromControlledModels list may contain features that are wrapped in data-items that
-            // provide/consuming value types other that typeif(double), e.g. Flow1D's network-coverages for waterlevel's,
+            // provide/consuming value types other that typeof(double), e.g. Flow1D's network-coverages for water levels,
             // discharges, etc (Flow1D exposes these network-coverages data items for e.g. the OpenMI wrapper).
             // RTC only can handle values on one single location, so return only the single value locations
             // (i.e. data item value type is double, see GetChildDataItemsFromControlledModelsForLocation(...) below).
@@ -1258,7 +1133,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void ResetOrphanedControlGroupInputsAndOutputs(IControlGroup controlGroup)
         {
-            // SOBEK3-562: Existing projects can have ControlGroups with locations at inputs/outputs but no underlying dataitem links
+            // SOBEK3-562: Existing projects can have ControlGroups with locations at inputs/outputs but no underlying data item links
 
             controlGroup.Inputs.Where(input => input.Feature != null).ForEach(input => ResetOrphanedInput(controlGroup, input));
             controlGroup.Outputs.Where(output => output.Feature != null).ForEach(output => ResetOrphanedOutput(controlGroup, output));
@@ -1337,7 +1212,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     new ValidationReport("Model", new[]
                     {
-                        new ValidationIssue(sourceModel, ValidationSeverity.Error, string.Format("sourceModel {0} (of type {1}) can't be merged with this model {2} (of type {3})", sourceModel.Name, sourceModel.GetType(), Name, GetType()))
+                        new ValidationIssue(sourceModel, ValidationSeverity.Error, $"sourceModel {sourceModel.Name} (of type {sourceModel.GetType()}) can't be merged with this model {Name} (of type {GetType()})")
                     })
                 });
             }
@@ -1345,7 +1220,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return new RealTimeControlModelMergeValidator().Validate(this, (RealTimeControlModel) sourceModel);
         }
 
-        public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependendModelsLookup)
+        public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependentModelsLookup)
         {
             if (!CanMerge(sourceModel))
             {
@@ -1375,14 +1250,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 existingControlGroupNames.Add(clonedControlGroup.Name);
             }
 
-            if (mergedDependendModelsLookup == null)
+            if (mergedDependentModelsLookup == null)
             {
                 return true;
             }
 
-            foreach (IModelMerge sourceDependentModel in mergedDependendModelsLookup.Keys)
+            foreach (IModelMerge sourceDependentModel in mergedDependentModelsLookup.Keys)
             {
-                var mergedDependentModel = mergedDependendModelsLookup[sourceDependentModel] as IModel;
+                var mergedDependentModel = mergedDependentModelsLookup[sourceDependentModel] as IModel;
 
                 // check input items LinkedTo
                 sourceModel.AllDataItems.Where(di => di.Role == DataItemRole.Input && di.LinkedTo != null && di.ValueConverter != null)
@@ -1405,10 +1280,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             IDataItem matchingRtcModelDataItem = AllDataItems.FirstOrDefault(
-                di => di.LinkedTo == null &&
-                      di.ValueConverter != null &&
-                      di.ValueConverter.OriginalValue is Input &&
-                      ((Input) di.ValueConverter.OriginalValue).Name == sourceModelOriginalValue.Name);
+                di => di.LinkedTo == null 
+                      && di.ValueConverter?.OriginalValue is Input input 
+                      && input.Name == sourceModelOriginalValue.Name);
 
             if (matchingRtcModelDataItem == null)
             {
@@ -1432,10 +1306,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             IDataItem matchingRtcModelDataItem = AllDataItems.FirstOrDefault(
-                di => (di.LinkedBy == null || di.LinkedBy.Count != sourceModelOutput.LinkedBy.Count) &&
-                      di.ValueConverter != null &&
-                      di.ValueConverter.OriginalValue is Output &&
-                      ((Output) di.ValueConverter.OriginalValue).Name == sourceModelOriginalValue.Name);
+                di => (di.LinkedBy == null || di.LinkedBy.Count != sourceModelOutput.LinkedBy.Count)
+                      && di.ValueConverter?.OriginalValue is Output output 
+                      && output.Name == sourceModelOriginalValue.Name);
 
             if (matchingRtcModelDataItem == null)
             {
@@ -1481,23 +1354,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return false;
             }
 
-            return rtcModel.DependendModels.All(m => DependendModels.Any(dm => dm.CanMerge(m)));
+            return rtcModel.DependentModels.All(m => DependentModels.Any(dm => dm.CanMerge(m)));
         }
 
-        public virtual IEnumerable<IModelMerge> DependendModels
-        {
-            get
-            {
-                return ControlledModels.OfType<IModelMerge>();
-            }
-        }
+        public virtual IEnumerable<IModelMerge> DependentModels => ControlledModels.OfType<IModelMerge>();
 
         public virtual string OutputFileName
         {
-            get
-            {
-                return outputFileName;
-            }
+            get => outputFileName;
             set
             {
                 if (!string.IsNullOrEmpty(value))
@@ -1548,7 +1412,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         protected override void OnCleanup()
         {
-            // Restore linked dataitems to their original values
+            // Restore linked data items to their original values
             // Needs to be done here as RestartState is written in TimeDependentModel.Finish()
             foreach (IDataItem dataItem in linkedDataItemsOriginalValues)
             {
@@ -1569,10 +1433,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             outputWriteTimesQueue = null;
 
             // Clear the explicit value converter lookup if relevant
-            if (explicitValueConverterLookupItems != null)
-            {
-                explicitValueConverterLookupItems.Clear();
-            }
+            explicitValueConverterLookupItems?.Clear();
 
             base.OnCleanup();
             runner.OnCleanup();
