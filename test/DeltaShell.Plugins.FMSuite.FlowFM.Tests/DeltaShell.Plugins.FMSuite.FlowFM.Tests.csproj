@@ -376,7 +376,7 @@
     <Compile Include="IO\ObsFileImporterExporterTest.cs" />
     <Compile Include="IO\PolFileImporterExporterTest.cs" />
     <Compile Include="IO\StructuresFileWriteTest.cs" />
-    <Compile Include="IO\Importers\FMRstFileImporterTest.cs" />
+    <Compile Include="IO\Importers\FMRestartFileImporterTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />
     <Compile Include="IO\FMMapFileFunctionStoreTest.cs" />
     <Compile Include="IO\PliFileImporterExporterTest.cs" />
