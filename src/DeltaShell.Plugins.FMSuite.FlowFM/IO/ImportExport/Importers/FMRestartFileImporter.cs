@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -11,8 +14,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
     public class FMRestartFileImporter : IFileImporter
     {
-        // TODO D3DFMIQ-2075
-        //public Func<FileBasedRestartState, WaterFlowFMModel> GetFMModelForRestartState { get; set; }
+        private readonly Func<IEnumerable<WaterFlowFMModel>> getModels;
+
+        public FMRestartFileImporter(Func<IEnumerable<WaterFlowFMModel>> getModels)
+        {
+            Ensure.NotNull(getModels, nameof(getModels));
+
+            this.getModels = getModels;
+        }
 
         public string Name => "Restart File";
 
@@ -26,10 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         {
             get
             {
-                yield break;
-
-                // TODO D3DFMIQ-2075
-                //yield return typeof(FileBasedRestartState);
+                yield return typeof(RestartFile);
             }
         }
 
@@ -45,27 +51,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool OpenViewAfterImport { get; private set; }
 
-        public bool CanImportOn(object targetObject)
+        public bool CanImportOn(object targetObject) => targetObject is RestartFile;
+
+        public object ImportItem(string path, object target)
         {
-            return false; 
+            Ensure.NotNull(target, nameof(target));
 
-            // TODO D3DFMIQ-2075
-            //return GetFMModelForRestartState != null &&
-            //       GetFMModelForRestartState(targetObject as FileBasedRestartState) != null;
-        }
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Path cannot be null or empty.");
+            }
 
-        public object ImportItem(string path, object target = null)
-        {
-            // TODO D3DFMIQ-2075
-            //WaterFlowFMModel model = GetFMModelForRestartState?.Invoke(target as FileBasedRestartState);
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException($"Restart file does not exist: {path}");
+            }
 
-            //if (model != null)
-            //{
-            //    model.ImportRestartFile(path);
-            //    return model.RestartInput;
-            //}
+            WaterFlowFMModel model = getModels().First(m => m.RestartInput == target);
 
-            return null;
+            model.UseRestart = true;
+
+            return model.RestartInput = new RestartFile(path);
         }
     }
 }
