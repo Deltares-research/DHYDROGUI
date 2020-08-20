@@ -5,6 +5,7 @@ using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Units;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -486,6 +487,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             IUnit unit = new FlowBoundaryCondition(type, BoundaryConditionDataType.TimeSeries).VariableUnit;
             Assert.That(unit.Name, Is.EqualTo(name_expectation));
             Assert.That(unit.Symbol, Is.EqualTo(symbol_expectation));
+        }
+
+        [Test]
+        [TestCase(FlowBoundaryQuantityType.Riemann, "meters", "m")]
+        public void VariableUnit_WithVariousFlowBoundaryType_ReturnsExpectedUnit(FlowBoundaryQuantityType quantityType,
+                                                                                 string unitDescription,
+                                                                                 string unit)
+        {
+            // Setup
+            var random = new Random(21);
+            var condition = new FlowBoundaryCondition(quantityType,
+                                                      random.NextEnumValue<BoundaryConditionDataType>());
+
+            // Call
+            IUnit variableUnit = condition.VariableUnit;
+
+            // Assert
+            Assert.That(variableUnit, Is.TypeOf<Unit>());
+            Assert.That(variableUnit.Name, Is.EqualTo(unitDescription));
+            Assert.That(variableUnit.Symbol, Is.EqualTo(unit));
         }
     }
 }

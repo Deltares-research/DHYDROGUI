@@ -18,9 +18,11 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -54,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private ICompositeActivity currentWorkflow;
         private CompositeHydroModelWorkFlowData currentWorkFlowData;
-
+        
         public virtual bool ReadOnly { get; set; }
 
         /// <summary>
@@ -108,6 +110,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 activity.Dispose();
             }
         }
+
+        #endregion
+
+        #region Working Directory
+
+        private Func<string> workingDirectoryPathFunc = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
+
+        /// <summary>
+        /// Func for retrieving the current working directory set in the framework.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when value is null.
+        /// </exception>
+        public virtual Func<string> WorkingDirectoryPathFunc
+        {
+            get => workingDirectoryPathFunc;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                workingDirectoryPathFunc = value;
+            }
+        } 
+
+        /// <summary>
+        /// Property for retrieving the current working directory set in the framework
+        /// and adding subfolder with model name.
+        /// </summary>
+        public virtual string WorkingDirectoryPath => Path.Combine(WorkingDirectoryPathFunc(), Name);
 
         #endregion
 
@@ -751,15 +781,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 try
                 {
-                    PrepareWorkDirectory();
-
                     List<IDimrModel> dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
                                                                  .Plus(CurrentWorkflow as IDimrModel).Where(dm => dm != null)
                                                                  .ToList();
 
                     dimrModels.ForEach(m =>
                     {
-                        m.ExplicitWorkingDirectory = Path.Combine(ExplicitWorkingDirectory, m.DirectoryName);
+                        m.ExplicitWorkingDirectory = Path.Combine(WorkingDirectoryPath, m.DirectoryName);
                         m.RunsInIntegratedModel = true;
                         m.DisconnectOutput();
 
@@ -772,8 +800,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         return;
                     }
 
+                    FileUtils.DeleteIfExists(WorkingDirectoryPath);
+                    Directory.CreateDirectory(WorkingDirectoryPath);
+
                     var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
-                    if (!dHydroConfigXmlExporter.Export(this, Path.Combine(ExplicitWorkingDirectory, "dimr.xml")))
+                    if (!dHydroConfigXmlExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml")))
                     {
                         Status = ActivityStatus.Failed;
                         return;
@@ -796,7 +827,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     dimrApi.KernelDirs = kernelDirectories;
                     dimrApi.DimrRefDate = StartTime;
 
-                    int returnCode = dimrApi.Initialize(Path.Combine(ExplicitWorkingDirectory, "dimr.xml"));
+                    int returnCode = dimrApi.Initialize(Path.Combine(WorkingDirectoryPath, "dimr.xml"));
                     if (returnCode != 0)
                     {
                         throw new DimrErrorCodeException(Status, returnCode);
@@ -820,7 +851,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 CurrentWorkflow.Initialize();
             }
         }
-
+        
         private string GetKernelDirectories(IEnumerable<IDimrModel> dimrModels)
         {
             try
@@ -832,19 +863,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 Log.ErrorFormat("Error retrieving kernel directories: {0}", ex.Message);
                 return null;
             }
-        }
-
-        private void PrepareWorkDirectory()
-        {
-            string workDirectory = ExplicitWorkingDirectory;
-            if (ExplicitWorkingDirectory == null)
-            {
-                string dirPath = Path.GetDirectoryName(path) ?? Environment.CurrentDirectory;
-                workDirectory = Path.Combine(dirPath, Name.Replace(' ', '_') + "_output");
-                ExplicitWorkingDirectory = workDirectory;
-            }
-
-            FileUtils.CreateDirectoryIfNotExists(workDirectory);
         }
 
         public virtual ValidationReport Validate()
@@ -893,7 +911,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             if (DoDimrRun())
             {
-                string validPath = ExplicitWorkingDirectory;
+                string validPath = WorkingDirectoryPath;
                 if (!Directory.Exists(validPath))
                 {
                     return;
@@ -914,8 +932,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     CurrentWorkflowIsDimr.ConnectOutput(validPath);
                     CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
                 }
-
-                DimrRunner.ConnectDimrRunLogFile(this);
+                
+                DimrRunHelper.ConnectDimrRunLogFile(this, WorkingDirectoryPath);
             }
             else
             {
@@ -940,7 +958,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
             }
         }
-
+        
         #endregion
 
         #region Region
@@ -1326,7 +1344,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             return base.IsLinkAllowed(source, target);
         }
-
+        
         #endregion
     }
 }

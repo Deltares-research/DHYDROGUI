@@ -32,12 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                         }
                     }
                 }
-
-                foreach (WavmFileFunctionStore wavmFileFunctionStore in model.WavmFunctionStores)
-                {
-                    wavmFileFunctionStore.Path = Path.Combine(Path.GetDirectoryName(model.MdwFilePath),
-                                                              Path.GetFileName(wavmFileFunctionStore.Path));
-                }
             }
 
             base.OnPostLoad(entity, state, propertyNames);

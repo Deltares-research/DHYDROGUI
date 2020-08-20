@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private IEnumerable GetOutputItems(WaterFlowFMModel model)
         {
             yield return new TreeFolder(model, GetRestartStates(model), "States", FolderImageType.None);
-            IDataItem dimrLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
+            IDataItem dimrLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == DimrRunHelper.dimrRunLogfileDataItemTag);
             if (dimrLogDataItem != null)
             {
                 yield return dimrLogDataItem;

@@ -1013,11 +1013,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
 
+        /// <summary>
+        /// DimrExportDirectoryPath should only be used if the
+        /// model runs stand-alone by using the DimrRunner.
+        /// However, RTC cannot run stand-alone, but it is
+        /// possible to press the run button. The run will be
+        /// cancelled, but the CleanUp is still using this property
+        /// for trying to connect output... Exception will be thrown,
+        /// but caught. Code should be improved for this case
+        /// </summary>
         [EditAction]
         public virtual string DimrExportDirectoryPath
         {
-            get => ExplicitWorkingDirectory;
-            set => ExplicitWorkingDirectory = value;
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;

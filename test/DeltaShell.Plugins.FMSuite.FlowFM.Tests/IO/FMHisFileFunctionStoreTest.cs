@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFMOutputHisFileWithPumpAndWeirAndStationsAndGateAndGeneralStructureWhenCreatingStoreThenFunctionsCorrectlyInitialized()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\D3DFMIQ-2084.nc"));
-            Assert.AreEqual(74, store.Functions.Count);
+            Assert.AreEqual(73, store.Functions.Count);
             var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_structure_discharge");
             Assert.That(pumpFunction, Is.Not.Null);
             Assert.AreEqual(289, pumpFunction.GetValues().Count);
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var store = model.OutputHisFileStore;
 
-                Assert.AreEqual(78, store.Functions.Count);
+                Assert.AreEqual(77, store.Functions.Count);
                 var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_s1up");
                 Assert.That(pumpFunction, Is.Not.Null);
                 Assert.AreEqual(5, pumpFunction.GetValues().Count);
@@ -288,12 +288,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IFunction timeSeriesForPoint = waterLevelFunction.GetTimeSeries(waterLevelFunction.Features.Skip(1).First());
             Assert.AreEqual(388, timeSeriesForPoint.GetValues().Count);
             Assert.AreEqual(0.1957, (double) timeSeriesForPoint.GetValues()[50], 0.001);
-            Assert.AreEqual(new DateTime(1999, 12, 16), waterLevelFunction.Time.Values.First());
-            Assert.AreEqual("(POR)", waterLevelFunction.Arguments[1].Values.OfType<Feature2D>().First().Name);
-            Assert.AreEqual("(POR)", waterLevelFunction.Features.OfType<Feature2D>().First().Name);
-            Assert.AreEqual(1.5d, (double)waterLevelFunction.Components[0].Values[0], 0.001);
-            Assert.AreEqual("m", waterLevelFunction.Components[0].Unit.Symbol);
-            Assert.AreEqual( new Point( new Coordinate(502049, 4205261)),  waterLevelFunction.Features.OfType<Feature2D>().First().Geometry);
         }
 
         [Test]

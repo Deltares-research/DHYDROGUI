@@ -580,8 +580,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IList<WaterFlowFMProperty> properties, IMduFileWriteConfig config)
         {
             WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            WriteLine("# Deltares, Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " +
-                      FMDllVersion);
+            WriteLine($"# Deltares, Plugin D-FLOW FM Version {FMSuiteFlowModelVersion}, " +
+                      $"D-Flow FM Version {FMDllVersion}");
             SetValueToPropertyIfExists(properties, KnownProperties.Version, FMDllVersion);
             SetValueToPropertyIfExists(properties, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
             IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup =

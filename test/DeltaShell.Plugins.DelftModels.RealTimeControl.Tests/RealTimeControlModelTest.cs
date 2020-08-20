@@ -822,6 +822,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
         }
 
+        [Test]
+        public void DimrExportDirectoryPath_ForGet_ShouldReturnNotSupportedException()
+        {
+            // Arrange
+            var model = new RealTimeControlModel();
+
+            // Act
+            void Call()
+            {
+                string dimrExportDirectory = model.DimrExportDirectoryPath;
+            }
+
+            // Assert
+            Assert.Throws<NotSupportedException>(Call);
+        }
+
+        [Test]
+        public void DimrExportDirectoryPath_ForSet_ShouldReturnNotImplementedException()
+        {
+            // Arrange
+            var model = new RealTimeControlModel();
+
+            // Act
+            void Call()
+            {
+                model.DimrExportDirectoryPath = "test";
+            }
+
+            // Assert
+            Assert.Throws<NotSupportedException>(Call);
+        }
+
         # endregion
 
         # region Helper functions
