@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using Netron.GraphLib;
 using Netron.GraphLib.Attributes;
@@ -69,6 +70,14 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             base.Paint(g);
         }
 
+        public IEnumerable<Connection> GetTopConnectors()
+        {
+            foreach (Connection topNodeConnection in TopNode.Connections)
+            {
+                yield return topNodeConnection;
+            }
+        }
+
         protected override void Initialize()
         {
             Rectangle = new RectangleF(0, 0, 25, 50);
@@ -87,7 +96,8 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             return new Connector(this, name, true)
             {
                 AllowNewConnectionsFrom = allowFrom,
-                AllowNewConnectionsTo = allowTo
+                AllowNewConnectionsTo = allowTo,
+                ShowLabel = true,
             };
         }
     }

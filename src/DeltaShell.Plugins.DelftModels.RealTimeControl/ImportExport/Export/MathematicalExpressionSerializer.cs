@@ -178,9 +178,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         {
             foreach (ParameterLeafNode leafNode in leafNodes)
             {
-                KeyValuePair<char, string> parameterKvp =
-                    MathematicalExpression.InputMapping.FirstOrDefault(i => i.Key.ToString() == leafNode.Value);
-                if (!parameterKvp.Equals(default(KeyValuePair<char, string>)))
+                KeyValuePair<char, IInput> parameterKvp = MathematicalExpression.InputMapping.SingleOrDefault(itcm => itcm.Key.ToString().Equals(leafNode.Value));
+                if (!parameterKvp.Equals(default(KeyValuePair<char, IInput>)))
                 {
                     IInput expressionInput =
                         MathematicalExpression.Inputs.First(i => i.Name.Equals(parameterKvp.Value));

@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public class MathematicalExpression : RtcBaseObject, IInput
     {
-        private readonly Dictionary<char, string> inputMapping = new Dictionary<char, string>();
+        private readonly Dictionary<char, IInput> inputMapping = new Dictionary<char, IInput>();
         private IEventedList<IInput> inputs;
 
         /// <summary>
@@ -64,12 +64,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         /// <summary>
         /// Gets the input mapping in which capital letters are mapped
-        /// in alphabetical order to an input name.
+        /// in alphabetical order to an input item.
         /// </summary>
         /// <remarks>
         /// The mapping contains unique values.
         /// </remarks>
-        public IReadOnlyDictionary<char, string> InputMapping => inputMapping;
+        public IReadOnlyDictionary<char, IInput> InputMapping => inputMapping;
 
         /// <summary>
         /// Gets or sets the expression.
@@ -112,21 +112,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         private void AddMappedInput(IInput input)
         {
-            string inputName = input.Name;
-            if (inputMapping.Values.Contains(inputName))
+            if (inputMapping.ContainsValue(input))
             {
                 return;
             }
 
             int parameterCount = inputMapping.Count;
             char newParameter = ToChar(parameterCount);
-            inputMapping[newParameter] = inputName;
+            inputMapping[newParameter] = input;
         }
 
         private void RemoveMappedInput(IInput input)
         {
-            string inputName = input.Name;
-            if (Inputs.Any(i => i.Name == inputName))
+            if (Inputs.Contains(input))
             {
                 return;
             }
@@ -137,12 +135,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         private void ResetMapping()
         {
             inputMapping.Clear();
-            string[] inputNames = Inputs.Select(i => i.Name)
-                                        .Distinct().ToArray();
-
-            for (var i = 0; i < inputNames.Length; i++)
+            foreach (IInput input in Inputs.Distinct())
             {
-                inputMapping[ToChar(i)] = inputNames[i];
+                AddMappedInput(input);
             }
         }
 

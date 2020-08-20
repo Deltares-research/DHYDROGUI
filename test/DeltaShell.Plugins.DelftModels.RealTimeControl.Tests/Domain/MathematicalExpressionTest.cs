@@ -25,12 +25,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.That(mathematicalExpression.Inputs, Is.Empty);
             Assert.That(mathematicalExpression.InputMapping, Is.Not.Null);
             Assert.That(mathematicalExpression.InputMapping, Is.Empty);
+
             Assert.That(mathematicalExpression.Expression, Is.EqualTo(string.Empty));
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void AddInput_UpdatesInputMappingCorrectly()
+        public void AddInput_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -43,18 +44,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Add(input);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(1));
 
             const char expectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
-            Assert.That(mapping[expectedKey], Is.EqualTo(inputName));
+            Assert.That(mapping[expectedKey].Name, Is.EqualTo(inputName));
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void AddSecondInput_UpdatesInputMappingCorrectly()
+        public void AddSecondInput_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -73,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Add(secondInput);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(2));
 
@@ -88,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void AddMultipleInputs_UpdatesInputMappingCorrectly()
+        public void AddMultipleInputs_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -113,7 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void AddSecondInput_WithSameName_UpdatesInputMappingCorrectly()
+        public void AddSecondInput_WithSameName_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -131,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Add(secondInput);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(1));
 
@@ -162,7 +163,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Remove(firstInput);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(1));
 
@@ -192,7 +193,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Remove(secondInput);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(1));
 
@@ -224,7 +225,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             firstInput.Name = newInputName;
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(2));
 
@@ -259,7 +260,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             firstInput.Name = secondInputName;
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(1));
 
@@ -289,7 +290,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void SetInputs_UpdatesInputMappingCorrectly()
+        public void SetInputs_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -314,7 +315,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         [Test]
         [Category(TestCategory.Integration)]
         [TestCaseSource(nameof(GetInputsTestCases))]
-        public void RenameInput_AfterSetInputs_UpdatesInputMappingCorrectly(IInput input)
+        public void RenameInput_AfterSetInputs_UpdatesInputToCharMappingCorrectly(IInput input)
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression
