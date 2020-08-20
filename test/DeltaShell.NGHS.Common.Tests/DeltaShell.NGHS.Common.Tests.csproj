@@ -135,6 +135,7 @@
     <Compile Include="Gui\Restart\RestartFileNodePresenterTest.cs" />
     <Compile Include="Gui\Restart\RestartFileOutputTreeFolderTest.cs" />
     <Compile Include="IO\FilesManagerTest.cs" />
+    <Compile Include="IO\Restart\RestartFileTest.cs" />
     <Compile Include="Logging\LogHandlerTest.cs" />
     <Compile Include="Logging\LogMessagesListTest.cs" />
     <Compile Include="SystemEnvironmentTest.cs" />

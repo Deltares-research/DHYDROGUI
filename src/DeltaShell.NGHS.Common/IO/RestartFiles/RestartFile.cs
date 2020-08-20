@@ -94,12 +94,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
             FileUtils.CreateDirectoryIfNotExists(dirInfo.FullName);
             string targetFilePath = System.IO.Path.Combine(dirInfo.FullName, Name);
 
-            CopyTo(targetFilePath);
-
-            if (switchTo)
-            {
-                SwitchTo(targetFilePath);
-            }
+            CopyTo(targetFilePath, switchTo);
         }
 
         /// <summary>
@@ -137,7 +132,12 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
                 return;
             }
 
-            pathInfo.CopyTo(destinationFileInfo.FullName, switchTo);
+            pathInfo.CopyTo(destinationFileInfo.FullName, true);
+
+            if (switchTo)
+            {
+                SwitchTo(destinationFileInfo.FullName);
+            }
         }
 
         /// <summary>
