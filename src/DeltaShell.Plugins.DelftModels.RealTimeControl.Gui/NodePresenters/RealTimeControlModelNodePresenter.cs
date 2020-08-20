@@ -11,6 +11,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 using GeoAPI.Extensions.Coverages;
 using log4net;
@@ -174,19 +175,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         private static IEnumerable GetRestartStates(RealTimeControlModel model)
         {
-            IEnumerable<IDataItem> restartStates = model.DataItems.Where(IsOutputRestartFile);
-            foreach (IDataItem restartState in restartStates)
+            IEnumerable<RestartFile> restartStates = model.RestartOutput;
+            foreach (RestartFile restartState in restartStates)
             {
                 yield return restartState;
             }
-        }
-
-        private static bool IsOutputRestartFile(IDataItem dataItem)
-        {
-            return false;
-
-            // TODO D3DFMIQ-2077
-            //return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
         }
     }
 }

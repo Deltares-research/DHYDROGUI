@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         // TODO D3DFMIQ-2077
         public virtual bool WriteRestart { get; set; }
 
-        public IEnumerable<RestartFile> RestartOutput { get; } = Enumerable.Empty<RestartFile>();
+        public virtual IEnumerable<RestartFile> RestartOutput { get; set; } = Enumerable.Empty<RestartFile>();
 
         public virtual int LogLevel { get; set; }
 
@@ -972,6 +972,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             string outputFilePath = Path.Combine(dirInfo.Parent.FullName, OutputFileName);
             ReconnectOutputFiles(outputFilePath);
+
+            SetRestartOutputFiles(Directory.GetFiles(Path.Combine(dirInfo.Parent.FullName, DirectoryName), "rtc_*.xml"));
+        }
+
+        private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
+        {
+            RestartOutput = restartFileStrings.Select(rfs => new RestartFile(rfs));
         }
 
         private void ReconnectOutputFiles(string outputFilePath)
