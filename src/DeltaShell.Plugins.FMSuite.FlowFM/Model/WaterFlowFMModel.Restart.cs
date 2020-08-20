@@ -131,28 +131,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set => ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value = value;
         }
 
-        private void LoadRestartFile(string mduPath)
-        {
-            if (mduPath == null)
-            {
-                return;
-            }
-
-            string restartFile = ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
-            string restartPath = GetFilePathFromMduPath(mduPath, restartFile);
-            if (File.Exists(restartPath))
-            {
-                ImportRestartFile(restartPath);
-            }
-        }
-
-        private static string GetFilePathFromMduPath(string mduPath, string filePath)
-        {
-            string directoryName = Path.GetDirectoryName(mduPath);
-            string normalizedFilePath = filePath.Replace('/', '\\');
-            string combinationPath = Path.Combine(directoryName,
-                                                  normalizedFilePath);
-            return combinationPath;
-        }
     }
 }

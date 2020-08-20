@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -158,6 +159,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                      mduFilePath); // backwards Compatibility (output next to mdu file)
 
             ReconnectOutputFiles(existingOutputDirectory);
+        }
+
+        private void LoadRestartFile(string mduPath)
+        {
+            string restartFilePath = MduFileHelper.GetSubfilePath(
+                mduPath, ModelDefinition.GetModelProperty(KnownProperties.RestartFile));
+
+            if (!File.Exists(filePath))
+            {
+                Log.Warn($"Restart file not found: {restartFilePath}.");
+                return;
+            }
+
+            UseRestart = true;
+            RestartInput = new RestartFile(restartFilePath);
         }
 
         public void ImportSpatialOperationsAfterLoading()
