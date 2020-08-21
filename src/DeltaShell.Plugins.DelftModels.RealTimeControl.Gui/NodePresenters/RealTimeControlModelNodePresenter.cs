@@ -11,6 +11,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
+using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 using GeoAPI.Extensions.Coverages;
@@ -145,10 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         private IEnumerable GetInitialConditions(RealTimeControlModel rtcModel)
         {
-            yield break;
-
-            // TODO D3DFMIQ-2077
-            // yield return rtcModel.GetDataItemByValue(rtcModel.RestartInput);
+            yield return new DataItem(rtcModel.RestartInput, DataItemRole.Input);
         }
 
         private static IEnumerable GetOutputItems(RealTimeControlModel model)
@@ -170,16 +168,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         private static object GetRestartFolder(RealTimeControlModel model)
         {
-            return new TreeFolder(model, GetRestartStates(model), "States", FolderImageType.None);
-        }
-
-        private static IEnumerable GetRestartStates(RealTimeControlModel model)
-        {
-            IEnumerable<RestartFile> restartStates = model.RestartOutput;
-            foreach (RestartFile restartState in restartStates)
-            {
-                yield return restartState;
-            }
+            return new RestartFileOutputTreeFolder(model);
         }
     }
 }
