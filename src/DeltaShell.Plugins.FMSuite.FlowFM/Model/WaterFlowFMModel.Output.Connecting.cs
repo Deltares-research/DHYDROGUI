@@ -127,7 +127,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                           || File.Exists(HisFilePath)
                                           || File.Exists(ClassMapFilePath)
                                           || File.Exists(WaqOutputDirectoryPath)
-                                          || File.Exists(SnappedOutputDirectoryPath);
+                                          || File.Exists(SnappedOutputDirectoryPath)
+                                          || RestartFilePaths.Any();
 
             /// <summary>
             /// The file path to the map file.
