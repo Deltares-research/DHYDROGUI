@@ -15,6 +15,7 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -209,7 +210,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private IEnumerable GetOutputItems(WaterFlowFMModel model)
         {
-            yield return new TreeFolder(model, GetRestartStates(model), "States", FolderImageType.None);
+            yield return new RestartFileOutputTreeFolder(model);
+
             IDataItem dimrLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == DimrRunHelper.dimrRunLogfileDataItemTag);
             if (dimrLogDataItem != null)
             {
