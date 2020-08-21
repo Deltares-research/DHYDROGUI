@@ -14,7 +14,7 @@ using log4net;
 
 namespace DeltaShell.Dimr
 {
-    public class DimrRunner
+    public class DimrRunner : IDisposable
     {
         private const decimal fileVersion = 1;
         private const string createdBy = "Deltares, Coupling Team";
@@ -380,6 +380,11 @@ namespace DeltaShell.Dimr
             }
 
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
+        }
+
+        public void Dispose()
+        {
+            dimrApi?.Dispose();
         }
     }
 }
