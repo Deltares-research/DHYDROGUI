@@ -158,14 +158,6 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
 
         public override string ToString() => Name;
 
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns>
-        /// A new copied instance of this instance.
-        /// </returns>
-        public RestartFile Clone() => new RestartFile(Path);
-
         private bool Exists => pathInfo?.Exists ?? false;
 
         private static void CreateParentDirectory(FileInfo destinationFileInfo)

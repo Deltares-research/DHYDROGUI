@@ -14,9 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
         private static readonly Bitmap Properties = Resources.properties;
 
         /// <summary>
-        /// Generates a context menu for the provided
-        /// <param name="data"/>
-        /// .
+        /// Generates a context menu for the provided <paramref name="data"/>.
         /// </summary>
         /// <param name="data"> Data to generate a menu for. </param>
         /// <param name="gui"> The gui (needed for calling commands) </param>

@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)
         {
-            yield return new DataItem(model.RestartInput, DataItemRole.Input);
+            yield return model.RestartInput;
 
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model, model.InitialWaterLevel, ShortCutType.SpatialCoverage);
 

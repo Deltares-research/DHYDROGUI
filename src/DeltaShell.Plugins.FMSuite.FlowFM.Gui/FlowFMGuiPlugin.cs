@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Resources;
 using DelftTools.Controls;
-using DelftTools.Controls.Swf;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
