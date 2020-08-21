@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -158,6 +159,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             /// <remarks> Returns null in case the directory was not found. </remarks>
             public string SnappedOutputDirectoryPath => GetDirectoryPathStartingWith(FileConstants.SnappedFeaturesDirectoryName);
 
+            /// <summary>
+            /// The paths of the restart files.
+            /// </summary>
+            public IEnumerable<string> RestartFilePaths => FindFilesThatEndWith(FileConstants.RestartFileExtension);
+
             private string GetDirectoryPathStartingWith(string directoryNameStart)
             {
                 return outputDirectoryInfo.EnumerateDirectories()
@@ -170,6 +176,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return outputDirectoryInfo.EnumerateFiles()
                                           .FirstOrDefault(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
                                           .FullName;
+            }
+
+            private IEnumerable<string> FindFilesThatEndWith(string extension)
+            {
+                return outputDirectoryInfo.EnumerateFiles()
+                                          .Where(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
+                                          .Select(f => f.FullName);
             }
         }
 
@@ -194,6 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
             ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
             ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
+            ReconnectRestartFiles(outputDirectory.RestartFilePaths);
 
             OutputIsEmpty = false;
 

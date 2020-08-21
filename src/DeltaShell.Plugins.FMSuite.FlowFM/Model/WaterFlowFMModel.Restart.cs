@@ -28,8 +28,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        // TODO D3DFMIQ-2165
-        public IEnumerable<RestartFile> RestartOutput { get; } = Enumerable.Empty<RestartFile>();
+
+        public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
 
         public virtual bool UseRestart => !RestartInput.IsEmpty;
 
@@ -126,5 +126,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set => ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value = value;
         }
 
+        private void ReconnectRestartFiles(IEnumerable<string> restartFilePaths)
+        {
+            RestartOutput = restartFilePaths.Select(p => new RestartFile(p)).ToList();
+        }
     }
 }
