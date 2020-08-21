@@ -80,11 +80,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             const char firstExpectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
-            Assert.That(mapping[firstExpectedKey], Is.EqualTo(firstInputName));
+            Assert.That(mapping[firstExpectedKey].Name, Is.EqualTo(firstInputName));
 
             const char secondExpectedKey = 'B';
             Assert.That(existingKeys[1], Is.EqualTo(secondExpectedKey));
-            Assert.That(mapping[secondExpectedKey], Is.EqualTo(secondInputName));
+            Assert.That(mapping[secondExpectedKey].Name, Is.EqualTo(secondInputName));
         }
 
         [Test]
@@ -108,7 +108,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 mathematicalExpression.Inputs.Add(input);
 
                 // Assert
-                CollectionAssert.AreEqual(mathematicalExpression.InputMapping, expectedKeyValuePairs);
+                IEnumerable<KeyValuePair<char, string>> keyValuePairs = mathematicalExpression.InputMapping.Select( im => new KeyValuePair<char, string>(im.Key, im.Value.Name));
+                CollectionAssert.AreEqual(keyValuePairs, expectedKeyValuePairs);
             }
         }
 
@@ -138,7 +139,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             const char expectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
-            Assert.That(mapping[expectedKey], Is.EqualTo(inputName));
+            Assert.That(mapping[expectedKey].Name, Is.EqualTo(inputName));
         }
 
         [Test]
@@ -169,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             const char expectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
-            Assert.That(mapping[expectedKey], Is.EqualTo(secondInputName));
+            Assert.That(mapping[expectedKey].Name, Is.EqualTo(secondInputName));
         }
 
         [Test]
@@ -199,7 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             const char expectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
-            Assert.That(mapping[expectedKey], Is.EqualTo(inputName));
+            Assert.That(mapping[expectedKey].Name, Is.EqualTo(inputName));
         }
 
         [Test]
@@ -231,11 +232,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             const char firstExpectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
-            Assert.That(mapping[firstExpectedKey], Is.EqualTo(newInputName));
+            Assert.That(mapping[firstExpectedKey].Name, Is.EqualTo(newInputName));
 
             const char secondExpectedKey = 'B';
             Assert.That(existingKeys[1], Is.EqualTo(secondExpectedKey));
-            Assert.That(mapping[secondExpectedKey], Is.EqualTo(originalInputName));
+            Assert.That(mapping[secondExpectedKey].Name, Is.EqualTo(originalInputName));
         }
 
         [Test]
@@ -266,7 +267,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             const char firstExpectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
-            Assert.That(mapping[firstExpectedKey], Is.EqualTo(secondInputName));
+            Assert.That(mapping[firstExpectedKey].Name, Is.EqualTo(secondInputName));
         }
 
         [Test]
@@ -308,7 +309,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             // Assert
             Assert.That(mathematicalExpression.InputMapping, Has.Count.EqualTo(1));
 
-            var expectedEntry = new KeyValuePair<char, string>('A', inputName);
+            var expectedEntry = new KeyValuePair<char, IInput>('A', input);
             Assert.That(mathematicalExpression.InputMapping, Has.Member(expectedEntry));
         }
 
