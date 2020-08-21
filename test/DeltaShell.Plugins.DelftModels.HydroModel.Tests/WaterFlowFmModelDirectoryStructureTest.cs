@@ -1051,7 +1051,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     // Execute SaveAs() manually (migrating through GUI does this already).
                     app.SaveProjectAs(projectFilePath);
 
-                    IModel integratedModel = app.GetAllModelsInProject().FirstOrDefault(m => m is IHydroModel);
+                    var integratedModel = app.GetAllModelsInProject().FirstOrDefault(m => m is HydroModel) as HydroModel;
                     Assert.NotNull(integratedModel, "Expected: one integrated model (hydromodel) in the project.");
                     var fmModel = (WaterFlowFMModel) app.GetAllModelsInProject().FirstOrDefault(m => m is WaterFlowFMModel);
                     Assert.NotNull(fmModel, "Expected: one waterflow fm model in the project.");
@@ -1059,7 +1059,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     app.RunActivity(integratedModel);
 
                     // Get directory structure of output in working directory before saving
-                    string outputWorkingDirectoryPath = Path.Combine(integratedModel.ExplicitWorkingDirectory,
+                    string outputWorkingDirectoryPath = Path.Combine(integratedModel.WorkingDirectoryPath,
                                                                      DflowfmDirName, OutputDirName);
                     Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputWorkingDirStructure = GetDirectoryStructure(outputWorkingDirectoryPath, ".", true);
 

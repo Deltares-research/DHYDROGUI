@@ -13,7 +13,6 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
-using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Grid;

@@ -274,7 +274,6 @@ namespace DeltaShell.Dimr
             dimrFile = GenerateDimrXML(model, exportPath);
 
             // initialize dimr
-            log.Info(model.KernelVersions);
             dimrApi = DimrApiFactory.CreateNew(!runLocal);
 
             if (dimrApi == null)

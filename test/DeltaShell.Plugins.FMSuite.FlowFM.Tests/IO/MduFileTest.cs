@@ -70,7 +70,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string writeFilePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
 
                 // Call
-                mduFile.Write(writeFilePath, modelDefinition, null, null, config);
+                mduFile.Write(writeFilePath, 
+                              modelDefinition, 
+                              null, 
+                              new List<ModelFeatureCoordinateData<FixedWeir>>(), 
+                              config);
 
                 // Assert
                 string[] lines = File.ReadAllLines(writeFilePath);
