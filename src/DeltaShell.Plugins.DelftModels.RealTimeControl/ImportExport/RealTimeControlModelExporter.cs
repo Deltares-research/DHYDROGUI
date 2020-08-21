@@ -108,8 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         {
             if (realTimeControlModel.UseRestart)
             {
-                // TODO D3DFMIQ-2077
-                // //ZipFileUtils.Extract(realTimeControlModel.RestartInput.Path, directory);
+                FileUtils.CopyFile(realTimeControlModel.RestartInput.Path, Path.Combine(directory, RealTimeControlXMLFiles.XmlImportState));
             }
             else
             {

@@ -17,6 +17,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
@@ -43,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Project explorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel, IRestartModel
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -68,6 +69,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private IEventedList<IModel> internalControlledModelsList;
 
         private bool suspendUpdateFeatureAndParameter;
+
+        private RestartFile restartFile = new RestartFile();
 
         public RealTimeControlModel() : this("RTC Model") {}
 
@@ -110,14 +113,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
             }
         }
-
-        // TODO D3DFMIQ-2077
-        public virtual bool UseRestart { get; set; }
-
-        // TODO D3DFMIQ-2077
-        public virtual bool WriteRestart { get; set; }
-
-        public virtual IEnumerable<RestartFile> RestartOutput { get; set; } = Enumerable.Empty<RestartFile>();
 
         public virtual int LogLevel { get; set; }
 
@@ -260,6 +255,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return "Kernel: " + RealTimeControlModelDll.RTCTOOLS_DLL_NAME + "  " + FileVersionInfo.GetVersionInfo(DimrApiDataSet.RtcToolsDllPath).FileVersion;
             }
         }
+
+        public virtual bool UseRestart { get; set; }
+
+        public virtual bool WriteRestart { get; set; }
+
+        /// <summary>
+        /// Gets or sets the input restart file.
+        /// </summary>
+        public virtual RestartFile RestartInput
+        {
+            get => restartFile;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+
+                restartFile = value;
+            }
+        }
+
+        public virtual IEnumerable<RestartFile> RestartOutput { get; set; } = Enumerable.Empty<RestartFile>();
 
         public virtual void RefreshInitialState()
         {
@@ -881,7 +896,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             throw new ArgumentException($"Could not serialize data item {dataItem} to d-hydro xml");
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         /// <exception cref="NotSupportedException">
         /// If the string does not start with <see cref="RtcXmlTag.Input"/> or
         /// <see cref="RtcXmlTag.Output"/>
@@ -895,7 +910,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 throw new NotSupportedException($"{itemString} does not start with {RtcXmlTag.Input} or {RtcXmlTag.Output}");
             }
-                
+
             IEnumerable<IDataItem> dataItem = AllDataItems.Where(di => (di.ValueConverter?.OriginalValue as ConnectionPoint)?.Name == itemString).ToArray();
             if (!dataItem.Any())
             {
@@ -1224,13 +1239,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             if (!CanMerge(sourceModel))
             {
-                return new ValidationReport(Name + " (Real Time Control)", new[]
-                {
-                    new ValidationReport("Model", new[]
-                    {
-                        new ValidationIssue(sourceModel, ValidationSeverity.Error, $"sourceModel {sourceModel.Name} (of type {sourceModel.GetType()}) can't be merged with this model {Name} (of type {GetType()})")
-                    })
-                });
+                return new ValidationReport(Name + " (Real Time Control)", new[] {new ValidationReport("Model", new[] {new ValidationIssue(sourceModel, ValidationSeverity.Error, $"sourceModel {sourceModel.Name} (of type {sourceModel.GetType()}) can't be merged with this model {Name} (of type {GetType()})")})});
             }
 
             return new RealTimeControlModelMergeValidator().Validate(this, (RealTimeControlModel) sourceModel);
@@ -1296,8 +1305,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             IDataItem matchingRtcModelDataItem = AllDataItems.FirstOrDefault(
-                di => di.LinkedTo == null 
-                      && di.ValueConverter?.OriginalValue is Input input 
+                di => di.LinkedTo == null
+                      && di.ValueConverter?.OriginalValue is Input input
                       && input.Name == sourceModelOriginalValue.Name);
 
             if (matchingRtcModelDataItem == null)
@@ -1323,7 +1332,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             IDataItem matchingRtcModelDataItem = AllDataItems.FirstOrDefault(
                 di => (di.LinkedBy == null || di.LinkedBy.Count != sourceModelOutput.LinkedBy.Count)
-                      && di.ValueConverter?.OriginalValue is Output output 
+                      && di.ValueConverter?.OriginalValue is Output output
                       && output.Name == sourceModelOriginalValue.Name);
 
             if (matchingRtcModelDataItem == null)
