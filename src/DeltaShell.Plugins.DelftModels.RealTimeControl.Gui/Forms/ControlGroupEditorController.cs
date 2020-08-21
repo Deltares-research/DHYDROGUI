@@ -1168,6 +1168,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             object from = connection.From.BelongsTo.Tag;
             object to = connection.To.BelongsTo.Tag;
             Disconnect(from, to);
+
+            // Because of the 'reshuffling' happening inside the mathematical expression, we need to rename the connector tags as well.
             if (connection.To.BelongsTo is MathematicalExpressionShape mes)
             {
                 foreach (Netron.GraphLib.Connection topConnector in mes.GetTopConnectors())
@@ -1179,7 +1181,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     topConnector.Text = matExpression.InputMapping.Single( itcm => itcm.Value.Equals(belongsToInput)).Key.ToString();
                     topConnector.Invalidate();
                 }
-                
             }
             return true;
         }
