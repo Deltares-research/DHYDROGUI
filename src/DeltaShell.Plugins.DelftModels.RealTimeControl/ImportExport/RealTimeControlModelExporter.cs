@@ -12,9 +12,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     public class RealTimeControlModelExporter : IFileExporter
     {
-        private const string SettingsString = "{\r\n\r\n\t\"xmlDir\": \".\",\r\n\t\"schemaDir\": \".\"\r\n\r\n}";
+        private const string settingsString = "{\r\n\r\n\t\"xmlDir\": \".\",\r\n\t\"schemaDir\": \".\"\r\n\r\n}";
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlModelExporter));
+        private static readonly ILog log = LogManager.GetLogger(typeof(RealTimeControlModelExporter));
 
         public string Directory { private get; set; }
 
@@ -22,13 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public string Category => "Xml files";
 
-        public string Description
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
+        public string Description => string.Empty;
 
         public string FileFilter => "xml files|*.xml";
 
@@ -59,15 +53,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
             catch (InvalidOperationException e) when (e.Message == Resources.RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_export_failed)
             {
-                Log.Error(e.Message);
+                log.Error(e.Message);
             }
             catch (Exception e)
 
             {
-                Log.Warn(e.Message); // skip model validation exceptions
+                log.Warn(e.Message); // skip model validation exceptions
             }
 
-            File.WriteAllText(Path.Combine(directory, "settings.json"), SettingsString);
+            File.WriteAllText(Path.Combine(directory, "settings.json"), settingsString);
 
             return true;
         }
@@ -93,10 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTools));
 
             XDocument timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(path, model, model.ControlGroups);
-            if (timeSeriesDoc != null)
-            {
-                timeSeriesDoc.Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTimeSeries));
-            }
+            timeSeriesDoc?.Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTimeSeries));
 
             string timeSeriesPathFileName = timeSeriesDoc == null ? null : RealTimeControlXMLFiles.XmlTimeSeries;
             RealTimeControlXmlWriter
