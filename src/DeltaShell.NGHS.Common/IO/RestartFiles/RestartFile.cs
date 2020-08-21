@@ -7,7 +7,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
     /// <summary>
     /// Represents a restart file.
     /// </summary>
-    public sealed class RestartFile : ICloneable
+    public sealed class RestartFile
     {
         private FileInfo pathInfo;
         private string path;
@@ -158,7 +158,13 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
 
         public override string ToString() => Name;
 
-        public object Clone() => new RestartFile(Path);
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>
+        /// A new copied instance of this instance.
+        /// </returns>
+        public RestartFile Clone() => new RestartFile(Path);
 
         private bool Exists => pathInfo?.Exists ?? false;
 

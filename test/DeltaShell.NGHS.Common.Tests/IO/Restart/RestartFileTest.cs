@@ -347,6 +347,21 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             }
         }
 
+        [TestCase(null)]
+        [TestCase("path/to/the.file")]
+        public void Clone_ReturnsCorrectClone(string path)
+        {
+            // Setup
+            var restartFile = new RestartFile(path);
+
+            // Call
+            RestartFile clone = restartFile.Clone();
+
+            // Assert
+            Assert.That(clone, Is.Not.SameAs(restartFile));
+            Assert.That(clone.Path, Is.EqualTo(path));
+        }
+
         private IEnumerable<TestCaseData> GetPathTestCases()
         {
             yield return new TestCaseData(null, null, string.Empty, true);
