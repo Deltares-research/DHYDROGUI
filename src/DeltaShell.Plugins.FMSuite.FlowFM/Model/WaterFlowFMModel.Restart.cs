@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -41,17 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             get => (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
             set => ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = value;
-        }
-
-        public override bool IsDataItemActive(IDataItem dataItem)
-        {
-            // TODO D3DFMIQ-2075
-            //if (dataItem.Tag == RestartInputStateTag)
-            //{
-            //    return UseRestart;
-            //}
-
-            return base.IsDataItemActive(dataItem);
         }
 
         private void ReconnectRestartFiles(IEnumerable<string> restartFilePaths)
