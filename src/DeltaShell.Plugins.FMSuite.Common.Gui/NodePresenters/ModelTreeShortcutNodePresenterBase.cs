@@ -6,6 +6,7 @@ using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.NGHS.Common.Gui.NodePresenters;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
