@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Guards;
@@ -28,67 +27,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-
         public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
 
         public virtual bool UseRestart => !RestartInput.IsEmpty;
-
-        public virtual bool UseSaveStateTimeRange
-        {
-            get => WriteRestart;
-// always when writing restart (interval is always choosable)
-            set {}
-        }
-
-        public virtual DateTime SaveStateStartTime
-        {
-            get
-            {
-                if (UserSpecifiedRestartStartTime)
-                {
-                    return (DateTime) ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value;
-                }
-
-                return StartTime;
-            }
-            set
-            {
-                if (value != StartTime)
-                {
-                    UserSpecifiedRestartStartTime = true;
-                }
-
-                if (UserSpecifiedRestartStartTime)
-                {
-                    ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value = value;
-                }
-            }
-        }
-
-        public virtual DateTime SaveStateStopTime
-        {
-            get
-            {
-                if (UserSpecifiedRestartStopTime)
-                {
-                    return (DateTime) ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value;
-                }
-
-                return StopTime;
-            }
-            set
-            {
-                if (value != StopTime)
-                {
-                    UserSpecifiedRestartStopTime = true;
-                }
-
-                if (UserSpecifiedRestartStopTime)
-                {
-                    ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value = value;
-                }
-            }
-        }
 
         public virtual TimeSpan SaveStateTimeStep
         {
@@ -112,18 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             //}
 
             return base.IsDataItemActive(dataItem);
-        }
-
-        private bool UserSpecifiedRestartStartTime
-        {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value;
-            set => ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value = value;
-        }
-
-        private bool UserSpecifiedRestartStopTime
-        {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value;
-            set => ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value = value;
         }
 
         private void ReconnectRestartFiles(IEnumerable<string> restartFilePaths)
