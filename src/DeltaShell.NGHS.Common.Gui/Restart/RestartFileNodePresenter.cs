@@ -1,8 +1,11 @@
 ﻿using System.Drawing;
+using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Controls.Swf;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.Gui.NodePresenters;
 using DeltaShell.NGHS.Common.Gui.Properties;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 
@@ -54,6 +57,29 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             {
                 UpdateRestartNode(node, nodeData);
             }
+        }
+
+        /// <summary>
+        /// Gets the context menu.
+        /// </summary>
+        /// <param name="sender">The node for which to get hte context menu.</param>
+        /// <param name="nodeData">The node data.</param>
+        /// <returns></returns>
+        public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
+        {
+            IMenuItem menuBase = base.GetContextMenu(sender, nodeData);
+            IMenuItem menu = 
+                NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, sender, nodeData);
+
+            if (menuBase != null)
+            {
+                menu.Add(menuBase);
+            }
+
+            ContextMenuStrip contextMenu = 
+                ContextMenuFactory.CreateMenuFor(nodeData, Gui, this, sender);
+            menu.Add(new MenuItemContextMenuStripAdapter(contextMenu));
+            return menu;
         }
 
         private static void UpdateRestartNode(ITreeNode node, RestartFile nodeData)

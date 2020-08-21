@@ -47,6 +47,8 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
         {
             ContextMenuStrip.Items.Add(GetRemoveRestartMenuItem(model));
             ContextMenuStrip.Items.Add(GetUseLastValidRestartMenuItem(model));
+
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
         }
 
         private void AddItemsForOutputRestartFile(T model, RestartFile restartFile)
