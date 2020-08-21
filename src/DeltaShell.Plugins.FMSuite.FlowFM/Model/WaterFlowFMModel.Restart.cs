@@ -103,11 +103,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set => ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = value;
         }
 
-        public virtual void ImportRestartFile(string restartFilePath)
-        {
-            // TODO D3DFMIQ-2075
-        }
-
         public override bool IsDataItemActive(IDataItem dataItem)
         {
             // TODO D3DFMIQ-2075

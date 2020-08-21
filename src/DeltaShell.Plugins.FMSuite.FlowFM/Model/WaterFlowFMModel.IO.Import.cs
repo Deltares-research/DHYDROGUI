@@ -166,7 +166,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             string restartFilePath = MduFileHelper.GetSubfilePath(
                 mduPath, ModelDefinition.GetModelProperty(KnownProperties.RestartFile));
 
-            if (!File.Exists(filePath))
+            if (string.IsNullOrEmpty(restartFilePath))
+            {
+                RestartInput = new RestartFile();
+                return;
+            }
+
+            if (!File.Exists(restartFilePath))
             {
                 Log.Warn($"Restart file not found: {restartFilePath}.");
                 return;

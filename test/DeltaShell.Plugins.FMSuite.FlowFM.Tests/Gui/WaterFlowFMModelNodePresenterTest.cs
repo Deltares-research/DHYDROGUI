@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
@@ -220,6 +222,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             int after = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
 
             Assert.AreEqual(before, after);
+        }
+
+        [Test]
+        public void GetChildNodeObjects_ContainsRestartOutputTreeFolder()
+        {
+            // Setup
+            var nodePresenter = new WaterFlowFMModelNodePresenter(null);
+            var model = new WaterFlowFMModel();
+
+            // Call
+            IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
+
+            // Assert
+            TreeFolder outputTreeFolder = childObjects.OfType<TreeFolder>().Single(f => f.Text == "Output");
+            List<RestartFileOutputTreeFolder> restartFileOutputTreeFolders = outputTreeFolder.ChildItems.OfType<RestartFileOutputTreeFolder>().ToList();
+            Assert.That(restartFileOutputTreeFolders, Has.Count.EqualTo(1));
         }
     }
 }
