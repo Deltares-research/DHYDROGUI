@@ -37,7 +37,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set => ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = value;
         }
 
-        // TODO D3DFMIQ-2075
         public virtual bool WriteRestart
         {
             get => (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
