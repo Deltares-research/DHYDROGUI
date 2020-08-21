@@ -135,11 +135,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             // Assert
             IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
-            Assert.That(existingKeys, Has.Length.EqualTo(1));
+            Assert.That(existingKeys, Has.Length.EqualTo(2));
 
-            const char expectedKey = 'A';
-            Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
-            Assert.That(mapping[expectedKey].Name, Is.EqualTo(inputName));
+            const char firstExpectedKey = 'A';
+            Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
+            Assert.That(mapping[firstExpectedKey], Is.EqualTo(firstInput));
+            const char secondExpectedKey = 'B';
+            Assert.That(existingKeys[1], Is.EqualTo(secondExpectedKey));
+            Assert.That(mapping[secondExpectedKey], Is.EqualTo(secondInput));
         }
 
         [Test]
@@ -263,7 +266,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             // Assert
             IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
-            Assert.That(existingKeys, Has.Length.EqualTo(1));
+            Assert.That(existingKeys, Has.Length.EqualTo(2));
 
             const char firstExpectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
@@ -336,7 +339,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.That(mathematicalExpression.InputMapping, Has.Count.EqualTo(1));
 
             var expectedEntry = new KeyValuePair<char, string>('A', secondInputName);
-            Assert.That(mathematicalExpression.InputMapping, Has.Member(expectedEntry));
+            Assert.That(mathematicalExpression.InputMapping.Select( im => new KeyValuePair<char, string>(im.Key, im.Value.Name)), Has.Member(expectedEntry));
         }
 
         [Test]
