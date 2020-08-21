@@ -8,74 +8,46 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 {
+    /// <summary>
+    /// <see cref="ContextMenuFactory"/> is responsible for building context
+    /// menus given data, and a corresponding node presenter.
+    /// </summary>
     public static class ContextMenuFactory
     {
-        private static readonly Bitmap Import = Resources.import;
-        private static readonly Bitmap Properties = Resources.properties;
+        private static readonly Bitmap import = Resources.import;
+        private static readonly Bitmap properties = Resources.properties;
 
         /// <summary>
         /// Generates a context menu for the provided <paramref name="data"/>.
         /// </summary>
         /// <param name="data"> Data to generate a menu for. </param>
         /// <param name="gui"> The gui (needed for calling commands) </param>
-        /// <param name="nodePresenter"> The node presenter for the
-        /// <param name="data"/>
-        /// object.
+        /// <param name="nodePresenter">
+        /// The node presenter for the <paramref name="data"/> object.
         /// </param>
-        /// <param name="node"> Tree node for the
-        /// <param name="data"/>
-        /// object.
+        /// <param name="node"> Tree node for the <paramref name="data"/> object.
         /// </param>
         /// <returns> A <see cref="ContextMenuStrip"/> object with defined functionality. </returns>
         public static ContextMenuStrip CreateMenuFor(object data, IGui gui, ITreeNodePresenter nodePresenter, ITreeNode node)
         {
             var menu = new ContextMenuStrip();
 
-            if (gui.CommandHandler.CanOpenSelectViewDialog()
-                && gui.DocumentViewsResolver.GetViewInfosFor(data).Count() > 1)
+            if (HasOpenWithItem(data, gui))
             {
-                var openWithItem = new ClonableToolStripMenuItem
-                {
-                    Text = Resources.FMSuiteNodePresenterBase_GetContextMenu_Open__With___,
-                    Tag = data,
-                    Enabled = true,
-                };
-
-                openWithItem.Click += (s, a) =>
-                {
-                    gui.Selection = ((ToolStripMenuItem)s).Tag;
-                    gui.CommandHandler.OpenSelectViewDialog();
-                };
-
-                menu.Items.Add(openWithItem);
+                menu.Items.Add(GetOpenWithItem(data, gui));
                 menu.Items.Add(new ToolStripSeparator());
             }
 
             var addToolStripSeparator = false;
-            if (node != null && nodePresenter.CanRemove(null, node.Tag))
+            if (HasDeleteItem(nodePresenter, node))
             {
-                var deleteItem = new ClonableToolStripMenuItem
-                {
-                    Text = "Delete",
-                    Tag = data,
-                    Enabled = true,
-                    Image = Resources.DeleteHS
-                };
-                deleteItem.Click += (s, e) => nodePresenter.RemoveNodeData(node.Parent.Tag, data);
-                menu.Items.Add(deleteItem);
+                menu.Items.Add(GetDeleteItem(data, nodePresenter, node));
                 addToolStripSeparator = true;
             }
 
-            if (nodePresenter.CanRenameNode(node))
+            if (HasRenameItem(nodePresenter, node))
             {
-                var renameItem = new ClonableToolStripMenuItem
-                {
-                    Text = "Rename",
-                    Tag = data,
-                    Enabled = true
-                };
-                renameItem.Click += (s, e) => node.TreeView.StartLabelEdit();
-                menu.Items.Add(renameItem);
+                menu.Items.Add(GetRenameItem(data, node));
                 addToolStripSeparator = true;
             }
 
@@ -84,17 +56,92 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                 menu.Items.Add(new ToolStripSeparator());
             }
 
+            menu.Items.Add(GetImportItem(data, gui));
+            menu.Items.Add(GetExportItem(data, gui));
+
+            menu.Items.Add(new ToolStripSeparator());
+
+            menu.Items.Add(GetPropertiesItem(data, gui));
+
+            return menu;
+        }
+
+        private static bool HasOpenWithItem(object data, IGui gui) =>
+            gui.CommandHandler.CanOpenSelectViewDialog()
+            && gui.DocumentViewsResolver.GetViewInfosFor(data).Count() > 1;
+
+        private static ToolStripItem GetOpenWithItem(object data, IGui gui)
+        {
+            var openWithItem = new ClonableToolStripMenuItem
+            {
+                Text = Resources.FMSuiteNodePresenterBase_GetContextMenu_Open__With___,
+                Tag = data,
+                Enabled = true,
+            };
+
+            openWithItem.Click += (s, a) =>
+            {
+                gui.Selection = ((ToolStripMenuItem) s).Tag;
+                gui.CommandHandler.OpenSelectViewDialog();
+            };
+
+            return openWithItem;
+        }
+
+        private static bool HasRenameItem(ITreeNodePresenter nodePresenter, ITreeNode node) => 
+            nodePresenter.CanRenameNode(node);
+
+
+        private static ToolStripItem GetRenameItem(object data, ITreeNode node)
+        {
+            var renameItem = new ClonableToolStripMenuItem
+            {
+                Text = "Rename",
+                Tag = data,
+                Enabled = true
+            };
+            renameItem.Click += (s, e) => node.TreeView.StartLabelEdit();
+
+            return renameItem;
+        }
+
+        private static bool HasDeleteItem(ITreeNodePresenter nodePresenter, ITreeNode node) => 
+            node != null && nodePresenter.CanRemove(null, node.Tag);
+
+
+        private static ToolStripItem GetDeleteItem(object data, 
+                                                       ITreeNodePresenter nodePresenter, 
+                                                       ITreeNode node)
+        {
+            var deleteItem = new ClonableToolStripMenuItem
+            {
+                Text = "Delete",
+                Tag = data,
+                Enabled = true,
+                Image = Resources.DeleteHS
+            };
+            deleteItem.Click += (s, e) => nodePresenter.RemoveNodeData(node.Parent.Tag, data);
+
+            return deleteItem;
+        }
+
+        private static ToolStripItem GetImportItem(object data, IGui gui)
+        {
             var importItem = new ClonableToolStripMenuItem
             {
                 Text = Resources.FMSuiteNodePresenterBase_GetContextMenu__Import___,
                 Tag = data,
-                Image = Import,
+                Image = import,
                 Enabled = gui.CommandHandler.CanImportOn(data)
             };
             importItem.Click += (s, a) => gui.CommandHandler.ImportOn(data);
 
-            menu.Items.Add(importItem);
+            return importItem;
+        }
 
+
+        private static ToolStripItem GetExportItem(object data, IGui gui)
+        {
             var exportItem = new ClonableToolStripMenuItem
             {
                 Text = Resources.FMSuiteNodePresenterBase_GetContextMenu__Export___,
@@ -102,15 +149,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                 Enabled = gui.CommandHandler.CanExportFrom(data)
             };
             exportItem.Click += (s, a) => { gui.CommandHandler.ExportFrom(data); };
-            menu.Items.Add(exportItem);
 
-            menu.Items.Add(new ToolStripSeparator());
+            return exportItem;
+        }
 
+        private static ToolStripItem GetPropertiesItem(object data, IGui gui)
+        {
             var propertiesItem = new ClonableToolStripMenuItem
             {
                 Text = Resources.FMSuiteNodePresenterBase_GetContextMenu__Properties,
                 Tag = data,
-                Image = Properties
+                Image = properties
             };
 
             propertiesItem.Click += (s, a) =>
@@ -119,9 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                 gui.CommandHandler.ShowProperties();
             };
 
-            menu.Items.Add(propertiesItem);
-
-            return menu;
+            return propertiesItem;
         }
     }
 }
