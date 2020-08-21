@@ -34,14 +34,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void CheckThatInitializingFmModelWithSalinityAndTemperatureEnabledNoWarningMessagesAreGiven()
         {
-            // TODO D3DFMIQ-2075
             var model = new WaterFlowFMModel();
             //Enable Salinity and Temperature checkboxes
             WaterFlowFMProperty salinityProperty = model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity);
             WaterFlowFMProperty temperatureProperty = model.ModelDefinition.GetModelProperty(KnownProperties.Temperature);
             //Create a grid
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            //model.UseRestart = true;
 
             //Validate model
             ValidationReport report = model.Validate();
@@ -147,20 +145,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(1,
                             report.GetAllIssuesRecursive()
                                   .Count(i => i.Severity == ValidationSeverity.Error && i.Message.Contains("parallel run")));
-        }
-
-        [Test]
-        public void ValidateRestartInputReportTestRestartIsEmpty()
-        {
-            // TODO D3DFMIQ-2075
-            var model = new WaterFlowFMModel();
-            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            //model.UseRestart = true;
-
-            ValidationReport report = model.Validate();
-            Assert.AreEqual(1, report.ErrorCount);
-            Assert.That(report.AllErrors.First(i => i.Severity == ValidationSeverity.Error).Message,
-                        Is.EqualTo("Input restart state is empty; cannot restart."));
         }
 
         [Test]
