@@ -64,7 +64,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
         /// </summary>
         /// <param name="sender">The node for which to get hte context menu.</param>
         /// <param name="nodeData">The node data.</param>
-        /// <returns></returns>
+        /// <returns>The context menu for a <see cref="RestartFile"/></returns>
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
             IMenuItem menuBase = base.GetContextMenu(sender, nodeData);
