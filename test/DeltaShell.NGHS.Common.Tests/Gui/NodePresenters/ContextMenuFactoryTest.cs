@@ -30,7 +30,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
             ToolStripItem importToolStripItem = null;
             foreach (ToolStripItem toolStripItem in menu.Items)
             {
-                if (toolStripItem.Text == "&Import...")
+                if (toolStripItem.Text == "Import ...")
                 {
                     importToolStripItem = toolStripItem;
                 }
@@ -60,7 +60,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
             ToolStripItem importToolStripItem = null;
             foreach (ToolStripItem toolStripItem in menu.Items)
             {
-                if (toolStripItem.Text == "&Export...")
+                if (toolStripItem.Text == "Export ...")
                 {
                     importToolStripItem = toolStripItem;
                 }
