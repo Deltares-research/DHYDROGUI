@@ -70,9 +70,10 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
 
             // Assert
             ToolStripItemCollection toolStripItems = menu.ContextMenuStrip.Items;
-            Assert.That(toolStripItems, Has.Count.EqualTo(2));
+            Assert.That(toolStripItems, Has.Count.EqualTo(3));
             Assert.That(toolStripItems[0].Text, Is.EqualTo("Remove restart"));
             Assert.That(toolStripItems[1].Text, Is.EqualTo("Use last restart"));
+            Assert.That(toolStripItems[2], Is.InstanceOf<ToolStripSeparator>());
         }
 
         [Test]
