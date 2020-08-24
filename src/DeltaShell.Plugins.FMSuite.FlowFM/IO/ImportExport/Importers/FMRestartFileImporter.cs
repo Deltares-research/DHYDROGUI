@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         /// <c>true</c> when the <paramref name="targetObject"/> is a <see cref="RestartFile"/>;
         /// otherwise, <c>false</c>.
         /// </returns>
-        public bool CanImportOn(object targetObject) => targetObject is RestartFile;
+        public bool CanImportOn(object targetObject) => GetModel(targetObject) != null;
 
         /// <summary>
         /// Imports the restart file with path <paramref name="path"/>
@@ -114,9 +114,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 throw new FileNotFoundException($"Restart file does not exist: {path}");
             }
 
-            WaterFlowFMModel model = getModels().First(m => m.RestartInput == target);
+            WaterFlowFMModel model = GetModel(target);
 
             return model.RestartInput = new RestartFile(path);
+        }
+
+        private WaterFlowFMModel GetModel(object obj)
+        {
+            return getModels().FirstOrDefault(m => m.RestartInput == obj);
         }
     }
 }

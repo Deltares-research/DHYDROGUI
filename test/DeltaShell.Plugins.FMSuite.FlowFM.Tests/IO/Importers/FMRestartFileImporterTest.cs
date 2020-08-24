@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
@@ -44,23 +43,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(importer.OpenViewAfterImport, Is.False);
         }
 
-        private IEnumerable<TestCaseData> CanImportOnTestCases()
+        [Test]
+        public void CanImportOn_IsRestartInputForModel_ReturnsTrue()
         {
-            yield return new TestCaseData(new RestartFile(), true);
-            yield return new TestCaseData(new object(), false);
-        }
-
-        [TestCaseSource(nameof(CanImportOnTestCases))]
-        public void CanImportOn(object obj, bool expected)
-        {
-            // Setup
-            var importer = new FMRestartFileImporter(Enumerable.Empty<WaterFlowFMModel>);
+            var model = new WaterFlowFMModel();
+            var importer = new FMRestartFileImporter(() => new[] { model });
 
             // Call
-            bool result = importer.CanImportOn(obj);
+            bool result = importer.CanImportOn(model.RestartInput);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void CanImportOn_IsNotRestartInputForModel_ReturnsFalse()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var importer = new FMRestartFileImporter(() => new[] { model });
+
+            // Call
+            bool result = importer.CanImportOn(new RestartFile());
+
+            // Assert
+            Assert.That(result, Is.False);
         }
 
         [Test]
