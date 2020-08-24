@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using BasicModelInterface;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -995,7 +996,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             string outputFilePath = Path.Combine(dirInfo.Parent.FullName, OutputFileName);
             ReconnectOutputFiles(outputFilePath);
 
-            SetRestartOutputFiles(Directory.GetFiles(Path.Combine(dirInfo.Parent.FullName, DirectoryName), "rtc_*.xml"));
+            var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
+            SetRestartOutputFiles(Directory.GetFiles(Path.Combine(dirInfo.Parent.FullName, DirectoryName)).Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))));
         }
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
