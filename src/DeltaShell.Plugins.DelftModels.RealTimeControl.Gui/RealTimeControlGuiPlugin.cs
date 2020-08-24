@@ -16,6 +16,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Gui.Restart;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
@@ -246,7 +247,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 return new MenuItemContextMenuStripAdapter(convertCoordinateSystemContextMenu);
             }
 
-            return null;
+            if (sender is ITreeNode node && data is RestartFile restartFile)
+            {
+                return new RestartFileContextMenu<RealTimeControlModel>(restartFile, node);
+            }
+
+            return base.GetContextMenu(sender, data);
         }
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()

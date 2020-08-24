@@ -1,15 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.Common.Gui.Restart;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using Rhino.Mocks;
 using Rhino.Mocks.Interfaces;
 
@@ -51,10 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 var pluginGui = new RealTimeControlGuiPlugin {Gui = gui};
                 pluginGui.Activate();
 
-                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(new ShapeBase[]
-                {
-                    new RuleShape()
-                });
+                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(new ShapeBase[] {new RuleShape()});
                 Assert.IsTrue(RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet());
 
                 projectClosingRaiser.Raise(project);
@@ -94,6 +96,54 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             propertyInfo = propertyInfos.First(pi => pi.ObjectType == typeof(ControlGroup));
             Assert.AreEqual(typeof(ControlGroupProperties), propertyInfo.PropertyType);
+        }
+
+        [Test]
+        public void GetProjectTreeViewNodePresenters_ContainsCorrectNodePresenters()
+        {
+            // Given
+            var guiPlugin = new RealTimeControlGuiPlugin();
+
+            // When
+            ITreeNodePresenter[] nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
+
+            // Then
+            var restartFileNodePresenter = Contains<RestartFileNodePresenter>(nodePresenters);
+            Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetContextMenuTestCaseData))]
+        public void GetContextMenu_ReturnsCorrectContextMenu(object sender, object data, ExactTypeConstraint typeConstraint)
+        {
+            // Setup
+            var plugin = new RealTimeControlGuiPlugin();
+
+            // Call
+            IMenuItem contextMenu = plugin.GetContextMenu(sender, data);
+
+            // Assert
+            Assert.That(contextMenu, typeConstraint);
+        }
+
+        private static T Contains<T>(IEnumerable<ITreeNodePresenter> source)
+        {
+            List<T> items = source.OfType<T>().ToList();
+            Assert.That(items, Has.Count.EqualTo(1), $"Collection should contain one {typeof(T).Name}");
+
+            return items[0];
+        }
+
+        private IEnumerable<TestCaseData> GetContextMenuTestCaseData()
+        {
+            var restartFile = new RestartFile();
+            var treeNode = Substitute.For<ITreeNode>();
+            treeNode.Parent.Returns((ITreeNode) null);
+
+            yield return new TestCaseData(treeNode, restartFile, Is.TypeOf(typeof(RestartFileContextMenu<RealTimeControlModel>)));
+            yield return new TestCaseData(treeNode, new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<RealTimeControlModel>)));
+            yield return new TestCaseData(new object(), restartFile, Is.Not.TypeOf(typeof(RestartFileContextMenu<RealTimeControlModel>)));
+            yield return new TestCaseData(new object(), new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<RealTimeControlModel>)));
         }
     }
 }
