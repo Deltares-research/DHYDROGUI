@@ -1986,6 +1986,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.That(model.RestartOutput, Is.Empty);
         }
 
+        [Test]
+        public void SetRestartInput_Null_ThrowsArgumentNullException()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+
+            // Call
+            void Call() => model.RestartInput = null;
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("value"));
+        }
+
+        [Test]
+        public void SetRestartInput_SetsCorrectly()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var restartFile = new RestartFile();
+
+            // Call
+            model.RestartInput = restartFile;
+
+            // Assert
+            Assert.That(model.RestartInput, Is.SameAs(restartFile));
+        }
+
         [TestCase(null, false)]
         [TestCase("path/to/the.file", true)]
         public void GetUseRestart_ReturnsCorrectResult(string filePath, bool expected)

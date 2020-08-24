@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 string restartFilePath = tempDir.CreateFile("restart.file");
                 string exportDir = tempDir.CreateDirectory("export_dir");
 
-                model.RestartInput.Path = restartFilePath;
+                model.RestartInput = new RestartFile(restartFilePath);
 
                 // Precondition
                 Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo(string.Empty));

@@ -18,9 +18,9 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         bool WriteRestart { get; set; }
 
         /// <summary>
-        /// Gets the restart input file.
+        /// Gets or sets the restart input file.
         /// </summary>
-        RestartFile RestartInput { get; }
+        RestartFile RestartInput { get; set; }
 
         /// <summary>
         /// Gets the restart output files.

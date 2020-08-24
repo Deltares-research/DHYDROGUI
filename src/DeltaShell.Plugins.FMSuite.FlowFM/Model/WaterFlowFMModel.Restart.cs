@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
@@ -9,10 +10,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     // The Restart related code for WaterFlowFM..
     public partial class WaterFlowFMModel
     {
+        private RestartFile restartFile = new RestartFile();
+
         /// <summary>
         /// Gets or sets the input restart file.
         /// </summary>
-        public RestartFile RestartInput { get; } = new RestartFile();
+        public RestartFile RestartInput
+        {
+            get => restartFile;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+
+                restartFile = value;
+            }
+        }
 
         public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
 

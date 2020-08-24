@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (string.IsNullOrEmpty(restartFilePath))
             {
-                RestartInput.Path = null;
+                RestartInput = new RestartFile();
                 return;
             }
 
@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return;
             }
 
-            RestartInput.Path = restartFilePath;
+            RestartInput = new RestartFile(restartFilePath);
         }
 
         public void ImportSpatialOperationsAfterLoading()
