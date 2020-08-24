@@ -93,12 +93,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             get
             {
                 string unitSymbol = description?.UnitSymbol;
-
+                unitSymbol = GetEnumerableSymbol(unitSymbol);
                 return !string.IsNullOrEmpty(unitSymbol)
                            ? $"[{unitSymbol}]"
                            : "";
             }
         }
+
+        public bool IsEnumerableSymbol => description != null && (description.UnitSymbol?.Contains("|") ?? false);
+
+        private string GetEnumerableSymbol(string unformattedSymbol)
+        {
+            if (unformattedSymbol == null || !IsEnumerableSymbol)
+                return unformattedSymbol;
+            const char symbolSeparator = ':';
+            string bindedProperty = unformattedSymbol.Split(symbolSeparator)[0];
+            string[] symbols = unformattedSymbol.Split(symbolSeparator)[1].Split('|');
+            WpfGuiProperty lbv = GetBindedProperty.Invoke(bindedProperty);            
+            int enumVal = (int)Enum.Parse(lbv.ValueType, lbv.Value.ToString());
+            return symbols[enumVal].Trim();
+        }
+
+        public Func<string, WpfGuiProperty> GetBindedProperty { get; set; }
 
         /// <summary>
         /// Minimum allowed value
@@ -243,6 +259,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             OnPropertyChanged(nameof(IsVisible));
             OnPropertyChanged(nameof(IsReadOnly));
             OnPropertyChanged(nameof(Value));
+            OnPropertyChanged(nameof(UnitSymbol));
             UpdateValueCollection();
             OnPropertyChanged(nameof(ValueCollection));
         }
