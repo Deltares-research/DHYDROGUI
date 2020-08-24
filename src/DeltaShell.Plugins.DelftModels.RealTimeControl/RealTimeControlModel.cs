@@ -386,17 +386,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             GC.SuppressFinalize(this);
         }
 
-        public override bool CanCopy(IDataItem item)
-        {
-            // TODO D3DFMIQ-2077
-            //if (item.Value is FileBasedRestartState)
-            //{
-            //    return true;
-            //}
-
-            return base.CanCopy(item);
-        }
-
         public override bool IsLinkAllowed(IDataItem source, IDataItem target)
         {
             return false;
@@ -581,7 +570,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <param name="tag"></param>
         private IDataItem CreateDataItemNotAvailableInPreviousVersion(string tag)
         {
-            //TODO D3DFMIQ-2077
+            //TODO D3DFMIQ-2196
             //if (tag == RestartInputStateTag || tag == UseRestartTag || tag == WriteRestartTag)
             //{
             //    AddRestartDataItems();

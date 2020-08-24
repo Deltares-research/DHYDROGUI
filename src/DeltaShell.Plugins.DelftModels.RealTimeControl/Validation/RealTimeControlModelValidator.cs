@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             {
                 ValidateRealTimeControlModel(rootObject),
 
-                // TODO D3DFMIQ-2077
+                // TODO D3DFMIQ-2191
 
                 ValidateRestartInputState(rootObject)
             };
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                 return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
             }
 
-            // TODO D3DFMIQ-2077
+            // TODO D3DFMIQ-2191
             return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
         }
     }
