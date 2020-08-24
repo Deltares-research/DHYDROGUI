@@ -1000,7 +1000,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
         {
-            RestartOutput = restartFileStrings.Select(rfs => new RestartFile(rfs));
+            RestartOutput = restartFileStrings.Select(rfs => new RestartFile(rfs)).ToArray();
         }
 
         private void ReconnectOutputFiles(string outputFilePath)

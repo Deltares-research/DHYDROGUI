@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,7 +12,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DeltaShell.NGHS.Common.Gui.Restart;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 using GeoAPI.Extensions.Coverages;
 using log4net;
@@ -104,6 +103,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         {
             yield return new TreeFolder(model, GetInputItems(model), InputFolderName, FolderImageType.Input);
             yield return new TreeFolder(model, GetOutputItems(model), OutputFolderName, FolderImageType.Output);
+        }
+
+        protected override void OnPropertyChanged(RealTimeControlModel model, ITreeNode node, PropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(model, node, e);
+
+            if (e.PropertyName == nameof(RealTimeControlModel.RestartInput))
+            {
+                TreeView.RefreshChildNodes(node);
+            }
         }
 
         protected override bool CanRemove(RealTimeControlModel model)
