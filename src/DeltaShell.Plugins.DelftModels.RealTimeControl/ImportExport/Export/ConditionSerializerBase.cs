@@ -65,10 +65,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         {
             IInput conditionInput = conditionBase.Input;
 
-            var serializer =
-                SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject) conditionInput);
-
-            return serializer == null ? "|no input|" : serializer.GetXmlName();
+            return conditionInput == null?
+                       "|no input|" : 
+                       SerializerCreator.CreateSerializerType<InputSerializerBase>(
+                           (RtcBaseObject)conditionInput).GetXmlName();
         }
     }
 }

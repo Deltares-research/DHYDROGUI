@@ -58,6 +58,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
         }
 
         [Test]
+        public void GivenStandardConditionWithoutConnectedObjects_WhenSerializedToXml_ThenExpectedXmlReturned()
+        {
+            var serializer = new StandardConditionSerializer(new StandardCondition()); 
+            Assert.AreEqual(XmlWithoutConnectedObjects(), serializer.ToXml(fns, "").Single().ToString(SaveOptions.DisableFormatting));
+        }
+
+    [Test]
         public void CheckXmlGenerationOtherBooleanCheck()
         {
             standardCondition.Operation = Operation.Less;
@@ -201,7 +208,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             Assert.AreEqual(expectedXml, retrievedXml);
         }
 
-        private string OriginXml()
+        private string XmlWithoutConnectedObjects() 
+        {
+            return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
+                   "<standard id=\"[StandardCondition]Standard Condition\">" +
+                   "<condition>" +
+                   "<x1Series ref=\"EXPLICIT\">|no input|</x1Series>" +
+                   "<relationalOperator>Equal</relationalOperator>" +
+                   "<x2Value>0</x2Value>" +
+                   "</condition>" +
+                   "<output>" +
+                   "<status>" + RtcXmlTag.Status + "Standard Condition</status>" +
+                   "</output>" +
+                   "</standard>" + 
+                   "</trigger>";
+        }
+
+    private string OriginXml()
         {
             return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                    "<standard id=\"[StandardCondition]" + standardCondition.Name + "\">" +
