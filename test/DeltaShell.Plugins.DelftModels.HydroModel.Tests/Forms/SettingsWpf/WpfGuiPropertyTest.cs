@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
@@ -144,6 +146,52 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             dummyField.UnitSymbol = "m/s";
 
             Assert.AreEqual("[m/s]", property.UnitSymbol);
+        }
+
+        private enum MultipleUnits
+        {
+            First,
+            Last
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Test_WpfGuiProperty_WithMultipleSymbolUnit_When_BindedValueChanges_Then_GetsCorrectUnit()
+        {
+            const string somePropName = "someProp";
+            var subCategory = "dummyCat";
+            var bindingValue = MultipleUnits.First;
+            var bindingUIField = new FieldUIDescription((o) => bindingValue, (o, o1) => bindingValue = (MultipleUnits) o1, o => true)
+            {
+                Name = somePropName,
+                SubCategory = subCategory,
+                ValueType = typeof(MultipleUnits)
+            };
+
+            var bindingProperty = new WpfGuiProperty(bindingUIField);
+            var dummyField = new FieldUIDescription(null, null)
+            {
+                Name = "dummyName", UnitSymbol = somePropName + ": First | Last", SubCategory = subCategory
+            };
+            bindingProperty.Value = MultipleUnits.First;
+
+            const string subCategoryName = "dummyCategory";
+            var groupingCategory = new WpfGuiCategory(subCategoryName, new List<FieldUIDescription>(){dummyField});
+            groupingCategory.Properties.Add(bindingProperty);
+
+            Assert.That(groupingCategory.Properties.Count, Is.EqualTo(2));
+
+            WpfGuiProperty dummyWpfProperty = groupingCategory.Properties.Single(p => p.Name.Equals(dummyField.Name));
+            Assert.That(dummyWpfProperty, Is.Not.Null);
+
+            Assert.That(dummyWpfProperty.UnitSymbol, Is.EqualTo("[First]"));
+
+            // When
+            bindingProperty.Value = MultipleUnits.Last;
+
+            // Then
+            Assert.That(dummyWpfProperty.UnitSymbol, Is.EqualTo("[Last]"));
+
         }
 
         [Test]

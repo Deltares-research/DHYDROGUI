@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         private string GetEnumerableSymbol(string unformattedSymbol)
         {
-            if (unformattedSymbol == null || !IsEnumerableSymbol)
+            if (unformattedSymbol == null || !IsEnumerableSymbol || GetBindedProperty == null)
                 return unformattedSymbol;
             const char symbolSeparator = ':';
             string bindedProperty = unformattedSymbol.Split(symbolSeparator)[0];
