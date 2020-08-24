@@ -16,6 +16,7 @@ using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -182,6 +183,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                             "The clean up should not have changed the parameter name of the output");
             Assert.AreEqual("[m]", output.UnitName,
                             "The clean up should not have changed the unit name of the output");
+        }
+
+        [Test]
+        public void GivenRealTimeControlModel_WhenDisconnectOutput_ThenRestartOutputCleared()
+        {
+            // Given
+            var rtcModel = new RealTimeControlModel {RestartOutput = new[] {new RestartFile()}};
+
+            // When
+            rtcModel.DisconnectOutput();
+
+            // Then
+            Assert.That(rtcModel.RestartOutput, Is.Empty);
         }
 
         # region Syncing controlled models, control group items, model settings, etc.

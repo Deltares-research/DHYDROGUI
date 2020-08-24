@@ -961,6 +961,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void DisconnectOutput()
         {
+            ClearRestartOutput();
+
             if (outputFileFunctionStore == null)
             {
                 return;
@@ -970,6 +972,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             outputFileFunctionStore.Features?.Clear();
             outputFileFunctionStore.Close();
             outputFileFunctionStore = null;
+        }
+
+        private void ClearRestartOutput()
+        {
+            RestartOutput = Enumerable.Empty<RestartFile>();
         }
 
         public virtual void ConnectOutput(string outputPath)
