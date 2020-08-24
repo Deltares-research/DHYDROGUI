@@ -811,18 +811,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
-        public void TestGetMetaDataRequirementsIsImplementedForAllSupportedVersions()
-        {
-            var model = new RealTimeControlModel();
-            int[] allSupportedVersions = TypeUtils.GetStaticField<int[]>(typeof(RealTimeControlModel), "SupportedMetaDataVersions");
-
-            foreach (int version in allSupportedVersions)
-            {
-                Assert.DoesNotThrow(() => TypeUtils.CallPrivateMethod(model, "GetMetaDataRequirements", version));
-            }
-        }
-
-        [Test]
         public void DimrExportDirectoryPath_ForGet_ShouldReturnNotSupportedException()
         {
             // Arrange

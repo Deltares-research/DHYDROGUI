@@ -215,6 +215,7 @@
     <Compile Include="ImportExport\Export\StandardConditionSerializer.cs" />
     <Compile Include="ImportExport\Export\TimeConditionSerializer.cs" />
     <Compile Include="ImportExport\Export\TimeRuleSerializer.cs" />
+    <Compile Include="ImportExport\RealTimeControlRestartFileImporter.cs" />
     <Compile Include="ImportExport\RealTimeControlDataAndToolsConfigXmlReader.cs" />
     <Compile Include="ImportExport\RealTimeControlDataConfigXmlSetter.cs" />
     <Compile Include="ImportExport\RealTimeControlModelExporter.cs" />

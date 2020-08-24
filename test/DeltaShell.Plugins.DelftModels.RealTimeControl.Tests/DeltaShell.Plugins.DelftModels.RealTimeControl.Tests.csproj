@@ -297,6 +297,7 @@
     <Compile Include="ImportExport\Export\PidRuleSerializerTest.cs" />
     <Compile Include="ImportExport\Export\RelativeTimRuleSerializerTest.cs" />
     <Compile Include="ImportExport\Export\StandardConditionSerializerTest.cs" />
+    <Compile Include="ImportExport\Export\TimeConditionSerializerTest.cs" />
     <Compile Include="ImportExport\Export\TimeRuleSerializerTest.cs" />
     <Compile Include="ImportExport\DataAccess\ExpressionTreeAssemblerTest.cs" />
     <Compile Include="ImportExport\Helpers\ExpressionNodeEqualityComparer.cs" />
@@ -306,6 +307,7 @@
     <Compile Include="ImportExport\RealTimeControlDataConfigXmlSetterTest.cs" />
     <Compile Include="ImportExport\RealTimeControlModelImporterTest.cs" />
     <Compile Include="ImportExport\RealTimeControlModelXmlReaderTest.cs" />
+    <Compile Include="ImportExport\RealTimeControlRestartFileImporterTest.cs" />
     <Compile Include="ImportExport\RealTimeControlRuntimeConfigSetterTest.cs" />
     <Compile Include="ImportExport\RealTimeControlRuntimeConfigXmlReaderTest.cs" />
     <Compile Include="ImportExport\RealTimeControlTimeSeriesSetterTest.cs" />
@@ -386,6 +388,10 @@
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
+      <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
+      <Name>DeltaShell.NGHS.IO.TestUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
       <Project>{4A0F7700-AA64-463F-A602-8C15E3886EC5}</Project>

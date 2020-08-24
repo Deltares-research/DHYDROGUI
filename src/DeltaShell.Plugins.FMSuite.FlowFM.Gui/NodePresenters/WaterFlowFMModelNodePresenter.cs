@@ -286,17 +286,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return existingItem;
         }
 
-        private static IEnumerable GetRestartStates(WaterFlowFMModel data)
-        {
-            yield break;
-
-            // TODO D3DFMIQ-2075
-            //IEnumerable<IDataItem> restartStates =
-            //    data.DataItems.Where(
-            //        dataItem => dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output);
-            //return restartStates;
-        }
-
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaterFlowFMModel model)
         {
             var item = new ClonableToolStripMenuItem
