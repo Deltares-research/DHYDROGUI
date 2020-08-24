@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <c>true</c> when the <paramref name="targetObject"/> is a <see cref="RestartFile"/>;
         /// otherwise, <c>false</c>.
         /// </returns>
-        public bool CanImportOn(object targetObject) => targetObject is RestartFile;
+        public bool CanImportOn(object targetObject) => GetModel(targetObject) != null;
 
         /// <summary>
         /// Imports the restart file with path <paramref name="path"/>
@@ -112,9 +112,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 throw new FileNotFoundException($"Restart file does not exist: {path}");
             }
 
-            RealTimeControlModel model = getModels().First(m => m.RestartInput == target);
+            RealTimeControlModel model = GetModel(target);
 
             return model.RestartInput = new RestartFile(path);
+        }
+
+        private RealTimeControlModel GetModel(object obj)
+        {
+            return getModels().FirstOrDefault(m => m.RestartInput == obj);
         }
     }
 }

@@ -91,23 +91,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             }
         }
 
-        private IEnumerable<TestCaseData> CanImportOnTestCases()
+        [Test]
+        public void CanImportOn_IsRestartInputForModel_ReturnsTrue()
         {
-            yield return new TestCaseData(new RestartFile(), true);
-            yield return new TestCaseData(new object(), false);
-        }
-
-        [TestCaseSource(nameof(CanImportOnTestCases))]
-        public void CanImportOn(object obj, bool expected)
-        {
-            // Setup
-            var importer = new RealTimeControlRestartFileImporter(Enumerable.Empty<RealTimeControlModel>);
+            var model = new RealTimeControlModel();
+            var importer = new RealTimeControlRestartFileImporter(() => new[] {model});
 
             // Call
-            bool result = importer.CanImportOn(obj);
+            bool result = importer.CanImportOn(model.RestartInput);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void CanImportOn_IsNotRestartInputForModel_ReturnsFalse()
+        {
+            // Setup
+            var model = new RealTimeControlModel();
+            var importer = new RealTimeControlRestartFileImporter(() => new[] {model});
+
+            // Call
+            bool result = importer.CanImportOn(new RestartFile());
+
+            // Assert
+            Assert.That(result, Is.False);
         }
 
         [TestCase(null)]
