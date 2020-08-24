@@ -255,7 +255,7 @@ def get_framework_version(dhydro_root: Path,
     """
     # We use the version specified in a package file to get the accurate 
     # version.
-    version_regex = re.compile(r'(?P<version>1\.6\.0(?:-beta)?(?:-SIGNED)?(?:(\.|-)\b[0-9a-f]{7})?)')
+    version_regex = re.compile(r'(?P<version>DeltaShell\.Framework\.1\.6\.0(?:-beta)?(?:-SIGNED)?(?:(\.|-)\b[0-9a-f]{7})?)')
 
     csproj_files = get_src_csproj_files(dhydro_root)
 
