@@ -16,7 +16,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Gui.Restart;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
@@ -57,52 +56,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             InitializeComponent();
         }
 
-        public override string Name
-        {
-            get
-            {
-                return "Real Time Control (UI)";
-            }
-        }
+        public override string Name => "Real Time Control (UI)";
 
-        public override string DisplayName
-        {
-            get
-            {
-                return "D-Real Time Control Plugin (UI)";
-            }
-        }
+        public override string DisplayName => "D-Real Time Control Plugin (UI)";
 
-        public override string Description
-        {
-            get
-            {
-                return RealTimeControl.Properties.Resources.RealTimeControlApplicationPlugin_Description;
-            }
-        }
+        public override string Description => 
+            RealTimeControl.Properties.Resources.RealTimeControlApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get
-            {
-                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
-            }
-        }
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion
-        {
-            get
-            {
-                return "3.5.0.0";
-            }
-        }
+        public override string FileFormatVersion => "3.5.0.0";
 
         public override IGui Gui
         {
-            get
-            {
-                return gui;
-            }
+            get => gui;
             set
             {
                 if (base.Gui != null)
@@ -120,13 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             }
         }
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get
-            {
-                return new RealTimeControlMapLayerProvider();
-            }
-        }
+        public override IMapLayerProvider MapLayerProvider => new RealTimeControlMapLayerProvider();
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {

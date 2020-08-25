@@ -20,7 +20,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Gui.Restart;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Controls;
@@ -10,15 +8,11 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.Common.Gui.Restart;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using GeoAPI.Extensions.CoordinateSystems;
-using NetTopologySuite.IO;
-using NSubstitute;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
