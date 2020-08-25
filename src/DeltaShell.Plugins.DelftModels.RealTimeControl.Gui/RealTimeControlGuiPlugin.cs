@@ -247,11 +247,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 return new MenuItemContextMenuStripAdapter(convertCoordinateSystemContextMenu);
             }
 
-            if (sender is ITreeNode node && data is RestartFile restartFile)
-            {
-                return new RestartFileContextMenu<RealTimeControlModel>(restartFile, node);
-            }
-
             return base.GetContextMenu(sender, data);
         }
 

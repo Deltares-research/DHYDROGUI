@@ -112,38 +112,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
         }
 
-        [Test]
-        [TestCaseSource(nameof(GetContextMenuTestCaseData))]
-        public void GetContextMenu_ReturnsCorrectContextMenu(object sender, object data, ExactTypeConstraint typeConstraint)
-        {
-            // Setup
-            var plugin = new RealTimeControlGuiPlugin();
-
-            // Call
-            IMenuItem contextMenu = plugin.GetContextMenu(sender, data);
-
-            // Assert
-            Assert.That(contextMenu, typeConstraint);
-        }
-
         private static T Contains<T>(IEnumerable<ITreeNodePresenter> source)
         {
             List<T> items = source.OfType<T>().ToList();
             Assert.That(items, Has.Count.EqualTo(1), $"Collection should contain one {typeof(T).Name}");
 
             return items[0];
-        }
-
-        private IEnumerable<TestCaseData> GetContextMenuTestCaseData()
-        {
-            var restartFile = new RestartFile();
-            var treeNode = Substitute.For<ITreeNode>();
-            treeNode.Parent.Returns((ITreeNode) null);
-
-            yield return new TestCaseData(treeNode, restartFile, Is.TypeOf(typeof(RestartFileContextMenu<RealTimeControlModel>)));
-            yield return new TestCaseData(treeNode, new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<RealTimeControlModel>)));
-            yield return new TestCaseData(new object(), restartFile, Is.Not.TypeOf(typeof(RestartFileContextMenu<RealTimeControlModel>)));
-            yield return new TestCaseData(new object(), new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<RealTimeControlModel>)));
         }
     }
 }

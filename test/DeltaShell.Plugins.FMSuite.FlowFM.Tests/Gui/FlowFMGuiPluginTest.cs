@@ -97,32 +97,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             return items[0];
         }
 
-        [Test]
-        [TestCaseSource(nameof(GetContextMenuTestCaseData))]
-        public void GetContextMenu_ReturnsCorrectContextMenu(object sender, object data, ExactTypeConstraint typeConstraint)
-        {
-            // Setup
-            var plugin = new FlowFMGuiPlugin();
-
-            // Call
-            IMenuItem contextMenu = plugin.GetContextMenu(sender, data);
-
-            // Assert
-            Assert.That(contextMenu, typeConstraint);
-        }
-
-        private IEnumerable<TestCaseData> GetContextMenuTestCaseData()
-        {
-            var restartFile = new RestartFile();
-            var treeNode = Substitute.For<ITreeNode>();
-            treeNode.Parent.Returns((ITreeNode) null);
-
-            yield return new TestCaseData(treeNode, restartFile, Is.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
-            yield return new TestCaseData(treeNode, new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
-            yield return new TestCaseData(new object(), restartFile, Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
-            yield return new TestCaseData(new object(), new object(), Is.Not.TypeOf(typeof(RestartFileContextMenu<WaterFlowFMModel>)));
-        }
-
         [Category(TestCategory.Jira)] // D3DFMIQ-614
         [Category(TestCategory.DataAccess)]
         [TestCase(@"ReloadGrid\netfile_projected_unassigned.nc", 0, @"ReloadGrid\netfile_projected_unassigned.nc", 0)]

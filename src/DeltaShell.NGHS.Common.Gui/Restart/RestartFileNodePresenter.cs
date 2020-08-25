@@ -76,6 +76,8 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
                 menu.Add(menuBase);
             }
 
+            menu.Add(new RestartFileContextMenu((RestartFile) nodeData, sender));
+
             ContextMenuStrip contextMenu = 
                 ContextMenuFactory.CreateMenuFor(nodeData, Gui, this, sender);
             menu.Add(new MenuItemContextMenuStripAdapter(contextMenu));

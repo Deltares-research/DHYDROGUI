@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             var node = Substitute.For<ITreeNode>();
 
             // Call
-            void Call() => new RestartFileContextMenu<IRestartModel>(null, node);
+            void Call() => new RestartFileContextMenu(null, node);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -33,7 +33,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             var restartFile = new RestartFile();
 
             // Call
-            void Call() => new RestartFileContextMenu<IRestartModel>(restartFile, null);
+            void Call() => new RestartFileContextMenu(restartFile, null);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -49,7 +49,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             node.Parent.Parent.Returns((ITreeNode) null);
 
             // Call
-            var menu = new RestartFileContextMenu<IRestartModel>(restartFile, node);
+            var menu = new RestartFileContextMenu(restartFile, node);
 
             // Assert
             Assert.That(menu.ContextMenuStrip.Items, Is.Empty);
@@ -66,7 +66,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             model.RestartInput.Returns(restartFile);
 
             // Call
-            var menu = new RestartFileContextMenu<IRestartModel>(restartFile, node);
+            var menu = new RestartFileContextMenu(restartFile, node);
 
             // Assert
             ToolStripItemCollection toolStripItems = menu.ContextMenuStrip.Items;
@@ -87,7 +87,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             model.RestartOutput.Returns(new List<RestartFile> {restartFile});
 
             // Call
-            var menu = new RestartFileContextMenu<IRestartModel>(restartFile, node);
+            var menu = new RestartFileContextMenu(restartFile, node);
 
             // Assert
             ToolStripItemCollection toolStripItems = menu.ContextMenuStrip.Items;
