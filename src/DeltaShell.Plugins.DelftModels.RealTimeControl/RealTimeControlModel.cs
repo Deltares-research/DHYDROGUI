@@ -27,6 +27,7 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
@@ -45,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Project explorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel, IRestartModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -63,7 +64,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private ICompositeActivity oldOwner;
 
         private bool cloning;
-        private string workDirectory;
 
         private IEventedList<ControlGroup> controlGroups;
 
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private bool suspendUpdateFeatureAndParameter;
 
-        private RestartFile restartFile = new RestartFile();
+        private RealTimeControlRestartFile restartFile = new RealTimeControlRestartFile();
 
         public RealTimeControlModel() : this("RTC Model") {}
 
@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <summary>
         /// Gets or sets the input restart file.
         /// </summary>
-        public virtual RestartFile RestartInput
+        public virtual RealTimeControlRestartFile RestartInput
         {
             get => restartFile;
             set
@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public virtual IEnumerable<RestartFile> RestartOutput { get; set; } = Enumerable.Empty<RestartFile>();
+        public virtual IEnumerable<RealTimeControlRestartFile> RestartOutput { get; set; } = Enumerable.Empty<RealTimeControlRestartFile>();
 
         public virtual void RefreshInitialState()
         {
@@ -966,7 +966,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void ClearRestartOutput()
         {
-            RestartOutput = Enumerable.Empty<RestartFile>();
+            RestartOutput = Enumerable.Empty<RealTimeControlRestartFile>();
         }
 
         public virtual void ConnectOutput(string outputPath)
@@ -991,7 +991,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
         {
-            RestartOutput = restartFileStrings.Select(rfs => new RestartFile(rfs)).ToArray();
+            RestartOutput = restartFileStrings.Select(rfs => new RealTimeControlRestartFile(Path.GetFileName(rfs), File.ReadAllText(rfs))).ToArray();
         }
 
         private void ReconnectOutputFiles(string outputFilePath)

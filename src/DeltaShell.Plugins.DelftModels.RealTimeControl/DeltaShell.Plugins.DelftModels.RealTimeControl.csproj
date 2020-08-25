@@ -165,6 +165,7 @@
     <Compile Include="Domain\IntervalRuleTimeSeriesCreator.cs" />
     <Compile Include="Domain\ITimeDependentRtcObject.cs" />
     <Compile Include="Domain\LookupSignal.cs" />
+    <Compile Include="Domain\Restart\RealTimeControlRestartFile.cs" />
     <Compile Include="ImportExport\DataAccess\BranchNode.cs" />
     <Compile Include="ImportExport\DataAccess\ConditionDataAccessObject.cs" />
     <Compile Include="ImportExport\DataAccess\ConditionDataAccessObjectCreator.cs" />

@@ -21,6 +21,7 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
@@ -202,12 +203,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 model.ConnectOutput(rtcDirectory);
 
                 // Assert
-                RestartFile[] restartOutput = model.RestartOutput.ToArray();
+                RealTimeControlRestartFile[] restartOutput = model.RestartOutput.ToArray();
                 Assert.That(restartOutput, Has.Length.EqualTo(5));
 
                 for (var i = 0; i < 5; i++)
                 {
-                    Assert.That(restartOutput[i].Path, Is.EqualTo(restartFiles[i]));
+                    Assert.That(restartOutput[i].Name, Is.EqualTo(Path.GetFileName(restartFiles[i])));
+                    Assert.That(restartOutput[i].Content, Is.EqualTo($"file {i}"));
                 }
             }
         }
@@ -216,7 +218,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             for (var i = 0; i < 5; i++)
             {
-                yield return tempDir.CreateFile(Path.Combine(rtcFolderName, $"rtc_1234567{i}_123456.xml"));
+                yield return tempDir.CreateFile(Path.Combine(rtcFolderName, $"rtc_1234567{i}_123456.xml"), $"file {i}");
             }
         }
 
@@ -224,7 +226,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void GivenRealTimeControlModel_WhenDisconnectOutput_ThenRestartOutputCleared()
         {
             // Given
-            var rtcModel = new RealTimeControlModel {RestartOutput = new[] {new RestartFile()}};
+            var rtcModel = new RealTimeControlModel {RestartOutput = new[] {new RealTimeControlRestartFile()}};
 
             // When
             rtcModel.DisconnectOutput();

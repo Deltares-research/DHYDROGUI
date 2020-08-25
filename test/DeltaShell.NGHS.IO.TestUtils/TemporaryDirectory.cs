@@ -61,13 +61,14 @@ namespace DeltaShell.NGHS.IO.TestUtils
         /// Creates a new file at the relative path.
         /// </summary>
         /// <param name="relativeFilePath">The relative file path.</param>
+        /// <param name="content">The content of the file.</param>
         /// <returns>
         /// The full file path.
         /// </returns>
-        public string CreateFile(string relativeFilePath)
+        public string CreateFile(string relativeFilePath, string content = "")
         {
             string targetFilePath = System.IO.Path.Combine(Path, relativeFilePath);
-            File.WriteAllText(targetFilePath, string.Empty);
+            File.WriteAllText(targetFilePath, content);
 
             return targetFilePath;
         }

@@ -11,10 +11,9 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
-using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using GeoAPI.Extensions.Coverages;
-using log4net;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
@@ -23,7 +22,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
     {
         public static readonly string InputFolderName = "Input";
         public static readonly string OutputFolderName = "Output";
-        private static readonly ILog log = LogManager.GetLogger(typeof(RealTimeControlModelNodePresenter));
 
         private IGui gui;
 
@@ -177,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         private static object GetRestartFolder(RealTimeControlModel model)
         {
-            return new RestartFileOutputTreeFolder(model);
+            return new RealTimeControlRestartFileOutputTreeFolder(model);
         }
     }
 }

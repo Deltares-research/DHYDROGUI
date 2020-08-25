@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         {
             get
             {
-                yield return typeof(RestartFile);
+                yield return typeof(RealTimeControlRestartFile);
             }
         }
 
@@ -114,7 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             RealTimeControlModel model = GetModel(target);
 
-            return model.RestartInput = new RestartFile(path);
+            return model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(path), File.ReadAllText(path));
         }
 
         private RealTimeControlModel GetModel(object obj)

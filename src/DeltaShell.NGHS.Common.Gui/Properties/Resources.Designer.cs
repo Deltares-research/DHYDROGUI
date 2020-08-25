@@ -22,7 +22,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeltaShell.NGHS.Common.Gui.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
-        internal static string ContextMenuFactory_Delete {
+        public static string ContextMenuFactory_Delete {
             get {
                 return ResourceManager.GetString("ContextMenuFactory_Delete", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Export ....
         /// </summary>
-        internal static string ContextMenuFactory_Export {
+        public static string ContextMenuFactory_Export {
             get {
                 return ResourceManager.GetString("ContextMenuFactory_Export", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Import ....
         /// </summary>
-        internal static string ContextMenuFactory_Import {
+        public static string ContextMenuFactory_Import {
             get {
                 return ResourceManager.GetString("ContextMenuFactory_Import", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Open with ....
         /// </summary>
-        internal static string ContextMenuFactory_Open_with {
+        public static string ContextMenuFactory_Open_with {
             get {
                 return ResourceManager.GetString("ContextMenuFactory_Open_with", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Properties.
         /// </summary>
-        internal static string ContextMenuFactory_Properties {
+        public static string ContextMenuFactory_Properties {
             get {
                 return ResourceManager.GetString("ContextMenuFactory_Properties", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Rename.
         /// </summary>
-        internal static string ContextMenuFactory_Rename {
+        public static string ContextMenuFactory_Rename {
             get {
                 return ResourceManager.GetString("ContextMenuFactory_Rename", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DeleteHS {
+        public static System.Drawing.Bitmap DeleteHS {
             get {
                 object obj = ResourceManager.GetObject("DeleteHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -127,7 +127,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap import {
+        public static System.Drawing.Bitmap import {
             get {
                 object obj = ResourceManager.GetObject("import", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -137,7 +137,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap properties {
+        public static System.Drawing.Bitmap properties {
             get {
                 object obj = ResourceManager.GetObject("properties", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -147,7 +147,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap restart {
+        public static System.Drawing.Bitmap restart {
             get {
                 object obj = ResourceManager.GetObject("restart", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -157,7 +157,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap restart_empty {
+        public static System.Drawing.Bitmap restart_empty {
             get {
                 object obj = ResourceManager.GetObject("restart_empty", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -167,7 +167,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Restart: empty.
         /// </summary>
-        internal static string RestartFileNodePresenter_Restart_empty {
+        public static string RestartFileNodePresenter_Restart_empty {
             get {
                 return ResourceManager.GetString("RestartFileNodePresenter_Restart_empty", resourceCulture);
             }
@@ -176,7 +176,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Converting strings to Types is currently not supported..
         /// </summary>
-        internal static string TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_not_supported_ {
+        public static string TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_not_supported_ {
             get {
                 return ResourceManager.GetString("TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_n" +
                         "ot_supported_", resourceCulture);

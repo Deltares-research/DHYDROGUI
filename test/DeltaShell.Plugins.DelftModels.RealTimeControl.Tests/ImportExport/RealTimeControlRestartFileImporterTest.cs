@@ -80,14 +80,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 var model = new RealTimeControlModel();
                 var importer = new RealTimeControlRestartFileImporter(() => new[] {model});
                 string filePath = Path.Combine(tempDir.Path, "file_rst.xml");
-                File.WriteAllText(filePath, "");
+                const string fileContent = @"file content here";
+                File.WriteAllText(filePath, fileContent);
 
                 // Call
                 object result = importer.ImportItem(filePath, model.RestartInput);
 
                 // Assert
                 Assert.That(result, Is.SameAs(model.RestartInput));
-                Assert.That(model.RestartInput.Path, Is.EqualTo(filePath));
+                Assert.That(model.RestartInput.Name, Is.EqualTo(Path.GetFileName(filePath)));
+                Assert.That(model.RestartInput.Content, Is.EqualTo(fileContent));
             }
         }
 
