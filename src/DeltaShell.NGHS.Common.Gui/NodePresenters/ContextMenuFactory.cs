@@ -74,7 +74,7 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
         {
             var openWithItem = new ClonableToolStripMenuItem
             {
-                Text = "Open with ...",
+                Text = Resources.ContextMenuFactory_Open_with,
                 Tag = data,
                 Enabled = true,
             };
@@ -96,7 +96,7 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
         {
             var renameItem = new ClonableToolStripMenuItem
             {
-                Text = "Rename",
+                Text = Resources.ContextMenuFactory_Rename,
                 Tag = data,
                 Enabled = true
             };
@@ -115,7 +115,7 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
         {
             var deleteItem = new ClonableToolStripMenuItem
             {
-                Text = "Delete",
+                Text = Resources.ContextMenuFactory_Delete,
                 Tag = data,
                 Enabled = true,
                 Image = Resources.DeleteHS
@@ -129,7 +129,7 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
         {
             var importItem = new ClonableToolStripMenuItem
             {
-                Text = "Import ...",
+                Text = Resources.ContextMenuFactory_Import,
                 Tag = data,
                 Image = import,
                 Enabled = gui.CommandHandler.CanImportOn(data)
@@ -144,7 +144,7 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
         {
             var exportItem = new ClonableToolStripMenuItem
             {
-                Text = "Export ...",
+                Text = Resources.ContextMenuFactory_Export,
                 Tag = data,
                 Enabled = gui.CommandHandler.CanExportFrom(data)
             };
@@ -157,7 +157,7 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
         {
             var propertiesItem = new ClonableToolStripMenuItem
             {
-                Text = "Properties",
+                Text = Resources.ContextMenuFactory_Properties,
                 Tag = data,
                 Image = properties
             };

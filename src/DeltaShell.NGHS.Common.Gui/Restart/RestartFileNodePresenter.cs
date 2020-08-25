@@ -17,8 +17,6 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
     /// <seealso cref="TreeViewNodePresenterBaseForPluginGui{T}"/>
     public sealed class RestartFileNodePresenter : TreeViewNodePresenterBaseForPluginGui<RestartFile>
     {
-        private const string emptyRestartText = "Restart: empty";
-
         private static readonly Image restartIcon = Resources.restart;
         private static readonly Image emptyRestartIcon = Resources.restart_empty;
 
@@ -92,7 +90,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
 
         private static void UpdateEmptyRestartNode(ITreeNode node)
         {
-            node.Text = emptyRestartText;
+            node.Text = Resources.RestartFileNodePresenter_Restart_empty;
             node.Image = emptyRestartIcon;
         }
     }
