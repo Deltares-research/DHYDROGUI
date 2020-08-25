@@ -966,7 +966,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>().ForEach(m => m.FinalizeRestart());
 
                 List<IDimrModel> dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
-                dimrModels.ForEach(m => m.AfterSuccessfulIntegratedModelRunActions(WorkingDirectoryPath));
+                dimrModels.ForEach(m => m.OnFinishIntegratedModelRun(WorkingDirectoryPath));
             }
             else
             {

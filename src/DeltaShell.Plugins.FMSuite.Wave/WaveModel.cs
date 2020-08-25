@@ -538,6 +538,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public void Dispose()
         {
             RestoreEnvironment();
+            runner?.Dispose();
         }
 
         public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
@@ -1459,7 +1460,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             //wave doesnt run standalone via dimr but via kernels
         }
 
-        public virtual void AfterSuccessfulIntegratedModelRunActions(string workingDirectoryPath)
+        public virtual void OnFinishIntegratedModelRun(string workingDirectoryPath)
         {
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.

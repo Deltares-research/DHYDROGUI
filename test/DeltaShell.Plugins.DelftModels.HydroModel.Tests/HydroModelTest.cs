@@ -444,7 +444,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 hydroModel.Finish();
 
                 // Then
-                activity.Received(1).AfterSuccessfulIntegratedModelRunActions(hydroModel.WorkingDirectoryPath);
+                activity.Received(1).OnFinishIntegratedModelRun(hydroModel.WorkingDirectoryPath);
             }
         }
 
@@ -498,8 +498,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 var activity = new WaterFlowFMModel();
                 string testTempDirectory = Path.GetTempPath();
-                string notExistingMduFilePath = Path.Combine(testTempDirectory, "SaveLocation", activity.Name+".mdu");
-                activity.CacheFile.UpdatePathToMduLocation(notExistingMduFilePath);
+                string nonExistingMduFilePath = Path.Combine(testTempDirectory, "SaveLocation", activity.Name+".mdu");
+                activity.CacheFile.UpdatePathToMduLocation(nonExistingMduFilePath);
 
                 hydroModel.WorkingDirectoryPathFunc = () => testTempDirectory;
                 
@@ -510,7 +510,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 hydroModel.Finish();
 
                 // Then
-                Assert.AreEqual(Path.Combine(hydroModel.WorkingDirectoryPath, activity.DirectoryName, activity.Name + ".cache"), activity.CacheFile.Path);
+                string expectedCachePath = Path.Combine(hydroModel.WorkingDirectoryPath, activity.DirectoryName, activity.Name + ".cache");
+                Assert.AreEqual(expectedCachePath, activity.CacheFile.Path);
             }
         }
 

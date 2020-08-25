@@ -526,6 +526,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     fileStore.Close();
                 }
+
+                runner?.Dispose();
             }
 
             disposed = true;
@@ -1159,7 +1161,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public virtual void AfterSuccessfulIntegratedModelRunActions(string workingDirectoryPath)
+        public virtual void OnFinishIntegratedModelRun(string workingDirectoryPath)
         {
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.

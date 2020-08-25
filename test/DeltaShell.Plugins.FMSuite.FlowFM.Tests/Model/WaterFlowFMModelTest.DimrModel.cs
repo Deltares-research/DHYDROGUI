@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        public void AfterSuccessfulIntegratedModelRunActions_WhenUseCachingIsTrue_SetsCacheFileToTheCorrectWorkingDirectory()
+        public void OnFinishIntegratedModelRun_WhenUseCachingIsTrue_SetsCacheFileToTheCorrectWorkingDirectory()
         {
             string workingDirectoryIntegratedModel = Path.Combine(Path.GetTempPath(), "IntegratedModel");
             
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             using (var model = new WaterFlowFMModel())
             {
                 // Call
-                model.AfterSuccessfulIntegratedModelRunActions(workingDirectoryIntegratedModel);
+                model.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
 
                 string expectedPath = Path.Combine(workingDirectoryIntegratedModel,model.DirectoryName,
                                                    Path.ChangeExtension(model.Name,
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        public void AfterSuccessfulIntegratedModelRunActions_WhenUseCachingIsFalse_SetsCacheFileToTheCorrectWorkingDirectory()
+        public void OnFinishIntegratedModelRun_WhenUseCachingIsFalse_SetsCacheFileToTheCorrectWorkingDirectory()
         {
             string workingDirectoryIntegratedModel = Path.Combine(Path.GetTempPath(), "IntegratedModel");
 
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             {
                 model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("false");
                 // Call
-                model.AfterSuccessfulIntegratedModelRunActions(workingDirectoryIntegratedModel);
+                model.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
                 
                 // Assert
                 Assert.IsNull(model.CacheFile.Path);

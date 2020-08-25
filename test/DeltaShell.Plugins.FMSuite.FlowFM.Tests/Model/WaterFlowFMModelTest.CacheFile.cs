@@ -324,6 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
         public void GivenAHydroModelWithFMModelAndCacheFile_WhenInitializeIsCalled_ThenTheCacheFileShouldBeCopiedToWorkingDirectory()
         {
             // Given
@@ -334,16 +335,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string saveFolderPath = Path.Combine(testTempDirectory, "SaveLocation");
                 Directory.CreateDirectory(saveFolderPath);
                 
-                string cacheFilePath = Path.Combine(saveFolderPath, "test.cache");
+                string saveFolderCacheFilePath = Path.Combine(saveFolderPath, "test.cache");
                 string mduFilePath = Path.Combine(saveFolderPath, "test.mdu");
 
-                using (FileStream fs = File.Create(cacheFilePath))
+                using (FileStream fs = File.Create(saveFolderCacheFilePath))
                 {
                     byte[] info = new UTF8Encoding(true).GetBytes("test");
                     fs.Write(info, 0, info.Length);
                 }
                 
-                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(20, 20, 20, 20);
+                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 model.WorkingDirectoryPathFunc = () => testTempDirectory;
                 model.CacheFile.UpdatePathToMduLocation(mduFilePath);
                 
@@ -351,7 +352,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 model.Initialize();
 
                 // Then
-                Assert.AreEqual(cacheFilePath, model.CacheFile.Path);
+                Assert.AreEqual(saveFolderCacheFilePath, model.CacheFile.Path);
                 Assert.IsTrue(File.Exists(Path.Combine(model.WorkingDirectoryPath, model.DirectoryName, model.Name + ".cache")));
             }
         }

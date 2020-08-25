@@ -881,7 +881,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
             Grid = null;
             DisposeSnapApi();
-            runner.Dispose();
+            runner?.Dispose();
             ClearSyncers();
 
             fixedWeirProperties.Values.ForEach(d => d.Dispose());

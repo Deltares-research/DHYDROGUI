@@ -67,6 +67,6 @@ namespace DeltaShell.Dimr
         /// <param name="workingDirectoryPath">
         /// Working directory path of the integrated model.
         /// </param>
-        void AfterSuccessfulIntegratedModelRunActions(string workingDirectoryPath);
+        void OnFinishIntegratedModelRun(string workingDirectoryPath);
     }
 }

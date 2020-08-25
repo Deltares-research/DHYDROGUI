@@ -19,6 +19,7 @@ namespace DeltaShell.Dimr
         private const decimal fileVersion = 1;
         private const string createdBy = "Deltares, Coupling Team";
         private static readonly ILog log = LogManager.GetLogger(typeof(DimrRunner));
+        private bool disposed = false;
 
         private static readonly dimrDocumentationXML documentation = new dimrDocumentationXML
         {
@@ -383,7 +384,22 @@ namespace DeltaShell.Dimr
 
         public void Dispose()
         {
-            dimrApi?.Dispose();
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                dimrApi?.Dispose();
+            }
+
+            disposed = true;
         }
     }
 }

@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             runner.SetVar($"{Name}/{category}", values);
         }
 
-        public virtual void AfterSuccessfulIntegratedModelRunActions(string workingDirectoryPath)
+        public virtual void OnFinishIntegratedModelRun(string workingDirectoryPath)
         {
             if ((bool) ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value)
             {
