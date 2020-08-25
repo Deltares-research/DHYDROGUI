@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
@@ -44,6 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ImportItem_TargetNull_ThrowsArgumentNullException()
         {
             // Setup

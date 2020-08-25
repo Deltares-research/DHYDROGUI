@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             Gui.DocumentViewsResolver.OpenViewForData(model, typeof(ValidationView));
         }
 
-        private void OnOpenLastWorkingDirectoryClicked(RealTimeControlModel model)
+        private static void OnOpenLastWorkingDirectoryClicked(RealTimeControlModel model)
         {
             string workingDir = model.LastWorkingDirectory;
             if (string.IsNullOrEmpty(workingDir))
@@ -147,15 +147,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             }
         }
 
-        private IEnumerable GetInputItems(RealTimeControlModel rtcModel)
+        private static IEnumerable GetInputItems(RealTimeControlModel rtcModel)
         {
             yield return new TreeFolder(rtcModel, GetInitialConditions(rtcModel), "Initial Conditions", FolderImageType.None);
             yield return rtcModel.ControlGroups;
         }
 
-        private IEnumerable GetInitialConditions(RealTimeControlModel rtcModel)
+        private static IEnumerable GetInitialConditions(RealTimeControlModel rtcModel)
         {
-            yield return new DataItem(rtcModel.RestartInput, DataItemRole.Input);
+            yield return rtcModel.RestartInput;
         }
 
         private static IEnumerable GetOutputItems(RealTimeControlModel model)

@@ -69,17 +69,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         /// <inheritdoc cref="IFileImporter"/>
-        public bool OpenViewAfterImport { get; private set; }
+        public bool OpenViewAfterImport => false;
 
         /// <summary>
         /// Indicates whether this importer can import on the specified <paramref name="targetObject"/>.
         /// </summary>
         /// <param name="targetObject">Target object to check.</param>
         /// <returns>
-        /// <c>true</c> when the <paramref name="targetObject"/> is a <see cref="RestartFile"/>;
-        /// otherwise, <c>false</c>.
+        /// <c>true</c> when the <paramref name="targetObject"/> is an input file of a <see cref="RealTimeControlModel"/>;
+        /// otherwise <c>false</c>.
         /// </returns>
-        public bool CanImportOn(object targetObject) => GetModel(targetObject) != null;
+        public bool CanImportOn(object targetObject) => GetRealTimeControlModelWithRestartInput(targetObject) != null;
 
         /// <summary>
         /// Imports the restart file with path <paramref name="path"/>
@@ -112,14 +112,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 throw new FileNotFoundException($"Restart file does not exist: {path}");
             }
 
-            RealTimeControlModel model = GetModel(target);
+            RealTimeControlModel model = GetRealTimeControlModelWithRestartInput(target);
 
             return model.RestartInput = new RestartFile(path);
         }
 
-        private RealTimeControlModel GetModel(object obj)
+        private RealTimeControlModel GetRealTimeControlModelWithRestartInput(object obj)
         {
-            return getModels().FirstOrDefault(m => m.RestartInput == obj);
+            return obj is RestartFile ? getModels().FirstOrDefault(m => m.RestartInput == obj) : null;
         }
     }
 }
