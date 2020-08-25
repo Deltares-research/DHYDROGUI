@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Controls;
@@ -14,9 +15,9 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -183,6 +184,40 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                             "The clean up should not have changed the parameter name of the output");
             Assert.AreEqual("[m]", output.UnitName,
                             "The clean up should not have changed the unit name of the output");
+        }
+
+        [Test]
+        public void ConnectOutput_RestartFiles_ReconnectsTheRestartFiles()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string rtcFolderName = "rtc";
+                string rtcDirectory = Path.Combine(tempDir.Path, rtcFolderName);
+                Directory.CreateDirectory(rtcDirectory);
+                string[] restartFiles = CreateRestartFiles(tempDir, rtcFolderName).ToArray();
+
+                var model = new RealTimeControlModel();
+
+                // Call
+                model.ConnectOutput(rtcDirectory);
+
+                // Assert
+                RestartFile[] restartOutput = model.RestartOutput.ToArray();
+                Assert.That(restartOutput, Has.Length.EqualTo(5));
+
+                for (var i = 0; i < 5; i++)
+                {
+                    Assert.That(restartOutput[i].Path, Is.EqualTo(restartFiles[i]));
+                }
+            }
+        }
+
+        private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir, string rtcFolderName)
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                yield return tempDir.CreateFile(Path.Combine(rtcFolderName, $"rtc_1234567{i}_123456.xml"));
+            }
         }
 
         [Test]
