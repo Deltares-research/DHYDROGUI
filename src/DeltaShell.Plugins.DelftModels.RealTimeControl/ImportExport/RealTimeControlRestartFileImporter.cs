@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private RealTimeControlModel GetRealTimeControlModelWithRestartInput(object obj)
         {
-            return obj is RestartFile ? getModels().FirstOrDefault(m => m.RestartInput == obj) : null;
+            return obj is RealTimeControlRestartFile ? getModels().FirstOrDefault(m => m.RestartInput == obj) : null;
         }
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
-using DeltaShell.NGHS.Common.Gui.Restart;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
 
             // Assert
             TreeFolder outputTreeFolder = childObjects.OfType<TreeFolder>().Single(f => f.Text == "Output");
-            List<RestartFileOutputTreeFolder> restartFileOutputTreeFolders = outputTreeFolder.ChildItems.OfType<RestartFileOutputTreeFolder>().ToList();
+            List<RealTimeControlRestartFileOutputTreeFolder> restartFileOutputTreeFolders = outputTreeFolder.ChildItems.OfType<RealTimeControlRestartFileOutputTreeFolder>().ToList();
             Assert.That(restartFileOutputTreeFolders, Has.Count.EqualTo(1));
         }
 
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             // Assert
             TreeFolder inputTreeFolder = childObjects.OfType<TreeFolder>().Single(f => f.Text == "Input");
             TreeFolder outputTreeFolder = inputTreeFolder.ChildItems.OfType<TreeFolder>().Single(f => f.Text == "Initial Conditions");
-            RestartFile inputRestartFile = outputTreeFolder.ChildItems.OfType<RestartFile>().Single();
+            RealTimeControlRestartFile inputRestartFile = outputTreeFolder.ChildItems.OfType<RealTimeControlRestartFile>().Single();
 
             Assert.That(inputRestartFile, Is.Not.Null);
         }

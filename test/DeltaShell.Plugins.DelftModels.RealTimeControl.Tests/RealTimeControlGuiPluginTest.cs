@@ -5,10 +5,10 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             ITreeNodePresenter[] nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
 
             // Then
-            var restartFileNodePresenter = Contains<RestartFileNodePresenter>(nodePresenters);
+            var restartFileNodePresenter = Contains<RealTimeControlRestartFileNodePresenter>(nodePresenters);
             Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
         }
 

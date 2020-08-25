@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using NUnit.Framework;
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             Assert.That(importer.Category, Is.EqualTo("XML"));
             Assert.That(importer.Description, Is.EqualTo(string.Empty));
             Assert.That(importer.Image, Is.Not.Null);
-            Assert.That(importer.SupportedItemTypes, Collection.OnlyContains(typeof(RestartFile)));
+            Assert.That(importer.SupportedItemTypes, Collection.OnlyContains(typeof(RealTimeControlRestartFile)));
             Assert.That(importer.CanImportOnRootLevel, Is.False);
             Assert.That(importer.FileFilter, Is.EqualTo("Real Time Control restart files|*.xml"));
             Assert.That(importer.TargetDataDirectory, Is.Null);
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var importer = new RealTimeControlRestartFileImporter(Enumerable.Empty<RealTimeControlModel>);
 
             // Call
-            void Call() => importer.ImportItem("path/to/the.file", new RestartFile());
+            void Call() => importer.ImportItem("path/to/the.file", new RealTimeControlRestartFile());
 
             // Assert
             var e = Assert.Throws<FileNotFoundException>(Call);
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var importer = new RealTimeControlRestartFileImporter(() => new[] {model});
 
             // Call
-            bool result = importer.CanImportOn(new RestartFile());
+            bool result = importer.CanImportOn(new RealTimeControlRestartFile());
 
             // Assert
             Assert.That(result, Is.False);
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var importer = new RealTimeControlRestartFileImporter(Enumerable.Empty<RealTimeControlModel>);
 
             // Call
-            void Call() => importer.ImportItem(path, new RestartFile());
+            void Call() => importer.ImportItem(path, new RealTimeControlRestartFile());
 
             // Assert
             var e = Assert.Throws<ArgumentException>(Call);

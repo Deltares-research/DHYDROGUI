@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
@@ -29,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             // Setup
             var model = new RealTimeControlModel();
             RealTimeControlRestartFile[] restartFiles = GetRealTimeControlRestartFiles().ToArray();
-            model.RestartOutput.Returns(restartFiles);
+            model.RestartOutput = restartFiles;
 
             // Call
             var folder = new RealTimeControlRestartFileOutputTreeFolder(model);
@@ -37,15 +35,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             // Assert
             Assert.That(folder.Text, Is.EqualTo("Restart"));
 
-            IDataItem[] items = folder.ChildItems.Cast<IDataItem>().ToArray();
+            RealTimeControlRestartFile[] items = folder.ChildItems.Cast<RealTimeControlRestartFile>().ToArray();
 
             for (var i = 0; i < 3; i++)
             {
-                IDataItem item = items[i];
+                RealTimeControlRestartFile item = items[i];
                 RealTimeControlRestartFile restartFile = restartFiles[i];
 
-                Assert.That(item.Value, Is.SameAs(restartFile));
-                Assert.That(item.Tag, Is.SameAs(restartFile.Name));
+                Assert.That(item, Is.SameAs(restartFile));
             }
         }
 

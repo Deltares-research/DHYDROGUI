@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
 
         private static void UpdateRestartNode(ITreeNode node, RealTimeControlRestartFile nodeData)
         {
-            node.Text = nodeData.Name + "RTC";
+            node.Text = nodeData.Name;
             node.Image = restartIcon;
         }
 

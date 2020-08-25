@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             var node = Substitute.For<ITreeNode>();
             var model = new RealTimeControlModel();
             node.Parent.Parent.Tag.Returns(model);
-            model.RestartInput.Returns(restartFile);
+            model.RestartInput = restartFile;
 
             // Call
             var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             var node = Substitute.For<ITreeNode>();
             var model = new RealTimeControlModel();
             node.Parent.Parent.Tag.Returns(model);
-            model.RestartOutput.Returns(new List<RealTimeControlRestartFile> {restartFile});
+            model.RestartOutput = new List<RealTimeControlRestartFile> {restartFile};
 
             // Call
             var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);
