@@ -136,4 +136,25 @@
   <data name="TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_not_supported_" xml:space="preserve">
     <value>Converting strings to Types is currently not supported.</value>
   </data>
+  <data name="RestartFileNodePresenter_Restart_empty" xml:space="preserve">
+    <value>Restart: empty</value>
+  </data>
+  <data name="ContextMenuFactory_Open_with" xml:space="preserve">
+    <value>Open with ...</value>
+  </data>
+  <data name="ContextMenuFactory_Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="ContextMenuFactory_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ContextMenuFactory_Import" xml:space="preserve">
+    <value>Import ...</value>
+  </data>
+  <data name="ContextMenuFactory_Export" xml:space="preserve">
+    <value>Export ...</value>
+  </data>
+  <data name="ContextMenuFactory_Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
 </root>
