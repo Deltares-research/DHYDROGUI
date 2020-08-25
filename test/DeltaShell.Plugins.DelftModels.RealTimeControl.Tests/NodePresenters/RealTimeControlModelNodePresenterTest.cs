@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.NGHS.Common.Gui.Restart;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -58,10 +58,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
 
             // Assert
-            TreeFolder outputTreeFolder = childObjects.OfType<TreeFolder>().Single(f => f.Text == "Input").ChildItems.OfType<TreeFolder>().Single(f => f.Text == "Initial Conditions");
-            DataItem restartFileInputDataItem = outputTreeFolder.ChildItems.OfType<DataItem>().Single();
-            Assert.That(restartFileInputDataItem.Value, Is.EqualTo(model.RestartInput));
-            Assert.That(restartFileInputDataItem.Role, Is.EqualTo(DataItemRole.Input));
+            TreeFolder inputTreeFolder = childObjects.OfType<TreeFolder>().Single(f => f.Text == "Input");
+            TreeFolder outputTreeFolder = inputTreeFolder.ChildItems.OfType<TreeFolder>().Single(f => f.Text == "Initial Conditions");
+            RestartFile inputRestartFile = outputTreeFolder.ChildItems.OfType<RestartFile>().Single();
+
+            Assert.That(inputRestartFile, Is.Not.Null);
         }
     }
 }
