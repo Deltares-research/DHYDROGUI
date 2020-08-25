@@ -69,6 +69,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        public void ClearOutput_WithRestartOutput_ThenRestartOutputIsRemovedFromModel()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string[] restartFiles = CreateRestartFiles(tempDir).ToArray();
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDir.Path);
+
+                TypeUtils.SetField(model, "outputIsEmpty", false);
+
+                // Precondition
+                Assert.That(model.RestartOutput.Count(), Is.EqualTo(restartFiles.Length));
+
+                // Call
+                model.ClearOutput();
+
+                // Assert
+                Assert.That(model.RestartOutput, Is.Empty);
+            }
+        }
+
+        [Test]
         public void ClearOutput_WithTextDocumentOutput_ThenOutputIsRemovedFromModel()
         {
             // Setup
