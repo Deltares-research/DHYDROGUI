@@ -173,7 +173,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
             DirectoryInfo parentDirInfo = destinationFileInfo.Directory;
             if (parentDirInfo == null)
             {
-                return;
+                throw new InvalidOperationException("The file cannot map to a drive.");
             }
 
             parentDirInfo.Create();
