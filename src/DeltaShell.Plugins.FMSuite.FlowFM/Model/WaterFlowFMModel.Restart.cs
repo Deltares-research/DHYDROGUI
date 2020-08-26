@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
 
-        public virtual bool UseRestart => !RestartInput.IsEmpty;
+        public bool UseRestart => !RestartInput.IsEmpty;
 
         /// <summary>
         /// Gets or sets the restart time step.
