@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 DisableFlowNodeRenumbering = DisableFlowNodeRenumbering
             };
 
-            RestartInput.CopyInto(dirName, switchTo);
+            RestartInput.CopyToDirectory(dirName, switchTo);
             ModelDefinition.GetModelProperty(KnownProperties.RestartFile)
                            .SetValueAsString(RestartInput.Name);
 

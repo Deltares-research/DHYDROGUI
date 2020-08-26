@@ -181,7 +181,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
         [TestCase(true, "")]
         [TestCase(false, null)]
         [TestCase(false, "")]
-        public void CopyInto_DirectoryPathNullOrEmpty_Returns(bool switchTo, string targetDir)
+        public void CopyToDirectory_DirectoryPathNullOrEmpty_Returns(bool switchTo, string targetDir)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
@@ -192,7 +192,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
                 var restartFile = new RestartFile(origFile);
 
                 // Call
-                restartFile.CopyInto(targetDir, switchTo);
+                restartFile.CopyToDirectory(targetDir, switchTo);
 
                 // Assert
                 Assert.That(origFile, Does.Exist);
@@ -202,13 +202,13 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
 
         [TestCase(true)]
         [TestCase(false)]
-        public void CopyInto_FileDoesNotExist_Returns(bool switchTo)
+        public void CopyToDirectory_FileDoesNotExist_Returns(bool switchTo)
         {
             // Setup
             var restartFile = new RestartFile("path/to/the.file");
 
             // Call
-            restartFile.CopyInto("some/folder", switchTo);
+            restartFile.CopyToDirectory("some/folder", switchTo);
 
             // Assert
             Assert.That(restartFile.Path, Is.EqualTo("path/to/the.file"));
@@ -216,7 +216,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
 
         [TestCase(true)]
         [TestCase(false)]
-        public void CopyInto_TargetDirDoesNotExist_CreatesTargetDir(bool switchTo)
+        public void CopyToDirectory_TargetDirDoesNotExist_CreatesTargetDir(bool switchTo)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
@@ -229,7 +229,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
                 string targetDir = Path.Combine(tempDir.Path, "target_dir");
 
                 // Call
-                restartFile.CopyInto(targetDir, switchTo);
+                restartFile.CopyToDirectory(targetDir, switchTo);
 
                 // Assert
                 string targetFile = Path.Combine(targetDir, restartFile.Name);
@@ -240,7 +240,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
 
         [TestCase(true)]
         [TestCase(false)]
-        public void CopyInto_CopiesFileIntoDirectory(bool switchTo)
+        public void CopyToDirectory_CopiesFileIntoDirectory(bool switchTo)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
@@ -253,7 +253,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
                 string targetDir = tempDir.CreateDirectory("target_dir");
 
                 // Call
-                restartFile.CopyInto(targetDir, switchTo);
+                restartFile.CopyToDirectory(targetDir, switchTo);
 
                 // Assert
                 string targetFile = Path.Combine(targetDir, restartFile.Name);
