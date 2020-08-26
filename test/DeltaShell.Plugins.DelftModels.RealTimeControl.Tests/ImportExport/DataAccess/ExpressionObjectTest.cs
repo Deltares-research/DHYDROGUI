@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Helpers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NSubstitute;

@@ -11,7 +11,8 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using log4net;
 using Mono.Addins;
 

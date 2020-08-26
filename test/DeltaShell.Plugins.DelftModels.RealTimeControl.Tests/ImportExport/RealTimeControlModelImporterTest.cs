@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport

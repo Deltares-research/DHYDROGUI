@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using DeltaShell.NGHS.Common.Utils;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Export

@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Logging;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
