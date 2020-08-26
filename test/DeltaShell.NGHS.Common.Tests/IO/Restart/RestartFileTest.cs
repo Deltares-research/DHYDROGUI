@@ -75,58 +75,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
 
         [Test]
         [TestCaseSource(nameof(GetPathTestCases))]
-        public void SetPath_SetsPathCorrectly(string value, string expPath, string expName, bool expIsEmpty)
-        {
-            // Setup
-            var restartFile = new RestartFile();
-
-            // Call
-            restartFile.Path = value;
-
-            // Assert
-            Assert.That(restartFile.Path, Is.EqualTo(expPath));
-            Assert.That(restartFile.Name, Is.EqualTo(expName));
-            Assert.That(restartFile.IsEmpty, Is.EqualTo(expIsEmpty));
-        }
-
-        [TestCaseSource(nameof(InvalidChars))]
-        public void SetPath_ContainsInvalidChars_ThrowsArgumentException(char invalidCharacter)
-        {
-            // Setup
-            string path = $"c:/{invalidCharacter}folder_path";
-
-            // Call
-            void Call() => new RestartFile().Path = path;
-
-            // Assert
-            Assert.Throws<ArgumentException>(Call);
-        }
-
-        [Test]
-        public void SetPath_WithEmptyString_ThrowsArgumentException()
-        {
-            // Call
-            void Call() => new RestartFile().Path = string.Empty;
-
-            // Assert
-            Assert.Throws<ArgumentException>(Call);
-        }
-
-        [Test]
-        public void SetPath_PathTooLong_ThrowsPathTooLongException()
-        {
-            // Setup
-            var path = new StringBuilder().Append('p', 248).ToString();
-
-            // Call
-            void Call() => new RestartFile().Path = path;
-
-            // Assert
-            Assert.Throws<PathTooLongException>(Call);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(GetPathTestCases))]
         public void SwitchTo_SetsPathCorrectly(string value, string expPath, string expName, bool expIsEmpty)
         {
             // Setup

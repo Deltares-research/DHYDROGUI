@@ -2019,7 +2019,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void GetUseRestart_ReturnsCorrectResult(string filePath, bool expected)
         {
             // Setup
-            var model = new WaterFlowFMModel {RestartInput = {Path = filePath}};
+            var model = new WaterFlowFMModel {RestartInput = new RestartFile(filePath)};
 
             // Call
             bool result = model.UseRestart;

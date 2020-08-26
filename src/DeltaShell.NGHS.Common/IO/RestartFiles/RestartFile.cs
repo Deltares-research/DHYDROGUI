@@ -9,8 +9,9 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
     /// </summary>
     public sealed class RestartFile
     {
-        private FileInfo pathInfo;
+        // used to retrieve the original value that Path was set with.
         private string path;
+        private FileInfo pathInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RestartFile"/> class.
@@ -30,27 +31,16 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         public RestartFile(string path) => Path = path;
 
         /// <summary>
-        /// Gets or sets the path.
+        /// Gets the path.
         /// </summary>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="value"/> contains invalid characters such as ", &, >, or |, or if <paramref name="value"/> is empty.
-        /// </exception>
-        /// <exception cref="PathTooLongException">
-        /// The specified path, file name, or both exceed the system-defined maximum length.
-        /// </exception>
         public string Path
         {
             get => path;
-            set
+            private set
             {
                 FileInfo newPathInfo = value != null
                                            ? new FileInfo(value)
                                            : null;
-
-                if (IsSamePath(newPathInfo))
-                {
-                    return;
-                }
 
                 pathInfo = newPathInfo;
                 path = value;
