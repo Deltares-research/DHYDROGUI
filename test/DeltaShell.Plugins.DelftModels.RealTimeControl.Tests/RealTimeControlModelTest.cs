@@ -214,6 +214,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
         }
 
+        [Test]
+        public void GivenRealTimeControlModel_WhenSetRestartInputToNull_RestartInputNotChanged()
+        {
+            // Given
+            var model = new RealTimeControlModel();
+            RealTimeControlRestartFile originalRestartFile = model.RestartInput;
+
+            // When
+            model.RestartInput = null;
+
+            // Then
+            Assert.That(model.RestartInput, Is.SameAs(originalRestartFile));
+        }
+
         private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir, string rtcFolderName)
         {
             for (var i = 0; i < 5; i++)
