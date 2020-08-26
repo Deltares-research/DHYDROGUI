@@ -30,7 +30,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public virtual bool UseRestart => !RestartInput.IsEmpty;
 
-        public virtual TimeSpan SaveStateTimeStep
+        /// <summary>
+        /// Gets or sets the restart time step.
+        /// </summary>
+        public virtual TimeSpan RestartTimeStep
         {
             get => (TimeSpan) ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value;
             set => ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = value;
