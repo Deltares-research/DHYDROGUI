@@ -242,6 +242,7 @@
     <Compile Include="Domain\FactorRuleTests.cs.cs" />
     <Compile Include="Domain\LookupSignalTests.cs" />
     <Compile Include="Domain\MathematicalExpressionTest.cs" />
+    <Compile Include="Domain\Restart\RealTimeControlRestartFileTest.cs" />
     <Compile Include="Domain\StandardConditionTests.cs" />
     <Compile Include="Domain\RelativeTimeRuleTests.cs" />
     <Compile Include="Domain\IntervalRuleTests.cs" />

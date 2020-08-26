@@ -9,8 +9,9 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
     /// </summary>
     public sealed class RestartFile
     {
-        private FileInfo pathInfo;
+        // used to retrieve the original value that Path was set with.
         private string path;
+        private FileInfo pathInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RestartFile"/> class.
@@ -27,30 +28,28 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// <exception cref="PathTooLongException">
         /// The specified <paramref name="path"/>, file name, or both exceed the system-defined maximum length.
         /// </exception>
+        /// <exception cref="System.Security.SecurityException">
+        /// Thrown when the caller does not have the required permission.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// Thrown when the access to the <paramref name="path"/> is denied.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// Thrown when <paramref name="path"/> contains a colon (:) in the middle of the string.
+        /// </exception>
         public RestartFile(string path) => Path = path;
 
         /// <summary>
-        /// Gets or sets the path.
+        /// Gets the path.
         /// </summary>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="value"/> contains invalid characters such as ", &, >, or |, or if <paramref name="value"/> is empty.
-        /// </exception>
-        /// <exception cref="PathTooLongException">
-        /// The specified path, file name, or both exceed the system-defined maximum length.
-        /// </exception>
         public string Path
         {
             get => path;
-            set
+            private set
             {
                 FileInfo newPathInfo = value != null
                                            ? new FileInfo(value)
                                            : null;
-
-                if (IsSamePath(newPathInfo))
-                {
-                    return;
-                }
 
                 pathInfo = newPathInfo;
                 path = value;
@@ -83,7 +82,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// or this <see cref="RestartFile"/> does not exist, the method returns.
         /// </remarks>
         /// <remarks>The <paramref name="directoryPath"/> will be created without overwriting the existing one.</remarks>
-        public void CopyInto(string directoryPath, bool switchTo = false)
+        public void CopyToDirectory(string directoryPath, bool switchTo)
         {
             if (string.IsNullOrEmpty(directoryPath) || !Exists)
             {
@@ -116,7 +115,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// The target directory of <paramref name="destinationPath"/> will be created without
         /// overwriting the existing one.
         /// </remarks>
-        public void CopyTo(string destinationPath, bool switchTo = false)
+        private void CopyTo(string destinationPath, bool switchTo)
         {
             if (string.IsNullOrEmpty(destinationPath) || !Exists)
             {
@@ -173,13 +172,10 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
             DirectoryInfo parentDirInfo = destinationFileInfo.Directory;
             if (parentDirInfo == null)
             {
-                return;
+                throw new InvalidOperationException("The file cannot map to a drive.");
             }
 
-            if (!parentDirInfo.Exists)
-            {
-                parentDirInfo.Create();
-            }
+            parentDirInfo.Create();
         }
 
         private bool IsSamePath(FileInfo fileInfo) => pathInfo?.FullName == fileInfo?.FullName;

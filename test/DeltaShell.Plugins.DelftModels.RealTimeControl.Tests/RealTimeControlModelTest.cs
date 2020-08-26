@@ -15,8 +15,8 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -214,25 +214,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
         }
 
+        [Test]
+        public void GivenRealTimeControlModel_WhenSetRestartInputToNull_RestartInputNotChanged()
+        {
+            // Given
+            var model = new RealTimeControlModel();
+            RealTimeControlRestartFile originalRestartFile = model.RestartInput;
+
+            // When
+            model.RestartInput = null;
+
+            // Then
+            Assert.That(model.RestartInput, Is.SameAs(originalRestartFile));
+        }
+
         private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir, string rtcFolderName)
         {
             for (var i = 0; i < 5; i++)
             {
                 yield return tempDir.CreateFile(Path.Combine(rtcFolderName, $"rtc_1234567{i}_123456.xml"), $"file {i}");
             }
-        }
-
-        [Test]
-        public void GivenRealTimeControlModel_WhenDisconnectOutput_ThenRestartOutputCleared()
-        {
-            // Given
-            var rtcModel = new RealTimeControlModel {RestartOutput = new[] {new RealTimeControlRestartFile()}};
-
-            // When
-            rtcModel.DisconnectOutput();
-
-            // Then
-            Assert.That(rtcModel.RestartOutput, Is.Empty);
         }
 
         # region Syncing controlled models, control group items, model settings, etc.

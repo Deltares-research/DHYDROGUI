@@ -10,27 +10,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     // The Restart related code for WaterFlowFM..
     public partial class WaterFlowFMModel
     {
-        private RestartFile restartFile = new RestartFile();
+        private RestartFile restartInput = new RestartFile();
 
         /// <summary>
         /// Gets or sets the input restart file.
         /// </summary>
         public RestartFile RestartInput
         {
-            get => restartFile;
+            get => restartInput;
             set
             {
                 Ensure.NotNull(value, nameof(value));
 
-                restartFile = value;
+                restartInput = value;
             }
         }
 
         public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
 
-        public virtual bool UseRestart => !RestartInput.IsEmpty;
+        public bool UseRestart => !RestartInput.IsEmpty;
 
-        public virtual TimeSpan SaveStateTimeStep
+        /// <summary>
+        /// Gets or sets the restart time step.
+        /// </summary>
+        public TimeSpan RestartTimeStep
         {
             get => (TimeSpan) ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value;
             set => ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = value;

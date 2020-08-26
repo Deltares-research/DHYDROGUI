@@ -390,6 +390,7 @@
     <EmbeddedResource Include="Domain\ControlGroup.3.5.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Restart\RealTimeControlRestartFile.hbm.xml" />
     <Content Include="Resources\cog_active.png" />
     <Content Include="Resources\cog1.png" />
     <Content Include="Resources\condition.png" />

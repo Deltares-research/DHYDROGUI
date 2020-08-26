@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using NUnit.Framework;
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
         {
             // Setup
             var model = new RealTimeControlModel();
-            RealTimeControlRestartFile[] restartFiles = GetRealTimeControlRestartFiles().ToArray();
+            var restartFiles = new EventedList<RealTimeControlRestartFile>(GetRealTimeControlRestartFiles());
             model.RestartOutput = restartFiles;
 
             // Call
