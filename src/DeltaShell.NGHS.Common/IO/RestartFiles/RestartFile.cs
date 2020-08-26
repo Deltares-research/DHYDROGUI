@@ -176,10 +176,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
                 return;
             }
 
-            if (!parentDirInfo.Exists)
-            {
-                parentDirInfo.Create();
-            }
+            parentDirInfo.Create();
         }
 
         private bool IsSamePath(FileInfo fileInfo) => pathInfo?.FullName == fileInfo?.FullName;
