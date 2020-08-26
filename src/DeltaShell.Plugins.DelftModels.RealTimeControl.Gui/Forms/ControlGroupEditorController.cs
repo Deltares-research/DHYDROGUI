@@ -1231,7 +1231,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
 
             connection.Text = string.Empty;
-            if (connection.To.BelongsTo.Tag is MathematicalExpression mathematicalExpression)
+            if (connection.From.BelongsTo.Tag is Input
+                    && connection.To.BelongsTo.Tag is MathematicalExpression mathematicalExpression)
             {
                 connection.Text = mathematicalExpression.InputMapping.Single( itcm => itcm.Value.Equals(connection.From.BelongsTo.Tag as IInput)).Key.ToString();
             }

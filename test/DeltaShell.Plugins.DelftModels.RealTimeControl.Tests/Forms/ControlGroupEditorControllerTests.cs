@@ -313,14 +313,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             controlGroup.MathematicalExpressions.Add(mathematicalExpression);
             Shape inputShape = controller.GraphControl.Shapes[0];
             Shape mathExpression = controller.GraphControl.Shapes[1];
+            Connector mathExpressionConnector = mathExpression.Connectors[1];
+            Connector inputShapeConnector = inputShape.Connectors[0];
             
             // When
-            Assert.That(mathExpression.Connectors[1].Name, Is.EqualTo("Top"));
-            Assert.That(inputShape.Connectors[0].Name, Is.EqualTo("Bottom"));
-            controller.GraphControl.AddConnection(inputShape.Connectors[0], mathExpression.Connectors[1]);
+            Assert.That(mathExpressionConnector.Name, Is.EqualTo("Top"));
+            Assert.That(inputShapeConnector.Name, Is.EqualTo("Bottom"));
+            controller.GraphControl.AddConnection(inputShapeConnector, mathExpressionConnector);
 
             // Then
             Assert.That(controller.GraphControl.Connections[0].Text, Is.EqualTo("A"));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void AddConditionToMathematicalExpressionDoesNotThrowException()
+        {
+            // Given
+            var condition = new StandardCondition();
+            var mathematicalExpression = new MathematicalExpression();
+            controlGroup.Conditions.Add(condition);
+            controlGroup.MathematicalExpressions.Add(mathematicalExpression);
+            Shape conditionShape = controller.GraphControl.Shapes[0];
+            Shape mathExpression = controller.GraphControl.Shapes[1];
+
+            // When
+            Connector mathExpressionConnector = mathExpression.Connectors[0];
+            Connector conditionShapeConnector = conditionShape.Connectors[3];
+            Assert.That(mathExpressionConnector.Name, Is.EqualTo("Left"));
+            Assert.That(conditionShapeConnector.Name, Is.EqualTo("Bottom"));
+            TestDelegate testAction = () => controller.GraphControl.AddConnection(conditionShapeConnector, mathExpressionConnector);
+
+            // Then
+            Assert.That(testAction, Throws.Nothing);
         }
 
         [Test]
