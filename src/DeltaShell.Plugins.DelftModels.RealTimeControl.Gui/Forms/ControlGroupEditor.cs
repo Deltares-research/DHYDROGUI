@@ -870,30 +870,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void OnGraphControlMouseDown(object sender, MouseEventArgs e)
         {
-            var menuItem = (NetronGraphControl)sender;
             var connector = TypeUtils.GetField(graphControl.NetronGraph, "Hover");
             if ((connector != null) && (connector.GetType() == typeof(Connector)))
             {
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
                 if (shapes != null)
                 {
-                    IEnumerable<Connector> connectors = getConnectableConnectors(shapes);
+                    IEnumerable<Connector> connectors = getConnectableConnectors(shapes, (Connector)connector);
                 }
             }
         }
         
-       private IEnumerable<Connector> getConnectableConnectors(IEnumerable<ShapeBase> shapes)
-       {
-           IEnumerable < Connector > connectors = new List<Connector>();
-           foreach (var shape in shapes) 
-           {
-               // get connectable connectors
+        private IEnumerable<Connector> getConnectableConnectors(IEnumerable<ShapeBase> shapes, Connector baseConnector)
+        {
+            IEnumerable <Connector> connectors = new List<Connector>();
+            foreach (var shape in shapes)
+            {
+               // connectors = shape.;
 
-           }
-           return connectors;
-       }
+            }
+            return connectors;
+        }
 
-private void ResetNewObjectButtons()
+        private void ResetNewObjectButtons()
         {
             tsbInput.CheckState = CheckState.Unchecked;
             tsbCondition.CheckState = CheckState.Unchecked;
