@@ -208,6 +208,7 @@
     <Compile Include="IO\Export\MathematicalExpressionSerializer.cs" />
     <Compile Include="IO\Export\OutputSerializer.cs" />
     <Compile Include="IO\Export\PidRuleSerializer.cs" />
+    <Compile Include="IO\Export\RealTimeControlRestartFileExporter.cs" />
     <Compile Include="IO\Export\RelativeTimeRuleSerializer.cs" />
     <Compile Include="IO\Export\SerializerCreator.cs" />
     <Compile Include="IO\Export\RtcSerializerBase.cs" />
