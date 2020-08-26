@@ -186,9 +186,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
-                string origFile = Path.Combine(tempDir.Path, "the.file");
-                File.WriteAllText(origFile, "");
-
+                string origFile = tempDir.CreateFile("the.file");
                 var restartFile = new RestartFile(origFile);
 
                 // Call
@@ -221,8 +219,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
-                string origFile = Path.Combine(tempDir.Path, "the.file");
-                File.WriteAllText(origFile, "");
+                string origFile = tempDir.CreateFile("the.file");
 
                 var restartFile = new RestartFile(origFile);
 
@@ -245,8 +242,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
-                string origFile = Path.Combine(tempDir.Path, "the.file");
-                File.WriteAllText(origFile, "");
+                string origFile = tempDir.CreateFile("the.file");
 
                 var restartFile = new RestartFile(origFile);
 
