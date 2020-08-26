@@ -148,15 +148,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.AreEqual("[m/s]", property.UnitSymbol);
         }
 
-        private enum MultipleUnits
+        public enum MultipleUnits
         {
             First,
-            Last
+            Second,
+            Third
         }
 
         [Test]
+        [TestCase("Captain | Tsubasha", MultipleUnits.Second, "[Tsubasha]")]
+        [TestCase("Default | NotDefault", MultipleUnits.Third, "[Default]")]
+        [TestCase("42 | 24 | 4.2", MultipleUnits.Third, "[4.2]")]
         [Category(TestCategory.Integration)]
-        public void Test_WpfGuiProperty_WithMultipleSymbolUnit_When_BindedValueChanges_Then_GetsCorrectUnit()
+        public void Test_WpfGuiProperty_WithMultipleSymbolUnit_When_BindedValueChanges_Then_GetsCorrectUnit(
+            string unitSymbols, MultipleUnits changeToValue, string expectedUnit)
         {
             const string somePropName = "someProp";
             var subCategory = "dummyCat";
@@ -171,7 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var bindingProperty = new WpfGuiProperty(bindingUIField);
             var dummyField = new FieldUIDescription(null, null)
             {
-                Name = "dummyName", UnitSymbol = somePropName + ": First | Last", SubCategory = subCategory
+                Name = "dummyName", UnitSymbol = somePropName + ": " + unitSymbols, SubCategory = subCategory
             };
             bindingProperty.Value = MultipleUnits.First;
 
@@ -184,13 +189,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             WpfGuiProperty dummyWpfProperty = groupingCategory.Properties.Single(p => p.Name.Equals(dummyField.Name));
             Assert.That(dummyWpfProperty, Is.Not.Null);
 
-            Assert.That(dummyWpfProperty.UnitSymbol, Is.EqualTo("[First]"));
-
             // When
-            bindingProperty.Value = MultipleUnits.Last;
+            TestDelegate testAction = () => bindingProperty.Value = changeToValue;
 
             // Then
-            Assert.That(dummyWpfProperty.UnitSymbol, Is.EqualTo("[Last]"));
+            Assert.That(testAction, Throws.Nothing);
+            Assert.That(dummyWpfProperty.UnitSymbol, Is.EqualTo(expectedUnit));
 
         }
 

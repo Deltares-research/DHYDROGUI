@@ -111,6 +111,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             string[] symbols = unformattedSymbol.Split(symbolSeparator)[1].Split('|');
             WpfGuiProperty lbv = GetBindedProperty.Invoke(bindedProperty);            
             int enumVal = (int)Enum.Parse(lbv.ValueType, lbv.Value.ToString());
+            if (symbols.Length <= enumVal)
+            {
+                return symbols[0].Trim();
+            }
             return symbols[enumVal].Trim();
         }
 
