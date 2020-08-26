@@ -44,7 +44,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void ImportItem_TargetNull_ThrowsArgumentNullException()
         {
             // Setup
@@ -73,6 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ImportItem_ImportsRestartFile()
         {
             using (var tempDir = new TemporaryDirectory())
