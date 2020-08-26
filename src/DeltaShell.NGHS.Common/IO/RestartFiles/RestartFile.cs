@@ -116,7 +116,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// The target directory of <paramref name="destinationPath"/> will be created without
         /// overwriting the existing one.
         /// </remarks>
-        public void CopyTo(string destinationPath, bool switchTo = false)
+        private void CopyTo(string destinationPath, bool switchTo = false)
         {
             if (string.IsNullOrEmpty(destinationPath) || !Exists)
             {
