@@ -109,6 +109,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 activity.Dispose();
             }
+            
+            dimrApi?.Dispose();
         }
 
         #endregion
@@ -787,11 +789,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                     dimrModels.ForEach(m =>
                     {
-                        m.ExplicitWorkingDirectory = Path.Combine(WorkingDirectoryPath, m.DirectoryName);
                         m.RunsInIntegratedModel = true;
                         m.DisconnectOutput();
-
-                        m.PrepareForIntegratedModelRun();
                     });
 
                     string kernelDirectories = GetKernelDirectories(dimrModels);
@@ -843,6 +842,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 {
                     Console.WriteLine(e.Message);
                     Log.ErrorFormat(e.Message);
+
+                    if (dimrApi != null)
+                    {
+                        dimrApi.Dispose();
+                        dimrApi = null;
+                    }
                     throw;
                 }
             }
@@ -946,9 +951,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnFinish()
         {
-            if (DoDimrRun() && dimrApi != null)
+            dimrApi?.Finish();
+
+            if (DoDimrRun())
             {
-                dimrApi.Finish();
+                List<IDimrModel> dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
+                dimrModels.ForEach(m => m.OnFinishIntegratedModelRun(WorkingDirectoryPath));
             }
             else
             {
