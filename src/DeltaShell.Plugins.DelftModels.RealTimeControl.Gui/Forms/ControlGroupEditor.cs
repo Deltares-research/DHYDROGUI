@@ -24,6 +24,8 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using Netron.GraphLib;
+using ValidationAspects;
+using NetronGraphControl = DelftTools.Controls.Swf.Graph.NetronGraphControl;
 using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
@@ -74,6 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             graphControl.NetronGraph.OnDoubleClick += GraphControlOnDoubleClick;
             graphControl.NetronGraph.MouseUp += OnGraphControlMouseUp;
+            graphControl.NetronGraph.MouseDown += OnGraphControlMouseDown;
         }
 
         public IGui Gui { get; set; } // selection and opening views
@@ -865,7 +868,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private void ResetNewObjectButtons()
+        private void OnGraphControlMouseDown(object sender, MouseEventArgs e)
+        {
+            var menuItem = (NetronGraphControl)sender;
+            var connector = TypeUtils.GetField(graphControl.NetronGraph, "Hover");
+            if ((connector != null) && (connector.GetType() == typeof(Connector)))
+            {
+                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+                if (shapes != null)
+                {
+                    IEnumerable<Connector> connectors = getConnectableConnectors(shapes);
+                }
+            }
+        }
+        
+       private IEnumerable<Connector> getConnectableConnectors(IEnumerable<ShapeBase> shapes)
+       {
+           IEnumerable < Connector > connectors = new List<Connector>();
+           foreach (var shape in shapes) 
+           {
+               // get connectable connectors
+
+           }
+           return connectors;
+       }
+
+private void ResetNewObjectButtons()
         {
             tsbInput.CheckState = CheckState.Unchecked;
             tsbCondition.CheckState = CheckState.Unchecked;
