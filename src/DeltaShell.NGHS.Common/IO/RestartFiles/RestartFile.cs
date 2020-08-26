@@ -28,6 +28,15 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// <exception cref="PathTooLongException">
         /// The specified <paramref name="path"/>, file name, or both exceed the system-defined maximum length.
         /// </exception>
+        /// <exception cref="System.Security.SecurityException">
+        /// Thrown when the caller does not have the required permission.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// Thrown when the access to the <paramref name="path"/> is denied.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// Thrown when <paramref name="path"/> contains a colon (:) in the middle of the string.
+        /// </exception>
         public RestartFile(string path) => Path = path;
 
         /// <summary>

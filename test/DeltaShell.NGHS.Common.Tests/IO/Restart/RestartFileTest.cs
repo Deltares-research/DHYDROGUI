@@ -51,6 +51,19 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
         }
 
         [Test]
+        public void Constructor_ContainsColon_ThrowsNotSupportedException()
+        {
+            // Setup
+            string path = "c:/:folder_path";
+
+            // Call
+            void Call() => new RestartFile(path);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(Call);
+        }
+
+        [Test]
         public void Constructor_EmptyString_ThrowsArgumentException()
         {
             // Call
