@@ -526,6 +526,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     fileStore.Close();
                 }
+
+                runner?.Dispose();
             }
 
             disposed = true;
@@ -1159,10 +1161,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public virtual void PrepareForIntegratedModelRun()
+        public virtual void OnFinishIntegratedModelRun(string workingDirectoryPath)
         {
-            // Initialization logic which should be executed as part of an
-            // integrated model HydroModel initialization.
+            // Actions, which should be done in the IDimrModel after a successful integrated model
+            // run.
         }
 
         #endregion

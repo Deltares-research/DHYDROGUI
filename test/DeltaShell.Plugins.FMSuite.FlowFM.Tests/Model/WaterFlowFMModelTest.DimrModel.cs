@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
@@ -137,23 +138,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        public void PrepareForIntegratedModelRun_SetsCacheFileToTheCorrectExplicitWorkingDirectory()
+        public void OnFinishIntegratedModelRun_WhenUseCachingIsTrue_SetsCacheFileToTheCorrectWorkingDirectory()
         {
-            const string explicitWorkingDirectory = @"Explicit\Working\Directory\dflowfm";
+            string workingDirectoryIntegratedModel = Path.Combine(Path.GetTempPath(), "IntegratedModel");
+            
             // Setup
             using (var model = new WaterFlowFMModel())
             {
-                model.ExplicitWorkingDirectory = explicitWorkingDirectory;
-
                 // Call
-                model.PrepareForIntegratedModelRun();
+                model.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
 
-                string expectedPath = Path.Combine(explicitWorkingDirectory,
+                string expectedPath = Path.Combine(workingDirectoryIntegratedModel,model.DirectoryName,
                                                    Path.ChangeExtension(model.Name,
                                                                         FileConstants.CachingFileExtension));
 
                 // Assert
                 Assert.That(model.CacheFile.Path, Is.EqualTo(expectedPath), "Expected a different path:");
+            }
+        }
+
+        [Test]
+        public void OnFinishIntegratedModelRun_WhenUseCachingIsFalse_SetsCacheFileToTheCorrectWorkingDirectory()
+        {
+            string workingDirectoryIntegratedModel = Path.Combine(Path.GetTempPath(), "IntegratedModel");
+
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("false");
+                // Call
+                model.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
+                
+                // Assert
+                Assert.IsNull(model.CacheFile.Path);
             }
         }
     }

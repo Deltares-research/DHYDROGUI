@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -8,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 {
@@ -317,6 +319,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     Assert.That(File.Exists(model.CacheFile.Path),
                                 $"Expected the cache file to exist at {model.CacheFile.Path}");
                 }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Slow)]
+        public void GivenAHydroModelWithFMModelAndCacheFile_WhenInitializeIsCalled_ThenTheCacheFileShouldBeCopiedToWorkingDirectory()
+        {
+            // Given
+            using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
+            {
+                string testTempDirectory = tempDirectory.Path;
+                string saveFolderPath = Path.Combine(testTempDirectory, "SaveLocation");
+                Directory.CreateDirectory(saveFolderPath);
+                
+                string saveFolderCacheFilePath = Path.Combine(saveFolderPath, "test.cache");
+                string mduFilePath = Path.Combine(saveFolderPath, "test.mdu");
+
+                using (FileStream fs = File.Create(saveFolderCacheFilePath))
+                {
+                    byte[] info = new UTF8Encoding(true).GetBytes("test");
+                    fs.Write(info, 0, info.Length);
+                }
+                
+                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+                model.WorkingDirectoryPathFunc = () => testTempDirectory;
+                model.CacheFile.UpdatePathToMduLocation(mduFilePath);
+                
+                // When 
+                model.Initialize();
+
+                // Then
+                Assert.AreEqual(saveFolderCacheFilePath, model.CacheFile.Path);
+                Assert.IsTrue(File.Exists(Path.Combine(model.WorkingDirectoryPath, model.DirectoryName, model.Name + ".cache")));
             }
         }
 
