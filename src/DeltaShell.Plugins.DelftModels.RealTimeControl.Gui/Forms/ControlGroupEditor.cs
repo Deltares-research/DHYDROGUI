@@ -870,26 +870,61 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void OnGraphControlMouseDown(object sender, MouseEventArgs e)
         {
-            var connector = TypeUtils.GetField(graphControl.NetronGraph, "Hover");
-            if ((connector != null) && (connector.GetType() == typeof(Connector)))
+            object hoveredItem = TypeUtils.GetField(graphControl.NetronGraph, "Hover");
+            if ((hoveredItem != null) && (hoveredItem is Connector activeConnector))
             {
+                // Retrieve all shapes present
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
                 if (shapes != null)
                 {
-                    IEnumerable<Connector> connectors = getConnectableConnectors(shapes, (Connector)connector);
+                    Connector[] allConnectors = shapes.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
+                    var owner = activeConnector.BelongsTo as ShapeBase;
+                    ConnectorType activeConnectionType = ConvertTo(activeConnector.ConnectorLocation);
+                    IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors);
+                    // draw rectangles
+                    foreach (var connector in allowedConnectors)
+                    {
+                        RectangleF rectangle = new RectangleF(connector.Location.X, connector.Location.X, 2,
+                                                              2);
+                        // draws the rectangles
+                    }
                 }
             }
         }
-        
-        private IEnumerable<Connector> getConnectableConnectors(IEnumerable<ShapeBase> shapes, Connector baseConnector)
-        {
-            IEnumerable <Connector> connectors = new List<Connector>();
-            foreach (var shape in shapes)
-            {
-               // connectors = shape.;
 
+        private static IEnumerable<Connector> FilterAllowableConnectors(ShapeBase sourceShape,
+                                                                        ConnectorType sourceConnection,
+                                                                        IEnumerable<Connector> availableConnectors)
+        {
+            var allowedConnectors = new List<Connector>();
+            foreach (Connector availableConnector in availableConnectors)
+            {
+                var targetShape = availableConnector.BelongsTo as ShapeBase;
+                ConnectorType targetConnectionType = ConvertTo(availableConnector.ConnectorLocation);
+                if (ControlGroupEditorController.IsConnectionAllowed(sourceShape, sourceConnection, targetShape, targetConnectionType))
+                {
+                    allowedConnectors.Add(availableConnector);
+                }
             }
-            return connectors;
+
+            return allowedConnectors;
+        }
+
+        private static ConnectorType ConvertTo(ConnectorLocation connectorLocation)
+        {
+            switch (connectorLocation)
+            {
+                case ConnectorLocation.North:
+                    return ConnectorType.Top;
+                case ConnectorLocation.East:
+                    return ConnectorType.Right;
+                case ConnectorLocation.West:
+                    return ConnectorType.Left;
+                case ConnectorLocation.South:
+                    return ConnectorType.Bottom;
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
         private void ResetNewObjectButtons()
