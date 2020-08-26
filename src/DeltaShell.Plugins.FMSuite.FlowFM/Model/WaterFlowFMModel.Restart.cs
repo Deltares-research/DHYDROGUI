@@ -10,19 +10,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     // The Restart related code for WaterFlowFM..
     public partial class WaterFlowFMModel
     {
-        private RestartFile restartFile = new RestartFile();
+        private RestartFile restartInput = new RestartFile();
 
         /// <summary>
         /// Gets or sets the input restart file.
         /// </summary>
         public RestartFile RestartInput
         {
-            get => restartFile;
+            get => restartInput;
             set
             {
                 Ensure.NotNull(value, nameof(value));
 
-                restartFile = value;
+                restartInput = value;
             }
         }
 
