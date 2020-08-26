@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// or this <see cref="RestartFile"/> does not exist, the method returns.
         /// </remarks>
         /// <remarks>The <paramref name="directoryPath"/> will be created without overwriting the existing one.</remarks>
-        public void CopyInto(string directoryPath, bool switchTo = false)
+        public void CopyInto(string directoryPath, bool switchTo)
         {
             if (string.IsNullOrEmpty(directoryPath) || !Exists)
             {
@@ -116,7 +116,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// The target directory of <paramref name="destinationPath"/> will be created without
         /// overwriting the existing one.
         /// </remarks>
-        private void CopyTo(string destinationPath, bool switchTo = false)
+        private void CopyTo(string destinationPath, bool switchTo)
         {
             if (string.IsNullOrEmpty(destinationPath) || !Exists)
             {
