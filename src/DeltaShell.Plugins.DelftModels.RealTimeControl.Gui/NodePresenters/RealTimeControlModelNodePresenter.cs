@@ -31,18 +31,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             gui = guiPlugin.Gui;
         }
 
-        public override Type NodeTagType
-        {
-            get
-            {
-                return typeof(RealTimeControlModel);
-            }
-        }
+        public override Type NodeTagType => typeof(RealTimeControlModel);
 
-        public override bool CanRenameNode(ITreeNode node)
-        {
-            return true;
-        }
+        public override bool CanRenameNode(ITreeNode node) => true;
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {

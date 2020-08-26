@@ -236,8 +236,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             // Assert
             TreeFolder outputTreeFolder = childObjects.OfType<TreeFolder>().Single(f => f.Text == "Output");
-            List<RestartFileOutputTreeFolder> restartFileOutputTreeFolders = outputTreeFolder.ChildItems.OfType<RestartFileOutputTreeFolder>().ToList();
-            Assert.That(restartFileOutputTreeFolders, Has.Count.EqualTo(1));
+            TreeFolder[] restartTreeFolders = outputTreeFolder.ChildItems.OfType<TreeFolder>().Where(f => f.Text == "Restart").ToArray();
+
+            Assert.That(restartTreeFolders.Length, Is.EqualTo(1));
         }
     }
 }
