@@ -9,7 +9,6 @@
     <id name="Id" column="id" type="Int64" access="property">
       <generator class="increment" />
     </id>
-    <discriminator column="type" type="string" />
     
     <property name="Name" column="name" />
     <property name="Content" column="content" />

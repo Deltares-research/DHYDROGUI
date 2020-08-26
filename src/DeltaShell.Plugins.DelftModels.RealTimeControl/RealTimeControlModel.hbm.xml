@@ -35,6 +35,6 @@
     </list>
 
     <property name="CoordinateSystem" column="coordinate_system" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis" />
-    <many-to-one name="OutputFileFunctionStore" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.RealTimeControlOutputFileFunctionStore, DeltaShell.Plugins.DelftModels.RealTimeControl" />
+    <many-to-one name="OutputFileFunctionStore" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.IO.RealTimeControlOutputFileFunctionStore, DeltaShell.Plugins.DelftModels.RealTimeControl" />
   </joined-subclass>
 </hibernate-mapping>
