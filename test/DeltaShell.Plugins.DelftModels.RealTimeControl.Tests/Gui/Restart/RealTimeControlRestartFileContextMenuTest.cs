@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using NSubstitute;
@@ -84,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             var node = Substitute.For<ITreeNode>();
             var model = new RealTimeControlModel();
             node.Parent.Parent.Tag.Returns(model);
-            model.RestartOutput = new List<RealTimeControlRestartFile> {restartFile};
+            model.RestartOutput = new EventedList<RealTimeControlRestartFile> {restartFile};
 
             // Call
             var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);

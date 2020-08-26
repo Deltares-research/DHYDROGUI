@@ -1,9 +1,13 @@
-﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart
+﻿using DelftTools.Utils.Aop;
+using DelftTools.Utils.Data;
+
+namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart
 {
     /// <summary>
     /// A restart file used in the RTC model.
     /// </summary>
-    public class RealTimeControlRestartFile
+    [Entity]
+    public class RealTimeControlRestartFile : Unique<long>
     {
         public RealTimeControlRestartFile() : this(string.Empty, string.Empty) {}
 
@@ -18,14 +22,14 @@
             Content = content;
         }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
         public bool IsEmpty => string.IsNullOrEmpty(Content);
 
         /// <summary>
         /// Gets the content of the restart file
         /// </summary>
-        public string Content { get; }
+        public string Content { get; set; }
 
         public RealTimeControlRestartFile Clone()
         {

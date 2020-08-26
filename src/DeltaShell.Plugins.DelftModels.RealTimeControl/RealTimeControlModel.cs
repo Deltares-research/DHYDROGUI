@@ -92,6 +92,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             SaveStateStopTime = StopTime;
             SaveStateTimeStep = TimeStep;
 
+            RestartOutput = new EventedList<RealTimeControlRestartFile>();
+
             runner = new DimrRunner(this);
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
 
@@ -269,13 +271,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => restartFile;
             set
             {
-                Ensure.NotNull(value, nameof(value));
+                if (value == null)
+                {
+                    return;
+                }
 
                 restartFile = value;
             }
         }
 
-        public virtual IEnumerable<RealTimeControlRestartFile> RestartOutput { get; set; } = Enumerable.Empty<RealTimeControlRestartFile>();
+        public virtual IEventedList<RealTimeControlRestartFile> RestartOutput { get; set; }
 
         public virtual void RefreshInitialState()
         {
@@ -951,8 +956,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void DisconnectOutput()
         {
-            ClearRestartOutput();
-
             if (outputFileFunctionStore == null)
             {
                 return;
@@ -962,11 +965,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             outputFileFunctionStore.Features?.Clear();
             outputFileFunctionStore.Close();
             outputFileFunctionStore = null;
-        }
-
-        private void ClearRestartOutput()
-        {
-            RestartOutput = Enumerable.Empty<RealTimeControlRestartFile>();
         }
 
         public virtual void ConnectOutput(string outputPath)
@@ -991,7 +989,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
         {
-            RestartOutput = restartFileStrings.Select(rfs => new RealTimeControlRestartFile(Path.GetFileName(rfs), File.ReadAllText(rfs))).ToArray();
+            RestartOutput = new EventedList<RealTimeControlRestartFile>(restartFileStrings.Select(rfs => new RealTimeControlRestartFile(Path.GetFileName(rfs), File.ReadAllText(rfs))).ToList());
         }
 
         private void ReconnectOutputFiles(string outputFilePath)
