@@ -884,14 +884,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     // draw rectangles
                     foreach (var connector in allowedConnectors)
                     {
-                        RectangleF rectangle = new RectangleF(connector.Location.X, connector.Location.X, 2,
+                        RectangleF rectangle = new RectangleF(connector.Location.X, connector.Location.Y, 2,
                                                               2);
+                        graphControl.NetronGraph.Invalidate();
                         // draws the rectangles
                     }
                 }
             }
         }
-
         private static IEnumerable<Connector> FilterAllowableConnectors(ShapeBase sourceShape,
                                                                         ConnectorType sourceConnection,
                                                                         IEnumerable<Connector> availableConnectors)
@@ -900,10 +900,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             foreach (Connector availableConnector in availableConnectors)
             {
                 var targetShape = availableConnector.BelongsTo as ShapeBase;
-                ConnectorType targetConnectionType = ConvertTo(availableConnector.ConnectorLocation);
-                if (ControlGroupEditorController.IsConnectionAllowed(sourceShape, sourceConnection, targetShape, targetConnectionType))
+                ConnectorType targetConnectionType;
+
+                if (targetShape is MathematicalExpressionShape)
                 {
-                    allowedConnectors.Add(availableConnector);
+                    switch (availableConnector.Name)
+                    {
+                        case "Left":
+                            targetConnectionType = ConnectorType.Left;
+                            break;
+                        case "Top":
+                            targetConnectionType = ConnectorType.Top;
+                            break;
+                        case "Bottom":
+                            targetConnectionType = ConnectorType.Bottom;
+                            break;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                }
+                else
+                {
+                    targetConnectionType = ConvertTo(availableConnector.ConnectorLocation);
+                }
+
+                if (sourceShape != targetShape)
+                {
+                    if (ControlGroupEditorController.IsConnectionAllowed(sourceShape, sourceConnection, targetShape, targetConnectionType))
+                    {
+                        allowedConnectors.Add(availableConnector);
+                    }
                 }
             }
 
