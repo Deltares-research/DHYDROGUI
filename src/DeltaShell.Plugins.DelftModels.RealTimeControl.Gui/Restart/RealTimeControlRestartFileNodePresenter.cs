@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
         /// <summary>
         /// Gets the context menu.
         /// </summary>
-        /// <param name="sender">The node for which to get hte context menu.</param>
+        /// <param name="sender">The node for which to get the context menu.</param>
         /// <param name="nodeData">The node data.</param>
         /// <returns>The context menu for a <see cref="RealTimeControlRestartFile"/></returns>
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)

@@ -18,13 +18,11 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
@@ -71,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private bool suspendUpdateFeatureAndParameter;
 
-        private RealTimeControlRestartFile restartFile = new RealTimeControlRestartFile();
+        private RealTimeControlRestartFile restartInput = new RealTimeControlRestartFile();
 
         public RealTimeControlModel() : this("RTC Model") {}
 
@@ -144,6 +142,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             outputFileFunctionStore != null && outputFileFunctionStore.Functions != null
                 ? outputFileFunctionStore.Functions.OfType<IFeatureCoverage>()
                 : Enumerable.Empty<IFeatureCoverage>();
+
+        public virtual bool UseRestart { get; set; }
+
+        public virtual bool WriteRestart { get; set; }
+
+        /// <summary>
+        /// Gets or sets the input restart file.
+        /// </summary>
+        public virtual RealTimeControlRestartFile RestartInput
+        {
+            get => restartInput;
+            set
+            {
+                if (value == null)
+                {
+                    return;
+                }
+
+                restartInput = value;
+            }
+        }
+
+        public virtual IEventedList<RealTimeControlRestartFile> RestartOutput { get; set; }
 
         //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
@@ -258,29 +279,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return "Kernel: " + RealTimeControlModelDll.RTCTOOLS_DLL_NAME + "  " + FileVersionInfo.GetVersionInfo(DimrApiDataSet.RtcToolsDllPath).FileVersion;
             }
         }
-
-        public virtual bool UseRestart { get; set; }
-
-        public virtual bool WriteRestart { get; set; }
-
-        /// <summary>
-        /// Gets or sets the input restart file.
-        /// </summary>
-        public virtual RealTimeControlRestartFile RestartInput
-        {
-            get => restartFile;
-            set
-            {
-                if (value == null)
-                {
-                    return;
-                }
-
-                restartFile = value;
-            }
-        }
-
-        public virtual IEventedList<RealTimeControlRestartFile> RestartOutput { get; set; }
 
         public virtual void RefreshInitialState()
         {
@@ -991,7 +989,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
         {
-            RestartOutput = new EventedList<RealTimeControlRestartFile>(restartFileStrings.Select(rfs => new RealTimeControlRestartFile(Path.GetFileName(rfs), File.ReadAllText(rfs))).ToList());
+            IEnumerable<RealTimeControlRestartFile> outputRestartFiles = 
+                restartFileStrings.Select(rfs => new RealTimeControlRestartFile(Path.GetFileName(rfs), 
+                                                                                File.ReadAllText(rfs)));
+            RestartOutput = new EventedList<RealTimeControlRestartFile>(outputRestartFiles.ToList());
         }
 
         private void ReconnectOutputFiles(string outputFilePath)

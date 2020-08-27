@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.Gui.Properties;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 
 namespace DeltaShell.NGHS.Common.Gui.Restart
@@ -58,7 +59,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
 
         private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(IRestartModel model, RestartFile restartFile)
         {
-            var menuItem = new ClonableToolStripMenuItem {Text = "Use as restart"};
+            var menuItem = new ClonableToolStripMenuItem {Text = Resources.UseAsRestart};
             menuItem.Click += (s, e) => model.RestartInput = restartFile.Clone();
 
             return menuItem;
@@ -68,7 +69,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
         {
             var menuItem = new ClonableToolStripMenuItem
             {
-                Text = "Use last restart",
+                Text = Resources.UseLastRestart,
                 Enabled = false
             };
 
@@ -88,8 +89,8 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
         {
             var menuItem = new ClonableToolStripMenuItem
             {
-                Text = "Remove restart",
-                Enabled = model.UseRestart,
+                Text = Resources.RemoveRestart,
+                Enabled = model.UseRestart
             };
             menuItem.Click += (s, e) => model.RestartInput = new RestartFile();
 

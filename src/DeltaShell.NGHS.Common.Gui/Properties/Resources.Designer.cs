@@ -145,6 +145,15 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove restart.
+        /// </summary>
+        public static string RemoveRestart {
+            get {
+                return ResourceManager.GetString("RemoveRestart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap restart {
@@ -174,12 +183,39 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Restart.
+        /// </summary>
+        public static string RestartFolderName {
+            get {
+                return ResourceManager.GetString("RestartFolderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Converting strings to Types is currently not supported..
         /// </summary>
         public static string TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_not_supported_ {
             get {
                 return ResourceManager.GetString("TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_n" +
                         "ot_supported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use as restart.
+        /// </summary>
+        public static string UseAsRestart {
+            get {
+                return ResourceManager.GetString("UseAsRestart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use last restart.
+        /// </summary>
+        public static string UseLastRestart {
+            get {
+                return ResourceManager.GetString("UseLastRestart", resourceCulture);
             }
         }
     }

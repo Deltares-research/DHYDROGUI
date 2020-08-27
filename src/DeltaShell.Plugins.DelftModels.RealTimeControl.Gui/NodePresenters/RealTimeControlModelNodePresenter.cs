@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         private static object GetRestartFolder(RealTimeControlModel model)
         {
-            return new RealTimeControlRestartFileOutputTreeFolder(model);
+            return new TreeFolder(model, model.RestartOutput, NGHS.Common.Gui.Properties.Resources.RestartFolderName, FolderImageType.None);
         }
     }
 }

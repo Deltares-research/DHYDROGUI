@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
@@ -57,8 +58,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
 
         private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(RealTimeControlModel model, RealTimeControlRestartFile restartFile)
         {
-            var menuItem = new ClonableToolStripMenuItem {Text = "Use as restart"};
-            menuItem.Click += (s, e) => model.RestartInput = (RealTimeControlRestartFile) restartFile.Clone();
+            var menuItem = new ClonableToolStripMenuItem {Text = Resources.UseAsRestart};
+            menuItem.Click += (s, e) => model.RestartInput = restartFile.Clone();
 
             return menuItem;
         }
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
         {
             var menuItem = new ClonableToolStripMenuItem
             {
-                Text = "Use last restart",
+                Text = Resources.UseLastRestart,
                 Enabled = false
             };
 
@@ -78,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             }
 
             menuItem.Enabled = true;
-            menuItem.Click += (s, e) => model.RestartInput = (RealTimeControlRestartFile) outputRealTimeControlRestartFile.Clone();
+            menuItem.Click += (s, e) => model.RestartInput = outputRealTimeControlRestartFile.Clone();
 
             return menuItem;
         }
@@ -87,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
         {
             var menuItem = new ClonableToolStripMenuItem
             {
-                Text = "Remove restart",
+                Text = Resources.RemoveRestart,
                 Enabled = model.UseRestart,
             };
             menuItem.Click += (s, e) => model.RestartInput = new RealTimeControlRestartFile();

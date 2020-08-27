@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             {
                 File.WriteAllText(path, restartFile.Content);
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 log.Error("Critical exception: " + e.Message);
                 return false;

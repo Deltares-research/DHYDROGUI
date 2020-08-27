@@ -136,6 +136,18 @@
   <data name="TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_not_supported_" xml:space="preserve">
     <value>Converting strings to Types is currently not supported.</value>
   </data>
+  <data name="RemoveRestart" xml:space="preserve">
+    <value>Remove restart</value>
+  </data>
+  <data name="UseAsRestart" xml:space="preserve">
+    <value>Use as restart</value>
+  </data>
+  <data name="UseLastRestart" xml:space="preserve">
+    <value>Use last restart</value>
+  </data>
+  <data name="RestartFolderName" xml:space="preserve">
+    <value>Restart</value>
+  </data>
   <data name="RestartFileNodePresenter_Restart_empty" xml:space="preserve">
     <value>Restart: empty</value>
   </data>
