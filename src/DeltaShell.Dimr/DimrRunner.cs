@@ -385,6 +385,7 @@ namespace DeltaShell.Dimr
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -401,5 +402,7 @@ namespace DeltaShell.Dimr
 
             disposed = true;
         }
+
+        ~DimrRunner() => Dispose(false);
     }
 }
