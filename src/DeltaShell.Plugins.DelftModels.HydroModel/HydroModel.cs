@@ -843,11 +843,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Console.WriteLine(e.Message);
                     Log.ErrorFormat(e.Message);
 
-                    if (dimrApi != null)
-                    {
-                        dimrApi.Dispose();
-                        dimrApi = null;
-                    }
+                    dimrApi?.Dispose();
+                    dimrApi = null;
+                    
                     throw;
                 }
             }
