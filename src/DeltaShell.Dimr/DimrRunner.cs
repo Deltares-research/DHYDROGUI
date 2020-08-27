@@ -181,9 +181,7 @@ namespace DeltaShell.Dimr
 
             model.ConnectOutput(outputDirectory);
 
-            string dimrLogDirectory = model is IDimrModel dimrModel ? 
-                                          dimrModel.DimrExportDirectoryPath : model.ExplicitWorkingDirectory;
-            DimrRunHelper.ConnectDimrRunLogFile(model, dimrLogDirectory);
+            DimrRunHelper.ConnectDimrRunLogFile(model, model.DimrExportDirectoryPath);
         }
         
         public static string GenerateDimrXML(IDimrModel dimrModel, string workDirectory)

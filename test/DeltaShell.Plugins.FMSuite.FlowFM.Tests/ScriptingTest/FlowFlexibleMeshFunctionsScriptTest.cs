@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
                                       "GenerateRegularGridForModel(fmModel, 10, 22, 50, 50, 500, 0, True)";
                 string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                 Directory.CreateDirectory(tempDirectory);
-                var waterFlowFmModel = new WaterFlowFMModel {ExplicitWorkingDirectory = tempDirectory};
+                var waterFlowFmModel = new WaterFlowFMModel();
 
                 TypeUtils.SetPrivatePropertyValue(waterFlowFmModel, nameof(waterFlowFmModel.MduFilePath), "Test.mdu");
 
