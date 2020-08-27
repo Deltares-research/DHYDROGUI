@@ -402,7 +402,5 @@ namespace DeltaShell.Dimr
 
             disposed = true;
         }
-
-        ~DimrRunner() => Dispose(false);
     }
 }
