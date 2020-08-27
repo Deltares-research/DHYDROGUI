@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using Netron.GraphLib;
 using Netron.GraphLib.Attributes;
@@ -37,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
             return new PointF(0, 0);
         }
-
+        
         public override void Paint(Graphics g)
         {
             Recalculate(g);
@@ -64,6 +65,8 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
             var brush = new SolidBrush(Color.FromArgb(14, 187, 240));
             g.FillPolygon(brush, points);
+
+            DrawConnectorsHighlights(HighLightedConnectors, g);
 
             PreRender(g);
             base.Paint(g);

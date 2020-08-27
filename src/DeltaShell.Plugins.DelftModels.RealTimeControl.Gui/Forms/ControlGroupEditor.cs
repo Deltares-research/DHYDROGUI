@@ -865,6 +865,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 created = null;
 
                 ResetNewObjectButtons();
+               
             }
         }
 
@@ -882,12 +883,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     ConnectorType activeConnectionType = ConvertTo(activeConnector.ConnectorLocation);
                     IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors);
                     // draw rectangles
-                    foreach (var connector in allowedConnectors)
+                    foreach (var shape in shapes)
                     {
-                        RectangleF rectangle = new RectangleF(connector.Location.X, connector.Location.Y, 2,
-                                                              2);
-                        graphControl.NetronGraph.Invalidate();
-                        // draws the rectangles
+                        shape.HighLightedConnectors = allowedConnectors.ToList();
                     }
                 }
             }
@@ -935,6 +933,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             return allowedConnectors;
         }
+
 
         private static ConnectorType ConvertTo(ConnectorLocation connectorLocation)
         {

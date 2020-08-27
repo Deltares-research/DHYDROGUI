@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
@@ -71,6 +72,8 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
                 }
             }
         }
+
+        public List<Connector> HighLightedConnectors { get; set; }
 
         public virtual long Id { get; set; }
 
@@ -179,6 +182,27 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             }
 
             g.DrawString(text, Font, TextBrush, newOrigin.X, newOrigin.Y);
+        }
+
+        protected void DrawConnectorsHighlights(List<Connector> connectors, Graphics g)
+        {
+            if (connectors != null)
+            {
+                Pen linePen = new Pen(Color.Red, 1);
+
+                RectangleF[] rectangles = new RectangleF[connectors.Count];
+                int countRectangles = 0;
+                foreach (var connector in connectors)
+                {
+
+                    RectangleF rectangle = new RectangleF(connector.Location.X, connector.Location.Y, 2,
+                                                          2);
+                    rectangles[countRectangles] = rectangle;
+                    countRectangles++;
+                }
+
+                g.DrawRectangles(linePen, rectangles);
+            }
         }
 
         protected override void GetPropertyBagValue(object sender, PropertySpecEventArgs e)
