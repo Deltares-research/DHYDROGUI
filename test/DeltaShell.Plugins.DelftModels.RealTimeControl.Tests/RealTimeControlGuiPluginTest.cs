@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -7,6 +8,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
@@ -51,10 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 var pluginGui = new RealTimeControlGuiPlugin {Gui = gui};
                 pluginGui.Activate();
 
-                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(new ShapeBase[]
-                {
-                    new RuleShape()
-                });
+                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(new ShapeBase[] {new RuleShape()});
                 Assert.IsTrue(RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet());
 
                 projectClosingRaiser.Raise(project);
@@ -94,6 +93,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             propertyInfo = propertyInfos.First(pi => pi.ObjectType == typeof(ControlGroup));
             Assert.AreEqual(typeof(ControlGroupProperties), propertyInfo.PropertyType);
+        }
+
+        [Test]
+        public void GetProjectTreeViewNodePresenters_ContainsCorrectNodePresenters()
+        {
+            // Given
+            var guiPlugin = new RealTimeControlGuiPlugin();
+
+            // When
+            ITreeNodePresenter[] nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
+
+            // Then
+            var restartFileNodePresenter = Contains<RealTimeControlRestartFileNodePresenter>(nodePresenters);
+            Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+        }
+
+        private static T Contains<T>(IEnumerable<ITreeNodePresenter> source)
+        {
+            List<T> items = source.OfType<T>().ToList();
+            Assert.That(items, Has.Count.EqualTo(1), $"Collection should contain one {typeof(T).Name}");
+
+            return items[0];
         }
     }
 }

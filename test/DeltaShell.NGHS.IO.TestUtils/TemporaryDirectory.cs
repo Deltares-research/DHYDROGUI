@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 
@@ -54,6 +55,22 @@ namespace DeltaShell.NGHS.IO.TestUtils
             FileUtils.CreateDirectoryIfNotExists(targetDirPath);
 
             return targetDirPath;
+        }
+
+        /// <summary>
+        /// Creates a new file at the relative path.
+        /// </summary>
+        /// <param name="relativeFilePath">The relative file path.</param>
+        /// <param name="content">The content of the file.</param>
+        /// <returns>
+        /// The full file path.
+        /// </returns>
+        public string CreateFile(string relativeFilePath, string content = "")
+        {
+            string targetFilePath = System.IO.Path.Combine(Path, relativeFilePath);
+            File.WriteAllText(targetFilePath, content);
+
+            return targetFilePath;
         }
 
         /// <summary>
