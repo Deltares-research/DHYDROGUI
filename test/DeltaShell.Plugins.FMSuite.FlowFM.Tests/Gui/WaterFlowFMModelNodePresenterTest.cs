@@ -13,6 +13,7 @@ using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.Common.Gui.Restart;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
@@ -222,6 +223,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             int after = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
 
             Assert.AreEqual(before, after);
+        }
+
+        [Test]
+        public void GetChildNodeObjects_ContainsRestartInput()
+        {
+            // Setup
+            var nodePresenter = new WaterFlowFMModelNodePresenter(null);
+            var model = new WaterFlowFMModel();
+
+            // Call
+            IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
+
+            // Assert
+            FmModelTreeShortcut initialConditionsFolder = childObjects.OfType<FmModelTreeShortcut>().Single(f => f.Text == "Initial Conditions");
+            RestartFile[] inputRestart = initialConditionsFolder.ChildObjects.OfType<RestartFile>().ToArray();
+            Assert.That(inputRestart.Length, Is.EqualTo(1));
+            Assert.That(inputRestart[0], Is.SameAs(model.RestartInput));
         }
 
         [Test]
