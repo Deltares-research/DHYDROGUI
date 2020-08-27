@@ -117,11 +117,6 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// </remarks>
         private void CopyTo(string destinationPath, bool switchTo)
         {
-            if (string.IsNullOrEmpty(destinationPath) || !Exists)
-            {
-                return;
-            }
-
             var destinationFileInfo = new FileInfo(destinationPath);
 
             CreateParentDirectory(destinationFileInfo);
@@ -135,24 +130,8 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
 
             if (switchTo)
             {
-                SwitchTo(destinationFileInfo.FullName);
+                Path = destinationFileInfo.FullName;
             }
-        }
-
-        /// <summary>
-        /// Switches to the specified <paramref name="newPath"/>
-        /// </summary>
-        /// <param name="newPath"> The new path. </param>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="newPath"/> contains invalid characters such as ", &, >, or |, or if <paramref name="newPath"/> is
-        /// empty.
-        /// </exception>
-        /// <exception cref="PathTooLongException">
-        /// The specified path, file name, or both exceed the system-defined maximum length.
-        /// </exception>
-        public void SwitchTo(string newPath)
-        {
-            Path = newPath;
         }
 
         public override string ToString() => Name;

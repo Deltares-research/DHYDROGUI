@@ -86,58 +86,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             Assert.Throws<PathTooLongException>(Call);
         }
 
-        [Test]
-        [TestCaseSource(nameof(GetPathTestCases))]
-        public void SwitchTo_SetsPathCorrectly(string value, string expPath, string expName, bool expIsEmpty)
-        {
-            // Setup
-            var restartFile = new RestartFile();
-
-            // Call
-            restartFile.SwitchTo(value);
-
-            // Assert
-            Assert.That(restartFile.Path, Is.EqualTo(expPath));
-            Assert.That(restartFile.Name, Is.EqualTo(expName));
-            Assert.That(restartFile.IsEmpty, Is.EqualTo(expIsEmpty));
-        }
-
-        [TestCaseSource(nameof(InvalidChars))]
-        public void SwitchTo_ContainsInvalidChars_ThrowsArgumentException(char invalidCharacter)
-        {
-            // Setup
-            string path = $"c:/{invalidCharacter}folder_path";
-
-            // Call
-            void Call() => new RestartFile().SwitchTo(path);
-
-            // Assert
-            Assert.Throws<ArgumentException>(Call);
-        }
-
-        [Test]
-        public void SwitchTo_WithEmptyString_ThrowsArgumentException()
-        {
-            // Call
-            void Call() => new RestartFile().SwitchTo(string.Empty);
-
-            // Assert
-            Assert.Throws<ArgumentException>(Call);
-        }
-
-        [Test]
-        public void SwitchTo_PathTooLong_ThrowsPathTooLongException()
-        {
-            // Setup
-            var path = new StringBuilder().Append('p', 248).ToString();
-
-            // Call
-            void Call() => new RestartFile().SwitchTo(path);
-
-            // Assert
-            Assert.Throws<PathTooLongException>(Call);
-        }
-
         [TestCase(true, null)]
         [TestCase(true, "")]
         [TestCase(false, null)]
@@ -159,18 +107,20 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             }
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void CopyToDirectory_FileDoesNotExist_Returns(bool switchTo)
+        [TestCase("path/to/the.file", true)]
+        [TestCase("path/to/the.file", false)]
+        [TestCase(null, true)]
+        [TestCase(null, false)]
+        public void CopyToDirectory_FileDoesNotExist_Returns(string path, bool switchTo)
         {
             // Setup
-            var restartFile = new RestartFile("path/to/the.file");
+            var restartFile = new RestartFile(path);
 
             // Call
             restartFile.CopyToDirectory("some/folder", switchTo);
 
             // Assert
-            Assert.That(restartFile.Path, Is.EqualTo("path/to/the.file"));
+            Assert.That(restartFile.Path, Is.EqualTo(path));
         }
 
         [TestCase(true)]
