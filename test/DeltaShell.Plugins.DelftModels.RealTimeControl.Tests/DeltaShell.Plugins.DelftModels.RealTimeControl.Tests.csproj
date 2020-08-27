@@ -242,6 +242,7 @@
     <Compile Include="Domain\FactorRuleTests.cs.cs" />
     <Compile Include="Domain\LookupSignalTests.cs" />
     <Compile Include="Domain\MathematicalExpressionTest.cs" />
+    <Compile Include="Domain\Restart\RealTimeControlRestartFileTest.cs" />
     <Compile Include="Domain\StandardConditionTests.cs" />
     <Compile Include="Domain\RelativeTimeRuleTests.cs" />
     <Compile Include="Domain\IntervalRuleTests.cs" />
@@ -271,50 +272,53 @@
     <Compile Include="Forms\Properties\StandardConditionPropertiesTest.cs" />
     <Compile Include="Forms\Properties\TimeConditionPropertiesTest.cs" />
     <Compile Include="Forms\TimeConditionPropertiesTest.cs" />
-    <Compile Include="ImportExport\DataAccess\BranchNodeTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ConditionDataAccessObjectCreatorTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ConditionDataAccessObjectTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ConstantLeafReferenceTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ConstantValueLeafNodeTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ExpressionObjectTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ExpressionReferenceTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ExpressionTreeTest.cs" />
-    <Compile Include="ImportExport\DataAccess\OperatorConverterTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ParameterLeafNodeTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ParameterLeafReferenceTest.cs" />
-    <Compile Include="ImportExport\DataAccess\RuleDataAccessObjectCreatorTest.cs" />
-    <Compile Include="ImportExport\DataAccess\RuleDataAccessObjectTest.cs" />
-    <Compile Include="ImportExport\DataAccess\SignalDataAccessObjectCreatorTest.cs" />
-    <Compile Include="ImportExport\DataAccess\SignalDataAccessObjectTest.cs" />
-    <Compile Include="ImportExport\Export\DirectionalConditionSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\ExpressionParserTest.cs" />
-    <Compile Include="ImportExport\Export\HydraulicRuleSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\InputSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\IntervalRuleSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\LookupSignalSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\MathematicalExpressionSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\OutputSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\PidRuleSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\RelativeTimRuleSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\StandardConditionSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\TimeConditionSerializerTest.cs" />
-    <Compile Include="ImportExport\Export\TimeRuleSerializerTest.cs" />
-    <Compile Include="ImportExport\DataAccess\ExpressionTreeAssemblerTest.cs" />
-    <Compile Include="ImportExport\Helpers\ExpressionNodeEqualityComparer.cs" />
-    <Compile Include="ImportExport\Helpers\ExpressionXMLBuilder.cs" />
-    <Compile Include="ImportExport\RealTimeControlDataAndToolsConfigXmlReaderTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlDataConfigXmlConverterTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlDataConfigXmlSetterTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlModelImporterTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlModelXmlReaderTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlRuntimeConfigSetterTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlRuntimeConfigXmlReaderTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlTimeSeriesSetterTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlTimeSeriesXmlReaderTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlToolsConfigComponentConnectorTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlToolsConfigXmlConverterTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlXmlReaderHelperTest.cs" />
-    <Compile Include="ImportExport\RealTimeControlXmlWriterTest.cs" />
+    <Compile Include="Gui\Restart\RealTimeControlRestartFileContextMenuTest.cs" />
+    <Compile Include="IO\DataAccess\BranchNodeTest.cs" />
+    <Compile Include="IO\DataAccess\ConditionDataAccessObjectCreatorTest.cs" />
+    <Compile Include="IO\DataAccess\ConditionDataAccessObjectTest.cs" />
+    <Compile Include="IO\DataAccess\ConstantLeafReferenceTest.cs" />
+    <Compile Include="IO\DataAccess\ConstantValueLeafNodeTest.cs" />
+    <Compile Include="IO\DataAccess\ExpressionObjectTest.cs" />
+    <Compile Include="IO\DataAccess\ExpressionReferenceTest.cs" />
+    <Compile Include="IO\DataAccess\ExpressionTreeTest.cs" />
+    <Compile Include="IO\DataAccess\OperatorConverterTest.cs" />
+    <Compile Include="IO\DataAccess\ParameterLeafNodeTest.cs" />
+    <Compile Include="IO\DataAccess\ParameterLeafReferenceTest.cs" />
+    <Compile Include="IO\DataAccess\RuleDataAccessObjectCreatorTest.cs" />
+    <Compile Include="IO\DataAccess\RuleDataAccessObjectTest.cs" />
+    <Compile Include="IO\DataAccess\SignalDataAccessObjectCreatorTest.cs" />
+    <Compile Include="IO\DataAccess\SignalDataAccessObjectTest.cs" />
+    <Compile Include="IO\Export\DirectionalConditionSerializerTest.cs" />
+    <Compile Include="IO\Export\ExpressionParserTest.cs" />
+    <Compile Include="IO\Export\HydraulicRuleSerializerTest.cs" />
+    <Compile Include="IO\Export\InputSerializerTest.cs" />
+    <Compile Include="IO\Export\IntervalRuleSerializerTest.cs" />
+    <Compile Include="IO\Export\LookupSignalSerializerTest.cs" />
+    <Compile Include="IO\Export\MathematicalExpressionSerializerTest.cs" />
+    <Compile Include="IO\Export\OutputSerializerTest.cs" />
+    <Compile Include="IO\Export\PidRuleSerializerTest.cs" />
+    <Compile Include="IO\Export\RealTimeControlRestartFileExporterTest.cs" />
+    <Compile Include="IO\Export\RelativeTimRuleSerializerTest.cs" />
+    <Compile Include="IO\Export\StandardConditionSerializerTest.cs" />
+    <Compile Include="IO\Export\TimeConditionSerializerTest.cs" />
+    <Compile Include="IO\Export\TimeRuleSerializerTest.cs" />
+    <Compile Include="IO\DataAccess\ExpressionTreeAssemblerTest.cs" />
+    <Compile Include="IO\Helpers\ExpressionNodeEqualityComparer.cs" />
+    <Compile Include="IO\Helpers\ExpressionXMLBuilder.cs" />
+    <Compile Include="IO\RealTimeControlDataAndToolsConfigXmlReaderTest.cs" />
+    <Compile Include="IO\RealTimeControlDataConfigXmlConverterTest.cs" />
+    <Compile Include="IO\RealTimeControlDataConfigXmlSetterTest.cs" />
+    <Compile Include="IO\RealTimeControlModelImporterTest.cs" />
+    <Compile Include="IO\RealTimeControlModelXmlReaderTest.cs" />
+    <Compile Include="IO\Import\RealTimeControlRestartFileImporterTest.cs" />
+    <Compile Include="IO\RealTimeControlRuntimeConfigSetterTest.cs" />
+    <Compile Include="IO\RealTimeControlRuntimeConfigXmlReaderTest.cs" />
+    <Compile Include="IO\RealTimeControlTimeSeriesSetterTest.cs" />
+    <Compile Include="IO\RealTimeControlTimeSeriesXmlReaderTest.cs" />
+    <Compile Include="IO\RealTimeControlToolsConfigComponentConnectorTest.cs" />
+    <Compile Include="IO\RealTimeControlToolsConfigXmlConverterTest.cs" />
+    <Compile Include="IO\RealTimeControlXmlReaderHelperTest.cs" />
+    <Compile Include="IO\RealTimeControlXmlWriterTest.cs" />
     <Compile Include="NHibernateRealTimeControlIntegrationTests.cs" />
     <Compile Include="NodePresenters\ControlGroupCollectionNodePresenterTest.cs" />
     <Compile Include="NodePresenters\ControlGroupNodePresenterTest.cs" />
@@ -327,9 +331,9 @@
     <Compile Include="RealTimeControlModelExtensionsTest.cs" />
     <Compile Include="RealTimeControlModelTest.cs" />
     <Compile Include="RealTimeControlGuiPluginTest.cs" />
-    <Compile Include="RealTimeControlModel_ModelRunsTest.cs" />
     <Compile Include="RealTimeControlTestHelperTest.cs" />
     <Compile Include="RealTimeControlUserInterfaceIntegrationTests.cs" />
+    <Compile Include="Gui\Restart\RealTimeControlRestartFileNodePresenterTest.cs" />
     <Compile Include="RtcDataAccessListenerTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="TimeConditionTest.cs" />
@@ -352,6 +356,11 @@
     <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
@@ -383,6 +392,10 @@
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
+      <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
+      <Name>DeltaShell.NGHS.IO.TestUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
       <Project>{4A0F7700-AA64-463F-A602-8C15E3886EC5}</Project>

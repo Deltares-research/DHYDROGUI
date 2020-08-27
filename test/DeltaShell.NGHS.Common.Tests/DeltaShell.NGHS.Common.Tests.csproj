@@ -46,18 +46,34 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="DelftTools.Controls">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.cb077cb\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.cb077cb\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Shell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.cb077cb\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Gui.Swf">
+    <Reference Include="DelftTools.Shell.Core">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.cb077cb\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.cb077cb\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.cb077cb\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.cb077cb\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.TestUtils">
@@ -109,6 +125,7 @@
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -123,7 +140,11 @@
     <Compile Include="Gui\Converters\EnumToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Converters\TypeToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Converters\UnitStringToUnitDisplayStringConverterTest.cs" />
+    <Compile Include="Gui\NodePresenters\ContextMenuFactoryTest.cs" />
+    <Compile Include="Gui\Restart\RestartFileContextMenuTest.cs" />
+    <Compile Include="Gui\Restart\RestartFileNodePresenterTest.cs" />
     <Compile Include="IO\FilesManagerTest.cs" />
+    <Compile Include="IO\Restart\RestartFileTest.cs" />
     <Compile Include="Logging\LogHandlerTest.cs" />
     <Compile Include="Logging\LogMessagesListTest.cs" />
     <Compile Include="SystemEnvironmentTest.cs" />

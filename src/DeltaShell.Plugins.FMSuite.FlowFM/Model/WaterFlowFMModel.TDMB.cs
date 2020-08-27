@@ -129,6 +129,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             yield return InitialTracers;
             yield return InitialFractions;
 
+            yield return RestartInput;
+
             //for QueryTimeSeries tool:
             if (OutputHisFileStore != null)
             {

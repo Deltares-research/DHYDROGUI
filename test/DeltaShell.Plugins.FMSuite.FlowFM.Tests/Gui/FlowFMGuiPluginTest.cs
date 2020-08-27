@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        public void GivenAFlowFMGuiPlugin_WhenGetProjectTreeViewNodePresentersIsCalled_AnEnumerableContainingAnFMClassMapFileFunctionStoreNodePresenterIsReturned()
+        public void GetProjectTreeViewNodePresenters_ContainsCorrectNodePresenters()
         {
             // Given
             var guiPlugin = new FlowFMGuiPlugin();
@@ -75,9 +76,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             ITreeNodePresenter[] nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
 
             // Then
-            FMClassMapFileFunctionStoreNodePresenter fmClassMapFileFunctionStoreNodePresenter = nodePresenters.OfType<FMClassMapFileFunctionStoreNodePresenter>().SingleOrDefault();
-            Assert.NotNull(fmClassMapFileFunctionStoreNodePresenter);
-            Assert.AreSame(guiPlugin, fmClassMapFileFunctionStoreNodePresenter.GuiPlugin);
+            var classMapFileNodePresenter = Contains<FMClassMapFileFunctionStoreNodePresenter>(nodePresenters);
+            Assert.That(classMapFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+
+            var restartFileNodePresenter = Contains<RestartFileNodePresenter>(nodePresenters);
+            Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+        }
+
+        private static T Contains<T>(ITreeNodePresenter[] source)
+        {
+            List<T> items = source.OfType<T>().ToList();
+            Assert.That(items, Has.Count.EqualTo(1), $"Collection should contain one {typeof(T).Name}");
+
+            return items[0];
         }
 
         [Category(TestCategory.Jira)] // D3DFMIQ-614

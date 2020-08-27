@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Controls;
@@ -14,11 +15,13 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
-using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
@@ -182,6 +185,55 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                             "The clean up should not have changed the parameter name of the output");
             Assert.AreEqual("[m]", output.UnitName,
                             "The clean up should not have changed the unit name of the output");
+        }
+
+        [Test]
+        public void ConnectOutput_RestartFiles_ReconnectsTheRestartFiles()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string rtcFolderName = "rtc";
+                string rtcDirectory = Path.Combine(tempDir.Path, rtcFolderName);
+                Directory.CreateDirectory(rtcDirectory);
+                string[] restartFiles = CreateRestartFiles(tempDir, rtcFolderName).ToArray();
+
+                var model = new RealTimeControlModel();
+
+                // Call
+                model.ConnectOutput(rtcDirectory);
+
+                // Assert
+                RealTimeControlRestartFile[] restartOutput = model.RestartOutput.ToArray();
+                Assert.That(restartOutput, Has.Length.EqualTo(5));
+
+                for (var i = 0; i < 5; i++)
+                {
+                    Assert.That(restartOutput[i].Name, Is.EqualTo(Path.GetFileName(restartFiles[i])));
+                    Assert.That(restartOutput[i].Content, Is.EqualTo($"file {i}"));
+                }
+            }
+        }
+
+        [Test]
+        public void GivenRealTimeControlModel_WhenSetRestartInputToNull_RestartInputNotChanged()
+        {
+            // Given
+            var model = new RealTimeControlModel();
+            RealTimeControlRestartFile originalRestartFile = model.RestartInput;
+
+            // When
+            model.RestartInput = null;
+
+            // Then
+            Assert.That(model.RestartInput, Is.SameAs(originalRestartFile));
+        }
+
+        private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir, string rtcFolderName)
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                yield return tempDir.CreateFile(Path.Combine(rtcFolderName, $"rtc_1234567{i}_123456.xml"), $"file {i}");
+            }
         }
 
         # region Syncing controlled models, control group items, model settings, etc.
@@ -807,18 +859,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             {
                 Assert.AreEqual("[Not Set]", output.Name);
                 Assert.IsNull(output.Feature);
-            }
-        }
-
-        [Test]
-        public void TestGetMetaDataRequirementsIsImplementedForAllSupportedVersions()
-        {
-            var model = new RealTimeControlModel();
-            int[] allSupportedVersions = TypeUtils.GetStaticField<int[]>(typeof(RealTimeControlModel), "SupportedMetaDataVersions");
-
-            foreach (int version in allSupportedVersions)
-            {
-                Assert.DoesNotThrow(() => TypeUtils.CallPrivateMethod(model, "GetMetaDataRequirements", version));
             }
         }
 

@@ -234,7 +234,6 @@
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ModelTreeShortcut.cs" />
-    <Compile Include="NodePresenters\ContextMenuFactory.cs" />
     <Compile Include="NodePresenters\FMSuiteNodePresenterBase.cs" />
     <Compile Include="NodePresenters\ModelTreeShortcutNodePresenterBase.cs" />
     <Compile Include="RgfGrid\RgfConfig.cs" />
@@ -253,6 +252,11 @@
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
       <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
       <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">

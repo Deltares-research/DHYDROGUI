@@ -59,6 +59,8 @@
     <Compile Include="EnvironmentConstants.cs" />
     <Compile Include="IO\FilesManager.cs" />
     <Compile Include="IO\IFilesManager.cs" />
+    <Compile Include="IO\RestartFiles\IRestartModel.cs" />
+    <Compile Include="IO\RestartFiles\RestartFile.cs" />
     <Compile Include="Logging\ILogHandler.cs" />
     <Compile Include="Logging\LogHandler.cs" />
     <Compile Include="SystemEnvironment.cs" />

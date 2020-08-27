@@ -252,8 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       DirectoryInfo modelDirectory,
                                                                       bool hasMultipleZipFiles)
         {
-            IList<string> filesInZip = ZipFileUtils.GetFilePathsInZip(candidateZipFile.FullName,
-                                                                      null);
+            IList<string> filesInZip = ZipFileUtils.GetFilePathsInZip(candidateZipFile.FullName);
 
             string[] relevantMduFilesInZip =
                 filesInZip.Where(p => p.EndsWith(".mdu") && !IsIgnored(p))

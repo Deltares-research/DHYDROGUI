@@ -737,12 +737,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     {
                         Status = ActivityStatus.Done;
                     }
-
-                    if (Status != ActivityStatus.Done)
-                    {
-                        currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>()
-                                       .ForEach(m => m.WriteRestartFiles());
-                    }
                 }
                 catch (Exception e)
                 {
@@ -843,8 +837,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
                                    .ForEach(m => m.CurrentTime = CurrentTime);
                     OnProgressChanged();
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>()
-                                   .ForEach(m => m.PrepareRestart());
                 }
                 catch (DimrErrorCodeException e)
                 {
@@ -961,8 +953,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             if (DoDimrRun())
             {
-                currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>().ForEach(m => m.FinalizeRestart());
-
                 List<IDimrModel> dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
                 dimrModels.ForEach(m => m.OnFinishIntegratedModelRun(WorkingDirectoryPath));
             }
@@ -1160,7 +1150,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 var copyModelsToMerge = new List<IModelMerge>(modelsToMerge);
                 foreach (IModelMerge modelToMerge in copyModelsToMerge)
                 {
-                    if (modelToMerge.DependendModels.Except(mergedModels).Any())
+                    if (modelToMerge.DependentModels.Except(mergedModels).Any())
                     {
                         continue;
                     }
@@ -1184,7 +1174,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependendModelsLookup)
+        public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependentModelsLookup)
         {
             if (!CanMerge(sourceModel))
             {
@@ -1239,7 +1229,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        public virtual IEnumerable<IModelMerge> DependendModels
+        public virtual IEnumerable<IModelMerge> DependentModels
         {
             get
             {

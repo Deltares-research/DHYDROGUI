@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,8 +12,8 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using GeoAPI.Extensions.Coverages;
-using log4net;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
@@ -22,7 +22,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
     {
         public static readonly string InputFolderName = "Input";
         public static readonly string OutputFolderName = "Output";
-        private static readonly ILog log = LogManager.GetLogger(typeof(RealTimeControlModelNodePresenter));
 
         private IGui gui;
 
@@ -32,18 +31,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             gui = guiPlugin.Gui;
         }
 
-        public override Type NodeTagType
-        {
-            get
-            {
-                return typeof(RealTimeControlModel);
-            }
-        }
+        public override Type NodeTagType => typeof(RealTimeControlModel);
 
-        public override bool CanRenameNode(ITreeNode node)
-        {
-            return true;
-        }
+        public override bool CanRenameNode(ITreeNode node) => true;
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
@@ -104,6 +94,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             yield return new TreeFolder(model, GetOutputItems(model), OutputFolderName, FolderImageType.Output);
         }
 
+        protected override void OnPropertyChanged(RealTimeControlModel model, ITreeNode node, PropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(model, node, e);
+
+            if (e.PropertyName == nameof(RealTimeControlModel.RestartInput))
+            {
+                TreeView.RefreshChildNodes(node);
+            }
+        }
+
         protected override bool CanRemove(RealTimeControlModel model)
         {
             return true;
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             Gui.DocumentViewsResolver.OpenViewForData(model, typeof(ValidationView));
         }
 
-        private void OnOpenLastWorkingDirectoryClicked(RealTimeControlModel model)
+        private static void OnOpenLastWorkingDirectoryClicked(RealTimeControlModel model)
         {
             string workingDir = model.LastWorkingDirectory;
             if (string.IsNullOrEmpty(workingDir))
@@ -136,15 +136,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             }
         }
 
-        private IEnumerable GetInputItems(RealTimeControlModel rtcModel)
+        private static IEnumerable GetInputItems(RealTimeControlModel rtcModel)
         {
             yield return new TreeFolder(rtcModel, GetInitialConditions(rtcModel), "Initial Conditions", FolderImageType.None);
             yield return rtcModel.ControlGroups;
         }
 
-        private IEnumerable GetInitialConditions(RealTimeControlModel rtcModel)
+        private static IEnumerable GetInitialConditions(RealTimeControlModel rtcModel)
         {
-            yield return rtcModel.GetDataItemByValue(rtcModel.RestartInput);
+            yield return rtcModel.RestartInput;
         }
 
         private static IEnumerable GetOutputItems(RealTimeControlModel model)
@@ -166,21 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         private static object GetRestartFolder(RealTimeControlModel model)
         {
-            return new TreeFolder(model, GetRestartStates(model), "States", FolderImageType.None);
-        }
-
-        private static IEnumerable GetRestartStates(RealTimeControlModel model)
-        {
-            IEnumerable<IDataItem> restartStates = model.DataItems.Where(IsOutputRestartFile);
-            foreach (IDataItem restartState in restartStates)
-            {
-                yield return restartState;
-            }
-        }
-
-        private static bool IsOutputRestartFile(IDataItem dataItem)
-        {
-            return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
+            return new TreeFolder(model, model.RestartOutput, NGHS.Common.Gui.Properties.Resources.RestartFolderName, FolderImageType.None);
         }
     }
 }
