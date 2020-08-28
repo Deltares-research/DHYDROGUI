@@ -37,9 +37,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
         [Test]
         [TestCase("")]
         [TestCase(null)]
-        public void GivenNullOrEmptyPath_WhenExported_ThrowsArgumentException(string content)
+        public void GivenEmptyPath_WhenExported_ThrowsArgumentException(string path)
         {
-            void Test() => new RealTimeControlRestartFileExporter().Export(new RealTimeControlRestartFile("file.name", content), string.Empty);
+            void Test() => new RealTimeControlRestartFileExporter().Export(new RealTimeControlRestartFile("file.name", "file content"), path);
 
             TestHelper.AssertLogMessageIsGenerated(Test, "Path cannot be null or empty.");
         }

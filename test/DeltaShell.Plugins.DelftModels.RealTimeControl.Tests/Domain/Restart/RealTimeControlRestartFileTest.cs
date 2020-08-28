@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain.Restart
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("name"));
+            Assert.That(exception.ParamName, Is.EqualTo("content"));
         }
 
         [Test]
@@ -55,19 +55,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain.Restart
             Assert.That(restartFile.IsEmpty, Is.False);
         }
 
-        [TestCase(null)]
-        [TestCase("the.file")]
-        public void Clone_ReturnsCorrectClone(string fileName)
+        [Test]
+        public void Clone_ReturnsCorrectClone()
         {
             // Setup
-            var restartFile = new RealTimeControlRestartFile(fileName, "file content");
+            var restartFile = new RealTimeControlRestartFile("file name", "file content");
 
             // Call
             RealTimeControlRestartFile clone = restartFile.Clone();
 
             // Assert
             Assert.That(clone, Is.Not.SameAs(restartFile));
-            Assert.That(clone.Name, Is.EqualTo(fileName));
+            Assert.That(clone.Name, Is.EqualTo("file name"));
             Assert.That(clone.Content, Is.EqualTo("file content"));
         }
     }
