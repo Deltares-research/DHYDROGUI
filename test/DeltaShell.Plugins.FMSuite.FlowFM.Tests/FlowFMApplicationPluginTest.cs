@@ -8,8 +8,14 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
+using DeltaShell.Plugins.NetworkEditor.Import;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -53,15 +59,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void GetFileImporters_ContainsExpectedImporterForFixedWeirs()
+        public void GetFileImporters_ContainsExpectedImporters()
         {
             // Call
-            IEnumerable<IFileImporter> importer = plugin.GetFileImporters();
+            IFileImporter[] importers = plugin.GetFileImporters().ToArray();
 
             // Assert
-            Type expectedType = typeof(PlizFileImporterExporter<FixedWeir, FixedWeir>);
-            Assert.NotNull(importer.SingleOrDefault(e => e.GetType() == expectedType),
-                           $"An importer of type {expectedType} was expected to be returned.");
+            Assert.That(importers, Has.Length.EqualTo(38));
+            Contains<WaterFlowFMFileImporter>(importers);
+            Contains<Area2DStructuresImporter>(importers);
+            Contains<StructuresListImporter>(importers, 2);
+            Contains<FMMapFileImporter>(importers);
+            Contains<FMHisFileImporter>(importers);
+            Contains<FMRestartFileImporter>(importers);
+            Contains<BcFileImporter>(importers);
+            Contains<BcmFileImporter>(importers);
+            Contains<BoundaryConditionWpsImporter>(importers);
+            Contains<GroupablePointCloudImporter>(importers);
+            Contains<PliFileImporterExporter<Embankment, Embankment>>(importers);
+            Contains<PlizFileImporterExporter<FixedWeir, FixedWeir>>(importers);
+            Contains<PlizFileImporterExporter<BridgePillar, BridgePillar>>(importers);
+            Contains<PliFileImporterExporter<ThinDam2D, ThinDam2D>>(importers);
+            Contains<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>(importers);
+            Contains<PliFileImporterExporter<Weir2D, Weir2D>>(importers);
+            Contains<PliFileImporterExporter<Pump2D, Pump2D>>(importers);
+            Contains<PliFileImporterExporter<SourceAndSink, Feature2D>>(importers);
+            Contains<PliFileImporterExporter<BoundaryConditionSet, Feature2D>>(importers);
+            Contains<PointFileImporterExporter>(importers);
+            Contains<ObsFileImporterExporter<GroupableFeature2DPoint>>(importers);
+            Contains<PolFileImporterExporter>(importers);
+            Contains<LdbFileImporterExporter>(importers);
+            Contains<FlowFMNetFileImporter>(importers);
+            Contains<TimFileImporter>(importers, 2);
+            Contains<ShapeFileImporter<ILineString, LandBoundary2D>>(importers);
+            Contains<ShapeFileImporter<IPoint, GroupablePointFeature>>(importers);
+            Contains<ShapeFileImporter<IPolygon, GroupableFeature2DPolygon>>(importers);
+            Contains<ShapeFileImporter<ILineString, ThinDam2D>>(importers);
+            Contains<ShapeFileImporter<ILineString, FixedWeir>>(importers);
+            Contains<ShapeFileImporter<IPoint, GroupableFeature2DPoint>>(importers);
+            Contains<ShapeFileImporter<ILineString, ObservationCrossSection2D>>(importers);
+            Contains<ShapeFileImporter<ILineString, Embankment>>(importers);
+            Contains<ShapeFileImporter<ILineString, BridgePillar>>(importers);
+            Contains<ShapeFileImporter<ILineString, Pump2D>>(importers);
+            Contains<ShapeFileImporter<ILineString, Weir2D>>(importers);
+        }
+
+        private static void Contains<T>(IFileImporter[] source, int n = 1)
+        {
+            Assert.That(source.OfType<T>().ToList(), Has.Count.EqualTo(n),
+                        $"Collection should contain {n} of {typeof(T).Name}");
         }
 
         [Test]

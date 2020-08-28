@@ -44,18 +44,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             }
         }
 
-        public string ExplicitWorkingDirectory
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public bool SuspendClearOutputOnInputChange { get; set; }
 
         public void LoadDataFromDirectory(string path)

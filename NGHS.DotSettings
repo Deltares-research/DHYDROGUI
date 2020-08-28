@@ -317,5 +317,6 @@
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=dsproj/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=NGHS/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=pliz/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=SOBEK/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Spreadings/@EntryIndexedValue">True</s:Boolean>
 </wpf:ResourceDictionary>

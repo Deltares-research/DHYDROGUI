@@ -40,7 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             WaterFlowFMProperty temperatureProperty = model.ModelDefinition.GetModelProperty(KnownProperties.Temperature);
             //Create a grid
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            model.UseRestart = true;
 
             //Validate model
             ValidationReport report = model.Validate();
@@ -146,19 +145,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(1,
                             report.GetAllIssuesRecursive()
                                   .Count(i => i.Severity == ValidationSeverity.Error && i.Message.Contains("parallel run")));
-        }
-
-        [Test]
-        public void ValidateRestartInputReportTestRestartIsEmpty()
-        {
-            var model = new WaterFlowFMModel();
-            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            model.UseRestart = true;
-
-            ValidationReport report = model.Validate();
-            Assert.AreEqual(1, report.ErrorCount);
-            Assert.That(report.AllErrors.First(i => i.Severity == ValidationSeverity.Error).Message,
-                        Is.EqualTo("Input restart state is empty; cannot restart."));
         }
 
         [Test]

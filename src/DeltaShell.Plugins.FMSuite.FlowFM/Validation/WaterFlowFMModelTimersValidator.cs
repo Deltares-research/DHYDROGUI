@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                                  "Model start time precedes reference time", validationShortcut);
             }
 
-            if (waterFlowFmModel.WriteRestart && waterFlowFmModel.SaveStateTimeStep.Ticks == 0)
+            if (waterFlowFmModel.WriteRestart && waterFlowFmModel.RestartTimeStep.Ticks == 0)
             {
                 yield return new ValidationIssue(timerCategory, ValidationSeverity.Error,
                                                  "Restart time interval should be strictly positive if write restart is true");

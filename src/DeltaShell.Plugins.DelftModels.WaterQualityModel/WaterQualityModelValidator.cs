@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
@@ -552,24 +551,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                  "Cannot use save state time range when running in Command Line mode");
             }
 
-            ValidationReport report = RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(
-                model.UseSaveStateTimeRange,
-                model.SaveStateStartTime,
-                model.SaveStateStopTime,
-                model.SaveStateTimeStep,
-                model);
-
-            foreach (ValidationIssue issue in report.GetAllIssuesRecursive()
-                                                    .Where(i => i.Severity == ValidationSeverity.Error))
-            {
-                yield return issue;
-            }
-
-            foreach (ValidationIssue issue in report.GetAllIssuesRecursive()
-                                                    .Where(i => i.Severity == ValidationSeverity.Warning))
-            {
-                yield return issue;
-            }
+            // TODO D3DFMIQ-2076
         }
 
         private static IEnumerable<ValidationIssue> ValidateRestartInput(WaterQualityModel model)
@@ -579,18 +561,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 yield break;
             }
 
-            IEnumerable<string> errors, warnings;
-            model.ValidateInputState(out errors, out warnings);
-
-            foreach (string error in errors)
-            {
-                yield return new ValidationIssue(model, ValidationSeverity.Error, error);
-            }
-
-            foreach (string warning in warnings)
-            {
-                yield return new ValidationIssue(model, ValidationSeverity.Warning, warning);
-            }
+            // TODO D3DFMIQ-2076
         }
     }
 }

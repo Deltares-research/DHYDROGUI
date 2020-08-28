@@ -162,30 +162,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
         private static ValidationReport ValidateRestartInput(WaterFlowFMModel model)
         {
-            if (!model.UseRestart)
-            {
-                return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
-            }
+            // TODO D3DFMIQ-2075
+            //if (!model.UseRestart)
+            //{
+            //    return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
+            //}
 
             IList<ValidationIssue> issues = new List<ValidationIssue>();
 
-            if (model.RestartInput.IsEmpty)
-            {
-                issues.Add(new ValidationIssue("Input restart state", ValidationSeverity.Error,
-                                               "Input restart state is empty; cannot restart."));
-            }
-            else
-            {
-                IEnumerable<string> errors, warnings;
-                model.ValidateInputState(out errors, out warnings);
-
-                issues = errors
-                         .Select(error => new ValidationIssue("Input restart state", ValidationSeverity.Error, error))
-                         .ToList();
-                issues.AddRange(warnings.Select(
-                                    warning => new ValidationIssue("Input restart state", ValidationSeverity.Warning,
-                                                                   warning)));
-            }
+            //if (model.RestartInput.IsEmpty)
+            //{
+            //    issues.Add(new ValidationIssue("Input restart state", ValidationSeverity.Error,
+            //                                   "Input restart state is empty; cannot restart."));
+            //}
 
             return new ValidationReport("Input restart state", issues);
         }

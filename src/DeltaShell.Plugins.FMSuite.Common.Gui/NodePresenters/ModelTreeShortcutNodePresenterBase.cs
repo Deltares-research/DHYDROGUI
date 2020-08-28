@@ -6,6 +6,7 @@ using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.NGHS.Common.Gui.NodePresenters;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
@@ -68,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
         /// <summary>
         /// Gets the context menu.
         /// </summary>
-        /// <param name="sender">The node for which to get hte context menu.</param>
+        /// <param name="sender">The node for which to get the context menu.</param>
         /// <param name="nodeData">The node data.</param>
         /// <returns></returns>
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)

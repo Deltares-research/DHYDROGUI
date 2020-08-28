@@ -54,14 +54,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).SetValueAsString("1");
 
-            // make sure on save / export, restart file + mdu are up to date and could be ran standalone with correct info
-            if (switchTo)
-            {
-                SaveRestartInfo(mduPath);
-            }
-
-            InitializeRestart(dirName);
-
             if (switchTo)
             {
                 RenameSubFilesIfApplicable();
@@ -99,6 +91,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 WriteFeatures = writeFeatures,
                 DisableFlowNodeRenumbering = DisableFlowNodeRenumbering
             };
+
+            RestartInput.CopyToDirectory(dirName, switchTo);
+            ModelDefinition.GetModelProperty(KnownProperties.RestartFile)
+                           .SetValueAsString(RestartInput.Name);
 
             CacheFile.Export(mduPath);
             MduFile.Write(mduPath,
