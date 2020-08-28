@@ -297,6 +297,7 @@
     <Compile Include="IO\Export\MathematicalExpressionSerializerTest.cs" />
     <Compile Include="IO\Export\OutputSerializerTest.cs" />
     <Compile Include="IO\Export\PidRuleSerializerTest.cs" />
+    <Compile Include="IO\Export\RealTimeControlModelExporterTest.cs" />
     <Compile Include="IO\Export\RealTimeControlRestartFileExporterTest.cs" />
     <Compile Include="IO\Export\RelativeTimRuleSerializerTest.cs" />
     <Compile Include="IO\Export\StandardConditionSerializerTest.cs" />
