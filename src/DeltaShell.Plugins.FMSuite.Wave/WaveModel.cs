@@ -16,6 +16,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
@@ -495,18 +496,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public void ModelSaveTo(string targetMdwFilePath, bool switchTo)
         {
             string targetDir = Path.GetDirectoryName(targetMdwFilePath);
-            if (!Directory.Exists(targetDir))
-            {
-                Directory.CreateDirectory(targetDir);
-            }
-
-            MdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
-
-            // write spatial data:
-            SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
+            ExportTo(targetMdwFilePath, switchTo);
 
             var targetOutputDir = Path.Combine(Path.GetDirectoryName(targetDir), FileConstants.OutputDirectoryName);
             SaveOutput(targetOutputDir, switchTo);
+        }
+
+        /// <summary>
+        /// Exports the model to the specified <paramref name="mdwFilePath"/>.
+        /// </summary>
+        /// <param name="mdwFilePath">The target mdw file path.</param>
+        /// <param name="switchTo">Whether or not the model and the data should be switched to the new location.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="mdwFilePath"/> is <c>null</c>.
+        /// </exception>
+        public void ExportTo(string mdwFilePath, bool switchTo = false)
+        {
+            Ensure.NotNullOrEmpty(mdwFilePath, nameof(mdwFilePath));
+
+            string targetDir = Path.GetDirectoryName(mdwFilePath);
+            FileUtils.CreateDirectoryIfNotExists(targetDir);
+
+            MdwFile.SaveTo(mdwFilePath, ModelDefinition, switchTo);
+
+            // write spatial data:
+            SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
         }
 
         public void ReloadAllGrids()

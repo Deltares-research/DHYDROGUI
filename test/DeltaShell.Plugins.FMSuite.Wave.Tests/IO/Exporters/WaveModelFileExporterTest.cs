@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
 using NUnit.Framework;
 
@@ -28,13 +28,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Exporters
             exporter = new WaveModelFileExporter();
             var model = new WaveModel();
 
-            string exportFolder = FileUtils.CreateTempDirectory();
-            string fullPath = Path.Combine(exportFolder, model.Name + ".mdw");
+            using (var temp = new TemporaryDirectory())
+            {
+                string fullPath = Path.Combine(temp.Path, model.Name + ".mdw");
 
-            Assert.IsTrue(exporter.Export(model, exportFolder));
-            Assert.IsTrue(File.Exists(fullPath));
-
-            FileUtils.DeleteIfExists(exportFolder);
+                Assert.IsTrue(exporter.Export(model, temp.Path));
+                Assert.IsTrue(File.Exists(fullPath));
+            }
         }
 
         [Test]
@@ -45,14 +45,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Exporters
             exporter = new WaveModelFileExporter();
             var model = new WaveModel();
 
-            string temp = FileUtils.CreateTempDirectory();
-            string exportFolder = Path.Combine(temp, @"non-existent-folder");
-            string fullPath = Path.Combine(exportFolder, model.Name + ".mdw");
+            using (var temp = new TemporaryDirectory())
+            {
+                string exportFolder = Path.Combine(temp.Path, @"non-existent-folder");
+                string fullPath = Path.Combine(exportFolder, model.Name + ".mdw");
 
-            Assert.IsTrue(exporter.Export(model, exportFolder));
-            Assert.IsTrue(File.Exists(fullPath));
-
-            FileUtils.DeleteIfExists(temp);
+                Assert.IsTrue(exporter.Export(model, exportFolder));
+                Assert.IsTrue(File.Exists(fullPath));
+            }
         }
 
         [Test]
@@ -61,18 +61,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Exporters
             exporter = new WaveModelFileExporter();
             var model = new WaveModel();
 
-            string temp = FileUtils.CreateTempDirectory();
-            string exportFolder = Path.Combine(temp, @"invalid-folder*");
-            string fullPath = Path.Combine(exportFolder, model.Name + ".mdw");
+            using (var temp = new TemporaryDirectory())
+            {
+                string exportFolder = Path.Combine(temp.Path, @"invalid-folder*");
+                string fullPath = Path.Combine(exportFolder, model.Name + ".mdw");
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => { Assert.IsFalse(exporter.Export(model, exportFolder)); },
-                string.Format("Export of Waves model failed to path {0}.", exportFolder)
-            );
+                TestHelper.AssertAtLeastOneLogMessagesContains(
+                    () => { Assert.IsFalse(exporter.Export(model, exportFolder)); },
+                    string.Format("Export of Waves model failed to path {0}.", exportFolder)
+                );
 
-            Assert.IsFalse(File.Exists(fullPath));
-
-            FileUtils.DeleteIfExists(temp);
+                Assert.IsFalse(File.Exists(fullPath));
+            }
         }
 
         [Test]
