@@ -1,4 +1,5 @@
-﻿using DelftTools.Utils.Data;
+﻿using System;
+using DelftTools.Utils.Data;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using NUnit.Framework;
 
@@ -7,6 +8,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain.Restart
     [TestFixture]
     public class RealTimeControlRestartFileTest
     {
+        [Test]
+        public void Constructor_NameNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => new RealTimeControlRestartFile(null, "content");
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("name"));
+        }
+
+        [Test]
+        public void Constructor_ContentNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => new RealTimeControlRestartFile("file name", null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("name"));
+        }
+
         [Test]
         public void Constructor_Default_InitializesInstanceCorrectly()
         {

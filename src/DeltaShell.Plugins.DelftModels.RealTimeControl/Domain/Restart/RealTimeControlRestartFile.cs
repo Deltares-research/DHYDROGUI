@@ -1,5 +1,6 @@
 ﻿using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
+using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart
 {
@@ -9,6 +10,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart
     [Entity]
     public class RealTimeControlRestartFile : Unique<long>
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="RealTimeControlRestartFile"/>.
+        /// </summary>
         public RealTimeControlRestartFile() : this(string.Empty, string.Empty) {}
 
         /// <summary>
@@ -16,8 +20,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart
         /// </summary>
         /// <param name="name">The name of the restart file.</param>
         /// <param name="content">The content of the restart file.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when any parameter is <c>null</c>.</exception>
         public RealTimeControlRestartFile(string name, string content)
         {
+            Ensure.NotNull(name, nameof(name));
+            Ensure.NotNull(content, nameof(content));
+
             Name = name;
             Content = content;
         }
