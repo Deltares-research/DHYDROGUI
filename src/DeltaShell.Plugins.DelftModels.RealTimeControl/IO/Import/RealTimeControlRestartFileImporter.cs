@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
@@ -88,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
         /// <param name="path"> The path of the restart file. </param>
         /// <param name="target"> The target restart file. </param>
         /// <returns>
-        /// The imported <seealso cref="RestartFile"/>.
+        /// The imported <seealso cref="RealTimeControlRestartFile"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="target"/> is <c>null</c>.
@@ -99,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
         /// <exception cref="FileNotFoundException">
         /// Thrown when the restart file at the specified <paramref name="path"/> does not exist.
         /// </exception>
-        public object ImportItem(string path, object target)
+        public object ImportItem(string path, object target = null)
         {
             Ensure.NotNull(target, nameof(target));
 
@@ -120,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
 
         private RealTimeControlModel GetRealTimeControlModelWithRestartInput(object obj)
         {
-            return obj is RealTimeControlRestartFile ? getModels().FirstOrDefault(m => m.RestartInput == obj) : null;
+            return obj is RealTimeControlRestartFile ? getModels().FirstOrDefault(m => ReferenceEquals(m.RestartInput, obj)) : null;
         }
     }
 }

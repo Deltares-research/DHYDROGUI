@@ -12,7 +12,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using GeoAPI.Extensions.Coverages;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
