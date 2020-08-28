@@ -1523,6 +1523,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Input restart file does not exist; cannot restart..
+        /// </summary>
+        public static string WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart {
+            get {
+                return ResourceManager.GetString("WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does" +
+                        "_not_exist_cannot_restart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Input restart state&quot;.
+        /// </summary>
+        public static string WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state {
+            get {
+                return ResourceManager.GetString("WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least one sediment fraction is required when using morphology..
         /// </summary>
         public static string WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology {

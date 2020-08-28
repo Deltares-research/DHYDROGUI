@@ -144,7 +144,7 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// </returns>
         public RestartFile Clone() => new RestartFile(Path);
 
-        private bool Exists => pathInfo?.Exists ?? false;
+        public bool Exists => pathInfo?.Exists ?? false;
 
         private static void CreateParentDirectory(FileInfo destinationFileInfo)
         {

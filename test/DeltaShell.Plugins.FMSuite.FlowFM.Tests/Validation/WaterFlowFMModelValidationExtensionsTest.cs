@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
+using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -279,6 +284,74 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             //Assert
             Assert.IsFalse(recursive.Any(m => m.Message.Contains("SedimentThickness is not fully covering the grid, please cover entire grid")));
+        }
+
+        [Test]
+        public void ValidateRestartInput_WhenRestartWillNotBeUsed_ThenValidationReportShouldContainAnEmptyRestartSubReport()
+        {
+            // Given
+            var fmModel = new WaterFlowFMModel();
+
+            // When
+            ValidationReport validationReport = WaterFlowFmModelValidationExtensions.Validate(fmModel);
+
+            // Assert
+            Assert.IsFalse(fmModel.UseRestart);
+
+            ValidationReport subReport = validationReport.SubReports.FirstOrDefault(sr => sr.Category ==
+                                                                                          Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state);
+            Assert.IsNotNull(subReport);
+            Assert.IsTrue(subReport.IsEmpty);
+        }
+
+        [Test]
+        public void ValidateRestartInput_WhenRestartInputFileDoesNotExist_ShouldReportErrorInValidationReport()
+        {
+            // Given
+            var fmModel = new WaterFlowFMModel {RestartInput = new RestartFile("test")};
+
+            // When
+            ValidationReport validationReport = WaterFlowFmModelValidationExtensions.Validate(fmModel);
+
+            //Assert
+            Assert.IsTrue(fmModel.UseRestart);
+
+            ValidationReport subReport = validationReport.SubReports.FirstOrDefault(sr => sr.Category ==
+                                                                                          Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state);
+            Assert.IsNotNull(subReport);
+
+            IList<ValidationIssue> allIssues = subReport.GetAllIssuesRecursive();
+            Assert.AreEqual(1, allIssues.Count);
+
+            ValidationIssue issue = allIssues[0];
+            Assert.AreEqual(Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart, issue.Message);
+            Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
+            Assert.AreEqual(Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state, issue.Subject);
+        }
+
+        [Test]
+        public void ValidateRestartInput_WhenRestartInputFileExists_ThenValidationReportShouldContainAnEmptyRestartSubReport()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
+                File.WriteAllText(restartFilePath, "test");
+
+                var fmModel = new WaterFlowFMModel { RestartInput = new RestartFile(restartFilePath) };
+
+                // When
+                ValidationReport validationReport = WaterFlowFmModelValidationExtensions.Validate(fmModel);
+
+                // Assert
+                Assert.IsTrue(fmModel.UseRestart);
+
+                ValidationReport subReport = validationReport.SubReports.FirstOrDefault(sr => sr.Category ==
+                                                                                              Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state);
+                Assert.IsNotNull(subReport);
+                Assert.IsTrue(subReport.IsEmpty);
+
+            }
         }
 
         private static void CreateSedimentFraction(SpatiallyVaryingSedimentProperty<double> thickProp, WaterFlowFMModel fmModel)

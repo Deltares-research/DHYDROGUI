@@ -628,4 +628,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset" xml:space="preserve">
     <value>Support point '{0}' contains a time zone offset, the time points will be adjusted to their equivalents in UTC.</value>
   </data>
+  <data name="WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart" xml:space="preserve">
+    <value>Input restart file does not exist; cannot restart.</value>
+  </data>
+  <data name="WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state" xml:space="preserve">
+    <value>"Input restart state"</value>
+  </data>
 </root>
