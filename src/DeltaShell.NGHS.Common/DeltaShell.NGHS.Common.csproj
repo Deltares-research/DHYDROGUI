@@ -63,6 +63,11 @@
     <Compile Include="IO\RestartFiles\RestartFile.cs" />
     <Compile Include="Logging\ILogHandler.cs" />
     <Compile Include="Logging\LogHandler.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SystemEnvironment.cs" />
     <Compile Include="IEnvironment.cs" />
     <Compile Include="ILinkedDataItemsModel.cs" />
@@ -72,11 +77,17 @@
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Repeat.cs" />
     <Compile Include="Utils\NameableCollectionExtensions.cs" />
+    <Compile Include="Validation\RestartTimeRangeValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="IO\FileBasedFolder.hbm.xml" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -6,6 +6,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
     {
         public static ValidationReport Validate(this WaterFlowFMModel model)
         {
-            ValidationReport[] validationReports = new[]
+            ValidationReport[] validationReports = 
             {
                 ValidateSpatiallyVaryingSedimentCoverage(model),
                 ValidateCoordinateSystem(model),
@@ -29,6 +30,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 WaterFlowFMBoundaryConditionValidator.Validate(model),
                 FMStructuresValidator.Validate(model),
                 ValidateRestartInput(model),
+                RestartTimeRangeValidator.ValidateWriteRestartSettings(model.WriteRestart, 
+                                                                       model.RestartStartTime, model.RestartStopTime, model.RestartTimeStep,
+                                                                       model.StartTime, model.StopTime, model.TimeStep),
                 WaterFlowFMEmbankmentValidator.Validate(model),
                 WaterFlowFMEnclosureValidator.Validate(model)
             };
