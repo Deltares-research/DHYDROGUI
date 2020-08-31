@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
         {
             if (connectors != null)
             {
-                Pen linePen = new Pen(Color.Red, 1);
+                Pen linePen = new Pen(Color.Red, 5);
 
                 RectangleF[] rectangles = new RectangleF[connectors.Count];
                 int countRectangles = 0;

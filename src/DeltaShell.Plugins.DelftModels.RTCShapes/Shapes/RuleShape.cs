@@ -38,6 +38,10 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
             g.FillRectangle(linearGradientBrush, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
             g.DrawRectangle(pen, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+            if (HighLightedConnectors != null)
+            {
+                DrawConnectorsHighlights(HighLightedConnectors, g);
+            }
             PreRender(g);
             base.Paint(g);
 

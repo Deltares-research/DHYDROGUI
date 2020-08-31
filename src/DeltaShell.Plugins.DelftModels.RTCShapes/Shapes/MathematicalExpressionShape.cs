@@ -66,7 +66,10 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             var brush = new SolidBrush(Color.FromArgb(14, 187, 240));
             g.FillPolygon(brush, points);
 
-            DrawConnectorsHighlights(HighLightedConnectors, g);
+            if (HighLightedConnectors != null)
+            {
+                DrawConnectorsHighlights(HighLightedConnectors, g);
+            }
 
             PreRender(g);
             base.Paint(g);

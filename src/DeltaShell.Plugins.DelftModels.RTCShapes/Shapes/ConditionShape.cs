@@ -65,6 +65,10 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             Pen pen = LeftNode.Connections.Count == 0 ? new Pen(Color.Black, 2) : Pens.Black;
 
             g.DrawPolygon(pen, points.ToArray());
+            if (HighLightedConnectors != null)
+            {
+                DrawConnectorsHighlights(HighLightedConnectors, g);
+            }
             PreRender(g);
             RenderDescription(g);
             base.Paint(g);

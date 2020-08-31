@@ -865,7 +865,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 created = null;
 
                 ResetNewObjectButtons();
-               
+
+            }
+
+            IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+            if (shapes != null)
+            {
+                foreach (var shape in shapes)
+                {
+                    shape.HighLightedConnectors = null;
+                }
             }
         }
 
@@ -880,12 +889,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 {
                     Connector[] allConnectors = shapes.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
                     var owner = activeConnector.BelongsTo as ShapeBase;
-                    ConnectorType activeConnectionType = ConvertTo(activeConnector.ConnectorLocation);
+                    ConnectorType activeConnectionType;
+
+                    if (owner is MathematicalExpressionShape)
+                    {
+                        activeConnectionType = ConvertConnectorNameToType(activeConnector.Name);
+                    }
+                    else
+                    {
+                        activeConnectionType = ConvertTo(activeConnector.ConnectorLocation);
+                    }
+                   
+
                     IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors);
                     // draw rectangles
                     foreach (var shape in shapes)
                     {
                         shape.HighLightedConnectors = allowedConnectors.ToList();
+                        // add highlighted Connectors to shape
                     }
                 }
             }
@@ -902,20 +923,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
                 if (targetShape is MathematicalExpressionShape)
                 {
-                    switch (availableConnector.Name)
-                    {
-                        case "Left":
-                            targetConnectionType = ConnectorType.Left;
-                            break;
-                        case "Top":
-                            targetConnectionType = ConnectorType.Top;
-                            break;
-                        case "Bottom":
-                            targetConnectionType = ConnectorType.Bottom;
-                            break;
-                        default:
-                            throw new NotSupportedException();
-                    }
+                    
+                    targetConnectionType = ConvertConnectorNameToType(availableConnector.Name);
                 }
                 else
                 {
@@ -934,6 +943,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             return allowedConnectors;
         }
 
+        private static ConnectorType ConvertConnectorNameToType(String connectorName)
+        {
+            ConnectorType targetConnectionType;
+            switch (connectorName)
+            {
+                case "Left":
+                    targetConnectionType = ConnectorType.Left;
+                    break;
+                case "Top":
+                    targetConnectionType = ConnectorType.Top;
+                    break;
+                case "Bottom":
+                    targetConnectionType = ConnectorType.Bottom;
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            return targetConnectionType;
+        }
 
         private static ConnectorType ConvertTo(ConnectorLocation connectorLocation)
         {
