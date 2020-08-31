@@ -1,8 +1,15 @@
-substance 'IM1' active
-   description        'inorganic matter (IM1)'
-   concentration-unit '(gDM/m3)'
-   waste-load-unit    '-'
-end-substance
+# bacteria.sub --
+#     A basic set-up to model Ecoli bacteria in fresh and saline water.
+#     Bacteria are represented by the substance Ecoli.
+#
+#     Important input:
+#     - The irradiation (light intensity), mean over the day
+#
+#     Inputs of secondary importance:
+#     - Salinity (actually modelled as a substance)
+#     - Ambient temperature
+#     - Day length (depends on the season and the location on Earth)
+#
 substance 'Salinity' active
    description        'Salinity'
    concentration-unit '(g/kg)'
@@ -28,33 +35,19 @@ parameter 'DayL'
    unit          '(d)'
    value          0.5800E+00
 end-parameter
-parameter 'RadSurf'
+parameter 'ExtVl'
+   description   'total extinction coefficient visible light'
+   unit          '(1/m)'
+   value          0.1000E+01
+end-parameter
+parameter 'DayRadSurf'
    description   'irradiation at the water surface'
    unit          '(W/m2)'
    value         -0.9990E+03
 end-parameter
-parameter 'ExtUvIM1'
-   description   'UV specific extinction coefficent IM1'
-   unit          '(m2/gDM)'
-   value          0.1000E-01
-end-parameter
-parameter 'ExtUvBak'
-   description   'background extinction UV light'
-   unit          '(1/m)'
-   value          0.8000E-01
-end-parameter
-output 'ExtUv'
-   description   'total extinction coefficient UV light'
-end-output
-output 'MrtToEColi'
-   description   'overall mortality rate EColi'
-end-output
 active-processes
-   name  'Secchi' 'Secchi depth for visible-light (370-680nm)'
    name  'EColiMrt' 'Mortality EColi bacteria'
-   name  'Extinc_VLG' 'Extinction of visible-light (370-680nm) DLWQ-G'
    name  'Salinchlor' 'Conversion of salinity into chloride or vv'
-   name  'CalcRadUV' 'UV-Radiation at segment upper and lower boundaries'
-   name  'Extinc_UVG' 'Extinction of ultraviolet-light (350-480nm) DLWQ-G'
+   name  'CalcRadDay' 'Actual radiation at segment boundaries'
    name  'DynDepth' 'dynamic calculation of the depth'
 end-active-processes
