@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
@@ -26,6 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
 
         public string FileFilter => "Real Time Control restart files|*.xml";
 
+        [ExcludeFromCodeCoverage]
         public Bitmap Icon => Resources.rtcmodel;
 
         public bool Export(object item, string path)
