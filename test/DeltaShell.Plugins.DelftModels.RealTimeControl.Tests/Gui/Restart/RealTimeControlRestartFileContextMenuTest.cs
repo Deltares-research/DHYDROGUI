@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils.Collections.Generic;

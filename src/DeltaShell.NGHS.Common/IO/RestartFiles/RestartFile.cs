@@ -67,6 +67,11 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         public bool IsEmpty => Path == null;
 
         /// <summary>
+        /// Gets a value indicating whether the restart file exists.
+        /// </summary>
+        public bool Exists => pathInfo?.Exists ?? false;
+
+        /// <summary>
         /// Copies the file in to the specified <paramref name="directoryPath"/>.
         /// </summary>
         /// <param name="directoryPath"> The destination directory. </param>
@@ -95,6 +100,16 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
 
             CopyTo(targetFilePath, switchTo);
         }
+
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>
+        /// A new copied instance of this instance.
+        /// </returns>
+        public RestartFile Clone() => new RestartFile(Path);
+
+        public override string ToString() => Name;
 
         /// <summary>
         /// Copies the file to the specified <paramref name="destinationPath"/>.
@@ -133,18 +148,6 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
                 Path = destinationFileInfo.FullName;
             }
         }
-
-        public override string ToString() => Name;
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns>
-        /// A new copied instance of this instance.
-        /// </returns>
-        public RestartFile Clone() => new RestartFile(Path);
-
-        public bool Exists => pathInfo?.Exists ?? false;
 
         private static void CreateParentDirectory(FileInfo destinationFileInfo)
         {
