@@ -78,8 +78,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(1, generalStructureFunction.Arguments[1].Values.Count);
 
         }
+
         [Test]
-        public void GivenNewCreatedFMModelWith2dGridAndPumpAndWeirAndStationsAndGateAndGeneralStructureAndCrossSection2DWhenModelRunnedThenFunctionsCorrectlyInitialized()
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.VerySlow)]
+        public void GivenNewCreatedFMModelWith2dGridAndPumpAndWeirAndStationsAndGateAndGeneralStructureAndCrossSection2D_WhenModelIsRun_ThenFunctionsCorrectlyInitialized()
         {
             using (var model = new WaterFlowFMModel() { })
             {
