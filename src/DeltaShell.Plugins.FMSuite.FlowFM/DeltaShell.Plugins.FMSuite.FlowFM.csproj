@@ -181,6 +181,7 @@
     <Compile Include="IO\Files\Helpers\MduFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Files\MduFileReader.cs" />
+    <Compile Include="IO\WaterFlowFMModel120LegacyLoader.cs" />
     <Compile Include="IO\IMduFileWriteConfig.cs" />
     <Compile Include="IO\ImportExport\Exporters\BcmFileExporter.cs" />
     <Compile Include="IO\ImportExport\Exporters\FMGridPartitionExporter.cs" />
@@ -434,6 +435,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Model\WaterFlowFMModel.1.1.0.hbm.xml" />
     <Resource Include="Resources\function_timeseries.png" />
+    <EmbeddedResource Include="Model\WaterFlowFMModel.1.2.0.hbm.xml" />
     <Content Include="toolboxes\Statistics.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
