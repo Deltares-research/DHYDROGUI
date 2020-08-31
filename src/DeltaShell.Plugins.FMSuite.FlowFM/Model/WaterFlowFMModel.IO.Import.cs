@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -160,6 +161,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ReconnectOutputFiles(existingOutputDirectory);
         }
 
+        private void LoadRestartFile(string mduPath)
+        {
+            string restartFilePath = MduFileHelper.GetSubfilePath(
+                mduPath, ModelDefinition.GetModelProperty(KnownProperties.RestartFile));
+
+            if (string.IsNullOrEmpty(restartFilePath))
+            {
+                RestartInput = new RestartFile();
+                return;
+            }
+
+            if (!File.Exists(restartFilePath))
+            {
+                Log.Warn($"Restart file not found: {restartFilePath}.");
+                return;
+            }
+
+            RestartInput = new RestartFile(restartFilePath);
+        }
+
         public void ImportSpatialOperationsAfterLoading()
         {
             foreach (KeyValuePair<string, IList<ISpatialOperation>> spatialOperation in ModelDefinition
@@ -284,7 +305,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
 
             FireImportProgressChanged("Loading restart", 2, TotalImportSteps);
-            LoadRestartInfo(mduFilePath);
 
             // sync the heat flux model, because events are off during reading
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;

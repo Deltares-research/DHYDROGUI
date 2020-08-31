@@ -374,11 +374,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, FileConstants.InputDirectoryName);
         public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, FileConstants.OutputDirectoryName);
 
-        public void SetModelStateHandlerModelWorkingDirectory(string modelExplicitWorkingDirectory)
-        {
-            ModelStateHandler.ModelWorkingDirectory = modelExplicitWorkingDirectory;
-        }
-
         #endregion Implementation of IDimrModel
     }
 }

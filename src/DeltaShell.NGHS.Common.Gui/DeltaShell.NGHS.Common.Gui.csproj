@@ -13,6 +13,8 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,23 +34,40 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DelftTools.Controls.Wpf">
+    <Reference Include="DelftTools.Controls">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1847306\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1847306\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1847306\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui.Swf">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1847306\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -66,11 +85,12 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="SharpMap.Api">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.1847306\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -99,12 +119,15 @@
     <Compile Include="DeltaresColor.cs" />
     <Compile Include="Layers\ILayerSubProvider.cs" />
     <Compile Include="Layers\MapLayerProvider.cs" />
+    <Compile Include="NodePresenters\ContextMenuFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Restart\RestartFileContextMenu.cs" />
+    <Compile Include="Restart\RestartFileNodePresenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
@@ -118,7 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -145,6 +168,21 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restart_empty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DeleteHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\import.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\properties.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -152,8 +190,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.6.0-beta.1847306\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.6.0-beta.1847306\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.1.6.0-beta.1847306\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.6.0-beta.1847306\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0-beta.69caad8\build\net461\DeltaShell.Framework.targets')" />
 </Project>

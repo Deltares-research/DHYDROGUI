@@ -4,7 +4,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
+using DeltaShell.NGHS.Common.Gui.NodePresenters;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters

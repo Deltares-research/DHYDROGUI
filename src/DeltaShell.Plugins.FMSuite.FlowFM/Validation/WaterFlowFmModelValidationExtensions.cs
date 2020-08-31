@@ -4,10 +4,11 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
@@ -160,34 +161,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return new ValidationReport("Coordinate System", issues);
         }
 
-        private static ValidationReport ValidateRestartInput(WaterFlowFMModel model)
+        private static ValidationReport ValidateRestartInput(IRestartModel model)
         {
             if (!model.UseRestart)
             {
-                return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
+                return new ValidationReport(Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state, 
+                                            Enumerable.Empty<ValidationReport>());
             }
 
             IList<ValidationIssue> issues = new List<ValidationIssue>();
 
-            if (model.RestartInput.IsEmpty)
+            if (!model.RestartInput.Exists)
             {
-                issues.Add(new ValidationIssue("Input restart state", ValidationSeverity.Error,
-                                               "Input restart state is empty; cannot restart."));
-            }
-            else
-            {
-                IEnumerable<string> errors, warnings;
-                model.ValidateInputState(out errors, out warnings);
-
-                issues = errors
-                         .Select(error => new ValidationIssue("Input restart state", ValidationSeverity.Error, error))
-                         .ToList();
-                issues.AddRange(warnings.Select(
-                                    warning => new ValidationIssue("Input restart state", ValidationSeverity.Warning,
-                                                                   warning)));
+                issues.Add(new ValidationIssue(Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state,
+                                                   ValidationSeverity.Error,
+                                                   Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart));
             }
 
-            return new ValidationReport("Input restart state", issues);
+            return new ValidationReport(Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state, issues);
         }
     }
 }

@@ -103,7 +103,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
 
         private static bool IsOutputRestartFile(IDataItem dataItem)
         {
-            return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
+            return false;
+
+            // TODO D3DFMIQ-2076
+            // //return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
         }
 
         private static IMenuItem GetContextMenu(WaterQualityModel model, IGui gui)
@@ -201,7 +204,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
                 inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.BoundaryDataDataItemMetaData.Tag));
                 inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.LoadsDataDataItemMetaData.Tag));
 
-                inputItems.Add(waterQualityModel.GetDataItemByTag(TimeDependentModelBase.RestartInputStateTag));
+                // TODO D3DFMIQ-2076
+                //inputItems.Add(waterQualityModel.GetDataItemByTag(TimeDependentModelBase.RestartInputStateTag));
             }
 
             public override IEnumerable ChildItems

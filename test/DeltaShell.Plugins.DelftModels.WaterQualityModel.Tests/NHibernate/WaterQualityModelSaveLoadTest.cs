@@ -822,8 +822,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             try
             {
-                Assert.That(NrOfDataItemsInProject(savePath), Is.GreaterThanOrEqualTo(154),
-                            "Original legacy model contained 152 data items, we need to have at least 2 more now...");
+                Assert.That(NrOfDataItemsInProject(savePath), Is.EqualTo(151),
+                            "Original legacy model contained 152 data items, we need to have at least 2 more now... " +
+                            "However, restart data items were removed (-3), so it should come down to 151.");
                 Assert.That(DataItemNameExistInDsProj(savePath, "OutputSubstancesTag"), Is.True,
                             "Migration from legacy WAQ to 3.5.1 has failed");
                 Assert.That(DataItemNameExistInDsProj(savePath, "OutputParametersTag"), Is.True,

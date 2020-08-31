@@ -23,6 +23,7 @@ using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
+using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 {
@@ -742,6 +743,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             foreach (IWaveBoundary waveBoundary in boundaries)
             {
                 Assert.That(result, Has.Member(waveBoundary));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ExportTo_ExportsToPath(bool switchTo)
+        {
+            using (var temp = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                const string currentPath = "current.mdw";
+                model.MdwFile.MdwFilePath = currentPath;
+
+                string exportPath = Path.Combine(temp.Path, "model.mdw");
+
+                // Call
+                model.ExportTo(exportPath, switchTo);
+
+                // Assert
+                Assert.That(exportPath, Does.Exist);
+                Assert.That(model.MdwFilePath, Is.EqualTo(switchTo ? exportPath : currentPath));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ExportTo_PathNull_ThrowsArgumentException(bool switchTo)
+        {
+            using (var model = new WaveModel())
+            {
+                // Call
+                void Call() => model.ExportTo(null, switchTo);
+
+                // Assert
+                var e = Assert.Throws<ArgumentException>(Call);
+                Assert.That(e.ParamName, Is.EqualTo("mdwFilePath"));
             }
         }
     }

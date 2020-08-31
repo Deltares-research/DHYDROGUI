@@ -5,6 +5,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils;
+using DeltaShell.NGHS.Common.Gui.NodePresenters;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 {

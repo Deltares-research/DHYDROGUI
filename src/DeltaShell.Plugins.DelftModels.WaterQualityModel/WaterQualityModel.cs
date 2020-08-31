@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +11,6 @@ using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
@@ -45,7 +43,7 @@ using SharpMap.Api.SpatialOperations;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 {
     [Entity]
-    public class WaterQualityModel : TimeDependentModelBase, IStateAwareModelEngine, IDisposable
+    public class WaterQualityModel : TimeDependentModelBase, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
 
@@ -57,14 +55,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public WaterQualityModel() : base("Water Quality")
         {
             modelSettings = new WaterQualityModelSettings {MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas};
-
-            modelStateHandler = new ModelFileBasedStateHandler(Name,
-                                                               new List<DelftTools.Utils.Tuple<string, string>>
-                                                               {
-                                                                   new DelftTools.Utils.Tuple<string, string>(
-                                                                       FileConstants.RestartFileName,
-                                                                       FileConstants.RestartInFileName)
-                                                               });
 
             InitializeInputDataItems();
             InitializeWaqProcessesRules();
@@ -415,6 +405,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             modelSettings.WorkingDirectoryPathFuncWithModelName = () => Path.Combine(WorkingDirectoryWithoutModelName(), GetWaqDataFolderName());
         }
+
+        // TODO D3DFMIQ-2076
+        public virtual bool UseRestart { get; set; }
+
+        // TODO D3DFMIQ-2076
+        public virtual bool WriteRestart { get; set; }
 
         [EditAction]
         protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -860,30 +856,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             valueConverter.SpatialOperationSet.Execute();
         }
 
-        private Dictionary<string, string> GetMetaDataRequirements(int version)
-        {
-            if (version != 1)
-            {
-                throw new NotImplementedException(string.Format(
-                                                      "Meta data version {0} for model type {1} is not supported",
-                                                      version, "WaterQualityModel"));
-            }
-
-            return new Dictionary<string, string> {{"CorrectForEvap", ModelSettings.CorrectForEvaporation.ToString()}};
-        }
-
-        private Dictionary<string, string> GetOptionalMetaDataRequirements(int version)
-        {
-            if (version != 1)
-            {
-                throw new NotImplementedException(string.Format(
-                                                      "Meta data version {0} for model type {1} is not supported",
-                                                      version, "WaterQualityModel"));
-            }
-
-            return new Dictionary<string, string> {{"NrOfActiveSubstances", SubstanceProcessLibrary.ActiveSubstances.Count().ToString(CultureInfo.InvariantCulture)}};
-        }
-
         private void HandleNewHydroDynamicsFunctionDataSet(IDataItemSet functionCollection, string functionName)
         {
             IDataItem dataItem =
@@ -1006,15 +978,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         #region Fields
 
-        private static readonly int[] SupportedMetaDataVersions =
-        {
-            1
-        };
-
         private double progressPercentage;
         private bool enableMarkOutputOutOfSync;
 
-        private readonly ModelFileBasedStateHandler modelStateHandler;
         private IWaqPreProcessor waqPreProcessor;
         private IWaqProcessor waqProcessor;
         private WaqInitializationSettings waqInitializationSettings;
@@ -1729,76 +1695,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         # endregion
 
-        #region Restart file
-
-        public virtual void ValidateInputState(out IEnumerable<string> errors, out IEnumerable<string> warnings)
-        {
-            try
-            {
-                var modelState =
-                    (ModelStateFilesImpl) modelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
-
-                ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions, GetMetaDataRequirements,
-                                                       GetOptionalMetaDataRequirements, "WaterQualityModel", out errors,
-                                                       out warnings);
-            }
-            catch (ArgumentException e)
-            {
-                errors = new[]
-                {
-                    e.Message
-                };
-                warnings = Enumerable.Empty<string>();
-            }
-        }
-
-        public virtual IModelState GetCopyOfCurrentState()
-        {
-            return modelStateHandler.GetState();
-        }
-
-        public virtual void SetState(IModelState modelState)
-        {
-            modelStateHandler.FeedStateToModel(modelState);
-        }
-
-        public virtual void ReleaseState(IModelState modelState)
-        {
-            modelStateHandler.ReleaseState(modelState);
-        }
-
-        public virtual IModelState CreateStateFromFile(string persistentStateFilePath)
-        {
-            return modelStateHandler.CreateStateFromFile(Name, persistentStateFilePath);
-        }
-
-        public virtual IEnumerable<DateTime> GetRestartWriteTimes()
-        {
-            if (UseSaveStateTimeRange)
-            {
-                DateTime time = SaveStateStartTime;
-                while (time <= SaveStateStopTime)
-                {
-                    yield return time;
-
-                    time += SaveStateTimeStep;
-                }
-            }
-        }
-
-        public virtual void SaveStateToFile(IModelState modelState, string persistentStateFilePath)
-        {
-            modelState.MetaData = new ModelStateMetaData
-            {
-                ModelTypeId = "WaterQualityModel",
-                Version = SupportedMetaDataVersions.Last(),
-                Attributes = GetMetaDataRequirements(SupportedMetaDataVersions.Last())
-            };
-            modelStateHandler.SaveStateToFile(modelState, persistentStateFilePath);
-        }
-
-        #endregion
-
         # region Model
 
         protected override void OnInitialize()
@@ -1819,22 +1715,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             FileUtils.CreateDirectoryIfNotExists(ModelSettings.WorkDirectory);
 
             waqInitializationSettings = WaqInitializationSettingsBuilder.BuildWaqInitializationSettings(this);
-
-            // use the work directory to unzip the restart state to if use restart is true
-            modelStateHandler.ModelWorkingDirectory = ModelSettings.WorkDirectory;
-
-            if (UseRestart)
-            {
-                if (RestartInput.IsEmpty)
-                {
-                    throw new InvalidOperationException("Cannot use restart; restart empty!");
-                }
-
-                modelStateHandler.FeedStateToModel(modelStateHandler.CreateStateFromFile(Name, RestartInput.Path));
-            }
-
-            // use the output directory to find the files to zip if writerestart is true.
-            modelStateHandler.ModelWorkingDirectory = ModelSettings.OutputDirectory;
 
             WaterQualityOutputDisconnector.Disconnect(this);
 

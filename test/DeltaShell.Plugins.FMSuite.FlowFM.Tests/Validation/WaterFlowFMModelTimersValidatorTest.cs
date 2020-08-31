@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             {
                 // arrange
                 model.WriteRestart = true;
-                model.SaveStateTimeStep = TimeSpan.Zero;
+                model.RestartTimeStep = TimeSpan.Zero;
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // act
