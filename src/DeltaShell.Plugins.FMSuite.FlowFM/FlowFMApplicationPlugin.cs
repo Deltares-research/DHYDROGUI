@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion => "1.2.0.0";
+        public override string FileFormatVersion => "1.3.0.0";
 
         public override IApplication Application
         {
