@@ -35,10 +35,10 @@ parameter 'DayL'
    unit          '(d)'
    value          0.5800E+00
 end-parameter
-parameter 'ExtVl'
-   description   'total extinction coefficient visible light'
+parameter 'ExtVL'
+   description   'total extinction coefficient UV light'
    unit          '(1/m)'
-   value          0.1000E+01
+   value          0.3000E+01
 end-parameter
 parameter 'DayRadSurf'
    description   'irradiation at the water surface'
@@ -48,6 +48,6 @@ end-parameter
 active-processes
    name  'EColiMrt' 'Mortality EColi bacteria'
    name  'Salinchlor' 'Conversion of salinity into chloride or vv'
-   name  'CalcRadDay' 'Actual radiation at segment boundaries'
+   name  'CalcRadDay' 'UV-Radiation at segment upper and lower boundaries'
    name  'DynDepth' 'dynamic calculation of the depth'
 end-active-processes
