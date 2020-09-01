@@ -496,21 +496,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public void ModelSaveTo(string targetMdwFilePath, bool switchTo)
         {
             string targetDir = Path.GetDirectoryName(targetMdwFilePath);
-            ExportTo(targetMdwFilePath, switchTo);
+            string modelDir = Path.GetDirectoryName(targetDir);
+            if (modelDir == null)
+            {
+                throw new InvalidOperationException("Model cannot be directly saved under the root.");
+            }
 
-            var targetOutputDir = Path.Combine(Path.GetDirectoryName(targetDir), FileConstants.OutputDirectoryName);
+            ExportModelInputTo(targetMdwFilePath, switchTo);
+
+            string targetOutputDir = Path.Combine(modelDir, FileConstants.OutputDirectoryName);
             SaveOutput(targetOutputDir, switchTo);
         }
 
         /// <summary>
-        /// Exports the model to the specified <paramref name="mdwFilePath"/>.
+        /// Exports the model input to the specified <paramref name="mdwFilePath"/>.
         /// </summary>
         /// <param name="mdwFilePath">The target mdw file path.</param>
         /// <param name="switchTo">Whether or not the model and the data should be switched to the new location.</param>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="mdwFilePath"/> is <c>null</c>.
         /// </exception>
-        public void ExportTo(string mdwFilePath, bool switchTo = false)
+        public void ExportModelInputTo(string mdwFilePath, bool switchTo = false)
         {
             Ensure.NotNullOrEmpty(mdwFilePath, nameof(mdwFilePath));
 
