@@ -141,10 +141,10 @@
   <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_time_step_must_be_an_integer_multiple_of_the_output_time_step_" xml:space="preserve">
     <value>The save state time step must be an integer multiple of the output time step.</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_before_stop_time_" xml:space="preserve">
-    <value>The save state start time must be expressed by start time plus an positive integer multiple of the model time step and before stop time.</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_" xml:space="preserve">
+    <value>The save state start time must be expressed by model start time plus an positive integer multiple of the model time step.</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_not_after_stop_time_" xml:space="preserve">
-    <value>The save state stop time must be expressed by start time plus an positive integer multiple of the model time step and not after stop time.</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_" xml:space="preserve">
+    <value>The save state stop time must be expressed by model start time plus an positive integer multiple of the model time step.</value>
   </data>
 </root>

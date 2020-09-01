@@ -117,24 +117,24 @@ namespace DeltaShell.NGHS.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The save state start time must be expressed by start time plus an positive integer multiple of the model time step and before stop time..
+        ///   Looks up a localized string similar to The save state start time must be expressed by model start time plus an positive integer multiple of the model time step..
         /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_before_stop_time_ {
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_ {
             get {
                 return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_t" +
-                        "ime_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_mod" +
-                        "el_time_step_and_before_stop_time_", resourceCulture);
+                        "ime_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_t" +
+                        "he_model_time_step_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The save state stop time must be expressed by start time plus an positive integer multiple of the model time step and not after stop time..
+        ///   Looks up a localized string similar to The save state stop time must be expressed by model start time plus an positive integer multiple of the model time step..
         /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_not_after_stop_time_ {
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_ {
             get {
                 return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_ti" +
-                        "me_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_mode" +
-                        "l_time_step_and_not_after_stop_time_", resourceCulture);
+                        "me_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_th" +
+                        "e_model_time_step_", resourceCulture);
             }
         }
         

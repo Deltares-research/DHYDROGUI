@@ -50,19 +50,17 @@ namespace DeltaShell.NGHS.Common.Validation
             }
 
             if (restartStartTime < modelStartTime||
-                restartStartTime > modelStopTime ||
                 restartStartTime > modelStartTime && modelTimeStepSeconds > 0 && (long)(restartStartTime - modelStartTime).TotalSeconds % modelTimeStepSeconds != 0)
             {
                 issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_start_time, ValidationSeverity.Error,
-                    Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_before_stop_time_));
+                    Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_));
             }
 
-            if (restartStopTime > modelStopTime ||
-                restartStopTime < modelStartTime ||
-                restartStopTime < modelStopTime && restartTimeStepSeconds > 0 && (long)(restartStopTime - restartStartTime).TotalSeconds % modelTimeStepSeconds != 0)
+            if (restartStopTime < modelStartTime ||
+                restartStopTime > modelStartTime &&  modelTimeStepSeconds > 0 && (long)(restartStopTime - modelStartTime).TotalSeconds % modelTimeStepSeconds != 0)
             {
                 issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_stop_time, ValidationSeverity.Error,
-                    Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_not_after_stop_time_));
+                    Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_));
             }
 
             return new ValidationReport(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings, issues);
