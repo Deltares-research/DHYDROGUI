@@ -49,9 +49,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 File.Delete(stateFile);
             }
 
-            File.Delete(paths.MetaDataXml);
+            File.Delete(paths.OutputMetaDataXml);
+            File.Delete(paths.InputMetaDataXml);
             File.Delete(paths.RestartMeta);
-            Directory.Delete(paths.ExplicitWorkingDirectory, true);
+            FileUtils.DeleteIfExists(paths.ExplicitWorkingDirectory);
         }
 
         private sealed class Paths
@@ -74,7 +75,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             public IEnumerable<string> StateFiles => SearchStateFiles(ProjectDir);
 
-            public string MetaDataXml => Path.Combine(OutputDir, metaData);
+            public string OutputMetaDataXml => Path.Combine(OutputDir, metaData);
+
+            public string InputMetaDataXml => Path.Combine(InputDir, metaData);
 
             public string RestartMeta => Path.Combine(InputDir, restartMeta);
 
