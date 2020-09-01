@@ -383,6 +383,7 @@
     <Compile Include="IO\StructureFMPropertiesFileTest.cs" />
     <Compile Include="IO\FMModelSchemaCsvFileTest.cs" />
     <Compile Include="IO\WaterFlowFMMduFileTest.cs" />
+    <Compile Include="IO\WaterFlowFMModel120LegacyLoaderTest.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensionsTest.cs" />
     <Compile Include="IO\WindExtForceTest.cs" />
     <Compile Include="Layers\UnstructuredGridCellCoverageLayerTest.cs" />
