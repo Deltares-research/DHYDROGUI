@@ -64,6 +64,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             yield return typeof(RealTimeControlRestartFile);
         }
 
-        public bool CanExportFor(object item) => true;
+        public bool CanExportFor(object item) => item is RealTimeControlRestartFile restartFile && !restartFile.IsEmpty;
     }
 }

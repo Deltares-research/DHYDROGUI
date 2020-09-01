@@ -94,5 +94,43 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             Assert.That(toolStripItems, Has.Count.EqualTo(1));
             Assert.That(toolStripItems[0].Text, Is.EqualTo("Use as restart"));
         }
+
+        [Test]
+        public void GivenRealTimeControlModel_WhenRestartInputEmpty_ThenRemoveRestartOptionDisabled()
+        {
+            // Setup
+            var restartFile = new RealTimeControlRestartFile();
+            var node = Substitute.For<ITreeNode>();
+            var model = new RealTimeControlModel();
+            node.Parent.Parent.Tag.Returns(model);
+            model.RestartInput = restartFile;
+
+            // Call
+            var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);
+
+            // Assert
+            ToolStripItem removeRestartItem = menu.ContextMenuStrip.Items[0];
+            Assert.That(removeRestartItem.Text, Is.EqualTo("Remove restart"));
+            Assert.That(removeRestartItem.Enabled, Is.False);
+        }
+
+        [Test]
+        public void GivenRealTimeControlModel_WhenRestartInputNotEmpty_ThenRemoveRestartOptionEnabled()
+        {
+            // Setup
+            var restartFile = new RealTimeControlRestartFile("filename", "content");
+            var node = Substitute.For<ITreeNode>();
+            var model = new RealTimeControlModel();
+            node.Parent.Parent.Tag.Returns(model);
+            model.RestartInput = restartFile;
+
+            // Call
+            var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);
+
+            // Assert
+            ToolStripItem removeRestartItem = menu.ContextMenuStrip.Items[0];
+            Assert.That(removeRestartItem.Text, Is.EqualTo("Remove restart"));
+            Assert.That(removeRestartItem.Enabled, Is.True);
+        }
     }
 }

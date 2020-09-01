@@ -22,7 +22,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             Assert.That(exporter.Category, Is.EqualTo("XML"));
             Assert.That(exporter.Description, Is.Empty);
             Assert.That(exporter.FileFilter, Is.EqualTo("Real Time Control restart files|*.xml"));
-            Assert.That(exporter.CanExportFor(new object()), Is.True);
             Assert.That(exporter.SourceTypes(), Is.EqualTo(new[] {typeof(RealTimeControlRestartFile)}));
         }
 
@@ -94,6 +93,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 Assert.That(exportResult, Is.True);
                 Assert.That(File.ReadAllText(path), Is.EqualTo("content"));
             }
+        }
+
+        [Test]
+        public void GivenEmptyRestartFile_WhenGetCanExport_ThenFalseReturned()
+        {
+            Assert.That(new RealTimeControlRestartFileExporter().CanExportFor(new RealTimeControlRestartFile()), Is.False);
+        }
+
+        [Test]
+        public void GivenNotEmptyRestartFile_WhenGetCanExport_ThenTrueReturned()
+        {
+            Assert.That(new RealTimeControlRestartFileExporter().CanExportFor(new RealTimeControlRestartFile("file name", "file contents")), Is.True);
+        }
+
+        [Test]
+        public void GivenNotRestartFile_WhenGetCanExport_ThenFalseReturned()
+        {
+            Assert.That(new RealTimeControlRestartFileExporter().CanExportFor(new object()), Is.False);
         }
     }
 }
