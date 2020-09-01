@@ -61,6 +61,33 @@ namespace DeltaShell.NGHS.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Restart interval.
+        /// </summary>
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_interval {
+            get {
+                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart start time.
+        /// </summary>
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_start_time {
+            get {
+                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_start_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart stop time.
+        /// </summary>
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_stop_time {
+            get {
+                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_stop_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Restart time range settings.
         /// </summary>
         public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings {
@@ -71,90 +98,63 @@ namespace DeltaShell.NGHS.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save state interval.
+        ///   Looks up a localized string similar to Restart time step.
         /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_interval {
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step {
             get {
-                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_interval", resourceCulture);
+                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save state start time.
+        ///   Looks up a localized string similar to The restart start time must be expressed by model start time plus an positive integer multiple of the model time step..
         /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_start_time {
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_start_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_ {
             get {
-                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_start_time", resourceCulture);
+                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_start_time" +
+                        "_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_" +
+                        "model_time_step_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save state stop time.
+        ///   Looks up a localized string similar to The restart stop time cannot be before restart start time..
         /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_stop_time {
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_cannot_be_before_restart_start_time_ {
             get {
-                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_stop_time", resourceCulture);
+                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_" +
+                        "cannot_be_before_restart_start_time_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save state time step.
+        ///   Looks up a localized string similar to The restart stop time must be expressed by model start time plus an positive integer multiple of the model time step..
         /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_time_step {
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_ {
             get {
-                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_time_step", resourceCulture);
+                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_" +
+                        "must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_m" +
+                        "odel_time_step_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The save state interval stop time cannot be before start time..
+        ///   Looks up a localized string similar to The restart time step must be an integer multiple of the output time step..
         /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_interval_stop_time_cannot_be_before_start_time_ {
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_an_integer_multiple_of_the_output_time_step_ {
             get {
-                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_interva" +
-                        "l_stop_time_cannot_be_before_start_time_", resourceCulture);
+                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_" +
+                        "must_be_an_integer_multiple_of_the_output_time_step_", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The save state start time must be expressed by model start time plus an positive integer multiple of the model time step..
+        ///   Looks up a localized string similar to The restart time step must be positive value..
         /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_ {
+        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_positive_value_ {
             get {
-                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_t" +
-                        "ime_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_t" +
-                        "he_model_time_step_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The save state stop time must be expressed by model start time plus an positive integer multiple of the model time step..
-        /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_ {
-            get {
-                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_ti" +
-                        "me_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_th" +
-                        "e_model_time_step_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The save state time step must be an integer multiple of the output time step..
-        /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_time_step_must_be_an_integer_multiple_of_the_output_time_step_ {
-            get {
-                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_time_st" +
-                        "ep_must_be_an_integer_multiple_of_the_output_time_step_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The save state time step must be positive value..
-        /// </summary>
-        public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_time_step_must_be_positive_value_ {
-            get {
-                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_time_st" +
-                        "ep_must_be_positive_value_", resourceCulture);
+                return ResourceManager.GetString("RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_" +
+                        "must_be_positive_value_", resourceCulture);
             }
         }
     }

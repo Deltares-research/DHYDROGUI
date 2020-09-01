@@ -120,31 +120,31 @@
   <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings" xml:space="preserve">
     <value>Restart time range settings</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_start_time" xml:space="preserve">
-    <value>Save state start time</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_start_time" xml:space="preserve">
+    <value>Restart start time</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_stop_time" xml:space="preserve">
-    <value>Save state stop time</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_stop_time" xml:space="preserve">
+    <value>Restart stop time</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_time_step" xml:space="preserve">
-    <value>Save state time step</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step" xml:space="preserve">
+    <value>Restart time step</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_time_step_must_be_positive_value_" xml:space="preserve">
-    <value>The save state time step must be positive value.</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_positive_value_" xml:space="preserve">
+    <value>The restart time step must be positive value.</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_interval" xml:space="preserve">
-    <value>Save state interval</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_interval" xml:space="preserve">
+    <value>Restart interval</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_interval_stop_time_cannot_be_before_start_time_" xml:space="preserve">
-    <value>The save state interval stop time cannot be before start time.</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_cannot_be_before_restart_start_time_" xml:space="preserve">
+    <value>The restart stop time cannot be before restart start time.</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_time_step_must_be_an_integer_multiple_of_the_output_time_step_" xml:space="preserve">
-    <value>The save state time step must be an integer multiple of the output time step.</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_an_integer_multiple_of_the_output_time_step_" xml:space="preserve">
+    <value>The restart time step must be an integer multiple of the output time step.</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_" xml:space="preserve">
-    <value>The save state start time must be expressed by model start time plus an positive integer multiple of the model time step.</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_start_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_" xml:space="preserve">
+    <value>The restart start time must be expressed by model start time plus an positive integer multiple of the model time step.</value>
   </data>
-  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_" xml:space="preserve">
-    <value>The save state stop time must be expressed by model start time plus an positive integer multiple of the model time step.</value>
+  <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_must_be_expressed_by_model_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_" xml:space="preserve">
+    <value>The restart stop time must be expressed by model start time plus an positive integer multiple of the model time step.</value>
   </data>
 </root>
