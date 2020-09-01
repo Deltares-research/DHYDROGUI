@@ -10,35 +10,56 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart
     [Entity]
     public class RealTimeControlRestartFile : Unique<long>
     {
+        private string name;
+
         /// <summary>
         /// Creates a new instance of <see cref="RealTimeControlRestartFile"/>.
         /// </summary>
-        public RealTimeControlRestartFile() : this(string.Empty, string.Empty) {}
+        public RealTimeControlRestartFile() : this(string.Empty, null) {}
 
         /// <summary>
         /// Creates a new instance of <see cref="RealTimeControlRestartFile"/>.
         /// </summary>
         /// <param name="name">The name of the restart file.</param>
         /// <param name="content">The content of the restart file.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when any parameter is <c>null</c>.</exception>
+        /// <exception cref="System.ArgumentNullException">Thrown when <paramref name="name"/> is <c>null</c>.</exception>
         public RealTimeControlRestartFile(string name, string content)
         {
             Ensure.NotNull(name, nameof(name));
-            Ensure.NotNull(content, nameof(content));
 
             Name = name;
             Content = content;
         }
 
-        public string Name { get; set; }
+        /// <summary>
+        /// Gets the name of the file.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">Thrown when set <paramref name="value"/> is <c>null</c>.</exception>
+        public string Name
+        {
+            get => name;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
 
-        public bool IsEmpty => string.IsNullOrEmpty(Content);
+                name = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is empty.
+        /// </summary>
+        public bool IsEmpty => Content == null;
 
         /// <summary>
         /// Gets the content of the restart file
         /// </summary>
         public string Content { get; set; }
 
+        /// <summary>
+        /// Clones this instance.
+        /// </summary>
+        /// <returns>A new copied instance of this instance.</returns>
         public RealTimeControlRestartFile Clone()
         {
             return new RealTimeControlRestartFile(Name, Content);
