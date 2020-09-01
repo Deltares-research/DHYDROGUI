@@ -1,4 +1,3 @@
-
 using System.Linq;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow.DataItems;
