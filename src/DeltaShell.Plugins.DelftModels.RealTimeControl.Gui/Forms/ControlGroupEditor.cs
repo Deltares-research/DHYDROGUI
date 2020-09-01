@@ -42,6 +42,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         */
         private const int MaxLocationsToDisplayIndividually = 900;
 
+        private static readonly Dictionary<Type, string> connectionMapping = new Dictionary<Type, string>()
+        {
+            {typeof(InputItemShape), "ConditionShape=Top|SignalShape=Top|RuleShape=Top|MathematicalExpressionShape=Top"},
+            {typeof(ConditionShape), "RuleShape=Left|MathematicalExpressionShape=Left"},
+            {typeof(SignalShape), "RuleShape=Top,Left,Bottom"},
+            {typeof(RuleShape), "OutputItemShape=Left"},
+            {typeof(MathematicalExpressionShape), "ConditionShape=Top,Left|RuleShape=Top,Left,Bottom|MathematicalExpressionShape=Top"}
+        };
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroupEditor));
         private readonly XNamespace fns = "http://www.wldelft.nl/fews";
         private object created, lastCreated;
@@ -902,11 +911,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                    
 
                     IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors);
-                    // draw rectangles
-                    foreach (var shape in shapes)
+                    if (allowedConnectors.Any())
                     {
-                        shape.HighLightedConnectors = allowedConnectors.ToList();
-                        // add highlighted Connectors to shape
+                        // draw rectangles
+                        foreach (var shape in shapes)
+                        {
+                            shape.HighLightedConnectors = allowedConnectors.ToList();
+                            // add highlighted Connectors to shape
+                        }
                     }
                 }
             }
@@ -931,9 +943,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     targetConnectionType = ConvertTo(availableConnector.ConnectorLocation);
                 }
 
-                if (sourceShape != targetShape)
+                if ((sourceShape != targetShape) && !(sourceShape is OutputItemShape))
                 {
-                    if (ControlGroupEditorController.IsConnectionAllowed(sourceShape, sourceConnection, targetShape, targetConnectionType))
+                    if (ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, sourceConnection, targetShape, targetConnectionType, connectionMapping))
                     {
                         allowedConnectors.Add(availableConnector);
                     }
@@ -943,7 +955,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             return allowedConnectors;
         }
 
-        private static ConnectorType ConvertConnectorNameToType(String connectorName)
+        private static ConnectorType ConvertConnectorNameToType(string connectorName)
         {
             ConnectorType targetConnectionType;
             switch (connectorName)

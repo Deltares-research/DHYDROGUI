@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private static bool refreshingConnections;
         private static readonly Bitmap timeConditionIcon = Resources.timecondition;
         private static readonly Bitmap directionalConditionIcon = Resources.directionalcondition;
-
+        
         private ControlGroup controlGroup;
 
         private object replaceable;
@@ -388,6 +388,77 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 default:
                     return true;
             }
+        }
+        /*
+        private static readonly Dictionary<string, string> connectionMapping = new Dictionary<string, string>()
+        {
+            {"InputItemShape", "ConditionShape=Top|SignalShape=Top|RuleShape=Top|MathematicalExpressionShape=Top"},
+            {"OutputItemShape", ""},
+            {"ConditionShape", "RuleShape=Left|MathematicalExpressionShape=Left"},
+            {"SignalShape", "RuleShape=Top,Left,Bottom"},
+            {"RuleShape", "OutputItemShape=Right"},
+            {"MathematicalExpressionShape", "ConditionShape=Top,Left|RuleShape=Top,Left,Bottom|MathematicalExpressionShape=Top"}
+        };
+        */
+        public static bool IsConnectorSourceCompatibleWithConnectorDestination(object source, ConnectorType sourceConnector,
+                                                                        object target, ConnectorType targetConnector, Dictionary<Type, string> connectionMapping)
+        {
+            string targetType;
+            if (target is InputItemShape)
+            {
+                targetType = "InputItemShape";
+            }
+            else if (target is ConditionShape)
+            {
+                targetType = "ConditionShape";
+            }
+            else if (target is SignalShape)
+            {
+                targetType = "SignalShape";
+            }
+            else if(target is MathematicalExpressionShape)
+            {
+                targetType = "MathematicalExpressionShape";
+            }
+            else if(target is RuleShape)
+            {
+                targetType = "RuleShape";
+            }
+            else if (target is OutputItemShape)
+            {
+                targetType = "OutputItemShape";
+            }
+            else
+            {
+                return false;
+            }
+            
+            string nodeMapping = connectionMapping[source.GetType()];
+            if (!nodeMapping.Contains(targetType))
+            {
+                return false;
+            }
+            List<string[]> connectableNodes = ParseConnectableNodes(nodeMapping);
+            foreach (var connectableNode in connectableNodes)
+            {
+                if (connectableNode[0].Contains(targetType)
+                    && (connectableNode[1].Contains(targetConnector.ToString())))
+                    return true;
+            }
+            return false;
+        }
+
+        public static List<string[]> ParseConnectableNodes(string nodeMapping)
+        {
+            List<string[]> connectableShapes = new List<string[]>();
+            string[] possibleShapes = nodeMapping.Split('|');
+            foreach (string shape in possibleShapes)
+            {
+                string[] connectors = shape.Split('=');
+                connectableShapes.Add(connectors);
+            }
+
+            return connectableShapes;
         }
 
         public static bool ConnectionIs(IConnection connection)
