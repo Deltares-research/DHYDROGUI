@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             Ensure.NotNull(project, nameof(project));
 
-            IEnumerable<WaterFlowFMModel> models = project.RootFolder.Models.OfType<WaterFlowFMModel>();
+            IEnumerable<WaterFlowFMModel> models = project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>();
             foreach (WaterFlowFMModel model in models)
             {
                 var paths = new Paths(model);
