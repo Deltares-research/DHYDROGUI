@@ -689,6 +689,389 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         }
 
         [TestFixture]
+        public static class GivenShapeCheckCompatibleConnectors
+        {
+            private static ConnectorType targetBottomConnectorType;
+            private static ConnectorType targetTopConnectorType;
+            private static ConnectorType targetLeftConnectorType;
+            private static ConnectorType targetRightConnectorType;
+
+            [SetUp]
+            public static void SetupConnectorsTypes()
+            {
+                targetBottomConnectorType = ConnectorType.Bottom;
+                targetTopConnectorType = ConnectorType.Top;
+                targetLeftConnectorType = ConnectorType.Left;
+                targetRightConnectorType = ConnectorType.Right;
+            }
+
+            [Test]
+            public static void GivenInputShapeCorrectConnectorsAreSelected()
+            {
+                bool result;
+                InputItemShape inputShape = new InputItemShape();
+
+                ConditionShape targetConditionShape = new ConditionShape();
+               
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetConditionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetConditionShape, targetTopConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetConditionShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetConditionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                SignalShape targetSignalShape = new SignalShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetSignalShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetSignalShape, targetTopConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetSignalShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetSignalShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                RuleShape targetRuleShape = new RuleShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetRuleShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetRuleShape, targetTopConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetRuleShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetRuleShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetMathematicalExpressionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetMathematicalExpressionShape, targetTopConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetMathematicalExpressionShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetMathematicalExpressionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                OutputItemShape outputItemShape = new OutputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, outputItemShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, outputItemShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, outputItemShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, outputItemShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                InputItemShape targetInputShape = new InputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetInputShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetInputShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetInputShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetInputShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+            }
+
+            [Test]
+            public static void GivenConditionShapeCorrectConnectorsAreSelected()
+            {
+                bool result;
+                ConditionShape conditionShape = new ConditionShape();
+
+                InputItemShape targetInputShape = new InputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetInputShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetInputShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetInputShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetInputShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                SignalShape targetSignalShape = new SignalShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetSignalShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetSignalShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetSignalShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetSignalShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                RuleShape targetRuleShape = new RuleShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetRuleShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetRuleShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetRuleShape, targetLeftConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetRuleShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetMathematicalExpressionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetMathematicalExpressionShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetMathematicalExpressionShape, targetLeftConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetMathematicalExpressionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                OutputItemShape outputItemShape = new OutputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, outputItemShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, outputItemShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, outputItemShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, outputItemShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                ConditionShape targetConditionShape = new ConditionShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetConditionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetConditionShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetConditionShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetConditionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+            }
+
+            [Test]
+            public static void GivenSignalShapeCorrectConnectorsAreSelected()
+            {
+                bool result;
+                SignalShape signalShape = new SignalShape();
+
+                InputItemShape targetInputShape = new InputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                ConditionShape targetConditionShape = new ConditionShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                RuleShape targetRuleShape = new RuleShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetBottomConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetTopConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetLeftConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                OutputItemShape outputItemShape = new OutputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                SignalShape targetSignalShape = new SignalShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+            }
+
+            [Test]
+            public static void GivenRuleShapeCorrectConnectorsAreSelected()
+            {
+                bool result;
+                RuleShape signalShape = new RuleShape();
+
+                InputItemShape targetInputShape = new InputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                ConditionShape targetConditionShape = new ConditionShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                SignalShape targetSignalShape = new SignalShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                OutputItemShape outputItemShape = new OutputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetLeftConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                RuleShape targetRuleShape = new RuleShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+            }
+
+            [Test]
+            public static void GivenMathematicalExpressionShapeCorrectConnectorsAreSelected()
+            {
+                bool result;
+                MathematicalExpressionShape mathematicalExpressionShape = new MathematicalExpressionShape();
+
+                InputItemShape targetInputShape = new InputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetInputShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetInputShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetInputShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetInputShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                ConditionShape targetConditionShape = new ConditionShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetConditionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetConditionShape, targetTopConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetConditionShape, targetLeftConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetConditionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                SignalShape targetSignalShape = new SignalShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetSignalShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetSignalShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetSignalShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetSignalShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                RuleShape ruleShape = new RuleShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, ruleShape, targetBottomConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, ruleShape, targetTopConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, ruleShape, targetLeftConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, ruleShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                OutputItemShape outputItemShape = new OutputItemShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, outputItemShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, outputItemShape, targetTopConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, outputItemShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, outputItemShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+
+                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
+
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetMathematicalExpressionShape, targetBottomConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetMathematicalExpressionShape, targetTopConnectorType);
+                Assert.That(result, Is.True);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetMathematicalExpressionShape, targetLeftConnectorType);
+                Assert.That(result, Is.False);
+                result = ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetMathematicalExpressionShape, targetRightConnectorType);
+                Assert.That(result, Is.False);
+            }
+        }
+
+        [TestFixture]
         public static class GivenInput
         {
             private static Input input;

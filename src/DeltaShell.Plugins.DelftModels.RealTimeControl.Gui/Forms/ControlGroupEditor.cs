@@ -42,15 +42,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         */
         private const int MaxLocationsToDisplayIndividually = 900;
 
-        private static readonly Dictionary<Type, string> connectionMapping = new Dictionary<Type, string>()
-        {
-            {typeof(InputItemShape), "ConditionShape=Top|SignalShape=Top|RuleShape=Top|MathematicalExpressionShape=Top"},
-            {typeof(ConditionShape), "RuleShape=Left|MathematicalExpressionShape=Left"},
-            {typeof(SignalShape), "RuleShape=Top,Left,Bottom"},
-            {typeof(RuleShape), "OutputItemShape=Left"},
-            {typeof(MathematicalExpressionShape), "ConditionShape=Top,Left|RuleShape=Top,Left,Bottom|MathematicalExpressionShape=Top"}
-        };
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroupEditor));
         private readonly XNamespace fns = "http://www.wldelft.nl/fews";
         private object created, lastCreated;
@@ -945,7 +936,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
                 if ((sourceShape != targetShape) && !(sourceShape is OutputItemShape))
                 {
-                    if (ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, sourceConnection, targetShape, targetConnectionType, connectionMapping))
+                    if (ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
                     {
                         allowedConnectors.Add(availableConnector);
                     }
