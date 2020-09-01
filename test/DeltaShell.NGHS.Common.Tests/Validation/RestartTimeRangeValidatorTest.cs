@@ -137,7 +137,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             // Assert
             ValidationIssue issue = RetrieveIssue(validationReport);
 
-            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_time_step_and_before_stop_time_, issue.Message);
+            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_before_stop_time_, issue.Message);
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
             Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_start_time, issue.Subject);
         }
@@ -179,7 +179,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             // Assert
             ValidationIssue issue = RetrieveIssue(validationReport);
 
-            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_time_step_and_before_stop_time_, issue.Message);
+            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_before_stop_time_, issue.Message);
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
             Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_start_time, issue.Subject);
         }
@@ -202,7 +202,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             // Assert
             ValidationIssue issue = RetrieveIssue(validationReport);
 
-            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_save_state_time_step_and_not_after_stop_time_, issue.Message);
+            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_not_after_stop_time_, issue.Message);
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
             Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_stop_time, issue.Subject);
         }
@@ -227,7 +227,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
         }
 
         [Test]
-        public void ValidateWriteRestartSettings_WhenWriteRestartIsTrueAndRestartStopTimeIsNotRestartStartTimePlusAMultipleOfRestartTimeStep_ShouldReturnError()
+        public void ValidateWriteRestartSettings_WhenWriteRestartIsTrueAndRestartStopTimeIsNotRestartStartTimePlusAMultipleOfModelTimeStep_ShouldReturnError()
         {
             // Arrange
             DateTime modelStartTime = DateTime.Today;
@@ -235,7 +235,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             var modelTimeStep = new TimeSpan(0, 2, 0, 0);
 
             DateTime restartStartTime = DateTime.Today;
-            DateTime restartStopTime = DateTime.Today.AddHours(14);
+            DateTime restartStopTime = DateTime.Today.AddHours(15);
             var restartTimeStep = new TimeSpan(0, 6, 0, 0);
 
             // Act
@@ -244,7 +244,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             // Assert
             ValidationIssue issue = RetrieveIssue(validationReport);
 
-            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_save_state_time_step_and_not_after_stop_time_, issue.Message);
+            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_not_after_stop_time_, issue.Message);
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
             Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_stop_time, issue.Subject);
         }
@@ -267,11 +267,11 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             ValidationIssue issue1 = allIssues[0];
             ValidationIssue issue2 = allIssues[1];
 
-            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_time_step_and_before_stop_time_, issue1.Message);
+            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_start_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_before_stop_time_, issue1.Message);
             Assert.AreEqual(ValidationSeverity.Error, issue1.Severity);
             Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_start_time, issue1.Subject);
 
-            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_save_state_time_step_and_not_after_stop_time_, issue2.Message);
+            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_save_state_stop_time_must_be_expressed_by_start_time_plus_an_positive_integer_multiple_of_the_model_time_step_and_not_after_stop_time_, issue2.Message);
             Assert.AreEqual(ValidationSeverity.Error, issue2.Severity);
             Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Save_state_stop_time, issue2.Subject);
         }
