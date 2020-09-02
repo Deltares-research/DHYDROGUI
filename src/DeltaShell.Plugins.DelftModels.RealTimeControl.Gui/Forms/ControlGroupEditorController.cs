@@ -398,12 +398,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     return true;
             }
         }
-     
+
+        /// <summary>
+        /// Check if a connector of a specific shape is compatible with a target connector
+        /// according to a specific connectionMapping
+        /// </summary>
+        /// <param name="source">The source object.</param>
+        /// <param name="target">The target object.</param>
+        /// <param name="targetConnector">The connector type of the target.</param>
+        /// <returns> </returns>
         public static bool IsConnectorSourceCompatibleWithConnectorDestination(object source, 
                                                                                object target, 
                                                                                ConnectorType targetConnector)
         {
             string targetType;
+
             if (target is Shape)
             {
                 targetType = ConvertShapeTypeToString(target);
@@ -414,59 +423,41 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
             
             string nodeMapping = connectionMapping[source.GetType()];
+
             if (!nodeMapping.Contains(targetType))
             {
                 return false;
             }
-            List<string[]> connectableNodes = ParseConnectableNodes(nodeMapping);
-            foreach (var connectableNode in connectableNodes)
-            {
-                if (connectableNode[0].Contains(targetType)
-                    && (connectableNode[1].Contains(targetConnector.ToString())))
-                    return true;
-            }
-            return false;
+
+            IEnumerable<string[]> connectableNodes = ParseConnectableNodes(nodeMapping);
+
+            return connectableNodes.Any(connectableNode => connectableNode[0].Contains(targetType) && 
+                                                           connectableNode[1].Contains(targetConnector.ToString()));
         }
 
         private static string ConvertShapeTypeToString(object type)
         {
-            if (type is InputItemShape)
-            {
-                return "InputItemShape";
-            }
-            else if (type is ConditionShape)
-            {
-                return "ConditionShape";
-            }
-            else if (type is SignalShape)
-            {
-                return "SignalShape";
-            }
-            else if (type is MathematicalExpressionShape)
-            {
-                return "MathematicalExpressionShape";
-            }
-            else if (type is RuleShape)
-            {
-                return "RuleShape";
-            }
-            else
-            {
-                return "OutputItemShape";
+            switch (type) {
+                case InputItemShape _:
+                    return "InputItemShape";
+                case ConditionShape _:
+                    return "ConditionShape";
+                case SignalShape _:
+                    return "SignalShape";
+                case MathematicalExpressionShape _:
+                    return "MathematicalExpressionShape";
+                case RuleShape _:
+                    return "RuleShape";
+                default:
+                    return "OutputItemShape";
             }
         }
 
-        private static List<string[]> ParseConnectableNodes(string nodeMapping)
+        private static IEnumerable<string[]> ParseConnectableNodes(string nodeMapping)
         {
-            List<string[]> connectableShapes = new List<string[]>();
             string[] possibleShapes = nodeMapping.Split('|');
-            foreach (string shape in possibleShapes)
-            {
-                string[] connectors = shape.Split('=');
-                connectableShapes.Add(connectors);
-            }
 
-            return connectableShapes;
+            return possibleShapes.Select(shape => shape.Split('=')).ToList();
         }
 
         public static bool ConnectionIs(IConnection connection)

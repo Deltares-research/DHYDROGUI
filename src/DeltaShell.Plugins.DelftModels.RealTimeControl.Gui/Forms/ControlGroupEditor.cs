@@ -881,65 +881,64 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void OnGraphControlMouseDown(object sender, MouseEventArgs e)
         {
             object hoveredItem = TypeUtils.GetField(graphControl.NetronGraph, "Hover");
-            if ((hoveredItem != null) && (hoveredItem is Connector activeConnector))
+            if ((hoveredItem == null) || (!(hoveredItem is Connector activeConnector)))
             {
-                // Retrieve all shapes present
-                IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
-                if (shapes != null)
-                {
-                    Connector[] allConnectors = shapes.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
-                    var owner = activeConnector.BelongsTo as ShapeBase;
-                    ConnectorType activeConnectionType;
+                return;
+            }
 
-                    if (owner is MathematicalExpressionShape)
-                    {
-                        activeConnectionType = ConvertConnectorNameToType(activeConnector.Name);
-                    }
-                    else
-                    {
-                        activeConnectionType = ConvertTo(activeConnector.ConnectorLocation);
-                    }
-                   
+            // Retrieve all shapes present
+            IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+            if (shapes == null)
+            {
+                return;
+            }
 
-                    IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors);
-                    if (allowedConnectors.Any())
-                    {
-                        // draw rectangles
-                        foreach (var shape in shapes)
-                        {
-                            shape.HighLightedConnectors = allowedConnectors.ToList();
-                            // add highlighted Connectors to shape
-                        }
-                    }
-                }
+            IEnumerable<ShapeBase> shapeBases = shapes.ToList();
+            Connector[] allConnectors = shapeBases.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
+            var owner = activeConnector.BelongsTo as ShapeBase;
+
+            ConnectorType activeConnectionType = owner is MathematicalExpressionShape ? ConvertConnectorNameToType(activeConnector.Name) : ConvertTo(activeConnector.ConnectorLocation);
+                
+            IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors);
+
+            IEnumerable<Connector> connectors = allowedConnectors.ToList();
+            if (!connectors.Any())
+            {
+                return;
+            }
+
+            foreach (ShapeBase shape in shapeBases)
+            {
+                shape.HighLightedConnectors = connectors.ToList();
             }
         }
+
         private static IEnumerable<Connector> FilterAllowableConnectors(ShapeBase sourceShape,
                                                                         ConnectorType sourceConnection,
                                                                         IEnumerable<Connector> availableConnectors)
         {
             var allowedConnectors = new List<Connector>();
+
+            if (sourceShape is MathematicalExpressionShape)
+            {
+                if (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top)
+                    return allowedConnectors;
+            }
+
             foreach (Connector availableConnector in availableConnectors)
             {
                 var targetShape = availableConnector.BelongsTo as ShapeBase;
-                ConnectorType targetConnectionType;
 
-                if (targetShape is MathematicalExpressionShape)
+                ConnectorType targetConnectionType = targetShape is MathematicalExpressionShape ? ConvertConnectorNameToType(availableConnector.Name) : ConvertTo(availableConnector.ConnectorLocation);
+
+                if ((sourceShape == targetShape) || sourceShape is OutputItemShape)
                 {
-                    
-                    targetConnectionType = ConvertConnectorNameToType(availableConnector.Name);
-                }
-                else
-                {
-                    targetConnectionType = ConvertTo(availableConnector.ConnectorLocation);
+                    continue;
                 }
 
-                if ((sourceShape != targetShape) && !(sourceShape is OutputItemShape))
+                if (ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
                 {
-                    if (ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
-                    {
-                        allowedConnectors.Add(availableConnector);
-                    }
+                    allowedConnectors.Add(availableConnector);
                 }
             }
 
