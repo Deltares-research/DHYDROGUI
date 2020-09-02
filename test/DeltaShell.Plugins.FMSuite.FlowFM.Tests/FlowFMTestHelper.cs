@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using NUnit.Framework;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -86,6 +93,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public static bool ContainsWarning(this ValidationReport report, string errorMessage)
         {
             return report.ContainsValidationIssue(errorMessage, ValidationSeverity.Warning);
+        }
+
+        public static WaterFlowFMModel GetSmallestValidModel(TemporaryDirectory temp)
+        {
+            string mduFilePath = Path.Combine(temp.Path, "model.mdu");
+
+            var model = new WaterFlowFMModel {Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2)};
+            model.ExportTo(mduFilePath);
+            model.ReloadGrid(true, true);
+            model.ImportFromMdu(mduFilePath);
+
+            model.StopTime = model.StartTime.AddMinutes(20);
+            model.ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value = false;
+            model.ModelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value = false;
+
+            ValidationReport report = model.Validate();
+            Assert.AreEqual(0, report.AllErrors.Count(), "Model has errors in the validation report.");
+
+            return model;
         }
 
         private static bool ContainsValidationIssue(this ValidationReport report, string errorMessage, ValidationSeverity severity)

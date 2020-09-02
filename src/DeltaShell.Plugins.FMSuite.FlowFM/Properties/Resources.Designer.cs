@@ -1371,6 +1371,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please save the project after a model run with &apos;write restart&apos; on..
+        /// </summary>
+        public static string WaterFlowFMModel_Save_project_after_model_run_with_write_restart {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_Save_project_after_model_run_with_write_restart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No grid points defined between structure {0} and {1}.
         /// </summary>
         public static string WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_ {

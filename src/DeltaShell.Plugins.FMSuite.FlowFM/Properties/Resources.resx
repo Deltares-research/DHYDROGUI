@@ -634,4 +634,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state" xml:space="preserve">
     <value>"Input restart state"</value>
   </data>
+  <data name="WaterFlowFMModel_Save_project_after_model_run_with_write_restart" xml:space="preserve">
+    <value>Please save the project after a model run with 'write restart' on.</value>
+  </data>
 </root>
