@@ -15,7 +15,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
@@ -30,6 +29,7 @@ using DeltaShell.Plugins.ProjectExplorer;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using SharpTestsEx;
+using CategoryAttribute = NUnit.Framework.CategoryAttribute;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 {
@@ -188,6 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ConnectOutput_RestartFiles_ReconnectsTheRestartFiles()
         {
             using (var tempDir = new TemporaryDirectory())

@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             var menuItem = new ClonableToolStripMenuItem
             {
                 Text = Resources.RemoveRestart,
-                Enabled = model.UseRestart,
+                Enabled = !model.RestartInput.IsEmpty
             };
             menuItem.Click += (s, e) => model.RestartInput = new RealTimeControlRestartFile();
 

@@ -346,6 +346,43 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        public void ModelSaveTo_MdwFilePathUnderRoot_ThrowsInvalidOperationException()
+        {
+            // Setup
+            var model = new WaveModel();
+
+            // Call
+            void Call() => model.ModelSaveTo(@"c:\model.mdw", true);
+
+            // Assert
+            var e = Assert.Throws<InvalidOperationException>(Call);
+            Assert.That(e.Message, Is.EqualTo("Model cannot be directly saved under the root."));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ModelSaveTo_WithOutput_SavesOutput(bool switchTo)
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string origOutputFile = temp.CopyTestDataFileToTempDirectory("output_wavm\\wavm-wave.nc");
+
+                model.WavmFunctionStores.First().Path = origOutputFile;
+
+                // Call
+                model.ModelSaveTo(Path.Combine(temp.Path, "input", "Waves.mdw"), switchTo);
+
+                // Assert
+                string expectedOutputFile = Path.Combine(temp.Path, "output", "wavm-wave.nc");
+                Assert.That(expectedOutputFile, Does.Exist);
+                Assert.That(origOutputFile, Does.Exist);
+                Assert.That(model.WavmFunctionStores.First().Path, Is.EqualTo(switchTo ? expectedOutputFile : origOutputFile));
+            }
+        }
+
+        [Test]
         public void WaveOutputSaveLoadTest()
         {
             using (DeltaShellApplication app = GetRunningApplication())

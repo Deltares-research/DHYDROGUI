@@ -5,6 +5,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Validation;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
@@ -23,10 +24,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             var validationReports = new List<ValidationReport>
             {
                 ValidateRealTimeControlModel(rootObject),
-
-                // TODO D3DFMIQ-2191
-
-                ValidateRestartInputState(rootObject)
+                
+                ValidateRestartInputState(rootObject),
+                RestartTimeRangeValidator.ValidateWriteRestartSettings(rootObject.WriteRestart,
+                                                                       rootObject.SaveStateStartTime, rootObject.SaveStateStopTime, rootObject.SaveStateTimeStep,
+                                                                       rootObject.StartTime, rootObject.StopTime, rootObject.TimeStep),
             };
             validationReports.AddRange(
                 rootObject.ControlGroups.Select(cg => new ControlGroupValidator().Validate(rootObject, cg)));

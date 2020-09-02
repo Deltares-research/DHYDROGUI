@@ -20,17 +20,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain.Restart
         }
 
         [Test]
-        public void Constructor_ContentNull_ThrowsArgumentNullException()
-        {
-            // Call
-            void Call() => new RealTimeControlRestartFile("file name", null);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("content"));
-        }
-
-        [Test]
         public void Constructor_Default_InitializesInstanceCorrectly()
         {
             // Call
@@ -39,21 +28,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain.Restart
             // Assert
             Assert.That(restartFile, Is.InstanceOf<Unique<long>>());
             Assert.That(restartFile.Name, Is.EqualTo(string.Empty));
-            Assert.That(restartFile.Content, Is.EqualTo(string.Empty));
+            Assert.That(restartFile.Content, Is.Null);
             Assert.That(restartFile.IsEmpty, Is.True);
         }
 
         [Test]
-        public void Constructor_InitializesInstanceCorrectly()
+        [TestCase(null, true)]
+        [TestCase("", false)]
+        [TestCase("file content", false)]
+        public void Constructor_InitializesInstanceCorrectly(string content, bool expectedIsEmpty)
         {
             // Call
-            var restartFile = new RealTimeControlRestartFile("file_name.xml", "file content A");
+            var restartFile = new RealTimeControlRestartFile("file_name.xml", content);
 
             // Assert
             Assert.That(restartFile.Name, Is.EqualTo("file_name.xml"));
-            Assert.That(restartFile.Content, Is.EqualTo("file content A"));
-            Assert.That(restartFile.IsEmpty, Is.False);
+            Assert.That(restartFile.Content, Is.EqualTo(content));
+            Assert.That(restartFile.IsEmpty, Is.EqualTo(expectedIsEmpty));
         }
+
+        [Test]
+        public void Name_SetToNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var restartFile = new RealTimeControlRestartFile("file name", null);
+
+            // Call
+            void Call() => restartFile.Name = null;
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("value"));
+        }
+
 
         [Test]
         public void Clone_ReturnsCorrectClone()

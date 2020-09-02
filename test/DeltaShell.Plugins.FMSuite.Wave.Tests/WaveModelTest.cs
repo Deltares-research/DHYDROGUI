@@ -748,7 +748,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [TestCase(true)]
         [TestCase(false)]
-        public void ExportTo_ExportsToPath(bool switchTo)
+        public void ExportModelInputTo_ExportsToPath(bool switchTo)
         {
             using (var temp = new TemporaryDirectory())
             using (var model = new WaveModel())
@@ -759,7 +759,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 string exportPath = Path.Combine(temp.Path, "model.mdw");
 
                 // Call
-                model.ExportTo(exportPath, switchTo);
+                model.ExportModelInputTo(exportPath, switchTo);
 
                 // Assert
                 Assert.That(exportPath, Does.Exist);
@@ -769,12 +769,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [TestCase(true)]
         [TestCase(false)]
-        public void ExportTo_PathNull_ThrowsArgumentException(bool switchTo)
+        public void ExportModelInputTo_PathNull_ThrowsArgumentException(bool switchTo)
         {
             using (var model = new WaveModel())
             {
                 // Call
-                void Call() => model.ExportTo(null, switchTo);
+                void Call() => model.ExportModelInputTo(null, switchTo);
 
                 // Assert
                 var e = Assert.Throws<ArgumentException>(Call);
