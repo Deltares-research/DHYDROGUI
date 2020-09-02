@@ -2028,6 +2028,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.That(result, Is.EqualTo(expected));
         }
 
+        [Test]
+        public void RestartTimeStep_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var restartTimeStep = new TimeSpan(0,13,0,0);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = restartTimeStep;
+
+            // Call
+            TimeSpan retrievedRestartTimeStep = model.RestartTimeStep;
+
+            // Assert
+            Assert.AreEqual(restartTimeStep, retrievedRestartTimeStep);
+        }
+
+        [Test]
+        public void RestartStartTime_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            DateTime restartStartTime = DateTime.Today.AddHours(12);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value = restartStartTime;
+            
+            // Call
+            DateTime retrievedRestartStartTime = model.RestartStartTime;
+
+            // Assert
+            Assert.AreEqual(restartStartTime,retrievedRestartStartTime);
+        }
+
+        [Test]
+        public void RestartStopTime_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            DateTime restartStopTime = DateTime.Today.AddHours(12);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value = restartStopTime;
+
+            // Call
+            DateTime retrievedRestartStopTime = model.RestartStopTime;
+
+            // Assert
+            Assert.AreEqual(restartStopTime, retrievedRestartStopTime);
+        }
+
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
         {
             var feature = new Weir2D() {WeirFormula = new SimpleWeirFormula()};
