@@ -20,6 +20,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string OldOutputDirectoryNamePrefix = "DFM_OUTPUT_";
         private const string dflowfmDirectoryName = "dflowfm";
 
+        private readonly LegacyLoader nextLegacyLoader = new WaterFlowFMModel120LegacyLoader();
+
         /// <summary>
         /// Called when [after project migrated]. Performs directory restructuring on old WaterFlowFM models.
         /// </summary>
@@ -45,6 +47,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     CleanUpDirectories(projectDataDirectoryInfo, waterFlowFmModel, oldWorkingDirPath);
                 }
             }
+
+            nextLegacyLoader.OnAfterProjectMigrated(project);
         }
 
         private static void PerformDirectoryRestructuring(WaterFlowFMModel waterFlowFMModel, string oldWorkingDirPath)
