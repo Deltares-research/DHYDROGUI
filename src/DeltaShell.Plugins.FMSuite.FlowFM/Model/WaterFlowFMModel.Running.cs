@@ -67,6 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                              $"{Name}{FileConstants.MduFileExtension}");
 
             CacheFile.UpdatePathToMduLocation(runMduPath);
+            LogWarningWriteRestartModelRun();
         }
 
         protected override void OnProgressChanged()
@@ -86,6 +87,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             progressText = text;
             base.OnProgressChanged();
+        }
+
+        private void LogWarningWriteRestartModelRun()
+        {
+            if (WriteRestart)
+            {
+                Log.Warn(Resources.WaterFlowFMModel_Save_project_after_model_run_with_write_restart);
+            }
         }
 
         #endregion

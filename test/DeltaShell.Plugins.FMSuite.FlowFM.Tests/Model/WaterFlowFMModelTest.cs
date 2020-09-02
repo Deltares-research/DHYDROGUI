@@ -19,6 +19,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -35,6 +36,7 @@ using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
@@ -2026,6 +2028,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void OnFinish_WriteRestartOn_LogsCorrectWarning()
+        {
+            using (var temp = new TemporaryDirectory())
+
+            using (WaterFlowFMModel model = FlowFMTestHelper.GetSmallestValidModel(temp))
+            {
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = true;
+                model.RestartTimeStep = model.TimeStep;
+
+                // Call
+                void Call() => ActivityRunner.RunActivity(model);
+
+                // Assert
+                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
+                Assert.That(warnings, Contains.Item("Please save the project after a model run with 'write restart' on."));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
+        public void OnFinish_WriteRestartOff_DoesNotLogWarning()
+        {
+            using (var temp = new TemporaryDirectory())
+
+            using (WaterFlowFMModel model = FlowFMTestHelper.GetSmallestValidModel(temp))
+            {
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = false;
+
+                // Call
+                void Call() => ActivityRunner.RunActivity(model);
+
+                // Assert
+                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
+                Assert.That(warnings, Is.Empty);
+            }
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
