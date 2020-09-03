@@ -22,9 +22,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
-        public static void Migrate(IWaveModel waveModel)
+        public static void Migrate(WaveModel waveModel)
         {
             Ensure.NotNull(waveModel, nameof(waveModel));
+
+            if (waveModel.MdwFilePath == null)
+            {
+                return;
+            }
+
+            DirectoryInfo origModelDirectoryInfo = 
+                (new FileInfo(waveModel.MdwFilePath)).Directory;
+
+            DirectoryInfo temporaryDirectory = 
+                MoveToTemporaryDirectory(origModelDirectoryInfo);
+
+            CreateExpectedDirectoryStructure(origModelDirectoryInfo.Parent, 
+                                             origModelDirectoryInfo.Name);
+
+
+        }
+
+        private static DirectoryInfo MoveToTemporaryDirectory(DirectoryInfo oldModelDirectory)
+        {
+            string temporaryDirectoryName = 
+                GetTemporaryMigrationDirectoryName(oldModelDirectory);
+            string temporaryDirectoryPath = 
+                Path.Combine(oldModelDirectory.Parent.FullName, temporaryDirectoryName);
+
+            oldModelDirectory.MoveTo(temporaryDirectoryPath);
+
+            return new DirectoryInfo(temporaryDirectoryPath);
         }
 
         /// <summary>
