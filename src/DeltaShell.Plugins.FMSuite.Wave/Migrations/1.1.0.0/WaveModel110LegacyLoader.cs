@@ -17,10 +17,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         {
             base.OnAfterProjectMigrated(project);
 
-            IEnumerable<IWaveModel> waveModels =
-                project.RootFolder.GetAllItemsRecursive().OfType<IWaveModel>();
+            IEnumerable<WaveModel> waveModels =
+                project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>();
 
-            foreach (IWaveModel waveModel in waveModels)
+            foreach (WaveModel waveModel in waveModels)
             {
                 WaveDirectoryStructureMigrationHelper.Migrate(waveModel);
             }
