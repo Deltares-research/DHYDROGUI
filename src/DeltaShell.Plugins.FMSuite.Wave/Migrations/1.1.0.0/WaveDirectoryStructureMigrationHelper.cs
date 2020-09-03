@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,11 +35,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// <returns>
         /// An unique temporary directory name formatted as <c>srcDirectory.Name_tmp.{0}</c>
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="srcDirectory"/> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="srcDirectory"/> parent is <c>null</c>.
         /// </exception>
         public static string GetTemporaryMigrationDirectoryName(DirectoryInfo srcDirectory)
         {
+            Ensure.NotNull(srcDirectory, nameof(srcDirectory));
+
             if (srcDirectory.Parent == null)
             {
                 throw new ArgumentException("Cannot create a temporary directory name if the parent folder is null.");

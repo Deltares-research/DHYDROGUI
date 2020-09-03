@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
@@ -16,6 +16,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("waveModel"));
+        }
+
+        [Test]
+        public void GetTemporaryMigrationDirectoryName_SrcDirectoryNull_ThrowsArgumentNullException()
+        {
+            void Call() => WaveDirectoryStructureMigrationHelper.GetTemporaryMigrationDirectoryName(null);
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("srcDirectory"));
         }
 
         [Test]
