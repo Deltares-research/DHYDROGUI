@@ -1,4 +1,5 @@
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
@@ -78,6 +79,56 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 // Assert
                 Assert.That(migrationDirectoryName, Is.EqualTo(srcDirName + "_tmp.4"));
+            }
+        }
+
+        [Test]
+        public void CreateExpectedDirectoryStructure_parentDirectoryInfoNull_ThrowsArgumentNullException()
+        {
+            void Call() => WaveDirectoryStructureMigrationHelper.CreateExpectedDirectoryStructure(null, "Waves");
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("parentDirectoryInfo"));
+        }
+
+        [Test]
+        public void CreateExpectedDirectoryStructure_WaveModelNameNull_ThrowsArgumentNullException()
+        {
+            void Call() => WaveDirectoryStructureMigrationHelper.CreateExpectedDirectoryStructure(new DirectoryInfo("."), null);
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("waveModelName"));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void CreateNewDirectoryStructure_ExpectedResults()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                var topDirectoryInfo = new DirectoryInfo(tempDir.Path);
+
+                const string modelFolderName = "Waves";
+
+                // Call
+                WaveDirectoryStructureMigrationHelper.CreateExpectedDirectoryStructure(topDirectoryInfo, modelFolderName);
+
+                // Assert
+                DirectoryInfo createdDirectory =
+                    topDirectoryInfo.GetDirectories().FirstOrDefault(x => x.Name == modelFolderName);
+
+                Assert.That(createdDirectory, Is.Not.Null);
+
+                DirectoryInfo[] subfolders = createdDirectory.GetDirectories();
+                Assert.That(subfolders.Length, Is.EqualTo(2));
+                Assert.That(subfolders, 
+                            Has.Exactly(1).Matches<DirectoryInfo>(x => x.Name == "input"));
+                Assert.That(subfolders, 
+                            Has.Exactly(1).Matches<DirectoryInfo>(x => x.Name == "output"));
+
+                FileInfo[] files = createdDirectory.GetFiles("*", SearchOption.AllDirectories);
+                Assert.That(files, Is.Empty);
             }
         }
     }

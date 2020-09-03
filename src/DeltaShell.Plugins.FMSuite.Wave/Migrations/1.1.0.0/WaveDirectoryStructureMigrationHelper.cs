@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -56,6 +56,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 
             string nameFormat = srcDirectory.Name + "_tmp.{0}";
             return NamingHelper.GenerateUniqueNameFromList(nameFormat, true, folderNames);
+        }
+
+        /// <summary>
+        /// Creates the expected 1.2.0.0 directory structure in the
+        /// <paramref name=" parentDirectoryInfo"/>. The directory structure is
+        /// defined as:
+        ///
+        /// <code>
+        /// └───waveModelName
+        ///     ├───input
+        ///     └───output
+        /// </code>
+        /// </summary>
+        /// <param name="parentDirectoryInfo">The parent directory information.</param>
+        /// <param name="waveModelName">Name of the wave model.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        public static void CreateExpectedDirectoryStructure(DirectoryInfo parentDirectoryInfo, 
+                                                            string waveModelName)
+        {
+            Ensure.NotNull(parentDirectoryInfo, nameof(parentDirectoryInfo));
+            Ensure.NotNull(waveModelName, nameof(waveModelName));
+
+            DirectoryInfo modelDirectoryInfo = parentDirectoryInfo.CreateSubdirectory(waveModelName);
+            modelDirectoryInfo.CreateSubdirectory("input");
+            modelDirectoryInfo.CreateSubdirectory("output");
         }
     }
 }
