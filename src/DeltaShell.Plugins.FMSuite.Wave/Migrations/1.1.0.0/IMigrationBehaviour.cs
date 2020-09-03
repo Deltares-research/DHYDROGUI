@@ -10,15 +10,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     public interface IMigrationBehaviour
     {
         /// <summary>
-        /// Migrates the property and returns the migrated result.
+        /// Migrates the property according to the defined behaviour. Note that
+        /// this modifies the provided property.
         /// </summary>
         /// <param name="property">The property.</param>
         /// <param name="logHandler">Optional log handler.</param>
-        /// <returns>
-        /// The migrated property, if this <see cref="IMigrationBehaviour"/>
-        /// acts upon the specified <paramref name="property"/> else
-        /// property will be returned.
-        /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="property"/> is <c>null</c>.
         /// </exception>
@@ -27,6 +23,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// <see cref="IMigrationBehaviour"/> acts upon one and only one
         /// property and not multiple.
         /// </remarks>
-        DelftIniProperty MigrateProperty(DelftIniProperty property, ILogHandler logHandler);
+        void MigrateProperty(DelftIniProperty property, ILogHandler logHandler);
     }
 }

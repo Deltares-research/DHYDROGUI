@@ -33,22 +33,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             this.goalDirectory = goalDirectory;
         }
 
-        public DelftIniProperty MigrateProperty(DelftIniProperty property, 
+        public void MigrateProperty(DelftIniProperty property, 
                                                 ILogHandler logHandler)
         {
             Ensure.NotNull(property, nameof(property));
 
             if (property.Name != expectedKey)
             {
-                return property;
+                return;
             }
 
             if (File.Exists(property.Value))
                 HandleMigration(property);
             else
                 HandleNotExists(property, logHandler);
-
-            return property;
         }
 
         private void HandleNotExists(DelftIniProperty property, ILogHandler logHandler)

@@ -78,13 +78,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var behaviour = new NoDependentsFileMigrateBehaviour("notKey", ".");
 
             // Call
-            DelftIniProperty result = behaviour.MigrateProperty(property, logHandler);
+            behaviour.MigrateProperty(property, logHandler);
 
             // Assert
-            Assert.That(result, Is.SameAs(property));
-            Assert.That(result.Name, Is.EqualTo(key));
-            Assert.That(result.Value, Is.EqualTo(value));
-            Assert.That(result.Comment, Is.EqualTo(comment));
+            Assert.That(property.Name, Is.EqualTo(key));
+            Assert.That(property.Value, Is.EqualTo(value));
+            Assert.That(property.Comment, Is.EqualTo(comment));
 
             VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
         }
@@ -118,13 +117,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                                      goalDir);
 
                 // Call 
-                DelftIniProperty result = behaviour.MigrateProperty(property, logHandler);
+                behaviour.MigrateProperty(property, logHandler);
 
                 // Assert
-                Assert.That(result, Is.SameAs(property));
-                Assert.That(result.Name, Is.EqualTo(propertyName));
-                Assert.That(result.Comment, Is.EqualTo(propertyComment));
-                Assert.That(result.Value, Is.EqualTo(expectedPath));
+                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Comment, Is.EqualTo(propertyComment));
+                Assert.That(property.Value, Is.EqualTo(expectedPath));
 
                 Assert.That(oldPathInfo.Exists, Is.False);
                 Assert.That(expectedPathInfo.Exists, Is.True);
@@ -159,13 +157,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                                      goalDir);
 
                 // Call 
-                DelftIniProperty result = behaviour.MigrateProperty(property, logHandler);
+                behaviour.MigrateProperty(property, logHandler);
 
                 // Assert
-                Assert.That(result, Is.SameAs(property));
-                Assert.That(result.Name, Is.EqualTo(propertyName));
-                Assert.That(result.Comment, Is.EqualTo(propertyComment));
-                Assert.That(result.Value, Is.EqualTo(string.Empty));
+                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Comment, Is.EqualTo(propertyComment));
+                Assert.That(property.Value, Is.EqualTo(string.Empty));
 
                 var expectedString = 
                     $"The file associated with property {propertyName}, {oldPath}, does not exist, the property is set to an empty string.";
