@@ -407,6 +407,7 @@
     <Compile Include="IO\SpectrumParametersVisitorTest.cs" />
     <Compile Include="IO\WaveModelSchemaCsvFileTest.cs" />
     <Compile Include="IO\WavmFileFunctionStoreTest.cs" />
+    <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviourTest.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelperTest.cs" />
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProviderTest.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinitionLoadHelperTest.cs" />
