@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateRestartInput(model),
                 RestartTimeRangeValidator.ValidateWriteRestartSettings(model.WriteRestart, 
                                                                        model.RestartStartTime, model.RestartStopTime, model.RestartTimeStep,
-                                                                       model.StartTime, model.StopTime, model.TimeStep),
+                                                                       model.StartTime, model.TimeStep),
                 WaterFlowFMEmbankmentValidator.Validate(model),
                 WaterFlowFMEnclosureValidator.Validate(model)
             };

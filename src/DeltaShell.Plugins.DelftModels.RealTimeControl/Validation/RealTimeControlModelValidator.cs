@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                 ValidateRestartInputState(rootObject),
                 RestartTimeRangeValidator.ValidateWriteRestartSettings(rootObject.WriteRestart,
                                                                        rootObject.SaveStateStartTime, rootObject.SaveStateStopTime, rootObject.SaveStateTimeStep,
-                                                                       rootObject.StartTime, rootObject.StopTime, rootObject.TimeStep),
+                                                                       rootObject.StartTime, rootObject.TimeStep),
             };
             validationReports.AddRange(
                 rootObject.ControlGroups.Select(cg => new ControlGroupValidator().Validate(rootObject, cg)));

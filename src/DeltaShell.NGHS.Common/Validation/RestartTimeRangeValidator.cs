@@ -19,51 +19,73 @@ namespace DeltaShell.NGHS.Common.Validation
         /// <param name="restartStopTime"> The restart stop time. </param>
         /// <param name="restartTimeStep"> The restart time step</param>
         /// <param name="modelStartTime"> The model start time. </param>
-        /// <param name="modelStopTime"> The model stop time. </param>
         /// <param name="modelTimeStep"> The model time step.</param>
         /// <returns></returns>
         public static ValidationReport ValidateWriteRestartSettings(bool writeRestart, DateTime restartStartTime, DateTime restartStopTime, TimeSpan restartTimeStep,
-                                                                        DateTime modelStartTime, DateTime modelStopTime, TimeSpan modelTimeStep)
+                                                                        DateTime modelStartTime, TimeSpan modelTimeStep)
         {
             var issues = new List<ValidationIssue>();
             
             if (!writeRestart) return new ValidationReport(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings, issues);
             
+            var modelTimeStepSeconds = (long)modelTimeStep.TotalSeconds;
+            
+            ValidateRestartTimeStep(modelTimeStepSeconds, restartTimeStep, issues);
+
+            ValidateRestartStopTimeIsNotBeforeRestartStartTime(restartStartTime, restartStopTime, issues);
+            
+            ValidateRestartStartTime(restartStartTime, modelStartTime, modelTimeStepSeconds, issues);
+            
+            ValidateRestartStopTime(restartStopTime, modelStartTime, modelTimeStepSeconds, issues);
+
+            return new ValidationReport(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings, issues);
+        }
+
+        private static void ValidateRestartStopTime(DateTime restartStopTime, DateTime modelStartTime, long modelTimeStepSeconds, ICollection<ValidationIssue> issues)
+        {
+            if (restartStopTime < modelStartTime ||
+                restartStopTime > modelStartTime && modelTimeStepSeconds > 0 && (long) (restartStopTime - modelStartTime).TotalSeconds % modelTimeStepSeconds != 0)
+            {
+                issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_stop_time, ValidationSeverity.Error,
+                                               Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_must_be_expressed_by_model_start_time_plus_a_positive_integer_multiple_of_the_model_time_step_));
+            }
+        }
+
+        private static void ValidateRestartStartTime(DateTime restartStartTime, DateTime modelStartTime, long modelTimeStepSeconds, ICollection<ValidationIssue> issues)
+        {
+            if (restartStartTime < modelStartTime ||
+                restartStartTime > modelStartTime && modelTimeStepSeconds > 0 && (long) (restartStartTime - modelStartTime).TotalSeconds % modelTimeStepSeconds != 0)
+            {
+                issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_start_time, ValidationSeverity.Error,
+                                               Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_start_time_must_be_expressed_by_model_start_time_plus_a_positive_integer_multiple_of_the_model_time_step_));
+            }
+        }
+
+        private static void ValidateRestartTimeStep(long modelTimeStepSeconds, TimeSpan restartTimeStep, ICollection<ValidationIssue> issues)
+        {
             if (restartTimeStep.TotalSeconds <= 0)
             {
                 issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step, ValidationSeverity.Error,
-                    Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_positive_value_));
+                                               Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_positive_value_));
+                return;
             }
 
-            if (restartStopTime < restartStartTime)
-            {
-                issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_interval, ValidationSeverity.Error,
-                    Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_cannot_be_before_restart_start_time_));
-            }
-
-            var modelTimeStepSeconds = (long)modelTimeStep.TotalSeconds;
             var restartTimeStepSeconds = (long)restartTimeStep.TotalSeconds;
+
             if (modelTimeStepSeconds > 0 && restartTimeStepSeconds % modelTimeStepSeconds != 0)
             {
                 issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step, ValidationSeverity.Error,
-                    Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_an_integer_multiple_of_the_output_time_step_));
+                                               Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_an_integer_multiple_of_the_output_time_step_));
             }
+        }
 
-            if (restartStartTime < modelStartTime||
-                restartStartTime > modelStartTime && modelTimeStepSeconds > 0 && (long)(restartStartTime - modelStartTime).TotalSeconds % modelTimeStepSeconds != 0)
+        private static void ValidateRestartStopTimeIsNotBeforeRestartStartTime(DateTime restartStartTime, DateTime restartStopTime, ICollection<ValidationIssue> issues)
+        {
+            if (restartStopTime < restartStartTime)
             {
-                issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_start_time, ValidationSeverity.Error,
-                    Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_start_time_must_be_expressed_by_model_start_time_plus_a_positive_integer_multiple_of_the_model_time_step_));
+                issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_interval, ValidationSeverity.Error,
+                                               Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_cannot_be_before_restart_start_time_));
             }
-
-            if (restartStopTime < modelStartTime ||
-                restartStopTime > modelStartTime &&  modelTimeStepSeconds > 0 && (long)(restartStopTime - modelStartTime).TotalSeconds % modelTimeStepSeconds != 0)
-            {
-                issues.Add(new ValidationIssue(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_stop_time, ValidationSeverity.Error,
-                    Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_must_be_expressed_by_model_start_time_plus_a_positive_integer_multiple_of_the_model_time_step_));
-            }
-
-            return new ValidationReport(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings, issues);
         }
     }
 }
