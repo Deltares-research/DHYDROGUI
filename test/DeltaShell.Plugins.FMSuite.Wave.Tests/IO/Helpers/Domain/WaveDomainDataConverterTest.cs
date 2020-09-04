@@ -6,6 +6,7 @@ using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
@@ -56,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
         [TestCase(true, false, true)]
         [TestCase(true, true, false)]
         [TestCase(true, true, true)]
-        public void Convert_(bool useDefDir, bool useDefFreq, bool useDefHydro)
+        public void Convert_ReturnsTheCorrectWaveDomainData(bool useDefDir, bool useDefFreq, bool useDefHydro)
         {
             WaveDomainData domain = CreateWaveDomainData(useDefDir, useDefFreq, useDefHydro);
             DelftIniCategory category = CreateCategory(domain);
@@ -73,18 +74,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
 
         private WaveDomainData CreateWaveDomainData(bool useDefFreq, bool useDefDir, bool useDefHydro)
         {
+            var spectralDomainData = Create.For<SpectralDomainData>();
+            var meteoData = Create.For<WaveMeteoData>();
+            var hydroFromFlowData = Create.For<HydroFromFlowSettings>();
+
+            spectralDomainData.UseDefaultDirectionalSpace = useDefDir;
+            spectralDomainData.UseDefaultFrequencySpace = useDefFreq;
+            meteoData.FileType = WindDefinitionType.WindXWindY;
+            hydroFromFlowData.UseDefaultHydroFromFlowSettings = useDefHydro;
+
             var domain = new WaveDomainData("the_domain")
             {
                 BedLevelGridFileName = "bed_level_grid_file",
                 Output = rand.NextBoolean(),
                 NestedInDomain = -1,
-                SpectralDomainData = Create.For<SpectralDomainData>(),
-                HydroFromFlowData = Create.For<HydroFromFlowSettings>()
+                SpectralDomainData = spectralDomainData,
+                MeteoData = meteoData,
+                HydroFromFlowData = hydroFromFlowData,
             };
-
-            domain.SpectralDomainData.UseDefaultDirectionalSpace = useDefDir;
-            domain.SpectralDomainData.UseDefaultFrequencySpace = useDefFreq;
-            domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings = useDefHydro;
 
             return domain;
         }
@@ -109,6 +116,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 domainCategory.AddProperty("NFreq", domain.SpectralDomainData.NFreq);
                 domainCategory.AddProperty("FreqMin", domain.SpectralDomainData.FreqMin);
                 domainCategory.AddProperty("FreqMax", domain.SpectralDomainData.FreqMax);
+            }
+
+            if (!domain.UseGlobalMeteoData)
+            {
+                WaveMeteoData meteoData = domain.MeteoData;
+                switch (meteoData.FileType)
+                {
+                    case WindDefinitionType.WindXY:
+                        domainCategory.AddProperty(KnownWaveProperties.MeteoFile, meteoData.XYVectorFileName);
+                        break;
+                    case WindDefinitionType.WindXWindY:
+                        domainCategory.AddProperty(KnownWaveProperties.MeteoFile, meteoData.XComponentFileName);
+                        domainCategory.AddProperty(KnownWaveProperties.MeteoFile, meteoData.YComponentFileName);
+                        break;
+                }
+
+                if (meteoData.FileType == WindDefinitionType.SpiderWebGrid || meteoData.HasSpiderWeb)
+                {
+                    domainCategory.AddProperty(KnownWaveProperties.MeteoFile, meteoData.SpiderWebFileName);
+                }
             }
 
             if (!domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings)
