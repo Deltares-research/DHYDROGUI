@@ -49,17 +49,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
             Assert.That(e.ParamName, Is.EqualTo("mdwDirPath"));
         }
 
-        [TestCase(false, false, false)]
-        [TestCase(false, false, true)]
-        [TestCase(false, true, false)]
-        [TestCase(false, true, true)]
-        [TestCase(true, false, false)]
-        [TestCase(true, false, true)]
-        [TestCase(true, true, false)]
-        [TestCase(true, true, true)]
-        public void Convert_ReturnsTheCorrectWaveDomainData(bool useDefDir, bool useDefFreq, bool useDefHydro)
+        [TestCaseSource(nameof(ValidDomainCases))]
+        public void Convert_ReturnsTheCorrectWaveDomainData(bool useDefDir, bool useDefFreq, bool useDefMeteo, bool useDefHydro, WaveMeteoData meteoData)
         {
-            WaveDomainData domain = CreateWaveDomainData(useDefDir, useDefFreq, useDefHydro);
+            WaveDomainData domain = CreateWaveDomainData(useDefDir, useDefFreq, useDefMeteo, useDefHydro, meteoData);
             DelftIniCategory category = CreateCategory(domain);
             const string mdwDirPath = "c:/some/dir";
             var logHandler = Substitute.For<ILogHandler>();
@@ -70,17 +63,93 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
             // Call
             WaveDomainData resultDomain = result.First();
             Assert.That(resultDomain, Is.EqualTo(domain).Using(comparer));
+            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(Arg.Any<string>());
         }
 
-        private WaveDomainData CreateWaveDomainData(bool useDefFreq, bool useDefDir, bool useDefHydro)
+        private IEnumerable<TestCaseData> ValidDomainCases()
+        {
+            foreach (WaveMeteoData meteoData in GetWaveMeteoData())
+            {
+                yield return new TestCaseData(false, false, false, false, meteoData);
+                yield return new TestCaseData(false, false, false, true, meteoData);
+                yield return new TestCaseData(false, false, true, false, meteoData);
+                yield return new TestCaseData(false, false, true, true, meteoData);
+                yield return new TestCaseData(false, true, false, false, meteoData);
+                yield return new TestCaseData(false, true, false, true, meteoData);
+                yield return new TestCaseData(false, true, true, false, meteoData);
+                yield return new TestCaseData(false, true, true, true, meteoData);
+                yield return new TestCaseData(true, false, false, false, meteoData);
+                yield return new TestCaseData(true, false, false, true, meteoData);
+                yield return new TestCaseData(true, false, true, false, meteoData);
+                yield return new TestCaseData(true, false, true, true, meteoData);
+                yield return new TestCaseData(true, true, false, false, meteoData);
+                yield return new TestCaseData(true, true, false, true, meteoData);
+                yield return new TestCaseData(true, true, true, false, meteoData);
+                yield return new TestCaseData(true, true, true, true, meteoData);
+            }
+        }
+
+        private static IEnumerable<WaveMeteoData> GetWaveMeteoData()
+        {
+            yield return new WaveMeteoData
+            {
+                FileType = WindDefinitionType.SpiderWebGrid,
+                HasSpiderWeb = true,
+                SpiderWebFilePath = "file.spw"
+            };
+            yield return new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXY,
+                HasSpiderWeb = true,
+                SpiderWebFilePath = "file.spw",
+                XYVectorFilePath = "xy_file.wnd"
+            };
+            yield return new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXY,
+                HasSpiderWeb = false,
+                XYVectorFilePath = "xy_file.wnd"
+            };
+
+            yield return new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXWindY,
+                HasSpiderWeb = true,
+                SpiderWebFilePath = "file.spw",
+                XComponentFilePath = "x_file.wnd",
+                YComponentFilePath = "y_file.wnd",
+            };
+            yield return new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXWindY,
+                HasSpiderWeb = false,
+                XComponentFilePath = "x_file.wnd",
+                YComponentFilePath = "y_file.wnd",
+            };
+            yield return new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXWindY,
+                HasSpiderWeb = true,
+                SpiderWebFilePath = "file.spw",
+                XComponentFilePath = "x_file.amu",
+                YComponentFilePath = "y_file.amv",
+            };
+            yield return new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXWindY,
+                HasSpiderWeb = false,
+                XComponentFilePath = "x_file.amu",
+                YComponentFilePath = "y_file.amv",
+            };
+        }
+
+        private WaveDomainData CreateWaveDomainData(bool useDefDir, bool useDefFreq, bool useDefMeteo, bool useDefHydro, WaveMeteoData meteoData)
         {
             var spectralDomainData = Create.For<SpectralDomainData>();
-            var meteoData = Create.For<WaveMeteoData>();
             var hydroFromFlowData = Create.For<HydroFromFlowSettings>();
 
             spectralDomainData.UseDefaultDirectionalSpace = useDefDir;
             spectralDomainData.UseDefaultFrequencySpace = useDefFreq;
-            meteoData.FileType = WindDefinitionType.WindXWindY;
             hydroFromFlowData.UseDefaultHydroFromFlowSettings = useDefHydro;
 
             var domain = new WaveDomainData("the_domain")
@@ -91,6 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 SpectralDomainData = spectralDomainData,
                 MeteoData = meteoData,
                 HydroFromFlowData = hydroFromFlowData,
+                UseGlobalMeteoData = useDefMeteo
             };
 
             return domain;
@@ -150,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
             return domainCategory;
         }
 
-        private class DomainEqualityComparer : IEqualityComparer<WaveDomainData>
+        private sealed class DomainEqualityComparer : IEqualityComparer<WaveDomainData>
         {
             public bool Equals(WaveDomainData x, WaveDomainData y)
             {
@@ -164,6 +234,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 }
 
                 if (!Equals(x.SpectralDomainData, y.SpectralDomainData))
+                {
+                    return false;
+                }
+
+                if (x.UseGlobalMeteoData != y.UseGlobalMeteoData)
+                {
+                    return false;
+                }
+
+                if (!x.UseGlobalMeteoData && !Equals(x.MeteoData, y.MeteoData))
                 {
                     return false;
                 }
@@ -202,6 +282,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                     {
                         return false;
                     }
+                }
+
+                return true;
+            }
+
+            private static bool Equals(WaveMeteoData x, WaveMeteoData y)
+            {
+                if (x.FileType != y.FileType || x.HasSpiderWeb != y.HasSpiderWeb)
+                {
+                    return false;
+                }
+
+                if (x.HasSpiderWeb && x.SpiderWebFileName != y.SpiderWebFileName)
+                {
+                    return false;
+                }
+
+                if (x.FileType == WindDefinitionType.WindXWindY && (x.XComponentFileName != y.XComponentFileName ||
+                                                                    x.YComponentFileName != y.YComponentFileName))
+                {
+                    return false;
+                }
+
+                if (x.FileType == WindDefinitionType.WindXY && x.XYVectorFileName != y.XYVectorFileName)
+                {
+                    return false;
                 }
 
                 return true;
