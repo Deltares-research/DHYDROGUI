@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Castle.Core.Internal;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.xsd;
@@ -12,8 +14,11 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Arg = NSubstitute.Arg;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 {
@@ -358,6 +363,42 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
             mocks.VerifyAll();
             logHandler.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void GivenAHydroModelConverter_WhenConvertingASubModelWithRegionIsNull_ThenAHydroModelWithThisSubModelShouldBeReturned()
+        {
+            // Given
+            var modelWithNullRegion = Substitute.For<IHydroModel>();
+            modelWithNullRegion.Region.ReturnsNull();
+
+            var dimrFileImporter = Substitute.For<IDimrModelFileImporter>();
+            dimrFileImporter.MasterFileExtension.Returns("extension");
+            dimrFileImporter.ImportItem(Arg.Any<string>()).Returns(modelWithNullRegion);
+
+            string dimrPath = Path.Combine("FileReader", "dimr.xml");
+            
+            var dimrXml = new dimrXML
+            {
+                component = new[]
+                {
+                    new dimrComponentXML
+                    {
+                        name = "ModelWithRegionIsNull",
+                        workingDir = ".",
+                        inputFile = "ModelWithRegionIsNull.extension"
+                    }
+                }
+            };
+
+            var importers = new List<IDimrModelFileImporter> {dimrFileImporter};
+
+            // When 
+            HydroModel hydroModel = hydroModelConverter.Convert(dimrXml, dimrPath, importers);
+
+            // Then
+            Assert.IsTrue(hydroModel.Models.Contains(modelWithNullRegion));
+            Assert.IsTrue(hydroModel.Region.SubRegions.IsNullOrEmpty());
         }
 
         private IDimrModelFileImporter GetDimrModelFileImporter(string subModelName)
