@@ -35,10 +35,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             var linearGradientBrush = new LinearGradientBrush(Rectangle, GradientStartColor, GradientEndColor, 45.0F);
             g.FillEllipse(linearGradientBrush, Rectangle);
             g.DrawEllipse(Pens.Black, Rectangle);
-            if (HighLightedConnectors != null)
-            {
-                DrawConnectorsHighlights(HighLightedConnectors, g);
-            }
             PreRender(g);
             base.Paint(g);
         }

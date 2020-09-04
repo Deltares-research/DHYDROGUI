@@ -407,21 +407,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         /// <param name="target">The target object.</param>
         /// <param name="targetConnector">The connector type of the target.</param>
         /// <returns> </returns>
-        public static bool IsConnectorSourceCompatibleWithConnectorDestination(object source, 
-                                                                               object target, 
+        public static bool IsConnectorSourceCompatibleWithConnectorDestination(ShapeBase source,
+                                                                               ShapeBase target, 
                                                                                ConnectorType targetConnector)
         {
-            string targetType;
-
-            if (target is Shape)
-            {
-                targetType = ConvertShapeTypeToString(target);
-            }
-            else
-            {
-                return false;
-            }
-            
+            string targetType = ConvertShapeTypeToString(target);
             string nodeMapping = connectionMapping[source.GetType()];
 
             if (!nodeMapping.Contains(targetType))

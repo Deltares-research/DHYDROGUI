@@ -886,30 +886,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 return;
             }
 
-            // Retrieve all shapes present
-            IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
-            if (shapes == null)
+            IEnumerable<ShapeBase> shapesOnGraph = graphControl.GetShapes<ShapeBase>();
+            if (shapesOnGraph == null)
             {
                 return;
             }
 
-            IEnumerable<ShapeBase> shapeBases = shapes.ToList();
+            IEnumerable<ShapeBase> shapeBases = shapesOnGraph as ShapeBase[] ?? shapesOnGraph.ToArray();
             Connector[] allConnectors = shapeBases.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
             var owner = activeConnector.BelongsTo as ShapeBase;
 
             ConnectorType activeConnectionType = owner is MathematicalExpressionShape ? ConvertConnectorNameToType(activeConnector.Name) : ConvertTo(activeConnector.ConnectorLocation);
-                
-            IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors);
 
-            IEnumerable<Connector> connectors = allowedConnectors.ToList();
-            if (!connectors.Any())
+            if (owner is OutputItemShape)
             {
                 return;
             }
 
+            IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors).ToList();
+            if (!allowedConnectors.Any())
+            {
+                return;
+            }
             foreach (ShapeBase shape in shapeBases)
             {
-                shape.HighLightedConnectors = connectors.ToList();
+                shape.HighLightedConnectors = allowedConnectors;
             }
         }
 
@@ -931,7 +932,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
                 ConnectorType targetConnectionType = targetShape is MathematicalExpressionShape ? ConvertConnectorNameToType(availableConnector.Name) : ConvertTo(availableConnector.ConnectorLocation);
 
-                if ((sourceShape == targetShape) || sourceShape is OutputItemShape)
+                if (sourceShape == targetShape)
                 {
                     continue;
                 }
@@ -947,23 +948,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private static ConnectorType ConvertConnectorNameToType(string connectorName)
         {
-            ConnectorType targetConnectionType;
             switch (connectorName)
             {
                 case "Left":
-                    targetConnectionType = ConnectorType.Left;
-                    break;
+                    return ConnectorType.Left;
                 case "Top":
-                    targetConnectionType = ConnectorType.Top;
-                    break;
+                    return ConnectorType.Top;
                 case "Bottom":
-                    targetConnectionType = ConnectorType.Bottom;
-                    break;
+                    return ConnectorType.Bottom;
                 default:
                     throw new NotSupportedException();
             }
-
-            return targetConnectionType;
         }
 
         private static ConnectorType ConvertTo(ConnectorLocation connectorLocation)
