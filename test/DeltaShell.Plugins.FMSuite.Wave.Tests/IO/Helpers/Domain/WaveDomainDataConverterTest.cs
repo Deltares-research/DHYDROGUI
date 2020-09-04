@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
         public void Convert_ArgumentNull_ThrowsArgumentNullException(IEnumerable<DelftIniCategory> domainCategories, ILogHandler logHandler, string expParamName)
         {
             // Call
-            void Call() => WaveDomainDataConverter.Convert(domainCategories, "lalal", logHandler).ToList();
+            void Call() => WaveDomainDataConverter.Convert(domainCategories, "some/path", logHandler).ToList();
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
