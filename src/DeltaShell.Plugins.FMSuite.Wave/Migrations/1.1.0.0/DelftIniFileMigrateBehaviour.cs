@@ -6,12 +6,9 @@ using DeltaShell.NGHS.IO.DelftIniObjects;
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
     /// <summary>
-    /// <summary>
-    /// <see cref="NoDependentsFileMigrateBehaviour"/> defines the migration of a
-    /// property describing a path to a delft ini file with dependents
+    /// <see cref="DelftIniFileMigrateBehaviour"/> defines the migration of a
+    /// property containing a path to a delft ini file with dependents
     /// (i.e. containing references to other files).
-    /// </summary>
-    /// <seealso cref="IMigrationBehaviour" />
     /// </summary>
     /// <seealso cref="IMigrationBehaviour" />
     public class DelftIniFileMigrateBehaviour : IMigrationBehaviour
@@ -25,7 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// </summary>
         /// <param name="expectedKey">The expected key.</param>
         /// <param name="goalDirectory">The goal directory.</param>
-        /// <param name="migrator">The migrator with which the found properties are migrated.</param>
+        /// <param name="migrator">
+        /// The migrator with which the property's file properties are migrated.
+        /// </param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>
         /// </exception>
@@ -47,7 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         {
             Ensure.NotNull(property, nameof(property));
 
-            if (property.Name != expectedKey)
+            if (property.Name != expectedKey || 
+                property.Value.Trim() == string.Empty)
             {
                 return;
             }

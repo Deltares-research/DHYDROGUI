@@ -38,7 +38,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         {
             Ensure.NotNull(property, nameof(property));
 
-            if (property.Name != expectedKey)
+            if (property.Name != expectedKey ||
+                property.Value.Trim() == string.Empty)
             {
                 return;
             }

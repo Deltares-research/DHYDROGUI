@@ -175,5 +175,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 logHandler.Received(1).ReportWarning(expectedString);
             }
         }
+
+        [Test]
+        public void MigrateProperty_Affected_PathEmpty_Skipped()
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var migrator = Substitute.For<IDelftIniMigrator>();
+
+            const string key = "key";
+            const string value = "";
+            const string comment = "comment";
+
+            var property = new DelftIniProperty(key, value, comment);
+
+            var behaviour = new DelftIniFileMigrateBehaviour("key", ".", migrator);
+
+            // Call
+            behaviour.MigrateProperty(property, logHandler);
+
+            // Assert
+            Assert.That(property.Name, Is.EqualTo(key));
+            Assert.That(property.Value, Is.EqualTo(value));
+            Assert.That(property.Comment, Is.EqualTo(comment));
+
+            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+        }
     }
 }
