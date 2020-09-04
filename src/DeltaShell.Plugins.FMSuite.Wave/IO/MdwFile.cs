@@ -215,7 +215,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             ConvertMdwCategoriesToModelDefinitionProperties(modelDefinition, mdwCategories, logHandler);
 
             // domain(s) and nesting
-            List<WaveDomainData> allDomains = WaveDomainDataConverter.Convert(mdwCategories.Where(c => c.Name == KnownWaveCategories.DomainCategory)).ToList();
+            IEnumerable<DelftIniCategory> domainCategories = mdwCategories.Where(c => c.Name == KnownWaveCategories.DomainCategory);
+            List<WaveDomainData> allDomains = WaveDomainDataConverter.Convert(domainCategories, mdwDir, logHandler).ToList();
             foreach (WaveDomainData domain in allDomains)
             {
                 if (domain.NestedInDomain == -1)

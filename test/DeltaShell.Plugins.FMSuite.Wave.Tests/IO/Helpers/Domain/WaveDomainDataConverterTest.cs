@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
@@ -17,15 +19,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
         private readonly Random rand = new Random();
         private readonly DomainEqualityComparer comparer = new DomainEqualityComparer();
 
-        [Test]
-        public void Convert_DomainCategoriesNull_ThrowsArgumentNullException()
+        [TestCaseSource(nameof(ArgumentNullCases))]
+        public void Convert_ArgumentNull_ThrowsArgumentNullException(IEnumerable<DelftIniCategory> domainCategories, ILogHandler logHandler, string expParamName)
         {
             // Call
-            void Call() => WaveDomainDataConverter.Convert(null).ToList();
+            void Call() => WaveDomainDataConverter.Convert(domainCategories, "lalal", logHandler).ToList();
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("domainCategories"));
+            Assert.That(e.ParamName, Is.EqualTo(expParamName));
+        }
+
+        private IEnumerable<TestCaseData> ArgumentNullCases()
+        {
+            yield return new TestCaseData(null, Substitute.For<ILogHandler>(), "domainCategories");
+            yield return new TestCaseData(Enumerable.Empty<DelftIniCategory>(), null, "logHandler");
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void Convert_MdwDirPathNullOrEmpty_ThrowsArgumentException(string mdwDirPath)
+        {
+            // Call
+            void Call() => WaveDomainDataConverter.Convert(Enumerable.Empty<DelftIniCategory>(), mdwDirPath, Substitute.For<ILogHandler>()).ToList();
+
+            // Assert
+            var e = Assert.Throws<ArgumentException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("mdwDirPath"));
         }
 
         [TestCase(false, false, false)]
@@ -40,9 +60,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
         {
             WaveDomainData domain = CreateWaveDomainData(useDefDir, useDefFreq, useDefHydro);
             DelftIniCategory category = CreateCategory(domain);
+            const string mdwDirPath = "c:/some/dir";
+            var logHandler = Substitute.For<ILogHandler>();
 
             // Call
-            IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category});
+            IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, mdwDirPath, logHandler);
 
             // Call
             WaveDomainData resultDomain = result.First();

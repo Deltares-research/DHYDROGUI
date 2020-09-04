@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
@@ -17,15 +18,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
         /// their respective <see cref="WaveDomainData"/>.
         /// </summary>
         /// <param name="domainCategories">The domain categories.</param>
+        /// <param name="mdwDirPath">The path of the directory of the mdw file..</param>
+        /// <param name="logHandler">The log handler.</param>
         /// <returns>
         /// The converted collection of <see cref="WaveDomainData"/>
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="domainCategories"/> is <c>null</c>.
+        /// Thrown when <paramref name="domainCategories"/> or <paramref name="logHandler"/> is <c>null</c>.
         /// </exception>
-        public static IEnumerable<WaveDomainData> Convert(IEnumerable<DelftIniCategory> domainCategories)
+        /// <exception cref="System.ArgumentException">
+        /// Thrown when <paramref name="mdwDirPath"/> is <c>null</c> or empty.
+        /// </exception>
+        public static IEnumerable<WaveDomainData> Convert(IEnumerable<DelftIniCategory> domainCategories, string mdwDirPath, ILogHandler logHandler)
         {
             Ensure.NotNull(domainCategories, nameof(domainCategories));
+            Ensure.NotNullOrEmpty(mdwDirPath, nameof(mdwDirPath));
+            Ensure.NotNull(logHandler, nameof(logHandler));
 
             foreach (DelftIniCategory domainCategory in domainCategories)
             {
