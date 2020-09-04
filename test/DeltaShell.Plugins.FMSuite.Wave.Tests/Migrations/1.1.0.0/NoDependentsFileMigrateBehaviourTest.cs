@@ -17,8 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         public void Constructor_ExpectedBehaviour()
         {
             // Call
-            var behaviour = new NoDependentsFileMigrateBehaviour("someKey", 
-                                                                 ".");
+            var behaviour = new NoDependentsFileMigrateBehaviour("someKey", ".", ".");
 
             // Assert
             Assert.That(behaviour, Is.InstanceOf<IMigrationBehaviour>());
@@ -27,16 +26,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         [Test]
         public void Constructor_ExpectedKeyNull_ThrowsArgumentNullException()
         {
-            void Call() => new NoDependentsFileMigrateBehaviour(null, ".");
+            void Call() => new NoDependentsFileMigrateBehaviour(null, ".", ".");
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("expectedKey"));
         }
 
         [Test]
+        public void Constructor_RelativeDirectoryNull_ThrowsArgumentNullException()
+        {
+            void Call() => new NoDependentsFileMigrateBehaviour("key", null, ".");
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("relativeDirectory"));
+        }
+
+        [Test]
         public void Constructor_GoalDirectoryNull_ThrowsArgumentNullException()
         {
-            void Call() => new NoDependentsFileMigrateBehaviour("key", null);
+            void Call() => new NoDependentsFileMigrateBehaviour("key", ".", null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("goalDirectory"));
@@ -45,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         [Test]
         public void MigrateProperty_PropertyNull_ThrowsArgumentNullException()
         {
-            var behaviour = new NoDependentsFileMigrateBehaviour("someKey", ".");
+            var behaviour = new NoDependentsFileMigrateBehaviour("someKey", ".", ".");
 
             void Call() => behaviour.MigrateProperty(null, null);
 
@@ -75,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
             var property = new DelftIniProperty(key, value, comment);
 
-            var behaviour = new NoDependentsFileMigrateBehaviour("notKey", ".");
+            var behaviour = new NoDependentsFileMigrateBehaviour("notKey", ".", "toad/to/elsewhere/");
 
             // Call
             behaviour.MigrateProperty(property, logHandler);
@@ -88,20 +96,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
         }
 
+
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void MigrateProperty_Affected_ExpectedResults()
+        public void MigrateProperty_Affected_PropertyRelativePath_ExpectedResults()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
 
             using (var tempDir = new TemporaryDirectory())
             {
-                const string fileName = "itDontMeanAThing.txt";
+                const string subDirectory = "itDonMean";
+                const string fileName = "AThing.txt";
+
                 const string fileContent = "ifItAintGotThatSwing";
                 const string goalDirName = "dooWahDooWah";
 
-                string oldPath = tempDir.CreateFile(fileName, fileContent);
+                tempDir.CreateDirectory(subDirectory);
+                string oldPath = tempDir.CreateFile(Path.Combine(subDirectory, fileName), fileContent);
                 var oldPathInfo = new FileInfo(oldPath);
 
                 string goalDir = tempDir.CreateDirectory(goalDirName);
@@ -111,9 +123,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 const string propertyName = "key";
                 const string propertyComment = "Comment";
-                var property = new DelftIniProperty(propertyName, oldPath, propertyComment);
+                var property = new DelftIniProperty(propertyName, fileName, propertyComment);
 
-                var behaviour = new NoDependentsFileMigrateBehaviour(propertyName, 
+                var behaviour = new NoDependentsFileMigrateBehaviour(propertyName,
+                                                                     Path.Combine(tempDir.Path, subDirectory),
                                                                      goalDir);
 
                 // Call 
@@ -122,7 +135,111 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 // Assert
                 Assert.That(property.Name, Is.EqualTo(propertyName));
                 Assert.That(property.Comment, Is.EqualTo(propertyComment));
-                Assert.That(property.Value, Is.EqualTo(expectedPath));
+                Assert.That(property.Value, Is.EqualTo(fileName));
+
+                Assert.That(oldPathInfo.Exists, Is.False);
+                Assert.That(expectedPathInfo.Exists, Is.True);
+
+                string resultContent = File.ReadAllText(expectedPathInfo.FullName);
+                Assert.That(resultContent, Is.EqualTo(fileContent));
+
+                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void MigrateProperty_Affected_PropertyAbsolutePathSameRelativeDirectory_ExpectedResults()
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string subDirectory = "itDonMean";
+                const string fileName = "AThing.txt";
+                string absolutePath = Path.Combine(tempDir.Path, subDirectory, fileName);
+
+                const string fileContent = "ifItAintGotThatSwing";
+                const string goalDirName = "dooWahDooWah";
+
+                tempDir.CreateDirectory(subDirectory);
+                string oldPath = tempDir.CreateFile(Path.Combine(subDirectory, fileName), fileContent);
+                var oldPathInfo = new FileInfo(oldPath);
+
+                string goalDir = tempDir.CreateDirectory(goalDirName);
+
+                string expectedPath = Path.Combine(goalDir, fileName);
+                var expectedPathInfo = new FileInfo(expectedPath);
+
+                const string propertyName = "key";
+                const string propertyComment = "Comment";
+                var property = new DelftIniProperty(propertyName, absolutePath, propertyComment);
+
+                var behaviour = new NoDependentsFileMigrateBehaviour(propertyName,
+                                                                     Path.Combine(tempDir.Path, subDirectory),
+                                                                     goalDir);
+
+                // Call 
+                behaviour.MigrateProperty(property, logHandler);
+
+                // Assert
+                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Comment, Is.EqualTo(propertyComment));
+                Assert.That(property.Value, Is.EqualTo(fileName));
+
+                Assert.That(oldPathInfo.Exists, Is.False);
+                Assert.That(expectedPathInfo.Exists, Is.True);
+
+                string resultContent = File.ReadAllText(expectedPathInfo.FullName);
+                Assert.That(resultContent, Is.EqualTo(fileContent));
+
+                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void MigrateProperty_Affected_PropertyAbsolutePathDifferentRelativeDirectory_ExpectedResults()
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string subDirectory = "itDonMean";
+                const string fileName = "AThing.txt";
+                string absolutePath = Path.Combine(tempDir.Path, subDirectory, fileName);
+
+                const string fileContent = "ifItAintGotThatSwing";
+                const string goalDirName = "dooWahDooWah";
+
+                tempDir.CreateDirectory(subDirectory);
+                string oldPath = tempDir.CreateFile(Path.Combine(subDirectory, fileName), fileContent);
+                var oldPathInfo = new FileInfo(oldPath);
+
+                string relativeDir = tempDir.CreateDirectory("dooWah");
+
+                string goalDir = tempDir.CreateDirectory(goalDirName);
+
+                string expectedPath = Path.Combine(goalDir, fileName);
+                var expectedPathInfo = new FileInfo(expectedPath);
+
+                const string propertyName = "key";
+                const string propertyComment = "Comment";
+                var property = new DelftIniProperty(propertyName, absolutePath, propertyComment);
+
+                var behaviour = new NoDependentsFileMigrateBehaviour(propertyName,
+                                                                     relativeDir,
+                                                                     goalDir);
+
+                // Call 
+                behaviour.MigrateProperty(property, logHandler);
+
+                // Assert
+                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Comment, Is.EqualTo(propertyComment));
+                Assert.That(property.Value, Is.EqualTo(fileName));
 
                 Assert.That(oldPathInfo.Exists, Is.False);
                 Assert.That(expectedPathInfo.Exists, Is.True);
@@ -154,6 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var property = new DelftIniProperty(propertyName, oldPath, propertyComment);
 
                 var behaviour = new NoDependentsFileMigrateBehaviour(propertyName, 
+                                                                     tempDir.Path,
                                                                      goalDir);
 
                 // Call 
@@ -165,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 Assert.That(property.Value, Is.EqualTo(string.Empty));
 
                 var expectedString = 
-                    $"The file associated with property {propertyName}, {oldPath}, does not exist, the property is set to an empty string.";
+                    $"The file associated with property {propertyName}, {fileName} at {oldPath}, does not exist, the property is set to an empty string.";
                 logHandler.Received(1).ReportWarning(expectedString);
             }
         }
@@ -182,7 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
             var property = new DelftIniProperty(key, value, comment);
 
-            var behaviour = new NoDependentsFileMigrateBehaviour("key", ".");
+            var behaviour = new NoDependentsFileMigrateBehaviour("key", ".", ".");
 
             // Call
             behaviour.MigrateProperty(property, logHandler);

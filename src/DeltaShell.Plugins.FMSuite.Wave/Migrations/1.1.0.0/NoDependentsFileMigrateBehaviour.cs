@@ -13,23 +13,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     public class NoDependentsFileMigrateBehaviour : IMigrationBehaviour
     {
         private readonly string expectedKey;
+        private readonly string relativeDirectory;
         private readonly string goalDirectory;
 
         /// <summary>
         /// Creates a new <see cref="NoDependentsFileMigrateBehaviour"/>.
         /// </summary>
         /// <param name="expectedKey">The expected key.</param>
+        /// <param name="relativeDirectory">The path relative to which property values are evaluated.</param>
         /// <param name="goalDirectory">The goal directory.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public NoDependentsFileMigrateBehaviour(string expectedKey, 
+        public NoDependentsFileMigrateBehaviour(string expectedKey,
+                                                string relativeDirectory,
                                                 string goalDirectory)
         {
             Ensure.NotNull(expectedKey, nameof(expectedKey));
+            Ensure.NotNull(relativeDirectory, nameof(relativeDirectory));
             Ensure.NotNull(goalDirectory, nameof(goalDirectory));
 
             this.expectedKey = expectedKey;
+            this.relativeDirectory = relativeDirectory;
             this.goalDirectory = goalDirectory;
         }
 
@@ -44,26 +49,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 return;
             }
 
-            if (File.Exists(property.Value))
-                HandleMigration(property);
+            var filePathInfo = new FileInfo(Path.Combine(relativeDirectory, property.Value));
+
+            if (filePathInfo.Exists)
+                HandleMigration(filePathInfo, property);
             else
-                HandleNotExists(property, logHandler);
+                HandleNotExists(filePathInfo, property, logHandler);
         }
 
-        private void HandleNotExists(DelftIniProperty property, ILogHandler logHandler)
+        private void HandleNotExists(FileInfo filePathInfo, DelftIniProperty property, ILogHandler logHandler)
         {
             var warningMsg = 
-                $"The file associated with property {expectedKey}, {property.Value}, does not exist, the property is set to an empty string.";
+                $"The file associated with property {expectedKey}, {Path.GetFileName(property.Value)} at {filePathInfo.FullName}, does not exist, the property is set to an empty string.";
             logHandler?.ReportWarning(warningMsg);
 
             property.Value = string.Empty;
         }
 
-        private void HandleMigration(DelftIniProperty property)
+        private void HandleMigration(FileInfo filePathInfo, DelftIniProperty property)
         {
             string goalPath = Path.Combine(goalDirectory, Path.GetFileName(property.Value));
-            File.Move(property.Value, goalPath);
-            property.Value = goalPath;
+
+            filePathInfo.MoveTo(goalPath);
+            property.Value = filePathInfo.Name;
         }
     }
 }
