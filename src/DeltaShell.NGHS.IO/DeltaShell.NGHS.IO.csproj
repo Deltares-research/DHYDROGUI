@@ -144,6 +144,7 @@
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="IDelftIniReader.cs" />
+    <Compile Include="IDelftIniWriter.cs" />
     <Compile Include="NGHSFileBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
