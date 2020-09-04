@@ -206,6 +206,7 @@
     <Compile Include="IO\Helpers\Boundaries\SpreadingImportType.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryConverter.cs" />
     <Compile Include="IO\Helpers\DelftIniCategoryExtensions.cs" />
+    <Compile Include="IO\Helpers\Domain\WaveDomainDataConverter.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactory.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporter.cs" />
