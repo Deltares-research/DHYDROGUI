@@ -31,6 +31,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModelWithUseRestartFalse_WhenExported_ThenRestartFileShouldContainStateVectorsWithZeroOrNan()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var model = new RealTimeControlModel();
+                AddControlGroupToModel(model);
+
+                // When
+                new RealTimeControlModelExporter().Export(model, tempDirectory.Path);
+                
+                string expectedFileContentPath = Path.Combine(tempDirectory.Path, "expected_state_import.xml");
+                RealTimeControlXmlWriter.GetStateVectorXml(tempDirectory.Path, model.ControlGroups).Save(expectedFileContentPath);
+                string exportedRestartFile = Path.Combine(tempDirectory.Path, RealTimeControlXMLFiles.XmlImportState);
+
+                // Then
+                FileAssert.AreEqual(expectedFileContentPath, exportedRestartFile);
+            }
+        }
+
+
         private static void AddControlGroupToModel(IRealTimeControlModel model)
         {
             ControlGroup controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
