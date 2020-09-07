@@ -54,6 +54,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                                                                                ShapeBase target,
                                                                                ConnectorType targetConnector)
         {
+            if (source == null || target == null)
+                throw new ArgumentNullException("Could not check if source shape is connectable with target shape.");
             IEnumerable<ConnectionRule> connectionRules = connectionMapping[source.GetType()];
             ConnectionRule rule = connectionRules.SingleOrDefault(r => r.ShapeType == target.GetType());
             return rule != null && rule.AllowedConnectors.Contains(targetConnector);

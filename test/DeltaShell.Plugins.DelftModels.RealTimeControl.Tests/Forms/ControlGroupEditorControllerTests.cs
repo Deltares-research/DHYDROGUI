@@ -706,6 +706,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             }
 
             [Test]
+            public static void GivenNullSourceShapeExceptionIsThrown()
+            {
+                InputItemShape sourceShape = null;
+                ConditionShape targetShape = new ConditionShape();
+                Assert.Throws<ArgumentNullException>(
+                    () => ShapeConnectionsRulesController.
+                        IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
+                                                                            targetShape,
+                                                                            targetBottomConnectorType));
+            }
+
+            [Test]
+            public static void GivenNullTargetShapeExceptionIsThrown()
+            {
+                InputItemShape targetShape = null;
+                ConditionShape sourceShape = new ConditionShape();
+                Assert.Throws<ArgumentNullException>(
+                    () => ShapeConnectionsRulesController.
+                        IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
+                                                                            targetShape,
+                                                                            targetBottomConnectorType));
+            }
+
+            [Test]
             public static void GivenInputShapeCorrectConnectorsAreSelected()
             {
                 bool result;
