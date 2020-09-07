@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ? outputFileFunctionStore.Functions.OfType<IFeatureCoverage>()
                 : Enumerable.Empty<IFeatureCoverage>();
 
-        public virtual bool UseRestart { get; set; }
+        public virtual bool UseRestart => !RestartInput.IsEmpty;
 
         public virtual bool WriteRestart { get; set; }
 

@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Given
-                var model = new RealTimeControlModel {RestartInput = new RealTimeControlRestartFile("Restart File", "file content here"), UseRestart = true};
+                var model = new RealTimeControlModel {RestartInput = new RealTimeControlRestartFile("Restart File", "file content here")};
                 AddControlGroupToModel(model);
 
                 // When
@@ -28,24 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
                 // Then
                 Assert.That(File.ReadAllText(Path.Combine(tempDirectory.Path, RealTimeControlXMLFiles.XmlImportState)), Is.EqualTo("file content here"));
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void GivenRealTimeControlModelWithRestartInputAndUseRestartFalse_WhenExported_ThenRestartFileNotWrittenToPath()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Given
-                var model = new RealTimeControlModel {RestartInput = new RealTimeControlRestartFile("Restart File", "file content here"), UseRestart = false};
-                AddControlGroupToModel(model);
-
-                // When
-                new RealTimeControlModelExporter().Export(model, tempDirectory.Path);
-
-                // Then
-                Assert.That(File.ReadAllText(Path.Combine(tempDirectory.Path, RealTimeControlXMLFiles.XmlImportState)), Is.Not.EqualTo("file content here"));
             }
         }
 
