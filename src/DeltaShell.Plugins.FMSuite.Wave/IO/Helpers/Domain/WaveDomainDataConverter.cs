@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
 {
@@ -50,6 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
 
                 CreateDirectionalSpaceData(domainCategory, domain);
                 CreateFrequencySpaceData(domainCategory, domain);
+                CreateMeteoData(domainCategory, domain, mdwDirPath, logHandler);
                 CreateHydroFromFlowSettingsData(domainCategory, domain);
 
                 yield return domain;
@@ -129,6 +133,67 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
             else
             {
                 domain.SpectralDomainData.UseDefaultDirectionalSpace = true;
+            }
+        }
+
+        private static void CreateMeteoData(DelftIniCategory domainCategory, WaveDomainData domain, string mdwDirPath, ILogHandler logHandler)
+        {
+            domain.UseGlobalMeteoData = true;
+
+            List<string> meteoFiles = domainCategory.GetPropertyValues(KnownWaveProperties.MeteoFile).Select(f => Path.Combine(mdwDirPath, f)).ToList();
+
+            if (!meteoFiles.Any())
+            {
+                return;
+            }
+
+            List<string> nonExistingFiles = meteoFiles.Where(f => !File.Exists(f)).ToList();
+            if (nonExistingFiles.Any())
+            {
+                foreach (string file in nonExistingFiles)
+                {
+                    logHandler.ReportWarning($"Meteo file {file} does not exist for domain '{domain.Name}'. Defaulted to global settings.");
+                }
+
+                return;
+            }
+
+            ILookup<string, string> lookup = meteoFiles.ToLookup(Path.GetExtension);
+            string[] spwFiles = lookup[".spw"].ToArray();
+            string[] wndFiles = lookup[".wnd"].ToArray();
+            string[] amuFiles = lookup[".amu"].ToArray();
+            string[] amvFiles = lookup[".amv"].ToArray();
+
+            var mapping = new Dictionary<(int, int, int, int), Func<WaveMeteoData>>
+            {
+                {(0, 1, 0, 0), () => WaveMeteoDataFactory.CreateVectorMeteoData(wndFiles[0])},
+                {(0, 2, 0, 0), () => WaveMeteoDataFactory.CreateWndXYComponentMeteoData(wndFiles[0], wndFiles[1])},
+                {(0, 0, 1, 1), () => WaveMeteoDataFactory.CreateXYComponentMeteoData(amuFiles[0], amvFiles[0])},
+                {(1, 0, 0, 0), () => WaveMeteoDataFactory.CreateSpiderWebMeteoData(spwFiles[0])},
+                {(1, 1, 0, 0), () => WaveMeteoDataFactory.CreateVectorMeteoData(wndFiles[0], spwFiles[0])},
+                {(1, 2, 0, 0), () => WaveMeteoDataFactory.CreateWndXYComponentMeteoData(wndFiles[0], wndFiles[1], spwFiles[0])},
+                {(1, 0, 1, 1), () => WaveMeteoDataFactory.CreateXYComponentMeteoData(amuFiles[0], amvFiles[0], spwFiles[0])},
+            };
+
+            if (mapping.TryGetValue((spwFiles.Length,
+                                     wndFiles.Length,
+                                     amuFiles.Length,
+                                     amvFiles.Length),
+                                    out Func<WaveMeteoData> createMeteoData))
+            {
+                WaveMeteoData meteoData = createMeteoData.Invoke();
+                if (meteoData == null)
+                {
+                    logHandler.ReportWarning($"Meteo data could not be created for domain '{domain.Name}'. Defaulted to global settings.");
+                    return;
+                }
+
+                domain.UseGlobalMeteoData = false;
+                domain.MeteoData = meteoData;
+            }
+            else
+            {
+                logHandler.ReportWarning($"Meteo file combination not supported for domain '{domain.Name}'. Defaulted to global settings.");
             }
         }
     }

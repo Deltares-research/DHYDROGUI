@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
@@ -52,18 +53,114 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
         [TestCaseSource(nameof(ValidDomainCases))]
         public void Convert_ReturnsTheCorrectWaveDomainData(bool useDefDir, bool useDefFreq, bool useDefMeteo, bool useDefHydro, WaveMeteoData meteoData)
         {
-            WaveDomainData domain = CreateWaveDomainData(useDefDir, useDefFreq, useDefMeteo, useDefHydro, meteoData);
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            {
+                WaveDomainData domain = CreateWaveDomainData(useDefDir, useDefFreq, useDefMeteo, useDefHydro, meteoData);
+                DelftIniCategory category = CreateCategory(domain);
+                CreateFiles(temp, domain);
+
+                var logHandler = Substitute.For<ILogHandler>();
+
+                // Call
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
+
+                // Assert
+                WaveDomainData resultDomain = result.First();
+                Assert.That(resultDomain, Is.EqualTo(domain).Using(comparer));
+                logHandler.DidNotReceiveWithAnyArgs().ReportWarning(Arg.Any<string>());
+            }
+        }
+
+        [Test]
+        public void Convert_FilesDoesNotExist_UseGlobalMeteoDataIsTrue()
+        {
+            // Setup
+            var domain = new WaveDomainData("the_domain");
             DelftIniCategory category = CreateCategory(domain);
-            const string mdwDirPath = "c:/some/dir";
+            category.AddProperty("MeteoFile", "meteo1.file");
+            category.AddProperty("MeteoFile", "meteo2.file");
+
             var logHandler = Substitute.For<ILogHandler>();
 
             // Call
-            IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, mdwDirPath, logHandler);
+            IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, @"c:\some\dir", logHandler);
 
-            // Call
+            // Assert
             WaveDomainData resultDomain = result.First();
-            Assert.That(resultDomain, Is.EqualTo(domain).Using(comparer));
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(Arg.Any<string>());
+            Assert.That(resultDomain.UseGlobalMeteoData, Is.True);
+            logHandler.Received(1).ReportWarning(@"Meteo file c:\some\dir\meteo1.file does not exist for domain 'the_domain'. Defaulted to global settings.");
+            logHandler.Received(1).ReportWarning(@"Meteo file c:\some\dir\meteo2.file does not exist for domain 'the_domain'. Defaulted to global settings.");
+        }
+
+        [Test]
+        public void Convert_MeteoDataCannotBeCreated_UseGlobalMeteoDataIsTrue()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    XComponentFilePath = "xwind.wnd",
+                    YComponentFilePath = "ywind.wnd"
+                };
+
+                WaveDomainData domain = CreateWaveDomainData(true, true, false, true, meteoData);
+                DelftIniCategory category = CreateCategory(domain);
+
+                temp.CreateFile(meteoData.XComponentFileName);
+                temp.CreateFile(meteoData.YComponentFileName);
+
+                var logHandler = Substitute.For<ILogHandler>();
+
+                // Call
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
+
+                // Assert
+                WaveDomainData resultDomain = result.First();
+                Assert.That(resultDomain.UseGlobalMeteoData, Is.True);
+                logHandler.Received(1).ReportWarning("Meteo data could not be created for domain 'the_domain'. Defaulted to global settings.");
+            }
+        }
+
+        [TestCaseSource(nameof(VariousUnsupportedMeteoFileCombinations))]
+        public void Convert_MeteoFileCombinationNotSupported_UseGlobalMeteoDataIsTrue(string[] meteoFiles)
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                var domain = new WaveDomainData("the_domain");
+                DelftIniCategory category = CreateCategory(domain);
+                foreach (string meteoFile in meteoFiles)
+                {
+                    category.AddProperty("MeteoFile", meteoFile);
+                    temp.CreateFile(meteoFile);
+                }
+
+                var logHandler = Substitute.For<ILogHandler>();
+
+                // Call
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
+
+                // Assert
+                WaveDomainData resultDomain = result.First();
+                Assert.That(resultDomain.UseGlobalMeteoData, Is.True);
+                logHandler.Received(1).ReportWarning("Meteo file combination not supported for domain 'the_domain'. Defaulted to global settings.");
+            }
+        }
+
+        private IEnumerable<string[]> VariousUnsupportedMeteoFileCombinations()
+        {
+            yield return new string[] {"meteo.spw", "meteo.spw"};
+            yield return new string[] {"meteo.amu"};
+            yield return new string[] {"meteo.amu", "meteo.amu"};
+            yield return new string[] {"meteo.amv"};
+            yield return new string[] {"meteo.amv", "meteo.amv"};
+            yield return new string[] {"meteo.wnd", "meteo.wnd", "meteo.wnd"};
+            yield return new string[] {"meteo.wnd", "meteo.amu", "meteo.spw"};
+            yield return new string[] {"meteo.wnd", "meteo.amu", "meteo.amv"};
+            yield return new string[] {"meteo.amu", "meteo.amu", "meteo.amv"};
         }
 
         private IEnumerable<TestCaseData> ValidDomainCases()
@@ -218,6 +315,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
             }
 
             return domainCategory;
+        }
+
+        private static void CreateFiles(TemporaryDirectory temp, WaveDomainData domain)
+        {
+            if (domain.UseGlobalMeteoData)
+            {
+                return;
+            }
+
+            temp.CreateFile(domain.MeteoData.SpiderWebFileName);
+            temp.CreateFile(domain.MeteoData.XYVectorFileName);
+            temp.CreateFile(domain.MeteoData.XComponentFileName, GetExampleContent("x_wind"));
+            temp.CreateFile(domain.MeteoData.YComponentFileName, GetExampleContent("y_wind"));
+        }
+
+        private static string GetExampleContent(string quantity)
+        {
+            return "FileVersion      = 1.03\n" +
+                   "filetype = meteo_on_equidistant_grid\n" +
+                   "NODATA_value = -999\n" +
+                   "n_cols = 2\n" +
+                   "n_rows = 2\n" +
+                   "grid_unit = m\n" +
+                   "x_llcorner = 1.00E+03\n" +
+                   "y_llcorner = 1.00E+03\n" +
+                   "dx = 2.44E+04\n" +
+                   "dy = 3.00E+04\n" +
+                   "n_quantity = 1\n" +
+                   $"quantity1 = {quantity}\n" +
+                   "unit1 = m s - 1\n";
         }
 
         private sealed class DomainEqualityComparer : IEqualityComparer<WaveDomainData>
