@@ -70,7 +70,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         private void HandleMigration(DelftIniProperty property)
         {
             var logHandler = new LogHandler($"Migrating {property.Value}");
-            migrator.MigrateFile(property.Value, goalDirectory, logHandler);
+
+            migrator.MigrateFile(new FileStream(property.Value, FileMode.Open),
+                                 property.Value, 
+                                 Path.Combine(goalDirectory, nameof(property.Value)), 
+                                 logHandler);
             logHandler.LogReport();
 
             property.Value = Path.Combine(goalDirectory, Path.GetFileName(property.Value));

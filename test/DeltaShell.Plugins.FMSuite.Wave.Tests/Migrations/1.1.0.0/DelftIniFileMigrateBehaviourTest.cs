@@ -5,6 +5,7 @@ using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
+using NetTopologySuite.Algorithm;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -111,10 +112,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 const string goalDirName = "dooWahDooWah";
 
                 string oldPath = tempDir.CreateFile(fileName, fileContent);
+                oldPath = Path.Combine(tempDir.Path, oldPath);
 
                 string goalDir = tempDir.CreateDirectory(goalDirName);
 
-                string expectedPath = Path.Combine(goalDir, fileName);
+                string expectedPath = Path.Combine(tempDir.Path, goalDir, fileName);
 
                 const string propertyName = "key";
                 const string propertyComment = "Comment";
@@ -132,7 +134,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 Assert.That(property.Comment, Is.EqualTo(propertyComment));
                 Assert.That(property.Value, Is.EqualTo(expectedPath));
 
-                migrator.Received(1).MigrateFile(oldPath, goalDir, Arg.Any<ILogHandler>() );
+                migrator.Received(1).MigrateFile(Arg.Any<Stream>(),
+                                                 oldPath, 
+                                                 expectedPath, 
+                                                 Arg.Any<ILogHandler>() );
 
                 VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
             }
@@ -145,6 +150,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var migrator = Substitute.For<IDelftIniMigrator>();
+
+            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
+                                 Arg.Any<string>(),
+                                 Arg.Any<string>(),
+                                 Arg.Any<ILogHandler>());
 
             using (var tempDir = new TemporaryDirectory())
             {
