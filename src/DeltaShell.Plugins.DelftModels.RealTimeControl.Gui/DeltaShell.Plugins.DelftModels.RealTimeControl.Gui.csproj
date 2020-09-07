@@ -96,6 +96,7 @@
     <Compile Include="Forms\RtcExporterDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\ShapeConnectionsRulesController.cs" />
     <Compile Include="Helpers\RTCModelCoordinateConvertor.cs" />
     <Compile Include="NodePresenters\ControlGroupCollectionNodePresenter.cs" />
     <Compile Include="NodePresenters\ControlGroupNodePresenter.cs" />

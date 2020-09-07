@@ -937,7 +937,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     continue;
                 }
 
-                if (ControlGroupEditorController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
+                if (ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
                 {
                     allowedConnectors.Add(availableConnector);
                 }
