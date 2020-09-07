@@ -31,15 +31,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the number of 2D meshes" + standardErrorMessage)]
         public void WhenInvoking_NumberOf2DMeshes_AndApiReturnsAnErrorValueThenThrowException()
         {
             var numMeshes = 2;
-            DoWithMockedUGridApi(
-                uGridApi => uGridApi
-                            .Expect(api => api.GetNumberOfMeshByType(Arg<UGridMeshType>.Is.Anything, out Arg<int>.Out(numMeshes).Dummy))
-                            .Return(errorValue).Repeat.Once(),
-                grid => { grid.GetNumberOf2DMeshes(); });
+
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi => uGridApi
+                                .Expect(api => api.GetNumberOfMeshByType(Arg<UGridMeshType>.Is.Anything, out Arg<int>.Out(numMeshes).Dummy))
+                                .Return(errorValue).Repeat.Once(),
+                    grid => { grid.GetNumberOf2DMeshes(); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of 2D meshes" + standardErrorMessage));
         }
 
         [Test]
@@ -58,15 +63,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the number of nodes" + standardErrorMessage)]
         public void WhenInvoking_NumberOfNodes_AndApiReturnsAnErrorValueThenThrowException()
         {
             var numNodes = 2;
-            DoWithMockedUGridApi(
-                uGridApi => uGridApi
-                            .Expect(api => api.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(numNodes).Dummy))
-                            .Return(errorValue).Repeat.Once(),
-                grid => { grid.GetNumberOfNodesForMeshId(Arg<int>.Is.Anything); });
+
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi => uGridApi
+                                .Expect(api => api.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(numNodes).Dummy))
+                                .Return(errorValue).Repeat.Once(),
+                    grid => { grid.GetNumberOfNodesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of nodes" + standardErrorMessage));
         }
 
         [Test]
@@ -85,15 +95,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get number of edges" + standardErrorMessage)]
         public void WhenInvoking_NumberOfEdges_AndApiReturnsAnErrorValueThenThrowException()
         {
             var numEdges = 2;
-            DoWithMockedUGridApi(
-                uGridApi => uGridApi
-                            .Expect(api => api.GetNumberOfEdges(Arg<int>.Is.Anything, out Arg<int>.Out(numEdges).Dummy))
-                            .Return(errorValue).Repeat.Once(),
-                grid => { grid.GetNumberOfEdgesForMeshId(Arg<int>.Is.Anything); });
+
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi => uGridApi
+                                .Expect(api => api.GetNumberOfEdges(Arg<int>.Is.Anything, out Arg<int>.Out(numEdges).Dummy))
+                                .Return(errorValue).Repeat.Once(),
+                    grid => { grid.GetNumberOfEdgesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of edges" + standardErrorMessage));
         }
 
         [Test]
@@ -112,15 +127,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get number of faces" + standardErrorMessage)]
         public void WhenInvoking_NumberOfFaces_AndApiReturnsAnErrorValueThenThrowException()
         {
             var numFaces = 2;
-            DoWithMockedUGridApi(
-                uGridApi => uGridApi
-                            .Expect(api => api.GetNumberOfFaces(Arg<int>.Is.Anything, out Arg<int>.Out(numFaces).Dummy))
-                            .Return(errorValue).Repeat.Once(),
-                grid => { grid.GetNumberOfFacesForMeshId(Arg<int>.Is.Anything); });
+
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi => uGridApi
+                                .Expect(api => api.GetNumberOfFaces(Arg<int>.Is.Anything, out Arg<int>.Out(numFaces).Dummy))
+                                .Return(errorValue).Repeat.Once(),
+                    grid => { grid.GetNumberOfFacesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of faces" + standardErrorMessage));
         }
 
         [Test]
@@ -139,15 +159,20 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get max face nodes" + standardErrorMessage)]
         public void WhenInvoking_NumberOfMaxFaceNodes_AndApiReturnsAnErrorValueThenThrowException()
         {
             var numMaxFaceNodes = 2;
-            DoWithMockedUGridApi(
-                uGridApi => uGridApi
-                            .Expect(api => api.GetMaxFaceNodes(Arg<int>.Is.Anything, out Arg<int>.Out(numMaxFaceNodes).Dummy))
-                            .Return(errorValue).Repeat.Once(),
-                grid => { grid.GetNumberOfMaxFaceNodesForMeshId(Arg<int>.Is.Anything); });
+
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi => uGridApi
+                                .Expect(api => api.GetMaxFaceNodes(Arg<int>.Is.Anything, out Arg<int>.Out(numMaxFaceNodes).Dummy))
+                                .Return(errorValue).Repeat.Once(),
+                    grid => { grid.GetNumberOfMaxFaceNodesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get max face nodes" + standardErrorMessage));
         }
 
         [Test]
@@ -166,78 +191,81 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get x node coordinates" + standardErrorMessage)]
         public void WhenInvoking_GetAllNodeCoordinates_AndApiReturnsAnErrorValueForXCoordinatesThenThrowException()
         {
-            double[] xCoordinates =
+            double[] xCoordinates = {2.0, 3.4};
+
+            void Test()
             {
-                2.0,
-                3.4
-            };
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.GetNodeXCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(xCoordinates).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                    uGridApi
-                        .Expect(api => api.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(2).Dummy))
-                        .Return(noErrorValue).Repeat.Once();
-                },
-                grid => { grid.GetAllNodeCoordinatesForMeshId(Arg<int>.Is.Anything); });
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.GetNodeXCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(xCoordinates).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                        uGridApi
+                            .Expect(api => api.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(2).Dummy))
+                            .Return(noErrorValue).Repeat.Once();
+                    },
+                    grid => { grid.GetAllNodeCoordinatesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get x node coordinates" + standardErrorMessage));
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get y node coordinates" + standardErrorMessage)]
         public void WhenInvoking_GetAllNodeCoordinates_AndApiReturnsAnErrorValueForYCoordinatesThenThrowException()
         {
-            double[] coordinates =
+            double[] coordinates = {2.0, 3.4};
+
+            void Test()
             {
-                2.0,
-                3.4
-            };
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.GetNodeXCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
-                        .Return(noErrorValue).Repeat.Once();
-                    uGridApi
-                        .Expect(api => api.GetNodeYCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                    uGridApi
-                        .Expect(api => api.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(2).Dummy))
-                        .Return(noErrorValue).Repeat.Once();
-                },
-                grid => { grid.GetAllNodeCoordinatesForMeshId(Arg<int>.Is.Anything); });
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.GetNodeXCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
+                            .Return(noErrorValue).Repeat.Once();
+                        uGridApi
+                            .Expect(api => api.GetNodeYCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                        uGridApi
+                            .Expect(api => api.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(2).Dummy))
+                            .Return(noErrorValue).Repeat.Once();
+                    },
+                    grid => { grid.GetAllNodeCoordinatesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get y node coordinates" + standardErrorMessage));
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get z node coordinates" + standardErrorMessage)]
         public void WhenInvoking_GetAllNodeCoordinates_AndApiReturnsAnErrorValueForZCoordinatesThenThrowException()
         {
-            double[] coordinates =
+            double[] coordinates = {2.0, 3.4};
+
+            void Test()
             {
-                2.0,
-                3.4
-            };
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.GetNodeXCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
-                        .Return(noErrorValue).Repeat.Once();
-                    uGridApi
-                        .Expect(api => api.GetNodeYCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
-                        .Return(noErrorValue).Repeat.Once();
-                    uGridApi
-                        .Expect(api => api.GetNodeZCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                    uGridApi
-                        .Expect(api => api.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(2).Dummy))
-                        .Return(noErrorValue).Repeat.Once();
-                },
-                grid => { grid.GetAllNodeCoordinatesForMeshId(Arg<int>.Is.Anything); });
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.GetNodeXCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
+                            .Return(noErrorValue).Repeat.Once();
+                        uGridApi
+                            .Expect(api => api.GetNodeYCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
+                            .Return(noErrorValue).Repeat.Once();
+                        uGridApi
+                            .Expect(api => api.GetNodeZCoordinates(Arg<int>.Is.Anything, out Arg<double[]>.Out(coordinates).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                        uGridApi
+                            .Expect(api => api.GetNumberOfNodes(Arg<int>.Is.Anything, out Arg<int>.Out(2).Dummy))
+                            .Return(noErrorValue).Repeat.Once();
+                    },
+                    grid => { grid.GetAllNodeCoordinatesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get z node coordinates" + standardErrorMessage));
         }
 
         [Test]
@@ -262,26 +290,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             var meshId = 1;
             var nNodes = 2;
-            double[] xCoordinates =
-            {
-                2.0,
-                3.4
-            };
-            double[] yCoordinates =
-            {
-                -1.0,
-                8.4
-            };
-            double[] zCoordinates =
-            {
-                -1.1,
-                -2.3
-            };
-            Coordinate[] expectedResult =
-            {
-                new Coordinate(2.0, -1.0, -1.1),
-                new Coordinate(3.4, 8.4, -2.3)
-            };
+            double[] xCoordinates = {2.0, 3.4};
+            double[] yCoordinates = {-1.0, 8.4};
+            double[] zCoordinates = {-1.1, -2.3};
+            Coordinate[] expectedResult = {new Coordinate(2.0, -1.0, -1.1), new Coordinate(3.4, 8.4, -2.3)};
 
             DoWithMockedUGridApi(
                 uGridApi =>
@@ -307,45 +319,29 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get edge nodes of the mesh" + standardErrorMessage)]
         public void WhenInvoking_GetEdgeNodesForMesh_AndApiReturnsAnErrorValueThenThrowException()
         {
-            int[,] edgeNodes =
-            {
-                {
-                    0,
-                    1
-                },
-                {
-                    1,
-                    2
-                }
-            };
+            int[,] edgeNodes = {{0, 1}, {1, 2}};
 
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.GetEdgeNodesForMesh(Arg<int>.Is.Anything, out Arg<int[,]>.Out(edgeNodes).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.GetEdgeNodesForMeshId(Arg<int>.Is.Anything); });
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.GetEdgeNodesForMesh(Arg<int>.Is.Anything, out Arg<int[,]>.Out(edgeNodes).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.GetEdgeNodesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get edge nodes of the mesh" + standardErrorMessage));
         }
 
         [Test]
         public void WhenInvoking_GetEdgeNodesForMesh_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            int[,] edgeNodes =
-            {
-                {
-                    0,
-                    1
-                },
-                {
-                    1,
-                    2
-                }
-            };
+            int[,] edgeNodes = {{0, 1}, {1, 2}};
             var meshId = 1;
             var numMeshes = 2;
 
@@ -371,45 +367,29 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get face nodes of the mesh" + standardErrorMessage)]
         public void WhenInvoking_GetFaceNodesForMesh_AndApiReturnsAnErrorValueThenThrowException()
         {
-            int[,] faceNodes =
-            {
-                {
-                    0,
-                    1
-                },
-                {
-                    1,
-                    2
-                }
-            };
+            int[,] faceNodes = {{0, 1}, {1, 2}};
 
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.GetFaceNodesForMesh(Arg<int>.Is.Anything, out Arg<int[,]>.Out(faceNodes).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.GetFaceNodesForMeshId(Arg<int>.Is.Anything); });
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.GetFaceNodesForMesh(Arg<int>.Is.Anything, out Arg<int[,]>.Out(faceNodes).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.GetFaceNodesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get face nodes of the mesh" + standardErrorMessage));
         }
 
         [Test]
         public void WhenInvoking_GetFaceNodesForMesh_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            int[,] faceNodes =
-            {
-                {
-                    0,
-                    1
-                },
-                {
-                    1,
-                    2
-                }
-            };
+            int[,] faceNodes = {{0, 1}, {1, 2}};
             var meshId = 1;
             var numMeshes = 2;
 
@@ -436,19 +416,23 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the number of names for location type" + standardErrorMessage)]
         public void WhenInvoking_NumberOfNamesAtLocation_AndApiReturnsAnErrorValueThenThrowException()
         {
             var nCount = 33;
 
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.GetVarCount(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, out Arg<int>.Out(nCount).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.NumberOfNamesForLocationType(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything); });
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.GetVarCount(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, out Arg<int>.Out(nCount).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.NumberOfNamesForLocationType(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of names for location type" + standardErrorMessage));
         }
 
         [Test]
@@ -470,31 +454,27 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get the names at location" + standardErrorMessage)]
         public void WhenInvoking_GetNamesAtLocation_AndApiReturnsAnErrorValueThenThrowException()
         {
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.GetVarNames(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, out Arg<int[]>.Out(null).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.GetNamesAtLocation(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything); });
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.GetVarNames(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, out Arg<int[]>.Out(null).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.GetNamesAtLocation(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the names at location" + standardErrorMessage));
         }
 
         [Test]
         public void WhenInvoking_GetNamesAtLocation_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
-            int[] varIds =
-            {
-                1,
-                1,
-                2,
-                3,
-                5,
-                8
-            };
+            int[] varIds = {1, 1, 2, 3, 5, 8};
             var meshId = 1;
             var locationType = GridApiDataSet.LocationType.UG_LOC_NODE;
 
@@ -515,17 +495,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't rewrite grid coordinates" + standardErrorMessage)]
         public void WhenInvoking_RewriteGridCoordinates_AndApiReturnsAnErrorValueThenThrowException()
         {
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.WriteXYCoordinateValues(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.RewriteGridCoordinatesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything); });
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.WriteXYCoordinateValues(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.RewriteGridCoordinatesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't rewrite grid coordinates" + standardErrorMessage));
         }
 
         [Test]
@@ -542,17 +526,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't get meshname" + standardErrorMessage)]
         public void WhenInvoking_GetMeshName_AndApiReturnsAnErrorValueThenThrowException()
         {
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.GetMeshName(Arg<int>.Is.Anything, out Arg<string>.Out(null).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.GetMeshName(Arg<int>.Is.Anything); });
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.GetMeshName(Arg<int>.Is.Anything, out Arg<string>.Out(null).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.GetMeshName(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get meshname" + standardErrorMessage));
         }
 
         [Test]
@@ -605,17 +593,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         #region TestWriteZValues
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Error writing z values at mesh faces" + standardErrorMessage)]
         public void WhenInvoking_WriteZValuesAtFaces_AndApiReturnsAnErrorValueThenThrowException()
         {
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.WriteZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<double[]>.Is.Anything))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.WriteZValuesAtFacesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything); });
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.WriteZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<double[]>.Is.Anything))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.WriteZValuesAtFacesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Error writing z values at mesh faces" + standardErrorMessage));
         }
 
         [Test]
@@ -632,17 +624,21 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Error writing z values at mesh nodes" + standardErrorMessage)]
         public void WhenInvoking_WriteZValuesAtNodes_AndApiReturnsAnErrorValueThenThrowException()
         {
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    uGridApi
-                        .Expect(api => api.WriteZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<double[]>.Is.Anything))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.WriteZValuesAtNodesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything); });
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        uGridApi
+                            .Expect(api => api.WriteZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, Arg<string>.Is.Anything, Arg<double[]>.Is.Anything))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.WriteZValuesAtNodesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Error writing z values at mesh nodes" + standardErrorMessage));
         }
 
         [Test]
@@ -663,19 +659,23 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         #region TestReadZValues
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Error reading z values at mesh faces" + standardErrorMessage)]
         public void WhenInvoking_ReadZValuesAtFaces_AndApiReturnsAnErrorValueThenThrowException()
         {
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    double[] zValues = null;
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        double[] zValues = null;
 
-                    uGridApi
-                        .Expect(api => api.ReadZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, out Arg<double[]>.Out(zValues).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.ReadZValuesAtFacesForMeshId(Arg<int>.Is.Anything); });
+                        uGridApi
+                            .Expect(api => api.ReadZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, out Arg<double[]>.Out(zValues).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.ReadZValuesAtFacesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Error reading z values at mesh faces" + standardErrorMessage));
         }
 
         [Test]
@@ -694,19 +694,23 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Error reading z values at mesh nodes" + standardErrorMessage)]
         public void WhenInvoking_ReadZValuesAtNodes_AndApiReturnsAnErrorValueThenThrowException()
         {
-            DoWithMockedUGridApi(
-                uGridApi =>
-                {
-                    double[] zValues = null;
+            void Test()
+            {
+                DoWithMockedUGridApi(
+                    uGridApi =>
+                    {
+                        double[] zValues = null;
 
-                    uGridApi
-                        .Expect(api => api.ReadZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, out Arg<double[]>.Out(zValues).Dummy))
-                        .Return(errorValue).Repeat.Once();
-                },
-                grid => { grid.ReadZValuesAtNodesForMeshId(Arg<int>.Is.Anything); });
+                        uGridApi
+                            .Expect(api => api.ReadZCoordinateValues(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything, Arg<string>.Is.Anything, out Arg<double[]>.Out(zValues).Dummy))
+                            .Return(errorValue).Repeat.Once();
+                    },
+                    grid => { grid.ReadZValuesAtNodesForMeshId(Arg<int>.Is.Anything); });
+            }
+
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Error reading z values at mesh nodes" + standardErrorMessage));
         }
 
         [Test]

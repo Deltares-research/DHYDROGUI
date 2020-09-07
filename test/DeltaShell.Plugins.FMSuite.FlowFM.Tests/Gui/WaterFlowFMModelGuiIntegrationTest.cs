@@ -540,7 +540,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Wpf)]
         [Category(TestCategory.WorkInProgress)]
-        [Ignore]
+        [Ignore("Ignored.")]
         public void TOOLS_22977Test()
         {
             using (var gui = new DeltaShellGui())
