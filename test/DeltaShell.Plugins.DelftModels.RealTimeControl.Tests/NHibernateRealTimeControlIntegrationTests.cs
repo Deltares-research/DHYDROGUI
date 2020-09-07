@@ -25,10 +25,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     [Category(TestCategory.Slow)]
     public class NHibernateRealTimeControlIntegrationTests : NHibernateIntegrationTestBase
     {
-        [TestFixtureSetUp]
-        public override void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
             factory.AddPlugin(new RealTimeControlGuiPlugin());
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
             factory.AddPlugin(new RealTimeControlApplicationPlugin());

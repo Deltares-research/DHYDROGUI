@@ -24,7 +24,7 @@ namespace DeltaShell.Dimr.Tests
                 Assert.AreEqual(dimrGuiPlugin, DimrGuiPlugin.Instance);
                 Assert.AreEqual("Dimr (UI)", DimrGuiPlugin.Instance.Name);
                 Assert.AreEqual(Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
-                Assert.That(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace, Is.StringStarting("DeltaShell.Dimr.Gui"));
+                Assert.That(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace, Does.StartWith("DeltaShell.Dimr.Gui"));
             }
 
             Assert.IsNull(DimrGuiPlugin.Instance);

@@ -1138,7 +1138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             // [D3DFMIQ-1276]
             // Disabling following testcase as this causes an GDI+ exception on the build agent which cannot be easily solved. 
             // According to sources on the internet, the exception is caused by MultiThreading access to a certain source.
-            // However, setting the test with the STAThread or RequiresSTA attribute does not resolve this issue on the agent.
+            // However, setting the test with the STAThread or Apartment(ApartmentState.STA) attribute does not resolve this issue on the agent.
             // Locally this test runs fine.
 
             //            var boundaryConditionSetWithoutMatchingBoundaryCondition = new BoundaryConditionSet

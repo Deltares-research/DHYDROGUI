@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                         Assert.AreEqual(size, model.OuterDomain.Grid.Size1);
 
                         Delft3DGridFileWriter.Write(model.OuterDomain.Grid, grdFilePath);
-                        Assert.IsNotNullOrEmpty(grdFilePath, "There was no .grd file created.");
+                        Assert.That(grdFilePath, Is.Not.Null.And.Not.Empty, "There was no .grd file created.");
 
                         model.OuterDomain.Grid = new CurvilinearGrid(0, 0, null, null, string.Empty);
                         Assert.AreEqual(0, model.OuterDomain.Grid.Size1);

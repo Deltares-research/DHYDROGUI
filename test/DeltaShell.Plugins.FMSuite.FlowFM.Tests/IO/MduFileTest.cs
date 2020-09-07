@@ -843,7 +843,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string msg = msgs.First();
 
                 const string expectedMsgHeader = "During reading the Fixed Weirs the following warnings were reported:";
-                Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
+                Assert.That(msg, Does.StartWith(expectedMsgHeader), "Expected the header of the message to be different:");
 
                 List<string> subMsgs = msg.Split(new[] {"\n- "}, StringSplitOptions.None).ToList();
                 subMsgs.RemoveAt(0);                              // Remove header msg.

@@ -306,8 +306,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
         private CultureInfo originalCulture;
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             originalCulture = Thread.CurrentThread.CurrentCulture;
 
@@ -317,8 +317,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             LogHelper.ConfigureLogging(Level.Warn);
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             LogHelper.ResetLogging();
 

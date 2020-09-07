@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         private readonly DateTime lastTimeStep = new DateTime(2010, 1, 2, 0, 0, 0);
         private string mapFilePath;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUpTests()
         {
             mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.map");

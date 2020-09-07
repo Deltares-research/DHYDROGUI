@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
     [TestFixture]
-    [RequiresSTA]
+    [Apartment(ApartmentState.STA)]
     [Category(TestCategory.Wpf)]
     public class SettingsTemplateSelectorTest
     {

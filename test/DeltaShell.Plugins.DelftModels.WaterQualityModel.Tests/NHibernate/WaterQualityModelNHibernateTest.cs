@@ -45,9 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
         #region SetUp / TearDown
 
-        public override void TestFixtureSetUp()
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
 
             var waterQualityModelApplicationPlugin = new WaterQualityModelApplicationPlugin();
             factory.AddPlugin(waterQualityModelApplicationPlugin);

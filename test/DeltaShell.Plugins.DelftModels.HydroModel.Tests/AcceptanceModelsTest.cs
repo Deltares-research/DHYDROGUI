@@ -164,8 +164,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private AcceptanceModelExportResultConfig exportConfig;
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             TestFixtureDirectory = FileUtils.CreateTempDirectory();
 
@@ -175,8 +175,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Directory.CreateDirectory(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory);
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             FileUtils.DeleteIfExists(TestFixtureDirectory);
         }
