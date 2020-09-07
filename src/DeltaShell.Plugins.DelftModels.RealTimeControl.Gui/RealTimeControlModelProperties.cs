@@ -48,6 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         }
 
         [PropertyOrder(0)]
+        [ReadOnly(true)]
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
         [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_UseRestart_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_UseRestart_Description")]
@@ -56,10 +57,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             get
             {
                 return data.UseRestart;
-            }
-            set
-            {
-                data.UseRestart = value;
             }
         }
 

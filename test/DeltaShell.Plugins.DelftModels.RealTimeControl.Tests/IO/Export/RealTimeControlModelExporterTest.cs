@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Given
-                var model = new RealTimeControlModel {RestartInput = new RealTimeControlRestartFile("Restart File", "file content here"), UseRestart = true};
+                var model = new RealTimeControlModel {RestartInput = new RealTimeControlRestartFile("Restart File", "file content here")};
                 AddControlGroupToModel(model);
 
                 // When
@@ -33,21 +33,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenRealTimeControlModelWithRestartInputAndUseRestartFalse_WhenExported_ThenRestartFileNotWrittenToPath()
+        public void GivenRealTimeControlModelWithUseRestartFalse_WhenExported_ThenRestartFileShouldContainStateVectorsWithZeroOrNan()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Given
-                var model = new RealTimeControlModel {RestartInput = new RealTimeControlRestartFile("Restart File", "file content here"), UseRestart = false};
+                var model = new RealTimeControlModel();
                 AddControlGroupToModel(model);
 
                 // When
                 new RealTimeControlModelExporter().Export(model, tempDirectory.Path);
+                
+                string expectedFileContentPath = Path.Combine(tempDirectory.Path, "expected_state_import.xml");
+                RealTimeControlXmlWriter.GetStateVectorXml(tempDirectory.Path, model.ControlGroups).Save(expectedFileContentPath);
+                string exportedRestartFile = Path.Combine(tempDirectory.Path, RealTimeControlXMLFiles.XmlImportState);
 
                 // Then
-                Assert.That(File.ReadAllText(Path.Combine(tempDirectory.Path, RealTimeControlXMLFiles.XmlImportState)), Is.Not.EqualTo("file content here"));
+                FileAssert.AreEqual(expectedFileContentPath, exportedRestartFile);
             }
         }
+
 
         private static void AddControlGroupToModel(IRealTimeControlModel model)
         {

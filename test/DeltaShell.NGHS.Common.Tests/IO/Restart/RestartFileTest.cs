@@ -184,6 +184,79 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             Assert.That(clone.Path, Is.EqualTo(path));
         }
 
+        [Test]
+        public void Exists_ShouldReturnFalseIfFileDoesNotExistCurrently()
+        {
+            // Setup
+            var restartFile = new RestartFile("NotExistingRestartFile_rst.nc");
+
+            // Call
+            bool fileExists = restartFile.Exists;
+
+            // Assert
+            Assert.IsFalse(fileExists);
+        }
+
+        [Test]
+        public void Exists_ShouldReturnTrueIfFileExistsCurrently()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
+                File.WriteAllText(restartFilePath, "test");
+
+                var restartFile = new RestartFile(restartFilePath);
+
+                // Call
+                bool fileExists = restartFile.Exists;
+
+                // Assert
+                Assert.IsTrue(fileExists);
+            }
+        }
+
+        [Test]
+        public void Exists_ShouldReturnFalseIfFileHasBeenDeletedAfterInitializingRestartFile()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
+                File.WriteAllText(restartFilePath, "test");
+                
+                var restartFile = new RestartFile(restartFilePath);
+                
+                // Call
+                File.Delete(restartFilePath);
+                bool fileExists = restartFile.Exists;
+
+                // Assert
+                Assert.IsFalse(fileExists);
+            }
+        }
+
+        [Test]
+        public void Exists_ShouldReturnTrueIfFileHasBeenAddedAfterInitializingRestartFile()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
+                
+                var restartFile = new RestartFile(restartFilePath);
+
+                // Call
+                File.WriteAllText(restartFilePath, "test");
+                bool fileExists = restartFile.Exists;
+
+                // Assert
+                Assert.IsTrue(fileExists);
+            }
+        }
+
+
+
         private IEnumerable<TestCaseData> GetPathTestCases()
         {
             yield return new TestCaseData(null, null, string.Empty, true);
