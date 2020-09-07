@@ -366,7 +366,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
-        public void GivenAHydroModelConverter_WhenConvertingASubModelWithRegionIsNull_ThenAHydroModelWithThisSubModelShouldBeReturned()
+        public void ConvertingDimrXmlOfAHydroModelWithSubModelRegionIsNull_ThenTheHydroModelShouldBeReturnedAndRegionOfSubModelIsNotAddedToRegionOfHydroModel()
         {
             // Given
             var modelWithNullRegion = Substitute.For<IHydroModel>();
