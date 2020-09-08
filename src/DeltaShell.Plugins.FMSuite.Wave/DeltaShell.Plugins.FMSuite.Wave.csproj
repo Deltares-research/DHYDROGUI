@@ -233,6 +233,7 @@
     <Compile Include="Migrations\1.1.0.0\DelftIniMigrator.cs" />
     <Compile Include="Migrations\1.1.0.0\IMigrationBehaviour.cs" />
     <Compile Include="Migrations\1.1.0.0\IDelftIniMigrator.cs" />
+    <Compile Include="Migrations\1.1.0.0\MigratorFactory.cs" />
     <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviour.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelper.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveModel110LegacyLoader.cs" />
