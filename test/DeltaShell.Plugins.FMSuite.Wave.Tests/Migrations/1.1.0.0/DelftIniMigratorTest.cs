@@ -200,8 +200,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         [Test]
         public void MigrateFile_SkipsPropertiesNotDefinedInMigrationBehaviour()
         {
-            
-        }
+            // Setup
+            var sourceFile = new MemoryStream();
 
+            const string sourcePath = "./fromHere/soooooooooourceyFile.ini";
+            const string targetPath = "./goesHere/taaaaaaaaaaargetFile.ini";
+
+            // Ini properties
+            const string categoryName = "categoryName";
+            var category = new DelftIniCategory(categoryName);
+
+            const string propertyName = "someName";
+            const string propertyValue = "someValue";
+            const string propertyComment = "someComment";
+
+            var property = new DelftIniProperty(propertyName, propertyValue, propertyComment);
+            category.AddProperty(property);
+
+            DelftIniCategory[] categories = {category};
+
+            var migrationBehaviour = Substitute.For<IMigrationBehaviour>();
+
+            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationMapping = 
+                new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>
+            {
+                {categoryName, new Dictionary<string, IMigrationBehaviour>
+                {
+                    { "notSomeName", migrationBehaviour },
+                }},
+            };
+
+
+            var iniReader = Substitute.For<IDelftIniReader>();
+            iniReader.ReadDelftIniFile(sourceFile, sourcePath).Returns(categories);
+
+            var iniWriter = Substitute.For<IDelftIniWriter>();
+
+            var migrator = new DelftIniMigrator(migrationMapping, iniReader, iniWriter);
+            var logHandler = Substitute.For<ILogHandler>();
+
+            // Call
+            migrator.MigrateFile(sourceFile, sourcePath, targetPath, logHandler);
+
+            // Assert
+            iniReader.Received(1).ReadDelftIniFile(sourceFile, sourcePath);
+            iniWriter.Received(1).WriteDelftIniFile(categories, targetPath, true);
+
+            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+
+            migrationBehaviour.DidNotReceiveWithAnyArgs().MigrateProperty(null, null);
+            Assert.That(property.Name, Is.EqualTo(propertyName));
+            Assert.That(property.Value, Is.EqualTo(propertyValue));
+            Assert.That(property.Comment, Is.EqualTo(propertyComment));
+        }
     }
 }
