@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     public class DelftIniFileMigrateBehaviour : IMigrationBehaviour
     {
         private readonly string expectedKey;
+        private readonly string relativeDirectory;
         private readonly string goalDirectory;
         private readonly IDelftIniMigrator migrator;
 
@@ -21,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// Creates a new <see cref="DelftIniFileMigrateBehaviour"/>.
         /// </summary>
         /// <param name="expectedKey">The expected key.</param>
+        /// <param name="relativeDirectory">The path relative to which property values are evaluated.</param>
         /// <param name="goalDirectory">The goal directory.</param>
         /// <param name="migrator">
         /// The migrator with which the property's file properties are migrated.
@@ -29,14 +31,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// Thrown when any parameter is <c>null</c>
         /// </exception>
         public DelftIniFileMigrateBehaviour(string expectedKey,
+                                            string relativeDirectory,
                                             string goalDirectory,
                                             IDelftIniMigrator migrator)
         {
             Ensure.NotNull(expectedKey, nameof(expectedKey));
+            Ensure.NotNull(relativeDirectory, nameof(relativeDirectory));
             Ensure.NotNull(goalDirectory, nameof(goalDirectory));
             Ensure.NotNull(migrator, nameof(migrator));
 
             this.expectedKey = expectedKey;
+            this.relativeDirectory = relativeDirectory;
             this.goalDirectory = goalDirectory;
             this.migrator = migrator;
         }
@@ -52,32 +57,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 return;
             }
 
-            if (File.Exists(property.Value))
-                HandleMigration(property);
+            var filePathInfo = new FileInfo(Path.Combine(relativeDirectory, property.Value));
+
+            if (filePathInfo.Exists)
+                HandleMigration(filePathInfo, property);
             else
-                HandleNotExists(property, logHandler);
+                HandleNotExists(filePathInfo, property, logHandler);
         }
 
-        private void HandleNotExists(DelftIniProperty property, ILogHandler logHandler)
+        private void HandleNotExists(FileInfo filePathInfo,
+                                     DelftIniProperty property, 
+                                     ILogHandler logHandler)
         {
             var warningMsg = 
-                $"The file associated with property {expectedKey}, {property.Value}, does not exist, the property is set to an empty string.";
+                $"The file associated with property {expectedKey}, {Path.GetFileName(property.Value)} at {filePathInfo.FullName}, does not exist, the property is set to an empty string.";
             logHandler?.ReportWarning(warningMsg);
 
             property.Value = string.Empty;
         }
 
-        private void HandleMigration(DelftIniProperty property)
+        private void HandleMigration(FileInfo filePathInfo, 
+                                     DelftIniProperty property)
         {
             var logHandler = new LogHandler($"Migrating {property.Value}");
 
-            migrator.MigrateFile(new FileStream(property.Value, FileMode.Open),
-                                 property.Value, 
-                                 Path.Combine(goalDirectory, nameof(property.Value)), 
+            string goalPath = Path.Combine(goalDirectory, Path.GetFileName(property.Value));
+
+            migrator.MigrateFile(new FileStream(filePathInfo.FullName, FileMode.Open),
+                                 filePathInfo.FullName, 
+                                 goalPath, 
                                  logHandler);
             logHandler.LogReport();
 
-            property.Value = Path.Combine(goalDirectory, Path.GetFileName(property.Value));
+            property.Value = filePathInfo.Name;
         }
     }
 }
