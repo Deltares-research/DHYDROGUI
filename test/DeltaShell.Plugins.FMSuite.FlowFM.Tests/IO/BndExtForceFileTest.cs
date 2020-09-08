@@ -1008,7 +1008,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.IsTrue(File.Exists(extFileName));
             string fileText = File.ReadAllText(extFileName);
-            Assert.That(fileText, Is.StringContaining(BndExtForceFileConstants.BoundaryBlockKey)
+            Assert.That(fileText, Does.Contain(BndExtForceFileConstants.BoundaryBlockKey)
                                     .And.StringContaining(BndExtForceFileConstants.QuantityKey + "=" + ExtForceQuantNames.ConcentrationAtBound + "frac1")
                                     .And.StringContaining(BndExtForceFileConstants.LocationFileKey + "=" + "L1.pli")
                                     .And.StringContaining(BndExtForceFileConstants.ForcingFileKey + "=" + "frac1.bc"));
@@ -1019,7 +1019,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists("frac1.bc"));
 
             fileText = File.ReadAllText("frac1.bc");
-            Assert.That(fileText, Is.StringContaining(ExtForceQuantNames.ConcentrationAtBound + "frac1")
+            Assert.That(fileText, Does.Contain(ExtForceQuantNames.ConcentrationAtBound + "frac1")
                                     .And.StringContaining("bound_0001")
                                     .And.StringContaining(BcFile.BlockKey)
                                     .And.StringContaining(BcFile.QuantityKey)
@@ -1091,7 +1091,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var bndExtForceFile = new BndExtForceFile();
             var firstBoundary = new Feature2D {Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())};
-            Assert.IsNullOrEmpty(firstBoundary.Name);
+            Assert.That(firstBoundary.Name, Is.Null.Or.Empty);
 
             var bcSet = new BoundaryConditionSet {Feature = firstBoundary};
             IList<DelftIniCategory> resultingItems = bndExtForceFile.WriteBndExtForceFileSubFiles(string.Empty, new List<BoundaryConditionSet> {bcSet}, DateTime.Today);
@@ -1118,7 +1118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
             };
             var secondBoundary = new Feature2D {Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())};
-            Assert.IsNullOrEmpty(secondBoundary.Name);
+            Assert.That(secondBoundary.Name, Is.Null.Or.Empty);
 
             var bcSetOne = new BoundaryConditionSet {Feature = firstBoundary};
             var bcSetTwo = new BoundaryConditionSet {Feature = secondBoundary};

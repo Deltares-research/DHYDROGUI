@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
     [TestFixture]
     public class CartesianOrientationCalculatorHelperTest
     {
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
 
         [Test]
         public void GetCoordinateAt_WithIndices_GridNull_ThrowsArgumentNullException()
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             Assert.That(result.Y, Is.EqualTo(expectedWorldY));
         }
 
-        private Tuple<double, double> GetDoubleValues()
+        private static Tuple<double, double> GetDoubleValues()
         {
             double lowerX0 = (random.NextDouble() * 2000) - 2000;
             double lowerX1 = (random.NextDouble() * 2000) + 2000;
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             return lowerX0 < lowerX1 ? new Tuple<double, double>(lowerX0, lowerX1) : new Tuple<double, double>(lowerX1, lowerX0);
         }
 
-        private IEnumerable<TestCaseData> GetIsCounterClockWiseData()
+        private static IEnumerable<TestCaseData> GetIsCounterClockWiseData()
         {
             Tuple<double, double> lowerX = GetDoubleValues();
             Tuple<double, double> upperX = GetDoubleValues();

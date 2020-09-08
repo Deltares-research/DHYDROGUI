@@ -207,7 +207,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void SettingMultipleLayersForWaterLevelGivesException()
         {
             var feature2D = new Feature2D
@@ -226,9 +225,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             data.AddPoint(0);
 
-            data.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed,
-                                                                               30,
-                                                                               40, 30);
+            Assert.That(() => data.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed,
+                                                                                                 30,
+                                                                                                 40, 30),
+                        Throws.ArgumentException);
         }
 
         [Test]

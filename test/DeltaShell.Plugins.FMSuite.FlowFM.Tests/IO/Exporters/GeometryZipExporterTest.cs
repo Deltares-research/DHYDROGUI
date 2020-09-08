@@ -386,7 +386,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        [ExpectedException(typeof(NotImplementedException))]
         public void GivenAGeometryZipExporterAndAnUnstructuredGridWithoutAModel_WhenExportIsCalled_ThenAnExceptionIsReturned()
         {
             var mocks = new MockRepository();
@@ -395,7 +394,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             mocks.ReplayAll();
 
-            exporter.Export(gridMock, Arg<string>.Is.Anything);
+            Assert.That(() => exporter.Export(gridMock, Arg<string>.Is.Anything), Throws.InstanceOf<NotImplementedException>());
         }
     }
 }

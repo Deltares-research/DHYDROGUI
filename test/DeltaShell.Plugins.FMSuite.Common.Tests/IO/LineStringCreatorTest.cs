@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Cannot create poly line with less than 2 points.")]
         public void GivenCollectionOfCoordinatesSmallerThan2_WhenCreatingLineString_ThenArgumentExceptionIsThrown()
         {
             // Given
@@ -37,7 +36,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             };
 
             // When/Then
-            LineStringCreator.CreateLineString(coordinates);
+            Assert.That(() => LineStringCreator.CreateLineString(coordinates),
+                Throws.ArgumentException.With.Message.EqualTo("Cannot create poly line with less than 2 points."));
         }
     }
 }

@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Utilities
             Assert.That(result, Is.EqualTo(expectedResult));
         }
 
-        private IEnumerable<TestCaseData> GetAreEqualTestCases()
+        private static IEnumerable<TestCaseData> GetAreEqualTestCases()
         {
             const double value1 = 7E-7;
             const double value2 = 8E-7;

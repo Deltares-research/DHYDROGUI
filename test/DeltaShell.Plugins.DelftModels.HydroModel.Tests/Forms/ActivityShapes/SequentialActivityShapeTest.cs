@@ -89,10 +89,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), UserMessage = "Value must be a SequentialActivity")]
         public void ThrowWhenAssigningIncompatibleActivity()
         {
-            var shape = new SequentialActivityShape(null) {Activity = ActivityShapeTestHelper.CreateSimpleActivity()};
+            Assert.That(() => new SequentialActivityShape(null) {Activity = ActivityShapeTestHelper.CreateSimpleActivity()},
+                        Throws.ArgumentException.With.Message.StartsWith("Value must be a SequentialActivity"));
         }
     }
 }

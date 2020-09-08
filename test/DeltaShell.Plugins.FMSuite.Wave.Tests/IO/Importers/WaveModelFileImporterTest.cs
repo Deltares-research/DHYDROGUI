@@ -9,7 +9,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using NSubstitute;
 using NUnit.Framework;
@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 Assert.That(model, Is.Not.Null);
                 Assert.That(model, Is.Not.SameAs(target));
                 Assert.That(model.WorkingDirectoryPathFunc, Is.SameAs(func));
-                Assert.That(owner.Items, Collection.OnlyContains(model));
+                CollectionContainsOnlyAssert.AssertContainsOnly(owner.Items, model);
             }
         }
 

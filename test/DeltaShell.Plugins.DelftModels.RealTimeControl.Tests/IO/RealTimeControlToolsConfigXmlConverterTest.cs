@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
     {
         private const string ControlGroupName = "control_group_name";
         private const string ComponentName = "component_name";
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
         private readonly ExpressionNodeEqualityComparer nodeComparer = new ExpressionNodeEqualityComparer();
 
         [Test]
@@ -986,7 +986,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                                              .AndConstantAsSecondReference("2");
         }
 
-        private IEnumerable<TestCaseData> ExpressionTestCases()
+        private static IEnumerable<TestCaseData> ExpressionTestCases()
         {
             const string yName = "expression_name";
             string id = $"{ControlGroupName}/{yName}";

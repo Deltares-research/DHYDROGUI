@@ -108,7 +108,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetNumberOfEdgesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of edges" + standardErrorMessage));
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get number of edges" + standardErrorMessage));
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetNumberOfFacesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of faces" + standardErrorMessage));
+            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get number of faces" + standardErrorMessage));
         }
 
         [Test]

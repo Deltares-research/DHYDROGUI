@@ -191,11 +191,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(NotImplementedException))]
-        public void
-            GivenAFunctionStoreCall_WhenTheFilterContainsMultipleValuesAndTheFunctionIsNotADoubleAndTheFunctionIsIndependentOfTime_ThenANotImplementedExceptionShouldBeThrown()
+        public void GivenAFunctionStoreCall_WhenTheFilterContainsMultipleValuesAndTheFunctionIsNotADoubleAndTheFunctionIsIndependentOfTime_ThenANotImplementedExceptionShouldBeThrown()
         {
-            //Given
+            // Given
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
 
             var timeFilter = new VariableValueFilter<DateTime>
@@ -213,10 +211,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             function.Arguments.Add(new Variable<int>("cell_index"));
             function.Components.Add(component);
 
-            //When
-            IMultiDimensionalArray values = store.GetVariableValues(component, timeFilter);
-
-            //Then NotImplementedException
+            // Then
+            Assert.That(() => store.GetVariableValues(component, timeFilter), Throws.InstanceOf<NotImplementedException>());
         }
 
         [Test]

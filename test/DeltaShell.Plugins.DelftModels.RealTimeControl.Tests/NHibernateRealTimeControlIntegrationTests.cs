@@ -284,7 +284,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             DirectionalCondition retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateDirectionalCondition(null));
             Assert.IsNotNull(retrievedEntity);
-            Assert.IsInstanceOfType(typeof(DirectionalCondition), retrievedEntity);
+            Assert.That(retrievedEntity, Is.InstanceOf<DirectionalCondition>());
             Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfConditions(RealTimeControlTestHelper.GenerateDirectionalCondition(null), retrievedEntity));
         }
 

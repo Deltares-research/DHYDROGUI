@@ -15,7 +15,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
-    [TestFixture()]
+    [TestFixture]
     public class BcmFileImporterTest
     {
         private BcmFileImporter importer;
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsFalse(result);
         }
 
-        [Test()]
+        [Test]
         public void TestBcmFileImporter()
         {
             var importer = new BcmFileImporter();
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(importerSupportedItemTypes[2], Is.EqualTo(typeof(BoundaryCondition)));
         }
 
-        [Test()]
+        [Test]
         public void TestCanImportOn()
         {
             var importer = new BcmFileImporter();
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.IsFalse(importer.CanImportOnRootLevel);
         }
 
-        [Test()]
+        [Test]
         public void TestImportItemOnModelBoundaryConditionSets()
         {
             string filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelPrescribed.bcm");
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(((FlowBoundaryCondition) model.BoundaryConditionSets[0].BoundaryConditions[1]).FlowQuantity, Is.EqualTo(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed));
         }
 
-        [Test()]
+        [Test]
         public void TestImportItemOnAModelBoundaryConditionSet()
         {
             string filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelPrescribed.bcm");
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(((FlowBoundaryCondition) model.BoundaryConditionSets[1].BoundaryConditions[0]).FlowQuantity, Is.EqualTo(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed));
         }
 
-        [Test()]
+        [Test]
         public void TestImportItemOnBoundaryCondition()
         {
             string filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelPrescribed.bcm");
@@ -190,8 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.AreEqual(23, data.GetValues<double>().Count);
         }
 
-        [Test()]
-        [ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void TestImportItemOnObjectThrowArgumentException()
         {
             string filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelPrescribed.bcm");
@@ -203,8 +202,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 DeleteDataBeforeImport = true
             };
 
-            var myobject = new object();
-            importer.ImportItem(filePath, myobject);
+            var obj = new object();
+            
+            Assert.That(() => importer.ImportItem(filePath, obj), Throws.ArgumentException);
         }
 
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]

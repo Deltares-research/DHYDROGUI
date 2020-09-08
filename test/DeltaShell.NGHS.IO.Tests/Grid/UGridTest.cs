@@ -63,30 +63,39 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Category(TestCategory.DataAccess)]
         public void TestIfFilenameIsNullUgridShouldThrowException()
         {
-            using (var uGrid = new UGrid(null))
+            Assert.That(() =>
             {
-                Assert.That(() => uGrid.Initialize(), Throws.Exception);
-            }
+                using (var uGrid = new UGrid(null))
+                {
+                    uGrid.Initialize();
+                }
+            }, Throws.Exception);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void TestIfFilenameIsEmptyStringUgridShouldThrowException()
         {
-            using (var uGrid = new UGrid(string.Empty))
+            Assert.That(() =>
             {
-                Assert.That(() => uGrid.Initialize(), Throws.Exception);
-            }
+                using (var uGrid = new UGrid(string.Empty))
+                {
+                    uGrid.Initialize();
+                }
+            }, Throws.Exception);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void TestIfFileDoesNotExistUgridShouldThrowException()
         {
-            using (var uGrid = new UGrid("thisFileDoesntExist.nc"))
+            Assert.That(() =>
             {
-                Assert.That(() => uGrid.Initialize(), Throws.Exception);
-            }
+                using (var uGrid = new UGrid("thisFileDoesntExist.nc"))
+                {
+                    uGrid.Initialize();
+                }
+            }, Throws.Exception);
         }
 
         [Test]

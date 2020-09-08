@@ -10,10 +10,10 @@ using Rhino.Mocks;
 
 namespace DeltaShell.Dimr.Tests
 {
-    [TestFixture()]
+    [TestFixture]
     public class DimrGuiPluginTests
     {
-        [Test()]
+        [Test]
         public void TestDimrGuiPlugin()
         {
             using (var gui = new DeltaShellGui())
@@ -30,7 +30,7 @@ namespace DeltaShell.Dimr.Tests
             Assert.IsNull(DimrGuiPlugin.Instance);
         }
 
-        [Test()]
+        [Test]
         public void TestIsOnlyDimrModelSelected()
         {
             var mocks = new MockRepository();
@@ -74,7 +74,7 @@ namespace DeltaShell.Dimr.Tests
             mocks.VerifyAll();
         }
 
-        [Test()]
+        [Test]
         public void TestGetPersistentAssemblies()
         {
             using (var dimrGuiPlugin = new DimrGuiPlugin())

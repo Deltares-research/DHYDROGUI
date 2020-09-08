@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check model name
                     WaterFlowFMModel targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
+                    Assert.That(targetModel.Name, Does.Contain("FlowFM"));
 
                     // Import new water flow model
                     WaterFlowFMFileImporter importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check name of imported water flow model
                     targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("har"));
+                    Assert.That(targetModel.Name, Does.Contain("har"));
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
@@ -181,14 +181,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check folder name
                     Folder testFolder = project.RootFolder.Folders.FirstOrDefault();
                     Assert.IsNotNull(testFolder);
-                    Assert.That(testFolder.Name, Is.StringContaining("Test Folder"));
+                    Assert.That(testFolder.Name, Does.Contain("Test Folder"));
 
                     // Add new water flow model to the new folder and check its name
                     testFolder.Add(new WaterFlowFMModel());
                     WaterFlowFMModel targetModel =
                         testFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
+                    Assert.That(targetModel.Name, Does.Contain("FlowFM"));
 
                     // Import new water flow model
                     WaterFlowFMFileImporter importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check name of imported water flow model
                     targetModel = testFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("har"));
+                    Assert.That(targetModel.Name, Does.Contain("har"));
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }

@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
     [TestFixture]
     public class ConditionDataAccessObjectCreatorTest
     {
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
 
         [Test]
         public void Create_StandardTriggerXmlNull_ThrowsArgumentNullException()
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                         "Expected the results to be equal to the expected results:");
         }
 
-        private IEnumerable<TestCaseData> GetCreateTestCases()
+        private static IEnumerable<TestCaseData> GetCreateTestCases()
         {
             foreach (Operation operation in Enum.GetValues(typeof(Operation)))
             {
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             }
         }
 
-        private TestCaseData GetStandardConditionWithImplicitReferenceTestCase(Operation operation)
+        private static TestCaseData GetStandardConditionWithImplicitReferenceTestCase(Operation operation)
         {
             const string reference = StandardCondition.ReferenceType.Implicit;
             const string inputReference = "input_ref";
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return new TestCaseData(standardTriggerXml, expectedConditionDataAccessObject);
         }
 
-        private TestCaseData GetStandardConditionWithExplicitReferenceTestCase(Operation operation)
+        private static TestCaseData GetStandardConditionWithExplicitReferenceTestCase(Operation operation)
         {
             const string reference = StandardCondition.ReferenceType.Explicit;
             const string inputReference = "input_ref";
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return new TestCaseData(standardTriggerXml, expectedConditionDataAccessObject);
         }
 
-        private TestCaseData GetTimeConditionWithImplicitReferenceTestCase(Operation operation)
+        private static TestCaseData GetTimeConditionWithImplicitReferenceTestCase(Operation operation)
         {
             string reference = StandardCondition.ReferenceType.Implicit;
             const string inputReference = "input_ref";
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return new TestCaseData(standardTriggerXml, expectedConditionDataAccessObject);
         }
 
-        private TestCaseData GetTimeConditionWithExplicitReferenceTestCase(Operation operation)
+        private static TestCaseData GetTimeConditionWithExplicitReferenceTestCase(Operation operation)
         {
             string reference = StandardCondition.ReferenceType.Explicit;
             const string inputReference = "input_ref";
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return new TestCaseData(standardTriggerXml, expectedConditionDataAccessObject);
         }
 
-        private TestCaseData GetDirectionalConditionWithImplicitReferenceTestCase(Operation operation)
+        private static TestCaseData GetDirectionalConditionWithImplicitReferenceTestCase(Operation operation)
         {
             const string reference = StandardCondition.ReferenceType.Implicit;
             const string inputReference = "input_ref";
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return new TestCaseData(standardTriggerXml, expectedConditionDataAccessObject);
         }
 
-        private StandardTriggerXML GetArgumentAndExpectedStandardConditionDataAccessObject(
+        private static StandardTriggerXML GetArgumentAndExpectedStandardConditionDataAccessObject(
             Operation operation, string reference, string inputRef,
             out ConditionDataAccessObject expectedConditionDataAccessObject)
         {
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return standardTriggerXml;
         }
 
-        private StandardTriggerXML GetArgumentAndExpectedTimeConditionDataAccessObject(
+        private static StandardTriggerXML GetArgumentAndExpectedTimeConditionDataAccessObject(
             Operation operation, string reference, string inputRef,
             out ConditionDataAccessObject expectedConditionDataAccessObject)
         {
