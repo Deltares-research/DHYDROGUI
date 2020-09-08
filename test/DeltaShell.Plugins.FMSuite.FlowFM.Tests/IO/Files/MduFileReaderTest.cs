@@ -318,7 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
         }
 
-        private IEnumerable<string> GetMultiValuedPropertiesFileContents()
+        private static IEnumerable<string> GetMultiValuedPropertiesFileContents()
         {
             yield return "[Geometry]"
                          + Environment.NewLine

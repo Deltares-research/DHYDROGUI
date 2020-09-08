@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// <summary>
         /// The test case data for the GivenAMduFileWithMoreColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged.
         /// </summary>
-        private IEnumerable<TestCaseData> WeirWarningMessageTestCaseData
+        private static IEnumerable<TestCaseData> WeirWarningMessageTestCaseData
         {
             get
             {
