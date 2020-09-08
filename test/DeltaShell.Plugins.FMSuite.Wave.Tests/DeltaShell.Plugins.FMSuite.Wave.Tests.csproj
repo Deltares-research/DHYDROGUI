@@ -392,7 +392,6 @@
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryConverterTest.cs" />
     <Compile Include="IO\Helpers\DelftIniCategoryExtensionsTest.cs" />
     <Compile Include="IO\Helpers\Domain\WaveDomainDataConverterTest.cs" />
-    <Compile Include="IO\Helpers\Domain\WaveMeteoDataFactoryTest.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValuesTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactoryTest.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporterTest.cs" />
