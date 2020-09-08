@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
@@ -16,6 +17,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
     /// </summary>
     public static class WaveDomainDataConverter
     {
+        private const string quantityKey = "quantity1";
+        private const string xWindQuantity = "x_wind";
+        private const string yWindQuantity = "y_wind";
+
         /// <summary>
         /// Converts the specified <paramref name="domainCategories"/> to
         /// their respective <see cref="WaveDomainData"/>.
@@ -53,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
 
                 CreateDirectionalSpaceData(domainCategory, domain);
                 CreateFrequencySpaceData(domainCategory, domain);
-                CreateMeteoData(domainCategory, domain, mdwDirPath, logHandler);
+                SetMeteoData(domainCategory, domain, mdwDirPath, logHandler);
                 CreateHydroFromFlowSettingsData(domainCategory, domain);
 
                 yield return domain;
@@ -136,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
             }
         }
 
-        private static void CreateMeteoData(DelftIniCategory domainCategory, WaveDomainData domain, string mdwDirPath, ILogHandler logHandler)
+        private static void SetMeteoData(DelftIniCategory domainCategory, WaveDomainData domain, string mdwDirPath, ILogHandler logHandler)
         {
             domain.UseGlobalMeteoData = true;
 
@@ -164,36 +169,158 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
             string[] amuFiles = lookup[".amu"].ToArray();
             string[] amvFiles = lookup[".amv"].ToArray();
 
-            var mapping = new Dictionary<(int, int, int, int), Func<WaveMeteoData>>
-            {
-                {(0, 1, 0, 0), () => WaveMeteoDataFactory.CreateVectorMeteoData(wndFiles[0])},
-                {(0, 2, 0, 0), () => WaveMeteoDataFactory.CreateWndXYComponentMeteoData(wndFiles[0], wndFiles[1])},
-                {(0, 0, 1, 1), () => WaveMeteoDataFactory.CreateXYComponentMeteoData(amuFiles[0], amvFiles[0])},
-                {(1, 0, 0, 0), () => WaveMeteoDataFactory.CreateSpiderWebMeteoData(spwFiles[0])},
-                {(1, 1, 0, 0), () => WaveMeteoDataFactory.CreateVectorMeteoData(wndFiles[0], spwFiles[0])},
-                {(1, 2, 0, 0), () => WaveMeteoDataFactory.CreateWndXYComponentMeteoData(wndFiles[0], wndFiles[1], spwFiles[0])},
-                {(1, 0, 1, 1), () => WaveMeteoDataFactory.CreateXYComponentMeteoData(amuFiles[0], amvFiles[0], spwFiles[0])},
-            };
+            WaveMeteoData meteoData = CreateWaveMeteoData(spwFiles, wndFiles, amuFiles, amvFiles);
 
-            if (mapping.TryGetValue((spwFiles.Length,
-                                     wndFiles.Length,
-                                     amuFiles.Length,
-                                     amvFiles.Length),
-                                    out Func<WaveMeteoData> createMeteoData))
+            if (meteoData == null)
             {
-                WaveMeteoData meteoData = createMeteoData.Invoke();
-                if (meteoData == null)
+                logHandler.ReportWarning($"Meteo data could not be created for domain '{domain.Name}'. Defaulted to global settings.");
+                return;
+            }
+
+            if (spwFiles.Length == 1)
+            {
+                AddSpiderwebData(meteoData, spwFiles[0]);
+            }
+
+            domain.UseGlobalMeteoData = false;
+            domain.MeteoData = meteoData;
+        }
+
+        private static bool TryCreateSpiderWebMeteoData(IList<string> spwFiles,
+                                                        IList<string> wndFiles,
+                                                        IList<string> amuFiles,
+                                                        IList<string> amvFiles,
+                                                        out WaveMeteoData meteoData)
+        {
+            meteoData = null;
+
+            if (spwFiles.Count == 1 &&
+                wndFiles.Count == 0 &&
+                amuFiles.Count == 0 &&
+                amvFiles.Count == 0)
+            {
+                meteoData = new WaveMeteoData {FileType = WindDefinitionType.SpiderWebGrid};
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryCreateWindXYMeteoData(IList<string> wndFiles,
+                                                     IList<string> amuFiles,
+                                                     IList<string> amvFiles,
+                                                     out WaveMeteoData meteoData)
+        {
+            meteoData = null;
+
+            if (wndFiles.Count == 1 && amuFiles.Count == 0 && amvFiles.Count == 0)
+            {
+                meteoData = new WaveMeteoData()
                 {
-                    logHandler.ReportWarning($"Meteo data could not be created for domain '{domain.Name}'. Defaulted to global settings.");
-                    return;
+                    FileType = WindDefinitionType.WindXY,
+                    XYVectorFilePath = wndFiles[0],
+                };
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryCreateWindXWindYMeteoData(IList<string> wndFiles,
+                                                         IList<string> amuFiles,
+                                                         IList<string> amvFiles,
+                                                         out WaveMeteoData meteoData)
+        {
+            meteoData = null;
+            string xWind = null;
+            string yWind = null;
+
+            if (wndFiles.Count == 2 && amuFiles.Count == 0 && amvFiles.Count == 0)
+            {
+                string wndFile1 = wndFiles[0];
+                string wndFile2 = wndFiles[1];
+
+                string quantity1 = GetQuantity(wndFile1);
+                string quantity2 = GetQuantity(wndFile2);
+
+                if (quantity1 == quantity2 ||
+                    !IsSupported(quantity1) ||
+                    !IsSupported(quantity2))
+                {
+                    return false;
                 }
 
-                domain.UseGlobalMeteoData = false;
-                domain.MeteoData = meteoData;
+                xWind = quantity1 == xWindQuantity ? wndFile1 : wndFile2;
+                yWind = quantity1 == yWindQuantity ? wndFile1 : wndFile2;
             }
-            else
+
+            else if (wndFiles.Count == 0 && amuFiles.Count == 1 && amvFiles.Count == 1)
             {
-                logHandler.ReportWarning($"Meteo file combination not supported for domain '{domain.Name}'. Defaulted to global settings.");
+                xWind = amuFiles[0];
+                yWind = amvFiles[0];
+            }
+
+            if (xWind == null || yWind == null)
+            {
+                return false;
+            }
+
+            meteoData = new WaveMeteoData()
+            {
+                FileType = WindDefinitionType.WindXWindY,
+                XComponentFilePath = xWind,
+                YComponentFilePath = yWind,
+            };
+
+            return true;
+        }
+
+        private static WaveMeteoData CreateWaveMeteoData(IList<string> spwFiles,
+                                                         IList<string> wndFiles,
+                                                         IList<string> amuFiles,
+                                                         IList<string> amvFiles)
+        {
+            if (TryCreateSpiderWebMeteoData(spwFiles, wndFiles, amuFiles, amvFiles, out WaveMeteoData spiderWebData))
+            {
+                return spiderWebData;
+            }
+
+            if (TryCreateWindXYMeteoData(wndFiles, amuFiles, amvFiles, out WaveMeteoData windXYData))
+            {
+                return windXYData;
+            }
+
+            if (TryCreateWindXWindYMeteoData(wndFiles, amuFiles, amvFiles, out WaveMeteoData windXWindYData))
+            {
+                return windXWindYData;
+            }
+
+            return null;
+        }
+
+        private static void AddSpiderwebData(WaveMeteoData meteoData, string spwFilePath)
+        {
+            meteoData.HasSpiderWeb = true;
+            meteoData.SpiderWebFilePath = spwFilePath;
+        }
+
+        private static bool IsSupported(string quantity) => quantity == xWindQuantity || quantity == yWindQuantity;
+
+        private static string GetQuantity(string file)
+        {
+            using (var sr = new StreamReader(new FileStream(file, FileMode.Open)))
+            {
+                string line;
+
+                while ((line = sr.ReadLine())?.Trim() != null)
+                {
+                    if (line.StartsWith(quantityKey, StringComparison.Ordinal))
+                    {
+                        return line.Split('=').ElementAt(1).Trim();
+                    }
+                }
+
+                return null;
             }
         }
     }
