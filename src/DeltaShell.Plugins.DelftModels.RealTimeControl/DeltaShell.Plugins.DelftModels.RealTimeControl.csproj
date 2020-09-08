@@ -255,6 +255,7 @@
     <Compile Include="Domain\PIDRule.cs" />
     <Compile Include="Domain\Record.cs" />
     <Compile Include="Domain\Setting.cs" />
+    <Compile Include="Legacy\RtcLegacyLoader36.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -392,6 +393,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Domain\Restart\RealTimeControlRestartFile.hbm.xml" />
+    <EmbeddedResource Include="RealTimeControlModel.3.6.hbm.xml" />
     <Content Include="Resources\cog_active.png" />
     <Content Include="Resources\cog1.png" />
     <Content Include="Resources\condition.png" />
