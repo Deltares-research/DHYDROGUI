@@ -42,10 +42,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ClearSyncers();
             TracerDefinitions.Clear();
 
-            LoadStateFromMdu(mduFilePath);
+            LoadInputStateFromMdu(mduFilePath);
+            LoadOutputStateFromMdu(mduFilePath);
+
             ImportSpatialOperationsAfterLoading();
 
             InitializeSyncers();
+        }
+
+        private void LoadOutputStateFromMdu(string mduFilePath)
+        {
+            string existingOutputDirectory = RetrieveOutputDirectory(mduFilePath);
+            ReconnectOutputFiles(existingOutputDirectory);
         }
 
         /// <summary>
@@ -61,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ClearSyncers();
             TracerDefinitions.Clear();
 
-            LoadStateFromMdu(mduFilePath);
+            LoadInputStateFromMdu(mduFilePath);
             AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating();
 
@@ -75,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             importProgressChanged = null;
         }
 
-        private void LoadStateFromMdu(string mduFilePath)
+        private void LoadInputStateFromMdu(string mduFilePath)
         {
             LoadModelFromMdu(mduFilePath);
 
@@ -134,7 +142,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FireImportProgressChanged("Reading model output", 8, TotalImportSteps);
 
             LoadRestartFile(mduFilePath);
+        }
 
+        private string RetrieveOutputDirectory(string mduFilePath)
+        {
             currentOutputDirectoryPath = PersistentOutputDirectoryPath;
 
             if (ModelDefinition.ContainsProperty(KnownProperties.OutputDir))
@@ -145,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (!string.IsNullOrEmpty(mduOutputDir))
                 {
                     // We currently assume all OutputDirectoryNames are relative.
-                    string mduOutputDirPath = Path.Combine(mduFileDir, mduOutputDir);
+                    string mduOutputDirPath = Path.Combine(Path.GetDirectoryName(mduFilePath), mduOutputDir);
                     if (Directory.Exists(mduOutputDirPath))
                     {
                         currentOutputDirectoryPath = mduOutputDirPath;
@@ -157,8 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                  ? currentOutputDirectoryPath
                                                  : Path.GetDirectoryName(
                                                      mduFilePath); // backwards Compatibility (output next to mdu file)
-
-            ReconnectOutputFiles(existingOutputDirectory);
+            return existingOutputDirectory;
         }
 
         private void LoadRestartFile(string mduPath)
