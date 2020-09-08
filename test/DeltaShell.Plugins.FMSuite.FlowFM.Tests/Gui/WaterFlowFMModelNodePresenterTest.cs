@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
+            model.LoadFromMdu(mduPath);
 
             IFunction outputFunction = model.OutputHisFileStore.Functions.First();
 
