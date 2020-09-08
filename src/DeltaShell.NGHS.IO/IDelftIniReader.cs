@@ -17,6 +17,9 @@ namespace DeltaShell.NGHS.IO
         /// <param name="filePath"> The path to the file location. </param>
         /// <returns> A collection of <see cref="DelftIniCategory"/> instances. </returns>
         /// <remarks> The stream is implicitly disposed. </remarks>
+        /// <exception cref="System.ArgumentException">
+        /// Thrown when <paramref name="stream"/> does not support reading.
+        /// </exception>
         IList<DelftIniCategory> ReadDelftIniFile(Stream stream, string filePath);
     }
 }
