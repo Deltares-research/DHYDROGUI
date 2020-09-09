@@ -980,6 +980,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The D-Real Time Control model &apos;{0}&apos; was migrated to the newest version. If applicable, please verify the restart file settings..
+        /// </summary>
+        public static string RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings {
+            get {
+                return ResourceManager.GetString("RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_rest" +
+                        "art_file_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap rtcmodel {

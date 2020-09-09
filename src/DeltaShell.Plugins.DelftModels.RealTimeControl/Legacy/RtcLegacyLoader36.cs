@@ -10,6 +10,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
@@ -50,8 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
             RemoveExplicitWorkingDir(rootPath, model.Name);
 
-            log.Warn($"The D-Real Time Control model '{model.Name}' was migrated to the newest version. " +
-                     $"If applicable, please verify the restart file settings.");
+            log.Warn(string.Format(Resources.RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings, model.Name));
         }
 
         private EventedList<RealTimeControlRestartFile> RetrieveRestartOutput(string rootPath, string modelName)

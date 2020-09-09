@@ -421,4 +421,7 @@
   <data name="MathematicalExpressionSerializer_ParseMathematicalExpressionToRootBranchNode_Mathematical_expression__0__contains_invalid_expression__1__" xml:space="preserve">
     <value>Mathematical expression {0} contains invalid expression "{1}".</value>
   </data>
+  <data name="RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings" xml:space="preserve">
+    <value>The D-Real Time Control model '{0}' was migrated to the newest version. If applicable, please verify the restart file settings.</value>
+  </data>
 </root>
