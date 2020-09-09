@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,9 +10,9 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 {
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
     /// </summary>
     public class RtcLegacyLoader36 : LegacyLoader
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(RtcLegacyLoader36));
+        private static readonly ILogHandler logHandler = new LogHandler("the migration of the D-RTC model", typeof(RtcLegacyLoader36));
         private readonly Regex timeRegex = new Regex(@"\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}");
         private const string restartFileName = "state_import.xml";
         private const string metaDataFileName = "metadata.xml";
@@ -40,6 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
             GetModels(project).ForEach(MigrateModel);
 
+            logHandler.LogReport();
+
             base.OnAfterProjectMigrated(project);
         }
 
@@ -51,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
             RemoveExplicitWorkingDir(rootPath, model.Name);
 
-            log.Warn(string.Format(Resources.RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings, model.Name));
+            logHandler.ReportWarning(string.Format(Resources.RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings, model.Name));
         }
 
         private EventedList<RealTimeControlRestartFile> RetrieveRestartOutput(string rootPath, string modelName)
@@ -67,9 +70,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
                 var restartFile = new RealTimeControlRestartFile(newFileName, File.ReadAllText(restartFilePath));
 
-                File.Delete(Path.Combine(rootPath, metaDataFileName));
-                File.Delete(stateFilePath);
-                File.Delete(restartFilePath);
+                TryDeleteFile(Path.Combine(rootPath, metaDataFileName));
+                TryDeleteFile(stateFilePath);
+                TryDeleteFile(restartFilePath);
 
                 restartFiles.Add(restartFile);
             }
@@ -98,5 +101,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
         }
 
         private static IEnumerable<RealTimeControlModel> GetModels(Project project) => project.RootFolder.GetAllItemsRecursive().OfType<RealTimeControlModel>();
+
+        private static void TryDeleteFile(string filePath)
+        {
+            try
+            {
+                File.Delete(filePath);
+            }
+
+            catch (IOException e)
+            {
+                LogException(filePath, e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                LogException(filePath, e.Message);
+            }
+        }
+
+        private static void LogException(string filePath, string exceptionMessage)
+        {
+            logHandler.ReportError(string.Format(Resources.RtcLegacyLoader36_an_error_occurred_while_deleting_file, Path.GetFileName(filePath),
+                                                 exceptionMessage));
+        }
     }
 }

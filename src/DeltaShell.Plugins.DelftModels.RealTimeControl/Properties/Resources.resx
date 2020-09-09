@@ -424,4 +424,7 @@
   <data name="RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings" xml:space="preserve">
     <value>The D-Real Time Control model '{0}' was migrated to the newest version. If applicable, please verify the restart file settings.</value>
   </data>
+  <data name="RtcLegacyLoader36_an_error_occurred_while_deleting_file" xml:space="preserve">
+    <value>An error occurred while deleting {0}: {1}</value>
+  </data>
 </root>

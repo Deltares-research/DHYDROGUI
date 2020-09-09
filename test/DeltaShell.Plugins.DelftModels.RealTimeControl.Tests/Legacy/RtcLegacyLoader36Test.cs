@@ -58,8 +58,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
                 // Assert
                 List<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
                 Assert.That(warnings, Has.Count.EqualTo(1));
-                Assert.That(warnings[0], Is.EqualTo($"The D-Real Time Control model 'Real-Time Control' was migrated to the newest version. " +
-                                                    $"If applicable, please verify the restart file settings."));
+                Assert.That(warnings[0], Contains.Substring($"The D-Real Time Control model 'Real-Time Control' was migrated to the newest version. " +
+                                                            $"If applicable, please verify the restart file settings."));
 
                 string projectDir = Path.Combine(dir, "Project1.dsproj_data");
                 string explicitWorkingDir = Path.Combine(projectDir, "Real-Time_Control_output");
