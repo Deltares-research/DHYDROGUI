@@ -1542,7 +1542,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;Input restart state&quot;.
+        ///   Looks up a localized string similar to Input restart state.
         /// </summary>
         public static string WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state {
             get {

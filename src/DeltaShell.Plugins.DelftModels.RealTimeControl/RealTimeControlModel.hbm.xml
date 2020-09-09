@@ -20,7 +20,6 @@
     <property name="SaveStateStopTime" />
     <property name="SaveStateTimeStep" />
 
-    <property name="UseRestart" />
     <property name="WriteRestart" />
 
     <many-to-one access="property" name="RestartInput" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart.RealTimeControlRestartFile, DeltaShell.Plugins.DelftModels.RealTimeControl" />

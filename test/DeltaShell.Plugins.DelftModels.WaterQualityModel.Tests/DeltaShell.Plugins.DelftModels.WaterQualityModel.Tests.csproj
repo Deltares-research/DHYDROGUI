@@ -104,6 +104,7 @@
     <Compile Include="Model\WaterQualityOutputConnectorTest.cs" />
     <Compile Include="Model\WaterQualityOutputDisconnectorTest.cs" />
     <Compile Include="NHibernate\WaterQualityModel352LegacyLoaderTest.cs" />
+    <Compile Include="NHibernate\WaterQualityModel353LegacyLoaderTest.cs" />
     <Compile Include="NHibernate\WaterQualityModelNHibernateIntegrationTest.cs" />
     <Compile Include="ObservationAreas\OverwriteLabelOperationTest.cs" />
     <Compile Include="ObservationAreas\WaterQualityObservationAreaCoverageTest.cs" />
