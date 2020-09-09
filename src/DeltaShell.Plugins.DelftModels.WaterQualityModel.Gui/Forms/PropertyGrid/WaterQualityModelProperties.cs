@@ -349,7 +349,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         }
 
         [PropertyOrder(1)]
-        [Description("Use (restart) state as initial condition")]
+        [Description("Use restart as initial condition")]
         [DisplayName("Use restart")]
         [Category("\tRestart parameters")]
         public bool UseRestart
@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         }
 
         [PropertyOrder(2)]
-        [Description("Write final state (can be used to restart from)")]
+        [Description("Write restart files (can be used to restart from)")]
         [DisplayName("Write restart")]
         [Category("\tRestart parameters")]
         public bool WriteRestart
@@ -391,7 +391,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         }
 
         [PropertyOrder(5)]
-        [Description("Stop writing states when simulation time is beyond this time")]
+        [Description("Stop writing restart files when simulation time is beyond this time")]
         [DisplayName("Restart stop time")]
         [Category("\tRestart parameters")]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
