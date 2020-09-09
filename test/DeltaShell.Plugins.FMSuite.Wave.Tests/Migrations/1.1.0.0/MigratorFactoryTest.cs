@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
@@ -15,6 +17,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
     [TestFixture]
     public class MigratorFactoryTest
     {
+        [Test]
+        [TestCase(null, "somePath", "relativeDirectory")]
+        [TestCase("somePath", null, "goalDirectory")]
+        public void CreateObsMigration_ParameterNull_ThrowsArgumentNullException(string relativeDirectory,
+                                                                                 string goalDirectory,
+                                                                                 string expectedParameterName)
+        {
+            void Call() => MigratorFactory.CreateObsMigrator(relativeDirectory, goalDirectory);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
+        }
+
+
+        [Test]
+        [TestCase(null, "somePath", "relativeDirectory")]
+        [TestCase("somePath", null, "goalDirectory")]
+        public void CreateMdwMigration_ParameterNull_ThrowsArgumentNullException(string relativeDirectory,
+                                                                                 string goalDirectory,
+                                                                                 string expectedParameterName)
+        {
+            void Call() => MigratorFactory.CreateMdwMigrator(relativeDirectory, goalDirectory);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
+        }
+
         [Test]
         [Category(TestCategory.Integration)]
         public void CreateObsMigration_RelativePath_ProducesCorrectFunctioningMigrator()
@@ -39,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 obstacleFileInformation.AddProperties( new []
                 {
                     new DelftIniProperty("File", "100.0", ""),
-                    new DelftIniProperty("PolyLineFile", polyLineFileName, ""), 
+                    new DelftIniProperty("PolylineFile", polyLineFileName, ""), 
                 });
 
                 var oldCategories = new DelftIniCategory[6];
@@ -138,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 obstacleFileInformation.AddProperties( new []
                 {
                     new DelftIniProperty("File", "100.0", ""),
-                    new DelftIniProperty("PolyLineFile", $"./{polSubDir}/{polyLineFileName}", ""), 
+                    new DelftIniProperty("PolylineFile", $"./{polSubDir}/{polyLineFileName}", ""), 
                 });
 
                 var oldCategories = new DelftIniCategory[6];
@@ -254,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 obstacleFileInformation.AddProperties( new []
                 {
                     new DelftIniProperty("File", "100.0", ""),
-                    new DelftIniProperty("PolyLineFile", oldPolPath, ""), 
+                    new DelftIniProperty("PolylineFile", oldPolPath, ""), 
                 });
 
                 var oldCategories = new DelftIniCategory[6];
@@ -338,6 +367,102 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                         Assert.That(newProperties[j].Name,    Is.EqualTo(oldProperties[j].Name));
                         Assert.That(newProperties[j].Value,   Is.EqualTo(oldProperties[j].Value));
                         Assert.That(newProperties[j].Comment, Is.EqualTo(oldProperties[j].Comment));
+                    }
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [TestCase("grw.zip")]
+        [TestCase("waddenzee.zip")]
+        [TestCase("westerscheldt.zip")]
+        public void CreateMdwMigration_ExpectedResults(string testFileName)
+        {
+            
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", "MigratorFactoryTest", testFileName));
+
+                string sourceModelFolder = Path.Combine(tempDir.Path, "source_model_folder");
+                string sourceMdwPath = Path.Combine(sourceModelFolder, "waves.mdw");
+
+                ZipFileUtils.Extract(inputDataPath, tempDir.Path);
+                string resultPath = tempDir.CreateDirectory("result_model_folder/input");
+                string resultMdwPath = Path.Combine(resultPath, "waves.mdw");
+
+                string referenceModelFolder = Path.Combine(tempDir.Path, "reference_model_folder", "input");
+                string referenceMdwPath = Path.Combine(referenceModelFolder, "waves.mdw");
+
+                IDelftIniMigrator migrator = MigratorFactory.CreateMdwMigrator(sourceModelFolder, resultPath);
+
+                var fileStream = new FileStream(sourceMdwPath, FileMode.Open);
+                var logHandler = Substitute.For<ILogHandler>();
+
+                // call 
+                migrator.MigrateFile(fileStream, sourceMdwPath, resultMdwPath, logHandler);
+
+                // Assert
+                string[] referenceFiles = Directory.GetFiles(referenceModelFolder);
+                string[] resultFiles = Directory.GetFiles(resultPath);
+
+                Assert.That(resultFiles.Length, Is.EqualTo(referenceFiles.Length));
+
+                for (var i = 0; i < resultFiles.Length; i++)
+                    Assert.That(Path.GetFileName(resultFiles[i]), 
+                                Is.EqualTo(Path.GetFileName(referenceFiles[i])));
+
+                Assert.That(File.Exists(resultMdwPath), Is.True);
+
+                var reader = new DelftIniReader();
+                IList<DelftIniCategory> newCategories = 
+                    reader.ReadDelftIniFile(new FileStream(resultMdwPath, FileMode.Open), resultMdwPath);
+
+                IList<DelftIniCategory> referenceCategories = 
+                    reader.ReadDelftIniFile(new FileStream(referenceMdwPath, FileMode.Open), referenceMdwPath);
+
+                for (var i = 0; i < newCategories.Count; i++)
+                {
+                    Assert.That(newCategories[i].Name, Is.EqualTo(referenceCategories[i].Name));
+
+                    DelftIniProperty[] referenceProperties = referenceCategories[i].Properties.ToArray();
+                    DelftIniProperty[] newProperties = newCategories[i].Properties.ToArray();
+
+                    Assert.That(newProperties.Length, Is.EqualTo(referenceProperties.Length));
+
+                    for (var j = 0; j < referenceProperties.Length; j++)
+                    {
+                        Assert.That(newProperties[j].Name,    Is.EqualTo(referenceProperties[j].Name));
+                        Assert.That(newProperties[j].Value,   Is.EqualTo(referenceProperties[j].Value));
+                        Assert.That(newProperties[j].Comment, Is.EqualTo(referenceProperties[j].Comment));
+                    }
+                }
+
+                foreach (string path in Directory.GetFiles(referenceModelFolder, "*.obs", SearchOption.TopDirectoryOnly))
+                {
+                    string newObsPath = Path.Combine(sourceMdwPath, Path.GetFileName(path));
+                    IList<DelftIniCategory> obsNewCategories =
+                        reader.ReadDelftIniFile(new FileStream(newObsPath, FileMode.Open), newObsPath);
+                    
+                    IList<DelftIniCategory> obsReferenceCategories = 
+                        reader.ReadDelftIniFile(new FileStream(path, FileMode.Open), path);
+
+                    for (var i = 0; i < obsNewCategories.Count; i++)
+                    {
+                        Assert.That(obsNewCategories[i].Name, Is.EqualTo(obsReferenceCategories[i].Name));
+
+                        DelftIniProperty[] obsReferenceProperties = obsReferenceCategories[i].Properties.ToArray();
+                        DelftIniProperty[] obsNewProperties = obsNewCategories[i].Properties.ToArray();
+
+                        Assert.That(obsNewProperties.Length, Is.EqualTo(obsReferenceProperties.Length));
+
+                        for (var j = 0; j < obsReferenceProperties.Length; j++)
+                        {
+                            Assert.That(obsNewProperties[j].Name,    Is.EqualTo(obsReferenceProperties[j].Name));
+                            Assert.That(obsNewProperties[j].Value,   Is.EqualTo(obsReferenceProperties[j].Value));
+                            Assert.That(obsNewProperties[j].Comment, Is.EqualTo(obsReferenceProperties[j].Comment));
+                        }
                     }
                 }
             }
