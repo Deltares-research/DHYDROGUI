@@ -1,6 +1,6 @@
 ﻿using System.IO;
-using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
 using NUnit.Framework;
@@ -11,12 +11,93 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
     public class WaveDirectoryStructureMigrationHelperTest
     {
         [Test]
-        public void Migrate_WaveModelNull_ThrowsArgumentNullException()
+        public void Migrate_MdwPathNull_ThrowsArgumentNullException()
         {
             void Call() => WaveDirectoryStructureMigrationHelper.Migrate(null);
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("waveModel"));
+            Assert.That(exception.ParamName, Is.EqualTo("mdwPath"));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [TestCase("obw.zip")]
+        [TestCase("waddenzee.zip")]
+        [TestCase("westerscheldt.zip")]
+        public void Migrate_ExpectedResults(string testFileName)
+        {
+            // Note, we assume that the migration of the content of the files
+            // is correct, as we test that in the MigratorFactoryTest. As such,
+            // we only focus on the overall file directory structure and files.
+
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Prepare input data
+                string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), testFileName));
+                ZipFileUtils.Extract(inputDataPath, tempDir.Path);
+
+                // Paths
+                string sourceDirectoryPath = Path.Combine(tempDir.Path, "source_data_directory");
+                string sourceMdwPath = Path.Combine(sourceDirectoryPath, "waves", "waves.mdw");
+
+                // Call
+                WaveDirectoryStructureMigrationHelper.Migrate(sourceMdwPath);
+
+                // Assert
+                Assert.That(Directory.Exists(sourceDirectoryPath), Is.True);
+                Assert.That(Directory.GetFiles(sourceDirectoryPath, "*", SearchOption.TopDirectoryOnly), Is.Empty);
+
+                string[] sourceDirectoriesChildren = Directory.GetDirectories(sourceDirectoryPath);
+                Assert.That(sourceDirectoriesChildren.Length, Is.EqualTo(1));
+
+                string sourceModelDirectory = sourceDirectoriesChildren[0];
+                Assert.That(Path.GetFileName(sourceModelDirectory), Is.EqualTo("waves"));
+                Assert.That(Directory.GetFiles(sourceModelDirectory, "*", SearchOption.TopDirectoryOnly), Is.Empty);
+
+                string[] modelSubFolders = Directory.GetDirectories(sourceModelDirectory);
+                Assert.That(modelSubFolders.Length, Is.EqualTo(2));
+
+                string inputSourceFolder = modelSubFolders[0];
+                Assert.That(Path.GetFileName(inputSourceFolder), Is.EqualTo("input"));
+                string outputSourceFolder = modelSubFolders[1];
+                Assert.That(Path.GetFileName(outputSourceFolder), Is.EqualTo("output"));
+
+                string referenceModelFolder = Path.Combine(tempDir.Path, "expected_data_directory", "waves");
+
+                var inputSourceInfo = new DirectoryInfo(inputSourceFolder);
+                var outputSourceInfo = new DirectoryInfo(outputSourceFolder);
+
+                var inputRefInfo = new DirectoryInfo(Path.Combine(referenceModelFolder, "input"));
+                var outputRefInfo = new DirectoryInfo(Path.Combine(referenceModelFolder, "output"));
+
+                AssertSameFiles(inputSourceInfo, inputRefInfo);
+                AssertSameFiles(outputSourceInfo, outputRefInfo);
+            }
+        }
+
+        private static void AssertSameFiles(DirectoryInfo sourceDirectoryInfo, DirectoryInfo referenceDirectoryInfo)
+        {
+            FileInfo[] sourceFiles = sourceDirectoryInfo.GetFiles();
+            FileInfo[] referenceFiles = referenceDirectoryInfo.GetFiles();
+
+            Assert.That(sourceFiles.Length, Is.EqualTo(referenceFiles.Length));
+
+            for (var i = 0; i < sourceFiles.Length; i++)
+            {
+                Assert.That(sourceFiles[i].Name, Is.EqualTo(referenceFiles[i].Name));
+            }
+
+            DirectoryInfo[] sourceSubDirectories = sourceDirectoryInfo.GetDirectories();
+            DirectoryInfo[] referenceSubDirectories = referenceDirectoryInfo.GetDirectories();
+
+            Assert.That(sourceSubDirectories.Length, Is.EqualTo(referenceSubDirectories.Length));
+
+            for (var i = 0; i < sourceSubDirectories.Length; i++)
+            {
+                AssertSameFiles(sourceSubDirectories[i], 
+                                referenceSubDirectories[i]);
+            }
         }
 
         [Test]
@@ -79,56 +160,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 // Assert
                 Assert.That(migrationDirectoryName, Is.EqualTo(srcDirName + "_tmp.4"));
-            }
-        }
-
-        [Test]
-        public void CreateExpectedDirectoryStructure_parentDirectoryInfoNull_ThrowsArgumentNullException()
-        {
-            void Call() => WaveDirectoryStructureMigrationHelper.CreateExpectedDirectoryStructure(null, "Waves");
-
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("parentDirectoryInfo"));
-        }
-
-        [Test]
-        public void CreateExpectedDirectoryStructure_WaveModelNameNull_ThrowsArgumentNullException()
-        {
-            void Call() => WaveDirectoryStructureMigrationHelper.CreateExpectedDirectoryStructure(new DirectoryInfo("."), null);
-
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("waveModelName"));
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void CreateNewDirectoryStructure_ExpectedResults()
-        {
-            // Setup
-            using (var tempDir = new TemporaryDirectory())
-            {
-                var topDirectoryInfo = new DirectoryInfo(tempDir.Path);
-
-                const string modelFolderName = "Waves";
-
-                // Call
-                WaveDirectoryStructureMigrationHelper.CreateExpectedDirectoryStructure(topDirectoryInfo, modelFolderName);
-
-                // Assert
-                DirectoryInfo createdDirectory =
-                    topDirectoryInfo.GetDirectories().FirstOrDefault(x => x.Name == modelFolderName);
-
-                Assert.That(createdDirectory, Is.Not.Null);
-
-                DirectoryInfo[] subfolders = createdDirectory.GetDirectories();
-                Assert.That(subfolders.Length, Is.EqualTo(2));
-                Assert.That(subfolders, 
-                            Has.Exactly(1).Matches<DirectoryInfo>(x => x.Name == "input"));
-                Assert.That(subfolders, 
-                            Has.Exactly(1).Matches<DirectoryInfo>(x => x.Name == "output"));
-
-                FileInfo[] files = createdDirectory.GetFiles("*", SearchOption.AllDirectories);
-                Assert.That(files, Is.Empty);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 
             foreach (WaveModel waveModel in waveModels)
             {
-                WaveDirectoryStructureMigrationHelper.Migrate(waveModel);
+                WaveDirectoryStructureMigrationHelper.Migrate(null);
             }
         }
     }
