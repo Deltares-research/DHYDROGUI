@@ -51,6 +51,7 @@
     <Compile Include="Export\DimrConfigModelCouplerFactory.cs" />
     <Compile Include="Export\IDimrConfigModelCoupler.cs" />
     <Compile Include="Export\IDimrConfigModelCouplerProvider.cs" />
+    <Compile Include="HydroModel111LegacyLoader.cs" />
     <Compile Include="HydroModelHelper.cs" />
     <Compile Include="Import\DHydroConfigXmlImporter.cs" />
     <Compile Include="Import\HydroModelConverter.cs" />
