@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -17,9 +16,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
     /// </summary>
     public static class WaveDomainDataConverter
     {
-        private const string quantityKey = "quantity1";
         private const string xWindQuantity = "x_wind";
         private const string yWindQuantity = "y_wind";
+
+        private static readonly MeteoFileReader meteoFileReader = new MeteoFileReader();
 
         /// <summary>
         /// Converts the specified <paramref name="domainCategories"/> to
@@ -308,20 +308,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain
 
         private static string GetQuantity(string file)
         {
-            using (var sr = new StreamReader(new FileStream(file, FileMode.Open)))
-            {
-                string line;
-
-                while ((line = sr.ReadLine())?.Trim() != null)
-                {
-                    if (line.StartsWith(quantityKey, StringComparison.Ordinal))
-                    {
-                        return line.Split('=').ElementAt(1).Trim();
-                    }
-                }
-
-                return null;
-            }
+            return meteoFileReader.Read(file)
+                                  .FirstOrDefault(mp => mp.Property == KnownWaveProperties.MeteoQuantityField)?
+                                  .Value;
         }
     }
 }

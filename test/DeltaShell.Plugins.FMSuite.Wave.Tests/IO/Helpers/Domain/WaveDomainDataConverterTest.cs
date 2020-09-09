@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] { category }, temp.Path, logHandler);
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
 
                 // Assert
                 WaveDomainData resultDomain = result.First();
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] { category }, temp.Path, logHandler);
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
 
                 // Assert
                 WaveDomainData resultDomain = result.First();
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] { category }, temp.Path, logHandler);
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
 
                 // Assert
                 WaveDomainData resultDomain = result.First();
@@ -243,7 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
             }
         }
 
-        private IEnumerable<string[]> VariousUnsupportedMeteoFileCombinations()
+        private static IEnumerable<string[]> VariousUnsupportedMeteoFileCombinations()
         {
             yield return new string[] {"meteo.spw", "meteo.spw"};
             yield return new string[] {"meteo.amu"};
@@ -256,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
             yield return new string[] {"meteo.amu", "meteo.amu", "meteo.amv"};
         }
 
-        private IEnumerable<TestCaseData> ValidDomainCases()
+        private static IEnumerable<TestCaseData> ValidDomainCases()
         {
             foreach (WaveMeteoData meteoData in GetWaveMeteoData())
             {
