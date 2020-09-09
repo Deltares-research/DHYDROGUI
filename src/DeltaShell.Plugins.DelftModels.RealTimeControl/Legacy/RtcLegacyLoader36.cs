@@ -10,6 +10,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 {
@@ -18,6 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
     /// </summary>
     public class RtcLegacyLoader36 : LegacyLoader
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(RtcLegacyLoader36));
         private readonly Regex timeRegex = new Regex(@"\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}");
         private const string restartFileName = "state_import.xml";
         private const string metaDataFileName = "metadata.xml";
@@ -47,6 +49,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             model.RestartOutput = RetrieveRestartOutput(rootPath, model.Name);
 
             RemoveExplicitWorkingDir(rootPath, model.Name);
+
+            log.Warn($"The D-Real Time Control model '{model.Name}' was migrated to the newest version. " +
+                     $"If applicable, please verify the restart file settings.");
         }
 
         private EventedList<RealTimeControlRestartFile> RetrieveRestartOutput(string rootPath, string modelName)

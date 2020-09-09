@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
@@ -7,6 +8,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy;
+using log4net.Core;
 using NSubstitute;
 using NUnit.Framework;
 using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
@@ -51,9 +53,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
                 model.Owner = owner;
 
                 // Call
-                legacyLoader.OnAfterProjectMigrated(project);
+                void Call() => legacyLoader.OnAfterProjectMigrated(project);
 
                 // Assert
+                List<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
+                Assert.That(warnings, Has.Count.EqualTo(1));
+                Assert.That(warnings[0], Is.EqualTo($"The D-Real Time Control model 'Real-Time Control' was migrated to the newest version. " +
+                                                    $"If applicable, please verify the restart file settings."));
+
                 string projectDir = Path.Combine(dir, "Project1.dsproj_data");
                 string explicitWorkingDir = Path.Combine(projectDir, "Real-Time_Control_output");
 
