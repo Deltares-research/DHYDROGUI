@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Globalization;
@@ -21,6 +22,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
     [DisplayName("Water quality model")]
     public class WaterQualityModelProperties : ObjectProperties<WaterQualityModel>
     {
+        private readonly IList<string> disabledProperties = new List<string>()
+        {
+            nameof(UseRestart),
+            nameof(WriteRestart),
+            nameof(UseRestartTimeRange),
+            nameof(RestartStartTime),
+            nameof(RestartTimeStep),
+            nameof(RestartStopTime),
+        };
+
         [PropertyOrder(1)]
         [Category("\t\t\t\t\t\tGeneral")]
         [Description("Name of model")]
@@ -352,6 +363,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Use restart as initial condition")]
         [DisplayName("Use restart")]
         [Category("\tRestart parameters")]
+        [DynamicReadOnly]
         public bool UseRestart
         {
             get => data.UseRestart;
@@ -362,6 +374,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Write restart files (can be used to restart from)")]
         [DisplayName("Write restart")]
         [Category("\tRestart parameters")]
+        [DynamicReadOnly]
         public bool WriteRestart
         {
             get => data.WriteRestart;
@@ -372,6 +385,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [Description("Write restart files on specified time instances")]
         [DisplayName("Use restart time range")]
         [Category("\tRestart parameters")]
+        [DynamicReadOnly]
         public bool UseRestartTimeRange
         {
             get => data.UseSaveStateTimeRange;
@@ -523,11 +537,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DynamicReadOnlyValidationMethod]
         public bool ValidateDynamicAttributes(string propertyName)
         {
-            if (propertyName == nameof(RestartStartTime) ||
-                propertyName == nameof(RestartStopTime) ||
-                propertyName == nameof(RestartTimeStep))
+            if (disabledProperties.Contains(propertyName))
             {
-                return !data.UseSaveStateTimeRange;
+                return true;
             }
             else if (IsIterativeSchemeRelatedProperty(propertyName))
             {
