@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
 using NSubstitute;
 using NUnit.Framework;
@@ -24,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var iniWriter = Substitute.For<IDelftIniWriter>();
 
             // Call
-            var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter);
+            var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter, false);
 
             // Assert
             Assert.That(migrator, Is.InstanceOf<IDelftIniMigrator>());
@@ -49,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                                           IDelftIniWriter iniWriter,
                                                                           string expectedParameterName)
         {
-            void Call() => new DelftIniMigrator(migrationBehaviour, iniReader, iniWriter);
+            void Call() => new DelftIniMigrator(migrationBehaviour, iniReader, iniWriter, false);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
@@ -75,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var iniWriter = Substitute.For<IDelftIniWriter>();
             var logHandler = Substitute.For<ILogHandler>();
 
-            var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter);
+            var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter, false);
             
             // Call | Assert
             void Call() => migrator.MigrateFile(null, 
@@ -97,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var iniWriter = Substitute.For<IDelftIniWriter>();
             var logHandler = Substitute.For<ILogHandler>();
 
-            var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter);
+            var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter, false);
             
             // Call | Assert
             void Call() => migrator.MigrateFile(new MemoryStream(), 
@@ -119,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var iniWriter = Substitute.For<IDelftIniWriter>();
             var logHandler = Substitute.For<ILogHandler>();
 
-            var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter);
+            var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter, false);
             
             // Call | Assert
             void Call() => migrator.MigrateFile(new MemoryStream(), 
@@ -177,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
             var iniWriter = Substitute.For<IDelftIniWriter>();
 
-            var migrator = new DelftIniMigrator(migrationMapping, iniReader, iniWriter);
+            var migrator = new DelftIniMigrator(migrationMapping, iniReader, iniWriter, false);
             var logHandler = Substitute.For<ILogHandler>();
 
             // Call
@@ -236,7 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
             var iniWriter = Substitute.For<IDelftIniWriter>();
 
-            var migrator = new DelftIniMigrator(migrationMapping, iniReader, iniWriter);
+            var migrator = new DelftIniMigrator(migrationMapping, iniReader, iniWriter, false);
             var logHandler = Substitute.For<ILogHandler>();
 
             // Call
@@ -252,6 +254,53 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(property.Name, Is.EqualTo(propertyName));
             Assert.That(property.Value, Is.EqualTo(propertyValue));
             Assert.That(property.Comment, Is.EqualTo(propertyComment));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void MigrateFile_RemoveOriginalIniFile_ExpectedBehaviour(bool removeOriginalIniFile)
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string sourceSubDirectory = "itDonMean";
+                tempDir.CreateDirectory(sourceSubDirectory);
+
+                const string goalSubDirectory = "dooWahDooWah";
+                tempDir.CreateDirectory(goalSubDirectory);
+
+                const string fileName = "AThing.ini";
+                string sourcePath = Path.Combine(tempDir.Path, sourceSubDirectory, fileName);
+
+                var delftIniWriter = new DelftIniWriter();
+                delftIniWriter.WriteDelftIniFile(Enumerable.Empty<DelftIniCategory>(), 
+                                                 sourcePath, 
+                                                 false);
+                
+                const string goalDirName = "dooWahDooWah";
+                string goalDir = tempDir.CreateDirectory(goalDirName);
+                string goalPath = Path.Combine(goalDir, fileName);
+
+                var migrator = new DelftIniMigrator(new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>(), 
+                                                    new DelftIniReader(), 
+                                                    delftIniWriter, 
+                                                    removeOriginalIniFile);
+                var sourceStream = new FileStream(sourcePath, FileMode.Open);
+
+                // Call
+                migrator.MigrateFile(sourceStream, 
+                                     sourcePath,  
+                                     goalPath, 
+                                     logHandler);
+
+                // Assert
+                Assert.That(File.Exists(goalPath), Is.True);
+                Assert.That(File.Exists(sourcePath), Is.EqualTo(!removeOriginalIniFile));
+            }
         }
     }
 }

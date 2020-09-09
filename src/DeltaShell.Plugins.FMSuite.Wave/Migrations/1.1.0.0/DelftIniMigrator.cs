@@ -19,6 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             migrationBehaviourMapping;
         private readonly IDelftIniReader iniReader;
         private readonly IDelftIniWriter iniWriter;
+        private readonly bool removeOriginalIniFile;
 
         /// <summary>
         /// Creates a new <see cref="DelftIniMigrator"/>.
@@ -29,13 +30,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// </param>
         /// <param name="iniReader">The ini reader.</param>
         /// <param name="iniWriter">The ini writer.</param>
+        /// <param name="removeOriginalIniFile">
+        /// Whether to remove the original source ini file.
+        /// </param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public DelftIniMigrator(
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping,
             IDelftIniReader iniReader, 
-            IDelftIniWriter iniWriter)
+            IDelftIniWriter iniWriter,
+            bool removeOriginalIniFile)
         {
             Ensure.NotNull(migrationBehaviourMapping, nameof(migrationBehaviourMapping));
             Ensure.NotNull(iniReader, nameof(iniReader));
@@ -44,6 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             this.migrationBehaviourMapping = migrationBehaviourMapping;
             this.iniReader = iniReader;
             this.iniWriter = iniWriter;
+            this.removeOriginalIniFile = removeOriginalIniFile;
         }
 
         public void MigrateFile(Stream sourceFileStream, 
@@ -61,6 +67,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             foreach (DelftIniCategory category in categories)
             {
                 MigrateCategory(category, logHandler);
+            }
+
+            if (removeOriginalIniFile)
+            {
+                File.Delete(sourceFilePath);
             }
 
             iniWriter.WriteDelftIniFile(categories, targetFilePath);

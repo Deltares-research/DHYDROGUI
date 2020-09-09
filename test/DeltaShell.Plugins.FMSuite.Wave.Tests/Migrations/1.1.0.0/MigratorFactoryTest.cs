@@ -404,6 +404,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 migrator.MigrateFile(fileStream, sourceMdwPath, resultMdwPath, logHandler);
 
                 // Assert
+                Assert.That(Directory.EnumerateFiles(sourceModelFolder), Is.Empty);
+
                 string[] referenceFiles = Directory.GetFiles(referenceModelFolder);
                 string[] resultFiles = Directory.GetFiles(resultPath);
 

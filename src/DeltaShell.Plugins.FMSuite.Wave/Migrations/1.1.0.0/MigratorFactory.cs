@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                     {"ObstacleFileInformation", obstacleFileInformationMapping},
                 };
 
-            return new DelftIniMigrator(mapping, new DelftIniReader(), new DelftIniWriter());
+            return new DelftIniMigrator(mapping, new DelftIniReader(), new DelftIniWriter(), true);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                     {"Output",   CreateOutputCategoryMigrations(relativeDirectory, goalDirectory)},
                 };
 
-            return new DelftIniMigrator(mapping, new DelftIniReader(), new DelftIniWriter());
+            return new DelftIniMigrator(mapping, new DelftIniReader(), new DelftIniWriter(), true);
         }
 
         private static IReadOnlyDictionary<string, IMigrationBehaviour> 
