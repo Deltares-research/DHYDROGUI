@@ -267,8 +267,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             foreach (ConditionBase condition in conditions)
             {
                 var copiedCondition = (ConditionBase) condition.Clone();
+                copiedCondition.Input = null;
 
-                copiedCondition.Input = condition.Input == null ? null : iInputMapping[condition.Input];
+                if (condition.Input != null && iInputMapping.ContainsKey(condition.Input))
+                {
+                    copiedCondition.Input = iInputMapping[condition.Input];
+                }
+
                 conditionMapping[condition] = copiedCondition;
                 copiedConditions.Add(copiedCondition);
             }
@@ -315,7 +320,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             foreach (IInput sourceInput in sourceInputs)
             {
                 IInput castInput = sourceInput;
-                inputsToAdd.Add(iInputMapping[castInput]);
+                if (iInputMapping.ContainsKey(castInput))
+                {
+                    inputsToAdd.Add(iInputMapping[castInput]);
+                }
             }
 
             targetInputs.AddRange(inputsToAdd);
@@ -325,7 +333,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                                       IEnumerable<Input> sourceInputs,
                                       IReadOnlyDictionary<Input, Input> inputMapping)
         {
-            IEnumerable<Input> inputsToAdd = sourceInputs.Select(sourceInput => inputMapping[sourceInput]);
+            IEnumerable<Input> inputsToAdd = GetItemsToAdd(sourceInputs, inputMapping);
             targetInputs.AddRange(inputsToAdd);
         }
 
@@ -333,7 +341,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                                      IEnumerable<RuleBase> sourceRules,
                                      IReadOnlyDictionary<RuleBase, RuleBase> ruleMapping)
         {
-            IEnumerable<RuleBase> rulesToAdd = sourceRules.Select(sourceInput => ruleMapping[sourceInput]);
+            IEnumerable<RuleBase> rulesToAdd = GetItemsToAdd(sourceRules, ruleMapping);
             targetRules.AddRange(rulesToAdd);
         }
 
@@ -341,21 +349,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                                        RuleBase source,
                                        IReadOnlyDictionary<Output, Output> outputMapping)
         {
-            IEnumerable<Output> outputsToAdd = source.Outputs.Select(sourceOutput => outputMapping[sourceOutput]);
+            IEnumerable<Output> outputsToAdd = GetItemsToAdd(source.Outputs, outputMapping);
             target.Outputs.AddRange(outputsToAdd);
         }
 
         private static void SetOutputs(IEventedList<RtcBaseObject> targetOutputs,
                                        IEnumerable<RtcBaseObject> sourceOutput,
-                                       IReadOnlyDictionary<RtcBaseObject, RtcBaseObject> outputMapping)
+                                       IReadOnlyDictionary<RtcBaseObject, RtcBaseObject> objectMapping)
         {
-            var objectsToBeAdded = new List<RtcBaseObject>();
-            foreach (RtcBaseObject rtcBaseObject in sourceOutput)
+            IEnumerable<RtcBaseObject> objectsToBeAdded = GetItemsToAdd(sourceOutput, objectMapping);
+            targetOutputs.AddRange(objectsToBeAdded);
+        }
+
+        private static IEnumerable<T> GetItemsToAdd<T>(IEnumerable<T> items,
+                                                       IReadOnlyDictionary<T, T> mapping)
+            where T : RtcBaseObject
+        {
+            var itemsToAdd = new List<T>();
+            foreach (T item in items)
             {
-                objectsToBeAdded.Add(outputMapping[rtcBaseObject]);
+                if (mapping.ContainsKey(item))
+                {
+                    itemsToAdd.Add(mapping[item]);
+                }
             }
 
-            targetOutputs.AddRange(objectsToBeAdded);
+            return itemsToAdd;
         }
 
         #endregion
