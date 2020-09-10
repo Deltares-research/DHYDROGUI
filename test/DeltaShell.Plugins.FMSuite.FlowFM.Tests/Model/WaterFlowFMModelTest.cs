@@ -1541,7 +1541,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             //Load model 
             var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
+            model.LoadFromMdu(mduPath);
 
             object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
