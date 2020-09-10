@@ -1534,6 +1534,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        public void GivenAModel_AfterCreatingIt_ThenCurrentOutputDirectoryIsStillNull()
+        {
+            var model = new WaterFlowFMModel();
+
+            object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+
+            Assert.IsNull(currentOutputDirectory);
+        }
+
+        [Test]
         public void GivenAModelWithOutput_WhenOpeningIt_ThenCurrentOutputDirectoryIsInPersistentFolder()
         {
             //Creation of a path of non-existing model file 
@@ -1547,6 +1557,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             string expectedPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"notexistingmodel\output");
             Assert.AreEqual(expectedPath, currentOutputDirectory);
+        }
+
+        [Test]
+        public void GivenAModel_WhenImportingIt_ThenCurrentOutputDirectoryIsStillNull()
+        {
+            //Creation of a path of non-existing model file 
+            string mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
+
+            //Import model 
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(mduPath);
+
+            object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+            
+            Assert.IsNull(currentOutputDirectory);
         }
 
         [Test]
