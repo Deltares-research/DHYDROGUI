@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
@@ -130,6 +132,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             Assert.AreEqual(0, validationResult.ErrorCount);
             Assert.AreEqual(0, validationResult.WarningCount);
             Assert.AreEqual(0, validationResult.InfoCount);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Validate_WhenSaveStateTimeStepIsNotCorrect_ShouldGiveWriteRestartSubReportWithError()
+        {
+            var rtcModel = new RealTimeControlModel
+            {
+                WriteRestart = true,
+                TimeStep = new TimeSpan(0, 2, 0, 0),
+                SaveStateTimeStep = new TimeSpan(0, 3, 0, 0)
+            };
+
+            rtcModel.SaveStateStartTime = rtcModel.StartTime;
+            rtcModel.SaveStateStopTime = rtcModel.StopTime;
+            
+            ValidationReport validationResult = new RealTimeControlModelValidator().Validate(rtcModel);
+            ValidationReport writeRestartSubValidationReport = validationResult.
+                                                               SubReports.
+                                                               FirstOrDefault(sr =>
+                                                                                  sr.Category == NGHS.Common.Properties.Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings);
+
+            Assert.IsNotNull(writeRestartSubValidationReport);
+
+            ValidationIssue restartValidationIssue = writeRestartSubValidationReport.GetAllIssuesRecursive().
+                                                                                     FirstOrDefault(i =>
+                                                                                                        i.Message == NGHS.Common.Properties.Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_an_integer_multiple_of_the_output_time_step_);
+            Assert.IsNotNull(restartValidationIssue);
+            Assert.AreEqual(NGHS.Common.Properties.Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step, 
+                            restartValidationIssue.ViewData);
         }
 
         private RealTimeControlModel CreateValidRealTimeControlModel()

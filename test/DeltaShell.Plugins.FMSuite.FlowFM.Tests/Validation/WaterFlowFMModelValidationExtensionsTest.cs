@@ -354,6 +354,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             }
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Validate_WhenRestartTimeStepIsNotCorrect_ShouldGiveWriteRestartSubReportWithError()
+        {
+            // Given
+            var fmModel = new WaterFlowFMModel
+            {
+                WriteRestart = true,
+                TimeStep = new TimeSpan(0, 2, 0, 0)
+            };
+            fmModel.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = new TimeSpan(0, 3, 0, 0);
+            
+            // When
+            ValidationReport validationReport = WaterFlowFmModelValidationExtensions.Validate(fmModel);
+
+            // Then
+            ValidationReport writeRestartSubValidationReport = validationReport.
+                                                               SubReports.
+                                                               FirstOrDefault(sr =>
+                                                                                  sr.Category == NGHS.Common.Properties.Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings);
+            
+            Assert.IsNotNull(writeRestartSubValidationReport);
+            ValidationIssue restartValidationIssue = writeRestartSubValidationReport.GetAllIssuesRecursive().
+                                                                                     FirstOrDefault(i => 
+                                                                                                        i.Message == NGHS.Common.Properties.Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_an_integer_multiple_of_the_output_time_step_);
+            Assert.IsNotNull(restartValidationIssue);
+            object viewData = restartValidationIssue.ViewData;
+            Assert.IsInstanceOf<FmValidationShortcut>(viewData);
+            Assert.AreSame(fmModel, ((FmValidationShortcut)viewData).FlowFmModel);
+            Assert.AreEqual("Output Parameters", ((FmValidationShortcut)viewData).TabName);
+        }
+
         private static void CreateSedimentFraction(SpatiallyVaryingSedimentProperty<double> thickProp, WaterFlowFMModel fmModel)
         {
             var testSedimentType = new SedimentType

@@ -194,6 +194,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 CacheFile.UpdatePathToMduLocation(runMduPath);
             }
+
+            LogWarningWriteRestartModelRun();
         }
 
         #endregion

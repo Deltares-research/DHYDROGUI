@@ -35,6 +35,7 @@ using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
@@ -2026,6 +2027,84 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Finish_WriteRestartOn_LogsCorrectWarning()
+        {
+            using (WaterFlowFMModel model = new WaterFlowFMModel())
+            {
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = true;
+                model.RestartTimeStep = model.TimeStep;
+
+                // Call
+                void Call() => model.Finish();
+
+                // Assert
+                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(warnings, Contains.Item("Please save the project after a model run with 'write restart' on."));
+            }
+        }
+
+        [Test]
+        public void Finish_WriteRestartOff_DoesNotLogWarning()
+        {
+            using (WaterFlowFMModel model = new WaterFlowFMModel())
+            {
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = false;
+
+                // Call
+                void Call() => model.Finish();
+
+                // Assert
+                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(warnings, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void RestartTimeStep_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var restartTimeStep = new TimeSpan(0,13,0,0);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = restartTimeStep;
+
+            // Call
+            TimeSpan retrievedRestartTimeStep = model.RestartTimeStep;
+
+            // Assert
+            Assert.AreEqual(restartTimeStep, retrievedRestartTimeStep);
+        }
+
+        [Test]
+        public void RestartStartTime_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            DateTime restartStartTime = DateTime.Today.AddHours(12);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value = restartStartTime;
+            
+            // Call
+            DateTime retrievedRestartStartTime = model.RestartStartTime;
+
+            // Assert
+            Assert.AreEqual(restartStartTime,retrievedRestartStartTime);
+        }
+
+        [Test]
+        public void RestartStopTime_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            DateTime restartStopTime = DateTime.Today.AddHours(12);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value = restartStopTime;
+
+            // Call
+            DateTime retrievedRestartStopTime = model.RestartStopTime;
+
+            // Assert
+            Assert.AreEqual(restartStopTime, retrievedRestartStopTime);
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)

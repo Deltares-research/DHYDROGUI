@@ -39,8 +39,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set => ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = value;
         }
 
+        /// <summary>
+        /// Gets the restart start time.
+        /// </summary>
         public DateTime RestartStartTime => (DateTime)ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value;
 
+        /// <summary>
+        /// Gets the restart stop time.
+        /// </summary>
         public DateTime RestartStopTime => (DateTime)ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value;
 
         public virtual bool WriteRestart
