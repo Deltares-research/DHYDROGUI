@@ -47,8 +47,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                                  rootObject.ProcessCoefficients, rootObject.WaqProcessesRules)),
                 new ValidationReport("Loads", ValidateLoads(rootObject)),
                 new ValidationReport(@"Observation points / areas", ValidateObservationPointsAndAreas(rootObject)),
-                new ValidationReport("Input restart state", ValidateRestartInput(rootObject)),
-                new ValidationReport("Output restart state", ValidateRestartOutput(rootObject)),
                 new ValidationReport("Segment function file existance", ValidateExistanceSegmentFiles(rootObject))
             });
         }
@@ -535,33 +533,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                  string.Format("This machine cannot use more threads than {0}.",
                                                                Environment.ProcessorCount));
             }
-        }
-
-        private IEnumerable<ValidationIssue> ValidateRestartOutput(WaterQualityModel model)
-        {
-            if (!model.WriteRestart)
-            {
-                yield break;
-            }
-
-            if (model.UseSaveStateTimeRange)
-            {
-                // cannot write multiple restart states in command line mode
-                yield return new ValidationIssue(model, ValidationSeverity.Error,
-                                                 "Cannot use save state time range when running in Command Line mode");
-            }
-
-            // TODO D3DFMIQ-2076
-        }
-
-        private static IEnumerable<ValidationIssue> ValidateRestartInput(WaterQualityModel model)
-        {
-            if (!model.UseRestart)
-            {
-                yield break;
-            }
-
-            // TODO D3DFMIQ-2076
         }
     }
 }

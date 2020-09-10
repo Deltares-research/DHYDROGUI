@@ -284,6 +284,7 @@
     <Compile Include="Forms\SettingsWpf\WpfSettingsViewModelTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfSettingsViewTest.cs" />
     <Compile Include="Forms\WorkflowEditorControlTest.cs" />
+    <Compile Include="HydroModel111LegacyLoaderTest.cs" />
     <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelGuiPluginTest.cs" />

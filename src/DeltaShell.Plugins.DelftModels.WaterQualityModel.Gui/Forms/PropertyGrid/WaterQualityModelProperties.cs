@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Globalization;
@@ -21,6 +22,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
     [DisplayName("Water quality model")]
     public class WaterQualityModelProperties : ObjectProperties<WaterQualityModel>
     {
+        private readonly IList<string> disabledProperties = new List<string>()
+        {
+            nameof(UseRestart),
+            nameof(WriteRestart),
+            nameof(UseRestartTimeRange),
+            nameof(RestartStartTime),
+            nameof(RestartTimeStep),
+            nameof(RestartStopTime),
+        };
+
         [PropertyOrder(1)]
         [Category("\t\t\t\t\t\tGeneral")]
         [Description("Name of model")]
@@ -349,9 +360,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         }
 
         [PropertyOrder(1)]
-        [Description("Use (restart) state as initial condition")]
+        [Description("Use restart as initial condition")]
         [DisplayName("Use restart")]
         [Category("\tRestart parameters")]
+        [DynamicReadOnly]
         public bool UseRestart
         {
             get => data.UseRestart;
@@ -359,9 +371,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         }
 
         [PropertyOrder(2)]
-        [Description("Write final state (can be used to restart from)")]
+        [Description("Write restart files (can be used to restart from)")]
         [DisplayName("Write restart")]
         [Category("\tRestart parameters")]
+        [DynamicReadOnly]
         public bool WriteRestart
         {
             get => data.WriteRestart;
@@ -369,46 +382,47 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         }
 
         [PropertyOrder(3)]
-        [Description("Write states on specified time instances")]
-        [DisplayName("Use save state time range")]
+        [Description("Write restart files on specified time instances")]
+        [DisplayName("Use restart time range")]
         [Category("\tRestart parameters")]
-        public bool UseSaveStateTimeRange
+        [DynamicReadOnly]
+        public bool UseRestartTimeRange
         {
             get => data.UseSaveStateTimeRange;
             set => data.UseSaveStateTimeRange = value;
         }
 
         [PropertyOrder(4)]
-        [Description("Start writing states when simulation time is equals or larger than this time")]
-        [DisplayName("Save state start time")]
+        [Description("Start writing restart files when simulation time is equal to or larger than this time")]
+        [DisplayName("Restart start time")]
         [Category("\tRestart parameters")]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
         [DynamicReadOnly]
-        public DateTime SaveStateStartTime
+        public DateTime RestartStartTime
         {
             get => data.SaveStateStartTime;
             set => data.SaveStateStartTime = value;
         }
 
         [PropertyOrder(5)]
-        [Description("Stop writing states when simulation time is beyond this time")]
-        [DisplayName("Save state stop time")]
+        [Description("Stop writing restart files when simulation time is beyond this time")]
+        [DisplayName("Restart stop time")]
         [Category("\tRestart parameters")]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
         [DynamicReadOnly]
-        public DateTime SaveStateStopTime
+        public DateTime RestartStopTime
         {
             get => data.SaveStateStopTime;
             set => data.SaveStateStopTime = value;
         }
 
         [PropertyOrder(6)]
-        [Description("Write state at each multiple of this time step after the 'Save state start time'")]
-        [DisplayName("Save state time step")]
+        [Description("Write restart file at each multiple of this time step after the 'Restart start time'")]
+        [DisplayName("Restart time step")]
         [Category("\tRestart parameters")]
         [TypeConverter(typeof(DeltaShellTimeSpanConverter))]
         [DynamicReadOnly]
-        public TimeSpan SaveStateTimeStep
+        public TimeSpan RestartTimeStep
         {
             get => data.SaveStateTimeStep;
             set => data.SaveStateTimeStep = value;
@@ -523,11 +537,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DynamicReadOnlyValidationMethod]
         public bool ValidateDynamicAttributes(string propertyName)
         {
-            if (propertyName == "SaveStateStartTime" ||
-                propertyName == "SaveStateStopTime" ||
-                propertyName == "SaveStateTimeStep")
+            if (disabledProperties.Contains(propertyName))
             {
-                return !data.UseSaveStateTimeRange;
+                return true;
             }
             else if (IsIterativeSchemeRelatedProperty(propertyName))
             {
