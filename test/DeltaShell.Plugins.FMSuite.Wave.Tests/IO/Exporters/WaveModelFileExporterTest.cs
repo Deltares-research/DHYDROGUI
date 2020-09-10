@@ -38,24 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Exporters
         }
 
         [Test]
-        [Category(TestCategory.WorkInProgress)]
-        // File should be exported correctly when path does not exist.
-        public void ExportWaveModel_WithoutExistingPath_ShouldStillExport()
-        {
-            exporter = new WaveModelFileExporter();
-            var model = new WaveModel();
-
-            using (var temp = new TemporaryDirectory())
-            {
-                string exportFolder = Path.Combine(temp.Path, @"non-existent-folder");
-                string fullPath = Path.Combine(exportFolder, model.Name + ".mdw");
-
-                Assert.IsTrue(exporter.Export(model, exportFolder));
-                Assert.IsTrue(File.Exists(fullPath));
-            }
-        }
-
-        [Test]
         public void ExportWaveModel_WithInvalidPath_ShouldGiveException()
         {
             exporter = new WaveModelFileExporter();

@@ -314,7 +314,6 @@
     <Compile Include="Gui\WaterFlowFMModelGuiIntegrationTest.cs" />
     <Compile Include="Gui\WaterFlowFMModelViewTest.cs" />
     <Compile Include="Gui\WaterFlowFMModelNodePresenterTest.cs" />
-    <Compile Include="Gui\WaterFlowFMStressTest.cs" />
     <Compile Include="Gui\WindFieldListViewTest.cs" />
     <Compile Include="IO\DataAccessBuilders\BcFileFlowBoundaryDataBuilderTest.cs" />
     <Compile Include="IO\BcFileExportImportTest.cs" />

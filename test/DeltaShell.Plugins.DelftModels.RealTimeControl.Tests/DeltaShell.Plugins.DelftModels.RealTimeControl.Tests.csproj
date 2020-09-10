@@ -328,7 +328,6 @@
     <Compile Include="NodePresenters\RealTimeControlModelNodePresenterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealTimeControlApplicationPluginTest.cs" />
-    <Compile Include="RealTimeControlModelANDandORTest.cs" />
     <Compile Include="RealTimeControlModelCopyPasteHelperTest.cs" />
     <Compile Include="RealTimeControlModelExtensionsTest.cs" />
     <Compile Include="RealTimeControlModelTest.cs" />

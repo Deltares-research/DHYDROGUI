@@ -307,7 +307,6 @@
     <Compile Include="ViewModels\HydroModelTimeSettingsViewModelTest.cs" />
     <Compile Include="ViewModels\TimeDependentModelBaseViewModelUnitTests.cs" />
     <Compile Include="WaterFlowFmModelDirectoryStructureTest.cs" />
-    <Compile Include="WaterFlowFMModelWaveTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
