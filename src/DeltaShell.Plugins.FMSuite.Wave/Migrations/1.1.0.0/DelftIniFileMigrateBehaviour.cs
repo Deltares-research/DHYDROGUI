@@ -73,10 +73,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                                      ILogHandler logHandler)
         {
             var warningMsg = 
-                $"The file associated with property {expectedKey}, {Path.GetFileName(property.Value)} at {filePathInfo.FullName}, does not exist, the property is set to an empty string.";
+                $"The file associated with property {expectedKey}, {Path.GetFileName(property.Value)} at {filePathInfo.FullName}, does not exist and thus is not migrated.";
             logHandler?.ReportWarning(warningMsg);
-
-            property.Value = string.Empty;
         }
 
         private void HandleMigration(FileInfo filePathInfo, 

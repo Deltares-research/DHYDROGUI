@@ -280,10 +280,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 // Assert
                 Assert.That(property.Name, Is.EqualTo(propertyName));
                 Assert.That(property.Comment, Is.EqualTo(propertyComment));
-                Assert.That(property.Value, Is.EqualTo(string.Empty));
+                Assert.That(property.Value, Is.EqualTo(oldPath));
 
                 var expectedString = 
-                    $"The file associated with property {propertyName}, {fileName} at {oldPath}, does not exist, the property is set to an empty string.";
+                    $"The file associated with property {propertyName}, {fileName} at {oldPath}, does not exist and thus is not migrated.";
                 logHandler.Received(1).ReportWarning(expectedString);
             }
         }
