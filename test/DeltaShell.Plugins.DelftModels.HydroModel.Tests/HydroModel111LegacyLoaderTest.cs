@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DelftTools.Shell.Core;
+using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
@@ -27,6 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OnAfterProjectMigrated_RemovesExplicitWorkingDirectory()
         {
             // Setup
@@ -34,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var project = new Project();
 
             using (var temp = new TemporaryDirectory())
-            using (var model = new HydroModel() {Name = "the integrated model"})
+            using (var model = new HydroModel {Name = "the integrated model"})
             {
                 string explicitWorkDir = temp.CreateDirectory("the_integrated_model_output");
 
