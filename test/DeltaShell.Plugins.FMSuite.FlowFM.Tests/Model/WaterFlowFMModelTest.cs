@@ -1536,27 +1536,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [Test]
         public void GivenAModel_AfterCreatingIt_ThenCurrentOutputDirectoryIsStillNull()
         {
-            var model = new WaterFlowFMModel();
+            using (var model = new WaterFlowFMModel())
+            {
+                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
-            object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
-
-            Assert.IsNull(currentOutputDirectory);
+                Assert.IsNull(currentOutputDirectory);
+            }
         }
 
         [Test]
         public void GivenAModelWithOutput_WhenOpeningIt_ThenCurrentOutputDirectoryIsInPersistentFolder()
         {
-            //Creation of a path of non-existing model file 
+            //Creation of a path of non-existing model file
             string mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
 
-            //Load model 
-            var model = new WaterFlowFMModel();
-            model.LoadFromMdu(mduPath);
+            using (var model = new WaterFlowFMModel())
+            {
+                //Load model
+                model.LoadFromMdu(mduPath);
 
-            object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
-            string expectedPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"notexistingmodel\output");
-            Assert.AreEqual(expectedPath, currentOutputDirectory);
+                string expectedPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"notexistingmodel\output");
+                Assert.AreEqual(expectedPath, currentOutputDirectory);
+            }
         }
 
         [Test]
@@ -1565,31 +1568,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             //Creation of a path of non-existing model file 
             string mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
 
-            //Import model 
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
+            using (var model = new WaterFlowFMModel())
+            {
+                //Import model
+                model.ImportFromMdu(mduPath);
 
-            object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
-            
-            Assert.IsNull(currentOutputDirectory);
+                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+
+                Assert.IsNull(currentOutputDirectory);
+            }
         }
 
         [Test]
         public void GivenAModel_WhenARunIsDone_ThenCurrentOutputDirectoryIsInWorkingDirectory()
         {
-            //Creation of a path of non-existing model file 
+            //Creation of a path of non-existing model file
             string mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
 
-            //Load model and "run"
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
+            using (var model = new WaterFlowFMModel())
+            {
+                //Load model and "run"
+                model.ImportFromMdu(mduPath);
 
-            TypeUtils.CallPrivateMethod(model, "OnFinish");
+                TypeUtils.CallPrivateMethod(model, "OnFinish");
 
-            object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
-            string expectedPath = model.WorkingOutputDirectoryPath;
-            Assert.AreEqual(expectedPath, currentOutputDirectory);
+                string expectedPath = model.WorkingOutputDirectoryPath;
+
+                Assert.AreEqual(expectedPath, currentOutputDirectory);
+            }
         }
 
         [Test]
@@ -1603,25 +1611,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
                 var mduFile2 = "notexistingmodel2.mdu";
 
-                //Load model and save
-                var model = new WaterFlowFMModel();
-                model.ImportFromMdu(mduPath);
+                using (var model = new WaterFlowFMModel())
+                {
+                    //Load model and save
+                    model.ImportFromMdu(mduPath);
 
-                //Run, so that the CurrentOutputDirectory is set to WorkingDirectoryPath
-                TypeUtils.CallPrivateMethod(model, "OnFinish");
+                    //Run, so that the CurrentOutputDirectory is set to WorkingDirectoryPath
+                    TypeUtils.CallPrivateMethod(model, "OnFinish");
 
-                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+                    object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
-                string expectedPath = Path.Combine(model.WorkingDirectoryPath, model.DirectoryName, "output");
-                Assert.AreEqual(expectedPath, currentOutputDirectory);
+                    string expectedPath = Path.Combine(model.WorkingDirectoryPath, model.DirectoryName, "output");
+                    Assert.AreEqual(expectedPath, currentOutputDirectory);
 
-                //Save, so that CurrentOutputDirectory is set to the persistent folder
-                model.ExportTo(Path.Combine(tempFolder, "notexistingmodel", "input", mduFile2));
+                    //Save, so that CurrentOutputDirectory is set to the persistent folder
+                    model.ExportTo(Path.Combine(tempFolder, "notexistingmodel", "input", mduFile2));
 
-                currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+                    currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
-                expectedPath = Path.Combine(tempFolder, @"notexistingmodel\output");
-                Assert.AreEqual(expectedPath, currentOutputDirectory);
+                    expectedPath = Path.Combine(tempFolder, @"notexistingmodel\output");
+                    Assert.AreEqual(expectedPath, currentOutputDirectory);
+                }
             }
             finally
             {
