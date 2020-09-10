@@ -361,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
-        public void ImportHarlingenShowVelocityOutput()
+        public void LoadHarlingenShowVelocityOutput()
         {
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
@@ -382,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Project project = app.Project;
 
                     var model = new WaterFlowFMModel();
-                    model.ImportFromMdu(mduPath);
+                    model.LoadFromMdu(mduPath);
 
                     project.RootFolder.Add(model);
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));

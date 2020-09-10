@@ -1375,7 +1375,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
                     AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    AssertThatOutputExists(modelDirImport, importOutputFolder, modelDirSave, importedModel);
+                    AssertThatOutputNotExists(modelDirSave, importedModel);
                 }
             }
             finally
@@ -1500,7 +1500,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
                     AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    AssertThatOutputExists(modelDirImport, customOutputFolder, modelDirSave, importedModel);
+                    AssertThatOutputNotExists(modelDirSave, importedModel); 
                 }
             }
             finally
@@ -1695,7 +1695,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
                     AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    AssertThatOutputExists(modelDirImport, "output", modelDirSave, importedModel);
+                    AssertThatOutputNotExists(modelDirSave, importedModel);
                 }
             }
             finally

@@ -1652,7 +1652,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 //Create WaterFlowFMModel from target MDU, so that the outputDirectory is set correctly.
                 var model = new WaterFlowFMModel();
-                model.ImportFromMdu(targetMdu);
+                model.LoadFromMdu(targetMdu);
 
                 //Put random file and directory in targetfolder, so that you can check the clean up after a save.
                 Directory.CreateDirectory(Path.Combine(targetOutput, "blarg"));

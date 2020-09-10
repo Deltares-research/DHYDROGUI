@@ -977,7 +977,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Load app plugins
                     RunConfiguredFmSuiteGui(gui);
 
-                    fmModel.ImportFromMdu(mduFilePath);
+                    fmModel.LoadFromMdu(mduFilePath);
                     app.Project.RootFolder.Add(fmModel);
 
                     // 3. Verify initial expectations
