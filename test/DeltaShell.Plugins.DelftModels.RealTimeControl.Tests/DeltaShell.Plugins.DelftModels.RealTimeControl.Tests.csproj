@@ -338,7 +338,6 @@
     <Compile Include="RtcDataAccessListenerTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="TimeConditionTest.cs" />
-    <Compile Include="UndoRedoRealTimeControlTest.cs" />
     <Compile Include="Validation\ControlGroupValidatorTest.cs" />
     <Compile Include="Validation\RealTimeControlModelMergeValidatorTest.cs" />
     <Compile Include="Validation\RealTimeControlModelValidatorTest.cs" />
