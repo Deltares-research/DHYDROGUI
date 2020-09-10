@@ -51,6 +51,7 @@
     <Compile Include="Export\DimrConfigModelCouplerFactory.cs" />
     <Compile Include="Export\IDimrConfigModelCoupler.cs" />
     <Compile Include="Export\IDimrConfigModelCouplerProvider.cs" />
+    <Compile Include="HydroModel111LegacyLoader.cs" />
     <Compile Include="HydroModelHelper.cs" />
     <Compile Include="Import\DHydroConfigXmlImporter.cs" />
     <Compile Include="Import\HydroModelConverter.cs" />
@@ -229,6 +230,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HydroModel.1.1.1.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
