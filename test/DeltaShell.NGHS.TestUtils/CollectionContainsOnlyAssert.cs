@@ -17,7 +17,8 @@ namespace DeltaShell.NGHS.TestUtils
         /// <param name="item">The item that should be in the collection.</param>
         public static void AssertContainsOnly<T>(IEnumerable<T> collection, T item)
         {
-            Assert.That(collection.Count(x => ReferenceEquals(x, item)), Is.EqualTo(1));
+            Assert.That(collection.SingleOrDefault(x => ReferenceEquals(x, item)), Is.Not.Null, 
+                        "Collection does not contain given item");
         }
     }
 }
