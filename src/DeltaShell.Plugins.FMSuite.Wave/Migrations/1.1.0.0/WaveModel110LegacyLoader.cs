@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Shell.Core;
+using System.Data;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Utils;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
@@ -13,17 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// <seealso cref="LegacyLoader" />
     public class WaveModel110LegacyLoader : LegacyLoader
     {
-        public override void OnAfterProjectMigrated(Project project)
+        public override void OnAfterInitialize(object entity, IDbConnection dbConnection)
         {
-            base.OnAfterProjectMigrated(project);
 
-            IEnumerable<WaveModel> waveModels =
-                project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>();
-
-            foreach (WaveModel waveModel in waveModels)
-            {
-                WaveDirectoryStructureMigrationHelper.Migrate(null);
-            }
         }
     }
 }
