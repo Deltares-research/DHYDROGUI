@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -49,6 +52,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //                             mduName     |  fixedWeirPlizFileName   | weirScheme | columnDifference | expectedSubMsgFormat
                 yield return new TestCaseData("FlowFM3.mdu", "TwoFixedWeirs_fxw.pliz", 6, 5, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored);
                 yield return new TestCaseData("FlowFM2.mdu", "TwoFixedWeirs_fxw2.pliz", 9, 7, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_Always_WritesExpectedMetaDataInformation()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var config = MockRepository.GenerateStub<IMduFileWriteConfig>();
+
+            using (IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew())
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string writeFilePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
+
+                // Call
+                mduFile.Write(writeFilePath, 
+                              modelDefinition, 
+                              null, 
+                              new List<ModelFeatureCoordinateData<FixedWeir>>(), 
+                              config);
+
+                // Assert
+                string[] lines = File.ReadAllLines(writeFilePath);
+                Assembly waterFlowFMAssembly = typeof(WaterFlowFMModel).Assembly;
+
+                string expectedMetaDataString = $"# Deltares, Plugin D-FLOW FM Version {waterFlowFMAssembly.GetName().Version}, " +
+                                                $"D-Flow FM Version {api.GetVersionString()}";
+
+                Assert.That(lines[1], Is.EqualTo(expectedMetaDataString));
             }
         }
 
@@ -101,11 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var tempDirectory = new TemporaryDirectory())
             {
                 string filePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
-                File.WriteAllLines(filePath, new[]
-                {
-                    "[physics]",
-                    $"{propertyName} = 1 # custom_comment"
-                });
+                File.WriteAllLines(filePath, new[] {"[physics]", $"{propertyName} = 1 # custom_comment"});
 
                 // Call
                 mduFile.Read(filePath, modelDefinition, new HydroArea(), null);
@@ -130,11 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var tempDirectory = new TemporaryDirectory())
             {
                 string filePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
-                File.WriteAllLines(filePath, new[]
-                {
-                    "[physics]",
-                    $"{propertyName} = 1 # {expectedComment}"
-                });
+                File.WriteAllLines(filePath, new[] {"[physics]", $"{propertyName} = 1 # {expectedComment}"});
 
                 // Call
                 mduFile.Read(filePath, modelDefinition, new HydroArea(), null);
@@ -162,11 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var tempDirectory = new TemporaryDirectory())
             {
                 string filePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
-                File.WriteAllLines(filePath, new[]
-                {
-                    $"[{oldCategoryName}]",
-                    $"{propertyName} = D-Flow FM # Program name"
-                });
+                File.WriteAllLines(filePath, new[] {$"[{oldCategoryName}]", $"{propertyName} = D-Flow FM # Program name"});
 
                 // Call
                 mduFile.Read(filePath, modelDefinition, new HydroArea(), null);
@@ -276,17 +299,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        /// <summary>
-        /// Method to test by dot Trace. Should be public for setting thresholds.
-        /// </summary>
-        /// <param name="mduFile"> The Mdu file. </param>
-        /// <param name="testFilePath">The Mdu file path. </param>
-        /// <param name="area"> The area of the model. </param>
-        public static void TimerMethod_ReadMduFileWithBridgePillars(MduFile mduFile, string testFilePath, HydroArea area)
-        {
-            mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
-        }
-
         [Test]
         public void Test_MduFile_Write_Writes_BridgePillars_Entry()
         {
@@ -364,13 +376,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 Name = "BridgePillar2Test",
                 Geometry =
-                    new LineString(new[]
-                    {
-                        new Coordinate(20.0, 60.0, 0),
-                        new Coordinate(140.0, 8.0, 1.0),
-                        new Coordinate(180.0, 4.0, 2.0),
-                        new Coordinate(260.0, 0.0, 3.0)
-                    })
+                    new LineString(new[] {new Coordinate(20.0, 60.0, 0), new Coordinate(140.0, 8.0, 1.0), new Coordinate(180.0, 4.0, 2.0), new Coordinate(260.0, 0.0, 3.0)})
             };
             hydroArea.BridgePillars.Add(pillar);
 
@@ -397,13 +403,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var bp = new BridgePillar()
             {
                 Geometry =
-                    new LineString(new[]
-                    {
-                        new Coordinate(0.0, 160.0, 0),
-                        new Coordinate(40.0, 80.0, 10.0),
-                        new Coordinate(80.0, 40.0, 20.0),
-                        new Coordinate(160.0, 0.0, 30.0)
-                    })
+                    new LineString(new[] {new Coordinate(0.0, 160.0, 0), new Coordinate(40.0, 80.0, 10.0), new Coordinate(80.0, 40.0, 20.0), new Coordinate(160.0, 0.0, 30.0)})
             };
             var modelFeatureCoordinateDatas = new List<ModelFeatureCoordinateData<BridgePillar>>();
 
@@ -485,13 +485,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var bp = new BridgePillar()
             {
                 Geometry =
-                    new LineString(new[]
-                    {
-                        new Coordinate(0.0, 160.0, 0),
-                        new Coordinate(40.0, 80.0, 10.0),
-                        new Coordinate(80.0, 40.0, 20.0),
-                        new Coordinate(160.0, 0.0, 30.0)
-                    })
+                    new LineString(new[] {new Coordinate(0.0, 160.0, 0), new Coordinate(40.0, 80.0, 10.0), new Coordinate(80.0, 40.0, 20.0), new Coordinate(160.0, 0.0, 30.0)})
             };
 
             var listofDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();
@@ -681,17 +675,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string[] generatedResultsContent = File.ReadAllLines(Path.Combine(newMduDir, twoFixedWeirsFxwPliz));
 
                 var expectedResultsContent =
-                    new[]
-                    {
-                        "Weir01",
-                        "    2    9",
-                        "5.400000000000000E+000  4.600000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  3.000000000000000E+000  4.000000000000000E+000  4.000000000000000E+000  0.000000000000000E+000",
-                        "1.200000000000000E+000  1.000000000000000E+001  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  3.000000000000000E+000  4.000000000000000E+000  4.000000000000000E+000  0.000000000000000E+000",
-                        "Weir02",
-                        "    2    9",
-                        "2.000000000000000E+000  7.000000000000000E-001  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  3.000000000000000E+000  4.000000000000000E+000  4.000000000000000E+000  0.000000000000000E+000",
-                        "3.900000000000000E+000  3.900000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  3.000000000000000E+000  4.000000000000000E+000  4.000000000000000E+000  0.000000000000000E+000"
-                    };
+                    new[] {"Weir01", "    2    9", "5.400000000000000E+000  4.600000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  3.000000000000000E+000  4.000000000000000E+000  4.000000000000000E+000  0.000000000000000E+000", "1.200000000000000E+000  1.000000000000000E+001  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  3.000000000000000E+000  4.000000000000000E+000  4.000000000000000E+000  0.000000000000000E+000", "Weir02", "    2    9", "2.000000000000000E+000  7.000000000000000E-001  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  3.000000000000000E+000  4.000000000000000E+000  4.000000000000000E+000  0.000000000000000E+000", "3.900000000000000E+000  3.900000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  0.000000000000000E+000  3.000000000000000E+000  4.000000000000000E+000  4.000000000000000E+000  0.000000000000000E+000"};
 
                 for (var i = 0; i < 8; i++)
                 {
@@ -722,17 +706,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.NotNull(newMduDir);
 
             var expectedResultsContent =
-                new[]
-                {
-                    "Weir01",
-                    "    2    5",
-                    "5.400000000000000E+000  4.600000000000000E+000  1.200000000000000E+000  3.500000000000000E+000  3.200000000000000E+000",
-                    "1.200000000000000E+000  1.000000000000000E+001  6.400000000000000E+000  3.000000000000000E+000  3.300000000000000E+000",
-                    "Weir02",
-                    "    2    5",
-                    "2.000000000000000E+000  7.000000000000000E-001  1.700000000000000E+000  4.500000000000000E+000  4.200000000000000E+000",
-                    "3.900000000000000E+000  3.900000000000000E+000  6.100000000000000E+000  4.000000000000000E+000  4.300000000000000E+000"
-                };
+                new[] {"Weir01", "    2    5", "5.400000000000000E+000  4.600000000000000E+000  1.200000000000000E+000  3.500000000000000E+000  3.200000000000000E+000", "1.200000000000000E+000  1.000000000000000E+001  6.400000000000000E+000  3.000000000000000E+000  3.300000000000000E+000", "Weir02", "    2    5", "2.000000000000000E+000  7.000000000000000E-001  1.700000000000000E+000  4.500000000000000E+000  4.200000000000000E+000", "3.900000000000000E+000  3.900000000000000E+000  6.100000000000000E+000  4.000000000000000E+000  4.300000000000000E+000"};
             try
             {
                 var mduFile = new MduFile();
@@ -871,10 +845,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 const string expectedMsgHeader = "During reading the Fixed Weirs the following warnings were reported:";
                 Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
 
-                List<string> subMsgs = msg.Split(new[]
-                {
-                    "\n- "
-                }, StringSplitOptions.None).ToList();
+                List<string> subMsgs = msg.Split(new[] {"\n- "}, StringSplitOptions.None).ToList();
                 subMsgs.RemoveAt(0);                              // Remove header msg.
                 subMsgs = subMsgs.Select(s => s.Trim()).ToList(); // Remove excessive white characters.
 
@@ -1045,6 +1016,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        /// <summary>
+        /// Method to test by dot Trace. Should be public for setting thresholds.
+        /// </summary>
+        /// <param name="mduFile"> The Mdu file. </param>
+        /// <param name="testFilePath">The Mdu file path. </param>
+        /// <param name="area"> The area of the model. </param>
+        public static void TimerMethod_ReadMduFileWithBridgePillars(MduFile mduFile, string testFilePath, HydroArea area)
+        {
+            mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
+        }
+
         private static void CheckAttributeCollection(DictionaryFeatureAttributeCollection attributes, string columnName, List<double> valueList)
         {
             Assert.IsNotNull(valueList);
@@ -1126,11 +1108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var tempDirectory = new TemporaryDirectory())
             {
                 string filePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
-                File.WriteAllLines(filePath, new[]
-                {
-                    "[category]",
-                    $"{oldPropertyName} = 0"
-                });
+                File.WriteAllLines(filePath, new[] {"[category]", $"{oldPropertyName} = 0"});
 
                 // Call
                 mduFile.Read(filePath, modelDefinition, new HydroArea(), null);

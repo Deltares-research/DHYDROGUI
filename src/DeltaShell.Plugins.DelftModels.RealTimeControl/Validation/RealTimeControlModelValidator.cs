@@ -3,9 +3,9 @@ using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Validation;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
@@ -24,12 +24,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             var validationReports = new List<ValidationReport>
             {
                 ValidateRealTimeControlModel(rootObject),
-                RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(true,
-                                                                           rootObject.SaveStateStartTime,
-                                                                           rootObject.SaveStateStopTime,
-                                                                           rootObject.SaveStateTimeStep,
-                                                                           rootObject),
-                ValidateRestartInputState(rootObject)
+                RestartTimeRangeValidator.ValidateWriteRestartSettings(rootObject.WriteRestart,
+                                                                       rootObject.SaveStateStartTime, rootObject.SaveStateStopTime, rootObject.SaveStateTimeStep,
+                                                                       rootObject.StartTime, rootObject.TimeStep)
             };
             validationReports.AddRange(
                 rootObject.ControlGroups.Select(cg => new ControlGroupValidator().Validate(rootObject, cg)));
@@ -151,22 +148,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                     ruleNames.Add(nameable.Name);
                 }
             }
-        }
-
-        private ValidationReport ValidateRestartInputState(RealTimeControlModel model)
-        {
-            if (!model.UseRestart)
-            {
-                return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
-            }
-
-            IEnumerable<string> errors, warnings;
-            model.ValidateInputState(out errors, out warnings);
-
-            List<ValidationIssue> issues = errors.Select(error => new ValidationIssue("Input restart state", ValidationSeverity.Error, error)).ToList();
-            issues.AddRange(warnings.Select(warning => new ValidationIssue("Input restart state", ValidationSeverity.Warning, warning)));
-
-            return new ValidationReport("Input restart state", issues);
         }
     }
 }

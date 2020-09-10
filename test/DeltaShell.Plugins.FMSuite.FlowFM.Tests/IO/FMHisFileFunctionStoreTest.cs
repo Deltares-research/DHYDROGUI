@@ -10,7 +10,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -23,6 +22,7 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFMOutputHisFileWithPumpAndWeirAndStationsAndGateAndGeneralStructureWhenCreatingStoreThenFunctionsCorrectlyInitialized()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\D3DFMIQ-2084.nc"));
-            Assert.AreEqual(74, store.Functions.Count);
+            Assert.AreEqual(73, store.Functions.Count);
             var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_structure_discharge");
             Assert.That(pumpFunction, Is.Not.Null);
             Assert.AreEqual(289, pumpFunction.GetValues().Count);
@@ -78,12 +78,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(1, generalStructureFunction.Arguments[1].Values.Count);
 
         }
+
         [Test]
-        public void GivenNewCreatedFMModelWith2dGridAndPumpAndWeirAndStationsAndGateAndGeneralStructureAndCrossSection2DWhenModelRunnedThenFunctionsCorrectlyInitialized()
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.VerySlow)]
+        public void GivenNewCreatedFMModelWith2dGridAndPumpAndWeirAndStationsAndGateAndGeneralStructureAndCrossSection2D_WhenModelIsRun_ThenFunctionsCorrectlyInitialized()
         {
-            using (var model = new WaterFlowFMModel() { })
+            using (var temporaryDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
-                InitializeModelWith10By10Grid(model);
+                InitializeModelWith10By10Grid(model, temporaryDirectory);
 
                 InitializeModelWithStructuresUsedWithHisOutput(model);
 
@@ -91,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 ActivityRunner.RunActivity(model);
 
-                var store = model.OutputHisFileStore;
+                FMHisFileFunctionStore store = model.OutputHisFileStore;
 
                 Assert.AreEqual(78, store.Functions.Count);
                 var pumpFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_s1up");
@@ -201,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             });
         }
 
-        private static void InitializeModelWith10By10Grid(WaterFlowFMModel model)
+        private static void InitializeModelWith10By10Grid(WaterFlowFMModel model, TemporaryDirectory temporaryDirectory)
         {
             var dtUserTimeSpan = new TimeSpan(0, 6, 0, 0, 0);
             model.TimeStep = dtUserTimeSpan;
@@ -214,8 +218,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             model.StartTime = DateTime.Today;
             model.StopTime = DateTime.Today.AddDays(1);
 
-            var tempMduFilePath = Path.Combine(FileUtils.CreateTempDirectory(), model.Name + ".mdu");
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 1, 1);
+            string tempMduFilePath = Path.Combine(temporaryDirectory.Path, model.Name + ".mdu");
+            
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 1, 1);
             grid.Vertices.ForEach(v=> v.Z =-2);
             model.Grid = grid;
             model.ExportTo(tempMduFilePath);
@@ -288,12 +293,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IFunction timeSeriesForPoint = waterLevelFunction.GetTimeSeries(waterLevelFunction.Features.Skip(1).First());
             Assert.AreEqual(388, timeSeriesForPoint.GetValues().Count);
             Assert.AreEqual(0.1957, (double) timeSeriesForPoint.GetValues()[50], 0.001);
-            Assert.AreEqual(new DateTime(1999, 12, 16), waterLevelFunction.Time.Values.First());
-            Assert.AreEqual("(POR)", waterLevelFunction.Arguments[1].Values.OfType<Feature2D>().First().Name);
-            Assert.AreEqual("(POR)", waterLevelFunction.Features.OfType<Feature2D>().First().Name);
-            Assert.AreEqual(1.5d, (double)waterLevelFunction.Components[0].Values[0], 0.001);
-            Assert.AreEqual("m", waterLevelFunction.Components[0].Unit.Symbol);
-            Assert.AreEqual( new Point( new Coordinate(502049, 4205261)),  waterLevelFunction.Features.OfType<Feature2D>().First().Geometry);
         }
 
         [Test]

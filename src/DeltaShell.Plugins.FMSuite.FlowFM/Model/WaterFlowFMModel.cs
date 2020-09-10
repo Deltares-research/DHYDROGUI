@@ -16,6 +16,7 @@ using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -41,7 +42,7 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, IDimrStateAwareModel, IFileBased,
+    public partial class WaterFlowFMModel : TimeDependentModelBase, IFileBased, IRestartModel,
                                             IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel,
                                             IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
     {
@@ -881,6 +882,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
             Grid = null;
             DisposeSnapApi();
+            runner?.Dispose();
             ClearSyncers();
 
             fixedWeirProperties.Values.ForEach(d => d.Dispose());

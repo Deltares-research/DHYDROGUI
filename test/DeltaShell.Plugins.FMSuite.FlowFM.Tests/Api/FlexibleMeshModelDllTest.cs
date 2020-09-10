@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Remoting;
@@ -87,7 +88,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.Finish();
                 model.Cleanup();
 
-                IDataItem dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
+                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
+
+                IDataItem dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunHelper.dimrRunLogfileDataItemTag);
                 Assert.NotNull(dimrLogDataItem, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
                 Assert.NotNull(dimrLogDataItem.Value, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
             }

@@ -59,7 +59,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private const string ProjectFileExtension = ".dsproj";
         private const string ProjectDirExtension = ".dsproj_data";
 
-        private const string StateFilesDirectoryPostfix = "_states";
         private const string InputDirName = "input";
         private const string OutputDirName = "output";
         private const string SnappedDirName = "snapped";
@@ -73,7 +72,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static string projectDirName;
         private static string projectFileName;
         private static string modelDirName;
-        private static string outputFMDirName;
         private static string outputWAQDirName;
 
         private static string projectDirPath;
@@ -124,7 +122,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             projectDirName = ProjectName + ProjectDirExtension;
             modelDirName = ModelName;
             mduFileName = ModelName + ".mdu";
-            outputFMDirName = $"DFM_OUTPUT_{ModelName}";
             outputWAQDirName = $"DFM_DELWAQ_{ModelName}";
 
             projectFilePath = Path.Combine(destinationDirPath, projectFileName);
@@ -143,7 +140,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             filtersCommonInput = new List<string>
             {
                 ".mdu",
-                ".meta",
                 "_net.nc",
                 ".pol",
                 ".pli",
@@ -664,10 +660,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                         Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
                                                                             actualFileCount, exportDimrDirPath));
                         AssertDflowfmDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes.Except(new[]
-                                                              {
-                                                                  ".meta"
-                                                              }),
+                        AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes,
                                                               dflowfmDirPath);
                     }
                 }
@@ -731,10 +724,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                         Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
                                                                             actualFileCount, exportDimrDirPath));
                         AssertDflowfmDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithMorphology.Except(new[]
-                                                              {
-                                                                  ".meta"
-                                                              }),
+                        AssertFilesExtensionsExistInDirectory(filtersInputWithMorphology,
                                                               dflowfmDirPath);
                     }
                 }
@@ -795,10 +785,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                         Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
                                                                             actualFileCount, exportDimrDirPath));
                         AssertDflowfmDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithWind.Except(new[]
-                                                              {
-                                                                  ".meta"
-                                                              }),
+                        AssertFilesExtensionsExistInDirectory(filtersInputWithWind,
                                                               dflowfmDirPath);
 
                         app.CloseProject();
@@ -1051,7 +1038,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     // Execute SaveAs() manually (migrating through GUI does this already).
                     app.SaveProjectAs(projectFilePath);
 
-                    IModel integratedModel = app.GetAllModelsInProject().FirstOrDefault(m => m is IHydroModel);
+                    var integratedModel = app.GetAllModelsInProject().FirstOrDefault(m => m is HydroModel) as HydroModel;
                     Assert.NotNull(integratedModel, "Expected: one integrated model (hydromodel) in the project.");
                     var fmModel = (WaterFlowFMModel) app.GetAllModelsInProject().FirstOrDefault(m => m is WaterFlowFMModel);
                     Assert.NotNull(fmModel, "Expected: one waterflow fm model in the project.");
@@ -1059,7 +1046,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     app.RunActivity(integratedModel);
 
                     // Get directory structure of output in working directory before saving
-                    string outputWorkingDirectoryPath = Path.Combine(integratedModel.ExplicitWorkingDirectory,
+                    string outputWorkingDirectoryPath = Path.Combine(integratedModel.WorkingDirectoryPath,
                                                                      DflowfmDirName, OutputDirName);
                     Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputWorkingDirStructure = GetDirectoryStructure(outputWorkingDirectoryPath, ".", true);
 
@@ -1156,8 +1143,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     List<string> projectDirSubFolders =
                         Directory.EnumerateDirectories(newDsProjData).ToList();
 
-                    Assert.That(projectDirSubFolders.Count, Is.EqualTo(2),
-                                $"Expected two folders in {newDsProjData}: '{ModelName}' and '{ModelName + StateFilesDirectoryPostfix}'.");
+                    Assert.That(projectDirSubFolders.Count, Is.EqualTo(1),
+                                $"Expected one folders in {newDsProjData}: '{ModelName}'");
 
                     string modelPath = Path.Combine(newDsProjData, fmModel.Name);
                     Assert.That(projectDirSubFolders.First(), Is.EqualTo(modelPath),
@@ -1543,8 +1530,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 {
                     // Given
                     string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    // Restart.Meta is not imported.
-                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).Where(p => !p.EndsWith("restart.meta")).ToList();
+                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
                     string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
@@ -1798,7 +1784,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void AssertThatInputFilesAreEqual(IEnumerable<string> importInputFiles,
                                                          IEnumerable<string> saveInputFiles)
         {
-            List<string> importFiles = importInputFiles.Select(Path.GetFileName).ToList();
+            List<string> importFiles = importInputFiles.Select(Path.GetFileName).Where(p => p != "restart.meta").ToList();
             List<string> saveFiles = saveInputFiles.Select(Path.GetFileName).ToList();
 
             Assert.That(saveFiles.Count, Is.EqualTo(importFiles.Count), "Expected the number of saved input files to be equal to the original number of input files.");

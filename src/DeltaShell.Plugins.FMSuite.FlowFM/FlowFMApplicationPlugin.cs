@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion => "1.2.0.0";
+        public override string FileFormatVersion => "1.3.0.0";
 
         public override IApplication Application
         {
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new StructuresListImporter(StructuresListType.Weirs) {GetModelForList = GetModelForCollection};
             yield return new FMMapFileImporter();
             yield return new FMHisFileImporter();
-            yield return new FMRstFileImporter {GetFMModelForRestartState = GetFMModelForRestartState};
+            yield return new FMRestartFileImporter(GetWaterFlowFMModels);
             yield return new BcFileImporter();
             yield return new BcmFileImporter();
             yield return new BoundaryConditionWpsImporter();
@@ -110,9 +110,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 GetBaseFolder = list =>
                 {
-                    WaterFlowFMModel model = Application
-                                             .GetAllModelsInProject().OfType<WaterFlowFMModel>()
-                                             .FirstOrDefault(m => Equals(m.Area.DryPoints, list));
+                    WaterFlowFMModel model = GetWaterFlowFMModels()
+                        .FirstOrDefault(m => Equals(m.Area.DryPoints, list));
                     return model == null ? string.Empty : Path.GetDirectoryName(model.MduFilePath);
                 }
             };
@@ -578,7 +577,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private IEnumerable<WaterFlowFMModel> FlowModels =>
             Application != null
-                ? Application.GetAllModelsInProject().OfType<WaterFlowFMModel>()
+                ? GetWaterFlowFMModels()
                 : Enumerable.Empty<WaterFlowFMModel>();
 
         private void Application_ProjectOpened(Project project)
@@ -594,13 +593,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return Application?.Project?.RootFolder.GetAllModelsRecursive()
                               .OfType<WaterFlowFMModel>()
                               .FirstOrDefault(m => listSelectors.Any(s => Equals(s(m.Area), target)));
-        }
-
-        private WaterFlowFMModel GetFMModelForRestartState(FileBasedRestartState fileBasedRestartState)
-        {
-            return
-                Application.GetAllModelsInProject().OfType<WaterFlowFMModel>()
-                           .FirstOrDefault(m => Equals(m.RestartInput, fileBasedRestartState));
         }
 
         private WaterFlowFMModel GetModelForArea(HydroArea hydroArea)
@@ -659,5 +651,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return false;
         }
+
+        private IEnumerable<WaterFlowFMModel> GetWaterFlowFMModels() => Application.GetAllModelsInProject().OfType<WaterFlowFMModel>();
     }
 }

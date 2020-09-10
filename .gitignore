@@ -53,3 +53,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# AcceptanceModels folder containing the test data for the acceptance tests
+AcceptanceModels

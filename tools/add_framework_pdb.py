@@ -29,7 +29,6 @@ class RunConfig(object):
                        only_update_bin: bool,
                        rebuild_framework: bool,
                        add_plugins: bool,
-                       use_revision: bool,
                        compile: bool,
                        verbose: bool):
         self._dhydro_root = dhydro_root
@@ -37,7 +36,6 @@ class RunConfig(object):
         self._only_update_bin = only_update_bin
         self._rebuild_framework = rebuild_framework
         self._add_plugins = add_plugins
-        self._use_revision = use_revision
         self._compile = compile
         self._verbose = verbose
 
@@ -48,7 +46,6 @@ class RunConfig(object):
                          args.update_only_bin,
                          args.rebuild_framework,
                          args.add_plugins_to_framework,
-                         args.use_revision, 
                          not args.skip_compile,
                          not args.quiet)
 
@@ -71,10 +68,6 @@ class RunConfig(object):
     @property
     def add_plugins(self) -> bool:
         return self._add_plugins
-
-    @property
-    def use_revision(self) -> bool:
-        return self._use_revision
 
     @property
     def compile(self) -> bool:
@@ -179,62 +172,6 @@ def get_src_csproj_files(root: Path):
     return (root / Path("src")).glob("**/*.csproj")
 
 
-def get_framework_revision(dhydro_root: Path, 
-                           verbose: bool) -> int:
-    """
-    Get the framework revision used within the D-HYDRO repository based upon
-    the packages.config files.
-
-    :param dhydro_root: Path to the D-HYDRO repository
-    :type dhydro_root: Path
-    :param verbose: whether to output additional messages.
-    :type verbose: bool
-    """
-    # We use the version specified in a package file to get the accurate 
-    # version.
-    version_regex = re.compile(r'DeltaShell\.Framework\.1\.5\.0\.(?P<version>\d{5})(?:-beta)?(?:-SIGNED)?')
-
-    csproj_files = get_src_csproj_files(dhydro_root)
-
-    for p in csproj_files:
-        with p.open() as f:
-            matched = version_regex.search(f.read())
-
-            if matched and matched.group("version"):
-                return int(matched.group("version"))
-
-    raise Exception("Could not find a package file with a framework definition")
-
-
-def update_framework_revision(deltashell_root: Path, 
-                              revision: int, 
-                              verbose: bool):
-    """
-    Update the DeltaShell framework to the specified revision.
-    """
-    # Note we currently not check for modifications, it might be better
-    # to do so in the future.
-    p = subprocess.call(["svn", "update",
-                         "-r", "{}".format(revision),
-                         str(deltashell_root)])
-
-
-def update_revision(run_config: RunConfig):
-    """
-    Update the revision of the framework to the one used within the 
-    D-HYDRO.
-    """
-    try:
-        revision = get_framework_revision(run_config.dhydro_root, 
-                                          run_config.verbose)
-        update_framework_revision(run_config.deltashell_root,
-                                  revision,
-                                  run_config.verbose)
-    except Exception as e:
-        print(f"Could not update the revision of the framework: {str(e)}")
-        raise
-
-
 def clean_framework_bin(deltashell_root: Path, 
                         verbose: bool):
     bin_folder_path = deltashell_root / Path("bin") / Path("Debug")
@@ -242,12 +179,11 @@ def clean_framework_bin(deltashell_root: Path,
         shutil.rmtree(str(bin_folder_path))
 
     for folder_path in (deltashell_root / Path("packages")).glob("*"):
-        p = subprocess.Popen(["svn", "info", str(folder_path)],
+        p = subprocess.Popen(["git", "-C", str(folder_path), "ls-files"],
                              stdout=subprocess.PIPE)
         output, error = p.communicate()
-        output = output.decode("utf-8")
 
-        if not ("Repository Root:" in output):
+        if not output:
             shutil.rmtree(str(folder_path))
 
 
@@ -319,7 +255,7 @@ def get_framework_version(dhydro_root: Path,
     """
     # We use the version specified in a package file to get the accurate 
     # version.
-    version_regex = re.compile(r'(?P<version>DeltaShell\.Framework\.1\.5\.0\.\d{5}(?:-beta)?(?:-SIGNED)?)')
+    version_regex = re.compile(r'(?P<version>DeltaShell\.Framework\.1\.6\.0(?:-beta)?(?:-SIGNED)?(?:(\.|-)\b[0-9a-f]{7})?)')
 
     csproj_files = get_src_csproj_files(dhydro_root)
 
@@ -413,8 +349,6 @@ def run(run_config: RunConfig):
         validate(run_config)
 
         if run_config.compile or run_config.add_plugins:
-            if run_config.use_revision:
-                update_revision(run_config)
             if run_config.rebuild_framework or run_config.add_plugins:
                 clean_framework(run_config)
 
@@ -443,12 +377,6 @@ def get_args():
     parser.add_argument("--rebuild_framework",
                         action="store_true", 
                         help="Flag to force rebuild the framework by deleting the bin and packages folders.")
-    parser.add_argument("--use_revision",
-                        action="store_true",
-                        help=("Flag to update the framework to the revision " +
-                              "used within D-HYDRO, make sure your framework " +
-                              "repository does not have local changes when " +
-                              "setting this flag."))
     parser.add_argument("--skip_compile",
                         action="store_true",
                         help="Skip the compilation step of this program and use the Debug bin as is.")

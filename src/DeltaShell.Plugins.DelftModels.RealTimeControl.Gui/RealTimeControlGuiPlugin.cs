@@ -20,7 +20,9 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Helpers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
@@ -55,52 +57,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             InitializeComponent();
         }
 
-        public override string Name
-        {
-            get
-            {
-                return "Real Time Control (UI)";
-            }
-        }
+        public override string Name => "Real Time Control (UI)";
 
-        public override string DisplayName
-        {
-            get
-            {
-                return "D-Real Time Control Plugin (UI)";
-            }
-        }
+        public override string DisplayName => "D-Real Time Control Plugin (UI)";
 
-        public override string Description
-        {
-            get
-            {
-                return RealTimeControl.Properties.Resources.RealTimeControlApplicationPlugin_Description;
-            }
-        }
+        public override string Description => 
+            RealTimeControl.Properties.Resources.RealTimeControlApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get
-            {
-                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
-            }
-        }
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion
-        {
-            get
-            {
-                return "3.5.0.0";
-            }
-        }
+        public override string FileFormatVersion => "3.5.0.0";
 
         public override IGui Gui
         {
-            get
-            {
-                return gui;
-            }
+            get => gui;
             set
             {
                 if (base.Gui != null)
@@ -118,13 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             }
         }
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get
-            {
-                return new RealTimeControlMapLayerProvider();
-            }
-        }
+        public override IMapLayerProvider MapLayerProvider => new RealTimeControlMapLayerProvider();
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
@@ -245,7 +209,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 return new MenuItemContextMenuStripAdapter(convertCoordinateSystemContextMenu);
             }
 
-            return null;
+            return base.GetContextMenu(sender, data);
         }
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
@@ -255,6 +219,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return new RtcOutputFileFunctionStoreNodePresenter();
             yield return new ControlGroupCollectionNodePresenter {GuiPlugin = this};
             yield return new ControlGroupNodePresenter(this);
+            yield return new RealTimeControlRestartFileNodePresenter(this);
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()

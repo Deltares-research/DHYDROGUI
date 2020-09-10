@@ -48,100 +48,100 @@
       <HintPath>..\..\packages\AutoFixture.NUnit2.4.11.0\lib\net452\AutoFixture.NUnit2.dll</HintPath>
     </Reference>
     <Reference Include="BasicModelInterface">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="DelftTools.Controls">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=1.6.0-beta.df46944ure=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+    <Reference Include="DelftTools.Shell.Core">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.TestProject.1.6.0-beta.df46944\lib\net40\DelftTools.TestUtils.dll</HintPath>
+    <Reference Include="DelftTools.TestUtils">
+      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0-beta.c0a5862\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Data.NHibernate">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.NetCDF">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.ProjectExplorer">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Scripting">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Scripting.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.Scripting.Gui\DeltaShell.Plugins.Scripting.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.Scripting.Gui\DeltaShell.Plugins.Scripting.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Toolbox">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.Toolbox\DeltaShell.Plugins.Toolbox.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.Toolbox\DeltaShell.Plugins.Toolbox.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Toolbox.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.Toolbox.Gui\DeltaShell.Plugins.Toolbox.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.Toolbox.Gui\DeltaShell.Plugins.Toolbox.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DHYDRO.TestModels.Common, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -154,15 +154,15 @@
       <HintPath>..\..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -171,7 +171,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Dynamic">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
@@ -179,11 +179,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nini">
@@ -205,7 +205,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
@@ -213,24 +213,24 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.UI">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SharpMapTestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpMapTestUtils">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.TestProject.1.6.0-beta.df46944\lib\net40\SharpMapTestUtils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0-beta.c0a5862\lib\net40\SharpMapTestUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -376,13 +376,14 @@
     <Compile Include="IO\ObsFileImporterExporterTest.cs" />
     <Compile Include="IO\PolFileImporterExporterTest.cs" />
     <Compile Include="IO\StructuresFileWriteTest.cs" />
-    <Compile Include="IO\Importers\FMRstFileImporterTest.cs" />
+    <Compile Include="IO\Importers\FMRestartFileImporterTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />
     <Compile Include="IO\FMMapFileFunctionStoreTest.cs" />
     <Compile Include="IO\PliFileImporterExporterTest.cs" />
     <Compile Include="IO\StructureFMPropertiesFileTest.cs" />
     <Compile Include="IO\FMModelSchemaCsvFileTest.cs" />
     <Compile Include="IO\WaterFlowFMMduFileTest.cs" />
+    <Compile Include="IO\WaterFlowFMModel120LegacyLoaderTest.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensionsTest.cs" />
     <Compile Include="IO\WindExtForceTest.cs" />
     <Compile Include="Layers\UnstructuredGridCellCoverageLayerTest.cs" />
@@ -422,14 +423,12 @@
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTest.cs" />
     <Compile Include="WaterFlowFMModel110LegacyLoaderTest.cs" />
-    <Compile Include="WaterFlowFMModelRestartTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.Output.cs" />
     <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
     <Compile Include="WaterFlowFMImportExportTest.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversionTest.cs" />
-    <Compile Include="WaterFlowFMModelRestartIntegrationTest.cs" />
     <Compile Include="WaterFlowFMModelTracersTest.cs" />
     <Compile Include="WaterFlowFMResourcesTest.cs" />
     <Compile Include="WaterFlowFMModelDefinitionTest.cs" />
@@ -446,6 +445,11 @@
     <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
@@ -548,9 +552,9 @@ IF EXIST "%25VS110COMNTOOLS%25vsvars32.bat" CALL “%25VS110COMNTOOLS%25vsvars32
 :endvsvars
 editbin /LARGEADDRESSAWARE $(TargetFileName)
 
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0-beta.df46944\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.1.6.0-beta.df46944\test-data\DelftTools.TestUtils
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0-beta.c0a5862\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.2.0.0-beta.c0a5862\test-data\DelftTools.TestUtils
 
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0-beta.df46944\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0-beta.c0a5862\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
 </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
@@ -561,11 +565,11 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0-beta.df46944\tools\m
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\build\DHYDRO.TestModels.DFlowFM.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\build\DHYDRO.TestModels.DFlowFM.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.1.6.0-beta.df46944\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.1.6.0-beta.df46944\build\net40\DeltaShell.TestProject.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.2.0.0-beta.c0a5862\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.2.0.0-beta.c0a5862\build\net40\DeltaShell.TestProject.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\build\DHYDRO.TestModels.DFlowFM.targets" Condition="Exists('..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\build\DHYDRO.TestModels.DFlowFM.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.6.0-beta.df46944\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\DeltaShell.TestProject.1.6.0-beta.df46944\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.1.6.0-beta.df46944\build\net40\DeltaShell.TestProject.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0-beta.c0a5862\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.TestProject.2.0.0-beta.c0a5862\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.2.0.0-beta.c0a5862\build\net40\DeltaShell.TestProject.targets')" />
 </Project>

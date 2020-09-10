@@ -24,26 +24,32 @@ def get_args():
     """Parses and returns the arguments"""
     parser = argparse.ArgumentParser()
     parser.add_argument("root_path", help="Path to the root of the working directory")
-    parser.add_argument("version_number", help="Version number of the Framework NuGet package")
-    parser.add_argument("--prefix", help="Add a prefix value to the nuget version tag (ie 1.2.3-PREFIX.abcdefg)")
+    parser.add_argument("framework_version", help="The full DSF version to update to i.e. Major.Minor.Patch[-Prefixes.hash]")
     return parser.parse_args()
+
+
+def get_framework_version_regex_string() -> str:
+    integer_regex = r'(0|([1-9]\d*))'
+    git_hash_regex = r'(?:(\.|-)\b[0-9a-f]{7})?'
+
+    known_prefixes = ['beta', 'SIGNED']
+    prefix_regex = ''.join(f'(?:-{prefix})?' for prefix in known_prefixes)
+
+    return f'{integer_regex}\\.{integer_regex}\\.{integer_regex}{prefix_regex}{git_hash_regex}'
 
 
 if __name__ == "__main__":
     args = get_args()
     root_path = Path(args.root_path)
-    version_number = args.version_number
-
-    nuget_version_tag = f"{args.prefix + '.' if args.prefix else ''}{version_number}"
-    project_file_paths = search_files(root_path, '.csproj')
     
-    version_regex = r'1\.6\.0(?:-beta)?(?:-SIGNED)?.(?:.{7})?'
-    new_version_string = f"1.6.0-{nuget_version_tag}"
+    project_file_paths = search_files(root_path, '.csproj')
+
+    new_version_string = args.framework_version
+    version_regex = get_framework_version_regex_string()
 
     find_and_replace_csproj = [
         (re.compile(f'DeltaShell\\.Framework\\.{version_regex}'),   f"DeltaShell.Framework.{new_version_string}"),
         (re.compile(f'DeltaShell\\.TestProject\\.{version_regex}'), f"DeltaShell.TestProject.{new_version_string}"),
-        (re.compile(f'Version={version_regex}'),                    f"Version={new_version_string}"),
     ]
 
     update_files(project_file_paths, find_and_replace_csproj, "utf-8-sig")

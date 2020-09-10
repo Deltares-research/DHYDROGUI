@@ -614,9 +614,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     case FlowBoundaryQuantityType.MorphologyBedLevelPrescribed:
                     case FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed:
                     case FlowBoundaryQuantityType.WaterLevel:
+                    case FlowBoundaryQuantityType.Riemann:
                         return new Unit("meters", "m");
                     case FlowBoundaryQuantityType.Velocity:
-                    case FlowBoundaryQuantityType.Riemann:
                     case FlowBoundaryQuantityType.RiemannVelocity:
                     case FlowBoundaryQuantityType.NormalVelocity:
                     case FlowBoundaryQuantityType.TangentVelocity:

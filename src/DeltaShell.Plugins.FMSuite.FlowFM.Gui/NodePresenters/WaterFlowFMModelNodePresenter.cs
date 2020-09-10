@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Functions;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
@@ -129,7 +128,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             base.OnPropertyChanged(model, node, e);
 
-            if (e.PropertyName == nameof(WaterFlowFMModel.InitialCoverageSetChanged))
+            if (e.PropertyName == nameof(WaterFlowFMModel.InitialCoverageSetChanged) || 
+                e.PropertyName == nameof(WaterFlowFMModel.RestartInput))
             {
                 TreeView.RefreshChildNodes(node);
             }
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)
         {
-            yield return model.GetDataItemByValue(model.RestartInput);
+            yield return model.RestartInput;
 
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model, model.InitialWaterLevel, ShortCutType.SpatialCoverage);
 
@@ -209,8 +209,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private IEnumerable GetOutputItems(WaterFlowFMModel model)
         {
-            yield return new TreeFolder(model, GetRestartStates(model), "States", FolderImageType.None);
-            IDataItem dimrLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
+            yield return new TreeFolder(model, model.RestartOutput, NGHS.Common.Gui.Properties.Resources.RestartFolderName, FolderImageType.Output);
+
+            IDataItem dimrLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == DimrRunHelper.dimrRunLogfileDataItemTag);
             if (dimrLogDataItem != null)
             {
                 yield return dimrLogDataItem;
@@ -281,14 +282,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             }
 
             return existingItem;
-        }
-
-        private static IEnumerable GetRestartStates(WaterFlowFMModel data)
-        {
-            IEnumerable<IDataItem> restartStates =
-                data.DataItems.Where(
-                    dataItem => dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output);
-            return restartStates;
         }
 
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaterFlowFMModel model)

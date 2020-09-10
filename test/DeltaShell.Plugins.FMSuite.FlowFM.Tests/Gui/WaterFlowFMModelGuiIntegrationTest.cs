@@ -307,7 +307,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel { ShowModelRunConsole = true };
             model.ImportFromMdu(mduPath);
 
-            model.ExplicitWorkingDirectory = model.WorkingDirectoryPath;
             using (var gui = new DeltaShellGui())
             {
                 IApplication app = gui.Application;
@@ -692,7 +691,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_CloseProject_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
-            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\FlowFM");
 
             // 2. Set up test action
             Action<IGui> testAction = gui => gui.CommandHandler.CloseProject();
@@ -706,7 +705,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_DeleteModel_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
-            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\FlowFM");
 
             // 2. Set up test action
             Action<IGui> testAction = gui =>
@@ -961,30 +960,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static void AssertMultipleFunctionViewClosedAsExpected(string filePath, Action<IGui> guiAction)
+        private static void AssertMultipleFunctionViewClosedAsExpected(string testDataPath, Action<IGui> guiAction)
         {
-            using (var dsProjLocation = new TemporaryDirectory())
+            using (var tempDir = new TemporaryDirectory())
             {
                 // 1. Load test data
-                string fileLocation = TestHelper.GetTestFilePath(filePath);
-                string tempFileLocation = dsProjLocation.CopyTestDataFileAndDirectoryToTempDirectory(fileLocation);
+                string modelDir = tempDir.CopyDirectoryToTempDirectory(testDataPath);
+                string mduFilePath = Path.Combine(modelDir, "input", "FlowFM.mdu");
 
+                Assert.That(File.Exists(mduFilePath));
                 // 2. Prepare Test Project
                 using (var gui = new DeltaShellGui())
+                using(var fmModel = new WaterFlowFMModel())
                 {
                     IApplication app = gui.Application;
                     // Load app plugins
                     RunConfiguredFmSuiteGui(gui);
 
-                    bool projectOpened = app.OpenProject(tempFileLocation);
+                    fmModel.ImportFromMdu(mduFilePath);
+                    app.Project.RootFolder.Add(fmModel);
 
                     // 3. Verify initial expectations
-                    Assert.That(projectOpened, Is.True, "It was not possible to open the project");
-                    Project project = app.Project;
-                    Assert.That(project, Is.Not.Null);
+                    Assert.That(app.Project, Is.Not.Null);
 
                     // 3.1. Verify data loaded correctly.
-                    WaterFlowFMModel fmModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
 
                     TimeSeries hisTimeSerie = fmModel.OutputHisFileStore.Functions

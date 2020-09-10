@@ -1,8 +1,6 @@
-using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
@@ -31,12 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                             sovc.SpatialOperationSet.Execute();
                         }
                     }
-                }
-
-                foreach (WavmFileFunctionStore wavmFileFunctionStore in model.WavmFunctionStores)
-                {
-                    wavmFileFunctionStore.Path = Path.Combine(Path.GetDirectoryName(model.MdwFilePath),
-                                                              Path.GetFileName(wavmFileFunctionStore.Path));
                 }
             }
 
