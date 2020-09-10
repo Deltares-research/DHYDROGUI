@@ -892,26 +892,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 return;
             }
 
-            IEnumerable<ShapeBase> shapeBases = shapesOnGraph as ShapeBase[] ?? shapesOnGraph.ToArray();
+            ShapeBase[] shapeBases = shapesOnGraph as ShapeBase[] ?? shapesOnGraph.ToArray();
             Connector[] allConnectors = shapeBases.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
             var owner = activeConnector.BelongsTo as ShapeBase;
-
-            ConnectorType activeConnectionType = owner is MathematicalExpressionShape ? ConvertConnectorNameToType(activeConnector.Name) : ConvertTo(activeConnector.ConnectorLocation);
 
             if (owner is OutputItemShape)
             {
                 return;
             }
 
+            ConnectorType activeConnectionType = GetActiveConnectionType(owner, activeConnector);
             IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors).ToList();
+
             if (!allowedConnectors.Any())
             {
                 return;
             }
+
             foreach (ShapeBase shape in shapeBases)
             {
                 shape.HighLightedConnectors = allowedConnectors;
             }
+        }
+
+        private static ConnectorType GetActiveConnectionType(ShapeBase owner, Connector activeConnector)
+        {
+            ConnectorType activeConnectionType = owner is MathematicalExpressionShape ? ConvertConnectorNameToType(activeConnector.Name) : ConvertTo(activeConnector.ConnectorLocation);
+            return activeConnectionType;
         }
 
         private static IEnumerable<Connector> FilterAllowableConnectors(ShapeBase sourceShape,
