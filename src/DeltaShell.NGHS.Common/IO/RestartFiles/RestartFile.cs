@@ -69,7 +69,19 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         /// <summary>
         /// Gets a value indicating whether the restart file exists.
         /// </summary>
-        public bool Exists => pathInfo?.Exists ?? false;
+        public bool Exists
+        {
+            get
+            {
+                if (pathInfo == null)
+                {
+                    return false;
+                }
+
+                pathInfo.Refresh();
+                return pathInfo.Exists;
+            }
+        }
 
         /// <summary>
         /// Copies the file in to the specified <paramref name="directoryPath"/>.

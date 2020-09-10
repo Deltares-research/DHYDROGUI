@@ -155,9 +155,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
                                                                                   sr.Category == NGHS.Common.Properties.Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings);
 
             Assert.IsNotNull(writeRestartSubValidationReport);
-            Assert.IsTrue(writeRestartSubValidationReport.GetAllIssuesRecursive().
-                                                          Any(i =>
-                                                                  i.Message == NGHS.Common.Properties.Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_an_integer_multiple_of_the_output_time_step_));
+
+            ValidationIssue restartValidationIssue = writeRestartSubValidationReport.GetAllIssuesRecursive().
+                                                                                     FirstOrDefault(i =>
+                                                                                                        i.Message == NGHS.Common.Properties.Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_an_integer_multiple_of_the_output_time_step_);
+            Assert.IsNotNull(restartValidationIssue);
+            Assert.AreEqual(NGHS.Common.Properties.Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step, 
+                            restartValidationIssue.ViewData);
         }
 
         private RealTimeControlModel CreateValidRealTimeControlModel()

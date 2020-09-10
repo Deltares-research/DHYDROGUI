@@ -895,6 +895,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.Throws<NotSupportedException>(Call);
         }
 
+        [Test]
+        public void UseRestart_WhenNoRestartFileHasBeenSetAsInitialCondition_ShouldReturnFalse()
+        {
+            // Arrange
+            var model = new RealTimeControlModel();
+            
+            // Act, Assert
+            Assert.IsFalse(model.UseRestart);
+        }
+
+        [Test]
+        public void UseRestart_WhenARestartFileHasBeenSetAsInitialCondition_ShouldReturnTrue()
+        {
+            // Arrange
+            var model = new RealTimeControlModel
+            {
+                RestartInput = new RealTimeControlRestartFile("test", "test")
+            };
+
+            // Act, Assert
+            Assert.IsTrue(model.UseRestart);
+        }
+
         # endregion
 
         # region Helper functions

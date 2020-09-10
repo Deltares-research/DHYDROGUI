@@ -19,7 +19,6 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -2031,44 +2030,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
-        public void OnFinish_WriteRestartOn_LogsCorrectWarning()
+        public void Finish_WriteRestartOn_LogsCorrectWarning()
         {
-            using (var temp = new TemporaryDirectory())
-
-            using (WaterFlowFMModel model = FlowFMTestHelper.GetSmallestValidModel(temp))
+            using (WaterFlowFMModel model = new WaterFlowFMModel())
             {
                 model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = true;
                 model.RestartTimeStep = model.TimeStep;
 
                 // Call
-                void Call() => ActivityRunner.RunActivity(model);
+                void Call() => model.Finish();
 
                 // Assert
                 IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
-                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
                 Assert.That(warnings, Contains.Item("Please save the project after a model run with 'write restart' on."));
             }
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
-        public void OnFinish_WriteRestartOff_DoesNotLogWarning()
+        public void Finish_WriteRestartOff_DoesNotLogWarning()
         {
-            using (var temp = new TemporaryDirectory())
-
-            using (WaterFlowFMModel model = FlowFMTestHelper.GetSmallestValidModel(temp))
+            using (WaterFlowFMModel model = new WaterFlowFMModel())
             {
                 model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = false;
 
                 // Call
-                void Call() => ActivityRunner.RunActivity(model);
+                void Call() => model.Finish();
 
                 // Assert
                 IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
-                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned));
                 Assert.That(warnings, Is.Empty);
             }
         }

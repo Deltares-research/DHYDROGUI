@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion => "3.5.3.0";
+        public override string FileFormatVersion => "3.6.0.0";
 
         public override IApplication Application
         {

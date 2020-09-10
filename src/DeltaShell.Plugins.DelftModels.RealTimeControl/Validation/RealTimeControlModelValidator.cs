@@ -24,11 +24,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             var validationReports = new List<ValidationReport>
             {
                 ValidateRealTimeControlModel(rootObject),
-                
-                ValidateRestartInputState(rootObject),
                 RestartTimeRangeValidator.ValidateWriteRestartSettings(rootObject.WriteRestart,
                                                                        rootObject.SaveStateStartTime, rootObject.SaveStateStopTime, rootObject.SaveStateTimeStep,
-                                                                       rootObject.StartTime, rootObject.StopTime, rootObject.TimeStep),
+                                                                       rootObject.StartTime, rootObject.TimeStep)
             };
             validationReports.AddRange(
                 rootObject.ControlGroups.Select(cg => new ControlGroupValidator().Validate(rootObject, cg)));
@@ -150,17 +148,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                     ruleNames.Add(nameable.Name);
                 }
             }
-        }
-
-        private ValidationReport ValidateRestartInputState(RealTimeControlModel model)
-        {
-            if (!model.UseRestart)
-            {
-                return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
-            }
-
-            // TODO D3DFMIQ-2191
-            return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
         }
     }
 }

@@ -231,5 +231,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 }
             }
         }
+
+        [TestCase("UseRestart")]
+        [TestCase("WriteRestart")]
+        [TestCase("UseRestartTimeRange")]
+        [TestCase("RestartStartTime")]
+        [TestCase("RestartTimeStep")]
+        [TestCase("RestartStopTime")]
+        public void ValidateDynamicAttributes_ReturnsCorrectResult(string propertyName)
+        {
+            // Setup
+            var properties = new WaterQualityModelProperties();
+
+            // Call
+            bool result = properties.ValidateDynamicAttributes(propertyName);
+
+            // Assert
+            Assert.That(result, Is.True);
+        }
     }
 }

@@ -18,6 +18,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
     {
         public static ValidationReport Validate(this WaterFlowFMModel model)
         {
+            var outputParametersShortcut = new FmValidationShortcut
+            {
+                FlowFmModel = model,
+                TabName = model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).PropertyDefinition.Category
+            };
+
             ValidationReport[] validationReports = 
             {
                 ValidateSpatiallyVaryingSedimentCoverage(model),
@@ -32,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateRestartInput(model),
                 RestartTimeRangeValidator.ValidateWriteRestartSettings(model.WriteRestart, 
                                                                        model.RestartStartTime, model.RestartStopTime, model.RestartTimeStep,
-                                                                       model.StartTime, model.StopTime, model.TimeStep),
+                                                                       model.StartTime, model.TimeStep, outputParametersShortcut),
                 WaterFlowFMEmbankmentValidator.Validate(model),
                 WaterFlowFMEnclosureValidator.Validate(model)
             };

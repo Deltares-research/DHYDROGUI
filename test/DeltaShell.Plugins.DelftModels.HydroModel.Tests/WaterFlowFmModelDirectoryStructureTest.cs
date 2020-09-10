@@ -59,7 +59,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private const string ProjectFileExtension = ".dsproj";
         private const string ProjectDirExtension = ".dsproj_data";
 
-        private const string StateFilesDirectoryPostfix = "_states";
         private const string InputDirName = "input";
         private const string OutputDirName = "output";
         private const string SnappedDirName = "snapped";
