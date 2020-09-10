@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DelftTools.Shell.Core;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate;
@@ -26,6 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OnAfterProjectMigrated_RemovesExplicitWorkingDirectory()
         {
             // Setup
@@ -33,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var project = new Project();
 
             using (var temp = new TemporaryDirectory())
-            using (var model = new WaterQualityModel() {Name = "the water quality model"})
+            using (var model = new WaterQualityModel {Name = "the water quality model"})
             {
                 string explicitWorkDir = temp.CreateDirectory("the_water_quality_model_output");
 
