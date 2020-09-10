@@ -241,6 +241,14 @@ def compile_dhydro(run_config: RunConfig):
     subprocess.call(["nuget.exe", "restore", str(solution_path),])
     subprocess.call([str(msbuild), str(solution_path), "/t:Build", "/property:Configuration=Debug"])
 
+def get_framework_version_regex_string() -> str:
+    integer_regex = r'(0|([1-9]\d*))'
+    git_hash_regex = r'(?:(\.|-)\b[0-9a-f]{7})?'
+
+    known_prefixes = ['beta', 'SIGNED']
+    prefix_regex = ''.join(f'(?:-{prefix})?' for prefix in known_prefixes)
+
+    return f'{integer_regex}\\.{integer_regex}\\.{integer_regex}{prefix_regex}{git_hash_regex}'
 
 def get_framework_version(dhydro_root: Path, 
                           verbose: bool) -> str:
@@ -255,7 +263,7 @@ def get_framework_version(dhydro_root: Path,
     """
     # We use the version specified in a package file to get the accurate 
     # version.
-    version_regex = re.compile(r'(?P<version>DeltaShell\.Framework\.1\.6\.0(?:-beta)?(?:-SIGNED)?(?:(\.|-)\b[0-9a-f]{7})?)')
+    version_regex = re.compile(f'(?P<version>DeltaShell\\.Framework\\.{get_framework_version_regex_string()})')
 
     csproj_files = get_src_csproj_files(dhydro_root)
 
