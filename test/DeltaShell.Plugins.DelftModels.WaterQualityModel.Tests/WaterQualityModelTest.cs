@@ -127,6 +127,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual(1e-7, model.VerticalDispersion);
             Assert.IsFalse(model.UseAdditionalHydrodynamicVerticalDiffusion);
 
+            Assert.That(model.UseRestart, Is.False);
+            Assert.That(model.WriteRestart, Is.False);
+            Assert.That(model.UseSaveStateTimeRange, Is.False);
+
             #region Default Dispersion Function
 
             Assert.AreEqual(1, model.Dispersion.Count);

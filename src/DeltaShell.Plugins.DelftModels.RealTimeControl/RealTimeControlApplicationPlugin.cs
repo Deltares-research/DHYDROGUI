@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return "3.6.0.0";
+                return "3.7.0.0";
             }
         }
 
