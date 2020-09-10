@@ -729,369 +729,210 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                                                                             targetBottomConnectorType));
             }
 
-            [Test]
-            public static void GivenInputShapeCorrectConnectorsAreSelected()
+            private static IEnumerable<TestCaseData> GetInputCompatibleConnectionsTestCaseData()
             {
-                bool result;
-                InputItemShape inputShape = new InputItemShape();
+                yield return new TestCaseData(new InputItemShape(), new ConditionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new InputItemShape(), new ConditionShape(), ConnectorType.Top, true);
+                yield return new TestCaseData(new InputItemShape(), new ConditionShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new InputItemShape(), new ConditionShape(), ConnectorType.Right, false);
 
-                ConditionShape targetConditionShape = new ConditionShape();
-               
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetConditionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetConditionShape, targetTopConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetConditionShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetConditionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                yield return new TestCaseData(new InputItemShape(), new SignalShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new InputItemShape(), new SignalShape(), ConnectorType.Top, true);
+                yield return new TestCaseData(new InputItemShape(), new SignalShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new InputItemShape(), new SignalShape(), ConnectorType.Right, false);
 
-                SignalShape targetSignalShape = new SignalShape();
+                yield return new TestCaseData(new InputItemShape(), new RuleShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new InputItemShape(), new RuleShape(), ConnectorType.Top, true);
+                yield return new TestCaseData(new InputItemShape(), new RuleShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new InputItemShape(), new RuleShape(), ConnectorType.Right, false);
 
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetSignalShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetSignalShape, targetTopConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetSignalShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetSignalShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                yield return new TestCaseData(new InputItemShape(), new MathematicalExpressionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new InputItemShape(), new MathematicalExpressionShape(), ConnectorType.Top, true);
+                yield return new TestCaseData(new InputItemShape(), new MathematicalExpressionShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new InputItemShape(), new MathematicalExpressionShape(), ConnectorType.Right, false);
 
-                RuleShape targetRuleShape = new RuleShape();
+                yield return new TestCaseData(new InputItemShape(), new InputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new InputItemShape(), new InputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new InputItemShape(), new InputItemShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new InputItemShape(), new InputItemShape(), ConnectorType.Right, false);
 
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetRuleShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetRuleShape, targetTopConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetRuleShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetRuleShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                yield return new TestCaseData(new InputItemShape(), new OutputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new InputItemShape(), new OutputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new InputItemShape(), new OutputItemShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new InputItemShape(), new OutputItemShape(), ConnectorType.Right, false);
+            }
 
-                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
+            private static IEnumerable<TestCaseData> GetConditionShapeCompatibleConnectionsTestCaseData()
+            {
+                yield return new TestCaseData(new ConditionShape(), new InputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new ConditionShape(), new InputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new ConditionShape(), new InputItemShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new ConditionShape(), new InputItemShape(), ConnectorType.Right, false);
 
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetMathematicalExpressionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetMathematicalExpressionShape, targetTopConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetMathematicalExpressionShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetMathematicalExpressionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                yield return new TestCaseData(new ConditionShape(), new SignalShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new ConditionShape(), new SignalShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new ConditionShape(), new SignalShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new ConditionShape(), new SignalShape(), ConnectorType.Right, false);
 
-                OutputItemShape outputItemShape = new OutputItemShape();
+                yield return new TestCaseData(new ConditionShape(), new RuleShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new ConditionShape(), new RuleShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new ConditionShape(), new RuleShape(), ConnectorType.Left, true);
+                yield return new TestCaseData(new ConditionShape(), new RuleShape(), ConnectorType.Right, false);
 
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, outputItemShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, outputItemShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, outputItemShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, outputItemShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                yield return new TestCaseData(new ConditionShape(), new MathematicalExpressionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new ConditionShape(), new MathematicalExpressionShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new ConditionShape(), new MathematicalExpressionShape(), ConnectorType.Left, true);
+                yield return new TestCaseData(new ConditionShape(), new MathematicalExpressionShape(), ConnectorType.Right, false);
 
-                InputItemShape targetInputShape = new InputItemShape();
+                yield return new TestCaseData(new ConditionShape(), new ConditionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new ConditionShape(), new ConditionShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new ConditionShape(), new ConditionShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new ConditionShape(), new ConditionShape(), ConnectorType.Right, false);
 
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetInputShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetInputShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetInputShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(inputShape, targetInputShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                yield return new TestCaseData(new ConditionShape(), new OutputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new ConditionShape(), new OutputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new ConditionShape(), new OutputItemShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new ConditionShape(), new OutputItemShape(), ConnectorType.Right, false);
+            }
+
+            private static IEnumerable<TestCaseData> GetSignalShapeCompatibleConnectionsTestCaseData()
+            {
+                yield return new TestCaseData(new SignalShape(), new InputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new SignalShape(), new InputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new SignalShape(), new InputItemShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new SignalShape(), new InputItemShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new SignalShape(), new ConditionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new SignalShape(), new ConditionShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new SignalShape(), new ConditionShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new SignalShape(), new ConditionShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new SignalShape(), new RuleShape(), ConnectorType.Bottom, true);
+                yield return new TestCaseData(new SignalShape(), new RuleShape(), ConnectorType.Top, true);
+                yield return new TestCaseData(new SignalShape(), new RuleShape(), ConnectorType.Left, true);
+                yield return new TestCaseData(new SignalShape(), new RuleShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new SignalShape(), new MathematicalExpressionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new SignalShape(), new MathematicalExpressionShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new SignalShape(), new MathematicalExpressionShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new SignalShape(), new MathematicalExpressionShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new SignalShape(), new SignalShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new SignalShape(), new SignalShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new SignalShape(), new SignalShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new SignalShape(), new SignalShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new SignalShape(), new OutputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new SignalShape(), new OutputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new SignalShape(), new OutputItemShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new SignalShape(), new OutputItemShape(), ConnectorType.Right, false);
+            }
+
+            private static IEnumerable<TestCaseData> GetRuleShapeCompatibleConnectionsTestCaseData()
+            {
+                yield return new TestCaseData(new RuleShape(), new InputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new RuleShape(), new InputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new RuleShape(), new InputItemShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new RuleShape(), new InputItemShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new RuleShape(), new ConditionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new RuleShape(), new ConditionShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new RuleShape(), new ConditionShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new RuleShape(), new ConditionShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new RuleShape(), new SignalShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new RuleShape(), new SignalShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new RuleShape(), new SignalShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new RuleShape(), new SignalShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new RuleShape(), new MathematicalExpressionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new RuleShape(), new MathematicalExpressionShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new RuleShape(), new MathematicalExpressionShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new RuleShape(), new MathematicalExpressionShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new RuleShape(), new RuleShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new RuleShape(), new RuleShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new RuleShape(), new RuleShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new RuleShape(), new RuleShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Left, true);
+                yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Right, false);
+            }
+
+            private static IEnumerable<TestCaseData> GetMathematicalExpressionShapeCompatibleConnectionsTestCaseData()
+            {
+                yield return new TestCaseData(new MathematicalExpressionShape(), new InputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new InputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new InputItemShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new InputItemShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new MathematicalExpressionShape(), new ConditionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new ConditionShape(), ConnectorType.Top, true);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new ConditionShape(), ConnectorType.Left, true);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new ConditionShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new MathematicalExpressionShape(), new SignalShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new SignalShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new SignalShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new SignalShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new MathematicalExpressionShape(), new RuleShape(), ConnectorType.Bottom, true);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new RuleShape(), ConnectorType.Top, true);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new RuleShape(), ConnectorType.Left, true);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new RuleShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new MathematicalExpressionShape(), new MathematicalExpressionShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new MathematicalExpressionShape(), ConnectorType.Top, true);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new MathematicalExpressionShape(), ConnectorType.Left, false);
+                yield return new TestCaseData(new MathematicalExpressionShape(), new MathematicalExpressionShape(), ConnectorType.Right, false);
+
+                yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Bottom, false);
+                yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Top, false);
+                yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Left, true);
+                yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Right, false);
+            }
+
+
+            [Test]
+            [TestCaseSource(nameof(GetInputCompatibleConnectionsTestCaseData))]
+            public static void GivenInputShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
+            {
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
             }
 
             [Test]
-            public static void GivenConditionShapeCorrectConnectorsAreSelected()
+            [TestCaseSource(nameof(GetConditionShapeCompatibleConnectionsTestCaseData))]
+            public static void GivenConditionShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
             {
-                bool result;
-                ConditionShape conditionShape = new ConditionShape();
-
-                InputItemShape targetInputShape = new InputItemShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetInputShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetInputShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetInputShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetInputShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                SignalShape targetSignalShape = new SignalShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetSignalShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetSignalShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetSignalShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetSignalShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                RuleShape targetRuleShape = new RuleShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetRuleShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetRuleShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetRuleShape, targetLeftConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetRuleShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetMathematicalExpressionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetMathematicalExpressionShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetMathematicalExpressionShape, targetLeftConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetMathematicalExpressionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                OutputItemShape outputItemShape = new OutputItemShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, outputItemShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, outputItemShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, outputItemShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, outputItemShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                ConditionShape targetConditionShape = new ConditionShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetConditionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetConditionShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetConditionShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(conditionShape, targetConditionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
             }
 
             [Test]
-            public static void GivenSignalShapeCorrectConnectorsAreSelected()
+            [TestCaseSource(nameof(GetSignalShapeCompatibleConnectionsTestCaseData))]
+            public static void GivenSignalShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
             {
-                bool result;
-                SignalShape signalShape = new SignalShape();
-
-                InputItemShape targetInputShape = new InputItemShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                ConditionShape targetConditionShape = new ConditionShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                RuleShape targetRuleShape = new RuleShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetBottomConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetTopConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetLeftConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                OutputItemShape outputItemShape = new OutputItemShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                SignalShape targetSignalShape = new SignalShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
             }
 
             [Test]
-            public static void GivenRuleShapeCorrectConnectorsAreSelected()
+            [TestCaseSource(nameof(GetRuleShapeCompatibleConnectionsTestCaseData))]
+            public static void GivenRuleShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
             {
-                bool result;
-                RuleShape signalShape = new RuleShape();
-
-                InputItemShape targetInputShape = new InputItemShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetInputShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                ConditionShape targetConditionShape = new ConditionShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetConditionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                SignalShape targetSignalShape = new SignalShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetSignalShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetMathematicalExpressionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                OutputItemShape outputItemShape = new OutputItemShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetLeftConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, outputItemShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                RuleShape targetRuleShape = new RuleShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(signalShape, targetRuleShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
             }
 
             [Test]
-            public static void GivenMathematicalExpressionShapeCorrectConnectorsAreSelected()
+            [TestCaseSource(nameof(GetMathematicalExpressionShapeCompatibleConnectionsTestCaseData))]
+            public static void GivenMathematicalExpressionShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
             {
-                bool result;
-                MathematicalExpressionShape mathematicalExpressionShape = new MathematicalExpressionShape();
-
-                InputItemShape targetInputShape = new InputItemShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetInputShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetInputShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetInputShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetInputShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                ConditionShape targetConditionShape = new ConditionShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetConditionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetConditionShape, targetTopConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetConditionShape, targetLeftConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetConditionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                SignalShape targetSignalShape = new SignalShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetSignalShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetSignalShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetSignalShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetSignalShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                RuleShape ruleShape = new RuleShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, ruleShape, targetBottomConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, ruleShape, targetTopConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, ruleShape, targetLeftConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, ruleShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                OutputItemShape outputItemShape = new OutputItemShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, outputItemShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, outputItemShape, targetTopConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, outputItemShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, outputItemShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
-
-                MathematicalExpressionShape targetMathematicalExpressionShape = new MathematicalExpressionShape();
-
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetMathematicalExpressionShape, targetBottomConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetMathematicalExpressionShape, targetTopConnectorType);
-                Assert.That(result, Is.True);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetMathematicalExpressionShape, targetLeftConnectorType);
-                Assert.That(result, Is.False);
-                result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(mathematicalExpressionShape, targetMathematicalExpressionShape, targetRightConnectorType);
-                Assert.That(result, Is.False);
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
             }
         }
 
