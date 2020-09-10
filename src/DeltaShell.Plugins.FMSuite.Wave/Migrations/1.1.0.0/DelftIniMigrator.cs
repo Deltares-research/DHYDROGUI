@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;

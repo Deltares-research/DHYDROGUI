@@ -2,6 +2,7 @@
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
@@ -13,6 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// <seealso cref="IMigrationBehaviour" />
     public class DelftIniFileMigrateBehaviour : IMigrationBehaviour
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(DelftIniFileMigrateBehaviour));
+
         private readonly string expectedKey;
         private readonly string relativeDirectory;
         private readonly string goalDirectory;
@@ -79,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         private void HandleMigration(FileInfo filePathInfo, 
                                      DelftIniProperty property)
         {
-            var logHandler = new LogHandler($"Migrating {property.Value}");
+            var logHandler = new LogHandler($"Migrating {property.Value}", log);
 
             string goalPath = Path.Combine(goalDirectory, Path.GetFileName(property.Value));
 
