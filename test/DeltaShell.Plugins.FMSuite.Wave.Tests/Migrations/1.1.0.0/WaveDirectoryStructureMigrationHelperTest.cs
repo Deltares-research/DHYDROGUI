@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
 using NUnit.Framework;
 
@@ -180,6 +182,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             // Assert
             Assert.That(hasParsed, Is.EqualTo(couldParse));
             Assert.That(databasePath, Is.EqualTo(expectedDatabasePath));
+        }
+        
+        private IEnumerable<TestCaseData> UpdateWavmFileFunctionStorePaths_ParameterNull_Data()
+        {
+            yield return new TestCaseData(null, new WaveModel(), "modelPath");
+            yield return new TestCaseData("some/path", null, "model");
+        }
+
+        [Test]
+        [TestCaseSource(nameof(UpdateWavmFileFunctionStorePaths_ParameterNull_Data))]
+        public void UpdateWavmFileFunctionStorePath_ParameterNull_ThrowsArgumentNullException(string modelPath, WaveModel model, string expectedParameterName)
+        {
+            void Call() => WaveDirectoryStructureMigrationHelper.UpdateWavmFileFunctionStorePaths(modelPath, model);
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
+
+            model.Dispose();
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void UpdateWavmFileFunctionStorePaths_ExpectedResults()
+        {
+            // Setup
+            string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), "wavm-wad.nc"));
+
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string oldModelPath = tempDir.CreateDirectory("oldModel");
+                string newModelPath = tempDir.CreateDirectory("newModel");
+                string expectedOutputPath = tempDir.CreateDirectory(
+                    Path.Combine("newModel", "output"));
+
+                string ncOldPath = Path.Combine(oldModelPath, Path.GetFileName(inputDataPath));
+                string ncNewPath = Path.Combine(expectedOutputPath, Path.GetFileName(inputDataPath));
+
+                File.Copy(inputDataPath, ncOldPath);
+                File.Copy(inputDataPath, ncNewPath);
+
+                // Associate wavm file function store with the outer domain
+                var functionStore = new WavmFileFunctionStore(ncOldPath);
+                var dataItem = new DataItem(functionStore, DataItemRole.Output, WaveModel.WavmStoreDataItemTag + model.OuterDomain.Name);
+                model.DataItems.Add(dataItem);
+
+                // Call
+                WaveDirectoryStructureMigrationHelper.UpdateWavmFileFunctionStorePaths(newModelPath, model);
+
+                // Assert
+                Assert.That(functionStore.Path, Is.EqualTo(ncNewPath));
+            }
         }
     }
 }
