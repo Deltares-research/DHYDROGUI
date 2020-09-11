@@ -1,5 +1,7 @@
 ﻿using System.Data;
 using System.IO;
+using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using log4net;
 
@@ -24,50 +26,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 return;
             }
 
-            if (!TryObtainDatabasePath(dbConnection.ConnectionString, out string dbPath))
+            if (!WaveDirectoryStructureMigrationHelper.TryParseDatabasePath(
+                    dbConnection.ConnectionString, 
+                    out string dbPath))
             {
                 log.Error($"Could not determine dsproj location from database connection: {dbConnection.ConnectionString}");
             }
 
-            string mdwPath = Path.Combine(dbPath + "_data", model.Name, $"{model.Name}.mdw");
+            string modelPath = Path.Combine(dbPath + "_data", model.Name);
+            string mdwPath = Path.Combine(modelPath, $"{model.Name}.mdw");
 
             WaveDirectoryStructureMigrationHelper.Migrate(mdwPath);
+            WaveDirectoryStructureMigrationHelper.UpdateWavmFileFunctionStorePaths(modelPath, model);
         }
 
-        private static bool TryObtainDatabasePath(string connectionString, 
-                                                  out string databasePath)
+        public override void OnAfterProjectMigrated(Project project)
         {
-            string[] keyValuePairs = connectionString.Split(';');
-
-            databasePath = null;
-
-            foreach (string keyValueString in keyValuePairs)
+            base.OnAfterProjectMigrated(project);
+            
+            foreach (WaveModel waveModel in project.RootFolder.Models.OfType<WaveModel>())
             {
-                if (TryParseDataSource(keyValueString, out string parsedPath))
-                {
-                    databasePath = parsedPath;
-                    return true;
-                }
+                WaveDirectoryStructureMigrationHelper.RemoveInvalidWavmFunctionStores(waveModel);
             }
-
-            return false;
-        }
-
-        private static bool TryParseDataSource(string keyValueString, out string parsedDataSourcePath)
-        {
-            parsedDataSourcePath = null;
-
-            string[] keyValuePair = keyValueString.Split('=');
-            string key = keyValuePair[0].Trim();
-            string value = keyValuePair[1].Trim();
-
-            if (key != "Data Source")
-            {
-                return false;
-            }
-
-            parsedDataSourcePath = value;
-            return true;
         }
     }
 }
