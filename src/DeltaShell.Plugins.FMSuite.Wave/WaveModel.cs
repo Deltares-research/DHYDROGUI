@@ -65,6 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private IGridOperationApi gridOperationApi;
         private double previousProgress = 0;
+        private string connectedOutputPath;
 
         public WaveModel() : this(BuildEmptyModel) {}
 
@@ -684,7 +685,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             base.OnProgressChanged();
         }
 
-        protected virtual void ReconnectWavmFile(string outputPath)
+        protected virtual void ReconnectWavmFile()
         {
             ReportProgressText("Reading output (WAVM) file");
             List<IWaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain).ToList();
@@ -692,13 +693,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 for (var i = 0; i < domains.Count; ++i)
                 {
-                    string wavmFile = Path.Combine(outputPath, "wavm-" + Name + "-" + domains[i].Name + ".nc");
+                    string wavmFile = Path.Combine(connectedOutputPath, "wavm-" + Name + "-" + domains[i].Name + ".nc");
                     ConnectWavmFile(wavmFile, i);
                 }
             }
             else
             {
-                string wavmFile = Path.Combine(outputPath, "wavm-" + Name + ".nc");
+                string wavmFile = Path.Combine(connectedOutputPath, "wavm-" + Name + ".nc");
                 ConnectWavmFile(wavmFile, 0);
             }
         }
@@ -1084,6 +1085,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void SaveOutput(string targetDirectory, bool switchTo)
         {
+            if (targetDirectory == connectedOutputPath)
+            {
+                return;
+            }
+
+            if (switchTo)
+            {
+                connectedOutputPath = targetDirectory;
+            }
+
             FileUtils.CreateDirectoryIfNotExists(targetDirectory, true);
 
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
@@ -1207,10 +1218,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private void ReconnectSwanDiagFile(string outputPath)
+        private void ReconnectSwanDiagFile()
         {
             ReportProgressText("Reading Swan dia file");
-            string swanDiagFile = Path.Combine(outputPath,
+            string swanDiagFile = Path.Combine(connectedOutputPath,
                                                "swn-diag." + Name);
             var swanLog = GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag);
 
@@ -1434,8 +1445,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual void ConnectOutput(string outputPath)
         {
-            ReconnectWavmFile(outputPath);
-            ReconnectSwanDiagFile(outputPath);
+            connectedOutputPath = outputPath;
+            ReconnectWavmFile();
+            ReconnectSwanDiagFile();
         }
 
         public new virtual ActivityStatus Status
