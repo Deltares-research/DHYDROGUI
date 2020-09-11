@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
@@ -22,7 +23,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 
             if (!(entity is WaveModel model))
             {
-                log.Error($"Provided entity is not a {nameof(WaveModel)}");
+                log.ErrorFormat(Resources.WaveModel110LegacyLoader_OnAfterInitialize_Provided_entity_is_not_a__0_, 
+                                nameof(WaveModel));
                 return;
             }
 
@@ -30,7 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                     dbConnection.ConnectionString, 
                     out string dbPath))
             {
-                log.Error($"Could not determine dsproj location from database connection: {dbConnection.ConnectionString}");
+                log.ErrorFormat(Resources.WaveModel110LegacyLoader_OnAfterInitialize_Could_not_determine_dsproj_location_from_database_connection___0_, 
+                                dbConnection.ConnectionString);
             }
 
             string modelPath = Path.Combine(dbPath + "_data", model.Name);

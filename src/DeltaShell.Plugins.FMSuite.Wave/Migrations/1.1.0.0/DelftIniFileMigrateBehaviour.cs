@@ -2,6 +2,7 @@
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
@@ -43,7 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         protected override void HandleMigration(FileInfo filePathInfo, 
                                                 DelftIniProperty property)
         {
-            var logHandler = new LogHandler($"Migrating {property.Value}", log);
+            var migratingMsg = string.Format(Resources.DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_, property.Value);
+            var logHandler = new LogHandler(migratingMsg, log);
 
             string goalPath = Path.Combine(GoalDirectory, Path.GetFileName(property.Value));
 

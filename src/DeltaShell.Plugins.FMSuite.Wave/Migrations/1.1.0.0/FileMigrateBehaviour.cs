@@ -2,6 +2,7 @@
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
@@ -100,9 +101,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// </remarks>
         protected virtual void HandleNotExists(FileInfo filePathInfo, DelftIniProperty property, ILogHandler logHandler)
         {
-            var warningMsg = 
-                $"The file associated with property {ExpectedKey}, {Path.GetFileName(property.Value)} at {filePathInfo.FullName}, does not exist and thus is not migrated.";
-            logHandler?.ReportWarning(warningMsg);
+            logHandler?.ReportWarningFormat(Resources.FileMigrateBehaviour_HandleNotExists_The_file_associated_with_property__0____1__at__2___does_not_exist_and_thus_is_not_migrated_,
+                                            ExpectedKey, Path.GetFileName(property.Value), filePathInfo.FullName);
         }
     }
 }

@@ -8,6 +8,7 @@ using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
@@ -91,7 +92,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             var fileStream = new FileStream(mdwPath, FileMode.Open);
             string targetFilePath = Path.Combine(newInputDirectory, mdwFileName);
 
-            var logHandler = new LogHandler($"Migrating '{mdwFileName}' to 1.2.0.0");
+            var logMessage = string.Format(Resources.WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0, mdwFileName);
+            var logHandler = new LogHandler(logMessage);
             migrator.MigrateFile(fileStream, mdwPath, targetFilePath, logHandler);
             logHandler.LogReport();
         }
@@ -100,13 +102,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                                                         DirectoryInfo origModelDirectoryInfo, 
                                                         DirectoryInfo goalDirectory)
         {
-            string mdwFileName = Path.GetFileName(mdwPath);
-            var logHandler = new LogHandler($"Migrating remaining files of '{mdwFileName}' to 1.2.0.0");
-
             FileInfo[] outputFiles = origModelDirectoryInfo.GetFiles("*", SearchOption.AllDirectories);
 
+            if (outputFiles.Length <= 0)
+            {
+                return;
+            }
+
+            string mdwFileName = Path.GetFileName(mdwPath);
+            string warningMessage = string.Format(Resources.WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_Migrating_remaining_files_of___0___to_1_2_0_0, 
+                                                  mdwFileName);
+            var logHandler = new LogHandler(warningMessage);
+
             string outputFilesString = string.Join(", ", outputFiles.Select(x => x.Name));
-            logHandler.ReportWarning($"The following files are assumed to be output and moved to the new output folder: {outputFilesString}");
+            logHandler.ReportWarningFormat(Resources.WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_The_following_files_are_assumed_to_be_output_and_moved_to_the_new_output_folder___0_, outputFilesString, 
+                                           outputFilesString);
 
             string newOutputDirectory = Path.Combine(goalDirectory.FullName, "output");
             foreach (FileInfo outputFile in outputFiles)

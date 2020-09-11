@@ -124,7 +124,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             {
                 { "LocationFile", new NoDependentsFileMigrateBehaviour("LocationFile", relativeDirectory, goalDirectory) },
                 { "CurveFile",    new NoDependentsFileMigrateBehaviour("CurveFile", relativeDirectory, goalDirectory) },
-                // TODO: Adjust COM file migration behaviour
                 { "COMFile",      new NoDependentsFileMigrateBehaviour("COMFile", relativeDirectory, goalDirectory) },
             };
         }
