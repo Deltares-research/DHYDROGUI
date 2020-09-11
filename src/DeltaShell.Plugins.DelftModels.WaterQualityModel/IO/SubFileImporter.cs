@@ -111,7 +111,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 return;
             }
 
-            Log.Info(string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, path));
             substanceProcessLibrary.ImportedSubstanceFilePath = path;
         }
 
@@ -123,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public object ImportItem(string path, object target)
         {
             Import(target as SubstanceProcessLibrary, path ?? DefaultFilePath);
-
+            Log.Info(string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, path));
             return target;
         }
 

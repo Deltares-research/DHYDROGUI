@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             string expectedMessage = string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, testFilePath);
 
-            Action action = () => { subFileImporter.Import(library, testFilePath); };
+            Action action = () => { subFileImporter.ImportItem(testFilePath, library); };
             TestHelper.AssertAtLeastOneLogMessagesContains(action, expectedMessage);
         }
 
