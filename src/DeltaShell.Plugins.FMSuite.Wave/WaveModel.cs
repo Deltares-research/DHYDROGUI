@@ -71,6 +71,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public WaveModel(string mdwPath) : this(model => BuildModelFromMdw(model, mdwPath)) {}
 
+        private string InputDirPath => Path.GetDirectoryName(MdwFilePath);
+        private string OutputDirPath => Path.Combine(Path.GetDirectoryName(InputDirPath), FileConstants.OutputDirectoryName);
+
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
             runner = new DimrRunner(this);
@@ -384,7 +387,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public string ImportIntoModelDirectory(string filePath)
         {
-            return WaveModelFileHelper.ImportIntoModelDirectory(Path.GetDirectoryName(MdwFilePath), filePath);
+            return WaveModelFileHelper.ImportIntoModelDirectory(InputDirPath, filePath);
         }
 
         public void SyncWithModelDefaults(IWaveDomainData domain)
@@ -599,10 +602,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             EndEdit();
 
             // grid(s) transformed, sync data to disk:
-            string modelDir = Path.GetDirectoryName(MdwFile.MdwFilePath);
             foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(OuterDomain))
             {
-                string targetGridFileName = Path.Combine(modelDir, domain.GridFileName);
+                string targetGridFileName = Path.Combine(InputDirPath, domain.GridFileName);
                 Delft3DGridFileWriter.Write(domain.Grid, targetGridFileName);
             }
         }
@@ -919,10 +921,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             model.SyncModelTimesWithBase();
 
-            string mdwDir = Path.GetDirectoryName(mdwFilePath);
             IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(model.ModelDefinition.OuterDomain);
 
-            model.BuildWaveDomains(allDomains, mdwDir, model);
+            model.BuildWaveDomains(allDomains, model.InputDirPath, model);
         }
 
         private static void BuildEmptyModel(WaveModel model)
@@ -1188,7 +1189,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void LoadWaveDomain(IWaveDomainData domain)
         {
-            LoadGrid(Path.GetDirectoryName(MdwFilePath), domain);
+            LoadGrid(InputDirPath, domain);
 
             UpdateBathymetry(domain);
             UpdateBathymetryOperations(domain);
