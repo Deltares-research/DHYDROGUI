@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
     public class WaveDirectoryStructureMigrationHelperTest
     {
         [Test]
-        public void Migrate_MdwPathNull_ThrowsArgumentNullException()
+        public void MigrateFileStructure_MdwPathNull_ThrowsArgumentNullException()
         {
-            void Call() => WaveDirectoryStructureMigrationHelper.Migrate(null);
+            void Call() => WaveDirectoryStructureMigrationHelper.MigrateFileStructure(null);
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("mdwPath"));
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         [TestCase("obw.zip")]
         [TestCase("waddenzee.zip")]
         [TestCase("westerscheldt.zip")]
-        public void Migrate_ExpectedResults(string testFileName)
+        public void MigrateFileStructure_ExpectedResults(string testFileName)
         {
             // Note, we assume that the migration of the content of the files
             // is correct, as we test that in the MigratorFactoryTest. As such,
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 string sourceMdwPath = Path.Combine(sourceDirectoryPath, "waves", "waves.mdw");
 
                 // Call
-                WaveDirectoryStructureMigrationHelper.Migrate(sourceMdwPath);
+                WaveDirectoryStructureMigrationHelper.MigrateFileStructure(sourceMdwPath);
 
                 // Assert
                 Assert.That(Directory.Exists(sourceDirectoryPath), Is.True);

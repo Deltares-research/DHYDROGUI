@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="mdwPath"/> is <c>null</c>.
         /// </exception>
-        public static void Migrate(string mdwPath)
+        public static void MigrateFileStructure(string mdwPath)
         {
             Ensure.NotNull(mdwPath, nameof(mdwPath));
 

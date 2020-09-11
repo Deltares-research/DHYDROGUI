@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             string modelPath = Path.Combine(dbPath + "_data", model.Name);
             string mdwPath = Path.Combine(modelPath, $"{model.Name}.mdw");
 
-            WaveDirectoryStructureMigrationHelper.Migrate(mdwPath);
+            WaveDirectoryStructureMigrationHelper.MigrateFileStructure(mdwPath);
             WaveDirectoryStructureMigrationHelper.UpdateWavmFileFunctionStorePaths(modelPath, model);
         }
 
