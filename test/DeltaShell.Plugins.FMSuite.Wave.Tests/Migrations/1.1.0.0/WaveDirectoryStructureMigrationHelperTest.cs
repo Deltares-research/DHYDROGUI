@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -199,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
 
-            model.Dispose();
+            model?.Dispose();
         }
 
         [Test]
@@ -233,6 +234,75 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 // Assert
                 Assert.That(functionStore.Path, Is.EqualTo(ncNewPath));
+                functionStore.Close();
+            }
+        }
+
+        [Test]
+        public void RemoveInvalidWavmFunctionStores_ModelNull_ThrowsArgumentNullException()
+        {
+            void Call() => WaveDirectoryStructureMigrationHelper.RemoveInvalidWavmFunctionStores(null);
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("waveModel"));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void RemoveInvalidWavmFunctionStores_FileNotExists_FunctionStoreRemoved()
+        {
+            // Setup
+            string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), "wavm-wad.nc"));
+
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string ncPath = Path.Combine(tempDir.Path, Path.GetFileName(inputDataPath));
+                File.Copy(inputDataPath, ncPath);
+
+                // Associate wavm file function store with the outer domain
+                var functionStore = new WavmFileFunctionStore(ncPath);
+                var dataItem = new DataItem(functionStore, DataItemRole.Output, WaveModel.WavmStoreDataItemTag + model.OuterDomain.Name);
+                model.DataItems.Add(dataItem);
+
+                File.Delete(ncPath);
+                Assert.That(model.WavmFunctionStores.Count(), Is.EqualTo(1), "Precondition: model has one WavmFileFunctionStore.");
+
+                // Call
+                WaveDirectoryStructureMigrationHelper.RemoveInvalidWavmFunctionStores(model);
+
+                // Assert
+                Assert.That(model.WavmFunctionStores, Has.No.Member(functionStore));
+                functionStore.Close();
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void RemoveInvalidWavmFunctionStores_FileExists_FunctionStoreRetained()
+        {
+            // Setup
+            string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), "wavm-wad.nc"));
+
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string ncPath = Path.Combine(tempDir.Path, Path.GetFileName(inputDataPath));
+                File.Copy(inputDataPath, ncPath);
+
+                // Associate wavm file function store with the outer domain
+                var functionStore = new WavmFileFunctionStore(ncPath);
+                var dataItem = new DataItem(functionStore, DataItemRole.Output, WaveModel.WavmStoreDataItemTag + model.OuterDomain.Name);
+                model.DataItems.Add(dataItem);
+
+                Assert.That(model.WavmFunctionStores.Count(), Is.EqualTo(1), "Precondition: model has one WavmFileFunctionStore.");
+
+                // Call
+                WaveDirectoryStructureMigrationHelper.RemoveInvalidWavmFunctionStores(model);
+
+                // Assert
+                Assert.That(model.WavmFunctionStores, Has.Member(functionStore));
+                functionStore.Close();
             }
         }
     }
