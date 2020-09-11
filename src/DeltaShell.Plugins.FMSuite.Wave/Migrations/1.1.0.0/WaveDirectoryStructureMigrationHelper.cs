@@ -209,6 +209,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         public static bool TryParseDatabasePath(string connectionString, out string databasePath)
         {
             databasePath = null;
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                return false;
+            }
+
             string[] keyValuePairs = connectionString.Split(';');
 
             foreach (string keyValueString in keyValuePairs)
