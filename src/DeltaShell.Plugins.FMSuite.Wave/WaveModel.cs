@@ -72,7 +72,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public WaveModel(string mdwPath) : this(model => BuildModelFromMdw(model, mdwPath)) {}
 
         private string InputDirPath => Path.GetDirectoryName(MdwFilePath);
-        private string OutputDirPath => Path.Combine(Path.GetDirectoryName(InputDirPath), FileConstants.OutputDirectoryName);
 
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
@@ -1086,17 +1085,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void SaveOutput(string targetDirectory, bool switchTo)
         {
-            if (targetDirectory == connectedOutputPath)
-            {
-                return;
-            }
-
-            if (switchTo)
-            {
-                connectedOutputPath = targetDirectory;
-            }
-
-            FileUtils.CreateDirectoryIfNotExists(targetDirectory, true);
+            FileUtils.CreateDirectoryIfNotExists(targetDirectory);
 
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
             {
