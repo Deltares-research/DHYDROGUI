@@ -12,13 +12,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// (i.e. containing references to other files).
     /// </summary>
     /// <seealso cref="IMigrationBehaviour" />
-    public class DelftIniFileMigrateBehaviour : IMigrationBehaviour
+    public sealed class DelftIniFileMigrateBehaviour : FileMigrateBehaviour
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(DelftIniFileMigrateBehaviour));
 
-        private readonly string expectedKey;
-        private readonly string relativeDirectory;
-        private readonly string goalDirectory;
         private readonly IDelftIniMigrator migrator;
 
         /// <summary>
@@ -36,53 +33,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         public DelftIniFileMigrateBehaviour(string expectedKey,
                                             string relativeDirectory,
                                             string goalDirectory,
-                                            IDelftIniMigrator migrator)
+                                            IDelftIniMigrator migrator) : 
+            base(expectedKey, relativeDirectory, goalDirectory)
         {
-            Ensure.NotNull(expectedKey, nameof(expectedKey));
-            Ensure.NotNull(relativeDirectory, nameof(relativeDirectory));
-            Ensure.NotNull(goalDirectory, nameof(goalDirectory));
             Ensure.NotNull(migrator, nameof(migrator));
-
-            this.expectedKey = expectedKey;
-            this.relativeDirectory = relativeDirectory;
-            this.goalDirectory = goalDirectory;
             this.migrator = migrator;
         }
 
-        public void MigrateProperty(DelftIniProperty property, 
-                                    ILogHandler logHandler)
-        {
-            Ensure.NotNull(property, nameof(property));
-
-            if (property.Name != expectedKey || 
-                property.Value.Trim() == string.Empty)
-            {
-                return;
-            }
-
-            var filePathInfo = new FileInfo(Path.Combine(relativeDirectory, property.Value));
-
-            if (filePathInfo.Exists)
-                HandleMigration(filePathInfo, property);
-            else
-                HandleNotExists(filePathInfo, property, logHandler);
-        }
-
-        private void HandleNotExists(FileInfo filePathInfo,
-                                     DelftIniProperty property, 
-                                     ILogHandler logHandler)
-        {
-            var warningMsg = 
-                $"The file associated with property {expectedKey}, {Path.GetFileName(property.Value)} at {filePathInfo.FullName}, does not exist and thus is not migrated.";
-            logHandler?.ReportWarning(warningMsg);
-        }
-
-        private void HandleMigration(FileInfo filePathInfo, 
-                                     DelftIniProperty property)
+        protected override void HandleMigration(FileInfo filePathInfo, 
+                                                DelftIniProperty property)
         {
             var logHandler = new LogHandler($"Migrating {property.Value}", log);
 
-            string goalPath = Path.Combine(goalDirectory, Path.GetFileName(property.Value));
+            string goalPath = Path.Combine(GoalDirectory, Path.GetFileName(property.Value));
 
             migrator.MigrateFile(new FileStream(filePathInfo.FullName, FileMode.Open),
                                  filePathInfo.FullName, 
