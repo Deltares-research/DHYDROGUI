@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// delft ini files.
     /// </summary>
     /// <seealso cref="IDelftIniMigrator" />
-    public class DelftIniMigrator : IDelftIniMigrator
+    public sealed class DelftIniMigrator : IDelftIniMigrator
     {
         private readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> 
             migrationBehaviourMapping;

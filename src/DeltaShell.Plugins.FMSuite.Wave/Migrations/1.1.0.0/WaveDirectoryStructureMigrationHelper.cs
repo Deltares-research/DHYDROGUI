@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="mdwPath"/> is <c>null</c>.
         /// </exception>
-        // TODO: add more validation for the mdw path?
         public static void Migrate(string mdwPath)
         {
             Ensure.NotNull(mdwPath, nameof(mdwPath));
@@ -48,50 +47,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         }
 
         /// <summary>
-        /// Updates the paths of the <see cref="WavmFileFunctionStore"/> of the
-        /// provided <paramref name="model"/> to <paramref name="modelPath"/> output.
+        /// Creates a temporary directory according the expected 1.2.0.0
+        /// directory structure in the. The directory structure is defined as:
+        /// 
+        /// <code>
+        /// └───waveModelName
+        ///     ├───input
+        ///     └───output
+        /// </code>
+        ///
         /// </summary>
-        /// <param name="modelPath">The model path.</param>
-        /// <param name="model">The model.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when any parameter is <c>null</c>.
-        /// </exception>
-        public static void UpdateWavmFileFunctionStorePaths(string modelPath, WaveModel model)
+        /// <param name="oldModelDirectory">The old model directory.</param>
+        /// <returns>
+        /// The directory info describing the new temporary directory that is
+        /// made according to the 1.2.0.0 directory structure.
+        /// </returns>
+        private static DirectoryInfo CreateToTemporaryDirectory(DirectoryInfo oldModelDirectory)
         {
-            Ensure.NotNull(modelPath, nameof(modelPath));
-            Ensure.NotNull(model, nameof(model));
+            string temporaryDirectoryName = 
+                GetTemporaryMigrationDirectoryName(oldModelDirectory);
+            string temporaryDirectoryPath = 
+                Path.Combine(oldModelDirectory.Parent.FullName, temporaryDirectoryName);
 
-            IEnumerable<WavmFileFunctionStore> functionStores = 
-                GetWavmFunctionStoreDataItems(model).Select(x => (WavmFileFunctionStore) x.Value);
+            var temporaryDirectoryInfo = new DirectoryInfo(temporaryDirectoryPath);
 
-            // We assume at this point the wavm file function store exists at this path
-            // If it does not exist after migration, we will remove the function store all
-            // together.
-            foreach (WavmFileFunctionStore functionStore in functionStores)
-            {
-                string wavmFileName = Path.GetFileName(functionStore.Path);
-                string expectedMigratedWavmPath = Path.Combine(modelPath, "output", wavmFileName);
-                functionStore.Path = expectedMigratedWavmPath;
-            }
-        }
+            temporaryDirectoryInfo.Create();
+            temporaryDirectoryInfo.CreateSubdirectory("input");
+            temporaryDirectoryInfo.CreateSubdirectory("output");
 
-        private static void RemoveOldModelDirectory(DirectoryInfo origModelDirectoryInfo) =>
-            FileUtils.DeleteIfExists(origModelDirectoryInfo.FullName);
-
-        private static void RenameNewModelDirectory(DirectoryInfo temporDirectoryInfo, string originalModelName)
-        {
-            string modelFolderPath = Path.Combine(temporDirectoryInfo.Parent.FullName, originalModelName);
-            temporDirectoryInfo.MoveTo(modelFolderPath);
-        }
-
-        private static void RemoveOldExplicitWorkingDirectory(DirectoryInfo originalModelDirectoryInfo)
-        {
-            string outputDirectoryName = originalModelDirectoryInfo.Name.Replace(' ', '_') +
-                                         "_output";
-            string explicitWorkingDirectoryPath =
-                Path.Combine(originalModelDirectoryInfo.Parent.FullName, outputDirectoryName);
-
-            FileUtils.DeleteIfExists(explicitWorkingDirectoryPath);
+            return temporaryDirectoryInfo;
         }
 
         private static void MigrateMdw(string mdwPath, 
@@ -134,36 +118,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             logHandler.LogReport();
         }
 
-        /// <summary>
-        /// Creates a temporary directory according the expected 1.2.0.0
-        /// directory structure in the. The directory structure is defined as:
-        /// 
-        /// <code>
-        /// └───waveModelName
-        ///     ├───input
-        ///     └───output
-        /// </code>
-        ///
-        /// </summary>
-        /// <param name="oldModelDirectory">The old model directory.</param>
-        /// <returns>
-        /// The directory info describing the new temporary directory that is
-        /// made according to the 1.2.0.0 directory structure.
-        /// </returns>
-        private static DirectoryInfo CreateToTemporaryDirectory(DirectoryInfo oldModelDirectory)
+        private static void RemoveOldModelDirectory(DirectoryInfo origModelDirectoryInfo) =>
+            FileUtils.DeleteIfExists(origModelDirectoryInfo.FullName);
+
+        private static void RenameNewModelDirectory(DirectoryInfo temporDirectoryInfo, string originalModelName)
         {
-            string temporaryDirectoryName = 
-                GetTemporaryMigrationDirectoryName(oldModelDirectory);
-            string temporaryDirectoryPath = 
-                Path.Combine(oldModelDirectory.Parent.FullName, temporaryDirectoryName);
+            string modelFolderPath = Path.Combine(temporDirectoryInfo.Parent.FullName, originalModelName);
+            temporDirectoryInfo.MoveTo(modelFolderPath);
+        }
 
-            var temporaryDirectoryInfo = new DirectoryInfo(temporaryDirectoryPath);
+        private static void RemoveOldExplicitWorkingDirectory(DirectoryInfo originalModelDirectoryInfo)
+        {
+            string outputDirectoryName = originalModelDirectoryInfo.Name.Replace(' ', '_') +
+                                         "_output";
+            string explicitWorkingDirectoryPath =
+                Path.Combine(originalModelDirectoryInfo.Parent.FullName, outputDirectoryName);
 
-            temporaryDirectoryInfo.Create();
-            temporaryDirectoryInfo.CreateSubdirectory("input");
-            temporaryDirectoryInfo.CreateSubdirectory("output");
-
-            return temporaryDirectoryInfo;
+            FileUtils.DeleteIfExists(explicitWorkingDirectoryPath);
         }
 
         /// <summary>
@@ -195,6 +166,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 
             string nameFormat = srcDirectory.Name + "_tmp.{0}";
             return NamingHelper.GenerateUniqueNameFromList(nameFormat, true, folderNames);
+        }
+
+        /// <summary>
+        /// Updates the paths of the <see cref="WavmFileFunctionStore"/> of the
+        /// provided <paramref name="model"/> to <paramref name="modelPath"/> output.
+        /// </summary>
+        /// <param name="modelPath">The model path.</param>
+        /// <param name="model">The model.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        public static void UpdateWavmFileFunctionStorePaths(string modelPath, WaveModel model)
+        {
+            Ensure.NotNull(modelPath, nameof(modelPath));
+            Ensure.NotNull(model, nameof(model));
+
+            IEnumerable<WavmFileFunctionStore> functionStores = 
+                GetWavmFunctionStoreDataItems(model).Select(x => (WavmFileFunctionStore) x.Value);
+
+            // We assume at this point the wavm file function store exists at this path
+            // If it does not exist after migration, we will remove the function store all
+            // together.
+            foreach (WavmFileFunctionStore functionStore in functionStores)
+            {
+                string wavmFileName = Path.GetFileName(functionStore.Path);
+                string expectedMigratedWavmPath = Path.Combine(modelPath, "output", wavmFileName);
+                functionStore.Path = expectedMigratedWavmPath;
+            }
         }
 
         /// <summary>
