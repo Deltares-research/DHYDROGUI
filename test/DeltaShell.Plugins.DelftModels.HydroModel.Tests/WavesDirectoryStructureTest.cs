@@ -41,17 +41,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 string dsprojPath = Path.Combine(temporaryDirectory.Path, "old_model", dsprojName);
 
-                var modelWaveFolder = 
-                    new DirectoryInfo(Path.Combine(temporaryDirectory.Path, "old_model", dsprojName + "_data", waveName));
-                var expectedWaveFolder = 
-                    new DirectoryInfo(Path.Combine(temporaryDirectory.Path, "expected_dsproj_data", waveName));
-
                 // When
                 app.OpenProject(dsprojPath);
                 // Execute SaveAs() manually (migrating through GUI does this already).
                 app.SaveProjectAs(dsprojPath);
 
                 // Then
+                var modelWaveFolder = 
+                    new DirectoryInfo(Path.Combine(temporaryDirectory.Path, "old_model", dsprojName + "_data", waveName));
+                var expectedWaveFolder = 
+                    new DirectoryInfo(Path.Combine(temporaryDirectory.Path, "expected_dsproj_data", dsprojName + "_data", waveName));
+
                 AssertExpectedFolderStructure(modelWaveFolder, expectedWaveFolder);
             }
         }
@@ -133,8 +133,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             for (var i = 0; i < expectedFiles.Length; i++)
             {
-                byte[] expectedFileContent = File.ReadAllBytes(expectedFiles[i].Name);
-                byte[] actualFileContent = File.ReadAllBytes(actualFiles[i].Name);
+                byte[] expectedFileContent = File.ReadAllBytes(expectedFiles[i].FullName);
+                byte[] actualFileContent = File.ReadAllBytes(actualFiles[i].FullName);
 
                 Assert.That(actualFileContent, Is.EqualTo(expectedFileContent),
                             $"Expected the file {actualFiles[i].Name} to be equal to expected.");
