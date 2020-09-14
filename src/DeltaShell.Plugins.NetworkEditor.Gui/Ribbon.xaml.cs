@@ -33,7 +33,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
     public partial class Ribbon : IRibbonCommandHandler
     {
         private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
-        private ICommand addNewBranchScribbleCommand = new AddNewBranchUsingScribbleModeCommand();
         private ICommand addNewPumpCommand = new AddNewPumpCommand();
         private ICommand addNewWeirCommand = new AddNewWeirCommand();
         private ICommand addNewExtraResistanceCommand = new AddNewExtraResistanceCommand();
@@ -83,7 +82,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             get
             {
                 yield return showHydroRegionContentsCommand;
-                yield return addNewBranchScribbleCommand;
                 yield return addNewPumpCommand;
                 yield return addNewWeirCommand;
                 yield return addNewExtraResistanceCommand;
@@ -129,9 +127,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var showArea2DTools = true; // regions.OfType<Area>().Any();  TODO. 
 
             ButtonShowHydroRegionContents.SetState(showHydroRegionContentsCommand);
-
-            // branch tools
-            ButtonAddNewBranchScribble.SetState(addNewBranchScribbleCommand, showNetworkTools);
 
             // structure tools
             ButtonAddNewPump.SetState(addNewPumpCommand, showNetworkTools);
@@ -261,12 +256,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonShowHydroRegionContents_Click(object sender, RoutedEventArgs e)
         {
             showHydroRegionContentsCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewBranchScribble_Click(object sender, RoutedEventArgs e)
-        {
-            addNewBranchScribbleCommand.Execute();
             ValidateItems();
         }
 
