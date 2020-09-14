@@ -48,11 +48,5 @@
                 
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
-
-        <fluent:RibbonTabItem Header="Tools" fluent:KeyTip.Keys="T">
-            <fluent:RibbonGroupBox Header="Data" fluent:KeyTip.Keys="ZD">
-                <fluent:Button x:Name="ButtonOpenCaseAnalysis" Header="Open Case Analysis View" ToolTip="Open Case Analysis View" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\case_analysis.png" Click="ButtonOpenCaseAnalysis_Click" Size="Middle" SizeDefinition="Middle,Small,Small" fluent:KeyTip.Keys="C" />
-            </fluent:RibbonGroupBox>
-        </fluent:RibbonTabItem>
     </fluent:Ribbon>
 </UserControl>

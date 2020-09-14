@@ -33,7 +33,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
     public partial class Ribbon : IRibbonCommandHandler
     {
         private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
-        private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
 
         private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
         private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) {LayerType = typeof(HydroAreaLayer)};
@@ -74,7 +73,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addLandBoundary2dCommand;
                 yield return addDryPoint2dCommand;
                 yield return addDryArea2dCommand;
-                yield return openCaseAnalysisCommand;
                 yield return addNewEmbankmentCommand;
                 yield return addEnclosure2dCommand;
                 yield return addBridgePillarCommand;
@@ -107,8 +105,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewEmbankment2D.SetState(addNewEmbankmentCommand, showArea2DTools);
             ButtonAddNewEnclosure2D.SetState(addEnclosure2dCommand, showArea2DTools);
             ButtonAddBridgePillar.SetState(addBridgePillarCommand, showArea2DTools);
-
-            ButtonOpenCaseAnalysis.IsEnabled = openCaseAnalysisCommand.Enabled;
 
             SetCoverageComboBox();
 
@@ -253,12 +249,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewDryArea_Click(object sender, RoutedEventArgs e)
         {
             addDryArea2dCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonOpenCaseAnalysis_Click(object sender, RoutedEventArgs e)
-        {
-            openCaseAnalysisCommand.Execute();
             ValidateItems();
         }
 
