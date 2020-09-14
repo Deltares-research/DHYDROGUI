@@ -383,6 +383,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ModelSaveTo_DoesNotClearOutputFolder(bool switchTo)
+        {
+            // Setup
+            string testData = TestHelper.GetTestFilePath("output_wavm\\wavm-wave.nc");
+
+            using (var temp = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string inputDir = temp.CreateDirectory("input");
+                string outputDir = temp.CreateDirectory("output");
+                string someOutputFile = temp.CreateFile("output\\simon.txt");
+                string someOtherOutputFile = temp.CreateFile("output\\pumba.txt");
+
+                string outputFile = Path.Combine(outputDir, "wavm-wave.nc");
+                File.Copy(testData, outputFile);
+
+                string mdwFilePath = Path.Combine(inputDir, "waves.mdw");
+
+                model.WavmFunctionStores.First().Path = outputFile;
+
+                // Call
+                model.ModelSaveTo(mdwFilePath, switchTo);
+
+                // Assert
+                Assert.That(outputDir, Does.Exist);
+                Assert.That(outputFile, Does.Exist);
+                Assert.That(someOutputFile, Does.Exist);
+                Assert.That(someOtherOutputFile, Does.Exist);
+            }
+        }
+
+        [Test]
         public void WaveOutputSaveLoadTest()
         {
             using (DeltaShellApplication app = GetRunningApplication())

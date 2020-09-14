@@ -328,7 +328,6 @@
     <Compile Include="NodePresenters\RealTimeControlModelNodePresenterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealTimeControlApplicationPluginTest.cs" />
-    <Compile Include="RealTimeControlModelANDandORTest.cs" />
     <Compile Include="RealTimeControlModelCopyPasteHelperTest.cs" />
     <Compile Include="RealTimeControlModelExtensionsTest.cs" />
     <Compile Include="RealTimeControlModelTest.cs" />
@@ -339,7 +338,6 @@
     <Compile Include="RtcDataAccessListenerTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="TimeConditionTest.cs" />
-    <Compile Include="UndoRedoRealTimeControlTest.cs" />
     <Compile Include="Validation\ControlGroupValidatorTest.cs" />
     <Compile Include="Validation\RealTimeControlModelMergeValidatorTest.cs" />
     <Compile Include="Validation\RealTimeControlModelValidatorTest.cs" />
