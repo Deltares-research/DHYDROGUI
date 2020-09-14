@@ -297,7 +297,6 @@
     <Compile Include="Forms\ChartEditors\StructureChartShapes\RoundCrestShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\StructureShapeStyleProvider.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\StructureSideViewShape.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\ThalWegInStructureView.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\TriangularCrestShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirInSideViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirInStructureViewShape.cs" />
