@@ -25,7 +25,6 @@
 
                 <!-- structures -->
                 <fluent:ToggleButton x:Name="ButtonAddNewWeir" Header="Add Weir" ToolTip="Add Weir" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\WeirSmall.png" Click="ButtonAddNewWeir_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewRetention" Header="Add Retention" ToolTip="Add Retention" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Retention.png" Click="ButtonAddNewRetention_Click" SizeDefinition="Small,Small,Small" />
                 <Separator />
             </fluent:RibbonGroupBox>
 
