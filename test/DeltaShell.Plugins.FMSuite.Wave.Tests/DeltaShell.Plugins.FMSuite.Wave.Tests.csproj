@@ -425,7 +425,6 @@
     <Compile Include="WaveModelTest.cs" />
     <Compile Include="WaveRgfGridEditorTest.cs" />
     <Compile Include="WaveTestHelper.cs" />
-    <Compile Include="WaveUndoRedoIntegrationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">

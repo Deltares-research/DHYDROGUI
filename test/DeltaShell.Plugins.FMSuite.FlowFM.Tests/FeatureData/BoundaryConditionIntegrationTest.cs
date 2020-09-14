@@ -301,44 +301,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         }
 
         [Test]
-        [Category(TestCategory.WorkInProgress)]
-        public void AddSedimentBoundaryConditionWithoutHydroBoundaryConditionShouldThrowValidationError()
-        {
-            WaterFlowFMModel model = CreateWaterFlowFMModel();
-            var sedFrac = new SedimentFraction() {Name = "Frac1"};
-            model.SedimentFractions.Add(sedFrac);
-
-            Feature2D boundary = model.Boundaries.Last();
-            var boundaryCondition = new FlowBoundaryCondition(
-                FlowBoundaryQuantityType.SedimentConcentration,
-                BoundaryConditionDataType.TimeSeries)
-            {
-                Feature = boundary,
-                SedimentFractionName = sedFrac.Name,
-                SedimentFractionNames = model.SedimentFractions.Select(sf => sf.Name).ToList()
-            };
-
-            boundaryCondition.AddPoint(0);
-            boundaryCondition.PointData[0][model.StartTime] = 1.5;
-            boundaryCondition.PointData[0][model.StopTime] = 0.2;
-
-            boundaryCondition.AddPoint(1);
-            boundaryCondition.PointData[1][model.StartTime] = 1.55;
-            boundaryCondition.PointData[1][model.StopTime] = 0.25;
-
-            BoundaryConditionSet boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
-            boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
-
-            Assert.IsNotNull(boundaryConditionSet);
-
-            ValidationReport report = model.Validate();
-            Assert.AreEqual(1, report.ErrorCount);
-            Assert.That(report.AllErrors.First(i => i.Severity == ValidationSeverity.Error).Message, Is.EqualTo(Resources.WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_));
-            ActivityRunner.RunActivity(model);
-            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Failed));
-        }
-
-        [Test]
         public void TestBedLoadTransportNotContainingMudFraction()
         {
             /* Expected mock behavior */
