@@ -369,7 +369,6 @@
     <Compile Include="Forms\PropertyGrid\HydroNetworkProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroAreaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\NetworkSegmentProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\PierWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\RiverWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\RunoffBoundaryProperties.cs" />
     <Compile Include="Forms\PropertyGrid\SimpleWeirFormulaProperties.cs" />
