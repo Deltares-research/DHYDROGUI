@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcDataConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews F:\checkouts\svn\DSCTestbench\trunk\cases\e105_dflowfm-drtc\f01_general\c072_generalstructure_lowering_open_door\e105-f01-c072.dsproj_data\Integrated_Model_output\rtc\rtcDataConfig.xsd">
+  <importSeries>
+    <PITimeSeriesFile>
+      <timeSeriesFile>timeseries_import.xml</timeSeriesFile>
+      <useBinFile>false</useBinFile>
+    </PITimeSeriesFile>
+    <timeSeries id="ControlGroup Gate Lower Edge Level/ControlRule Gate Lower Edge Level">
+      <PITimeSeries>
+        <locationId>[TimeRule]ControlGroup Gate Lower Edge Level/ControlRule Gate Lower Edge Level</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="ControlGroup Gate Opening Width/ControlRule Gate Opening Width">
+      <PITimeSeries>
+        <locationId>[TimeRule]ControlGroup Gate Opening Width/ControlRule Gate Opening Width</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+    <timeSeries id="ControlGroup Crestlevel/ControlRule Crestlevel">
+      <PITimeSeries>
+        <locationId>[TimeRule]ControlGroup Crestlevel/ControlRule Crestlevel</locationId>
+        <parameterId>TimeSeries</parameterId>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+      </PITimeSeries>
+    </timeSeries>
+  </importSeries>
+  <exportSeries>
+    <CSVTimeSeriesFile decimalSeparator="." delimiter="," adjointOutput="false"></CSVTimeSeriesFile>
+    <PITimeSeriesFile>
+      <timeSeriesFile>timeseries_export.xml</timeSeriesFile>
+      <useBinFile>false</useBinFile>
+    </PITimeSeriesFile>
+    <timeSeries id="[Output]Maeslantkering/GateLowerEdgeLevel">
+      <OpenMIExchangeItem>
+        <elementId>Maeslantkering</elementId>
+        <quantityId>GateLowerEdgeLevel</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Maeslantkering/GateOpeningWidth">
+      <OpenMIExchangeItem>
+        <elementId>Maeslantkering</elementId>
+        <quantityId>GateOpeningWidth</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+    <timeSeries id="[Output]Maeslantkering/CrestLevel">
+      <OpenMIExchangeItem>
+        <elementId>Maeslantkering</elementId>
+        <quantityId>CrestLevel</quantityId>
+        <unit>m</unit>
+      </OpenMIExchangeItem>
+    </timeSeries>
+  </exportSeries>
+</rtcDataConfig>
