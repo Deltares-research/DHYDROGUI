@@ -255,14 +255,12 @@
     </Compile>
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperations.cs" />
     <Compile Include="Forms\ChartEditors\ChartDrawingContext.cs" />
-    <Compile Include="Forms\ChartEditors\ChartShapeEditors\CircleShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\CompositeShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\IShapeFeatureEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\PolygonEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\RectangleShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\ShapeFeatureEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\SymbolShapeEditor.cs" />
-    <Compile Include="Forms\ChartEditors\ChartShapes\CircleShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\CompositeShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\FixedRectangleShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\IShapeFeature.cs" />
