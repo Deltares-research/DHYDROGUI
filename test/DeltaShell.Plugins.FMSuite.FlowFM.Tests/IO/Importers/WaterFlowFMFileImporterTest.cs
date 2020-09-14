@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -24,19 +25,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void GivenGeneralStructureMduFile_WhenImportItemFails_ThenExpectedErrorReturned()
         {
             // Given
             const string relativeFilePath = @"c071_generalstructure_door_closing_at_sill\dflowfm\t2.mdu";
             string testFilePath = TestHelper.GetTestFilePath(relativeFilePath);
             Assert.That(File.Exists(testFilePath));
+            string base_error = "The method or operation is not implemented.";
+            string first_error = $"Failed to convert .ini structure definition 'Maeslantkering' to actual structure: {base_error}";
+            string last_error = $"An error occurred while trying to import a Flow Flexible Mesh Model from {testFilePath}. Cause: {first_error}";
+            string expectedErrorMessage = $"{last_error}";
 
             // When
             var importer = new WaterFlowFMFileImporter(() => null);
             TestDelegate testAction = () => importer.ImportItem(testFilePath);
 
+            string[] renderedMessages = TestHelper.GetAllRenderedMessages(() =>
+            {
+                try
+                {
+                    testAction.Invoke();
+                }
+                catch
+                {
+                    // ignored
+                }
+            }).ToArray();
+
             // Then
-            Assert.That(testAction, Throws.Exception);
+            Assert.That(testAction, Throws.Exception.With.Message.EqualTo(expectedErrorMessage));
+            Assert.That(renderedMessages.Contains(base_error), Is.False);
+            Assert.That(renderedMessages.Contains(first_error), Is.False);
+            Assert.That(renderedMessages.Contains(last_error), Is.True);
 
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
@@ -114,15 +115,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
             catch (Exception e)
             {
+                string errorMessage = $"An error occurred while trying to import a {Name} from {path}. Cause: {e.Message}";
+                log.Error($"{errorMessage}");
                 if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
                     e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
                 {
-                    log.Error(string.Format("An error occurred while trying to import a {0}; Cause: ",
-                                            Name), e);
+                    log.Error($"{errorMessage}");
                     return null;
                 }
 
                 // !!Unexpected type of exception (like NotSupportedException or NotImplementedException), so fail fast!!
+                e
+                    .GetType()
+                    .GetField("_message", BindingFlags.Instance | BindingFlags.NonPublic)
+                    ?.SetValue(e, errorMessage);
                 throw;
             }
         }
