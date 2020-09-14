@@ -58,14 +58,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
             if (!DateTime.TryParseExact(timeReference,
                                         dateTimeFormatWithZone,
                                         CultureInfo.InvariantCulture,
-                                        DateTimeStyles.None,
+                                        DateTimeStyles.AdjustToUniversal,
                                         out DateTime dateTime))
             {
                 return base.ReadReferenceDateFromFile(timeVariableName);
             }
-
-            TimeSpan timeZoneOffset = TimeZoneInfo.Local.GetUtcOffset(dateTime);
-            dateTime = dateTime.Subtract(timeZoneOffset);
 
             return dateTime.ToString(DateTimeFormatInfo.InvariantInfo.FullDateTimePattern, CultureInfo.InvariantCulture);
         }
