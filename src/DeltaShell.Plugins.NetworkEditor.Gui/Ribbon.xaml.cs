@@ -33,7 +33,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
     public partial class Ribbon : IRibbonCommandHandler
     {
         private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
-        private ICommand addNewWeirCommand = new AddNewWeirCommand();
         private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
 
         private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
@@ -66,7 +65,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             get
             {
                 yield return showHydroRegionContentsCommand;
-                yield return addNewWeirCommand;
                 yield return addThinDam2dCommand;
                 yield return addFixedWeir2dCommand;
                 yield return addObs2dCommand;
@@ -95,9 +93,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var showArea2DTools = true; // regions.OfType<Area>().Any();  TODO. 
 
             ButtonShowHydroRegionContents.SetState(showHydroRegionContentsCommand);
-
-            // structure tools
-            ButtonAddNewWeir.SetState(addNewWeirCommand, showNetworkTools);
 
             // Area2d tools
             ButtonAddNewThinDam2D.SetState(addThinDam2dCommand, showArea2DTools);
@@ -204,12 +199,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonShowHydroRegionContents_Click(object sender, RoutedEventArgs e)
         {
             showHydroRegionContentsCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewWeir_Click(object sender, RoutedEventArgs e)
-        {
-            addNewWeirCommand.Execute();
             ValidateItems();
         }
 

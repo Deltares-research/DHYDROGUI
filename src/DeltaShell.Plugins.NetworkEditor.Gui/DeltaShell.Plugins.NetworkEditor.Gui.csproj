@@ -170,7 +170,6 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Commands\AddNewWeirCommand.cs" />
     <Compile Include="Commands\NetworkEditorCommand.cs" />
     <Compile Include="Commands\OpenCaseAnalysisViewCommand.cs" />
     <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />

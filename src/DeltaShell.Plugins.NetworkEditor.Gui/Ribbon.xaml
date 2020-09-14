@@ -21,12 +21,6 @@
         </fluent:RibbonTabItem>
 
         <fluent:RibbonTabItem Header="Map" x:Name="tabRegion" Group="{Binding ElementName=geospatialContextualGroup}" ReduceOrder="HydroRegion,HydroNetwork,DrainageBasin,NetworkCoverage,Analysis" fluent:KeyTip.Keys="M">
-            <fluent:RibbonGroupBox Header="Network" x:Name="HydroNetwork" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkGroup.png" fluent:KeyTip.Keys="ZN">
-
-                <!-- structures -->
-                <fluent:ToggleButton x:Name="ButtonAddNewWeir" Header="Add Weir" ToolTip="Add Weir" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\WeirSmall.png" Click="ButtonAddNewWeir_Click" SizeDefinition="Small,Small,Small" />
-                <Separator />
-            </fluent:RibbonGroupBox>
 
             <fluent:RibbonGroupBox Header="Area" x:Name="Area2D" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
                 <fluent:ToggleButton x:Name="ButtonAddNewThinDam2D" Header="Thin dam" ToolTip="Add new thin dam (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\thindam.png" Click="ButtonAddNewThinDam_Click" SizeDefinition="Small,Small,Small" />
