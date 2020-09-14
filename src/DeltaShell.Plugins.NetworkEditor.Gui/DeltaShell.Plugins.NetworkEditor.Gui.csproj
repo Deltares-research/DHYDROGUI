@@ -286,7 +286,6 @@
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\CrestShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\FreeFormatWeirEditor.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\GatedWeirShapeEditor.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\BroadCrestShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\CrestShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\FreeFormatWeirShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\GatedWeirShape.cs" />
