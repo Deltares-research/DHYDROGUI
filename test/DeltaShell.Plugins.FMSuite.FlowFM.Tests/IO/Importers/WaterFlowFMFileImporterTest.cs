@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const string relativeFilePath = @"c071_generalstructure_door_closing_at_sill\dflowfm\t2.mdu";
             string testFilePath = TestHelper.GetTestFilePath(relativeFilePath);
             Assert.That(File.Exists(testFilePath));
-            string base_error = "The method or operation is not implemented.";
+            string base_error = $"Trying to generate Time series for 2D Structure: Maeslantkering, property: GateOpeningWidth mapped as type External which is not yet supported.";
             string first_error = $"Failed to convert .ini structure definition 'Maeslantkering' to actual structure: {base_error}";
             string last_error = $"An error occurred while trying to import a Flow Flexible Mesh Model from {testFilePath}. Cause: {first_error}";
             string expectedErrorMessage = $"{last_error}";
