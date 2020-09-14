@@ -5,7 +5,7 @@ D-HYDRO repository
 """
 __author__ = "Maarten Tegelaers"
 __copyright__ = "Copyright 2020"
-__version__ = "0.3"
+__version__ = "0.4"
 __maintainer__ = "Maarten Tegelaers"
 __email__ = "Maarten.Tegelaers@deltares.nl"
 __status__ = "Development"
@@ -78,7 +78,7 @@ class RunConfig(object):
         return self._verbose
 
 
-def validate_folder(root: Path, solution_file: str, verbose: bool):
+def validate_folder(root: Path, solution_file: str) -> None:
     """
     Validate the specified folder exists and contains the specified solution 
     file.
@@ -88,8 +88,6 @@ def validate_folder(root: Path, solution_file: str, verbose: bool):
     :param solution_file: String specifying the name (and extension) of the 
                           solution file.
     :type solution_file: str
-    :param verbose: Whether to print messages.
-    :type verbose: bool
     """
     if not root.exists():
         raise Exception("The provided path does not exist.")
@@ -118,7 +116,7 @@ def validate_dhydro_root(dhydro_root: Path, verbose: bool) -> None:
     if verbose:
         print(f"Validating the D-HYDRO root: {str(dhydro_root)}")
 
-    validate_folder(dhydro_root, "NGHS.sln", verbose)
+    validate_folder(dhydro_root, "NGHS.sln")
 
     if verbose:
         print("Succesfully validated the D-HYDRO root.")
@@ -139,7 +137,7 @@ def validate_deltashell_root(deltashell_root: Path, verbose: bool) -> None:
     if verbose:
         print(f"Validating the DeltaShell Framework root: {str(deltashell_root)}")
 
-    validate_folder(deltashell_root, "Framework.sln", verbose)
+    validate_folder(deltashell_root, "Framework.sln")
 
     if verbose:
         print("Succesfully validated the DeltaShell Framework root.")
@@ -172,12 +170,15 @@ def get_src_csproj_files(root: Path):
     return (root / Path("src")).glob("**/*.csproj")
 
 
-def clean_framework_bin(deltashell_root: Path, 
-                        verbose: bool):
+def clean_framework_bin(deltashell_root: Path) -> None:
     bin_folder_path = deltashell_root / Path("bin") / Path("Debug")
     if bin_folder_path.exists():
         shutil.rmtree(str(bin_folder_path))
 
+    # DeltaShell Framework contains several committed package files
+    # we do not want to delete these, as the NuGet restore will not 
+    # restore these. As such we skip these by checking if git reacts
+    # on them.
     for folder_path in (deltashell_root / Path("packages")).glob("*"):
         p = subprocess.Popen(["git", "-C", str(folder_path), "ls-files"],
                              stdout=subprocess.PIPE)
@@ -187,10 +188,9 @@ def clean_framework_bin(deltashell_root: Path,
             shutil.rmtree(str(folder_path))
 
 
-def clean_framework(run_config: RunConfig):
+def clean_framework(run_config: RunConfig) -> None:
     try:
-        clean_framework_bin(run_config.deltashell_root,
-                            run_config.verbose)
+        clean_framework_bin(run_config.deltashell_root)
     except Exception as e:
         print(f"Could not clean the bin folder of the framework: {str(e)}")
         return
@@ -242,16 +242,13 @@ def compile_dhydro(run_config: RunConfig):
     subprocess.call([str(msbuild), str(solution_path), "/t:Build", "/property:Configuration=Debug"])
 
 
-def get_framework_version(dhydro_root: Path, 
-                          verbose: bool) -> str:
+def get_framework_version(dhydro_root: Path) -> str:
     """
     Get the framework version used within the D-HYDRO repository based upon
-    the packages.config files.
+    the csproj files.
 
     :param dhydro_root: Path to the D-HYDRO repository
     :type dhydro_root: Path
-    :param verbose: whether to output additional messages.
-    :type verbose: bool
     """
     # We use the version specified in a package file to get the accurate 
     # version.
@@ -280,10 +277,9 @@ def update_framework_in_dhydro(run_config: RunConfig):
         if run_config.only_update_bin and not run_config.add_plugins:
             target_path = run_config.dhydro_root / Path("bin/Debug/")
         else:
-            framework_package_name = get_framework_version(run_config.dhydro_root, run_config.verbose)
+            framework_package_name = get_framework_version(run_config.dhydro_root)
             target_path = run_config.dhydro_root / Path(f"packages/{framework_package_name}/lib/net461/")
 
-        print(str(target_path))
         copy_tree(str(run_config.deltashell_root / Path("bin/Debug/DeltaShell/")), 
                   str(target_path / Path("DeltaShell")))
         copy_tree(str(run_config.deltashell_root / Path("bin/Debug/plugins/")), 
@@ -368,9 +364,9 @@ def get_args():
     """
     parser = argparse.ArgumentParser(prog="Add the DeltaShell PDBs")
     parser.add_argument("dhydro_root",
-                        help="Path to the D-HYDRO repository root, e.g. https://github.com/Deltares/D-HYDRO.git")
+                        help="Path to the D-HYDRO repository root, e.g. a checkout of https://github.com/Deltares/D-HYDRO.git")
     parser.add_argument("delta_shell_framework_root", 
-                        help="Path to the DeltaShell root path, e.g. https://repos.deltares.nl/repos/delft-tools/trunk/delta-shell/Framework.")
+                        help="Path to the DeltaShell root path, e.g. a checkout of https://github.com/Deltares/Delta-Shell-Framework.")
     parser.add_argument("--update_only_bin",
                         action="store_true", 
                         help="Flag to make the script update only the bin folder, default behaviour is to update the packages.")
