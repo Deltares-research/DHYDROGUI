@@ -37,7 +37,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewWeirCommand = new AddNewWeirCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
-        private ICommand addNewLinkCommand = new AddNewLinkCommand();
         private ICommand addNewNetworkLocationCommand = new AddNewNetworkLocationCommand();
         private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
 
@@ -84,7 +83,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addLandBoundary2dCommand;
                 yield return addDryPoint2dCommand;
                 yield return addDryArea2dCommand;
-                yield return addNewLinkCommand;
                 yield return addNewNetworkLocationCommand;
                 yield return openCaseAnalysisCommand;
                 yield return addNewEmbankmentCommand;
@@ -126,8 +124,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewEnclosure2D.SetState(addEnclosure2dCommand, showArea2DTools);
             ButtonAddBridgePillar.SetState(addBridgePillarCommand, showArea2DTools);
 
-            ButtonAddNewLink.SetState(addNewLinkCommand, regions.Count > 0);
-            
             ButtonOpenCaseAnalysis.IsEnabled = openCaseAnalysisCommand.Enabled;
             
             SetCoverageComboBox();
@@ -298,12 +294,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewDryArea_Click(object sender, RoutedEventArgs e)
         {
             addDryArea2dCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewLink_Click(object sender, RoutedEventArgs e)
-        {
-            addNewLinkCommand.Execute();
             ValidateItems();
         }
 
