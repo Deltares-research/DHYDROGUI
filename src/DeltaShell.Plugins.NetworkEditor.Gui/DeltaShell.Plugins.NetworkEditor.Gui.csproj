@@ -360,7 +360,6 @@
     <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DrainageBasinProperties.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureCoverageProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\GatedWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\GateProperties.cs" />
     <Compile Include="Forms\PropertyGrid\GeneralStructureWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroLinkProperties.cs" />
