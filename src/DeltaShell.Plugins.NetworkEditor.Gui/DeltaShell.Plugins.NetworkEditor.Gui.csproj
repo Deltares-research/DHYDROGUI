@@ -265,8 +265,6 @@
     <Compile Include="Forms\ChartEditors\ChartShapes\FixedRectangleShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\IShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\PolygonShapeFeature.cs" />
-    <Compile Include="Forms\ChartEditors\ChartShapes\RectangleSeriesShapeEditor.cs" />
-    <Compile Include="Forms\ChartEditors\ChartShapes\RectangleSeriesShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\RectangleShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\ShapeFeatureBase.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\SymbolShapeFeature.cs" />
