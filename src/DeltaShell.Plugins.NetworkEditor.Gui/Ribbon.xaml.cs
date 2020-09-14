@@ -36,7 +36,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewPumpCommand = new AddNewPumpCommand();
         private ICommand addNewWeirCommand = new AddNewWeirCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
-        private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
         private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
 
         private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
@@ -72,7 +71,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewPumpCommand;
                 yield return addNewWeirCommand;
                 yield return addNewRetentionCommand;
-                yield return addNewObservationPointCommand;
                 yield return addThinDam2dCommand;
                 yield return addFixedWeir2dCommand;
                 yield return addObs2dCommand;
@@ -106,7 +104,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewPump.SetState(addNewPumpCommand, showNetworkTools);
             ButtonAddNewWeir.SetState(addNewWeirCommand, showNetworkTools);
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
-            ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
 
             // Area2d tools
             ButtonAddNewThinDam2D.SetState(addThinDam2dCommand, showArea2DTools);
@@ -231,12 +228,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewRetention_Click(object sender, RoutedEventArgs e)
         {
             addNewRetentionCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewObservationPoint_Click(object sender, RoutedEventArgs e)
-        {
-            addNewObservationPointCommand.Execute();
             ValidateItems();
         }
 
