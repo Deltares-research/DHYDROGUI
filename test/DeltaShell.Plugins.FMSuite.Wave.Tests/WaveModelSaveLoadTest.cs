@@ -382,6 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
+        [Test]
         [TestCase(false)]
         [TestCase(true)]
         public void ModelSaveTo_DoesNotRemoveOutputFolder(bool switchTo)
@@ -394,6 +395,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             {
                 string inputDir = temp.CreateDirectory("input");
                 string outputDir = temp.CreateDirectory("output");
+                string someOutputFile = temp.CreateFile("output\\simon.txt");
+                string someOtherOutputFile = temp.CreateFile("output\\pumba.txt");
+
                 string outputFile = Path.Combine(outputDir, "wavm-wave.nc");
                 File.Copy(testData, outputFile);
 
@@ -407,6 +411,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 // Assert
                 Assert.That(outputDir, Does.Exist);
                 Assert.That(outputFile, Does.Exist);
+                Assert.That(someOutputFile, Does.Exist);
+                Assert.That(someOtherOutputFile, Does.Exist);
             }
         }
 
