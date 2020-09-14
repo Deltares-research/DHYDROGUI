@@ -283,7 +283,6 @@
       <DependentUpon>HydroRegionTreeView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\BranchFeatureTreeViewNodePresenterBase.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentTypeNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentTypesNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\ChannelTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CompositeStructureTreeViewNodePresenter.cs" />
