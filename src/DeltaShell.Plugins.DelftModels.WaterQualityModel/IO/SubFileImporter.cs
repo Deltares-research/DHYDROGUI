@@ -53,6 +53,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool ShouldCancel { get; set; }
 
+        public bool SubFileSuccessfullyImported { get; set; } 
+
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         /// <summary>
@@ -60,6 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </summary>
         public void Import(SubstanceProcessLibrary substanceProcessLibrary, string path)
         {
+            SubFileSuccessfullyImported = false;
+
             // Check if the substance process library is set
             if (substanceProcessLibrary == null)
             {
@@ -122,7 +126,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public object ImportItem(string path, object target)
         {
             Import(target as SubstanceProcessLibrary, path ?? DefaultFilePath);
-            Log.Info(string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, path));
+
+            if (SubFileSuccessfullyImported)
+            {
+                Log.Info(string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, path ?? DefaultFilePath));
+            }
+
             return target;
         }
 
@@ -380,6 +389,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 UpdateProgress($"Importing new {elementName}.", j++, nrOfSubstancesToBeAdded);
                 target.Add(substance);
             }
+
+            SubFileSuccessfullyImported = true;
         }
 
         #endregion
