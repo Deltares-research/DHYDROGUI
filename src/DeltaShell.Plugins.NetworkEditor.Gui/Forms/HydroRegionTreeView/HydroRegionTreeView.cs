@@ -116,7 +116,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             var treeNodePresenters = new ITreeNodePresenter[]
             {
                 new HydroRegionTreeViewNodePresenter(guiPlugin),
-                new NetworkTreeViewNodePresenter(guiPlugin),
                 new HydroAreaTreeViewNodePresenter(guiPlugin),
                 new RetentionNodePresenter(guiPlugin),
                 new ObservationPointTreeViewNodePresenter(guiPlugin),

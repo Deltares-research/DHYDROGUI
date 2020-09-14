@@ -285,7 +285,6 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\BranchFeatureTreeViewNodePresenterBase.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\NetworkTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\ObservationPointTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RetentionNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RunoffBoundariesTreeViewNodePresenter.cs" />
