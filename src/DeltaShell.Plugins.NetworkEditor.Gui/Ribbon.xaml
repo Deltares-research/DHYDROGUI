@@ -29,17 +29,7 @@
                 <fluent:ToggleButton x:Name="ButtonAddNewEmbankment2D" Header="Embankment" ToolTip="Add new embankment (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Embankment.png" Click="ButtonAddNewEmbankment_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewEnclosure2D" Header="Enclosure" ToolTip="Add new enclosure (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\enclosure.png" Click="ButtonAddNewEnclosure_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddBridgePillar" Header="Bridge Pillar" ToolTip="Add new bridge pillar" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\BridgeSmall.png" Click="ButtonAddBridgePillar_Click" SizeDefinition="Small,Small,Small" />
-            </fluent:RibbonGroupBox>
-            
-            <fluent:RibbonGroupBox Header="Network Coverage" x:Name="NetworkCoverage" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkCoverageGroup.png">
-                <WrapPanel x:Name="NetworkCoverageEditPanel">
-                    <Label Content="Coverage" />
-                    <ComboBox x:Name="ComboBoxSelectNetworkCoverage" SelectionChanged="ComboBoxSelectNetworkCoverageSelectionChanged" Width="150" IsEditable="True" IsReadOnly="True" />
-                </WrapPanel>
-            </fluent:RibbonGroupBox>
 
-            <fluent:RibbonGroupBox Header="Analysis" x:Name="Analysis" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\AnalysisGroup.png">
-                
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
     </fluent:Ribbon>
