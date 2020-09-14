@@ -2,21 +2,22 @@
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate;
 using NUnit.Framework;
 using Does = NUnit.Framework.Does;
 
-namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
+namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
-    public class WaterQualityModel353LegacyLoaderTest
+    [TestFixture]
+    public class HydroModel111LegacyLoaderTest
     {
         [Test]
         public void OnAfterProjectMigrated_ProjectNull_ThrowsArgumentNullException()
         {
             // Setup
-            var legacyLoader = new WaterQualityModel353LegacyLoader();
+            var legacyLoader = new HydroModel111LegacyLoader();
 
             // Call
             void Call() => legacyLoader.OnAfterProjectMigrated(null);
@@ -31,15 +32,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void OnAfterProjectMigrated_RemovesExplicitWorkingDirectory()
         {
             // Setup
-            var legacyLoader = new WaterQualityModel353LegacyLoader();
+            var legacyLoader = new HydroModel111LegacyLoader();
             var project = new Project();
 
             using (var temp = new TemporaryDirectory())
-            using (var model = new WaterQualityModel {Name = "the water quality model"})
+            using (var model = new HydroModel {Name = "the integrated model"})
             {
-                string explicitWorkDir = temp.CreateDirectory("the_water_quality_model_output");
+                string explicitWorkDir = temp.CreateDirectory("the_integrated_model_output");
 
-                model.ModelDataDirectory = Path.Combine(temp.Path, model.Name);
+                ((IFileBased) model).Path = Path.Combine(temp.Path, model.Name);
                 project.RootFolder.Add(model);
 
                 // Call
