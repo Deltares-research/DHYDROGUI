@@ -118,7 +118,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 new HydroRegionTreeViewNodePresenter(guiPlugin),
                 new HydroAreaTreeViewNodePresenter(guiPlugin),
                 new RetentionNodePresenter(guiPlugin),
-                new ObservationPointTreeViewNodePresenter(guiPlugin),
                 new WasteWaterTreatmentPlantsTreeViewNodePresenter(guiPlugin),
                 new WasteWaterTreatmentPlantTreeViewNodePresenter(guiPlugin),
                 new RunoffBoundariesTreeViewNodePresenter(guiPlugin),
