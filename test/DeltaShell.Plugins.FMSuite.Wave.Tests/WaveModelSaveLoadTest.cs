@@ -385,7 +385,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         [TestCase(false)]
         [TestCase(true)]
-        public void ModelSaveTo_DoesNotRemoveOutputFolder(bool switchTo)
+        public void ModelSaveTo_DoesNotClearOutputFolder(bool switchTo)
         {
             // Setup
             string testData = TestHelper.GetTestFilePath("output_wavm\\wavm-wave.nc");
