@@ -309,12 +309,6 @@
     <Compile Include="Forms\FMWeirView.Designer.cs">
       <DependentUpon>FMWeirView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormLevelShift.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormLevelShift.Designer.cs">
-      <DependentUpon>FormLevelShift.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormPasteCrossSection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -480,9 +474,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FMWeirView.resx">
       <DependentUpon>FMWeirView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormLevelShift.resx">
-      <DependentUpon>FormLevelShift.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormPasteCrossSection.resx">
       <DependentUpon>FormPasteCrossSection.cs</DependentUpon>
