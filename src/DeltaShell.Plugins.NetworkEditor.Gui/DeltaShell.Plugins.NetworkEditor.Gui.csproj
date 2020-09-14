@@ -298,7 +298,6 @@
     <Compile Include="Forms\ChartEditors\StructureChartShapes\StructureShapeStyleProvider.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\StructureSideViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\TriangularCrestShapeFeature.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirInStructureViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirShapeFeature.cs" />
     <Compile Include="Forms\ComputationalGridDialog.cs">
       <SubType>Form</SubType>
