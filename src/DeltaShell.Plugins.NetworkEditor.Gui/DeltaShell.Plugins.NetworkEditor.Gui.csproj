@@ -281,10 +281,8 @@
     <Compile Include="Forms\ChartEditors\ShapeMoveTool.cs" />
     <Compile Include="Forms\ChartEditors\ShapeSelectTool.cs" />
     <Compile Include="Forms\ChartEditors\ShapeTool.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\CrestShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\FreeFormatWeirEditor.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\GatedWeirShapeEditor.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\CrestShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\FreeFormatWeirShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\HoverText.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\IHover.cs" />
