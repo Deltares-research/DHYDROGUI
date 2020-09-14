@@ -33,11 +33,6 @@
                 <Separator />
             </fluent:RibbonGroupBox>
 
-            <fluent:RibbonGroupBox Header="Basin" x:Name="DrainageBasin" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
-                <fluent:ToggleButton x:Name="ButtonAddNewWasteWaterTreatmentPlant" Header="Treatment Plant" ToolTip="Add new wastewater treatment plant" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\wwtp.png" Click="ButtonAddNewWasteWaterTreatmentPlant_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewRunoffBoundary" Header="Runoff Boundary" ToolTip="Add new runoff boundary" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\runoff.png" Click="ButtonAddNewRunoffBoundary_Click" SizeDefinition="Small,Small,Small" />
-            </fluent:RibbonGroupBox>
-
             <fluent:RibbonGroupBox Header="Area" x:Name="Area2D" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
                 <fluent:ToggleButton x:Name="ButtonAddNewThinDam2D" Header="Thin dam" ToolTip="Add new thin dam (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\thindam.png" Click="ButtonAddNewThinDam_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewFixedWeir2D" Header="Fixed weir" ToolTip="Add new fixed weir (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\fixedweir.png" Click="ButtonAddNewFixedWeir_Click" SizeDefinition="Small,Small,Small" />

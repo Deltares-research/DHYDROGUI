@@ -39,8 +39,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
-        private ICommand addNewWasteWaterTreatmentPlantCommand = new AddNewDrainageBasinFeatureCommand(HydroRegionEditorMapTool.AddWasteWaterTreatmentPlantToolName);
-        private ICommand addNewRunoffBoundaryCommand = new AddNewDrainageBasinFeatureCommand(HydroRegionEditorMapTool.AddRunoffBoundaryToolName);
         private ICommand addNewLinkCommand = new AddNewLinkCommand();
         private ICommand addNewNetworkLocationCommand = new AddNewNetworkLocationCommand();
         private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
@@ -81,8 +79,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewLateralSourceCommand;
                 yield return addNewRetentionCommand;
                 yield return addNewObservationPointCommand;
-                yield return addNewWasteWaterTreatmentPlantCommand;
-                yield return addNewRunoffBoundaryCommand;
                 yield return addThinDam2dCommand;
                 yield return addFixedWeir2dCommand;
                 yield return addObs2dCommand;
@@ -121,9 +117,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewLateralSource.SetState(addNewLateralSourceCommand, showNetworkTools);
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
             ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
-
-            ButtonAddNewWasteWaterTreatmentPlant.SetState(addNewWasteWaterTreatmentPlantCommand, showBasinTools);
-            ButtonAddNewRunoffBoundary.SetState(addNewRunoffBoundaryCommand, showBasinTools);
 
             // Area2d tools
             ButtonAddNewThinDam2D.SetState(addThinDam2dCommand, showArea2DTools);
@@ -269,18 +262,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewObservationPoint_Click(object sender, RoutedEventArgs e)
         {
             addNewObservationPointCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewWasteWaterTreatmentPlant_Click(object sender, RoutedEventArgs e)
-        {
-            addNewWasteWaterTreatmentPlantCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewRunoffBoundary_Click(object sender, RoutedEventArgs e)
-        {
-            addNewRunoffBoundaryCommand.Execute();
             ValidateItems();
         }
 
