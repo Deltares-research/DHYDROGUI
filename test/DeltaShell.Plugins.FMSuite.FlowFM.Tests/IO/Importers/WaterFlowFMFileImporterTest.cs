@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void GivenGeneralStructureMduFile_WhenImportItemFails_ThenExpectedErrorReturned()
+        public void GivenGeneralStructureMduFileWithUnhandledType_WhenImportItem_ThenNotImplementedExceptionThrown()
         {
             // Given
             const string relativeFilePath = @"c071_generalstructure_door_closing_at_sill\dflowfm\t2.mdu";
@@ -54,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }).ToArray();
 
             // Then
-            Assert.That(testAction, Throws.Exception.With.Message.EqualTo(expectedErrorMessage));
+            Assert.That(testAction, Throws.TypeOf<NotImplementedException>().With.Message.EqualTo(expectedErrorMessage));
             Assert.That(renderedMessages.Contains(base_error), Is.False);
             Assert.That(renderedMessages.Contains(first_error), Is.False);
             Assert.That(renderedMessages.Contains(last_error), Is.True);
