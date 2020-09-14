@@ -183,7 +183,6 @@
     <Compile Include="Commands\AddNewRetentionCommand.cs" />
     <Compile Include="Commands\AddNewWeirCommand.cs" />
     <Compile Include="Commands\NetworkEditorCommand.cs" />
-    <Compile Include="Commands\NetworkEditorHelper.cs" />
     <Compile Include="Commands\OpenCaseAnalysisViewCommand.cs" />
     <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
