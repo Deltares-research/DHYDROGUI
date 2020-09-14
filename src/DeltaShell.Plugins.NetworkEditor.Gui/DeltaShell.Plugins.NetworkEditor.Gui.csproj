@@ -294,7 +294,6 @@
     <Compile Include="Forms\ChartEditors\StructureChartShapes\HoverText.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\IHover.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\IHoverText.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\PumpInSideViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\PumpInStructureViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\RoundCrestShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\StructureShapeStyleProvider.cs" />
