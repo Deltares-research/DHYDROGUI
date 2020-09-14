@@ -171,7 +171,6 @@
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="Commands\NetworkEditorCommand.cs" />
-    <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />

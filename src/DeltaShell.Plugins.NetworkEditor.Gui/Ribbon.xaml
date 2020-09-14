@@ -14,12 +14,6 @@
             <fluent:RibbonContextualTabGroup Header="Cross-Sections" Visibility="Visible" Name="crossSectionContextualGroup" Background="MediumBlue" BorderBrush="MediumBlue" />
         </fluent:Ribbon.ContextualGroups>
 
-        <fluent:RibbonTabItem Header="View" fluent:KeyTip.Keys="V">
-            <fluent:RibbonGroupBox Header="Show/Hide" fluent:KeyTip.Keys="ZS">
-                <fluent:ToggleButton x:Name="ButtonShowHydroRegionContents" Header="Region Contents" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches.png" Click="ButtonShowHydroRegionContents_Click" Size="Middle" SizeDefinition="Middle,Small,Small" fluent:KeyTip.Keys="R" />
-            </fluent:RibbonGroupBox>
-        </fluent:RibbonTabItem>
-
         <fluent:RibbonTabItem Header="Map" x:Name="tabRegion" Group="{Binding ElementName=geospatialContextualGroup}" ReduceOrder="HydroRegion,HydroNetwork,DrainageBasin,NetworkCoverage,Analysis" fluent:KeyTip.Keys="M">
 
             <fluent:RibbonGroupBox Header="Area" x:Name="Area2D" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">

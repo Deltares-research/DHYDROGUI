@@ -31,9 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
     /// Interaction logic for Ribbon.xaml
     /// </summary>
     public partial class Ribbon : IRibbonCommandHandler
-    {
-        private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
-
+    { 
         private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
         private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) {LayerType = typeof(HydroAreaLayer)};
         private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) {LayerType = typeof(HydroAreaLayer)};
@@ -63,7 +61,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             get
             {
-                yield return showHydroRegionContentsCommand;
                 yield return addThinDam2dCommand;
                 yield return addFixedWeir2dCommand;
                 yield return addObs2dCommand;
@@ -88,9 +85,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             bool showNetworkTools = regions.OfType<IHydroNetwork>().Any();
             bool showBasinTools = regions.OfType<DrainageBasin>().Any();
-            var showArea2DTools = true; // regions.OfType<Area>().Any();  TODO. 
-
-            ButtonShowHydroRegionContents.SetState(showHydroRegionContentsCommand);
+            var showArea2DTools = true; // regions.OfType<Area>().Any();  TODO.
 
             // Area2d tools
             ButtonAddNewThinDam2D.SetState(addThinDam2dCommand, showArea2DTools);
@@ -190,12 +185,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             return false;
-        }
-
-        private void ButtonShowHydroRegionContents_Click(object sender, RoutedEventArgs e)
-        {
-            showHydroRegionContentsCommand.Execute();
-            ValidateItems();
         }
 
         private void ButtonAddNewThinDam_Click(object sender, RoutedEventArgs e)
