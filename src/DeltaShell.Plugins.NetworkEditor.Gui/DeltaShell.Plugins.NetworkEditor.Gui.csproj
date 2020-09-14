@@ -170,7 +170,6 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Commands\AddNewNetworkLocationCommand.cs" />
     <Compile Include="Commands\AddNewObservationPointCommand.cs" />
     <Compile Include="Commands\AddNewPumpCommand.cs" />
     <Compile Include="Commands\AddNewRetentionCommand.cs" />

@@ -37,7 +37,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewWeirCommand = new AddNewWeirCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
-        private ICommand addNewNetworkLocationCommand = new AddNewNetworkLocationCommand();
         private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
 
         private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
@@ -83,7 +82,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addLandBoundary2dCommand;
                 yield return addDryPoint2dCommand;
                 yield return addDryArea2dCommand;
-                yield return addNewNetworkLocationCommand;
                 yield return openCaseAnalysisCommand;
                 yield return addNewEmbankmentCommand;
                 yield return addEnclosure2dCommand;
@@ -125,11 +123,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddBridgePillar.SetState(addBridgePillarCommand, showArea2DTools);
 
             ButtonOpenCaseAnalysis.IsEnabled = openCaseAnalysisCommand.Enabled;
-            
+
             SetCoverageComboBox();
 
             // Depends on SetCoverageComboBox
-            ButtonAddNewNetworkLocation.SetState(addNewNetworkLocationCommand);
             NetworkCoverageEditPanel.Visibility = showNetworkTools ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -297,12 +294,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ValidateItems();
         }
 
-        private void ButtonAddNewNetworkLocation_Click(object sender, RoutedEventArgs e)
-        {
-            addNewNetworkLocationCommand.Execute();
-            ValidateItems();
-        }
-
         private void ButtonOpenCaseAnalysis_Click(object sender, RoutedEventArgs e)
         {
             openCaseAnalysisCommand.Execute();
@@ -343,25 +334,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             var activeNetworkCoverageGroupLayer = ComboBoxSelectNetworkCoverage.SelectedItem as INetworkCoverageGroupLayer;
             tool.ActiveNetworkCoverageGroupLayer = activeNetworkCoverageGroupLayer;
-
-            ButtonAddNewNetworkLocation.Header = activeNetworkCoverageGroupLayer != null
-                                                     ? string.Format("Add {0} location", activeNetworkCoverageGroupLayer.Name)
-                                                     : "Add Network Location";
-            ButtonAddNewNetworkLocation.ToolTip = activeNetworkCoverageGroupLayer != null
-                                                      ? string.Format("Add location to {0} data", activeNetworkCoverageGroupLayer.Name)
-                                                      : "Add location to network data";
         }
 
         private void ComboBoxSelectNetworkCoverageSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateAddNetworkLocationHeaderTooltip();
-
-            // activate addNewNetworkLocation tool
-            if (!addNewNetworkLocationCommand.Enabled)
-            {
-                addNewNetworkLocationCommand.Execute();
-            }
-
             ValidateItems();
         }
     }

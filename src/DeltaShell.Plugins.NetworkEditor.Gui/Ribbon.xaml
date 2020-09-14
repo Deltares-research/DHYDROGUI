@@ -50,7 +50,6 @@
                 <WrapPanel x:Name="NetworkCoverageEditPanel">
                     <Label Content="Coverage" />
                     <ComboBox x:Name="ComboBoxSelectNetworkCoverage" SelectionChanged="ComboBoxSelectNetworkCoverageSelectionChanged" Width="150" IsEditable="True" IsReadOnly="True" />
-                    <fluent:ToggleButton x:Name="ButtonAddNewNetworkLocation" Header="Add Network Location" ToolTip="Add location to network data" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkLocationSmall.png" Click="ButtonAddNewNetworkLocation_Click" SizeDefinition="Small,Small,Small" />
                 </WrapPanel>
             </fluent:RibbonGroupBox>
 
