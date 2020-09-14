@@ -26,7 +26,6 @@
                 <!-- structures -->
                 <fluent:ToggleButton x:Name="ButtonAddNewPump" Header="Add Pump" ToolTip="Add Pump" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\PumpSmall.png" Click="ButtonAddNewPump_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewWeir" Header="Add Weir" ToolTip="Add Weir" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\WeirSmall.png" Click="ButtonAddNewWeir_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewLateralSource" Header="Add Lateral Source" ToolTip="Add Lateral Source" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\LateralSourceSmall.png" Click="ButtonAddNewLateralSource_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewRetention" Header="Add Retention" ToolTip="Add Retention" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Retention.png" Click="ButtonAddNewRetention_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewObservationPoint" Header="Add Observation Point" ToolTip="Add Observation Point" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Observation.png" Click="ButtonAddNewObservationPoint_Click" SizeDefinition="Small,Small,Small" />
                 <Separator />

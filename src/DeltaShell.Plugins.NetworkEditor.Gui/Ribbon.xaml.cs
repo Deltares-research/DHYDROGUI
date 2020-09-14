@@ -35,7 +35,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
         private ICommand addNewPumpCommand = new AddNewPumpCommand();
         private ICommand addNewWeirCommand = new AddNewWeirCommand();
-        private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
         private ICommand addNewLinkCommand = new AddNewLinkCommand();
@@ -74,7 +73,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return showHydroRegionContentsCommand;
                 yield return addNewPumpCommand;
                 yield return addNewWeirCommand;
-                yield return addNewLateralSourceCommand;
                 yield return addNewRetentionCommand;
                 yield return addNewObservationPointCommand;
                 yield return addThinDam2dCommand;
@@ -111,7 +109,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             // structure tools
             ButtonAddNewPump.SetState(addNewPumpCommand, showNetworkTools);
             ButtonAddNewWeir.SetState(addNewWeirCommand, showNetworkTools);
-            ButtonAddNewLateralSource.SetState(addNewLateralSourceCommand, showNetworkTools);
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
             ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
 
@@ -235,12 +232,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewWeir_Click(object sender, RoutedEventArgs e)
         {
             addNewWeirCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewLateralSource_Click(object sender, RoutedEventArgs e)
-        {
-            addNewLateralSourceCommand.Execute();
             ValidateItems();
         }
 
