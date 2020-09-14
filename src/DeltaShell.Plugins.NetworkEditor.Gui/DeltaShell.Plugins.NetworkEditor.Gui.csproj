@@ -370,7 +370,6 @@
     <Compile Include="Forms\PropertyGrid\HydroAreaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\NetworkSegmentProperties.cs" />
     <Compile Include="Forms\PropertyGrid\RunoffBoundaryProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\SimpleWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\TimeDependency.cs" />
     <Compile Include="Forms\PropertyGrid\WasteWaterTreatmentPlantProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WeirFormulaProperties.cs" />
