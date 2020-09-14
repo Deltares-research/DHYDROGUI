@@ -283,7 +283,6 @@
     </Compile>
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\TreeViewBranchFeatureNodeSorter.cs" />
     <Compile Include="Forms\PropertyGrid\CatchmentProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DrainageBasinProperties.cs" />
