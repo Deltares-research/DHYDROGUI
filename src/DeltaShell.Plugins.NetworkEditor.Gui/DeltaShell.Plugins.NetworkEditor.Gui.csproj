@@ -338,12 +338,6 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantsTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\TreeViewBranchFeatureNodeSorter.cs" />
-    <Compile Include="Forms\ImportBranchFeatureDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ImportBranchFeatureDialog.Designer.cs">
-      <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\PropertyGrid\CatchmentProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DrainageBasinProperties.cs" />
@@ -472,9 +466,6 @@
     <EmbeddedResource Include="Forms\HydroRegionTreeView\HydroRegionTreeView.resx">
       <DependentUpon>HydroRegionTreeView.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportBranchFeatureDialog.resx">
-      <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\ExtraResistanceView.resx">
       <DependentUpon>ExtraResistanceView.cs</DependentUpon>

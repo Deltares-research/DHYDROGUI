@@ -285,7 +285,6 @@
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />
     <Compile Include="Forms\GridProperties\FeaturePropertiesTest.cs" />
-    <Compile Include="Forms\ImportBranchFeatureDialogTest.cs" />
     <Compile Include="Forms\StructureFeatureView\ExtraResistanceViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewTest.cs" />
     <Compile Include="MapLayers\Editors\ChannelInteractorTest.cs" />
