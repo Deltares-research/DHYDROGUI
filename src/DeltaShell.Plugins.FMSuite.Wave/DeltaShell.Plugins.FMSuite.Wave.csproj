@@ -239,6 +239,7 @@
     <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviour.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelper.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveModel110LegacyLoader.cs" />
+    <Compile Include="Migrations\1.1.0.0\WavmFunctionStoreMigrationHelper.cs" />
     <Compile Include="ModelDefinition\IReferenceDateTimeProvider.cs" />
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProvider.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinitionLoadHelper.cs" />

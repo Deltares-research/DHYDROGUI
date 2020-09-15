@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(migrator, Is.InstanceOf<IDelftIniMigrator>());
         }
 
-        public IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
+        private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
         {
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping = 
                 new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>();

@@ -412,6 +412,7 @@
     <Compile Include="Migrations\1.1.0.0\MigratorFactoryTest.cs" />
     <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviourTest.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelperTest.cs" />
+    <Compile Include="Migrations\1.1.0.0\WavmFunctionStoreMigrationHelperTest.cs" />
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProviderTest.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinitionLoadHelperTest.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinitionTest.cs" />

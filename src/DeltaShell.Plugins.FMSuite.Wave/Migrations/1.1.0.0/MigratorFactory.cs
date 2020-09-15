@@ -83,8 +83,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             return new DelftIniMigrator(mapping, new DelftIniReader(), new DelftIniWriter(), true);
         }
 
-        private static IReadOnlyDictionary<string, IMigrationBehaviour> 
-            CreateGeneralCategoryMigrations(string relativeDirectory, string goalDirectory)
+        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateGeneralCategoryMigrations(string relativeDirectory, 
+                                                                                                        string goalDirectory)
         {
             return new Dictionary<string, IMigrationBehaviour>
             {
@@ -96,8 +96,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             };
         }
 
-        private static IReadOnlyDictionary<string, IMigrationBehaviour>
-            CreateDomainCategoryMigrations(string relativeDirectory, string goalDirectory)
+        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateDomainCategoryMigrations(string relativeDirectory, 
+                                                                                                       string goalDirectory)
         {
             return new Dictionary<string, IMigrationBehaviour>
             {
@@ -108,8 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             };
         }
 
-        private static IReadOnlyDictionary<string, IMigrationBehaviour>
-            CreateBoundaryCategoryMigrations(string relativeDirectory, string goalDirectory)
+        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateBoundaryCategoryMigrations(string relativeDirectory, 
+                                                                                                         string goalDirectory)
         {
             return new Dictionary<string, IMigrationBehaviour>
             {
@@ -117,8 +117,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             };
         }
 
-        private static IReadOnlyDictionary<string, IMigrationBehaviour>
-            CreateOutputCategoryMigrations(string relativeDirectory, string goalDirectory)
+        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateOutputCategoryMigrations(string relativeDirectory, 
+                                                                                                       string goalDirectory)
         {
             return new Dictionary<string, IMigrationBehaviour>
             {

@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(behaviour, Is.InstanceOf<IMigrationBehaviour>());
         }
 
-        private IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
+        private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
         {
             var migrator = Substitute.For<IDelftIniMigrator>();
 

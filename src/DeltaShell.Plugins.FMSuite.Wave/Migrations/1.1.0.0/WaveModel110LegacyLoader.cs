@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             string mdwPath = Path.Combine(modelPath, $"{model.Name}.mdw");
 
             WaveDirectoryStructureMigrationHelper.MigrateFileStructure(mdwPath);
-            WaveDirectoryStructureMigrationHelper.UpdateWavmFileFunctionStorePaths(modelPath, model);
+            WavmFunctionStoreMigrationHelper.UpdateWavmFileFunctionStorePaths(modelPath, model);
         }
 
         public override void OnAfterProjectMigrated(Project project)
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             
             foreach (WaveModel waveModel in project.RootFolder.Models.OfType<WaveModel>())
             {
-                WaveDirectoryStructureMigrationHelper.RemoveInvalidWavmFunctionStores(waveModel);
+                WavmFunctionStoreMigrationHelper.RemoveInvalidWavmFunctionStores(waveModel);
             }
         }
     }
