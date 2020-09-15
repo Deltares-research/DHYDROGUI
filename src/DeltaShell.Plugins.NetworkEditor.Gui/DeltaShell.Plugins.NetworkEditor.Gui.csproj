@@ -238,7 +238,6 @@
     <Compile Include="Forms\FMWeirView.Designer.cs">
       <DependentUpon>FMWeirView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GatePropertiesRow.cs" />
     <Compile Include="Forms\HydroRegionTreeView\HydroRegionTreeView.cs">
       <SubType>UserControl</SubType>
     </Compile>

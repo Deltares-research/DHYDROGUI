@@ -193,34 +193,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            yield return new ViewInfo<IEnumerable<IGate>, ILayer, VectorLayerAttributeTableView>
-            {
-                Description = "Attribute Table",
-                AdditionalDataCheck = o => o.All(gate => gate.Branch != null),
-                CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => gui.Application.Project.GetAllItemsRecursive()
-                                               .OfType<IDataItem>()
-                                               .FirstOrDefault(d => d.Value is IHydroNetwork &&
-                                                                    ((IHydroNetwork) d.Value).Gates == o),
-                GetViewData = o =>
-                {
-                    ProjectItemMapView centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
-                    return centralMap.MapView.GetLayerForData(o);
-                },
-                AfterCreate = (v, o) =>
-                {
-                    ProjectItemMapView centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
-                    if (centralMap == null)
-                    {
-                        return;
-                    }
-
-                    v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
-                    v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
-                    v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                    v.SetCreateFeatureRowFunction(feature => new GatePropertiesRow((IGate) feature));
-                }
-            };
             yield return new ViewInfo<Embankment, IGeometry, GeometryEditor>
             {
                 GetViewData = (v) => v.Geometry,
