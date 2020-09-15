@@ -271,7 +271,6 @@
     <Compile Include="Forms\PropertyGrid\HydroRegionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroAreaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\TimeDependency.cs" />
-    <Compile Include="Forms\StructureFeatureView\GateViewData.cs" />
     <Compile Include="Forms\StructureFeatureView\PumpView.cs">
       <SubType>UserControl</SubType>
     </Compile>
