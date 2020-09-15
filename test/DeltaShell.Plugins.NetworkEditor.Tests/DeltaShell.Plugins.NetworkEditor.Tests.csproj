@@ -278,7 +278,6 @@
     <Compile Include="MapLayers\Editors\ChannelInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroLinkInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroNodeInteractorTest.cs" />
-    <Compile Include="Forms\ChartEditors\FixedRectangleShapeEditorTest.cs" />
     <Compile Include="Forms\CompositeStructureView\SimpleSelectionContainer.cs" />
     <Compile Include="Forms\CompositeStructureView\MockGui.cs" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollectionTest.cs" />
@@ -354,10 +353,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\ChartEditors\ChartShapes\" />
-    <Folder Include="Forms\CrossSectionView\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
