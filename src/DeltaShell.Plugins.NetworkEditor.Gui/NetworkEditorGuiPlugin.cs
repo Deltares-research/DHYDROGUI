@@ -187,20 +187,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
-            yield return new PropertyInfo<IHydroNode, HydroNodeProperties>();
-            yield return new PropertyInfo<IHydroNetwork, HydroNetworkProperties>();
-            yield return new PropertyInfo<DrainageBasin, DrainageBasinProperties>();
             yield return new PropertyInfo<HydroRegion, HydroRegionProperties>();
             yield return new PropertyInfo<Discretization, DiscretizationProperties>();
-            yield return new PropertyInfo<INetworkCoverage, NetworkCoverageProperties>();
             yield return new PropertyInfo<IFeatureCoverage, FeatureCoverageProperties>();
-            yield return new PropertyInfo<IGate, GateProperties>();
-            yield return new PropertyInfo<Catchment, CatchmentProperties>();
-            yield return new PropertyInfo<WasteWaterTreatmentPlant, WasteWaterTreatmentPlantProperties>();
-            yield return new PropertyInfo<RunoffBoundary, RunoffBoundaryProperties>();
-            yield return new PropertyInfo<NetworkLocation, NetworkLocationProperties>();
-            yield return new PropertyInfo<NetworkSegment, NetworkSegmentProperties>();
-            yield return new PropertyInfo<HydroLink, HydroLinkProperties>();
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
         }
 

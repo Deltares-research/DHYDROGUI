@@ -51,11 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             channel.BranchFeatures.Add(lateralSource);
             var region = new HydroRegion();
             region.SubRegions.Add(network);
-            var nodePropertyGrid = new HydroNodeProperties
-            {
-                Data = node1,
-                Y = 100.0
-            };
+
             Assert.AreEqual(50.0, lateralSource.Geometry.Centroid.Y, 1e-06);
         }
     }

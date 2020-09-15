@@ -240,19 +240,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaLayerTest.cs" />
-    <Compile Include="Forms\GridProperties\CatchmentPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\DiscretizationPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\DrainageBasinPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\FeatureCoveragePropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\HydroLinkPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\HydroNodePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\HydroRegionPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\NetworkCoveragePropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\NetworkLocationPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\NetworkPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\NetworkSegmentPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\RunoffBoundaryPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\WasteWaterTreatmentPlantPropertiesTest.cs" />
     <Compile Include="Gui\Converters\EmptyDoubleValueConverterTest.cs" />
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
@@ -306,7 +296,6 @@
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewTest.cs" />
     <Compile Include="NetworkEditorGuiPluginTest.cs" />
-    <Compile Include="NetworkCoveragePropertiesTest.cs" />
     <Compile Include="Forms\NetworkLocationEditorMapControlTest.cs" />
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollectionTest.cs" />
     <Compile Include="TestModelWithHydroNetwork.cs" />

@@ -283,22 +283,11 @@
     </Compile>
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\PropertyGrid\CatchmentProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\DrainageBasinProperties.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureCoverageProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\GateProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\HydroLinkProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\HydroNodeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroRegionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\NetworkCoverageProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\NetworkLocationProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\HydroNetworkProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroAreaProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\NetworkSegmentProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\RunoffBoundaryProperties.cs" />
     <Compile Include="Forms\PropertyGrid\TimeDependency.cs" />
-    <Compile Include="Forms\PropertyGrid\WasteWaterTreatmentPlantProperties.cs" />
     <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.cs">
       <SubType>UserControl</SubType>
     </Compile>
