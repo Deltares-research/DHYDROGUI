@@ -284,6 +284,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     {
                         v.Data = GetMultipleFunctionViewData(o);
                         v.Text = o.Name;
+                        v.TableView.ReadOnly = true;
                     },
                     CloseForData = (v, o) =>
                         v.Data != null && o.TimeSeriesList.Any(ts => ((IEnumerable<IFunction>) v.Data).Contains(ts))
