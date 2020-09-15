@@ -486,29 +486,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
-        public void SaveLoadDiffuseLateralSource()
-        {
-            IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(200, 0), new Point(200, 200));
-            IBranch branch1 = hydroNetwork.Branches[0];
-
-            var lateralSource = new LateralSource
-            {
-                Name = "Source1",
-                Chainage = 10
-            };
-            branch1.BranchFeatures.Add(lateralSource);
-            lateralSource.Branch = branch1;
-            HydroRegionEditorHelper.UpdateBranchFeatureGeometry(lateralSource, 40);
-
-            LateralSource retrievedLateralSource = SaveLoadBranchFeature(lateralSource, TestHelper.GetCurrentMethodName());
-
-            Assert.AreEqual(lateralSource.Name, retrievedLateralSource.Name);
-            Assert.AreEqual(lateralSource.Chainage, retrievedLateralSource.Chainage);
-            Assert.AreEqual(lateralSource.IsDiffuse, retrievedLateralSource.IsDiffuse);
-            Assert.AreEqual(lateralSource.Length, retrievedLateralSource.Length);
-        }
-
-        [Test]
         public void SaveLoadRetention()
         {
             var retention = new Retention()
