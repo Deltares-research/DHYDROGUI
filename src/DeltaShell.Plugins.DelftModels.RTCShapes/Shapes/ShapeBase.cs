@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Data;
 using Netron.GraphLib;
 using Netron.GraphLib.UI;
@@ -71,6 +73,8 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
                 }
             }
         }
+
+        public IEnumerable<Connector> HighLightedConnectors { get; set; }
 
         public virtual long Id { get; set; }
 
@@ -165,6 +169,10 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             }
 
             RenderText(Title, origin, g, Font.Size);
+            if (HighLightedConnectors != null)
+            {
+                DrawConnectorsHighlights(HighLightedConnectors, g);
+            }
         }
 
         protected void RenderText(string text, PointF origin, Graphics g, float fontSize)
@@ -179,6 +187,27 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             }
 
             g.DrawString(text, Font, TextBrush, newOrigin.X, newOrigin.Y);
+        }
+
+        protected void DrawConnectorsHighlights(IEnumerable<Connector> connectors, Graphics g)
+        {
+            if (connectors != null)
+            {
+                Pen linePen = new Pen(Color.Red, 5);
+
+                RectangleF[] rectangles = new RectangleF[connectors.AsList().Count];
+                int countRectangles = 0;
+                foreach (var connector in connectors)
+                {
+
+                    RectangleF rectangle = new RectangleF(connector.Location.X, connector.Location.Y, 2,
+                                                          2);
+                    rectangles[countRectangles] = rectangle;
+                    countRectangles++;
+                }
+
+                g.DrawRectangles(linePen, rectangles);
+            }
         }
 
         protected override void GetPropertyBagValue(object sender, PropertySpecEventArgs e)

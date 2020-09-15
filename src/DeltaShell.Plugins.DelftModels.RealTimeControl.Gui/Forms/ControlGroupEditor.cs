@@ -24,6 +24,8 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using Netron.GraphLib;
+using ValidationAspects;
+using NetronGraphControl = DelftTools.Controls.Swf.Graph.NetronGraphControl;
 using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
@@ -74,6 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             graphControl.NetronGraph.OnDoubleClick += GraphControlOnDoubleClick;
             graphControl.NetronGraph.MouseUp += OnGraphControlMouseUp;
+            graphControl.NetronGraph.MouseDown += OnGraphControlMouseDown;
         }
 
         public IGui Gui { get; set; } // selection and opening views
@@ -863,6 +866,123 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 created = null;
 
                 ResetNewObjectButtons();
+
+            }
+
+            IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
+            if (shapes != null)
+            {
+                foreach (var shape in shapes)
+                {
+                    shape.HighLightedConnectors = null;
+                }
+            }
+        }
+
+        private void OnGraphControlMouseDown(object sender, MouseEventArgs e)
+        {
+            object hoveredItem = TypeUtils.GetField(graphControl.NetronGraph, "Hover");
+            if ((hoveredItem == null) || (!(hoveredItem is Connector activeConnector)))
+            {
+                return;
+            }
+
+            IEnumerable<ShapeBase> shapesOnGraph = graphControl.GetShapes<ShapeBase>();
+            if (shapesOnGraph == null)
+            {
+                return;
+            }
+
+            ShapeBase[] shapeBases = shapesOnGraph as ShapeBase[] ?? shapesOnGraph.ToArray();
+            Connector[] allConnectors = shapeBases.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
+            var owner = activeConnector.BelongsTo as ShapeBase;
+
+            if (owner is OutputItemShape)
+            {
+                return;
+            }
+
+            ConnectorType activeConnectionType = GetActiveConnectionType(owner, activeConnector);
+            IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors).ToList();
+
+            if (!allowedConnectors.Any())
+            {
+                return;
+            }
+
+            foreach (ShapeBase shape in shapeBases)
+            {
+                shape.HighLightedConnectors = allowedConnectors;
+            }
+        }
+
+        private static ConnectorType GetActiveConnectionType(ShapeBase owner, Connector activeConnector)
+        {
+            ConnectorType activeConnectionType = owner is MathematicalExpressionShape ? ConvertConnectorNameToType(activeConnector.Name) : ConvertTo(activeConnector.ConnectorLocation);
+            return activeConnectionType;
+        }
+
+        private static IEnumerable<Connector> FilterAllowableConnectors(ShapeBase sourceShape,
+                                                                        ConnectorType sourceConnection,
+                                                                        IEnumerable<Connector> availableConnectors)
+        {
+            var allowedConnectors = new List<Connector>();
+
+            if (sourceShape is MathematicalExpressionShape)
+            {
+                if (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top)
+                    return allowedConnectors;
+            }
+
+            foreach (Connector availableConnector in availableConnectors)
+            {
+                var targetShape = availableConnector.BelongsTo as ShapeBase;
+
+                ConnectorType targetConnectionType = targetShape is MathematicalExpressionShape ? ConvertConnectorNameToType(availableConnector.Name) : ConvertTo(availableConnector.ConnectorLocation);
+
+                if (sourceShape == targetShape)
+                {
+                    continue;
+                }
+
+                if (ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
+                {
+                    allowedConnectors.Add(availableConnector);
+                }
+            }
+
+            return allowedConnectors;
+        }
+
+        private static ConnectorType ConvertConnectorNameToType(string connectorName)
+        {
+            switch (connectorName)
+            {
+                case "Left":
+                    return ConnectorType.Left;
+                case "Top":
+                    return ConnectorType.Top;
+                case "Bottom":
+                    return ConnectorType.Bottom;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        private static ConnectorType ConvertTo(ConnectorLocation connectorLocation)
+        {
+            switch (connectorLocation)
+            {
+                case ConnectorLocation.North:
+                    return ConnectorType.Top;
+                case ConnectorLocation.East:
+                    return ConnectorType.Right;
+                case ConnectorLocation.West:
+                    return ConnectorType.Left;
+                case ConnectorLocation.South:
+                    return ConnectorType.Bottom;
+                default:
+                    throw new NotSupportedException();
             }
         }
 

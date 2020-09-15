@@ -14,6 +14,14 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
         "Mathematical expression")]
     public class MathematicalExpressionShape : ShapeBase
     {
+        public IEnumerable<Connection> GetTopConnectors()
+        {
+            foreach (Connection topNodeConnection in TopNode.Connections)
+            {
+                yield return topNodeConnection;
+            }
+        }
+
         public override PointF ConnectionPoint(Connector c)
         {
             if (c == TopNode)
@@ -65,17 +73,8 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
             var brush = new SolidBrush(Color.FromArgb(14, 187, 240));
             g.FillPolygon(brush, points);
-
             PreRender(g);
             base.Paint(g);
-        }
-
-        public IEnumerable<Connection> GetTopConnectors()
-        {
-            foreach (Connection topNodeConnection in TopNode.Connections)
-            {
-                yield return topNodeConnection;
-            }
         }
 
         protected override void Initialize()
@@ -97,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             {
                 AllowNewConnectionsFrom = allowFrom,
                 AllowNewConnectionsTo = allowTo,
-                ShowLabel = true,
+                ShowLabel = true
             };
         }
     }

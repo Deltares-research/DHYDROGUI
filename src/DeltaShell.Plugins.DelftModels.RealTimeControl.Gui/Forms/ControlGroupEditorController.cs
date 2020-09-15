@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private static bool refreshingConnections;
         private static readonly Bitmap timeConditionIcon = Resources.timecondition;
         private static readonly Bitmap directionalConditionIcon = Resources.directionalcondition;
-
+        
         private ControlGroup controlGroup;
 
         private object replaceable;
