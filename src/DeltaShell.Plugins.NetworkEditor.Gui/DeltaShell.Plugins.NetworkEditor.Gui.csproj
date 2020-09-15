@@ -262,12 +262,6 @@
     <Compile Include="Forms\ChartEditors\StructureChartShapes\HoverText.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\IHover.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\IHoverText.cs" />
-    <Compile Include="Forms\ComputationalGridDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ComputationalGridDialog.Designer.cs">
-      <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FMWeirView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -385,10 +379,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\AreaStructureView.resx">
       <DependentUpon>AreaStructureView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ComputationalGridDialog.resx">
-      <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FMWeirView.resx">
