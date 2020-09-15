@@ -255,7 +255,6 @@
     <Compile Include="Forms\ChartEditors\ShapeMoveTool.cs" />
     <Compile Include="Forms\ChartEditors\ShapeSelectTool.cs" />
     <Compile Include="Forms\ChartEditors\ShapeTool.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapeEditors\GatedWeirShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\HoverText.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\IHover.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\IHoverText.cs" />
@@ -799,7 +798,9 @@
   <ItemGroup>
     <Resource Include="Resources\enclosure.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Forms\ChartEditors\StructureChartShapeEditors\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
