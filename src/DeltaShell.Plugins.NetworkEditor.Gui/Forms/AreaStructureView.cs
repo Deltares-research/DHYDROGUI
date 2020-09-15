@@ -102,18 +102,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 return;
             }
 
-            if (structure is IGate)
-            {
-                StructureControl = new GateView
-                {
-                    Dock = DockStyle.Fill,
-                    Data = structure
-                };
-                structureViewPanel.AutoScrollMinSize = new Size(StructureControl.Width, StructureControl.Height);
-                structureViewPanel.Controls.Add(StructureControl);
-                return;
-            }
-
             throw new NotImplementedException();
         }
 
