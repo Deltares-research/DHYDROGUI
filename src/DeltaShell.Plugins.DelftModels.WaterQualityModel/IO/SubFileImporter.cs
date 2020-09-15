@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool ShouldCancel { get; set; }
 
-        public bool SubFileSuccessfullyImported { get; set; } 
+        public bool SubFileSuccessfullyImported { get; private set; } 
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
