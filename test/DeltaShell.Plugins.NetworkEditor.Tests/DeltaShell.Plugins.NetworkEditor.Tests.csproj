@@ -290,7 +290,6 @@
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\PierWeirFormulaViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirViewTest.cs" />
     <Compile Include="NetworkEditorGuiPluginTest.cs" />
     <Compile Include="Forms\NetworkLocationEditorMapControlTest.cs" />
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollectionTest.cs" />
