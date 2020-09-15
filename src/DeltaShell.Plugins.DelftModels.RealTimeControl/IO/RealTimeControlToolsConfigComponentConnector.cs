@@ -140,9 +140,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             IEnumerable<ParameterLeafNode> leafNodes = expressionTree.RootNode.GetChildNodes().OfType<ParameterLeafNode>();
             foreach (ParameterLeafNode leafNode in leafNodes)
             {
-                KeyValuePair<char, IInput> parameterKvp =
-                    mathematicalExpression.InputMapping.FirstOrDefault(i => i.Value.Name == leafNode.Value);
-                if (!parameterKvp.Equals(default(KeyValuePair<char, IInput>)))
+                KeyValuePair<char, string> parameterKvp =
+                    mathematicalExpression.InputMapping.FirstOrDefault(i => i.Value == leafNode.Value);
+                if (!parameterKvp.Equals(default(KeyValuePair<char, string>)))
                 {
                     leafNode.Value = parameterKvp.Key.ToString();
                 }

@@ -178,12 +178,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         {
             foreach (ParameterLeafNode leafNode in leafNodes)
             {
-                KeyValuePair<char, IInput> parameterKvp = MathematicalExpression.InputMapping.SingleOrDefault(input => input.Key.ToString().Equals(leafNode.Value));
-                if (!parameterKvp.Equals(default(KeyValuePair<char, IInput>)))
+                KeyValuePair<char, string> parameterKvp =
+                    MathematicalExpression.InputMapping.FirstOrDefault(i => i.Key.ToString() == leafNode.Value);
+                if (!parameterKvp.Equals(default(KeyValuePair<char, string>)))
                 {
-                    IInput expressionInput = MathematicalExpression.Inputs.First(i => i.Equals(parameterKvp.Value));
+                    IInput expressionInput =
+                        MathematicalExpression.Inputs.First(i => i.Name.Equals(parameterKvp.Value));
 
-                    var serializer = SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject) expressionInput);
+                    var serializer =
+                        SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject) expressionInput);
                     string xmlName = serializer.GetXmlName();
 
                     leafNode.Value = xmlName;
