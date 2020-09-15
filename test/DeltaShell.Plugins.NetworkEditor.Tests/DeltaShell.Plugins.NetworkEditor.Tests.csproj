@@ -240,7 +240,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaLayerTest.cs" />
-    <Compile Include="Forms\GridProperties\DiscretizationPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\FeatureCoveragePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\HydroRegionPropertiesTest.cs" />
     <Compile Include="Gui\Converters\EmptyDoubleValueConverterTest.cs" />
