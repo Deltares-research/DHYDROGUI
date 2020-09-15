@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             const string structureFactoryException = "Trying to generate Time series for 2D Structure: Maeslantkering, property: GateOpeningWidth mapped as type External which is not yet supported.";
             string structuresFileError = $"Error while reading and converting 2D Structures from {structureFilePath}";
-            string iniFileError = $"Failed to convert .ini structure definition 'Maeslantkering' to actual structure: {structureFactoryException}";
+            const string convertStructureError = "Failed to convert .ini structure definition 'Maeslantkering' to actual structure.";
             string waterFlowFmFileImporterError = $"Error while importing a Flow Flexible Mesh Model from {iniFilePath}";
 
             // When
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             // Then
             string renderMessagesAsString = string.Join("\n", renderedMessages);
             Assert.That(renderedMessages.Contains(structureFactoryException), Is.False);
-            Assert.That(renderedMessages.Contains(iniFileError), Is.True, $"Not found error message: {iniFileError}\n Log messages: {renderMessagesAsString}");
+            Assert.That(renderedMessages.Contains(convertStructureError), Is.True, $"Not found error message: {convertStructureError}\n Log messages: {renderMessagesAsString}");
             Assert.That(renderedMessages.Contains(structuresFileError), Is.True, $"Not found error message: {structuresFileError}\n Log messages: {renderMessagesAsString}");
             Assert.That(renderedMessages.Contains(waterFlowFmFileImporterError), Is.True, $"Not found error message: {waterFlowFmFileImporterError}\n Log messages: {renderMessagesAsString}");
         }

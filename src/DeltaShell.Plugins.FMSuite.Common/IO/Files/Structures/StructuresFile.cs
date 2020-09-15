@@ -206,9 +206,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             {
                 return StructureFactory.CreateStructure(structure, structuresSubFilesReferenceFilePath, ReferenceDate);
             }
-            catch (Exception e)
+            catch (Exception e) 
             {
-                string errorMessage = $"Failed to convert .ini structure definition '{structure.Name}' to actual structure: {e.Message}";
+                string errorMessage = $"Failed to convert .ini structure definition '{structure.Name}' to actual structure.";
                 Log.Error(errorMessage);
 
                 if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
