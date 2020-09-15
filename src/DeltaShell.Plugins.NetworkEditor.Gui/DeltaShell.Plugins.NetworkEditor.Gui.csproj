@@ -234,7 +234,6 @@
     <Compile Include="Forms\AreaStructureView.Designer.cs">
       <DependentUpon>AreaStructureView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperations.cs" />
     <Compile Include="Forms\ChartEditors\ChartDrawingContext.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\CompositeShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\IShapeFeatureEditor.cs" />
@@ -802,9 +801,7 @@
   <ItemGroup>
     <Resource Include="Resources\enclosure.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\Feature2DEditors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
