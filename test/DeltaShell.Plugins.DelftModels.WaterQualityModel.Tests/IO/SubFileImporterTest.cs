@@ -238,6 +238,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
+        public void CheckWhenImportingASubFileAndSetImportedSubstanceIsImportedFileFlagEqualsTrue()
+        {
+            var library = new SubstanceProcessLibrary();
+            var subFileImporter = new SubFileImporter();
+
+            string testFilePath = TestHelper.GetTestFilePath(@"IO\SubstateWithPercentageSign.sub");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+            subFileImporter.ImportItem(testFilePath, library);
+
+            Assert.IsTrue(subFileImporter.IsSubFileSuccessfullyImported);
+        }
+
+        [Test]
         public void Import_WhenSubstancesAndParametersAreDefinedOnSingleLine_ExpectedSubstancesAndParametersImported()
         {
             // Setup

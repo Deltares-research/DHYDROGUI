@@ -199,9 +199,6 @@
   <data name="SubstanceProcessLibraryWizard_Title" xml:space="preserve">
     <value>Import a substances and processes configuration file (sub-file)</value>
   </data>
-  <data name="SubstanceProcessLibraryWizardPageExtensions_The_process_dll_file_path_is_set_to_0_" xml:space="preserve">
-    <value>The process dll file path is set to: '{0}'</value>
-  </data>
   <data name="OverwriteLabelOperation_Label_Description" xml:space="preserve">
     <value>New label to be inserted.</value>
   </data>
