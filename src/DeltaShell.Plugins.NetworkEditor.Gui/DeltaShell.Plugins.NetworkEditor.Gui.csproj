@@ -248,7 +248,6 @@
     </Compile>
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureCoverageProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroRegionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroAreaProperties.cs" />

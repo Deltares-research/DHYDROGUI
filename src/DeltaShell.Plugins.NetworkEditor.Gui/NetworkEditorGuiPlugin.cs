@@ -188,7 +188,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
             yield return new PropertyInfo<HydroRegion, HydroRegionProperties>();
-            yield return new PropertyInfo<Discretization, DiscretizationProperties>();
             yield return new PropertyInfo<IFeatureCoverage, FeatureCoverageProperties>();
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
         }
