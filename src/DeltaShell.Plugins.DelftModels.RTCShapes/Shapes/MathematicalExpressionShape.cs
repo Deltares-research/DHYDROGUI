@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using Netron.GraphLib;
 using Netron.GraphLib.Attributes;
-using Netron.GraphLib.IO.NML;
 
 namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 {
@@ -42,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
             return new PointF(0, 0);
         }
-        
+
         public override void Paint(Graphics g)
         {
             Recalculate(g);
@@ -85,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             Connectors.Add(TopNode);
             Connectors.Add(BottomNode);
         }
-        
+
         private Connector CreateConnector(string name, bool allowFrom, bool allowTo)
         {
             return new Connector(this, name, true)

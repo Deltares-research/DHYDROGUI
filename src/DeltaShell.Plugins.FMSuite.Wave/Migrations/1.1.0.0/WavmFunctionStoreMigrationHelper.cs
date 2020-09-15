@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -21,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// </summary>
         /// <param name="modelPath">The model path.</param>
         /// <param name="model">The model.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public static void UpdateWavmFileFunctionStorePaths(string modelPath, WaveModel model)
@@ -48,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// <paramref name="waveModel"/>.
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
         public static void RemoveInvalidWavmFunctionStores(WaveModel waveModel)
