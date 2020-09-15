@@ -7,18 +7,12 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
-using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.IO;
 using TreeView = DelftTools.Controls.Swf.TreeViewControls.TreeView;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
@@ -34,7 +28,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private ClonableToolStripMenuItem buttonMenuFeatureDelete;
         private ClonableToolStripMenuItem buttonDataItemRename;
         private ContextMenuStrip contextMenuNetwork;
-        private ClonableToolStripMenuItem buttonMenuNetworkAddBranch;
         private ContextMenuStrip contextMenuBranch;
         private ClonableToolStripMenuItem buttonMenuBranchDelete;
         private ClonableToolStripMenuItem buttonMenuBranchRename;
@@ -66,21 +59,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             SelectedRegion = GetParentRegionFromNode(node);
 
             bool isActiveViewMapView = gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Any();
-            if (tag is IHydroNetwork)
-            {
-                return new MenuItemContextMenuStripAdapter(contextMenuNetwork);
-            }
-
-            if (tag is IEventedList<Route>)
-            {
-                return new MenuItemContextMenuStripAdapter(contextMenuRoutes);
-            }
-
-            if (tag is IChannel)
-            {
-                buttonMenuBranchZoomTo.Enabled = isActiveViewMapView;
-                return new MenuItemContextMenuStripAdapter(contextMenuBranch);
-            }
 
             if (tag is HydroRegion)
             {
@@ -129,7 +107,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         {
             IFeature selectedFeature = null;
 
-            // Try to select the network object in the treeview
             if (gui.Selection is IFeature)
             {
                 selectedFeature = (IFeature) gui.Selection;
@@ -184,24 +161,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             gui.CommandHandler.OpenDefaultViewForSelection();
         }
 
-        private void handleButtonAddBranch_Click(object sender, EventArgs e)
-        {
-            object selectedObject = TreeView.SelectedNode.Tag;
-            var network = selectedObject as IHydroNetwork;
-
-            if (network != null)
-            {
-                var channel = Channel.CreateDefault(network);
-
-                // HACK: add geometry manually, TODO: probably it should happen automatically in topology rule, and also for nodes
-                channel.Geometry =
-                    new WKTReader().Read(string.Format("LINESTRING({0} 0,{0} 100)", network.Branches.Count * 100));
-
-                NetworkHelper.AddChannelToHydroNetwork(network, channel);
-                channel.Name = HydroNetworkHelper.GetUniqueFeatureName(network, channel);
-            }
-        }
-
         private void handleButtonDelete_Click(object sender, EventArgs e)
         {
             TreeView.DeleteNodeData();
@@ -218,39 +177,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             gui.CommandHandler.OpenSelectViewDialog();
         }
 
-        private void handleButtonAddLateralSource_Click(object sender, EventArgs e)
-        {
-            var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel != null)
-            {
-                channel.BranchFeatures.Add(LateralSource.CreateDefault(channel));
-            }
-        }
-        
-        private void handleButtonAddWeir_Click(object sender, EventArgs e)
-        {
-            var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel != null)
-            {
-                var branchFeature = new Weir();
-                BranchStructure.AddStructureToNetwork(branchFeature, channel);
-            }
-        }
-        
-        private void handleButtonAddObservationPoint_Click(object sender, EventArgs e)
-        {
-            var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel != null)
-            {
-                channel.BranchFeatures.Add(ObservationPoint.CreateDefault(channel));
-            }
-        }
-
         private void handleButtonProperties_Click(object sender, EventArgs e)
         {
             gui.CommandHandler.ShowProperties();
         }
-        
+
         private void handleButtonZoomToItem_Click(object sender, EventArgs e)
         {
             var feature = TreeView.SelectedNode.Tag as IFeature;
