@@ -1,19 +1,9 @@
-using System;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
-using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.LinearReferencing;
-using SharpMap.Editors.FallOff;
 using SharpMap.UI.Forms;
-using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
 {
