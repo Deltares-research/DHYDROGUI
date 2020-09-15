@@ -240,7 +240,6 @@
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\ShapeFeatureEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\CompositeShapeFeature.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\IShapeFeature.cs" />
-    <Compile Include="Forms\ChartEditors\ChartShapes\ShapeFeatureBase.cs" />
     <Compile Include="Forms\ChartEditors\IChartDrawingContext.cs" />
     <Compile Include="Forms\ChartEditors\IShapeLayerTool.cs" />
     <Compile Include="Forms\ChartEditors\ShapeDeletePointTool.cs" />
