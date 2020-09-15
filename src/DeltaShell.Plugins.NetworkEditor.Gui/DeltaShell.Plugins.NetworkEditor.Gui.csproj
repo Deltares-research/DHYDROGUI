@@ -259,7 +259,6 @@
       <DependentUpon>PumpView.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
-    <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
     <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
     <Compile Include="Layers\Providers\BridgePillarsLayerProvider.cs" />
     <Compile Include="Layers\Providers\DryAreasLayerProvider.cs" />

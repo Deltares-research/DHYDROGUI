@@ -842,12 +842,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 throw new InvalidOperationException("Can not find network when converting the coordinate system.");
             }
-
-            if (NetworkCoordinateConvertor.Convert(network))
-            {
-                MapView mapView = GetFocusedMapView();
-                mapView?.Map?.ZoomToExtents();
-            }
         }
     }
 }
