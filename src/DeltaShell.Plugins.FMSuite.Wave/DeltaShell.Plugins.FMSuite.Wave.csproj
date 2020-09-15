@@ -115,6 +115,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +210,7 @@
     <Compile Include="IO\Helpers\Boundaries\SpreadingImportType.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryConverter.cs" />
     <Compile Include="IO\Helpers\DelftIniCategoryExtensions.cs" />
+    <Compile Include="IO\Helpers\Domain\WaveDomainDataConverter.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactory.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporter.cs" />

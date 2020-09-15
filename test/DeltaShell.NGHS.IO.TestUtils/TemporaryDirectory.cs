@@ -67,6 +67,11 @@ namespace DeltaShell.NGHS.IO.TestUtils
         /// </returns>
         public string CreateFile(string relativeFilePath, string content = "")
         {
+            if (relativeFilePath == null)
+            {
+                return null;
+            }
+
             string targetFilePath = System.IO.Path.Combine(Path, relativeFilePath);
             File.WriteAllText(targetFilePath, content);
 
