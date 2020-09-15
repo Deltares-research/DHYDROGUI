@@ -33,14 +33,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const string relativeFilePath = @"c071_generalstructure_door_closing_at_sill\dflowfm\t2.mdu";
             string testFilePath = TestHelper.GetTestFilePath(relativeFilePath);
             Assert.That(File.Exists(testFilePath));
-            string base_error = $"Trying to generate Time series for 2D Structure: Maeslantkering, property: GateOpeningWidth mapped as type External which is not yet supported.";
-            string first_error = $"Failed to convert .ini structure definition 'Maeslantkering' to actual structure: {base_error}";
-            string last_error = $"An error occurred while trying to import a Flow Flexible Mesh Model from {testFilePath}. Cause: {first_error}";
-            string expectedErrorMessage = $"{last_error}";
+            const string baseError = "Trying to generate Time series for 2D Structure: Maeslantkering, property: GateOpeningWidth mapped as type External which is not yet supported.";
 
             // When
             var importer = new WaterFlowFMFileImporter(() => null);
             TestDelegate testAction = () => importer.ImportItem(testFilePath);
+
+            // Then
+            Assert.That(testAction, Throws.TypeOf<NotImplementedException>().With.Message.EqualTo(baseError));
+
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenGeneralStructureMduFileWithUnhandledType_WhenImportItem_ThenLoggedExpectedMessages()
+        {
+            // Given
+            const string relativeFilePath = @"c071_generalstructure_door_closing_at_sill\dflowfm\";
+            string iniFilePath = TestHelper.GetTestFilePath(Path.Combine(relativeFilePath, "t2.mdu"));
+            string structureFilePath = TestHelper.GetTestFilePath(Path.Combine(relativeFilePath, "tst-1_structures.ini"));
+            Assert.That(File.Exists(iniFilePath));
+            Assert.That(File.Exists(structureFilePath));
+
+            const string structureFactoryException = "Trying to generate Time series for 2D Structure: Maeslantkering, property: GateOpeningWidth mapped as type External which is not yet supported.";
+            string structuresFileError = $"Error while reading and converting 2D Structures from {structureFilePath}";
+            string iniFileError = $"Failed to convert .ini structure definition 'Maeslantkering' to actual structure: {structureFactoryException}";
+            string waterFlowFmFileImporterError = $"Error while importing a Flow Flexible Mesh Model from {iniFilePath}";
+
+            // When
+            var importer = new WaterFlowFMFileImporter(() => null);
+            TestDelegate testAction = () => importer.ImportItem(iniFilePath);
 
             string[] renderedMessages = TestHelper.GetAllRenderedMessages(() =>
             {
@@ -55,11 +77,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }).ToArray();
 
             // Then
-            Assert.That(testAction, Throws.TypeOf<NotImplementedException>().With.Message.EqualTo(expectedErrorMessage));
-            Assert.That(renderedMessages.Contains(base_error), Is.False);
-            Assert.That(renderedMessages.Contains(first_error), Is.False);
-            Assert.That(renderedMessages.Contains(last_error), Is.True);
-
+            string renderMessagesAsString = string.Join("\n", renderedMessages);
+            Assert.That(renderedMessages.Contains(structureFactoryException), Is.False);
+            Assert.That(renderedMessages.Contains(iniFileError), Is.True, $"Not found error message: {iniFileError}\n Log messages: {renderMessagesAsString}");
+            Assert.That(renderedMessages.Contains(structuresFileError), Is.True, $"Not found error message: {structuresFileError}\n Log messages: {renderMessagesAsString}");
+            Assert.That(renderedMessages.Contains(waterFlowFmFileImporterError), Is.True, $"Not found error message: {waterFlowFmFileImporterError}\n Log messages: {renderMessagesAsString}");
         }
+
     }
 }

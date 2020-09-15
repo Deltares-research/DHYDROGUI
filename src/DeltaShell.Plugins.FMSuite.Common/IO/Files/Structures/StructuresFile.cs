@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
             catch (Exception e)
             {
-                Log.ErrorFormat("Error while reading and converting 2D Structures from {structuresFilePath}.");
+                Log.ErrorFormat($"Error while reading and converting 2D Structures from {structuresFilePath}");
                 throw;
             }
         }
@@ -209,19 +209,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             catch (Exception e)
             {
                 string errorMessage = $"Failed to convert .ini structure definition '{structure.Name}' to actual structure: {e.Message}";
+                Log.Error(errorMessage);
+
                 if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
-                        e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
-                        e is FormatException)
+                    e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
+                    e is FormatException)
                 {
-                    Log.Error(errorMessage);
+                    // Let the parent caller go ahead with further conversions.
                     return null;
                 }
 
-                // Unexpected Exception, don't handle:
-                e
-                    .GetType()
-                    .GetField("_message", BindingFlags.Instance | BindingFlags.NonPublic)
-                    ?.SetValue(e, errorMessage);
                 throw;
             }
         }

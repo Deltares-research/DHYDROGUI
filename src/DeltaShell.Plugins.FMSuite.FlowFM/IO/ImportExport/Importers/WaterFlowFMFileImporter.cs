@@ -115,20 +115,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
             catch (Exception e)
             {
-                string errorMessage = $"An error occurred while trying to import a {Name} from {path}. Cause: {e.Message}";
+                string errorMessage = $"Error while importing a {Name} from {path}";
                 log.Error($"{errorMessage}");
+
                 if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
                     e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
                 {
-                    log.Error($"{errorMessage}");
+                    // Do not stop the current import.
                     return null;
                 }
 
-                // !!Unexpected type of exception (like NotSupportedException or NotImplementedException), so fail fast!!
-                e
-                    .GetType()
-                    .GetField("_message", BindingFlags.Instance | BindingFlags.NonPublic)
-                    ?.SetValue(e, errorMessage);
                 throw;
             }
         }
