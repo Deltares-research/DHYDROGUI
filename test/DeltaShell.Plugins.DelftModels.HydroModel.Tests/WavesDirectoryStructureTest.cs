@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [TestCase("Obw.zip", "Obw.dsproj", "obw_wave")]
         [TestCase("WaddenZee.zip", "wad.dsproj", "wad")]
         [TestCase("Westerscheldt.zip", "Westerscheldt.dsproj", "Waves")]
+        [TestCase("A4-Storm_wavecon.zip", "Project4.dsproj", "Waves")]
         public void GivenAPreviousModel_WhenThisModelIsOpened_ThenTheModelIsCorrectlyMigrated(string zipName, string dsprojName, string waveName)
         {
             // Given
