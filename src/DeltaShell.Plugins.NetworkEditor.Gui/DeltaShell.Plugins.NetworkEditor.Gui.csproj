@@ -233,8 +233,6 @@
     <Compile Include="Forms\AreaStructureView.Designer.cs">
       <DependentUpon>AreaStructureView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ChartEditors\ChartDrawingContext.cs" />
-    <Compile Include="Forms\ChartEditors\IChartDrawingContext.cs" />
     <Compile Include="Forms\FMWeirView.cs">
       <SubType>UserControl</SubType>
     </Compile>
