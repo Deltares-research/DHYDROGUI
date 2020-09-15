@@ -286,7 +286,6 @@
     <Compile Include="NetworkEditorPluginTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Forms\StructureFeatureView\PumpViewTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaViewTest.cs" />
     <Compile Include="NetworkEditorGuiPluginTest.cs" />
     <Compile Include="Forms\NetworkLocationEditorMapControlTest.cs" />
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollectionTest.cs" />

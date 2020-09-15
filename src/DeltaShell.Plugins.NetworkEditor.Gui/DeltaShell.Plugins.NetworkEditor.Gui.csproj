@@ -290,12 +290,6 @@
     <Compile Include="Forms\StructureFeatureView\PumpView.Designer.cs">
       <DependentUpon>PumpView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaView.Designer.cs">
-      <DependentUpon>RiverWeirFormulaView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirViewData.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewValidationResult.cs" />
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
@@ -355,10 +349,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\PumpView.resx">
       <DependentUpon>PumpView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaView.resx">
-      <DependentUpon>RiverWeirFormulaView.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
