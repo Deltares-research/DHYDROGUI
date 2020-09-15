@@ -184,7 +184,6 @@
     <Compile Include="Domain\FactorRule.cs" />
     <Compile Include="Converters\OperationConverter.cs" />
     <Compile Include="IO\DataAccess\ExpressionObject.cs" />
-    <Compile Include="IO\DataAccess\ExpressionObjectGroup.cs" />
     <Compile Include="IO\DataAccess\ExpressionReference.cs" />
     <Compile Include="IO\DataAccess\ExpressionTree.cs" />
     <Compile Include="IO\DataAccess\ExpressionTreeAssembler.cs" />
