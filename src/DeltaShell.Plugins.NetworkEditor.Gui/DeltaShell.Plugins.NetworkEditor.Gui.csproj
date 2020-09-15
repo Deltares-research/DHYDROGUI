@@ -237,7 +237,6 @@
     <Compile Include="Forms\ChartEditors\ChartDrawingContext.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\CompositeShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\IShapeFeatureEditor.cs" />
-    <Compile Include="Forms\ChartEditors\ChartShapeEditors\PolygonEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\RectangleShapeEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapeEditors\ShapeFeatureEditor.cs" />
     <Compile Include="Forms\ChartEditors\ChartShapes\CompositeShapeFeature.cs" />
