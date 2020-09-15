@@ -19,7 +19,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.HydroNetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
@@ -546,11 +545,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (typeof(T) == typeof(IPump))
             {
                 view.SetCreateFeatureRowFunction(feature => new FMPumpPropertiesRow((IPump) feature));
-            }
-
-            if (typeof(T) == typeof(IGate))
-            {
-                view.SetCreateFeatureRowFunction(feature => new FMGatePropertiesRow((IGate) feature));
             }
         }
 
