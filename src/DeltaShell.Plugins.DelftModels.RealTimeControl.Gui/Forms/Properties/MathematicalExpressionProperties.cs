@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         private KeyValuePair<string, string>[] GetInputs()
         {
             return data.InputMapping
-                       .Select(i => new KeyValuePair<string, string>(i.Key.ToString(), i.Value.Name))
+                       .Select(i => new KeyValuePair<string, string>(i.Key.ToString(), i.Value))
                        .ToArray();
         }
     }
