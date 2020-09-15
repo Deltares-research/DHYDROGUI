@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void RemoveInvalidWavmFunctionStores_FileExists_FunctionStoreRemoved()
+        public void RemoveWavmFunctionStores_FileExists_FunctionStoreRemoved()
         {
             // Setup
             string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), "wavm-wad.nc"));

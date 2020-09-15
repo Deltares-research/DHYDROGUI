@@ -620,6 +620,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unlinking existing wavm.nc files in {0}:.
+        /// </summary>
+        public static string WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__ {
+            get {
+                return ResourceManager.GetString("WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_" +
+                        "in__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Option &quot;Write Tables&quot; is selected but there are no Observation Points in your model..
         /// </summary>
         public static string WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_ {

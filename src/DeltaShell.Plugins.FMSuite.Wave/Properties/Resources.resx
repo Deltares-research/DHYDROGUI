@@ -325,4 +325,7 @@
   <data name="WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_been_broken_" xml:space="preserve">
     <value>The link with {0} has been broken.</value>
   </data>
+  <data name="WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__" xml:space="preserve">
+    <value>Unlinking existing wavm.nc files in {0}:</value>
+  </data>
 </root>

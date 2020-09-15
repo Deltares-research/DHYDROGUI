@@ -49,7 +49,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             
             foreach (WaveModel waveModel in project.RootFolder.Models.OfType<WaveModel>())
             {
-                var logHandler = new LogHandler($"Unlinking existing wavm.nc files in {waveModel.Name}:", log);
+                string activityName = string.Format(Resources.WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__, 
+                                                    waveModel.Name);
+                var logHandler = new LogHandler(activityName, log);
                 WavmFunctionStoreMigrationHelper.RemoveWavmFunctionStores(waveModel, logHandler);
                 logHandler.LogReport();
             }
