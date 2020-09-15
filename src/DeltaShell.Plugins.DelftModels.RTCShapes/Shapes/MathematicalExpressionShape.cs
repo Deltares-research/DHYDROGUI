@@ -64,7 +64,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
             var brush = new SolidBrush(Color.FromArgb(14, 187, 240));
             g.FillPolygon(brush, points);
-
             PreRender(g);
             base.Paint(g);
         }
@@ -87,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             return new Connector(this, name, true)
             {
                 AllowNewConnectionsFrom = allowFrom,
-                AllowNewConnectionsTo = allowTo
+                AllowNewConnectionsTo = allowTo,
             };
         }
     }

@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             var linearGradientBrush = new LinearGradientBrush(Rectangle, Color.Khaki, Color.White, 45.0F);
             g.FillRectangle(linearGradientBrush, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
             g.DrawRectangle(Pens.Black, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
-
             PreRender(g);
             base.Paint(g);
         }
