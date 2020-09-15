@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                                 nameof(WaveModel));
                 return;
             }
-
+            
             if (!WaveDirectoryStructureMigrationHelper.TryParseDatabasePath(
                     dbConnection.ConnectionString, 
                     out string dbPath))
@@ -35,12 +36,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 log.ErrorFormat(Resources.WaveModel110LegacyLoader_OnAfterInitialize_Could_not_determine_dsproj_location_from_database_connection___0_, 
                                 dbConnection.ConnectionString);
             }
-
+            
             string modelPath = Path.Combine(dbPath + "_data", model.Name);
             string mdwPath = Path.Combine(modelPath, $"{model.Name}.mdw");
-
+            
             WaveDirectoryStructureMigrationHelper.MigrateFileStructure(mdwPath);
-            WavmFunctionStoreMigrationHelper.UpdateWavmFileFunctionStorePaths(modelPath, model);
         }
 
         public override void OnAfterProjectMigrated(Project project)
@@ -49,7 +49,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             
             foreach (WaveModel waveModel in project.RootFolder.Models.OfType<WaveModel>())
             {
-                WavmFunctionStoreMigrationHelper.RemoveInvalidWavmFunctionStores(waveModel);
+                var logHandler = new LogHandler($"Unlinking existing wavm.nc files in {waveModel.Name}:", log);
+                WavmFunctionStoreMigrationHelper.RemoveWavmFunctionStores(waveModel, logHandler);
+                logHandler.LogReport();
             }
         }
     }

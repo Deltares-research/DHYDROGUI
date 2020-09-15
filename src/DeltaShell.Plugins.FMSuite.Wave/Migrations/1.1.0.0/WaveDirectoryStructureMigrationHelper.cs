@@ -7,9 +7,11 @@ using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
+
     /// <summary>
     /// <see cref="WaveDirectoryStructureMigrationHelper"/> provides the methods
     /// for the Directory Structure migration associated with file format version
@@ -17,6 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// </summary>
     public static class WaveDirectoryStructureMigrationHelper
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(WaveDirectoryStructureMigrationHelper));
+
         /// <summary>
         /// Try and parse the database path from the provided <paramref name="connectionString"/>.
         /// </summary>
@@ -162,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             string targetFilePath = Path.Combine(newInputDirectory, mdwFileName);
 
             var logMessage = string.Format(Resources.WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0, mdwFileName);
-            var logHandler = new LogHandler(logMessage);
+            var logHandler = new LogHandler(logMessage, log);
             migrator.MigrateFile(fileStream, mdwPath, targetFilePath, logHandler);
             logHandler.LogReport();
         }
