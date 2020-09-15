@@ -798,9 +798,7 @@
   <ItemGroup>
     <Resource Include="Resources\enclosure.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\ChartEditors\StructureChartShapeEditors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
