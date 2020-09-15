@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 "IM1",
                 "Salinity",
                 "EColi",
-                "ExtUv",
+                "ExtVL",
                 "MrtToEColi"
             };
 

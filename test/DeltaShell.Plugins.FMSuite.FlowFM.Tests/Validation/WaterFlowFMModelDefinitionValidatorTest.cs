@@ -19,17 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     public class WaterFlowFMModelDefinitionValidatorTest
     {
         [Test]
-        public void ValidateZeroTimeSteps()
-        {
-            WaterFlowFMModel model = CreateSimpleModel();
-            model.TimeStep = new TimeSpan(0, 0, 0, 0);
-
-            ValidationReport validationReport = model.Validate();
-
-            Assert.AreEqual(4, validationReport.ErrorCount);
-        }
-
-        [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void DoNotValidateCalculationTimeStep()
@@ -66,22 +55,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             ValidationReport issues = WaterFlowFMModelDefinitionValidator.Validate(model);
 
             Assert.AreEqual(0, issues.ErrorCount);
-            Assert.AreEqual(0, issues.WarningCount);
-            Assert.AreEqual(0, issues.InfoCount);
-        }
-
-        [Test]
-        [Ignore]                                // no priority
-        [Category(TestCategory.WorkInProgress)] // See TOOLS-20091
-        public void Conveyance2DOutOfRangeYieldsValidationError()
-        {
-            WaterFlowFMModel model = CreateValidModel();
-
-            WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-            modelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueAsString("4"); // This method now throws. For TOOLS-20091 this should not happen any more.
-            ValidationReport issues = WaterFlowFMModelDefinitionValidator.Validate(model);
-
-            Assert.AreEqual(1, issues.ErrorCount);
             Assert.AreEqual(0, issues.WarningCount);
             Assert.AreEqual(0, issues.InfoCount);
         }

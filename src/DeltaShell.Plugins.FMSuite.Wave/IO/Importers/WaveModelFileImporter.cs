@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
@@ -15,8 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
     /// <summary>
     /// Importer for importing D-Waves models from .mdw files.
     /// </summary>
-    /// <seealso cref="IFileImporter" />
-    public class WaveModelFileImporter : IFileImporter
+    /// <seealso cref="IDimrModelFileImporter" />
+    public class WaveModelFileImporter : IDimrModelFileImporter
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaveModelFileImporter));
         private readonly Func<string> getWorkingDirectoryPathFunc;
@@ -64,6 +65,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         public bool ShouldCancel { get; set; }
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
+
+        /// <summary>
+        /// MasterFileExtension needed for dimr xml import for
+        /// retrieving the correct file importer based on the
+        /// input file mentioned.
+        /// </summary>
+        public string MasterFileExtension => "mdw";
 
         public bool CanImportOn(object targetObject)
         {

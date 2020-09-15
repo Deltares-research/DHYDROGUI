@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion => "1.1.0.0";
+        public override string FileFormatVersion => "1.2.0.0";
 
         public IEnumerable<WaveModel> GetModels()
         {

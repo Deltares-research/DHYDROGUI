@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 {

@@ -19,7 +19,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -387,7 +387,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 graphControl.ContextMenuItems.Add(new MenuItem("Copy", CopyAction) {Tag = selectedShapes});
             }
 
-            if (RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet() && !selectedShapes.Any())
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            if (helper.IsDataSet && !selectedShapes.Any())
             {
                 graphControl.ContextMenuItems.Add(new MenuItem("Paste", PasteAction));
             }
@@ -422,20 +423,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void PasteAction(object sender, EventArgs e)
         {
-            IEnumerable<ShapeBase> clipBoardRtcObjects = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
-
             Point mea = PointToClient(MousePosition);
-            if (clipBoardRtcObjects.Any())
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            if (helper.IsDataSet)
             {
-                RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(
-                    clipBoardRtcObjects, controller, mea);
+                helper.CopyShapesToController(controller, mea);
+                helper.ClearData();
             }
         }
 
         private void CopyAction(object sender, EventArgs e)
         {
             var menuItem = (MenuItem) sender;
-            RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard((IEnumerable<ShapeBase>) menuItem.Tag);
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            helper.SetCopiedData((IEnumerable<ShapeBase>)menuItem.Tag);
         }
 
         private void CopyAsImageToClipboard(object sender, EventArgs e)

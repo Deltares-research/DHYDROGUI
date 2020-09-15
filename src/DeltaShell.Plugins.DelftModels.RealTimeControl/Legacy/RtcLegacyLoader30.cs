@@ -17,11 +17,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
     /// </summary>
     public class RtcLegacyLoader30 : LegacyLoader
     {
+        private readonly LegacyLoader nextLegacyLoader = new RtcLegacyLoader36();
         private readonly IList<RealTimeControlModel> rtcModels = new List<RealTimeControlModel>();
 
         public override void OnAfterInitialize(object entity, IDbConnection dbConnection)
         {
             rtcModels.Add((RealTimeControlModel) entity);
+
+            nextLegacyLoader.OnAfterInitialize(entity, dbConnection);
         }
 
         public override void OnAfterProjectMigrated(Project project)
@@ -123,6 +126,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
                 oldOwner.Items.Remove(rtcModel);
                 oldOwner.Items.Add(hydroModel);
             }
+
+            nextLegacyLoader.OnAfterProjectMigrated(project);
         }
     }
 }

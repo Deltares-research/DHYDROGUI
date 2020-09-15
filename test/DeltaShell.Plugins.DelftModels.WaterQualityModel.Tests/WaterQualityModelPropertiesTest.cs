@@ -38,8 +38,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.WindowsForms)]
         public void ShowPropertyGridWithDefaultModelProperties()
         {
-            var mockrepos = new MockRepository();
-            var guiMock = mockrepos.Stub<IGui>();
+            var mockRepository = new MockRepository();
+            var guiMock = mockRepository.Stub<IGui>();
             var grid = new PropertyGrid(guiMock) {Data = new DynamicPropertyBag(new WaterQualityModelProperties {Data = new WaterQualityModel()})};
 
             WindowsFormsTestHelper.ShowModal(grid);
@@ -49,8 +49,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.WindowsForms)]
         public void ShowPropertyGridWithModifiedModelProperties2()
         {
-            var mockrepos = new MockRepository();
-            var guiMock = mockrepos.Stub<IGui>();
+            var mockRepository = new MockRepository();
+            var guiMock = mockRepository.Stub<IGui>();
             var model1D = new WaterQualityModel();
             WaterQualityModelSettings settings = model1D.ModelSettings;
 
@@ -131,8 +131,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
-        // TODO: Check WaqLayer for vertically aggregated waq-grid.
-
         [Test]
         public void HorizontalDispersionIsReadOnlyWhenDispersionIsAnUnstructuredGridCellCoverage()
         {
@@ -170,7 +168,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                           "Test precondition: Dispersion should be a constant value.");
 
             // call
-            string propertyName = nameof(WaterQualityModel.HorizontalDispersion);
+            const string propertyName = nameof(WaterQualityModel.HorizontalDispersion);
             bool isReadOnly = properties.ValidateDynamicAttributes(propertyName);
 
             // assert
@@ -191,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        [TestCaseSource("iterationRelatedSchemes")]
+        [TestCaseSource(nameof(iterationRelatedSchemes))]
         public void IterationRelatedPropertiesShouldBeEditableForIterativeCalculationSchemes(NumericalScheme scheme)
         {
             // setup
@@ -206,12 +204,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 bool isReadOnly = properties.ValidateDynamicAttributes(propertyName);
 
                 // assert
-                Assert.IsFalse(isReadOnly, string.Format("Expected property {0} to be editable", propertyName));
+                Assert.IsFalse(isReadOnly, $"Expected property {propertyName} to be editable");
             }
         }
 
         [Test]
-        public void IterationRelatedPropertiesShouldBeReadOnlyForNoniterativeCalculationSchemes()
+        public void IterationRelatedPropertiesShouldBeReadOnlyForNonIterativeCalculationSchemes()
         {
             // setup
             var model = new WaterQualityModel();
@@ -227,9 +225,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     bool isReadonly = properties.ValidateDynamicAttributes(propertyName);
 
                     // assert
-                    Assert.IsTrue(isReadonly, string.Format("Expected property {0} to be read-only for scheme {1}", propertyName, nonIterativeScheme));
+                    Assert.IsTrue(isReadonly, $"Expected property {propertyName} to be read-only for scheme {nonIterativeScheme}");
                 }
             }
+        }
+
+        [Test]
+        [TestCase("UseRestart")]
+        [TestCase("WriteRestart")]
+        [TestCase("UseRestartTimeRange")]
+        [TestCase("RestartStartTime")]
+        [TestCase("RestartTimeStep")]
+        [TestCase("RestartStopTime")]
+        public void ValidateDynamicAttributes_ReturnsCorrectResult(string propertyName)
+        {
+            // Setup
+            var properties = new WaterQualityModelProperties();
+
+            // Call
+            bool result = properties.ValidateDynamicAttributes(propertyName);
+
+            // Assert
+            Assert.That(result, Is.True);
         }
     }
 }

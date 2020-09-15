@@ -307,7 +307,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel { ShowModelRunConsole = true };
             model.ImportFromMdu(mduPath);
 
-            model.ExplicitWorkingDirectory = model.WorkingDirectoryPath;
             using (var gui = new DeltaShellGui())
             {
                 IApplication app = gui.Application;
@@ -535,86 +534,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        /// <summary>
-        /// Test for issue TOOLS_22977, Not working test only reproducing scenario
-        /// </summary>
-        [Test]
-        [Category(TestCategory.Wpf)]
-        [Category(TestCategory.WorkInProgress)]
-        [Ignore]
-        public void TOOLS_22977Test()
-        {
-            using (var gui = new DeltaShellGui())
-            {
-                IApplication app = gui.Application;
-
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                var sharpMapGisGuiPlugin = new SharpMapGisGuiPlugin();
-                gui.Plugins.Add(sharpMapGisGuiPlugin);
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Run();
-                string testFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-                testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-
-                var model = new WaterFlowFMModel();
-                model.ImportFromMdu(testFilePath);
-
-                gui.Application.Project.RootFolder.Add(model);
-
-                Assert.IsTrue(gui.DocumentViewsResolver.OpenViewForData(model, typeof(ProjectItemMapView)));
-                var mapView = gui.DocumentViews.ActiveView as ProjectItemMapView;
-                mapView.SetSpatialOperationLayer(mapView.MapView.GetLayerForData(model.Bathymetry), true);
-                sharpMapGisGuiPlugin.FocusSpatialOperationView();
-
-                SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                    model.GetDataItemByValue(model.Bathymetry));
-
-                Assert.IsNotNull(valueConverter.SpatialOperationSet);
-
-                var sampleSet = new SpatialOperationSet();
-                valueConverter.SpatialOperationSet.AddOperation(sampleSet);
-
-                string samplesPath = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
-                var importSamples = new ImportSamplesOperation(false)
-                {
-                    FilePath = samplesPath,
-                    Name = "Test import"
-                };
-                Assert.IsNotNull(sampleSet.AddOperation(importSamples));
-
-                var interpolate = new InterpolateOperation
-                {
-                    InterpolationMethod = SpatialInterpolationMethod.Triangulation,
-                    OperationType = PointwiseOperationType.OverwriteWhereMissing
-                };
-                interpolate.LinkInput(InterpolateOperation.InputSamplesName, importSamples.Output);
-
-                valueConverter.SpatialOperationSet.AddOperation(interpolate);
-                valueConverter.SpatialOperationSet.Execute();
-                Action onShown = delegate
-                {
-                    interpolate.OperationType = PointwiseOperationType.Overwrite;
-                    var layer = (SpatialOperationSetLayer) mapView.SpatialOperationLayer;
-                    valueConverter.SpatialOperationSet.Execute();
-
-                    int beforeRefreshThreadCount = Process.GetCurrentProcess().Threads.Count;
-                    TestHelper.AssertIsFasterThan(4000, layer.ShowOutputOnly);
-                    Thread.Sleep(3000);
-                    Assert.AreEqual(beforeRefreshThreadCount, Process.GetCurrentProcess().Threads.Count);
-                };
-
-                WpfTestHelper.ShowModal((Control) gui.MainWindow, onShown);
-            }
-        }
-
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
@@ -692,7 +611,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_CloseProject_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
-            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\FlowFM");
 
             // 2. Set up test action
             Action<IGui> testAction = gui => gui.CommandHandler.CloseProject();
@@ -706,7 +625,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_DeleteModel_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
-            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\FlowFM");
 
             // 2. Set up test action
             Action<IGui> testAction = gui =>
@@ -961,30 +880,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static void AssertMultipleFunctionViewClosedAsExpected(string filePath, Action<IGui> guiAction)
+        private static void AssertMultipleFunctionViewClosedAsExpected(string testDataPath, Action<IGui> guiAction)
         {
-            using (var dsProjLocation = new TemporaryDirectory())
+            using (var tempDir = new TemporaryDirectory())
             {
                 // 1. Load test data
-                string fileLocation = TestHelper.GetTestFilePath(filePath);
-                string tempFileLocation = dsProjLocation.CopyTestDataFileAndDirectoryToTempDirectory(fileLocation);
+                string modelDir = tempDir.CopyDirectoryToTempDirectory(testDataPath);
+                string mduFilePath = Path.Combine(modelDir, "input", "FlowFM.mdu");
 
+                Assert.That(File.Exists(mduFilePath));
                 // 2. Prepare Test Project
                 using (var gui = new DeltaShellGui())
+                using(var fmModel = new WaterFlowFMModel())
                 {
                     IApplication app = gui.Application;
                     // Load app plugins
                     RunConfiguredFmSuiteGui(gui);
 
-                    bool projectOpened = app.OpenProject(tempFileLocation);
+                    fmModel.LoadFromMdu(mduFilePath);
+                    app.Project.RootFolder.Add(fmModel);
 
                     // 3. Verify initial expectations
-                    Assert.That(projectOpened, Is.True, "It was not possible to open the project");
-                    Project project = app.Project;
-                    Assert.That(project, Is.Not.Null);
+                    Assert.That(app.Project, Is.Not.Null);
 
                     // 3.1. Verify data loaded correctly.
-                    WaterFlowFMModel fmModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
 
                     TimeSeries hisTimeSerie = fmModel.OutputHisFileStore.Functions

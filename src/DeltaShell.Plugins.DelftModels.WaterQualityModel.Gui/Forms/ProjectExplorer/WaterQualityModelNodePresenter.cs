@@ -90,20 +90,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
 
         private static IEnumerable GetOutputItems(WaterQualityModel data)
         {
-            yield return new TreeFolder(data, data.DataItems.Where(IsOutputRestartFile), "States",
-                                        FolderImageType.None);
-
             foreach (IDataItem outputDataItem in data.DataItems.Where(
-                di => di.Role.HasFlag(DataItemRole.Output) &&
-                      !IsOutputRestartFile(di)))
+                di => di.Role.HasFlag(DataItemRole.Output)))
             {
                 yield return data.GetDataItemByValue(outputDataItem.Value);
             }
-        }
-
-        private static bool IsOutputRestartFile(IDataItem dataItem)
-        {
-            return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
         }
 
         private static IMenuItem GetContextMenu(WaterQualityModel model, IGui gui)
@@ -200,8 +191,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
                     waterQualityModel.GetDataItemByTag(WaterQualityModel.ObservationAreasDataItemMetaData.Tag));
                 inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.BoundaryDataDataItemMetaData.Tag));
                 inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.LoadsDataDataItemMetaData.Tag));
-
-                inputItems.Add(waterQualityModel.GetDataItemByTag(TimeDependentModelBase.RestartInputStateTag));
             }
 
             public override IEnumerable ChildItems

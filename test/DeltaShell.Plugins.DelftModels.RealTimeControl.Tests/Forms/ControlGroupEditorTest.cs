@@ -20,7 +20,7 @@ using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
@@ -519,8 +519,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void ControlGroupEditorSupportsCopyPaste()
         {
-            var controlGroup = new ControlGroup();
+            // Setup
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            helper.ClearData();
 
+            // Precondition
+            // Note: the helper is a singleton, so for every test make sure 
+            // that the helper is in a clear state
+            Assert.That(helper.IsDataSet, Is.False);
+            Assert.That(helper.CopiedShapes, Is.Empty);
+            
+            var controlGroup = new ControlGroup();
             using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
@@ -534,8 +543,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 ControlGroupEditorController controller = controlGroupEditor.Controller;
                 //new ControlGroupEditorController { ControlGroup = controlGroup, GraphControl = graphControl };
                 IEnumerable<ShapeBase> shapeCollection = graphControl.GetShapes<ShapeBase>();
-                RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(shapeCollection, controller, new Point(12, 13));
 
+                helper.SetCopiedData(shapeCollection);
+
+                // Precondition
+                Assert.That(helper.IsDataSet, Is.True);
+                Assert.That(helper.CopiedShapes.Count(), Is.EqualTo(shapeCollection.Count()));
+
+                // Call
+                helper.CopyShapesToController(controller, Point.Empty);
+
+                // Assert
                 Assert.AreEqual(8, graphControl.GetShapes<ShapeBase>().Count());
             }
         }

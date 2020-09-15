@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 Assert.That(File.Exists(outputFilePath), Is.True);
 
                 // Assert output is correct
-                IList<string> filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath, null);
+                IList<string> filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath);
                 Assert.That(filesInExportedZip.Count, Is.EqualTo(2));
                 Assert.That(filesInExportedZip.Contains(ncFileName));
                 Assert.That(filesInExportedZip.Contains(ncGeomFileName));
@@ -367,7 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 // Assert output is correct
                 string outputNcFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}(3).nc";
 
-                IList<string> filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath, null);
+                IList<string> filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath);
                 Assert.That(filesInExportedZip.Count, Is.EqualTo(2));
                 Assert.That(filesInExportedZip.Contains(outputNcFileName));
                 Assert.That(filesInExportedZip.Contains(ncGeomFileName));

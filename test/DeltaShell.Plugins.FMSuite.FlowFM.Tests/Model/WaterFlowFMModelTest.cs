@@ -17,6 +17,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -34,6 +35,7 @@ using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
@@ -1058,21 +1060,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        public void StateInfoRetreivesTheSameNameAndZipPathTest()
-        {
-            try
-            {
-                var stateInfo = new StateInfo("StateName", "ZipPath");
-                Assert.AreEqual(stateInfo.Name, "StateName");
-                Assert.AreEqual(stateInfo.ZipPath, "ZipPath");
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Creation of a StateInfo object should not fail. Exception thrown: {0}.", e.Message);
-            }
-        }
-
-        [Test]
         public void WriteSnappedFeaturesTest()
         {
             var model = new WaterFlowFMModel();
@@ -1547,37 +1534,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        public void GivenAModel_AfterCreatingIt_ThenCurrentOutputDirectoryIsStillNull()
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+
+                Assert.IsNull(currentOutputDirectory);
+            }
+        }
+
+        [Test]
         public void GivenAModelWithOutput_WhenOpeningIt_ThenCurrentOutputDirectoryIsInPersistentFolder()
+        {
+            //Creation of a path of non-existing model file
+            string mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
+
+            using (var model = new WaterFlowFMModel())
+            {
+                //Load model
+                model.LoadFromMdu(mduPath);
+
+                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+
+                string expectedPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"notexistingmodel\output");
+                Assert.AreEqual(expectedPath, currentOutputDirectory);
+            }
+        }
+
+        [Test]
+        public void GivenAModel_WhenImportingIt_ThenCurrentOutputDirectoryIsStillNull()
         {
             //Creation of a path of non-existing model file 
             string mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
 
-            //Load model 
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
+            using (var model = new WaterFlowFMModel())
+            {
+                //Import model
+                model.ImportFromMdu(mduPath);
 
-            object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
-            string expectedPath = Path.Combine(TestHelper.GetTestDataDirectory(), @"notexistingmodel\output");
-            Assert.AreEqual(expectedPath, currentOutputDirectory);
+                Assert.IsNull(currentOutputDirectory);
+            }
         }
 
         [Test]
         public void GivenAModel_WhenARunIsDone_ThenCurrentOutputDirectoryIsInWorkingDirectory()
         {
-            //Creation of a path of non-existing model file 
+            //Creation of a path of non-existing model file
             string mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
 
-            //Load model and "run"
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
+            using (var model = new WaterFlowFMModel())
+            {
+                //Load model and "run"
+                model.ImportFromMdu(mduPath);
 
-            TypeUtils.CallPrivateMethod(model, "OnFinish");
+                TypeUtils.CallPrivateMethod(model, "OnFinish");
 
-            object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
-            string expectedPath = model.WorkingOutputDirectoryPath;
-            Assert.AreEqual(expectedPath, currentOutputDirectory);
+                string expectedPath = model.WorkingOutputDirectoryPath;
+
+                Assert.AreEqual(expectedPath, currentOutputDirectory);
+            }
         }
 
         [Test]
@@ -1591,25 +1611,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string mduPath = TestHelper.GetTestFilePath(@"notexistingmodel\input\notexistingmodel.mdu");
                 var mduFile2 = "notexistingmodel2.mdu";
 
-                //Load model and save
-                var model = new WaterFlowFMModel();
-                model.ImportFromMdu(mduPath);
+                using (var model = new WaterFlowFMModel())
+                {
+                    //Load model and save
+                    model.ImportFromMdu(mduPath);
 
-                //Run, so that the CurrentOutputDirectory is set to WorkingDirectoryPath
-                TypeUtils.CallPrivateMethod(model, "OnFinish");
+                    //Run, so that the CurrentOutputDirectory is set to WorkingDirectoryPath
+                    TypeUtils.CallPrivateMethod(model, "OnFinish");
 
-                object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+                    object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
-                string expectedPath = Path.Combine(model.WorkingDirectoryPath, model.DirectoryName, "output");
-                Assert.AreEqual(expectedPath, currentOutputDirectory);
+                    string expectedPath = Path.Combine(model.WorkingDirectoryPath, model.DirectoryName, "output");
+                    Assert.AreEqual(expectedPath, currentOutputDirectory);
 
-                //Save, so that CurrentOutputDirectory is set to the persistent folder
-                model.ExportTo(Path.Combine(tempFolder, "notexistingmodel", "input", mduFile2));
+                    //Save, so that CurrentOutputDirectory is set to the persistent folder
+                    model.ExportTo(Path.Combine(tempFolder, "notexistingmodel", "input", mduFile2));
 
-                currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
+                    currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
-                expectedPath = Path.Combine(tempFolder, @"notexistingmodel\output");
-                Assert.AreEqual(expectedPath, currentOutputDirectory);
+                    expectedPath = Path.Combine(tempFolder, @"notexistingmodel\output");
+                    Assert.AreEqual(expectedPath, currentOutputDirectory);
+                }
             }
             finally
             {
@@ -1640,7 +1662,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 //Create WaterFlowFMModel from target MDU, so that the outputDirectory is set correctly.
                 var model = new WaterFlowFMModel();
-                model.ImportFromMdu(targetMdu);
+                model.LoadFromMdu(targetMdu);
 
                 //Put random file and directory in targetfolder, so that you can check the clean up after a save.
                 Directory.CreateDirectory(Path.Combine(targetOutput, "blarg"));
@@ -1983,6 +2005,141 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.That(mduSavePath, Is.EqualTo(expectedMduSavePath),
                             $"After renaming the model, the {nameof(model.MduSavePath)} should return the correct path.");
             }
+        }
+
+        [Test]
+        public void Constructor_CorrectRestartData()
+        {
+            // Call
+            var model = new WaterFlowFMModel();
+
+            // Assert
+            Assert.That(model.UseRestart, Is.False);
+            Assert.That(model.WriteRestart, Is.False);
+            Assert.That(model.RestartInput, Is.Not.Null);
+            Assert.That(model.RestartInput.Path, Is.Null);
+            Assert.That(model.RestartOutput, Is.Not.Null);
+            Assert.That(model.RestartOutput, Is.Empty);
+        }
+
+        [Test]
+        public void SetRestartInput_Null_ThrowsArgumentNullException()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+
+            // Call
+            void Call() => model.RestartInput = null;
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("value"));
+        }
+
+        [Test]
+        public void SetRestartInput_SetsCorrectly()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var restartFile = new RestartFile();
+
+            // Call
+            model.RestartInput = restartFile;
+
+            // Assert
+            Assert.That(model.RestartInput, Is.SameAs(restartFile));
+        }
+
+        [TestCase(null, false)]
+        [TestCase("path/to/the.file", true)]
+        public void GetUseRestart_ReturnsCorrectResult(string filePath, bool expected)
+        {
+            // Setup
+            var model = new WaterFlowFMModel {RestartInput = new RestartFile(filePath)};
+
+            // Call
+            bool result = model.UseRestart;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Finish_WriteRestartOn_LogsCorrectWarning()
+        {
+            using (WaterFlowFMModel model = new WaterFlowFMModel())
+            {
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = true;
+                model.RestartTimeStep = model.TimeStep;
+
+                // Call
+                void Call() => model.Finish();
+
+                // Assert
+                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(warnings, Contains.Item("Please save the project after a model run with 'write restart' on."));
+            }
+        }
+
+        [Test]
+        public void Finish_WriteRestartOff_DoesNotLogWarning()
+        {
+            using (WaterFlowFMModel model = new WaterFlowFMModel())
+            {
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = false;
+
+                // Call
+                void Call() => model.Finish();
+
+                // Assert
+                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(warnings, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void RestartTimeStep_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var restartTimeStep = new TimeSpan(0,13,0,0);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = restartTimeStep;
+
+            // Call
+            TimeSpan retrievedRestartTimeStep = model.RestartTimeStep;
+
+            // Assert
+            Assert.AreEqual(restartTimeStep, retrievedRestartTimeStep);
+        }
+
+        [Test]
+        public void RestartStartTime_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            DateTime restartStartTime = DateTime.Today.AddHours(12);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value = restartStartTime;
+            
+            // Call
+            DateTime retrievedRestartStartTime = model.RestartStartTime;
+
+            // Assert
+            Assert.AreEqual(restartStartTime,retrievedRestartStartTime);
+        }
+
+        [Test]
+        public void RestartStopTime_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            DateTime restartStopTime = DateTime.Today.AddHours(12);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value = restartStopTime;
+
+            // Call
+            DateTime retrievedRestartStopTime = model.RestartStopTime;
+
+            // Assert
+            Assert.AreEqual(restartStopTime, retrievedRestartStopTime);
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
