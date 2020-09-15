@@ -710,5 +710,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
                 return ResourceManager.GetString("WaveTimePointValidator_Validate_No_time_points_defined", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The link with {0} has been broken..
+        /// </summary>
+        public static string WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_been_broken_ {
+            get {
+                return ResourceManager.GetString("WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_b" +
+                        "een_broken_", resourceCulture);
+            }
+        }
     }
 }

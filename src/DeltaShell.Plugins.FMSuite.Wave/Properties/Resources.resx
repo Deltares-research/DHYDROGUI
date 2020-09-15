@@ -322,4 +322,7 @@
   <data name="WaveModel110LegacyLoader_OnAfterInitialize_Could_not_determine_dsproj_location_from_database_connection___0_" xml:space="preserve">
     <value>Could not determine dsproj location from database connection: {0}</value>
   </data>
+  <data name="WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_been_broken_" xml:space="preserve">
+    <value>The link with {0} has been broken.</value>
+  </data>
 </root>
