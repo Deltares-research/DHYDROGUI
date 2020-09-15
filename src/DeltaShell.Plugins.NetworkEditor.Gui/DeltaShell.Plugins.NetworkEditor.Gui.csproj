@@ -248,7 +248,6 @@
     <Compile Include="Forms\ChartEditors\ShapeMoveTool.cs" />
     <Compile Include="Forms\ChartEditors\ShapeSelectTool.cs" />
     <Compile Include="Forms\ChartEditors\ShapeTool.cs" />
-    <Compile Include="Forms\ChartEditors\StructureChartShapes\HoverText.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\IHover.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\IHoverText.cs" />
     <Compile Include="Forms\FMWeirView.cs">
