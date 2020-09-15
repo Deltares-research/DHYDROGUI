@@ -273,7 +273,6 @@
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
     <Compile Include="Forms\GridProperties\FeaturePropertiesTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\ExtraResistanceViewTest.cs" />
     <Compile Include="MapLayers\Editors\ChannelInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroLinkInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroNodeInteractorTest.cs" />

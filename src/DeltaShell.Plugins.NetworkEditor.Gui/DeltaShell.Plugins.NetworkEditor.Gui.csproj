@@ -271,12 +271,6 @@
     <Compile Include="Forms\PropertyGrid\HydroRegionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroAreaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\TimeDependency.cs" />
-    <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\ExtraResistanceView.Designer.cs">
-      <DependentUpon>ExtraResistanceView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\GateView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -340,9 +334,6 @@
     <EmbeddedResource Include="Forms\HydroRegionTreeView\HydroRegionTreeView.resx">
       <DependentUpon>HydroRegionTreeView.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StructureFeatureView\ExtraResistanceView.resx">
-      <DependentUpon>ExtraResistanceView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\GateView.resx">
       <DependentUpon>GateView.cs</DependentUpon>
