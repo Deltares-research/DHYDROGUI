@@ -290,12 +290,6 @@
     <Compile Include="Forms\StructureFeatureView\PumpView.Designer.cs">
       <DependentUpon>PumpView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.Designer.cs">
-      <DependentUpon>GatedWeirFormulaView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -374,9 +368,6 @@
     <EmbeddedResource Include="Forms\StructureFeatureView\PumpView.resx">
       <DependentUpon>PumpView.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\GatedWeirFormulaView.resx">
-      <DependentUpon>GatedWeirFormulaView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaView.resx">
       <DependentUpon>GeneralStructureWeirFormulaView.cs</DependentUpon>
