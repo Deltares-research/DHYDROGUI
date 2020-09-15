@@ -277,7 +277,6 @@
     <Compile Include="Forms\StructureFeatureView\PumpView.Designer.cs">
       <DependentUpon>PumpView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StructureFeatureView\WeirViewValidationResult.cs" />
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
     <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
