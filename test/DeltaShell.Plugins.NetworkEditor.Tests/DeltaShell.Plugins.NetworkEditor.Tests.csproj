@@ -273,7 +273,6 @@
     <Compile Include="MapLayers\Editors\ChannelInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroLinkInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroNodeInteractorTest.cs" />
-    <Compile Include="Forms\CompositeStructureView\SimpleSelectionContainer.cs" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollectionTest.cs" />
     <Compile Include="MapLayers\Tools\Feature2DPointToolTest.cs" />
     <Compile Include="NetworkEditorApplicationPluginTest.cs" />
