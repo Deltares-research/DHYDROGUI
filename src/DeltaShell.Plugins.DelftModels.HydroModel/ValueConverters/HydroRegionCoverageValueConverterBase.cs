@@ -178,22 +178,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
         {
             bool updateOnlySpecificTimeSlice = dateTimeToUpdate != default(DateTime);
 
-            if (updateOnlySpecificTimeSlice)
+            if (updateOnlySpecificTimeSlice && ConvertedValue.Time.Values.Count - 1 == OriginalValue.Time.Values.Count) // we're only one time step off
             {
-                if (ConvertedValue.Time.Values.Count - 1 == OriginalValue.Time.Values.Count) //we're only one timestep off
+                if (!OriginalValue.Time.Values.Contains(dateTimeToUpdate))
                 {
-                    if (!OriginalValue.Time.Values.Contains(dateTimeToUpdate))
-                    {
-                        OriginalValue.Time.Values.Add(dateTimeToUpdate);
-                    }
-
-                    return new[]
-                    {
-                        dateTimeToUpdate
-                    };
+                    OriginalValue.Time.Values.Add(dateTimeToUpdate);
                 }
 
-                //else: fall through and do full refresh
+                return new[]
+                {
+                    dateTimeToUpdate
+                };
             }
 
             if (OriginalValue.Time.Values.Count > 0)

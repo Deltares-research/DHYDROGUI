@@ -342,17 +342,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             foreach (IBoundaryCondition boundaryCondition in BoundaryConditions)
             {
                 var flowCondition = boundaryCondition as FlowBoundaryCondition;
-                if (flowCondition != null)
+                if (flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
                 {
-                    if (flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                    if (!TracerDefinitions.Contains(flowCondition.TracerName))
                     {
-                        if (!TracerDefinitions.Contains(flowCondition.TracerName))
-                        {
-                            TracerDefinitions.Add(flowCondition.TracerName);
-                        }
-
-                        AddTracerToSourcesAndSink(flowCondition.TracerName);
+                        TracerDefinitions.Add(flowCondition.TracerName);
                     }
+
+                    AddTracerToSourcesAndSink(flowCondition.TracerName);
                 }
             }
 

@@ -185,6 +185,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spatial data {0} is not time dependent, which is required for this operation..
+        /// </summary>
+        public static string CoverageAnalysisView_Spatial_data_is_not_time_dependent_which_is_required {
+            get {
+                return ResourceManager.GetString("CoverageAnalysisView_Spatial_data_is_not_time_dependent_which_is_required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatial data {0} is not time dependent, which is required for this operation because spatial data {1} is time dependent.
+        /// </summary>
+        public static string CoverageAnalysisView_Spatial_data_is_not_time_dependent_which_is_required_because_data_is_time_dependent {
+            get {
+                return ResourceManager.GetString("CoverageAnalysisView_Spatial_data_is_not_time_dependent_which_is_required_because" +
+                        "_data_is_time_dependent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cross section definition.
         /// </summary>
         public static string CrossSectionDefinitionProperties_DisplayName {

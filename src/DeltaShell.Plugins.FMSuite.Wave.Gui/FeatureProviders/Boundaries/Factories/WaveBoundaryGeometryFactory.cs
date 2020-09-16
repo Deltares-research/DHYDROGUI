@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -25,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// </summary>
         /// <param name="gridBoundaryProvider">The grid boundary provider.</param>
         /// <param name="snappingCalculatorProvider">The snapping calculator provider.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public WaveBoundaryGeometryFactory(IGridBoundaryProvider gridBoundaryProvider,

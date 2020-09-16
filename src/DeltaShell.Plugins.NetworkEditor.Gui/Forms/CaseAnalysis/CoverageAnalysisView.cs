@@ -14,6 +14,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Threading;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
@@ -33,17 +34,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
 
         public INetworkCoverage Coverage { get; private set; }
 
-        public string DisplayName
-        {
-            get
-            {
-                return Coverage == null
-                           ? ""
-                           : Parent != null
-                               ? Coverage.Name + " (" + Parent.Name + ")"
-                               : Coverage.Name;
-            }
-        }
+        public string DisplayName =>
+            Coverage == null
+                ? ""
+                : Parent != null
+                    ? Coverage.Name + " (" + Parent.Name + ")"
+                    : Coverage.Name;
 
         public void Dispose()
         {
@@ -92,21 +88,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             childViews.Add(coverageView);
         }
 
-        public IEventedList<IView> ChildViews
-        {
-            get
-            {
-                return childViews;
-            }
-        }
+        public IEventedList<IView> ChildViews => childViews;
 
-        public bool HandlesChildViews
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HandlesChildViews => true;
 
         public CoverageWrapper CreateWrapper(INetworkCoverage item)
         {
@@ -194,14 +178,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
         {
             var matches = new List<INetworkCoverage>();
 
-            var cov = obj as INetworkCoverage;
-            if (cov != null)
+            if (obj is INetworkCoverage cov)
             {
                 matches.Add(cov);
             }
 
-            var itemContainer = obj as IItemContainer;
-            if (itemContainer != null)
+            if (obj is IItemContainer itemContainer)
             {
                 matches.AddRange(itemContainer.GetAllItemsRecursive().OfType<INetworkCoverage>().Distinct());
             }
@@ -244,8 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
         private INetworkCoverage GetProcessedCoverageFromSelections()
         {
             NetworkCoverageOperations.INetworkCoverageOperation operation = GetSelectedOperation();
-            var primaryCoverage = comboboxPrimary.SelectedValue as INetworkCoverage;
-            if (primaryCoverage == null)
+            if (!(comboboxPrimary.SelectedValue is INetworkCoverage primaryCoverage))
             {
                 return null;
             }
@@ -282,16 +263,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             if (operation.RequiresScalarArgument && !operation.RequiresSecondCoverage)
             {
                 processedCoverage = operation.Perform(primaryCoverage, referenceValue);
-                processedCoverage.Name =
-                    string.Format("{0} ({1}) {2}", primaryCoverage.Name, operation, referenceValue);
+                processedCoverage.Name = $"{primaryCoverage.Name} ({operation}) {referenceValue}";
             }
             else if (operation.RequiresSecondCoverage && !operation.RequiresScalarArgument)
             {
                 processedCoverage = operation.Perform(primaryCoverage, secondaryCoverage);
-                processedCoverage.Name =
-                    string.Format("{0} ({1}) {2}", primaryCoverage.Name, operation, secondaryCoverage != null
-                                                                                        ? secondaryCoverage.Name
-                                                                                        : "");
+                processedCoverage.Name = $"{primaryCoverage.Name} ({operation}) {(secondaryCoverage != null ? secondaryCoverage.Name : "")}";
             }
             else if (operation.RequiresSecondCoverage && operation.RequiresScalarArgument)
             {
@@ -300,10 +277,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             else
             {
                 processedCoverage = operation.Perform(primaryCoverage, secondaryCoverage);
-                processedCoverage.Name =
-                    string.Format("{0} ({1}) {2}", primaryCoverage.Name, operation, secondaryCoverage != null
-                                                                                        ? secondaryCoverage.Name
-                                                                                        : "");
+                processedCoverage.Name = $"{primaryCoverage.Name} ({operation}) {(secondaryCoverage != null ? secondaryCoverage.Name : "")}";
             }
 
             processedCoverage.Components[0].Name = operation.ToString();
@@ -316,9 +290,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
         {
             if (operation.RequiresPrimaryTimeDependent && !primaryCoverage.IsTimeDependent)
             {
-                MessageBox.Show(
-                    string.Format("Spatial data {0} is not time dependent, which is required for this operation.",
-                                  primaryCoverage.Name));
+                MessageBox.Show(string.Format(Resources.CoverageAnalysisView_Spatial_data_is_not_time_dependent_which_is_required, primaryCoverage.Name));
                 return true;
             }
 
@@ -330,15 +302,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             INetworkCoverage primaryCoverage,
             INetworkCoverage secondaryCoverage)
         {
-            if (operation.RequiresSecondCoverage && !operation.AllowSecondaryNonTimeDependentIfFirstIs)
+            if (operation.RequiresSecondCoverage && 
+                !operation.AllowSecondaryNonTimeDependentIfFirstIs && 
+                primaryCoverage.IsTimeDependent && 
+                !secondaryCoverage.IsTimeDependent)
             {
-                if (primaryCoverage.IsTimeDependent && !secondaryCoverage.IsTimeDependent)
-                {
-                    MessageBox.Show(string.Format(
-                                        "Spatial data {0} is not time dependent, which is required for this operation because spatial data {1} is time dependent",
-                                        secondaryCoverage.Name, primaryCoverage.Name));
-                    return true;
-                }
+                MessageBox.Show(string.Format(Resources.CoverageAnalysisView_Spatial_data_is_not_time_dependent_which_is_required_because_data_is_time_dependent, secondaryCoverage.Name, primaryCoverage.Name));
+                return true;
             }
 
             return false;
@@ -349,10 +319,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
         {
             MapView mapView = coverageView.ChildViews.OfType<MapView>().First();
 
-            if (mapView.Map != null)
-            {
-                mapView.Map.Layers.Clear();
-            }
+            mapView.Map?.Layers.Clear();
 
             coverageView.Data = null;
         }
@@ -417,10 +384,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
 
         public object Data
         {
-            get
-            {
-                return data;
-            }
+            get => data;
             set
             {
                 if (data != null)

@@ -19,7 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     public class BcmFileImporterTest
     {
         private BcmFileImporter importer;
-        private BoundaryCondition boundaryCondition;
 
         [SetUp]
         public void Setup()

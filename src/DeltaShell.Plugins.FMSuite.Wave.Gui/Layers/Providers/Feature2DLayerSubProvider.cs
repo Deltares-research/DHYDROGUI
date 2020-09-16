@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using DelftTools.Utils.Collections.Generic;
+﻿using System.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using NetTopologySuite.Extensions.Features;
@@ -10,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
     /// <see cref="Feature2DLayerSubProvider"/> partially implements the
-    /// <see cref="ILayerSubProvider"/> for data of type <see cref="IEventedList{T}"/>.
+    /// <see cref="ILayerSubProvider"/> for data of type <see cref="DelftTools.Utils.Collections.Generic.IEventedList{T}"/>.
     /// </summary>
     /// <seealso cref="ILayerSubProvider"/>
     public abstract class Feature2DLayerSubProvider : ILayerSubProvider
@@ -19,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// Creates a new <see cref="Feature2DLayerSubProvider"/>.
         /// </summary>
         /// <param name="factory">The factory.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Throw when <paramref name="factory"/> is <c>null</c>.
         /// </exception>
         protected Feature2DLayerSubProvider(IWaveLayerFactory factory)

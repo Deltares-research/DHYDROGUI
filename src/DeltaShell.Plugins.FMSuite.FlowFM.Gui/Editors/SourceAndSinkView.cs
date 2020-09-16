@@ -35,20 +35,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             });
         }
 
-        public FunctionView FunctionView
-        {
-            get
-            {
-                return functionView;
-            }
-        }
+        public FunctionView FunctionView => functionView;
 
         public WaterFlowFMModel Model
         {
-            get
-            {
-                return model;
-            }
+            get => model;
             set
             {
                 if (model != null)
@@ -68,20 +59,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public IEventedList<IView> ChildViews { get; private set; }
 
-        public bool HandlesChildViews
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HandlesChildViews => true;
 
         public object Data
         {
-            get
-            {
-                return SourceAndSink;
-            }
+            get => SourceAndSink;
             set
             {
                 SourceAndSink = value as SourceAndSink;
@@ -98,17 +80,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public bool Locked
         {
-            get
-            {
-                return locked;
-            }
+            get => locked;
             set
             {
                 locked = value;
-                if (LockedChanged != null)
-                {
-                    LockedChanged(this, new EventArgs());
-                }
+                LockedChanged?.Invoke(this, new EventArgs());
             }
         }
 
@@ -118,10 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private SourceAndSink SourceAndSink
         {
-            get
-            {
-                return sourceAndSink;
-            }
+            get => sourceAndSink;
             set
             {
                 FunctionView.Data = null;
@@ -144,17 +117,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void AreaTextBoxOnValidating(object sender, CancelEventArgs e)
         {
             string text = ((TextBox) sender).Text;
-            double value;
-            if (double.TryParse(text, out value))
+            if (double.TryParse(text, out double value) && value > 0 && value < 1e+6)
             {
-                if (value > 0 && value < 1e+6)
-                {
-                    sourceAndSink.Area = value;
-                    errorProvider1.Clear();
-                    errorProvider1.SetError(areaTextBox, "");
-                    e.Cancel = false;
-                    return;
-                }
+                sourceAndSink.Area = value;
+                errorProvider1.Clear();
+                errorProvider1.SetError(areaTextBox, "");
+                e.Cancel = false;
+                return;
             }
 
             errorProvider1.Clear();
@@ -185,8 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (e.PropertyName == nameof(Model.UseSalinity) ||
                 e.PropertyName == nameof(Model.HeatFluxModelType) ||
                 e.PropertyName == nameof(Model.UseMorSed) ||
-                e.PropertyName == nameof(Model.UseSecondaryFlow)
-            )
+                e.PropertyName == nameof(Model.UseSecondaryFlow))
             {
                 IList<bool> visibilitySettings = CalculateComponentVisibilitySettings();
                 SetVisibility(visibilitySettings);

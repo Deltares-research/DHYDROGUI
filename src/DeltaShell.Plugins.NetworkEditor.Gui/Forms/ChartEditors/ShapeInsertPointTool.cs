@@ -92,10 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                         else
                         {
                             ShapeModifyTool.ShapeSelectTool.MouseEvent(kind, e, c);
-                            if (null != ShapeModifyTool.ShapeFeatureEditor)
-                            {
-                                ShapeModifyTool.ShapeFeatureEditor.Stop();
-                            }
+                            ShapeModifyTool.ShapeFeatureEditor?.Stop();
                         }
                     }
                         break;
@@ -119,7 +116,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                         if (ShapeModifyTool.ShapeMoveTool.IsBusy)
                         {
                             ShapeModifyTool.ShapeMoveTool.MouseEvent(kind, e, c);
-                            return;
                         }
 
                         break;
@@ -128,12 +124,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             else
             {
                 ShapeModifyTool.ShapeSelectTool.MouseEvent(kind, e, c);
-                if (kind == ChartMouseEvent.Down)
+                if (kind == ChartMouseEvent.Down && ShapeModifyTool.ShapeSelectTool.ShapeFeatureEditor != null)
                 {
-                    if (ShapeModifyTool.ShapeSelectTool.ShapeFeatureEditor != null)
-                    {
-                        ShapeModifyTool.ShapeFeatureEditor.Start();
-                    }
+                    ShapeModifyTool.ShapeFeatureEditor.Start();
                 }
             }
         }

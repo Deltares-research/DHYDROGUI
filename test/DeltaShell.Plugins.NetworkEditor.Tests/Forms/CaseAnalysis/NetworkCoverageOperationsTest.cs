@@ -453,7 +453,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CaseAnalysis
             foreach (INetworkLocation networkLocation in networkCoverage.Locations.Values)
             {
                 Assert.AreEqual(expectedValues[networkLocationCounter], result[networkLocation],
-                                string.Format("Expected value for location = {0} not matching", networkLocation));
+                                $"Expected value for location = {networkLocation} not matching");
                 networkLocationCounter++;
             }
         }

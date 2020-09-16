@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         private const string KeywordPart = @"^\w+\s*";
 
         /// <summary>
-        /// Matches the pattern: end with a non-scientific intiger or double in <see cref="CultureInfo.InvariantCulture"/>.
+        /// Matches the pattern: end with a non-scientific integer or double in <see cref="CultureInfo.InvariantCulture"/>.
         /// </summary>
         private const string ValuePart = @"\s*-?\d+(\.\d+)?$";
 
@@ -45,19 +45,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                                                       string dependencyExpression)
         {
             string dependencyPropertyName = GetDependencyPropertyName(evaluatedProperty, dependencyExpression);
-            ModelProperty dependencyProperty =
-                allProperties.FirstOrDefault(
-                    p =>
-                        p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
-                                                                     StringComparison.InvariantCultureIgnoreCase));
-            if (dependencyProperty != null)
+            ModelProperty dependencyProperty = allProperties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
+                                                                                                                              StringComparison.InvariantCultureIgnoreCase));
+            if (dependencyProperty != null &&
+                dependencyProperty.PropertyDefinition.DataType != typeof(double) &&
+                dependencyProperty.PropertyDefinition.DataType != typeof(int))
             {
-                if (dependencyProperty.PropertyDefinition.DataType != typeof(double) &&
-                    dependencyProperty.PropertyDefinition.DataType != typeof(int))
-                {
-                    return string.Format("Model property '{0}' should be have 'double' or 'integer' data type.",
-                                         dependencyPropertyName);
-                }
+                return $"Model property '{dependencyPropertyName}' should be have 'double' or 'integer' data type.";
             }
 
             return null;
@@ -69,11 +63,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             return properties =>
             {
                 string dependencyPropertyName = GetDependencyPropertyName(evaluatedProperty, dependencyExpression);
-                ModelProperty dependencyProperty =
-                    properties?.FirstOrDefault(
-                        p =>
-                            p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
-                                                                         StringComparison.InvariantCultureIgnoreCase));
+                ModelProperty dependencyProperty = properties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
+                                                                                                                                StringComparison.InvariantCultureIgnoreCase));
                 if (dependencyProperty != null)
                 {
                     double comparisonValue = GetComparisonValue(evaluatedProperty, dependencyExpression);

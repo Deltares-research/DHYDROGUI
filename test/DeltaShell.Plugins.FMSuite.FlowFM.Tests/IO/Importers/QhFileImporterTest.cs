@@ -9,7 +9,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     public class QhFileImporterTest
     {
         private QhFileImporter importer;
-        private BoundaryCondition boundaryCondition;
 
         [SetUp]
         public void Setup()
