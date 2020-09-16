@@ -321,11 +321,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\AddDefaultCrossSectionDefinition.png" />
-    <Resource Include="Resources\AddDefaultCrossSectionDefinition.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\AddInterpolatedCrossSection.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Boundary.png" />
@@ -334,97 +329,13 @@
     <Resource Include="Resources\BridgeSmall.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\case_analysis.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\catchment.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\copyhs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CrossSectionSectionType.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CrossSectionSectionTypeAdd.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CrossSectionSectionTypes.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CrossSectionSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CrossSectionSmallWithExclamation.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CrossSectionSmallXYZ.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CrossSectionStandardSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CrossSectionTabulatedSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\CulvertSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\definition.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\definitiondefault.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\definitiontemplate.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\DeleteHS.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\DiffuseSource.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\basin.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\ExtraResistanceSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\favorite.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\generatepoints.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\greenhouse.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\GridPoint.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\GridPointFixed.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\hide_empty_tabs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\hydrolink.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\region.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\LateralSourceMap.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\LateralSourceSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\network_crs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\network_branches.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\NetworkLocationSmall.png" />
@@ -436,109 +347,28 @@
     <Resource Include="Resources\network_branches1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Node.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\NodeOnMultipleBranches.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\NodeOnSingleBranch.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Observation.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\openwater.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\out_of_sync_overlay.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\pan.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\pastehs.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\paved.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\polder_empty.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\propertieshs.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\PumpSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\PumpSmallLeft.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\PumpSmallNegative.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\PumpSmallPositive.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\PumpSmallRight.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\relational.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\removepoints.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Retention.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\route.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Route-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\routes.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\runoff.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\SharedCrossSectionDefinitions.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\show_only_selection.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\sideview.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\StructureFeatureSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\table_add.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\table_delete.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\unpaved.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\warning.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\WeirSmall.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\wwtp.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\cut1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\cut.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Editors\Structures\Views\Components\GateOpeningHeightCalculatedFieldView.xaml">
@@ -611,35 +441,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\hbv.png" />
-    <Resource Include="Resources\sacramento.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\AnalysisGroup.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\basinGroup.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\NetworkCoverageGroup.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\NetworkGroup.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\RegionGroup.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\globe-green.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\thindam.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Weir.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Gate.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\landboundary.png" />
@@ -664,12 +472,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Embankment.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\clock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\import.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\enclosure.png" />

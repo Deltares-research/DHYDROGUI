@@ -63,139 +63,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap AnalysisGroup {
-            get {
-                object obj = ResourceManager.GetObject("AnalysisGroup", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap basinGroup {
-            get {
-                object obj = ResourceManager.GetObject("basinGroup", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap BridgeSmall {
             get {
                 object obj = ResourceManager.GetObject("BridgeSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap case_analysis {
-            get {
-                object obj = ResourceManager.GetObject("case_analysis", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap catchment {
-            get {
-                object obj = ResourceManager.GetObject("catchment", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap clock {
-            get {
-                object obj = ResourceManager.GetObject("clock", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap CrossSectionSectionType {
-            get {
-                object obj = ResourceManager.GetObject("CrossSectionSectionType", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap cut {
-            get {
-                object obj = ResourceManager.GetObject("cut", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap definition {
-            get {
-                object obj = ResourceManager.GetObject("definition", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap definitiondefault {
-            get {
-                object obj = ResourceManager.GetObject("definitiondefault", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap definitiontemplate {
-            get {
-                object obj = ResourceManager.GetObject("definitiontemplate", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap DeleteHS {
-            get {
-                object obj = ResourceManager.GetObject("DeleteHS", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap DiffuseSource {
-            get {
-                object obj = ResourceManager.GetObject("DiffuseSource", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap DrainageBasin {
-            get {
-                object obj = ResourceManager.GetObject("DrainageBasin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -253,89 +123,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap favorite {
-            get {
-                object obj = ResourceManager.GetObject("favorite", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap fixedweir {
             get {
                 object obj = ResourceManager.GetObject("fixedweir", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Gate {
-            get {
-                object obj = ResourceManager.GetObject("Gate", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap GeneratePoints {
-            get {
-                object obj = ResourceManager.GetObject("GeneratePoints", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap globe_green {
-            get {
-                object obj = ResourceManager.GetObject("globe_green", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap greenhouse {
-            get {
-                object obj = ResourceManager.GetObject("greenhouse", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap GridPoint {
-            get {
-                object obj = ResourceManager.GetObject("GridPoint", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap GridPointFixed {
-            get {
-                object obj = ResourceManager.GetObject("GridPointFixed", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap hide_empty_tabs {
-            get {
-                object obj = ResourceManager.GetObject("hide_empty_tabs", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -353,16 +143,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap hydrolink {
-            get {
-                object obj = ResourceManager.GetObject("hydrolink", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap HydroRegion {
             get {
                 object obj = ResourceManager.GetObject("HydroRegion", resourceCulture);
@@ -373,29 +153,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap import {
-            get {
-                object obj = ResourceManager.GetObject("import", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap landboundary {
             get {
                 object obj = ResourceManager.GetObject("landboundary", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap LateralSourceMap {
-            get {
-                object obj = ResourceManager.GetObject("LateralSourceMap", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -416,36 +176,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static System.Drawing.Bitmap Link {
             get {
                 object obj = ResourceManager.GetObject("Link", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Network {
-            get {
-                object obj = ResourceManager.GetObject("Network", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap network_branches {
-            get {
-                object obj = ResourceManager.GetObject("network_branches", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap NetworkCoverageGroup {
-            get {
-                object obj = ResourceManager.GetObject("NetworkCoverageGroup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -474,16 +204,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static string NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group {
             get {
                 return ResourceManager.GetString("NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap NetworkGroup {
-            get {
-                object obj = ResourceManager.GetObject("NetworkGroup", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -520,29 +240,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap Node {
-            get {
-                object obj = ResourceManager.GetObject("Node", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap NodeOnMultipleBranches {
             get {
                 object obj = ResourceManager.GetObject("NodeOnMultipleBranches", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap NodeOnSingleBranch {
-            get {
-                object obj = ResourceManager.GetObject("NodeOnSingleBranch", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -570,66 +270,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap openwater {
-            get {
-                object obj = ResourceManager.GetObject("openwater", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap out_of_sync_overlay {
-            get {
-                object obj = ResourceManager.GetObject("out_of_sync_overlay", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap pan {
-            get {
-                object obj = ResourceManager.GetObject("pan", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap paved {
-            get {
-                object obj = ResourceManager.GetObject("paved", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap polder {
-            get {
-                object obj = ResourceManager.GetObject("polder", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap PropertiesHS {
-            get {
-                object obj = ResourceManager.GetObject("PropertiesHS", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap pump {
             get {
                 object obj = ResourceManager.GetObject("pump", resourceCulture);
@@ -650,76 +290,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap PumpSmallLeft {
-            get {
-                object obj = ResourceManager.GetObject("PumpSmallLeft", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap PumpSmallNegative {
-            get {
-                object obj = ResourceManager.GetObject("PumpSmallNegative", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap PumpSmallPositive {
-            get {
-                object obj = ResourceManager.GetObject("PumpSmallPositive", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap PumpSmallRight {
-            get {
-                object obj = ResourceManager.GetObject("PumpSmallRight", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap RegionGroup {
-            get {
-                object obj = ResourceManager.GetObject("RegionGroup", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Relational {
-            get {
-                object obj = ResourceManager.GetObject("Relational", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap RemovePoints {
-            get {
-                object obj = ResourceManager.GetObject("RemovePoints", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap Retention {
             get {
                 object obj = ResourceManager.GetObject("Retention", resourceCulture);
@@ -730,59 +300,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap route {
-            get {
-                object obj = ResourceManager.GetObject("route", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Route_icon {
-            get {
-                object obj = ResourceManager.GetObject("Route_icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap routes {
-            get {
-                object obj = ResourceManager.GetObject("routes", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap runoff {
             get {
                 object obj = ResourceManager.GetObject("runoff", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap show_only_selection {
-            get {
-                object obj = ResourceManager.GetObject("show_only_selection", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap sideview {
-            get {
-                object obj = ResourceManager.GetObject("sideview", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -809,49 +329,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap table_add {
-            get {
-                object obj = ResourceManager.GetObject("table_add", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap table_delete {
-            get {
-                object obj = ResourceManager.GetObject("table_delete", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap thindam {
             get {
                 object obj = ResourceManager.GetObject("thindam", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap unpaved {
-            get {
-                object obj = ResourceManager.GetObject("unpaved", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap warning {
-            get {
-                object obj = ResourceManager.GetObject("warning", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
