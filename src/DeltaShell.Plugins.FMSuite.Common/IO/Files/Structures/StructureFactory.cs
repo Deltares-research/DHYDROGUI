@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                         reader.Read(filePath, timeSeries, refDate);
                         break;
                     default:
-                        throw new NotImplementedException($"Trying to generate Time series for 2D Structure: {structure2D.Name}, property: {propertyName} mapped as type {steerable.Mode} which is not yet supported.");
+                        throw new NotImplementedException($"Trying to generate Time series for 2D Structure: {structure2D.Name}, property: {property} mapped as {propertyName}, type: {steerable.Mode} which is not yet supported.");
                 }
             }
         }

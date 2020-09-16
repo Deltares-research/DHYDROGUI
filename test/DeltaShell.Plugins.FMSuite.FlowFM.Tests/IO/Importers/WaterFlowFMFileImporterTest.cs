@@ -33,14 +33,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const string relativeFilePath = @"c071_generalstructure_door_closing_at_sill\dflowfm\t2.mdu";
             string testFilePath = TestHelper.GetTestFilePath(relativeFilePath);
             Assert.That(File.Exists(testFilePath));
-            const string baseError = "Trying to generate Time series for 2D Structure: Maeslantkering, property: GateOpeningWidth mapped as type External which is not yet supported.";
+            const string propertyName = "Horizontal opening width: REALTIME (generalstructure)";
+            string structureFactoryException = $"Trying to generate Time series for 2D Structure: Maeslantkering, property: {propertyName}, mapped as GateOpeningWidth mapped as type: External which is not yet supported.";
 
             // When
             var importer = new WaterFlowFMFileImporter(() => null);
             TestDelegate testAction = () => importer.ImportItem(testFilePath);
 
             // Then
-            Assert.That(testAction, Throws.TypeOf<NotImplementedException>().With.Message.EqualTo(baseError));
+            Assert.That(testAction, Throws.TypeOf<NotImplementedException>().With.Message.EqualTo(structureFactoryException));
 
         }
 
@@ -54,8 +55,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             string structureFilePath = TestHelper.GetTestFilePath(Path.Combine(relativeFilePath, "tst-1_structures.ini"));
             Assert.That(File.Exists(iniFilePath));
             Assert.That(File.Exists(structureFilePath));
-
-            const string structureFactoryException = "Trying to generate Time series for 2D Structure: Maeslantkering, property: GateOpeningWidth mapped as type External which is not yet supported.";
+            const string propertyName = "Horizontal opening width: REALTIME (generalstructure)";
+            string structureFactoryException = $"Trying to generate Time series for 2D Structure: Maeslantkering, property: {propertyName}, mapped as GateOpeningWidth mapped as type: External which is not yet supported.";
             string structuresFileError = $"Error while reading and converting 2D Structures from {structureFilePath}";
             const string convertStructureError = "Failed to convert .ini structure definition 'Maeslantkering' to actual structure.";
             string waterFlowFmFileImporterError = $"Error while importing a Flow Flexible Mesh Model from {iniFilePath}";
