@@ -288,7 +288,6 @@
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollectionTest.cs" />
     <Compile Include="TestModelWithHydroNetwork.cs" />
     <Compile Include="MapLayers\Editors\BranchNodeTopologyTest.cs" />
-    <Compile Include="HydroRegionTreeViewTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

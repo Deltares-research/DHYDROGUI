@@ -238,12 +238,6 @@
     <Compile Include="Forms\FMWeirView.Designer.cs">
       <DependentUpon>FMWeirView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\HydroRegionTreeView\HydroRegionTreeView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\HydroRegionTreeView\HydroRegionTreeView.Designer.cs">
-      <DependentUpon>HydroRegionTreeView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureCoverageProperties.cs" />
@@ -299,10 +293,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FMWeirView.resx">
       <DependentUpon>FMWeirView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\HydroRegionTreeView\HydroRegionTreeView.resx">
-      <DependentUpon>HydroRegionTreeView.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StructureFeatureView\PumpView.resx">
       <DependentUpon>PumpView.cs</DependentUpon>

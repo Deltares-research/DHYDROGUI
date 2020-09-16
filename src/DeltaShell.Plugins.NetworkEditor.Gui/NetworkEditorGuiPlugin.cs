@@ -9,7 +9,6 @@ using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Utils;
@@ -19,7 +18,6 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
@@ -47,8 +45,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private const string RemoveGroupToolStripMenuKey = "RemoveGroup";
         private const string RemoveUngroupedToolStripMenuKey = "RemoveUngrouped";
         private const string SeparatorToolStripMenuKey = "Separator";
-        private HydroRegionTreeView hydroRegionTreeView;
-        private bool settingGuiSelection;
         private ContextMenuStrip hydroRegionContextMenu;
         private IGui gui;
 
@@ -107,19 +103,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
             set
             {
-                if (gui != null)
-                {
-                    gui.SelectionChanged -= GuiSelectionChanged;
-                }
-
                 gui = value;
 
                 if (gui != null)
                 {
-                    gui.Application.ProjectClosing += ApplicationProjectClosed;
-
-                    gui.SelectionChanged += GuiSelectionChanged;
-
                     if (!gui.Application.FileExporters.Any(e => e is HydroRegionShapeFileExporter))
                     {
                         ((List<IFileExporter>) gui.Application.FileExporters).Add(new HydroRegionShapeFileExporter(Gui));
@@ -139,41 +126,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         public override IMapLayerProvider MapLayerProvider { get; }
 
         public static NetworkEditorGuiPlugin Instance { get; private set; }
-
-        public IView HydroRegionContents
-        {
-            get
-            {
-                return hydroRegionTreeView;
-            }
-        }
-
-        public void InitializeHydroRegionTreeView()
-        {
-            if (hydroRegionTreeView == null || hydroRegionTreeView.IsDisposed)
-            {
-                hydroRegionTreeView = new HydroRegionTreeView(this);
-                hydroRegionTreeView.Text = "Region";
-                hydroRegionTreeView.TreeView.DoubleClick += TreeViewDoubleClick;
-                hydroRegionTreeView.TreeView.SelectedNodeChanged += TreeViewSelectedNodeChanged;
-            }
-
-            Gui.ToolWindowViews.Add(hydroRegionTreeView, ViewLocation.Right);
-            Gui.ToolWindowViews.ActiveView = hydroRegionTreeView;
-        }
-
-        public void SetActiveRegion(IHydroRegion region)
-        {
-            if (hydroRegionTreeView == null)
-            {
-                return;
-            }
-
-            if (hydroRegionTreeView.Region != region)
-            {
-                hydroRegionTreeView.Region = region;
-            }
-        }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
@@ -215,48 +167,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.BridgePillars);
         }
 
-        public override void Activate()
-        {
-            InitializeHydroRegionTreeView();
-
-            if (Gui.DocumentViews.ActiveView != null)
-            {
-                SetActiveRegion(GetRegionFromActiveView());
-            }
-
-            Gui.Application.ProjectClosing += ApplicationProjectClosed;
-            Gui.SelectionChanged += GuiSelectionChanged;
-
-            base.Activate();
-        }
-
-        public override void Deactivate()
-        {
-            base.Deactivate();
-
-            if (Gui != null)
-            {
-                Gui.Application.ProjectClosing -= ApplicationProjectClosed;
-                Gui.SelectionChanged -= GuiSelectionChanged;
-            }
-
-            if (hydroRegionTreeView != null)
-            {
-                hydroRegionTreeView.TreeView.DoubleClick -= TreeViewDoubleClick;
-                hydroRegionTreeView.TreeView.SelectedNodeChanged -= TreeViewSelectedNodeChanged;
-                hydroRegionTreeView.Dispose();
-            }
-        }
-
         public override void Dispose()
         {
-            if (hydroRegionTreeView != null)
-            {
-                ((IView) hydroRegionTreeView).Data = null;
-                hydroRegionTreeView.Dispose();
-                hydroRegionTreeView = null;
-            }
-
             base.Dispose();
 
             Instance = null;
@@ -264,16 +176,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IMenuItem GetContextMenu(object sender, object data)
         {
-            if (hydroRegionTreeView != null && sender != null && ((TreeNode) sender).TreeView == hydroRegionTreeView.TreeView)
-            {
-                if (data is HydroRegion)
-                {
-                    return new MenuItemContextMenuStripAdapter(hydroRegionContextMenu);
-                }
-
-                return hydroRegionTreeView.GetContextMenu(sender, data);
-            }
-
             if (data is HydroRegion)
             {
                 return new MenuItemContextMenuStripAdapter(hydroRegionContextMenu);
@@ -317,11 +219,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                              .OfType<MapView>()
                              .ForEach(mv => HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mv.MapControl));
             }
-        }
-
-        public override void OnActiveViewChanged(IView view)
-        {
-            SetActiveRegion(GetRegionFromActiveView());
         }
 
         internal static MapView GetFocusedMapView()
@@ -485,11 +382,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             };
         }
 
-        private void ApplicationProjectClosed(Project project)
-        {
-            ((IView) hydroRegionTreeView).Data = null;
-        }
-
         private void OnDocumentViewAdded(IView view)
         {
             var coverageView = view as CoverageView;
@@ -564,76 +456,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             return matchingRegion.Parent != null
                        ? GetRootRegion(matchingRegion.Parent)
                        : matchingRegion;
-        }
-
-        private IHydroRegion GetRegionFromActiveView()
-        {
-            IView activeView = Gui.DocumentViews.ActiveView;
-            if (activeView == null || activeView.Data == null)
-            {
-                return null; // strange bug
-            }
-
-            // in case active view is view of network such as cross section editor, 
-            // network editor or map that contains a network set the network to treeview
-            IHydroRegion region = null;
-
-            if (activeView is MapView || activeView is ProjectItemMapView)
-            {
-                // when region is dragged onto an opened mapview
-                MapView mapView = activeView is ProjectItemMapView
-                                      ? ((ProjectItemMapView) activeView).MapView
-                                      : (MapView) activeView;
-
-                HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
-                region = HydroRegionEditorHelper.RootGetHydroRegion(mapView);
-            }
-
-            return region;
-        }
-
-        private void GuiSelectionChanged(object sender, SelectedItemChangedEventArgs e)
-        {
-            if (settingGuiSelection)
-            {
-                return;
-            }
-
-            //show network if selected
-            if (Gui.Selection is IDataItem dataItem && typeof(IHydroRegion).IsAssignableFrom(dataItem.ValueType))
-            {
-                hydroRegionTreeView.Region = (IHydroRegion) dataItem.Value;
-                return;
-            }
-
-            //no network selected, so get it from the active view
-            SetActiveRegion(GetRegionFromActiveView());
-        }
-
-        private void TreeViewSelectedNodeChanged(object sender, EventArgs e)
-        {
-            // check if view is open for cross section belonging to specific Branch
-            if (hydroRegionTreeView.TreeView.SelectedNode == null || settingGuiSelection)
-            {
-                return;
-            }
-
-            if (!hydroRegionTreeView.SynchronizingGuiSelection)
-            {
-                settingGuiSelection = true;
-                // needed to clear Trackers in mapView for nodes that are not displayed in MapView
-                Gui.Selection = null;
-
-                Gui.Selection = hydroRegionTreeView.TreeView.SelectedNode.Tag;
-
-                settingGuiSelection = false;
-            }
-        }
-
-        private void TreeViewDoubleClick(object sender, EventArgs e)
-        {
-            //open view for selected object
-            Gui.CommandHandler.OpenViewForSelection();
         }
     }
 }
