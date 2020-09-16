@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using SharpMap.Api;
@@ -18,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
         /// <returns>A new <see cref="ILayer"/> containing teh model.</returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Throw when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
         ILayer CreateModelGroupLayer(WaveModel waveModel);
@@ -30,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new <see cref="ILayer"/> of the <see cref="WaveDomainData"/>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="domain"/> is <c>null</c>.
         /// </exception>
         ILayer CreateWaveDomainDataLayer(WaveDomainData domain);
@@ -43,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new output <see cref="ILayer"/>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="domainName"/> is <c>null</c>.
         /// </exception>
         ILayer CreateOutputLayer(string domainName, bool overrideLayerName = false);
@@ -57,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new grid <see cref="ILayer"/>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="discreteGrid"/> is <c>null</c>.
         /// </exception>
         ILayer CreateGridLayer(IDiscreteGridPointCoverage discreteGrid,
@@ -69,9 +68,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
         /// <returns>
-        /// A new <see cref="ILayer"/> visualising the obstacle features.
+        /// A new <see cref="ILayer"/> visualizing the obstacle features.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
         ILayer CreateObstacleLayer(IWaveModel waveModel);
@@ -82,9 +81,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
         /// <returns>
-        /// A new <see cref="ILayer"/> visualising the observation points features.
+        /// A new <see cref="ILayer"/> visualizing the observation points features.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
         ILayer CreateObservationPointsLayer(IWaveModel waveModel);
@@ -95,9 +94,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
         /// <returns>
-        /// A new <see cref="ILayer"/> visualising the observation cross-sections features.
+        /// A new <see cref="ILayer"/> visualizing the observation cross-sections features.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
         ILayer CreateObservationCrossSectionLayer(IWaveModel waveModel);
@@ -109,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new boundary group layer.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateBoundaryLayer(IBoundaryMapFeaturesContainer featuresProviderContainer);
@@ -121,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new support points layer.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider);
@@ -133,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new boundary line layer.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateBoundaryLineLayer(IFeatureProvider featureProvider);
@@ -145,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new boundary start point layer.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateBoundaryStartPointLayer(IFeatureProvider featureProvider);
@@ -157,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new boundary end point layer.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateBoundaryEndPointLayer(IFeatureProvider featureProvider);
@@ -169,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new selected support point layer.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateSelectedSupportPointLayer(IFeatureProvider featureProvider);
@@ -181,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new inactive support points layer.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateInactiveSupportPointsLayer(IFeatureProvider featureProvider);
@@ -193,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>
         /// A new active support points layer.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateActiveSupportPointsLayer(IFeatureProvider featureProvider);
