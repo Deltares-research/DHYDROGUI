@@ -1,8 +1,10 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Utils;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
@@ -47,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         {
             base.OnAfterProjectMigrated(project);
             
-            foreach (WaveModel waveModel in project.RootFolder.Models.OfType<WaveModel>())
+            foreach (WaveModel waveModel in GetAllWaveModelsFromProject(project))
             {
                 string activityName = string.Format(Resources.WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__, 
                                                     waveModel.Name);
@@ -56,5 +58,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 logHandler.LogReport();
             }
         }
+
+        private static IEnumerable<WaveModel> GetAllWaveModelsFromProject(Project project) =>
+            project.GetAllItemsRecursive().OfType<WaveModel>();
     }
 }
