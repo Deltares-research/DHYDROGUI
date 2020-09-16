@@ -98,7 +98,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         break;
                     case NotifyCollectionChangedAction.Replace:
                         throw new NotImplementedException("Renaming of Tracers is not yet supported");
-                        break;
                     case NotifyCollectionChangedAction.Reset:
                         SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
                         return;
@@ -143,7 +142,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 case NotifyCollectionChangedAction.Replace:
                     // can't rename yet
                     throw new NotImplementedException("Renaming of tracer definitions is not yet supported");
-                    break;
                 case NotifyCollectionChangedAction.Reset:
                     // sync the initial tracers
                     InitialTracers.Clear();
@@ -264,7 +262,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
-                    break;
                 case NotifyCollectionChangedAction.Reset:
                     // sync the initial fractions
                     InitialFractions.Clear();

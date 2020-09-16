@@ -236,10 +236,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 date = DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                log.Error(
-                    "Could not load the reference time correctly, check the format. Using Now as a time reference instead.");
+                log.Error("Could not load the reference time correctly, check the format. Using Now as a time reference instead.");
                 date = DateTime.Now;
             }
 
