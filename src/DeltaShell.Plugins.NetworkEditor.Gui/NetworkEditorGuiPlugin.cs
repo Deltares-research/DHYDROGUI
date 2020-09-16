@@ -9,6 +9,7 @@ using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Utils;
@@ -103,10 +104,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
             set
             {
+                if (gui != null)
+                {
+                    gui.SelectionChanged -= GuiSelectionChanged;
+                }
+
                 gui = value;
 
                 if (gui != null)
                 {
+                    gui.SelectionChanged += GuiSelectionChanged;
+
                     if (!gui.Application.FileExporters.Any(e => e is HydroRegionShapeFileExporter))
                     {
                         ((List<IFileExporter>) gui.Application.FileExporters).Add(new HydroRegionShapeFileExporter(Gui));
@@ -167,6 +175,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.BridgePillars);
         }
 
+        public override void Activate()
+        {
+            if (Gui.DocumentViews.ActiveView != null)
+            {
+                GetRegionFromActiveView();
+            }
+
+            Gui.SelectionChanged += GuiSelectionChanged;
+
+            base.Activate();
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+
+            if (Gui != null)
+            {
+                Gui.SelectionChanged -= GuiSelectionChanged;
+            }
+        }
+
         public override void Dispose()
         {
             base.Dispose();
@@ -219,6 +249,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                              .OfType<MapView>()
                              .ForEach(mv => HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mv.MapControl));
             }
+        }
+
+        public override void OnActiveViewChanged(IView view)
+        {
+            GetRegionFromActiveView();
         }
 
         internal static MapView GetFocusedMapView()
@@ -456,6 +491,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             return matchingRegion.Parent != null
                        ? GetRootRegion(matchingRegion.Parent)
                        : matchingRegion;
+        }
+
+        private IHydroRegion GetRegionFromActiveView()
+        {
+            IView activeView = Gui.DocumentViews.ActiveView;
+            if (activeView == null || activeView.Data == null)
+            {
+                return null; // strange bug
+            }
+
+            // in case active view is view of network such as cross section editor, 
+            // network editor or map that contains a network set the network to treeview
+            IHydroRegion region = null;
+
+            if (activeView is MapView || activeView is ProjectItemMapView)
+            {
+                // when region is dragged onto an opened mapview
+                MapView mapView = activeView is ProjectItemMapView
+                                      ? ((ProjectItemMapView) activeView).MapView
+                                      : (MapView) activeView;
+
+                HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
+                region = HydroRegionEditorHelper.RootGetHydroRegion(mapView);
+            }
+
+            return region;
+        }
+
+        private void GuiSelectionChanged(object sender, SelectedItemChangedEventArgs e)
+        {
+            //show network if selected
+            if (Gui.Selection is IDataItem dataItem && typeof(IHydroRegion).IsAssignableFrom(dataItem.ValueType))
+            {
+                return;
+            }
+
+            //no network selected, so get it from the active view
+            GetRegionFromActiveView();
         }
     }
 }
