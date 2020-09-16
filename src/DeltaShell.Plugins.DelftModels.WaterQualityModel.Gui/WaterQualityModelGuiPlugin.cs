@@ -271,6 +271,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     {
                         v.Data = GetMultipleFunctionViewData(o);
                         v.Text = o.Name;
+                        v.TableView.ReadOnly = true;
                     },
                     CloseForData = (v, o) =>
                         v.Data != null && o.TimeSeriesList.Any(ts => ((IEnumerable<IFunction>) v.Data).Contains(ts))
@@ -799,17 +800,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 variableOutput.Name,
                 TimeSeries = ts
             }).ToArray();
-            var dialog = new GridBasedDialog
+            using (var dialog = new GridBasedDialog
             {
                 Text = "Select time series",
                 MasterDataSource = dialogData,
                 SingleList = true,
                 MasterMultiSelect = true
-            };
-
-            return dialog.ShowDialog() == DialogResult.OK
-                       ? dialog.MasterSelectedIndices.Reverse().Select(i => dialogData[i].TimeSeries).ToArray()
-                       : null;
+            })
+            {
+                return dialog.ShowDialog() == DialogResult.OK
+                           ? dialog.MasterSelectedIndices.Reverse().Select(i => dialogData[i].TimeSeries).ToArray()
+                           : null;
+            }
         }
 
         private void FunctionListViewExtraActions(WaterQualityModel model, FunctionListView view)
