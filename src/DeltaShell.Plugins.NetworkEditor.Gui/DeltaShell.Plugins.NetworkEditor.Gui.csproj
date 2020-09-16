@@ -535,9 +535,6 @@
     <Resource Include="Resources\wwtp.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\AddPointCursor.cur" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\cut1.png" />
   </ItemGroup>
   <ItemGroup>
