@@ -690,16 +690,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The process dll file path is set to: &apos;{0}&apos;.
-        /// </summary>
-        internal static string SubstanceProcessLibraryWizardPageExtensions_The_process_dll_file_path_is_set_to_0_ {
-            get {
-                return ResourceManager.GetString("SubstanceProcessLibraryWizardPageExtensions_The_process_dll_file_path_is_set_to_0" +
-                        "_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &lt;empty&gt;.
         /// </summary>
         internal static string SubstanceProcessLibraryWizardPageExtentsions_Empty_ {

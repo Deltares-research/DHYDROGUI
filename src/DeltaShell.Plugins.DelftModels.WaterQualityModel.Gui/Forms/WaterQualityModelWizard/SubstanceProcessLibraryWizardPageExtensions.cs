@@ -56,10 +56,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                 string.IsNullOrEmpty(substanceProcessLibrary.ProcessDefinitionFilesPath)
                     ? Resources.SubstanceProcessLibraryWizardPageExtentsions_Empty_
                     : substanceProcessLibrary.ProcessDefinitionFilesPath);
-            Log.InfoFormat(Resources.SubstanceProcessLibraryWizardPageExtensions_The_process_dll_file_path_is_set_to_0_,
-                           string.IsNullOrEmpty(substanceProcessLibrary.ProcessDllFilePath)
-                               ? Resources.SubstanceProcessLibraryWizardPageExtentsions_Empty_
-                               : substanceProcessLibrary.ProcessDllFilePath);
         }
     }
 }
