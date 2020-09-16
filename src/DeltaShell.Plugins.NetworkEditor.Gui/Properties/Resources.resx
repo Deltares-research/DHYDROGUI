@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BedLevelFunctionName" xml:space="preserve">
-    <value>Bed level</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="BridgeSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BridgeSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -293,9 +290,6 @@
   <data name="unpaved" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\unpaved.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="WaterLevelFunctionName" xml:space="preserve">
-    <value>Water level</value>
-  </data>
   <data name="WeirSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\WeirSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -326,89 +320,8 @@
   <data name="RegionGroup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RegionGroup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="BridgeProperties_DisplayName" xml:space="preserve">
-    <value>Bridge</value>
-  </data>
-  <data name="CatchmentProperties_DisplayName" xml:space="preserve">
-    <value>Catchment</value>
-  </data>
-  <data name="ChannelProperties_DisplayName" xml:space="preserve">
-    <value>Channel</value>
-  </data>
-  <data name="CompositeStructureProperties_DisplayName" xml:space="preserve">
-    <value>Composite structure</value>
-  </data>
-  <data name="CrossSectionDefinitionProperties_DisplayName" xml:space="preserve">
-    <value>Cross section definition</value>
-  </data>
-  <data name="CrossSectionProperties_DisplayName" xml:space="preserve">
-    <value>Cross section</value>
-  </data>
-  <data name="CrossSectionSectionTypeProperties_DisplayName" xml:space="preserve">
-    <value>Cross section type</value>
-  </data>
-  <data name="CulvertProperties_DisplayName" xml:space="preserve">
-    <value>Culvert</value>
-  </data>
-  <data name="DrainageBasinProperties_DisplayName" xml:space="preserve">
-    <value>Drainage basin</value>
-  </data>
-  <data name="ExtraResistanceProperties_DisplayName" xml:space="preserve">
-    <value>Extra resistance</value>
-  </data>
-  <data name="FeatureCoverageProperties_DisplayName" xml:space="preserve">
-    <value>Feature spatial data</value>
-  </data>
-  <data name="HydroLinkProperties_DisplayName" xml:space="preserve">
-    <value>Hydro link</value>
-  </data>
-  <data name="HydroNodeProperties_DisplayName" xml:space="preserve">
-    <value>Hydro node</value>
-  </data>
-  <data name="HydroRegionProperties_DisplayName" xml:space="preserve">
-    <value>Hydro region</value>
-  </data>
-  <data name="LateralSourceProperties_DisplayName" xml:space="preserve">
-    <value>Lateral source</value>
-  </data>
-  <data name="NetworkCoverageProperties_DisplayName" xml:space="preserve">
-    <value>Network spatial data</value>
-  </data>
-  <data name="NetworkLocationProperties_DisplayName" xml:space="preserve">
-    <value>Network location</value>
-  </data>
-  <data name="NetworkProperties_DisplayName" xml:space="preserve">
-    <value>Network</value>
-  </data>
-  <data name="NetworkSegmentProperties_DisplayName" xml:space="preserve">
-    <value>Network segment</value>
-  </data>
-  <data name="ObservationPointProperties_DisplayName" xml:space="preserve">
-    <value>Observation point</value>
-  </data>
-  <data name="PumpProperties_DisplayName" xml:space="preserve">
-    <value>Pump</value>
-  </data>
-  <data name="RetentionProperties_DisplayName" xml:space="preserve">
-    <value>Retention</value>
-  </data>
-  <data name="RunoffBoundaryProperties_DisplayName" xml:space="preserve">
-    <value>Runoff boundary</value>
-  </data>
-  <data name="WasteWaterTreatmentPlantProperties_DisplayName" xml:space="preserve">
-    <value>Waste water treatment plant</value>
-  </data>
-  <data name="WeirProperties_DisplayName" xml:space="preserve">
-    <value>Weir</value>
-  </data>
-  <data name="DiscretizationProperties_DisplayName" xml:space="preserve">
-    <value>Discretization</value>
-  </data>
   <data name="globe_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\globe-green.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="GateProperties_DisplayName" xml:space="preserve">
-    <value>Gate</value>
   </data>
   <data name="dry_area" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\dry_area.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -449,53 +362,8 @@
   <data name="import" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\import.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="FeatureProjectTreeViewNodePresenter_GetContextMenu_Open__With___" xml:space="preserve">
-    <value>Open &amp;With...</value>
-  </data>
-  <data name="FeatureProjectTreeViewNodePresenter_GetContextMenu__Import___" xml:space="preserve">
-    <value>&amp;Import...</value>
-  </data>
-  <data name="FeatureProjectTreeViewNodePresenter_GetContextMenu__Export___" xml:space="preserve">
-    <value>&amp;Export...</value>
-  </data>
-  <data name="FeatureProjectTreeViewNodePresenter_GetContextMenu__Properties" xml:space="preserve">
-    <value>&amp;Properties</value>
-  </data>
-  <data name="NetworkEditorGuiPlugin_InitializeComponent_Generate_Computational_Grid_Nodes___" xml:space="preserve">
-    <value>Generate Computational Grid Nodes...</value>
-  </data>
-  <data name="NetworkEditorGuiPlugin_InitializeComponent_Remove_Computational_Grid_Nodes" xml:space="preserve">
-    <value>Remove Computational Grid Nodes</value>
-  </data>
-  <data name="NetworkEditorGuiPlugin_InitializeComponent_Add_Sub_Region" xml:space="preserve">
-    <value>Add Sub Region</value>
-  </data>
-  <data name="NetworkSideViewDataController_NetworkOfAddedSpatialDataDoesNotMatchNetworkOfRoute" xml:space="preserve">
-    <value>Network of added spatial data does not match network of the route.</value>
-  </data>
-  <data name="NetworkSideViewDataController_NetworkSpatialDataAlreadyInSideviewData" xml:space="preserve">
-    <value>Network spatial data already in sideview data.</value>
-  </data>
-  <data name="NetworkSideViewDataController_NetworkSpatialDataNotKnownInSideviewData" xml:space="preserve">
-    <value>Network spatial data not known in sideview data.</value>
-  </data>
-  <data name="NetworkSideViewDataController_FeatureSpatialDataAlreadyInSideviewData" xml:space="preserve">
-    <value>Feature spatial data already in sideview data.</value>
-  </data>
-  <data name="NetworkSideViewDataController_FeatureSpatialDataNotKnownInSideviewData" xml:space="preserve">
-    <value>Feature spatial data not known in sideview data.</value>
-  </data>
-  <data name="NetworkSideViewDataController_NetworkSpatialDataNotInSideviewData" xml:space="preserve">
-    <value>Network spatial data not in sideview data.</value>
-  </data>
-  <data name="NetworkSideViewDataController_FeatureSpatialDataNotInSideviewData" xml:space="preserve">
-    <value>Feature spatial data not in sideview data.</value>
-  </data>
   <data name="Embankment" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Embankment.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="AreaProperties_DisplayName" xml:space="preserve">
-    <value>Area</value>
   </data>
   <data name="enclosure" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\enclosure.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

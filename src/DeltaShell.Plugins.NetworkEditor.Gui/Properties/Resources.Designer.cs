@@ -81,39 +81,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Area.
-        /// </summary>
-        public static string AreaProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("AreaProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap basinGroup {
             get {
                 object obj = ResourceManager.GetObject("basinGroup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Bed level.
-        /// </summary>
-        public static string BedLevelFunctionName {
-            get {
-                return ResourceManager.GetString("BedLevelFunctionName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Bridge.
-        /// </summary>
-        public static string BridgeProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("BridgeProperties_DisplayName", resourceCulture);
             }
         }
         
@@ -148,24 +121,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Catchment.
-        /// </summary>
-        public static string CatchmentProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("CatchmentProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Channel.
-        /// </summary>
-        public static string ChannelProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("ChannelProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap clock {
@@ -176,57 +131,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Composite structure.
-        /// </summary>
-        public static string CompositeStructureProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("CompositeStructureProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cross section definition.
-        /// </summary>
-        public static string CrossSectionDefinitionProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("CrossSectionDefinitionProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cross section.
-        /// </summary>
-        public static string CrossSectionProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("CrossSectionProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap CrossSectionSectionType {
             get {
                 object obj = ResourceManager.GetObject("CrossSectionSectionType", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cross section type.
-        /// </summary>
-        public static string CrossSectionSectionTypeProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("CrossSectionSectionTypeProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Culvert.
-        /// </summary>
-        public static string CulvertProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("CulvertProperties_DisplayName", resourceCulture);
             }
         }
         
@@ -291,30 +201,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Discretization.
-        /// </summary>
-        public static string DiscretizationProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("DiscretizationProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap DrainageBasin {
             get {
                 object obj = ResourceManager.GetObject("DrainageBasin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Drainage basin.
-        /// </summary>
-        public static string DrainageBasinProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("DrainageBasinProperties_DisplayName", resourceCulture);
             }
         }
         
@@ -359,15 +251,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extra resistance.
-        /// </summary>
-        public static string ExtraResistanceProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("ExtraResistanceProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap ExtraResistanceSmall {
@@ -388,51 +271,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feature spatial data.
-        /// </summary>
-        public static string FeatureCoverageProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("FeatureCoverageProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;Export....
-        /// </summary>
-        public static string FeatureProjectTreeViewNodePresenter_GetContextMenu__Export___ {
-            get {
-                return ResourceManager.GetString("FeatureProjectTreeViewNodePresenter_GetContextMenu__Export___", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;Import....
-        /// </summary>
-        public static string FeatureProjectTreeViewNodePresenter_GetContextMenu__Import___ {
-            get {
-                return ResourceManager.GetString("FeatureProjectTreeViewNodePresenter_GetContextMenu__Import___", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;Properties.
-        /// </summary>
-        public static string FeatureProjectTreeViewNodePresenter_GetContextMenu__Properties {
-            get {
-                return ResourceManager.GetString("FeatureProjectTreeViewNodePresenter_GetContextMenu__Properties", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Open &amp;With....
-        /// </summary>
-        public static string FeatureProjectTreeViewNodePresenter_GetContextMenu_Open__With___ {
-            get {
-                return ResourceManager.GetString("FeatureProjectTreeViewNodePresenter_GetContextMenu_Open__With___", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap fixedweir {
@@ -449,15 +287,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("Gate", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gate.
-        /// </summary>
-        public static string GateProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("GateProperties_DisplayName", resourceCulture);
             }
         }
         
@@ -542,39 +371,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hydro link.
-        /// </summary>
-        public static string HydroLinkProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("HydroLinkProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hydro node.
-        /// </summary>
-        public static string HydroNodeProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("HydroNodeProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap HydroRegion {
             get {
                 object obj = ResourceManager.GetObject("HydroRegion", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hydro region.
-        /// </summary>
-        public static string HydroRegionProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("HydroRegionProperties_DisplayName", resourceCulture);
             }
         }
         
@@ -605,15 +407,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("LateralSourceMap", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Lateral source.
-        /// </summary>
-        public static string LateralSourceProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("LateralSourceProperties_DisplayName", resourceCulture);
             }
         }
         
@@ -668,15 +461,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Network spatial data.
-        /// </summary>
-        public static string NetworkCoverageProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("NetworkCoverageProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Remove ungrouped.
         /// </summary>
         public static string NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped {
@@ -704,33 +488,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add Sub Region.
-        /// </summary>
-        public static string NetworkEditorGuiPlugin_InitializeComponent_Add_Sub_Region {
-            get {
-                return ResourceManager.GetString("NetworkEditorGuiPlugin_InitializeComponent_Add_Sub_Region", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Generate Computational Grid Nodes....
-        /// </summary>
-        public static string NetworkEditorGuiPlugin_InitializeComponent_Generate_Computational_Grid_Nodes___ {
-            get {
-                return ResourceManager.GetString("NetworkEditorGuiPlugin_InitializeComponent_Generate_Computational_Grid_Nodes___", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove Computational Grid Nodes.
-        /// </summary>
-        public static string NetworkEditorGuiPlugin_InitializeComponent_Remove_Computational_Grid_Nodes {
-            get {
-                return ResourceManager.GetString("NetworkEditorGuiPlugin_InitializeComponent_Remove_Computational_Grid_Nodes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap NetworkGroup {
@@ -741,103 +498,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Network location.
-        /// </summary>
-        public static string NetworkLocationProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("NetworkLocationProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap NetworkLocationSmall {
             get {
                 object obj = ResourceManager.GetObject("NetworkLocationSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Network.
-        /// </summary>
-        public static string NetworkProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("NetworkProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Network segment.
-        /// </summary>
-        public static string NetworkSegmentProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("NetworkSegmentProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature spatial data already in sideview data..
-        /// </summary>
-        public static string NetworkSideViewDataController_FeatureSpatialDataAlreadyInSideviewData {
-            get {
-                return ResourceManager.GetString("NetworkSideViewDataController_FeatureSpatialDataAlreadyInSideviewData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature spatial data not in sideview data..
-        /// </summary>
-        public static string NetworkSideViewDataController_FeatureSpatialDataNotInSideviewData {
-            get {
-                return ResourceManager.GetString("NetworkSideViewDataController_FeatureSpatialDataNotInSideviewData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature spatial data not known in sideview data..
-        /// </summary>
-        public static string NetworkSideViewDataController_FeatureSpatialDataNotKnownInSideviewData {
-            get {
-                return ResourceManager.GetString("NetworkSideViewDataController_FeatureSpatialDataNotKnownInSideviewData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Network of added spatial data does not match network of the route..
-        /// </summary>
-        public static string NetworkSideViewDataController_NetworkOfAddedSpatialDataDoesNotMatchNetworkOfRoute {
-            get {
-                return ResourceManager.GetString("NetworkSideViewDataController_NetworkOfAddedSpatialDataDoesNotMatchNetworkOfRoute" +
-                        "", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Network spatial data already in sideview data..
-        /// </summary>
-        public static string NetworkSideViewDataController_NetworkSpatialDataAlreadyInSideviewData {
-            get {
-                return ResourceManager.GetString("NetworkSideViewDataController_NetworkSpatialDataAlreadyInSideviewData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Network spatial data not in sideview data..
-        /// </summary>
-        public static string NetworkSideViewDataController_NetworkSpatialDataNotInSideviewData {
-            get {
-                return ResourceManager.GetString("NetworkSideViewDataController_NetworkSpatialDataNotInSideviewData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Network spatial data not known in sideview data..
-        /// </summary>
-        public static string NetworkSideViewDataController_NetworkSpatialDataNotKnownInSideviewData {
-            get {
-                return ResourceManager.GetString("NetworkSideViewDataController_NetworkSpatialDataNotKnownInSideviewData", resourceCulture);
             }
         }
         
@@ -912,15 +578,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Observation point.
-        /// </summary>
-        public static string ObservationPointProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("ObservationPointProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap openwater {
@@ -987,15 +644,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("pump", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pump.
-        /// </summary>
-        public static string PumpProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("PumpProperties_DisplayName", resourceCulture);
             }
         }
         
@@ -1090,15 +738,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retention.
-        /// </summary>
-        public static string RetentionProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("RetentionProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap route {
@@ -1135,15 +774,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("runoff", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Runoff boundary.
-        /// </summary>
-        public static string RunoffBoundaryProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("RunoffBoundaryProperties_DisplayName", resourceCulture);
             }
         }
         
@@ -1237,39 +867,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Waste water treatment plant.
-        /// </summary>
-        public static string WasteWaterTreatmentPlantProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("WasteWaterTreatmentPlantProperties_DisplayName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Water level.
-        /// </summary>
-        public static string WaterLevelFunctionName {
-            get {
-                return ResourceManager.GetString("WaterLevelFunctionName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Weir {
             get {
                 object obj = ResourceManager.GetObject("Weir", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Weir.
-        /// </summary>
-        public static string WeirProperties_DisplayName {
-            get {
-                return ResourceManager.GetString("WeirProperties_DisplayName", resourceCulture);
             }
         }
         
