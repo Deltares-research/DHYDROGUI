@@ -92,10 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                         else
                         {
                             ShapeModifyTool.ShapeSelectTool.MouseEvent(kind, e, c);
-                            if (null != ShapeModifyTool.ShapeFeatureEditor)
-                            {
-                                ShapeModifyTool.ShapeFeatureEditor.Stop();
-                            }
+                            ShapeModifyTool.ShapeFeatureEditor?.Stop();
                         }
                     }
                         break;
@@ -119,7 +116,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                         if (ShapeModifyTool.ShapeMoveTool.IsBusy)
                         {
                             ShapeModifyTool.ShapeMoveTool.MouseEvent(kind, e, c);
-                            return;
                         }
 
                         break;

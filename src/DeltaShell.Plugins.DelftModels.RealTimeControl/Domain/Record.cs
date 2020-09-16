@@ -1,13 +1,10 @@
 ﻿using System.Globalization;
 using System.Xml.Linq;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     public class Record : IXml
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(Record));
-
         public Record()
         {
             XLabel = "x";
@@ -21,13 +18,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override bool Equals(object obj)
         {
-            var that = obj as Record;
-            if (that != null)
+            if (obj is Record that && X == that.X && Y == that.Y)
             {
-                if (X == that.X && Y == that.Y)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;

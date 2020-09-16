@@ -120,7 +120,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             if (feature.Geometry.Coordinates.Length == previousGeometry.Coordinates.Length)
             {
                 previousGeometry = feature.Geometry;
-                return;
             }
             else
             {

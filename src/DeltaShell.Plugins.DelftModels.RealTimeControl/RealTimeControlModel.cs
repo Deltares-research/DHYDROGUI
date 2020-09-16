@@ -597,15 +597,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                         di =>
                         {
                             var controlGroup = di.Value as ControlGroup;
-                            if (controlGroup != null)
-                            {
-                                if (controlGroup.Inputs.Cast<ConnectionPoint>().Concat(controlGroup.Outputs).Contains(connectionPoint))
-                                {
-                                    return true;
-                                }
-                            }
-
-                            return false;
+                            return controlGroup != null && controlGroup.Inputs.Cast<ConnectionPoint>().Concat(controlGroup.Outputs).Contains(connectionPoint);
                         });
 
                     if (controlGroupDataItem != null)
@@ -760,11 +752,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 // this is another hack, fix the model state machine to handle lower level exception
                 MarkOutputOutOfSync();
-            }
-
-            if (RunsInIntegratedModel)
-            {
-                return;
             }
         }
 
