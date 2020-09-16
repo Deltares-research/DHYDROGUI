@@ -18,55 +18,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var issues = new List<ValidationIssue>();
             foreach (IWindField windField in model.WindFields)
             {
-                if (windField.Data != null && windField.Data.Arguments[0] is IVariable<DateTime>)
+                if (windField.Data?.Arguments[0] is IVariable<DateTime>)
                 {
                     IMultiDimensionalArray<DateTime> times = windField.Data.Arguments[0].GetValues<DateTime>();
                     if (!times.Any())
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                                                       string.Format("No data defined in wind time series {0}",
-                                                                     windField.Name), windField));
+                                                       $"No data defined in wind time series {windField.Name}", windField));
                     }
                     else if (times.First() > model.StartTime || times.Last() < model.StopTime)
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                                                       string.Format(
-                                                           "Time series interval does not span model run time for {0}",
-                                                           windField.Name),
+                                                       $"Time series interval does not span model run time for {windField.Name}",
                                                        windField));
                     }
                 }
 
-                var griddedWindField = windField as GriddedWindField;
-                if (griddedWindField != null)
+                if (windField is GriddedWindField griddedWindField)
                 {
                     if (!File.Exists(griddedWindField.WindFilePath))
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                                                       string.Format("Could not find wind file {0} for {1}",
-                                                                     griddedWindField.WindFilePath,
-                                                                     griddedWindField.Name), griddedWindField));
+                                                       $"Could not find wind file {griddedWindField.WindFilePath} for {griddedWindField.Name}", griddedWindField));
                     }
 
                     if (griddedWindField.SeparateGridFile && !File.Exists(griddedWindField.GridFilePath))
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                                                       string.Format("Could not find grid file {0} for {1}",
-                                                                     griddedWindField.GridFilePath,
-                                                                     griddedWindField.Name), griddedWindField));
+                                                       $"Could not find grid file {griddedWindField.GridFilePath} for {griddedWindField.Name}", griddedWindField));
                     }
                 }
 
-                var spiderWebWindField = windField as SpiderWebWindField;
-                if (spiderWebWindField != null)
+                if (windField is SpiderWebWindField spiderWebWindField && !File.Exists(spiderWebWindField.WindFilePath))
                 {
-                    if (!File.Exists(spiderWebWindField.WindFilePath))
-                    {
-                        issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                                                       string.Format("Could not find wind file {0} for {1}",
-                                                                     spiderWebWindField.WindFilePath,
-                                                                     spiderWebWindField.Name), spiderWebWindField));
-                    }
+                    issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
+                                                   $"Could not find wind file {spiderWebWindField.WindFilePath} for {spiderWebWindField.Name}", spiderWebWindField));
                 }
             }
 

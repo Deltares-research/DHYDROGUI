@@ -124,12 +124,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             else
             {
                 ShapeModifyTool.ShapeSelectTool.MouseEvent(kind, e, c);
-                if (kind == ChartMouseEvent.Down)
+                if (kind == ChartMouseEvent.Down && ShapeModifyTool.ShapeSelectTool.ShapeFeatureEditor != null)
                 {
-                    if (ShapeModifyTool.ShapeSelectTool.ShapeFeatureEditor != null)
-                    {
-                        ShapeModifyTool.ShapeFeatureEditor.Start();
-                    }
+                    ShapeModifyTool.ShapeFeatureEditor.Start();
                 }
             }
         }

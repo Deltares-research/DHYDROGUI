@@ -268,4 +268,10 @@
   <data name="FMMenuItemHelper_CreateResetCoordinateSystemItem_Reset_Coordinate_System___" xml:space="preserve">
     <value>Reset Coordinate System...</value>
   </data>
+  <data name="SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system" xml:space="preserve">
+    <value>The model coordinates do not appear to be in '{0}', as they fall outside the expected range of values for this system. Please verify the selected coordinate system is the system the coordinates were measured in. Continuing could lead to the map visualization failing and unexpected behaviour of spatial operations {1}{1}Are you sure you want to continue?</value>
+  </data>
+  <data name="SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system_Caption" xml:space="preserve">
+    <value>Warning: model coordinates do not appear to be in the selected system</value>
+  </data>
 </root>

@@ -22,43 +22,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             });
         }
 
-        public TabbedMultipleFunctionView FunctionView
-        {
-            get
-            {
-                return tabbedMultipleFunctionView;
-            }
-        }
+        public TabbedMultipleFunctionView FunctionView => tabbedMultipleFunctionView;
 
-        public override string Text
-        {
-            get
-            {
-                return "Heat flux model data";
-            }
-        }
+        public override string Text => "Heat flux model data";
 
         public Image Image { get; set; }
 
         public IEventedList<IView> ChildViews { get; private set; }
 
-        public bool HandlesChildViews
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool HandlesChildViews => true;
 
         public void EnsureVisible(object item) {}
         public void ActivateChildView(IView childView) {}
 
         private HeatFluxModel HeatFluxModel
         {
-            get
-            {
-                return heatFluxModel;
-            }
+            get => heatFluxModel;
             set
             {
                 heatFluxModel = value;
@@ -97,19 +76,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             if (heatFluxModel != null)
             {
-                if (radiationCheckBox.Enabled && !radiationCheckBox.Checked)
+                if (radiationCheckBox.Enabled && 
+                    !radiationCheckBox.Checked && 
+                    heatFluxModel.MeteoData != null && 
+                    heatFluxModel.MeteoData.Arguments[0].Values.Count > 0)
                 {
-                    if (heatFluxModel.MeteoData != null &&
-                        heatFluxModel.MeteoData.Arguments[0].Values.Count > 0)
-                    {
-                        DialogResult dialogResult = MessageBox.Show("Are you sure you want to erase solar radiation data?",
-                                                                    "Dismiss solar radiation",
-                                                                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    DialogResult dialogResult = MessageBox.Show("Are you sure you want to erase solar radiation data?",
+                                                                "Dismiss solar radiation",
+                                                                MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
 
-                        if (dialogResult == DialogResult.Cancel)
-                        {
-                            proceed = false;
-                        }
+                    if (dialogResult == DialogResult.Cancel)
+                    {
+                        proceed = false;
                     }
                 }
 
@@ -132,14 +110,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public object Data
         {
-            get
-            {
-                return HeatFluxModel;
-            }
-            set
-            {
-                HeatFluxModel = value as HeatFluxModel;
-            }
+            get => HeatFluxModel;
+            set => HeatFluxModel = value as HeatFluxModel;
         }
 
         public ViewInfo ViewInfo { get; set; }

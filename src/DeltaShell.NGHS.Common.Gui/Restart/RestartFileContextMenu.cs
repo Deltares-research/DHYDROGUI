@@ -12,7 +12,6 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
     /// <summary>
     /// Context menu for a <seealso cref="RestartFile"/>.
     /// </summary>
-    /// <typeparam name="T">Type of the <seealso cref="IRestartModel"/></typeparam>
     /// <seealso cref="MenuItemContextMenuStripAdapter"/>
     public class RestartFileContextMenu : MenuItemContextMenuStripAdapter
     {

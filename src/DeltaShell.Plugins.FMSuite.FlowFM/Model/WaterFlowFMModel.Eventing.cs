@@ -715,8 +715,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
 
-            var groupableFeature = removedOrAddedItem as IGroupableFeature;
-            if (groupableFeature != null && e.Action != NotifyCollectionChangedAction.Remove && !Area.IsEditing)
+            if (removedOrAddedItem is IGroupableFeature groupableFeature && e.Action != NotifyCollectionChangedAction.Remove && !Area.IsEditing)
             {
                 groupableFeature.UpdateGroupName(this);
             }
@@ -750,27 +749,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         AddAreaItem(feature, inputSender);
                         break;
                     default:
-                        throw new NotImplementedException(
-                            string.Format("Action {0} on feature collection not supported", e.Action));
+                        throw new NotImplementedException($"Action {e.Action} on feature collection not supported");
                 }
             }
         }
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var weir = sender as IWeir;
-            if (weir != null)
+            if (sender is IWeir weir && e.PropertyName == nameof(Weir.WeirFormula))
             {
-                if (e.PropertyName == nameof(Weir.WeirFormula))
-                {
-                    bool isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
-                    UpdateAreaDataItems(weir, isInputSender);
-                }
+                bool isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
+                UpdateAreaDataItems(weir, isInputSender);
             }
 
-            var groupableFeature = sender as IGroupableFeature;
-            if (updatingGroupName || Area.IsEditing || groupableFeature == null ||
-                e.PropertyName != nameof(IGroupableFeature.GroupName))
+            if (updatingGroupName || Area.IsEditing || !(sender is IGroupableFeature groupableFeature) || e.PropertyName != nameof(IGroupableFeature.GroupName))
             {
                 return;
             }
@@ -789,8 +781,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void RemoveAreaFeature(IFeature feature)
         {
-            List<IDataItem> dataItemsToBeRemoved;
-            if (areaDataItems.TryGetValue(feature, out dataItemsToBeRemoved))
+            if (areaDataItems.TryGetValue(feature, out List<IDataItem> dataItemsToBeRemoved))
             {
                 foreach (IDataItem dataItem in dataItemsToBeRemoved)
                 {
