@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<dimrConfig xmlns="http://schemas.deltares.nl/dimr" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.deltares.nl/dimr http://content.oss.deltares.nl/schemas/dimr-1.2.xsd">
+  <documentation>
+    <fileVersion>1.2</fileVersion>
+    <createdBy>Deltares, Coupling Team</createdBy>
+    <creationDate>2020-07-10T13:23:13.4669058Z</creationDate>
+  </documentation>
+  <control>
+    <parallel>
+      <startGroup>
+        <time>0 300 1800000</time>
+        <start name="Real-Time Control" />
+        <coupler name="rtc_to_flow" />
+      </startGroup>
+      <start name="t2" />
+    </parallel>
+  </control>
+  <component name="Real-Time Control">
+    <library>FBCTools_BMI</library>
+    <workingDir>rtc</workingDir>
+    <inputFile>.</inputFile>
+  </component>
+  <component name="t2">
+    <library>dflowfm</library>
+    <workingDir>dflowfm</workingDir>
+    <inputFile>t2.mdu</inputFile>
+  </component>
+  <coupler name="rtc_to_flow">
+    <sourceComponent>Real-Time Control</sourceComponent>
+    <targetComponent>t2</targetComponent>
+    <item>
+      <sourceName>[Output]Maeslantkering/GateLowerEdgeLevel</sourceName>
+      <targetName>generalstructures/Maeslantkering/GateLowerEdgeLevel</targetName>
+    </item>
+    <item>
+      <sourceName>[Output]Maeslantkering/GateOpeningWidth</sourceName>
+      <targetName>generalstructures/Maeslantkering/GateOpeningWidth</targetName>
+    </item>
+    <item>
+      <sourceName>[Output]Maeslantkering/CrestLevel</sourceName>
+      <targetName>generalstructures/Maeslantkering/CrestLevel</targetName>
+    </item>
+    <logger>
+      <workingDir>.</workingDir>
+      <outputFile>rtc_to_flow.nc</outputFile>
+    </logger>
+  </coupler>
+</dimrConfig>

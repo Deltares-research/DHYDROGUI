@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<TimeSeries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.wldelft.nl/fews/PI" xsi:schemaLocation="http://www.wldelft.nl/fews/PI F:\checkouts\svn\DSCTestbench\trunk\cases\e105_dflowfm-drtc\f01_general\c072_generalstructure_lowering_open_door\e105-f01-c072.dsproj_data\Integrated_Model_output\rtc\pi_timeseries.xsd" version="1.2">
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>[TimeRule]ControlGroup Gate Lower Edge Level/ControlRule Gate Lower Edge Level</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="5" divider="1" />
+      <startDate date="2007-01-01" time="00:00:00" />
+      <endDate date="2007-01-21" time="20:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2007-01-01" time="00:00:00" value="-16.5" />
+    <event date="2007-01-04" time="11:20:00" value="-16.5" />
+    <event date="2007-01-07" time="22:40:00" value="-16.5" />
+    <event date="2007-01-14" time="21:20:00" value="-16.5" />
+    <event date="2007-01-18" time="08:40:00" value="-16.5" />
+    <event date="2007-01-21" time="20:00:00" value="-16.5" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>[TimeRule]ControlGroup Gate Opening Width/ControlRule Gate Opening Width</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="5" divider="1" />
+      <startDate date="2007-01-01" time="00:00:00" />
+      <endDate date="2007-01-21" time="20:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2007-01-01" time="00:00:00" value="1000" />
+    <event date="2007-01-04" time="11:20:00" value="1000" />
+    <event date="2007-01-07" time="22:40:00" value="0" />
+    <event date="2007-01-14" time="21:20:00" value="0" />
+    <event date="2007-01-18" time="08:40:00" value="1000" />
+    <event date="2007-01-21" time="20:00:00" value="1000" />
+  </series>
+  <series>
+    <header>
+      <type>instantaneous</type>
+      <locationId>[TimeRule]ControlGroup Crestlevel/ControlRule Crestlevel</locationId>
+      <parameterId>TimeSeries</parameterId>
+      <timeStep unit="minute" multiplier="5" divider="1" />
+      <startDate date="2007-01-01" time="00:00:00" />
+      <endDate date="2007-01-21" time="20:00:00" />
+      <missVal>-999.0</missVal>
+      <stationName />
+      <units />
+    </header>
+    <event date="2007-01-01" time="00:00:00" value="-16.5" />
+    <event date="2007-01-04" time="11:20:00" value="-16.5" />
+    <event date="2007-01-07" time="22:40:00" value="-16.5" />
+    <event date="2007-01-14" time="21:20:00" value="-16.5" />
+    <event date="2007-01-18" time="08:40:00" value="-16.5" />
+    <event date="2007-01-21" time="20:00:00" value="-16.5" />
+  </series>
+</TimeSeries>

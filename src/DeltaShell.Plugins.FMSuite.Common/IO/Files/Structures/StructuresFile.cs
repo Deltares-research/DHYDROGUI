@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -78,15 +79,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             string structuresFilePath, string structuresSubFilesReferenceFilePath)
         {
             var logHandler = new LogHandler($"reading the structures file ({structuresFilePath}),", Log);
+            try
+            {
+                var structures = ReadStructures2D(structuresFilePath, logHandler)
+                             .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
+                             .Where(s => s != null)
+                             .ToList();
 
-            List<IStructure> structures = ReadStructures2D(structuresFilePath, logHandler)
-                                          .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
-                                          .Where(s => s != null)
-                                          .ToList();
 
-            logHandler.LogReport();
+                logHandler.LogReport();
+                return structures;
 
-            return structures;
+            }
+            catch (Exception e)
+            {
+                Log.ErrorFormat($"Error while reading and converting 2D Structures from {structuresFilePath}");
+                throw;
+            }
         }
 
         /// <summary>
@@ -197,18 +206,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             {
                 return StructureFactory.CreateStructure(structure, structuresSubFilesReferenceFilePath, ReferenceDate);
             }
-            catch (Exception e)
+            catch (Exception e) 
             {
+                string errorMessage = $"Failed to convert .ini structure definition '{structure.Name}' to actual structure.";
+                Log.Error(errorMessage);
+
                 if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
                     e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
                     e is FormatException)
                 {
-                    Log.ErrorFormat("Failed to convert .ini structure definition '{0}' to actual structure: {1}.",
-                                    structure.Name, e.Message);
+                    // Let the parent caller go ahead with further conversions.
                     return null;
                 }
 
-                // Unexpected Exception, don't handle:
                 throw;
             }
         }
