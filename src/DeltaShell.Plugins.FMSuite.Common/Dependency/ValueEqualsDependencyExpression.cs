@@ -31,20 +31,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                                                       string dependencyExpression)
         {
             string dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
-            ModelProperty dependencyProperty =
-                allProperties?.FirstOrDefault(
-                    p =>
-                        p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
-                                                                     StringComparison.InvariantCultureIgnoreCase));
-            if (dependencyProperty != null)
+            ModelProperty dependencyProperty = allProperties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
+                                                                                                                               StringComparison.InvariantCultureIgnoreCase));
+            if (dependencyProperty != null && 
+                dependencyProperty.PropertyDefinition.DataType != typeof(bool) && 
+                dependencyProperty.PropertyDefinition.DataType != typeof(int) && 
+                !dependencyProperty.PropertyDefinition.DataType.IsEnum)
             {
-                if (dependencyProperty.PropertyDefinition.DataType != typeof(bool) &&
-                    dependencyProperty.PropertyDefinition.DataType != typeof(int) &&
-                    !dependencyProperty.PropertyDefinition.DataType.IsEnum)
-                {
-                    return string.Format("Model property '{0}' should be have 'bool', 'int' or 'enum' data type.",
-                                         dependencyPropertyName);
-                }
+                return $"Model property '{dependencyPropertyName}' should be have 'bool', 'int' or 'enum' data type.";
             }
 
             return null;
@@ -56,21 +50,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             return properties =>
             {
                 string dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
-                ModelProperty dependencyProperty =
-                    properties?.FirstOrDefault(
-                        p =>
-                            p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
-                                                                         StringComparison.InvariantCultureIgnoreCase));
+                ModelProperty dependencyProperty = properties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
+                                                                                                                                StringComparison.InvariantCultureIgnoreCase));
 
-                if (dependencyProperty != null)
-                {
-                    IEnumerable<int> comparisonValues = GetComparisonValues(dependencyExpression);
-
-                    return comparisonValues.Contains(Convert.ToInt32(dependencyProperty.Value));
-                }
-
-                // Property does not exist -> Is not true -> Do not enable!
-                return false;
+                return dependencyProperty != null && GetComparisonValues(dependencyExpression).Contains(Convert.ToInt32(dependencyProperty.Value));
             };
         }
 

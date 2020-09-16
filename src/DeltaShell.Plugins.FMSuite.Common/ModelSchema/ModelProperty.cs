@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
 
             if (propertyDefinition == null)
             {
-                throw new ArgumentNullException("propertyDefinition");
+                throw new ArgumentNullException(nameof(propertyDefinition));
             }
 
             string inputString = string.IsNullOrEmpty(valueAsString)
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             {
                 if (value != null)
                 {
-                    ThrowIfTypesDontMatch(value.GetType());
+                    ThrowIfTypesDoNotMatch(value.GetType());
                 }
 
                 this.value = value;
@@ -69,35 +69,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// The minimum allowed value if defined (object type defined by <see cref="ModelPropertyDefinition.DataType"/>)
         /// or null if not set.
         /// </summary>
-        public object MinValue
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(propertyDefinition.MinValueAsString))
-                {
-                    return FMParser.FromString(propertyDefinition.MinValueAsString, propertyDefinition.DataType);
-                }
-
-                return null;
-            }
-        }
+        public object MinValue => !string.IsNullOrEmpty(propertyDefinition.MinValueAsString) 
+                                      ? FMParser.FromString(propertyDefinition.MinValueAsString, propertyDefinition.DataType) 
+                                      : null;
 
         /// <summary>
         /// The maximum allowed value if defined (object type defined by <see cref="ModelPropertyDefinition.DataType"/>)
         /// or null if not set.
         /// </summary>
-        public object MaxValue
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(propertyDefinition.MaxValueAsString))
-                {
-                    return FMParser.FromString(propertyDefinition.MaxValueAsString, propertyDefinition.DataType);
-                }
-
-                return null;
-            }
-        }
+        public object MaxValue => !string.IsNullOrEmpty(propertyDefinition.MaxValueAsString) 
+                                      ? FMParser.FromString(propertyDefinition.MaxValueAsString, propertyDefinition.DataType) 
+                                      : null;
 
         /// <summary>
         /// The description and definition of this property.
@@ -130,15 +112,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             {
                 if (e is ArgumentNullException || e is FormatException)
                 {
-                    throw new FormatException(string.Format("Unexpected value string \"{0}\" for property \"{1}\"",
-                                                            valueAsString, PropertyDefinition.FilePropertyName),
+                    throw new FormatException($"Unexpected value string \"{valueAsString}\" for property \"{PropertyDefinition.FilePropertyName}\"",
                                               e);
                 }
 
                 if (e is OverflowException)
                 {
-                    throw new FormatException(string.Format("Value string \"{0}\" is too large/small for property \"{1}\"",
-                                                            valueAsString, PropertyDefinition.FilePropertyName),
+                    throw new FormatException($"Value string \"{valueAsString}\" is too large/small for property \"{PropertyDefinition.FilePropertyName}\"",
                                               e);
                 }
 
@@ -166,22 +146,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
                 return true;
             }
 
-            var minValue = MinValue as IComparable;
-            if (minValue != null)
+            if (MinValue is IComparable minValue && minValue.CompareTo(value) > 0)
             {
-                if (minValue.CompareTo(value) > 0)
-                {
-                    return false;
-                }
+                return false;
             }
 
-            var maxValue = MaxValue as IComparable;
-            if (maxValue != null)
+            if (MaxValue is IComparable maxValue && maxValue.CompareTo(value) < 0)
             {
-                if (maxValue.CompareTo(value) < 0)
-                {
-                    return false;
-                }
+                return false;
             }
 
             return true;
@@ -204,8 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
 
         public override string ToString()
         {
-            return string.Format("{0}: {1} ({2})", PropertyDefinition.Caption, GetValueAsString(),
-                                 PropertyDefinition.Category);
+            return $"{PropertyDefinition.Caption}: {GetValueAsString()} ({PropertyDefinition.Category})";
         }
 
         public abstract object Clone();
@@ -226,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             }
 
             string fileName = Path.GetFileName(valueAsString);
-            if (FileUtils.IsValidFileName(fileName) && Path.GetExtension(fileName) == ".tim") // ... or a timeseries
+            if (FileUtils.IsValidFileName(fileName) && Path.GetExtension(fileName) == ".tim") // ... or a time series
             {
                 steerableValue.TimeSeriesFilename = valueAsString;
                 steerableValue.Mode = SteerableMode.TimeSeries;
@@ -244,13 +215,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// </summary>
         /// <param name="type"> Type to be checked. </param>
         /// <exception cref="ArgumentException"> When <paramref name="type"/> does not correspond. </exception>
-        private void ThrowIfTypesDontMatch(Type type)
+        private void ThrowIfTypesDoNotMatch(Type type)
         {
             if (type != propertyDefinition.DataType && !type.Implements(propertyDefinition.DataType))
             {
-                throw new ArgumentException(string.Format("Invalid object type {0} (expecting {1}) for {2}",
-                                                          type, propertyDefinition.DataType,
-                                                          propertyDefinition.FilePropertyName));
+                throw new ArgumentException($"Invalid object type {type} (expecting {propertyDefinition.DataType}) for {propertyDefinition.FilePropertyName}");
             }
         }
     }

@@ -9,8 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 {
     public static class StructureFactoryValidator
     {
-        public static readonly StructureType[] SupportedTypes = new[]
-        {
+        public static readonly StructureType[] SupportedTypes = {
             StructureType.Pump,
             StructureType.Weir,
             StructureType.Gate,
@@ -29,8 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 return "";
             }
 
-            string errorMessage, name;
-            if (ValidateGeneralStructureProperties(structure, out name, out errorMessage))
+            if (ValidateGeneralStructureProperties(structure, out string name, out string errorMessage))
             {
                 return errorMessage;
             }
@@ -54,19 +52,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             if (enumerable.All(type => type != structureType))
             {
                 bool isSingularItem = enumerable.Length > 1;
-                throw new FormatException(string.Format("Structure specification for {0}, but should {1}: {2}",
-                                                        structureType,
-                                                        isSingularItem ? "be type" : "be any of the following",
-                                                        string.Join(", ", enumerable)));
+                throw new FormatException($"Structure specification for {structureType}, but should {(isSingularItem ? "be type" : "be any of the following")}: {string.Join(", ", enumerable)}");
             }
         }
 
         private static bool ValidateSpecificStructureProperties(Structure2D structure, string name,
                                                                 out string errorMessage)
         {
-            string errorMessage1;
             if (structure.StructureType == StructureType.Pump &&
-                ValidateGeneralPumpProperties(structure, name, out errorMessage1))
+                ValidateGeneralPumpProperties(structure, name, out string errorMessage1))
             {
                 errorMessage = errorMessage1;
                 return true;
@@ -83,33 +77,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             if (property != null)
             {
                 var numberOfLevels = FMParser.FromString<int>(property.GetValueAsString());
-                if (numberOfLevels == 1)
+                if (numberOfLevels == 1 && structure.GetProperty(KnownStructureProperties.ReductionFactor) == null)
                 {
-                    if (structure.GetProperty(KnownStructureProperties.ReductionFactor) == null)
-                    {
-                        errorMessage =
-                            string.Format(
-                                "Structure '{0}' with constant reduction factor does not have factor defined.", name);
-                        return true;
-                    }
+                    errorMessage = $"Structure '{name}' with constant reduction factor does not have factor defined.";
+                    return true;
                 }
 
                 if (numberOfLevels > 1)
                 {
                     if (structure.GetProperty(KnownStructureProperties.Head) == null)
                     {
-                        errorMessage =
-                            string.Format(
-                                "Structure '{0}' with multiple reduction factors does not have reference levels defined.",
-                                name);
+                        errorMessage = $"Structure '{name}' with multiple reduction factors does not have reference levels defined.";
                         return true;
                     }
 
                     if (structure.GetProperty(KnownStructureProperties.ReductionFactor) == null)
                     {
-                        errorMessage =
-                            string.Format(
-                                "Structure '{0}' with multiple reduction factors does not have factors defined.", name);
+                        errorMessage = $"Structure '{name}' with multiple reduction factors does not have factors defined.";
                         return true;
                     }
                 }
@@ -145,12 +129,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             {
                 if (structure.InvalidStructureType == null)
                 {
-                    errorMessage = string.Format("Structure '{0}' cannot have null as type.", name);
+                    errorMessage = $"Structure '{name}' cannot have null as type.";
                 }
                 else
                 {
-                    errorMessage = string.Format("Structure '{0}' has unsupported type ({1}) specified.", name,
-                                                 structure.InvalidStructureType);
+                    errorMessage = $"Structure '{name}' has unsupported type ({structure.InvalidStructureType}) specified.";
                 }
 
                 return true;
@@ -160,16 +143,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             string typeAsString;
             if (typeProperty == null || string.IsNullOrEmpty(typeAsString = typeProperty.GetValueAsString()))
             {
-                errorMessage = string.Format("Structure '{0}' does not have a type specified.", name);
+                errorMessage = $"Structure '{name}' does not have a type specified.";
                 return true;
             }
 
-            var structureTypeFromString =
-                (StructureType) typeof(StructureType).GetEnumValueFromDescription(typeAsString);
+            var structureTypeFromString = (StructureType) typeof(StructureType).GetEnumValueFromDescription(typeAsString);
             if (structureTypeFromString != structureType)
             {
-                errorMessage = string.Format("Structure '{0}' has conflicting types: '{1}' and '{2}' are stated.",
-                                             name, structureType.GetDescription(), typeAsString);
+                errorMessage = $"Structure '{name}' has conflicting types: '{structureType.GetDescription()}' and '{typeAsString}' are stated.";
                 return true;
             }
 
@@ -184,15 +165,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             {
                 if (polylineProperty == null)
                 {
-                    errorMessage = string.Format("Structure '{0}' must have geometry specified.", name);
+                    errorMessage = $"Structure '{name}' must have geometry specified.";
                     return true;
                 }
 
                 if (string.IsNullOrEmpty(polylineProperty.GetValueAsString()))
                 {
-                    errorMessage = string.Format(
-                        "Structure '{0}' does not have a filename specified for property '{1}'.",
-                        name, KnownStructureProperties.PolylineFile);
+                    errorMessage = $"Structure '{name}' does not have a filename specified for property '{KnownStructureProperties.PolylineFile}'.";
                     return true;
                 }
             }
@@ -200,22 +179,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             {
                 if (xProperty == null)
                 {
-                    errorMessage = string.Format("Structure '{0}' has property '{1}' specified, but '{2}' is missing.",
-                                                 name, KnownStructureProperties.Y, KnownStructureProperties.X);
+                    errorMessage = $"Structure '{name}' has property '{KnownStructureProperties.Y}' specified, but '{KnownStructureProperties.X}' is missing.";
                     return true;
                 }
 
                 if (yProperty == null)
                 {
-                    errorMessage = string.Format("Structure '{0}' has property '{1}' specified, but '{2}' is missing.",
-                                                 name, KnownStructureProperties.X, KnownStructureProperties.Y);
+                    errorMessage = $"Structure '{name}' has property '{KnownStructureProperties.X}' specified, but '{KnownStructureProperties.Y}' is missing.";
                     return true;
                 }
 
                 if (polylineProperty != null)
                 {
-                    errorMessage = string.Format("Structure '{0}' cannot have point geometry and polyline geometry.",
-                                                 name);
+                    errorMessage = $"Structure '{name}' cannot have point geometry and polyline geometry.";
                     return true;
                 }
             }

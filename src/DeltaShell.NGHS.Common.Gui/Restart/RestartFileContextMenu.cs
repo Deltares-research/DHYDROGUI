@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
@@ -12,7 +11,6 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
     /// <summary>
     /// Context menu for a <seealso cref="RestartFile"/>.
     /// </summary>
-    /// <typeparam name="T">Type of the <seealso cref="IRestartModel"/></typeparam>
     /// <seealso cref="MenuItemContextMenuStripAdapter"/>
     public class RestartFileContextMenu : MenuItemContextMenuStripAdapter
     {
@@ -21,7 +19,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
         /// </summary>
         /// <param name="restartFile">The restart file.</param>
         /// <param name="node">The corresponding node.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="restartFile"/> or <paramref name="node"/> is <c>null</c>.
         /// </exception>
         public RestartFileContextMenu(RestartFile restartFile, ITreeNode node) : base(new ContextMenuStrip())

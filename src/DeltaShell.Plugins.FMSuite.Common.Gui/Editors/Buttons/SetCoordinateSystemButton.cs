@@ -42,19 +42,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons
             ICoordinateSystem selectedCoordinateSystem = control.SelectedCoordinateSystem;
 
             if (selectedCoordinateSystem != null &&
-                !model.CanSetCoordinateSystem(selectedCoordinateSystem))
+                !model.CanSetCoordinateSystem(selectedCoordinateSystem)
+                && MessageBox.Show(string.Format(Resources.SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system,
+                                                 selectedCoordinateSystem, Environment.NewLine),
+                                   Resources.SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system_Caption,
+                                   MessageBoxButtons.YesNo,
+                                   MessageBoxIcon.Warning) == DialogResult.No)
             {
-                if (MessageBox.Show(string.Format(
-                                        "The model coordinates do not appear to be in '{0}', as they fall outside the expected range of values for this system. Please verify the selected " +
-                                        "coordinate system is the system the coordinates were measured in. Continuing could lead to the map visualization failing and unexpected behaviour of spatial operations {1}{1}" +
-                                        "Are you sure you want to continue?",
-                                        selectedCoordinateSystem, Environment.NewLine),
-                                    "Warning: model coordinates do not appear to be in the selected system",
-                                    MessageBoxButtons.YesNo,
-                                    MessageBoxIcon.Warning) == DialogResult.No)
-                {
-                    return;
-                }
+                return;
             }
 
             ICoordinateSystem coordinateSystem = model.CoordinateSystem;

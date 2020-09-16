@@ -372,16 +372,11 @@ namespace DeltaShell.Plugins.FMSuite.Common
                 return DateTime.Now;
             }
 
-            DateTime value;
-            if (!DateTime.TryParseExact(valueAsString, "yyyyMMdd", null, DateTimeStyles.None, out value))
+            if (!DateTime.TryParseExact(valueAsString, "yyyyMMdd", null, DateTimeStyles.None, out DateTime value) &&
+                !DateTime.TryParseExact(valueAsString, "yyyyMMddHHmmss", null, DateTimeStyles.None, out value) && 
+                !DateTime.TryParseExact(valueAsString, "yyyy-MM-dd", null, DateTimeStyles.None, out value))
             {
-                if (!DateTime.TryParseExact(valueAsString, "yyyyMMddHHmmss", null, DateTimeStyles.None, out value))
-                {
-                    if (!DateTime.TryParseExact(valueAsString, "yyyy-MM-dd", null, DateTimeStyles.None, out value))
-                    {
-                        throw new FormatException("Unexpected date time format");
-                    }
-                }
+                throw new FormatException("Unexpected date time format");
             }
 
             return value;
