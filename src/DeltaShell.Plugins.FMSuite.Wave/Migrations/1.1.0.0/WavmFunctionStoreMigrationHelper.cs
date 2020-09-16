@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Guards;
@@ -23,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
         /// <param name="logHandler">The log handler to log any unlinked function stores with.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
         public static void RemoveWavmFunctionStores(WaveModel waveModel, ILogHandler logHandler)
