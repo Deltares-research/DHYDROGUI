@@ -61,6 +61,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Migrating {0}.
+        /// </summary>
+        public static string DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_ {
+            get {
+                return ResourceManager.GetString("DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file associated with property {0}, {1} at {2}, does not exist and thus is not migrated..
+        /// </summary>
+        public static string FileMigrateBehaviour_HandleNotExists_The_file_associated_with_property__0____1__at__2___does_not_exist_and_thus_is_not_migrated_ {
+            get {
+                return ResourceManager.GetString("FileMigrateBehaviour_HandleNotExists_The_file_associated_with_property__0____1__a" +
+                        "t__2___does_not_exist_and_thus_is_not_migrated_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find meteo file for &apos;{0}&apos;.
         /// </summary>
         public static string MdwFile_Could_not_find_meteo_file_for__0__ {
@@ -465,6 +484,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Migrating &apos;{0}&apos; to 1.2.0.0.
+        /// </summary>
+        public static string WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0 {
+            get {
+                return ResourceManager.GetString("WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Migrating remaining files of &apos;{0}&apos; to 1.2.0.0.
+        /// </summary>
+        public static string WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_Migrating_remaining_files_of___0___to_1_2_0_0 {
+            get {
+                return ResourceManager.GetString("WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_Migrating_remai" +
+                        "ning_files_of___0___to_1_2_0_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following files are assumed to be output and moved to the new output folder: {0}.
+        /// </summary>
+        public static string WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_The_following_files_are_assumed_to_be_output_and_moved_to_the_new_output_folder___0_ {
+            get {
+                return ResourceManager.GetString("WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_The_following_f" +
+                        "iles_are_assumed_to_be_output_and_moved_to_the_new_output_folder___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All the grids Coordinate System should be the same, either Spherical or Cartesian.
         /// </summary>
         public static string WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_All_the_grids_Coordinate_System_should_be_the_same__either_Spherical_or_Cardesian {
@@ -549,6 +597,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_ru" +
                         "ns_with_lakes_will_produce_unreliable_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not determine dsproj location from database connection: {0}.
+        /// </summary>
+        public static string WaveModel110LegacyLoader_OnAfterInitialize_Could_not_determine_dsproj_location_from_database_connection___0_ {
+            get {
+                return ResourceManager.GetString("WaveModel110LegacyLoader_OnAfterInitialize_Could_not_determine_dsproj_location_fr" +
+                        "om_database_connection___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provided entity is not a {0}.
+        /// </summary>
+        public static string WaveModel110LegacyLoader_OnAfterInitialize_Provided_entity_is_not_a__0_ {
+            get {
+                return ResourceManager.GetString("WaveModel110LegacyLoader_OnAfterInitialize_Provided_entity_is_not_a__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unlinking existing wavm.nc files in {0}:.
+        /// </summary>
+        public static string WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__ {
+            get {
+                return ResourceManager.GetString("WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_" +
+                        "in__0__", resourceCulture);
             }
         }
         
@@ -641,6 +718,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         public static string WaveTimePointValidator_Validate_No_time_points_defined {
             get {
                 return ResourceManager.GetString("WaveTimePointValidator_Validate_No_time_points_defined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The link with {0} has been broken..
+        /// </summary>
+        public static string WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_been_broken_ {
+            get {
+                return ResourceManager.GetString("WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_b" +
+                        "een_broken_", resourceCulture);
             }
         }
     }

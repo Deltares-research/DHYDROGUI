@@ -1,0 +1,282 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using DelftTools.TestUtils;
+using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
+using NSubstitute;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
+{
+    [TestFixture]
+    public class DelftIniFileMigrateBehaviourTest
+    {
+        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
+        {
+            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
+        }
+
+        [Test]
+        public void Constructor_ExpectedBehaviour()
+        {
+            // Setup
+            var migrator = Substitute.For<IDelftIniMigrator>();
+
+            // Call
+            var behaviour = new DelftIniFileMigrateBehaviour("key", ".", ".", migrator);
+
+            // Assert
+            Assert.That(behaviour, Is.InstanceOf<IMigrationBehaviour>());
+        }
+
+        private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
+        {
+            var migrator = Substitute.For<IDelftIniMigrator>();
+
+            yield return new TestCaseData(null, ".", ".", migrator, "expectedKey");
+            yield return new TestCaseData("key", null, ".", migrator, "relativeDirectory");
+            yield return new TestCaseData("key", ".", null, migrator, "goalDirectory");
+            yield return new TestCaseData("key", ".", ".", null, "migrator");
+        }
+
+        [Test]
+        [TestCaseSource(nameof(Constructor_ParameterNull_Data))]
+        public void Constructor_ParameterNull_ThrowsArgumentNullException(string key, 
+                                                                          string relativeDirectory, 
+                                                                          string goalDirectory, 
+                                                                          IDelftIniMigrator migrator, 
+                                                                          string expectedParameter)
+        {
+            void Call() => new DelftIniFileMigrateBehaviour(key, relativeDirectory, goalDirectory, migrator);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParameter));
+        }
+
+        [Test]
+        public void MigrateProperty_PropertyNull_ThrowsArgumentNullException()
+        {
+            var migrator = Substitute.For<IDelftIniMigrator>();
+            var behaviour = new DelftIniFileMigrateBehaviour("key", ".", ".", migrator);
+
+            void Call() => behaviour.MigrateProperty(null, null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("property"));
+        }
+
+        [Test]
+        public void MigrateProperty_NotAffected_ReturnsUnchangedProperty()
+        {
+            // Setup
+            var migrator = Substitute.For<IDelftIniMigrator>();
+            var logHandler = Substitute.For<ILogHandler>();
+
+            const string key = "key";
+            const string value = "value";
+            const string comment = "comment";
+
+            var property = new DelftIniProperty(key, value, comment);
+
+            var behaviour = new DelftIniFileMigrateBehaviour("notKey", 
+                                                             ".", 
+                                                             ".", 
+                                                             migrator);
+
+            // Call
+            behaviour.MigrateProperty(property, logHandler);
+
+            // Assert
+            Assert.That(property.Name, Is.EqualTo(key));
+            Assert.That(property.Value, Is.EqualTo(value));
+            Assert.That(property.Comment, Is.EqualTo(comment));
+
+            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void MigrateProperty_Affected_PropertyRelativePath_CallsMigrator()
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var migrator = Substitute.For<IDelftIniMigrator>();
+            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
+                                 Arg.Any<string>(),
+                                 Arg.Any<string>(),
+                                 Arg.Any<ILogHandler>());
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string subDirectory = "itDonMean";
+                const string fileName = "AThing.txt";
+
+                const string fileContent = "ifItAintGotThatSwing";
+                const string goalDirName = "dooWahDooWah";
+
+                tempDir.CreateDirectory(subDirectory);
+                string oldPath = tempDir.CreateFile(Path.Combine(subDirectory, fileName), fileContent);
+
+                string goalDir = tempDir.CreateDirectory(goalDirName);
+
+                string expectedPath = Path.Combine(goalDir, fileName);
+
+                const string propertyName = "key";
+                const string propertyComment = "Comment";
+                var property = new DelftIniProperty(propertyName, oldPath, propertyComment);
+
+                var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
+                                                                 Path.Combine(tempDir.Path, subDirectory),
+                                                                 goalDir, 
+                                                                 migrator);
+
+                // Call 
+                behaviour.MigrateProperty(property, logHandler);
+
+                // Assert
+                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Comment, Is.EqualTo(propertyComment));
+                Assert.That(property.Value, Is.EqualTo(fileName));
+
+                migrator.Received(1).MigrateFile(Arg.Any<Stream>(),
+                                                 oldPath, 
+                                                 expectedPath, 
+                                                 Arg.Any<ILogHandler>() );
+
+                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void MigrateProperty_Affected_PropertyAbsolutePath_CallsMigrator()
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var migrator = Substitute.For<IDelftIniMigrator>();
+            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
+                                 Arg.Any<string>(),
+                                 Arg.Any<string>(),
+                                 Arg.Any<ILogHandler>());
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string subDirectory = "itDonMean";
+                const string fileName = "AThing.txt";
+                string absolutePath = Path.Combine(tempDir.Path, subDirectory, fileName);
+
+                const string fileContent = "ifItAintGotThatSwing";
+                const string goalDirName = "dooWahDooWah";
+
+                tempDir.CreateDirectory(subDirectory);
+                tempDir.CreateFile(Path.Combine(subDirectory, fileName), fileContent);
+
+                string goalDir = tempDir.CreateDirectory(goalDirName);
+
+                string expectedPath = Path.Combine(goalDir, fileName);
+
+                const string propertyName = "key";
+                const string propertyComment = "Comment";
+                var property = new DelftIniProperty(propertyName, absolutePath, propertyComment);
+
+                var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
+                                                                 Path.Combine(tempDir.Path, subDirectory),
+                                                                 goalDir, 
+                                                                 migrator);
+
+                // Call 
+                behaviour.MigrateProperty(property, logHandler);
+
+                // Assert
+                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Comment, Is.EqualTo(propertyComment));
+                Assert.That(property.Value, Is.EqualTo(fileName));
+
+                migrator.Received(1).MigrateFile(Arg.Any<Stream>(),
+                                                 absolutePath, 
+                                                 expectedPath, 
+                                                 Arg.Any<ILogHandler>() );
+
+                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            }
+        }
+
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void MigrateProperty_Affected_FileNotFound_LogsWarning()
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var migrator = Substitute.For<IDelftIniMigrator>();
+
+            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
+                                 Arg.Any<string>(),
+                                 Arg.Any<string>(),
+                                 Arg.Any<ILogHandler>());
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string fileName = "itDontMeanAThing.txt";
+                const string goalDirName = "dooWahDooWah";
+
+                string oldPath = Path.Combine(tempDir.Path, fileName);
+                string goalDir = tempDir.CreateDirectory(goalDirName);
+
+                const string propertyName = "key";
+                const string propertyComment = "Comment";
+                var property = new DelftIniProperty(propertyName, oldPath, propertyComment);
+
+                var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
+                                                                 tempDir.Path,
+                                                                 goalDir, 
+                                                                 migrator);
+
+                // Call 
+                behaviour.MigrateProperty(property, logHandler);
+
+                // Assert
+                Assert.That(property.Name, Is.EqualTo(propertyName));
+                Assert.That(property.Comment, Is.EqualTo(propertyComment));
+                Assert.That(property.Value, Is.EqualTo(oldPath));
+
+                const string expectedString = "The file associated with property {0}, {1} at {2}, does not exist and thus is not migrated.";
+                logHandler.Received(1).ReportWarningFormat(expectedString, propertyName, fileName, oldPath);
+            }
+        }
+
+        [Test]
+        public void MigrateProperty_Affected_PathEmpty_Skipped()
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var migrator = Substitute.For<IDelftIniMigrator>();
+
+            const string key = "key";
+            const string value = "";
+            const string comment = "comment";
+
+            var property = new DelftIniProperty(key, value, comment);
+
+            var behaviour = new DelftIniFileMigrateBehaviour("key", ".", ".", migrator);
+
+            // Call
+            behaviour.MigrateProperty(property, logHandler);
+
+            // Assert
+            Assert.That(property.Name, Is.EqualTo(key));
+            Assert.That(property.Value, Is.EqualTo(value));
+            Assert.That(property.Comment, Is.EqualTo(comment));
+
+            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+        }
+    }
+}

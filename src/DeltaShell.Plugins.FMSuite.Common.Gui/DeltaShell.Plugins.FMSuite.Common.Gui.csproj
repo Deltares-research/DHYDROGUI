@@ -143,62 +143,90 @@
     <Compile Include="Editors\ListBoxItemRemovingEventArgs.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMap.cs" />
     <Compile Include="FeatureCollectionViewInfoHelper.cs" />
-    <Compile Include="FileBasedWindDefinitionView.cs" />
+    <Compile Include="FileBasedWindDefinitionView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FileBasedWindDefinitionView.Designer.cs">
       <DependentUpon>FileBasedWindDefinitionView.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileSelectionControl.cs" />
+    <Compile Include="FileSelectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FileSelectionControl.Designer.cs">
       <DependentUpon>FileSelectionControl.cs</DependentUpon>
     </Compile>
     <Compile Include="FMMenuItemHelper.cs" />
-    <Compile Include="Forms\AstroComponentSelection.cs" />
+    <Compile Include="Forms\AstroComponentSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\AstroComponentSelection.Designer.cs">
       <DependentUpon>AstroComponentSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\BoundaryConditionEditorController.cs" />
-    <Compile Include="Editors\BoundaryConditionPropertiesControl.cs" />
+    <Compile Include="Editors\BoundaryConditionPropertiesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\BoundaryConditionPropertiesControl.Designer.cs">
       <DependentUpon>BoundaryConditionPropertiesControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\BoundaryConditionEditor.cs" />
+    <Compile Include="Editors\BoundaryConditionEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\BoundaryConditionEditor.Designer.cs">
       <DependentUpon>BoundaryConditionEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\Buttons\ToolboxesPanel.cs" />
     <Compile Include="Forms\SupportPointMode.cs" />
-    <Compile Include="Forms\SupportPointPropertiesForm.cs" />
+    <Compile Include="Forms\SupportPointPropertiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\SupportPointPropertiesForm.Designer.cs">
       <DependentUpon>SupportPointPropertiesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SupportPointSelectionForm.cs" />
+    <Compile Include="Forms\SupportPointSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\SupportPointSelectionForm.Designer.cs">
       <DependentUpon>SupportPointSelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\Buttons\SetCoordinateSystemButton.cs" />
-    <Compile Include="Editors\DepthLayerControl.cs" />
+    <Compile Include="Editors\DepthLayerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\DepthLayerControl.Designer.cs">
       <DependentUpon>DepthLayerControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DepthLayerDialog.cs" />
+    <Compile Include="Forms\DepthLayerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\DepthLayerDialog.Designer.cs">
       <DependentUpon>DepthLayerDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\ListBoxItemRemovedEventArgs.cs" />
-    <Compile Include="Editors\RemoveableItemsListBox.cs" />
+    <Compile Include="Editors\RemoveableItemsListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Editors\RemoveableItemsListBox.Designer.cs">
       <DependentUpon>RemoveableItemsListBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\MultipleFunctionChart.cs" />
+    <Compile Include="Editors\MultipleFunctionChart.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Editors\MultipleFunctionChart.Designer.cs">
       <DependentUpon>MultipleFunctionChart.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\SupportPointListBox.cs" />
-    <Compile Include="Editors\VerticalProfileControl.cs" />
+    <Compile Include="Editors\SupportPointListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Editors\VerticalProfileControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Editors\VerticalProfileControl.Designer.cs">
       <DependentUpon>VerticalProfileControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VerticalProfileDialog.cs" />
+    <Compile Include="Forms\VerticalProfileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\VerticalProfileDialog.Designer.cs">
       <DependentUpon>VerticalProfileDialog.cs</DependentUpon>
     </Compile>

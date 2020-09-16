@@ -12,6 +12,7 @@ using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
@@ -38,6 +39,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
             Assert.AreEqual(10, store.Functions.Count);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(@"output_hisfiles\FlowFMWithTimeZones_his.nc", "Monday, 01 January 2001 00:00:00")]
+        [TestCase(@"output_hisfiles\FlowFMWithoutTimeZones_his.nc", "Wednesday, 09 January 2008 00:00:00")]
+        public void OpenHisFileWithOrWithoutTimeZones_ShouldSetReferenceDateInFunctionsCorrectly(string hisFilePath, string expectedReferenceDate)
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string hisFilePathTemp = tempDirectory.CopyTestDataFileToTempDirectory(TestHelper.GetTestFilePath(hisFilePath));
+
+                // Act
+                var store = new FMHisFileFunctionStore(hisFilePathTemp);
+
+                // Assert
+                Assert.IsInstanceOf<FMNetCdfFileFunctionStore>(store);
+
+                string retrievedReferenceDate = ((ICoverage)store.Functions.First()).Time.Attributes["ncRefDate"];
+                Assert.AreEqual(expectedReferenceDate, retrievedReferenceDate);
+            }
         }
 
         [Test]

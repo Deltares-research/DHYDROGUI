@@ -113,7 +113,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +210,7 @@
     <Compile Include="IO\Helpers\Boundaries\SpreadingImportType.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryConverter.cs" />
     <Compile Include="IO\Helpers\DelftIniCategoryExtensions.cs" />
+    <Compile Include="IO\Helpers\Domain\WaveDomainDataConverter.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactory.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporter.cs" />
@@ -229,6 +234,16 @@
     <Compile Include="IO\WavmFileFunctionStore.cs" />
     <Compile Include="IWaveDomainData.cs" />
     <Compile Include="IWaveModel.cs" />
+    <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviour.cs" />
+    <Compile Include="Migrations\1.1.0.0\DelftIniMigrator.cs" />
+    <Compile Include="Migrations\1.1.0.0\FileMigrateBehaviour.cs" />
+    <Compile Include="Migrations\1.1.0.0\IMigrationBehaviour.cs" />
+    <Compile Include="Migrations\1.1.0.0\IDelftIniMigrator.cs" />
+    <Compile Include="Migrations\1.1.0.0\MigratorFactory.cs" />
+    <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviour.cs" />
+    <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelper.cs" />
+    <Compile Include="Migrations\1.1.0.0\WaveModel110LegacyLoader.cs" />
+    <Compile Include="Migrations\1.1.0.0\WavmFunctionStoreMigrationHelper.cs" />
     <Compile Include="ModelDefinition\IReferenceDateTimeProvider.cs" />
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProvider.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinitionLoadHelper.cs" />
@@ -317,6 +332,10 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WaveModel.1.1.0.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
