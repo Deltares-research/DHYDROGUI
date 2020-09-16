@@ -61,6 +61,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Area.
+        /// </summary>
+        public static string AreaProperties_DisplayName {
+            get {
+                return ResourceManager.GetString("AreaProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap BridgeSmall {
@@ -121,6 +130,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Feature spatial data.
+        /// </summary>
+        public static string FeatureCoverageProperties_DisplayName {
+            get {
+                return ResourceManager.GetString("FeatureCoverageProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap fixedweir {
@@ -147,6 +165,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("HydroRegion", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hydro region.
+        /// </summary>
+        public static string HydroRegionProperties_DisplayName {
+            get {
+                return ResourceManager.GetString("HydroRegionProperties_DisplayName", resourceCulture);
             }
         }
         
