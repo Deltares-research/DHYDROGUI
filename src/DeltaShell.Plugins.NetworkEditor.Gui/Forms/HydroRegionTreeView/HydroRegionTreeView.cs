@@ -56,7 +56,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         public IMenuItem GetContextMenu(object node, object tag)
         {
             var treeNode = (ITreeNode) node;
-            SelectedRegion = GetParentRegionFromNode(node);
 
             bool isActiveViewMapView = gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Any();
 
@@ -87,8 +86,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             base.Dispose();
         }
 
-        private IHydroRegion SelectedRegion { get; set; }
-        
         private void AddNodePresenters(GuiPlugin guiPlugin)
         {
             var treeNodePresenters = new ITreeNodePresenter[]
@@ -138,22 +135,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             SynchronizingGuiSelection = true;
             TreeView.SelectedNode = treeNode;
             SynchronizingGuiSelection = false;
-        }
-
-        private IHydroRegion GetParentRegionFromNode(object obj)
-        {
-            var node = obj as ITreeNode;
-            while (node != null)
-            {
-                if (node.Tag is IHydroRegion)
-                {
-                    return node.Tag as IHydroRegion;
-                }
-
-                node = node.Parent;
-            }
-
-            return null;
         }
 
         private void handleButtonOpen_Click(object sender, EventArgs e)
