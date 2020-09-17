@@ -214,7 +214,6 @@
     </Compile>
     <Compile Include="Retention.cs" />
     <Compile Include="RoughnessType.cs" />
-    <Compile Include="RoughnessTypeDefaults.cs" />
     <Compile Include="RunoffBoundary.cs" />
     <Compile Include="Structures\BridgeFrictionType.cs" />
     <Compile Include="Structures\CompositeBranchStructure.cs" />
