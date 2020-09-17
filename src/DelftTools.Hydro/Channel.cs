@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
@@ -51,18 +50,6 @@ namespace DelftTools.Hydro
         }
 
         #region IChannel Members
-
-        public virtual IEnumerable<IStructure1D> Structures => throw new NotImplementedException();
-
-        public virtual IEnumerable<IPump> Pumps => throw new NotImplementedException();
-
-        public virtual IEnumerable<IWeir> Weirs => throw new NotImplementedException();
-
-        public virtual IEnumerable<IGate> Gates => throw new NotImplementedException();
-
-        public virtual IEnumerable<LateralSource> BranchSources => throw new NotImplementedException();
-
-        public virtual IEnumerable<ObservationPoint> ObservationPoints => throw new NotImplementedException();
 
         [DisplayName("LongName")]
         [FeatureAttribute(Order = 2)]
