@@ -1453,11 +1453,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// <exception cref="NotSupportedException">
         /// Thrown when this property is set, because the model should use the application's working directory.
         /// </exception>
-        public virtual string DimrExportDirectoryPath
-        {
-            get => Path.Combine(WorkingDirectoryPathFunc(), Name);
-            set => throw new NotSupportedException("Cannot set dimr export directory.");
-        }
+        public virtual string DimrExportDirectoryPath => Path.Combine(WorkingDirectoryPathFunc(), Name);
 
         public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;
 

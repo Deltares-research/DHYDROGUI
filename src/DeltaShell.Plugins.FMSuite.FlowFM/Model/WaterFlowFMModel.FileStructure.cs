@@ -365,11 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             return Path.Combine(directoryName, InputFile == null ? Name + FileConstants.MduFileExtension : Path.GetFileName(InputFile));
         }
 
-        public virtual string DimrExportDirectoryPath
-        {
-            get => WorkingDirectoryPath;
-            set => WorkingDirectoryPath = value;
-        }
+        public virtual string DimrExportDirectoryPath => WorkingDirectoryPath;
 
         public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, FileConstants.InputDirectoryName);
         public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, FileConstants.OutputDirectoryName);

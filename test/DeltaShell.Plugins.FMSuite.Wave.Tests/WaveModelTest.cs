@@ -140,21 +140,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
-        [Test]
-        public void SetDimrExportDirectoryPath_ThrowsNotSupportedException()
-        {
-            // Setup
-            using (var model = new WaveModel())
-            {
-                // Call
-                void Call() => model.DimrExportDirectoryPath = "some_path";
-
-                // Assert
-                Assert.That(Call, Throws.TypeOf<NotSupportedException>()
-                                        .With.Message.EqualTo("Cannot set dimr export directory."));
-            }
-        }
-
         private sealed class PathProvider
         {
             public string Path { get; set; }
