@@ -45,7 +45,6 @@
     <Compile Include="Helpers\HydroNetworkHelperTest.cs" />
     <Compile Include="Helpers\ThreadingHelperTest.cs" />
     <Compile Include="HydroAreaTest.cs" />
-    <Compile Include="HydroNetwork351LegacyLoaderTest.cs" />
     <Compile Include="HydroNetworkExtensionsTest.cs" />
     <Compile Include="HydroNodeTest.cs" />
     <Compile Include="HydroRegionTest.cs" />
