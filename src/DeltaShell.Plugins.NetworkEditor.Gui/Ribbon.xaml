@@ -14,41 +14,7 @@
             <fluent:RibbonContextualTabGroup Header="Cross-Sections" Visibility="Visible" Name="crossSectionContextualGroup" Background="MediumBlue" BorderBrush="MediumBlue" />
         </fluent:Ribbon.ContextualGroups>
 
-        <fluent:RibbonTabItem Header="View" fluent:KeyTip.Keys="V">
-            <fluent:RibbonGroupBox Header="Show/Hide" fluent:KeyTip.Keys="ZS">
-                <fluent:ToggleButton x:Name="ButtonShowHydroRegionContents" Header="Region Contents" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches.png" Click="ButtonShowHydroRegionContents_Click" Size="Middle" SizeDefinition="Middle,Small,Small" fluent:KeyTip.Keys="R" />
-            </fluent:RibbonGroupBox>
-        </fluent:RibbonTabItem>
-
         <fluent:RibbonTabItem Header="Map" x:Name="tabRegion" Group="{Binding ElementName=geospatialContextualGroup}" ReduceOrder="HydroRegion,HydroNetwork,DrainageBasin,NetworkCoverage,Analysis" fluent:KeyTip.Keys="M">
-            <fluent:RibbonGroupBox Header="Network" x:Name="HydroNetwork" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkGroup.png" fluent:KeyTip.Keys="ZN">
-
-                <!-- branches / nodes -->
-                <fluent:ToggleButton x:Name="ButtonAddNewBranch" Header="Add Branch" ToolTip="Add new branch" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches1.png" Click="ButtonAddNewBranch_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="B" />
-                <fluent:ToggleButton x:Name="ButtonAddNewBranchScribble" Header="Add Branch (Freeform)" ToolTip="Add new branch (Freeform)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\network_branches11.png" Click="ButtonAddNewBranchScribble_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="F" />
-                <Separator />
-
-                <!-- structures -->
-                <fluent:ToggleButton x:Name="ButtonAddNewPump" Header="Add Pump" ToolTip="Add Pump" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\PumpSmall.png" Click="ButtonAddNewPump_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewWeir" Header="Add Weir" ToolTip="Add Weir" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\WeirSmall.png" Click="ButtonAddNewWeir_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewExtraResistance" Header="Add Extra Resistance" ToolTip="Add Extra Resistance" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\ExtraResistanceSmall.png" Click="ButtonAddNewExtraResistance_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewLateralSource" Header="Add Lateral Source" ToolTip="Add Lateral Source" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\LateralSourceSmall.png" Click="ButtonAddNewLateralSource_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewRetention" Header="Add Retention" ToolTip="Add Retention" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Retention.png" Click="ButtonAddNewRetention_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewObservationPoint" Header="Add Observation Point" ToolTip="Add Observation Point" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Observation.png" Click="ButtonAddNewObservationPoint_Click" SizeDefinition="Small,Small,Small" />
-                <Separator />
-            </fluent:RibbonGroupBox>
-
-            <fluent:RibbonGroupBox Header="Basin" x:Name="DrainageBasin" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
-                <fluent:ToggleButton x:Name="ButtonAddNewCatchmentPolder" Header="Polder" ToolTip="Add new polder catchment" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\polder_empty.png" Click="ButtonAddNewCatchmentPolder_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCatchmentPaved" Header="Paved" ToolTip="Add new paved catchment" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\paved.png" Click="ButtonAddNewCatchmentPaved_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCatchmentUnpaved" Header="Unpaved" ToolTip="Add new unpaved catchment" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\unpaved.png" Click="ButtonAddNewCatchmentUnpaved_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCatchmentOpenWater" Header="Open Water" ToolTip="Add new open water catchment" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\openwater.png" Click="ButtonAddNewCatchmentOpenWater_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCatchmentGreenHouse" Header="Green House" ToolTip="Add new green house catchment" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\greenhouse.png" Click="ButtonAddNewCatchmentGreenHouse_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCatchmentSacramento" Header="Sacramento" ToolTip="Add new sacramento catchment" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\sacramento.png" Click="ButtonAddNewCatchmentSacramento_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewCatchmentHbv" Header="HBV" ToolTip="Add new HBV catchment" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\hbv.png" Click="ButtonAddNewCatchmentHbv_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewWasteWaterTreatmentPlant" Header="Treatment Plant" ToolTip="Add new wastewater treatment plant" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\wwtp.png" Click="ButtonAddNewWasteWaterTreatmentPlant_Click" SizeDefinition="Small,Small,Small" />
-                <fluent:ToggleButton x:Name="ButtonAddNewRunoffBoundary" Header="Runoff Boundary" ToolTip="Add new runoff boundary" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\runoff.png" Click="ButtonAddNewRunoffBoundary_Click" SizeDefinition="Small,Small,Small" />
-            </fluent:RibbonGroupBox>
 
             <fluent:RibbonGroupBox Header="Area" x:Name="Area2D" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
                 <fluent:ToggleButton x:Name="ButtonAddNewThinDam2D" Header="Thin dam" ToolTip="Add new thin dam (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\thindam.png" Click="ButtonAddNewThinDam_Click" SizeDefinition="Small,Small,Small" />
@@ -63,28 +29,7 @@
                 <fluent:ToggleButton x:Name="ButtonAddNewEmbankment2D" Header="Embankment" ToolTip="Add new embankment (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Embankment.png" Click="ButtonAddNewEmbankment_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddNewEnclosure2D" Header="Enclosure" ToolTip="Add new enclosure (2D)" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\enclosure.png" Click="ButtonAddNewEnclosure_Click" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddBridgePillar" Header="Bridge Pillar" ToolTip="Add new bridge pillar" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\BridgeSmall.png" Click="ButtonAddBridgePillar_Click" SizeDefinition="Small,Small,Small" />
-            </fluent:RibbonGroupBox>
 
-            <fluent:RibbonGroupBox Header="Region" x:Name="HydroRegion" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\RegionGroup.png">
-                <fluent:ToggleButton x:Name="ButtonAddNewLink" Header="Link" ToolTip="Add Hydro Link" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\hydrolink.png" Click="ButtonAddNewLink_Click" SizeDefinition="Middle,Small,Small" />
-            </fluent:RibbonGroupBox>
-
-            <fluent:RibbonGroupBox Header="Network Coverage" x:Name="NetworkCoverage" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkCoverageGroup.png">
-                <WrapPanel x:Name="NetworkCoverageEditPanel">
-                    <Label Content="Coverage" />
-                    <ComboBox x:Name="ComboBoxSelectNetworkCoverage" SelectionChanged="ComboBoxSelectNetworkCoverageSelectionChanged" Width="150" IsEditable="True" IsReadOnly="True" />
-                    <fluent:ToggleButton x:Name="ButtonAddNewNetworkLocation" Header="Add Network Location" ToolTip="Add location to network data" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkLocationSmall.png" Click="ButtonAddNewNetworkLocation_Click" SizeDefinition="Small,Small,Small" />
-                </WrapPanel>
-            </fluent:RibbonGroupBox>
-
-            <fluent:RibbonGroupBox Header="Analysis" x:Name="Analysis" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\AnalysisGroup.png">
-                
-            </fluent:RibbonGroupBox>
-        </fluent:RibbonTabItem>
-
-        <fluent:RibbonTabItem Header="Tools" fluent:KeyTip.Keys="T">
-            <fluent:RibbonGroupBox Header="Data" fluent:KeyTip.Keys="ZD">
-                <fluent:Button x:Name="ButtonOpenCaseAnalysis" Header="Open Case Analysis View" ToolTip="Open Case Analysis View" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\case_analysis.png" Click="ButtonOpenCaseAnalysis_Click" Size="Middle" SizeDefinition="Middle,Small,Small" fluent:KeyTip.Keys="C" />
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
     </fluent:Ribbon>

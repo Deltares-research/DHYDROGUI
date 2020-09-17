@@ -240,22 +240,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaLayerTest.cs" />
-    <Compile Include="Forms\GridProperties\CatchmentPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\DiscretizationPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\DrainageBasinPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\FeatureCoveragePropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\HydroLinkPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\HydroNodePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\HydroRegionPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\NetworkCoveragePropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\NetworkLocationPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\NetworkPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\NetworkSegmentPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\RunoffBoundaryPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\WasteWaterTreatmentPlantPropertiesTest.cs" />
     <Compile Include="Gui\Converters\EmptyDoubleValueConverterTest.cs" />
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\StructureViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatedWeirViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModelTest.cs" />
@@ -282,22 +270,9 @@
     <Compile Include="HydroAreaProjectTreeViewNodePresenterTest.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
-    <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
-    <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />
-    <Compile Include="Forms\GridProperties\FeaturePropertiesTest.cs" />
-    <Compile Include="Forms\ImportBranchFeatureDialogTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\ExtraResistanceViewTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewTest.cs" />
     <Compile Include="MapLayers\Editors\ChannelInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroLinkInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroNodeInteractorTest.cs" />
-    <Compile Include="Forms\ChartEditors\FixedRectangleShapeEditorTest.cs" />
-    <Compile Include="Forms\ChartEditors\RectangleShapeEditorTest.cs" />
-    <Compile Include="Forms\ChartEditors\RectangleSeriesShapeFeatureTest.cs" />
-    <Compile Include="Forms\CompositeStructureView\SimpleSelectionContainer.cs" />
-    <Compile Include="Forms\ComputationalGridDialogTest.cs" />
-    <Compile Include="Forms\ChartEditors\FreeFormatWeirEditorTest.cs" />
-    <Compile Include="Forms\CompositeStructureView\MockGui.cs" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollectionTest.cs" />
     <Compile Include="MapLayers\Tools\Feature2DPointToolTest.cs" />
     <Compile Include="NetworkEditorApplicationPluginTest.cs" />
@@ -305,17 +280,11 @@
     <Compile Include="NetworkEditorPluginTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Forms\StructureFeatureView\PumpViewTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\PierWeirFormulaViewTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\RiverWeirFormulaViewTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\WeirViewTest.cs" />
     <Compile Include="NetworkEditorGuiPluginTest.cs" />
-    <Compile Include="NetworkCoveragePropertiesTest.cs" />
     <Compile Include="Forms\NetworkLocationEditorMapControlTest.cs" />
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollectionTest.cs" />
     <Compile Include="TestModelWithHydroNetwork.cs" />
     <Compile Include="MapLayers\Editors\BranchNodeTopologyTest.cs" />
-    <Compile Include="HydroRegionTreeViewTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -372,10 +341,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\ChartEditors\ChartShapes\" />
-    <Folder Include="Forms\CrossSectionView\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
