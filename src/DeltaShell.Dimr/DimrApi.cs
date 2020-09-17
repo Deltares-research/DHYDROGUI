@@ -192,8 +192,8 @@ namespace DeltaShell.Dimr
                 string environmentPathVariable = Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey);
 
                 environmentPathVariable = KernelDirs + ";" +
-                       DimrApiDataSet.DimrDllPath + ";" +
-                       environmentPathVariable;
+                                          DimrApiDataSet.DimrDllPath + ";" +
+                                          environmentPathVariable;
                 Environment.SetEnvironmentVariable(EnvironmentConstants.PathKey, environmentPathVariable, EnvironmentVariableTarget.Process);
 
                 LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey)));

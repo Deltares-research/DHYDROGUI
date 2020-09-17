@@ -338,14 +338,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             return new BcmBlockData
-                {
-                    FilePath = InputFilePath,
-                    SupportPoint = blockName,
-                    FunctionType = contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
-                    TimeInterpolationType = interpolationValue,
-                    Location = locationValue,
-                    Quantities = quantityDataList
-                };
+            {
+                FilePath = InputFilePath,
+                SupportPoint = blockName,
+                FunctionType = contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
+                TimeInterpolationType = interpolationValue,
+                Location = locationValue,
+                Quantities = quantityDataList
+            };
         }
     }
 }

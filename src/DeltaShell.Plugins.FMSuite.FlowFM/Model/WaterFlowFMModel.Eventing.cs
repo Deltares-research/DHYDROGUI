@@ -72,10 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (flowBoundaryCondition != null &&
                     flowBoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
                 {
-                    tracerBoundaryConditions = new List<FlowBoundaryCondition>
-                    {
-                        flowBoundaryCondition
-                    };
+                    tracerBoundaryConditions = new List<FlowBoundaryCondition> {flowBoundaryCondition};
                 }
             }
             else
@@ -943,17 +940,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             syncers.Add(new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(
                             Boundaries,
                             BoundaryConditionSets,
-                            feature => new BoundaryConditionSet
-                            {
-                                Feature = feature
-                            }));
+                            feature => new BoundaryConditionSet {Feature = feature}));
             syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(
                             Pipes,
                             SourcesAndSinks,
-                            feature => new SourceAndSink
-                            {
-                                Feature = feature
-                            }));
+                            feature => new SourceAndSink {Feature = feature}));
         }
 
         private void ClearSyncers()

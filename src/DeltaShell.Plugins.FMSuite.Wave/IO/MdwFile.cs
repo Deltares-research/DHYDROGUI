@@ -176,27 +176,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             logHandler.LogReport();
         }
 
-        private static void SaveMeteoFile(WaveModelDefinition modelDefinition, IEnumerable<DelftIniCategory> mdwCategories, string sourceDir, string targetDir)
-        {
-            DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
-
-            generalCategory.RemoveAllPropertiesWhere(prop => prop.Name == KnownWaveProperties.MeteoFile);
-
-            if (modelDefinition.TimePointData.WindDataType == InputFieldDataType.FromInputFiles)
-            {
-                List<string> meteoFiles = GetMeteoFiles(modelDefinition.TimePointData.MeteoData);
-                meteoFiles.ForEach((mf, i) =>
-                {
-                    generalCategory.AddProperty(KnownWaveProperties.MeteoFile, meteoFiles[i]);
-                    CopyModelFile(meteoFiles[i], sourceDir, targetDir);
-                });
-            }
-            else if (modelDefinition.TimePointData.WindDataType != InputFieldDataType.FromInputFiles)
-            {
-                generalCategory.SetProperty(KnownWaveProperties.MeteoFile, string.Empty);
-            }
-        }
-
         public WaveModelDefinition Load(string filePath)
         {
             var logHandler = new LogHandler(Resources.MdwFile_Load_loading_the_D_Waves_model, log);
@@ -258,6 +237,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             logHandler.LogReport();
 
             return modelDefinition;
+        }
+
+        private static void SaveMeteoFile(WaveModelDefinition modelDefinition, IEnumerable<DelftIniCategory> mdwCategories, string sourceDir, string targetDir)
+        {
+            DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
+
+            generalCategory.RemoveAllPropertiesWhere(prop => prop.Name == KnownWaveProperties.MeteoFile);
+
+            if (modelDefinition.TimePointData.WindDataType == InputFieldDataType.FromInputFiles)
+            {
+                List<string> meteoFiles = GetMeteoFiles(modelDefinition.TimePointData.MeteoData);
+                meteoFiles.ForEach((mf, i) =>
+                {
+                    generalCategory.AddProperty(KnownWaveProperties.MeteoFile, meteoFiles[i]);
+                    CopyModelFile(meteoFiles[i], sourceDir, targetDir);
+                });
+            }
+            else if (modelDefinition.TimePointData.WindDataType != InputFieldDataType.FromInputFiles)
+            {
+                generalCategory.SetProperty(KnownWaveProperties.MeteoFile, string.Empty);
+            }
         }
 
         private static void SetConstantWindProperties(WaveModelDefinition modelDefinition)

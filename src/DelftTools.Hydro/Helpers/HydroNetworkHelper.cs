@@ -56,7 +56,7 @@ namespace DelftTools.Hydro.Helpers
 
             return uniqueName;
         }
-        
+
         public static IHydroNetwork GetSnakeHydroNetwork(params Point[] points)
         {
             return GetSnakeHydroNetwork(false, points);
@@ -103,7 +103,7 @@ namespace DelftTools.Hydro.Helpers
 
             return GetSnakeHydroNetwork(generateIDs, points.ToArray());
         }
-        
+
         private static void AddSnakeNetwork(bool generateIDs, Point[] points, IHydroNetwork network)
         {
             for (var i = 0; i < points.Length; i++)

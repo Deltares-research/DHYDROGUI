@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// property containing a path to a delft ini file with dependents
     /// (i.e. containing references to other files).
     /// </summary>
-    /// <seealso cref="IMigrationBehaviour" />
+    /// <seealso cref="IMigrationBehaviour"/>
     public sealed class DelftIniFileMigrateBehaviour : FileMigrateBehaviour
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(DelftIniFileMigrateBehaviour));
@@ -34,24 +34,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         public DelftIniFileMigrateBehaviour(string expectedKey,
                                             string relativeDirectory,
                                             string goalDirectory,
-                                            IDelftIniMigrator migrator) : 
+                                            IDelftIniMigrator migrator) :
             base(expectedKey, relativeDirectory, goalDirectory)
         {
             Ensure.NotNull(migrator, nameof(migrator));
             this.migrator = migrator;
         }
 
-        protected override void HandleMigration(FileInfo filePathInfo, 
+        protected override void HandleMigration(FileInfo filePathInfo,
                                                 DelftIniProperty property)
         {
-            var migratingMsg = string.Format(Resources.DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_, property.Value);
+            string migratingMsg = string.Format(Resources.DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_, property.Value);
             var logHandler = new LogHandler(migratingMsg, log);
 
             string goalPath = Path.Combine(GoalDirectory, Path.GetFileName(property.Value));
 
             migrator.MigrateFile(new FileStream(filePathInfo.FullName, FileMode.Open),
-                                 filePathInfo.FullName, 
-                                 goalPath, 
+                                 filePathInfo.FullName,
+                                 goalPath,
                                  logHandler);
             logHandler.LogReport();
 

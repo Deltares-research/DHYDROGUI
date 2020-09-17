@@ -16,14 +16,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         private readonly IReadOnlyDictionary<string, string> PropertyMapping =
             new Dictionary<string, string>()
             {
-                { nameof(Weir2D.CrestLevel), nameof(CrestLevel) },
-                { nameof(Weir2D.UseCrestLevelTimeSeries), nameof(UseCrestLevelTimeSeries) },
-                { nameof(Weir2D.CrestLevelTimeSeries), nameof(CrestLevelTimeSeries) },
-                { nameof(Weir2D.CrestWidth), nameof(CrestWidth) },
-                { nameof(Weir2D.Name), nameof(StructureName) },
+                {nameof(Weir2D.CrestLevel), nameof(CrestLevel)},
+                {nameof(Weir2D.UseCrestLevelTimeSeries), nameof(UseCrestLevelTimeSeries)},
+                {nameof(Weir2D.CrestLevelTimeSeries), nameof(CrestLevelTimeSeries)},
+                {nameof(Weir2D.CrestWidth), nameof(CrestWidth)},
+                {nameof(Weir2D.Name), nameof(StructureName)},
             };
 
         private readonly Weir2D weir;
+
+        private bool hasDisposed = false;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Creates a new <see cref="WeirPropertiesViewModel"/>.
@@ -82,6 +86,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
             set => weir.Name = value;
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <remarks>
+        /// Note that this class is sealed, and no un-managed resources need to be
+        /// released, as such we do not need to use an isDisposing approach.
+        /// </remarks>
+        public void Dispose()
+        {
+            if (hasDisposed)
+            {
+                return;
+            }
+
+            Unsubscribe();
+
+            hasDisposed = true;
+        }
+
         private void Subscribe()
         {
             weir.PropertyChanged += PropagatePropertyChanged;
@@ -119,32 +142,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
             weir.PropertyChanged -= PropagatePropertyChanged;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <remarks>
-        /// Note that this class is sealed, and no un-managed resources need to be
-        /// released, as such we do not need to use an isDisposing approach.
-        /// </remarks>
-        public void Dispose()
-        {
-            if (hasDisposed)
-            {
-                return;
-            }
-
-            Unsubscribe();
-
-            hasDisposed = true;
-        }
-
-        private bool hasDisposed = false;
     }
 }

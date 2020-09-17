@@ -69,16 +69,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// The minimum allowed value if defined (object type defined by <see cref="ModelPropertyDefinition.DataType"/>)
         /// or null if not set.
         /// </summary>
-        public object MinValue => !string.IsNullOrEmpty(propertyDefinition.MinValueAsString) 
-                                      ? FMParser.FromString(propertyDefinition.MinValueAsString, propertyDefinition.DataType) 
+        public object MinValue => !string.IsNullOrEmpty(propertyDefinition.MinValueAsString)
+                                      ? FMParser.FromString(propertyDefinition.MinValueAsString, propertyDefinition.DataType)
                                       : null;
 
         /// <summary>
         /// The maximum allowed value if defined (object type defined by <see cref="ModelPropertyDefinition.DataType"/>)
         /// or null if not set.
         /// </summary>
-        public object MaxValue => !string.IsNullOrEmpty(propertyDefinition.MaxValueAsString) 
-                                      ? FMParser.FromString(propertyDefinition.MaxValueAsString, propertyDefinition.DataType) 
+        public object MaxValue => !string.IsNullOrEmpty(propertyDefinition.MaxValueAsString)
+                                      ? FMParser.FromString(propertyDefinition.MaxValueAsString, propertyDefinition.DataType)
                                       : null;
 
         /// <summary>

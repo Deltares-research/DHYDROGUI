@@ -11,40 +11,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         /// <summary>
         /// The upstream1 property
         /// </summary>
-        public static readonly DependencyProperty Upstream1Property = 
-            DependencyProperty.Register(nameof(Upstream1), 
-                                        typeof(string), 
-                                        typeof(GeneralStructureStreamFieldsView), 
+        public static readonly DependencyProperty Upstream1Property =
+            DependencyProperty.Register(nameof(Upstream1),
+                                        typeof(string),
+                                        typeof(GeneralStructureStreamFieldsView),
                                         new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
         /// The upstream2 property
         /// </summary>
-        public static readonly DependencyProperty Upstream2Property = 
-            DependencyProperty.Register(nameof(Upstream2), 
-                                        typeof(string), 
-                                        typeof(GeneralStructureStreamFieldsView), 
+        public static readonly DependencyProperty Upstream2Property =
+            DependencyProperty.Register(nameof(Upstream2),
+                                        typeof(string),
+                                        typeof(GeneralStructureStreamFieldsView),
                                         new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
         /// The downstream1 property
         /// </summary>
-        public static readonly DependencyProperty Downstream1Property = 
-            DependencyProperty.Register(nameof(Downstream1), 
-                                        typeof(string), 
-                                        typeof(GeneralStructureStreamFieldsView), 
+        public static readonly DependencyProperty Downstream1Property =
+            DependencyProperty.Register(nameof(Downstream1),
+                                        typeof(string),
+                                        typeof(GeneralStructureStreamFieldsView),
                                         new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
         /// The downstream2 property
         /// </summary>
-        public static readonly DependencyProperty Downstream2Property = 
-            DependencyProperty.Register(nameof(Downstream2), 
-                                        typeof(string), 
-                                        typeof(GeneralStructureStreamFieldsView), 
+        public static readonly DependencyProperty Downstream2Property =
+            DependencyProperty.Register(nameof(Downstream2),
+                                        typeof(string),
+                                        typeof(GeneralStructureStreamFieldsView),
                                         new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 

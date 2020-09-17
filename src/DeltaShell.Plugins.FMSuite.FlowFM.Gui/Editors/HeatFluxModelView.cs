@@ -76,9 +76,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             if (heatFluxModel != null)
             {
-                if (radiationCheckBox.Enabled && 
-                    !radiationCheckBox.Checked && 
-                    heatFluxModel.MeteoData != null && 
+                if (radiationCheckBox.Enabled &&
+                    !radiationCheckBox.Checked &&
+                    heatFluxModel.MeteoData != null &&
                     heatFluxModel.MeteoData.Arguments[0].Values.Count > 0)
                 {
                     DialogResult dialogResult = MessageBox.Show("Are you sure you want to erase solar radiation data?",

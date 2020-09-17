@@ -11,50 +11,50 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         /// <summary>
         /// The is using crest level time series property
         /// </summary>
-        public static readonly DependencyProperty IsUsingCrestLevelTimeSeriesProperty = 
-            DependencyProperty.Register(nameof(IsUsingCrestLevelTimeSeries), 
-                                        typeof(bool), 
-                                        typeof(GateOpeningHeightCalculatedFieldView), 
+        public static readonly DependencyProperty IsUsingCrestLevelTimeSeriesProperty =
+            DependencyProperty.Register(nameof(IsUsingCrestLevelTimeSeries),
+                                        typeof(bool),
+                                        typeof(GateOpeningHeightCalculatedFieldView),
                                         new PropertyMetadata(default(bool),
                                                              OnDependentPropertyChanged));
 
         /// <summary>
         /// The is using gate lower edge level time series property
         /// </summary>
-        public static readonly DependencyProperty IsUsingGateLowerEdgeLevelTimeSeriesProperty = 
-            DependencyProperty.Register(nameof(IsUsingGateLowerEdgeLevelTimeSeries), 
-                                        typeof(bool), 
-                                        typeof(GateOpeningHeightCalculatedFieldView), 
+        public static readonly DependencyProperty IsUsingGateLowerEdgeLevelTimeSeriesProperty =
+            DependencyProperty.Register(nameof(IsUsingGateLowerEdgeLevelTimeSeries),
+                                        typeof(bool),
+                                        typeof(GateOpeningHeightCalculatedFieldView),
                                         new PropertyMetadata(default(bool),
                                                              OnDependentPropertyChanged));
 
         /// <summary>
         /// The crest level property
         /// </summary>
-        public static readonly DependencyProperty CrestLevelProperty = 
-            DependencyProperty.Register(nameof(CrestLevel), 
-                                        typeof(double), 
-                                        typeof(GateOpeningHeightCalculatedFieldView), 
-                                        new PropertyMetadata(default(double), 
+        public static readonly DependencyProperty CrestLevelProperty =
+            DependencyProperty.Register(nameof(CrestLevel),
+                                        typeof(double),
+                                        typeof(GateOpeningHeightCalculatedFieldView),
+                                        new PropertyMetadata(default(double),
                                                              OnDependentPropertyChanged));
 
         /// <summary>
         /// The gate lower edge level property
         /// </summary>
-        public static readonly DependencyProperty GateLowerEdgeLevelProperty = 
-            DependencyProperty.Register(nameof(GateLowerEdgeLevel), 
-                                        typeof(double), 
-                                        typeof(GateOpeningHeightCalculatedFieldView), 
+        public static readonly DependencyProperty GateLowerEdgeLevelProperty =
+            DependencyProperty.Register(nameof(GateLowerEdgeLevel),
+                                        typeof(double),
+                                        typeof(GateOpeningHeightCalculatedFieldView),
                                         new PropertyMetadata(default(double),
                                                              OnDependentPropertyChanged));
 
         /// <summary>
         /// The calculated value property
         /// </summary>
-        public static readonly DependencyProperty CalculatedValueProperty = 
-            DependencyProperty.Register(nameof(CalculatedValue), 
-                                        typeof(double?), 
-                                        typeof(GateOpeningHeightCalculatedFieldView), 
+        public static readonly DependencyProperty CalculatedValueProperty =
+            DependencyProperty.Register(nameof(CalculatedValue),
+                                        typeof(double?),
+                                        typeof(GateOpeningHeightCalculatedFieldView),
                                         new PropertyMetadata(default(double?)));
 
         /// <summary>

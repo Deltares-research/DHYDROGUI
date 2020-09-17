@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             base.OnPropertyChanged(model, node, e);
 
-            if (e.PropertyName == nameof(WaterFlowFMModel.InitialCoverageSetChanged) || 
+            if (e.PropertyName == nameof(WaterFlowFMModel.InitialCoverageSetChanged) ||
                 e.PropertyName == nameof(WaterFlowFMModel.RestartInput))
             {
                 TreeView.RefreshChildNodes(node);

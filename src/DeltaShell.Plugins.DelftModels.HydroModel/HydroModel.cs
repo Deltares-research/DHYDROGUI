@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private ICompositeActivity currentWorkflow;
         private CompositeHydroModelWorkFlowData currentWorkFlowData;
-        
+
         public virtual bool ReadOnly { get; set; }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 activity.Dispose();
             }
-            
+
             dimrApi?.Dispose();
         }
 
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 Ensure.NotNull(value, nameof(value));
                 workingDirectoryPathFunc = value;
             }
-        } 
+        }
 
         /// <summary>
         /// Property for retrieving the current working directory set in the framework
@@ -574,7 +574,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (currentWorkflow != null)
                 {
                     currentWorkflow.StatusChanged -= CurrentWorkflowOnStatusChanged;
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach( dm => dm.RunsInIntegratedModel = false);
+                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(dm => dm.RunsInIntegratedModel = false);
                 }
 
                 currentWorkflow = value;
@@ -845,7 +845,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                     dimrApi?.Dispose();
                     dimrApi = null;
-                    
+
                     throw;
                 }
             }
@@ -854,7 +854,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 CurrentWorkflow.Initialize();
             }
         }
-        
+
         private string GetKernelDirectories(IEnumerable<IDimrModel> dimrModels)
         {
             try
@@ -935,7 +935,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     CurrentWorkflowIsDimr.ConnectOutput(validPath);
                     CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
                 }
-                
+
                 DimrRunHelper.ConnectDimrRunLogFile(this, WorkingDirectoryPath);
             }
             else
@@ -964,7 +964,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
             }
         }
-        
+
         #endregion
 
         #region Region
@@ -1350,7 +1350,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             return base.IsLinkAllowed(source, target);
         }
-        
+
         #endregion
     }
 }

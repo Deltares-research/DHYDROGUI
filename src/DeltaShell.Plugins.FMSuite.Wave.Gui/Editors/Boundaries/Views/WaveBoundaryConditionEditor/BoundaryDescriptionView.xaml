@@ -38,13 +38,13 @@
             <components:LabeledValueBox Label="Name:"
                                         ValueContent="{Binding Path=Name}" />
             <components:LabeledComboBox Label="Forcing Type:"
-                                            SelectedItem="{Binding Path=ForcingType}"
-                                            ItemsSource="{Binding Source={StaticResource ForcingTypes}}"
-                                            ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
+                                        SelectedItem="{Binding Path=ForcingType}"
+                                        ItemsSource="{Binding Source={StaticResource ForcingTypes}}"
+                                        ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
             <components:LabeledComboBox Label="Spatial Definition:"
-                                            SelectedItem="{Binding Path=SpatialDefinition}"
-                                            ItemsSource="{Binding Source={StaticResource SpatialDefinitions}}"
-                                            ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
+                                        SelectedItem="{Binding Path=SpatialDefinition}"
+                                        ItemsSource="{Binding Source={StaticResource SpatialDefinitions}}"
+                                        ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
 
         </StackPanel>
     </GroupBox>

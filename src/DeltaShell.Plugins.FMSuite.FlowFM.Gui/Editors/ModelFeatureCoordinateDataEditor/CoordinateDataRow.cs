@@ -25,7 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
         /// <param name="columnIndex"/>
         /// </summary>
         /// <param name="columnIndex">Column index for getting the value</param>
-        /// <returns>Value for this row and the specified
+        /// <returns>
+        /// Value for this row and the specified
         /// <param name="columnIndex"/>
         /// </returns>
         public object GetDataValue(int columnIndex)

@@ -10,6 +10,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// </summary>
     public abstract class WeirViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Creates a new <see cref="WeirViewModel"/>.
         /// </summary>
@@ -27,8 +29,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// Gets the weir properties view model.
         /// </summary>
         public WeirPropertiesViewModel WeirPropertiesViewModel { get; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

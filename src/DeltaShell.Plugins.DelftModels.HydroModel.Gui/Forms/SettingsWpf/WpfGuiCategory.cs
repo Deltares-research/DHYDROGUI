@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         private WpfGuiProperty GetPropertyValueInCategory(string propertyName)
         {
-            return Properties.FirstOrDefault(p => p.Name.Equals(propertyName)) ;
+            return Properties.FirstOrDefault(p => p.Name.Equals(propertyName));
         }
 
         private void Dispose(bool disposing)

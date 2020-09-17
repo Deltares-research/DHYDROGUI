@@ -33,9 +33,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             string dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
             ModelProperty dependencyProperty = allProperties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
                                                                                                                                StringComparison.InvariantCultureIgnoreCase));
-            if (dependencyProperty != null && 
-                dependencyProperty.PropertyDefinition.DataType != typeof(bool) && 
-                dependencyProperty.PropertyDefinition.DataType != typeof(int) && 
+            if (dependencyProperty != null &&
+                dependencyProperty.PropertyDefinition.DataType != typeof(bool) &&
+                dependencyProperty.PropertyDefinition.DataType != typeof(int) &&
                 !dependencyProperty.PropertyDefinition.DataType.IsEnum)
             {
                 return $"Model property '{dependencyPropertyName}' should be have 'bool', 'int' or 'enum' data type.";

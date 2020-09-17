@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
     /// Interaction logic for Ribbon.xaml
     /// </summary>
     public partial class Ribbon : IRibbonCommandHandler
-    { 
+    {
         private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
         private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) {LayerType = typeof(HydroAreaLayer)};
         private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) {LayerType = typeof(HydroAreaLayer)};
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             tabRegion.Group = geospatialContextualGroup;
         }
 
-        public Ribbon(IGui gui): this()
+        public Ribbon(IGui gui) : this()
         {
             Ensure.NotNull(gui, nameof(gui));
             gui.MainWindow.SetActiveRibbonTab("Home");

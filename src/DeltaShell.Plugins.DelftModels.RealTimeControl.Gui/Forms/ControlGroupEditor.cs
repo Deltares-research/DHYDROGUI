@@ -42,14 +42,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroupEditor));
         private readonly XNamespace fns = "http://www.wldelft.nl/fews";
+
+        private readonly IList<ShapeBase> shapes = new List<ShapeBase>();
         private object created, lastCreated;
 
         private ControlGroupEditorViewContext context;
         private ControlGroupEditorController controller;
 
         private ControlGroup controlGroup;
-
-        private readonly IList<ShapeBase> shapes = new List<ShapeBase>();
 
         public ControlGroupEditor()
         {

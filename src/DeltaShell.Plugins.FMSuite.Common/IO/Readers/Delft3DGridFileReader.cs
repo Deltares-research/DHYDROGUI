@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 
                     IEnumerable<string> doubleValues =
                         currentLine.Split(' ').Select(l => l.Trim()).Where(v => v.Length > 0);
-                    
+
                     if (xCoordinates.Count < mSize * nSize)
                     {
                         xCoordinates.AddRange(doubleValues.Select(v => double.Parse(v, CultureInfo.InvariantCulture)));
