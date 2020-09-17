@@ -4,7 +4,6 @@ using System.ComponentModel;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro
@@ -16,10 +15,6 @@ namespace DelftTools.Hydro
     [Entity]
     public partial class HydroNetwork : Network, IHydroNetwork
     {
-        public override IEventedList<IBranch> Branches { get; set; }
-
-        public override IEventedList<INode> Nodes { get; set; }
-
         public virtual IEnumerable<IChannel> Channels { get; protected set; }
 
         public virtual IEventedList<IRegion> SubRegions { get; set; }
@@ -35,19 +30,9 @@ namespace DelftTools.Hydro
 
         public new virtual bool EditWasCancelled { get; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
         public virtual IEnumerable<object> GetDirectChildren()
         {
             yield break;
-        }
-
-        public override object Clone()
-        {
-            return (HydroNetwork) base.Clone();
         }
 
         public virtual HydroLink AddNewLink(IHydroObject source, IHydroObject target)
