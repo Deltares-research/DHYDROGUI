@@ -173,7 +173,6 @@
     <Compile Include="MapLayers\CustomRenderers\EnclosureRenderer.cs" />
     <Compile Include="MapLayers\Editors\HydroAreaFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\EmbankmentInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\LateralSourceInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroNodeInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\ChannelInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroLinkInteractor.cs" />

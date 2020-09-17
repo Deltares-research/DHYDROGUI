@@ -131,12 +131,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             {
                 featureInteractor = new NetworkLocationFeatureInteractor(layer, feature, vectorStyle, null);
             }
-            else if (feature is LateralSource)
-            {
-                featureInteractor = ((LateralSource) feature).IsDiffuse
-                                        ? (IFeatureInteractor) new DiffuseLateralSourceInteractor(layer, feature, vectorStyle, Network)
-                                        : new LateralSourceInteractor(layer, feature, vectorStyle, Network);
-            }
             else if (feature is Retention)
             {
                 featureInteractor = new BranchFeatureInteractor<Retention>(layer, feature, vectorStyle, Network);
