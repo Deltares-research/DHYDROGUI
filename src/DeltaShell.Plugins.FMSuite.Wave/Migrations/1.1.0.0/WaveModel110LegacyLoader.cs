@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils;
-using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
@@ -40,12 +39,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                                 dbConnection.ConnectionString);
             }
 
-            model.BeginEdit(new DefaultEditAction("Migrating the Mdw file structure"));
             string modelPath = Path.Combine(dbPath + "_data", model.Name);
             string mdwPath = Path.Combine(modelPath, $"{model.Name}.mdw");
             
             WaveDirectoryStructureMigrationHelper.MigrateFileStructure(mdwPath);
-            model.EndEdit();
         }
 
         public override void OnAfterProjectMigrated(Project project)

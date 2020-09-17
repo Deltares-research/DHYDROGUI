@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
@@ -28,8 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         {
             Ensure.NotNull(waveModel, nameof(waveModel));
 
-            waveModel.BeginEdit(new DefaultEditAction("Disconnecting wavm function stores"));
-
             IEnumerable<IDataItem> wavmDataItems = GetWavmFunctionStoreDataItems(waveModel);
             foreach (IDataItem dataItem in wavmDataItems)
             {
@@ -38,15 +35,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 logHandler?.ReportWarningFormat(Resources.WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_been_broken_,
                                                 wavmFunctionStore.Name);
 
-                wavmFunctionStore?.Close();
+                wavmFunctionStore.Close();
                 wavmFunctionStore.Path = string.Empty;
             }
-            waveModel.EndEdit();
         }
 
         private static IEnumerable<IDataItem> GetWavmFunctionStoreDataItems(WaveModel model) =>
             WaveDomainHelper.GetAllDomains(model.OuterDomain)
                             .Select(domain => model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name))
-                            .Where(di => di != null);
+                            .Where(di => di != null || di.Value != null);
     }
 }
