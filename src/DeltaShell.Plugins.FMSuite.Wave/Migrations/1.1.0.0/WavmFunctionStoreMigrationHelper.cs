@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
@@ -16,17 +17,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     public static class WavmFunctionStoreMigrationHelper
     {
         /// <summary>
-        /// Removes the invalid wavm function stores from the provided
-        /// <paramref name="waveModel"/>.
+        /// Disconnects the wavm function stores from the provided <paramref name="waveModel"/>.
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
         /// <param name="logHandler">The log handler to log any unlinked function stores with.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
-        public static void RemoveWavmFunctionStores(WaveModel waveModel, ILogHandler logHandler)
+        public static void DisconnectWavmFunctionStores(WaveModel waveModel, ILogHandler logHandler)
         {
             Ensure.NotNull(waveModel, nameof(waveModel));
+
+            waveModel.BeginEdit(new DefaultEditAction("Disconnecting wavm function stores"));
 
             IEnumerable<IDataItem> wavmDataItems = GetWavmFunctionStoreDataItems(waveModel);
             foreach (IDataItem dataItem in wavmDataItems)
@@ -37,8 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                                                 wavmFunctionStore.Name);
 
                 wavmFunctionStore?.Close();
-                waveModel.DataItems.Remove(dataItem);
+                wavmFunctionStore.Path = string.Empty;
             }
+            waveModel.EndEdit();
         }
 
         private static IEnumerable<IDataItem> GetWavmFunctionStoreDataItems(WaveModel model) =>
