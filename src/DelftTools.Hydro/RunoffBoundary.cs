@@ -10,13 +10,6 @@ namespace DelftTools.Hydro
     [Entity]
     public class RunoffBoundary : Feature, IHydroObject, IComparable, ILongNameable
     {
-        public RunoffBoundary()
-        {
-            Name = "RunoffBoundary";
-            Links = new EventedList<HydroLink>();
-            Attributes = new DictionaryFeatureAttributeCollection();
-        }
-
         [Aggregation]
         public virtual DrainageBasin Basin { get; set; }
 
@@ -27,7 +20,7 @@ namespace DelftTools.Hydro
         [FeatureAttribute]
         public virtual string Name { get; set; }
 
-        public virtual IHydroRegion Region => Basin;
+        public virtual IHydroRegion Region => throw new NotImplementedException();
 
         [Aggregation]
         public virtual IEventedList<HydroLink> Links { get; set; }
@@ -40,72 +33,24 @@ namespace DelftTools.Hydro
         [FeatureAttribute]
         public virtual string LongName { get; set; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
         public virtual int CompareTo(object obj)
         {
-            var other = obj as RunoffBoundary;
-            if (other != null)
-            {
-                if (Equals(this, other))
-                {
-                    return 0;
-                }
-
-                foreach (RunoffBoundary c in Basin.Boundaries)
-                {
-                    if (Equals(c, this))
-                    {
-                        return -1;
-                    }
-
-                    if (Equals(c, other))
-                    {
-                        return 1;
-                    }
-                }
-            }
-            else if (obj is Catchment)
-            {
-                return 1;
-            }
-            else if (obj is WasteWaterTreatmentPlant)
-            {
-                return 1;
-            }
-
-            throw new InvalidOperationException();
+            throw new NotImplementedException();
         }
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {
-            return Region.AddNewLink(this, target);
+            throw new NotImplementedException();
         }
 
         public virtual void UnlinkFrom(IHydroObject target)
         {
-            Region.RemoveLink(this, target);
+            throw new NotImplementedException();
         }
 
         public virtual bool CanLinkTo(IHydroObject target)
         {
-            return Region.CanLinkTo(this, target);
-        }
-
-        public override object Clone()
-        {
-            var boundary = new RunoffBoundary();
-            boundary.Geometry = Geometry;
-            boundary.Name = Name;
-            boundary.Description = Description;
-            boundary.LongName = LongName;
-            boundary.Basin = Basin;
-            boundary.Attributes = (IFeatureAttributeCollection) Attributes.Clone();
-            boundary.Links = new EventedList<HydroLink>(Links);
-            return boundary;
+            throw new NotImplementedException();
         }
     }
 }
