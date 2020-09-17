@@ -119,27 +119,6 @@ namespace DelftTools.Hydro
                 return false;
             }
 
-            // allowed links
-            if ((source is Catchment || source is WasteWaterTreatmentPlant)
-                && (target is Catchment || target is WasteWaterTreatmentPlant || target is RunoffBoundary ||
-                    target is LateralSource || target is HydroNode))
-            {
-                var catchmentSource = source as Catchment;
-                if (catchmentSource != null)
-                {
-                    //for now: if you can have subcatchments, you cannot be linked directly yourself (will probably change in the future)
-                    return catchmentSource.CatchmentType != null &&
-                           !catchmentSource.CatchmentType.SubCatchmentTypes.Any();
-                }
-
-                return true;
-            }
-
-            if (source is Embankment && target is LateralSource)
-            {
-                return true;
-            }
-
             return false;
         }
 
