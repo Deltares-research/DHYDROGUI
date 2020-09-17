@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace DeltaShell.NGHS.Common.Tests.IO
 {
     [TestFixture]
-    public class ModelFIleImporterBaseTest
+    public class ModelFileImporterBaseTest
     {
         [Test]
         public void Constructor_ExpectedValues()
