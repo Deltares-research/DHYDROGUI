@@ -39,7 +39,6 @@
     <Compile Include="CatchmentTest.cs" />
     <Compile Include="ChannelTest.cs" />
     <Compile Include="DrainageBasinTest.cs" />
-    <Compile Include="Forms\NetworkCoverageFunctionViewTest.cs" />
     <Compile Include="GroupableFeatureComparerTest.cs" />
     <Compile Include="GroupableFeatureExtensionsTest.cs" />
     <Compile Include="GroupablePointFeatureTest.cs" />
