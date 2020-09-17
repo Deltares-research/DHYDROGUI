@@ -537,7 +537,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
 
-            string expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidrule02TestName}";
+            var expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidrule02TestName}";
             Assert.AreEqual(expectedLocalName, descendantsWithLocalName[0].Value); // only the PidRule from the second control group
 
             /*Set both to time series, there should be two nodes now*/
@@ -567,7 +567,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             Assert.AreEqual(1, descendantsWithLocalName.Count);
             Assert.AreNotEqual(pidRule.Name, descendantsWithLocalName[0].Value);
 
-            string expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{controlGroup.Rules[1].Name}";
+            var expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{controlGroup.Rules[1].Name}";
             Assert.AreEqual(expectedLocalName, descendantsWithLocalName[0].Value);
 
             /*Set both to time series, there should be two nodes now*/
@@ -598,7 +598,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
 
-            string expectedLocalNameValue = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidRule.Name}";
+            var expectedLocalNameValue = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidRule.Name}";
             Assert.AreEqual(expectedLocalNameValue, descendantsWithLocalName[0].Value);
         }
 

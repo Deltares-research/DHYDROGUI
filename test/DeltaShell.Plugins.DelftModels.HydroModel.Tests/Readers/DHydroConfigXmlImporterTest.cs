@@ -40,8 +40,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             void Call() => new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>(), null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("getWorkingDirectoryPathFunc"));
-
         }
+
         /// <summary>
         /// WHEN SupportedItemTypes is retrieved
         /// THEN a set containing ICompositeActivity is returned
@@ -563,7 +563,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 object importedModel = importer.ImportItem(dimrFilePathInTemp, null);
 
                 // Assert
-                Assert.AreEqual(applicationWorkingDirectory, ((HydroModel)importedModel).WorkingDirectoryPathFunc());
+                Assert.AreEqual(applicationWorkingDirectory, ((HydroModel) importedModel).WorkingDirectoryPathFunc());
             }
         }
 

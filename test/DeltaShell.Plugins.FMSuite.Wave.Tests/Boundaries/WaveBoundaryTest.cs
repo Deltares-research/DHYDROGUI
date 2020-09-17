@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         public void Constructor_ExpectedValues()
         {
             // Setup
-            string boundaryName = $"RandomBoundaryName({random.Next()})";
+            var boundaryName = $"RandomBoundaryName({random.Next()})";
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         public void Constructor_GeometricDefinitionNull_ThrowsArgumentNullException()
         {
             // Setup
-            string boundaryName = $"RandomBoundaryName({random.Next()})";
+            var boundaryName = $"RandomBoundaryName({random.Next()})";
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
             // Call
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         public void Constructor_ConditionDefinitionNull_ThrowsArgumentNullException()
         {
             // Setup
-            string boundaryName = $"RandomBoundaryName({random.Next()})";
+            var boundaryName = $"RandomBoundaryName({random.Next()})";
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
 
             // Call

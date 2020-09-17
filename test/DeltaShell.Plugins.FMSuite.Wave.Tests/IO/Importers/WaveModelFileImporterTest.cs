@@ -149,26 +149,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             Assert.That(result, Is.EqualTo("Master Definition WAVE File|*.mdw"));
         }
 
-        private IEnumerable<TestCaseData> CanImportOnCases()
-        {
-            yield return new TestCaseData(Substitute.For<ICompositeActivity>(), true);
-            yield return new TestCaseData(new WaveModel(), true);
-            yield return new TestCaseData(new object(), false);
-        }
-
-        [TestCaseSource(nameof(CanImportOnCases))]
-        public void CanImportOn_ReturnsCorrectResult(object obj, bool expectedResult)
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            bool result = importer.CanImportOn(obj);
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedResult));
-        }
-
         [Test]
         public void ImportItem_TargetNull_ReturnsImportedWaveModel()
         {
@@ -301,9 +281,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
             // Call
             string masterFileExtension = importer.MasterFileExtension;
-            
+
             // Assert
             Assert.AreEqual("mdw", masterFileExtension);
+        }
+
+        private IEnumerable<TestCaseData> CanImportOnCases()
+        {
+            yield return new TestCaseData(Substitute.For<ICompositeActivity>(), true);
+            yield return new TestCaseData(new WaveModel(), true);
+            yield return new TestCaseData(new object(), false);
+        }
+
+        [TestCaseSource(nameof(CanImportOnCases))]
+        public void CanImportOn_ReturnsCorrectResult(object obj, bool expectedResult)
+        {
+            // Setup
+            var importer = new WaveModelFileImporter(() => null);
+
+            // Call
+            bool result = importer.CanImportOn(obj);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         private static void VerifyWaveModel(IEventedList<IActivity> items, Func<string> func)

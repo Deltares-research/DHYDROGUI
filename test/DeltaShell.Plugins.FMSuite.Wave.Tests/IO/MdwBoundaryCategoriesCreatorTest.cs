@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             double endX = random.NextDouble();
             double endY = random.NextDouble();
             const string fileName = "some_file.txt";
-            string filePath = $"D:\\some_directory\\{fileName}";
+            var filePath = $"D:\\some_directory\\{fileName}";
 
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             IWaveBoundary boundary = WaveBoundaryBuilder.Create(name, boundaryContainer, 0, 10)
@@ -157,15 +157,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             const int distance1 = 0;
             const string fileName1 = "file_1.txt";
-            string filePath1 = $"D:\\some_directory\\{fileName1}";
+            var filePath1 = $"D:\\some_directory\\{fileName1}";
 
             const int distance2 = 5;
             const string fileName2 = "file_2.txt";
-            string filePath2 = $"D:\\some_directory\\{fileName2}";
+            var filePath2 = $"D:\\some_directory\\{fileName2}";
 
             const int distance3 = 10;
             const string fileName3 = "file_3.txt";
-            string filePath3 = $"D:\\some_directory\\{fileName3}";
+            var filePath3 = $"D:\\some_directory\\{fileName3}";
 
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             IWaveBoundary boundary = WaveBoundaryBuilder.Create(name, boundaryContainer, distance1, distance2, distance3)
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Setup
             const string fileName = "file.txt";
-            string filePath = $"D:\\some_directory\\{fileName}";
+            var filePath = $"D:\\some_directory\\{fileName}";
 
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             boundaryContainer.DefinitionPerFileUsed = true;

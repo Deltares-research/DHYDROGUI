@@ -250,6 +250,81 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        [Test]
+        public void GetModelInfos_ShouldReturnModelInfoWithFuncCreateModelWhichSetWorkingDirectoryPathFuncInHydroModel()
+        {
+            // Arrange
+            var appPlugin = new HydroModelApplicationPlugin();
+            var application = Substitute.For<IApplication>();
+            const string applicationWorkingDirectory = "WorkingDirectory";
+            application.WorkDirectory.Returns(applicationWorkingDirectory);
+            appPlugin.Application = application;
+
+            // Act
+            ModelInfo modelInfos = appPlugin.GetModelInfos().First();
+
+            // Assert
+            var hydroModel = modelInfos.CreateModel(Substitute.For<IProjectItem>()) as HydroModel;
+            Assert.IsNotNull(hydroModel);
+            Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
+
+            const string applicationWorkingDirectory2 = "WorkingDirectory2";
+            application.WorkDirectory.Returns(applicationWorkingDirectory2);
+            Assert.AreEqual(applicationWorkingDirectory2, hydroModel.WorkingDirectoryPathFunc());
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetFileImporters_ShouldReturnDimrXmlImporterWhichCreatesAHydroModelUsingApplicationWorkingDirectory()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string dimrFilePathInTemp = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(Path.Combine("FileReader", "dimr.xml"));
+
+                var appPlugin = new HydroModelApplicationPlugin();
+                var application = Substitute.For<IApplication>();
+                const string applicationWorkingDirectory = "TestWorkingDirectory";
+                application.WorkDirectory.Returns(applicationWorkingDirectory);
+                appPlugin.Application = application;
+
+                // Act
+                IFileImporter importer = appPlugin.GetFileImporters().Single();
+
+                // Assert
+
+                // Check type of importer
+                Assert.IsInstanceOf(typeof(DHydroConfigXmlImporter), importer);
+
+                // Check if the correct constructor argument was provided in the HydroModelApplicationPlugin
+                object importedModel = importer.ImportItem(dimrFilePathInTemp);
+                Assert.AreEqual(applicationWorkingDirectory, ((HydroModel) importedModel).WorkingDirectoryPathFunc());
+            }
+        }
+
+        [Test]
+        public void ProjectOpened_ShouldSetWorkingDirectoryPathFuncInHydroModel()
+        {
+            // Arrange
+            var appPlugin = new HydroModelApplicationPlugin();
+            var application = Substitute.For<IApplication>();
+            const string applicationWorkingDirectory = "TestWorkingDirectory";
+            application.WorkDirectory.Returns(applicationWorkingDirectory);
+            appPlugin.Application = application;
+
+            var project = new Project();
+            var hydroModel = new HydroModel();
+
+            application.Project.Returns(project);
+            application.GetAllModelsInProject().Returns(new List<IModel> {hydroModel});
+
+            // Act
+            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+
+            // Assert
+            Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
+        }
+
         private static void SetUpApplication(DeltaShellApplication app, ApplicationPlugin appPlugin)
         {
             app.Project = new Project();
@@ -344,81 +419,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.That(model.Name, Is.EqualTo("Unique (1)"),
                             "When project contains model with same name, model should be renamed.");
             }
-        }
-
-        [Test]
-        public void GetModelInfos_ShouldReturnModelInfoWithFuncCreateModelWhichSetWorkingDirectoryPathFuncInHydroModel()
-        {
-            // Arrange
-            var appPlugin = new HydroModelApplicationPlugin();
-            var application = Substitute.For<IApplication>();
-            const string applicationWorkingDirectory = "WorkingDirectory";
-            application.WorkDirectory.Returns(applicationWorkingDirectory);
-            appPlugin.Application = application;
-            
-            // Act
-            ModelInfo modelInfos = appPlugin.GetModelInfos().First();
-
-            // Assert
-            var hydroModel = modelInfos.CreateModel(Substitute.For<IProjectItem>()) as HydroModel;
-            Assert.IsNotNull(hydroModel);
-            Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
-
-            const string applicationWorkingDirectory2 = "WorkingDirectory2";
-            application.WorkDirectory.Returns(applicationWorkingDirectory2);
-            Assert.AreEqual(applicationWorkingDirectory2, hydroModel.WorkingDirectoryPathFunc());
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void GetFileImporters_ShouldReturnDimrXmlImporterWhichCreatesAHydroModelUsingApplicationWorkingDirectory()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Arrange
-                string dimrFilePathInTemp = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(Path.Combine("FileReader", "dimr.xml"));
-                
-                var appPlugin = new HydroModelApplicationPlugin();
-                var application = Substitute.For<IApplication>();
-                const string applicationWorkingDirectory = "TestWorkingDirectory";
-                application.WorkDirectory.Returns(applicationWorkingDirectory);
-                appPlugin.Application = application;
-
-                // Act
-                IFileImporter importer = appPlugin.GetFileImporters().Single();
-
-                // Assert
-                
-                // Check type of importer
-                Assert.IsInstanceOf(typeof(DHydroConfigXmlImporter), importer);
-
-                // Check if the correct constructor argument was provided in the HydroModelApplicationPlugin
-                object importedModel = importer.ImportItem(dimrFilePathInTemp);
-                Assert.AreEqual(applicationWorkingDirectory, ((HydroModel) importedModel).WorkingDirectoryPathFunc());
-            }
-        }
-
-        [Test]
-        public void ProjectOpened_ShouldSetWorkingDirectoryPathFuncInHydroModel()
-        {
-            // Arrange
-            var appPlugin = new HydroModelApplicationPlugin();
-            var application = Substitute.For<IApplication>();
-            const string applicationWorkingDirectory = "TestWorkingDirectory";
-            application.WorkDirectory.Returns(applicationWorkingDirectory);
-            appPlugin.Application = application;
-            
-            var project = new Project();
-            var hydroModel = new HydroModel();
-            
-            application.Project.Returns(project);
-            application.GetAllModelsInProject().Returns(new List<IModel>{hydroModel});
-
-            // Act
-            application.ProjectOpened += Raise.Event<Action<Project>>(project);
-
-            // Assert
-            Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
         }
 
         private static DeltaShellApplication CreateApplicationWithModel(string modelName)

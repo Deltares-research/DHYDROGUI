@@ -223,14 +223,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
-        private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir)
-        {
-            for (var i = 0; i < 5; i++)
-            {
-                yield return tempDir.CreateFile($"{i}_rst.nc");
-            }
-        }
-
         [Test]
         [Category(NghsTestCategory.PerformanceDotTrace)]
         public void ConnectOutput_Performance()
@@ -246,6 +238,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 // Call
                 model.ConnectOutput(outputDir);
+            }
+        }
+
+        private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir)
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                yield return tempDir.CreateFile($"{i}_rst.nc");
             }
         }
 

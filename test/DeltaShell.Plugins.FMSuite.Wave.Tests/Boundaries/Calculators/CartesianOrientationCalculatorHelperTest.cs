@@ -104,6 +104,94 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             Assert.That(result.Y, Is.EqualTo(expectedWorldY));
         }
 
+        [Test]
+        [TestCaseSource(nameof(GetIsCounterClockWiseData))]
+        public void IsCounterClockwisePolygon_ExpectedResults(Coordinate[] vertices, bool expectedResult)
+        {
+            // Call
+            bool result = CartesianOrientationCalculatorHelper.IsCounterClockwisePolygon(vertices);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        [Test]
+        public void IsCounterClockWisePolygon_PolygonVerticesNull_ThrowsArgumentNullException()
+        {
+            // Call | Assert
+            void Call()
+            {
+                CartesianOrientationCalculatorHelper.IsCounterClockwisePolygon(null);
+            }
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("polygonVertices"));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetIsCounterClockWisePolygonInvalidOperationData))]
+        public void IsCounterClockWisePolygon_LessThanThreeCoordinates_ThrowsInvalidOperationException(Coordinate[] coordinates)
+        {
+            // Call | Assert
+            void Call()
+            {
+                CartesianOrientationCalculatorHelper.IsCounterClockwisePolygon(coordinates);
+            }
+
+            Assert.Throws<InvalidOperationException>(Call);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetGetNormalData))]
+        public void GetNormal_ExpectedResults(Coordinate firstCoordinate,
+                                              Coordinate lastCoordinate,
+                                              Vector2D expectedNormal)
+        {
+            // Call
+            Vector2D result = CartesianOrientationCalculatorHelper.GetNormal(firstCoordinate, lastCoordinate);
+
+            // Assert
+            Assert.That(result.X, Is.EqualTo(expectedNormal.X).Within(1E-10));
+            Assert.That(result.Y, Is.EqualTo(expectedNormal.Y).Within(1E-10));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetClosestAlignedValueParameterNullData))]
+        public void GetValueClosestAlignedWithVector_ParameterNull_ThrowsArgumentNullException(IEnumerable<Tuple<int, Vector2D>> valueNormalPairs,
+                                                                                               Vector2D referenceNormal,
+                                                                                               string expectedParamName)
+        {
+            // Call | Assert
+            void Call()
+            {
+                CartesianOrientationCalculatorHelper.GetValueClosestAlignedWithVector(valueNormalPairs, referenceNormal, 0);
+            }
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
+        }
+
+        [Test]
+        public void GetValueClosestAlignedWithVector_ExpectedResults()
+        {
+            var referenceNormal = Vector2D.Create((random.NextDouble() + 0.1) * 100,
+                                                  (random.NextDouble() + 0.1) * 100);
+
+            Tuple<double, Vector2D>[] valueNormalPairs =
+                Enumerable.Range(0, 5).Select(_ => GetValueNormalPair(referenceNormal)).ToArray();
+
+            double expectedValue = valueNormalPairs.OrderBy(x => Math.Abs(x.Item1))
+                                                   .First().Item1;
+
+            // Call
+            double result = CartesianOrientationCalculatorHelper.GetValueClosestAlignedWithVector(valueNormalPairs,
+                                                                                                  referenceNormal,
+                                                                                                  0.0);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedValue));
+        }
+
         private Tuple<double, double> GetDoubleValues()
         {
             double lowerX0 = (random.NextDouble() * 2000) - 2000;
@@ -184,30 +272,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             }, false);
         }
 
-        [Test]
-        [TestCaseSource(nameof(GetIsCounterClockWiseData))]
-        public void IsCounterClockwisePolygon_ExpectedResults(Coordinate[] vertices, bool expectedResult)
-        {
-            // Call
-            bool result = CartesianOrientationCalculatorHelper.IsCounterClockwisePolygon(vertices);
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedResult));
-        }
-
-        [Test]
-        public void IsCounterClockWisePolygon_PolygonVerticesNull_ThrowsArgumentNullException()
-        {
-            // Call | Assert
-            void Call()
-            {
-                CartesianOrientationCalculatorHelper.IsCounterClockwisePolygon(null);
-            }
-
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("polygonVertices"));
-        }
-
         private static IEnumerable<TestCaseData> GetIsCounterClockWisePolygonInvalidOperationData()
         {
             var coordinate0 = new Coordinate(0.0, 0.0);
@@ -225,19 +289,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
 
             yield return new TestCaseData(singleCoordinate);
             yield return new TestCaseData(twoCoordinates);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(GetIsCounterClockWisePolygonInvalidOperationData))]
-        public void IsCounterClockWisePolygon_LessThanThreeCoordinates_ThrowsInvalidOperationException(Coordinate[] coordinates)
-        {
-            // Call | Assert
-            void Call()
-            {
-                CartesianOrientationCalculatorHelper.IsCounterClockwisePolygon(coordinates);
-            }
-
-            Assert.Throws<InvalidOperationException>(Call);
         }
 
         private static IEnumerable<TestCaseData> GetGetNormalData()
@@ -268,20 +319,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             yield return new TestCaseData(yCoord1, xCoord1, Vector2D.Create(-1.0, 0.0).Rotate(Degrees.ToRadians(45.0)));
         }
 
-        [Test]
-        [TestCaseSource(nameof(GetGetNormalData))]
-        public void GetNormal_ExpectedResults(Coordinate firstCoordinate,
-                                              Coordinate lastCoordinate,
-                                              Vector2D expectedNormal)
-        {
-            // Call
-            Vector2D result = CartesianOrientationCalculatorHelper.GetNormal(firstCoordinate, lastCoordinate);
-
-            // Assert
-            Assert.That(result.X, Is.EqualTo(expectedNormal.X).Within(1E-10));
-            Assert.That(result.Y, Is.EqualTo(expectedNormal.Y).Within(1E-10));
-        }
-
         private static IEnumerable<TestCaseData> GetClosestAlignedValueParameterNullData()
         {
             IEnumerable<Tuple<int, Vector2D>> pairs = Enumerable.Empty<Tuple<int, Vector2D>>();
@@ -289,22 +326,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
 
             yield return new TestCaseData(null, referenceNormal, "valueVectorPairs");
             yield return new TestCaseData(pairs, null, "referenceVector");
-        }
-
-        [Test]
-        [TestCaseSource(nameof(GetClosestAlignedValueParameterNullData))]
-        public void GetValueClosestAlignedWithVector_ParameterNull_ThrowsArgumentNullException(IEnumerable<Tuple<int, Vector2D>> valueNormalPairs,
-                                                                                               Vector2D referenceNormal,
-                                                                                               string expectedParamName)
-        {
-            // Call | Assert
-            void Call()
-            {
-                CartesianOrientationCalculatorHelper.GetValueClosestAlignedWithVector(valueNormalPairs, referenceNormal, 0);
-            }
-
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
         private double GetRandomRotation()
@@ -320,27 +341,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                                              .Rotate(rotation);
 
             return new Tuple<double, Vector2D>(rotation, normal);
-        }
-
-        [Test]
-        public void GetValueClosestAlignedWithVector_ExpectedResults()
-        {
-            var referenceNormal = Vector2D.Create((random.NextDouble() + 0.1) * 100,
-                                                  (random.NextDouble() + 0.1) * 100);
-
-            Tuple<double, Vector2D>[] valueNormalPairs =
-                Enumerable.Range(0, 5).Select(_ => GetValueNormalPair(referenceNormal)).ToArray();
-
-            double expectedValue = valueNormalPairs.OrderBy(x => Math.Abs(x.Item1))
-                                                   .First().Item1;
-
-            // Call
-            double result = CartesianOrientationCalculatorHelper.GetValueClosestAlignedWithVector(valueNormalPairs,
-                                                                                                  referenceNormal,
-                                                                                                  0.0);
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedValue));
         }
     }
 }

@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 var validator = new WaterFlowFMModelTimersValidator();
                 Assert.AreEqual(new TimeSpan(0, 0, 5, 0), model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
                 Assert.AreEqual(new TimeSpan(0, 0, 20, 0), model.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value);
-                
+
                 // set invalid user output timestep
                 model.TimeStep = new TimeSpan(0, 0, 7, 0);
 
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Assert.AreEqual(2, issues.Length);
                 Assert.AreEqual("His output interval must be a multiple of the output timestep.", issues[0].Message);
                 Assert.AreEqual("Map output interval must be a multiple of the output timestep.", issues[1].Message);
-                
+
                 // set valid user output timestep
                 model.TimeStep = new TimeSpan(0, 0, 1, 0);
 

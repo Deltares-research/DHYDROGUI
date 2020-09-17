@@ -79,7 +79,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Import
             {
                 // Setup
                 var model = new RealTimeControlModel();
-                var importer = new RealTimeControlRestartFileImporter(() => new[] {model});
+                var importer = new RealTimeControlRestartFileImporter(() => new[]
+                {
+                    model
+                });
                 string filePath = Path.Combine(tempDir.Path, "file_rst.xml");
                 const string fileContent = @"file content here";
                 File.WriteAllText(filePath, fileContent);
@@ -98,7 +101,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Import
         public void CanImportOn_IsRestartInputForModel_ReturnsTrue()
         {
             var model = new RealTimeControlModel();
-            var importer = new RealTimeControlRestartFileImporter(() => new[] {model});
+            var importer = new RealTimeControlRestartFileImporter(() => new[]
+            {
+                model
+            });
 
             // Call
             bool result = importer.CanImportOn(model.RestartInput);
@@ -112,7 +118,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Import
         {
             // Setup
             var model = new RealTimeControlModel();
-            var importer = new RealTimeControlRestartFileImporter(() => new[] {model});
+            var importer = new RealTimeControlRestartFileImporter(() => new[]
+            {
+                model
+            });
 
             // Call
             bool result = importer.CanImportOn(new RealTimeControlRestartFile());

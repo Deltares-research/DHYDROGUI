@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Given
             const string boundaryConditionName = "boundary_condition";
-            string expectedLine = $"location             '{boundaryConditionName}'";
+            var expectedLine = $"location             '{boundaryConditionName}'";
             const string fileName = "Waves.bcw";
             var bcwFile = new BcwFile();
 

@@ -14,6 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class WaterFlowFMModel120LegacyLoaderTest
     {
+        private static ExistConstraint DoesNotExist => Does.Not.Exist();
+
         [Test]
         public void OnAfterProjectMigrated_ProjectNull_ThrowsArgumentNullException()
         {
@@ -68,7 +70,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(Path.Combine(outputDir, "metadata.xml"), DoesNotExist);
             }
         }
-
-        private static ExistConstraint DoesNotExist => Does.Not.Exist();
     }
 }

@@ -440,6 +440,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.IsFalse(FlowBoundaryCondition.MorphologyBoundaryConditionHasGeneratedData(condition));
         }
 
+        [Test]
+        [TestCase(FlowBoundaryQuantityType.Riemann, "meters", "m")]
+        public void VariableUnit_WithVariousFlowBoundaryType_ReturnsExpectedUnit(FlowBoundaryQuantityType quantityType,
+                                                                                 string unitDescription,
+                                                                                 string unit)
+        {
+            // Setup
+            var random = new Random(21);
+            var condition = new FlowBoundaryCondition(quantityType,
+                                                      random.NextEnumValue<BoundaryConditionDataType>());
+
+            // Call
+            IUnit variableUnit = condition.VariableUnit;
+
+            // Assert
+            Assert.That(variableUnit, Is.TypeOf<Unit>());
+            Assert.That(variableUnit.Name, Is.EqualTo(unitDescription));
+            Assert.That(variableUnit.Symbol, Is.EqualTo(unit));
+        }
+
         private static BoundaryConditionDataType DetermineDataType(IFunction function)
         {
             if (function.Arguments.Count == 0)
@@ -487,26 +507,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             IUnit unit = new FlowBoundaryCondition(type, BoundaryConditionDataType.TimeSeries).VariableUnit;
             Assert.That(unit.Name, Is.EqualTo(name_expectation));
             Assert.That(unit.Symbol, Is.EqualTo(symbol_expectation));
-        }
-
-        [Test]
-        [TestCase(FlowBoundaryQuantityType.Riemann, "meters", "m")]
-        public void VariableUnit_WithVariousFlowBoundaryType_ReturnsExpectedUnit(FlowBoundaryQuantityType quantityType,
-                                                                                 string unitDescription,
-                                                                                 string unit)
-        {
-            // Setup
-            var random = new Random(21);
-            var condition = new FlowBoundaryCondition(quantityType,
-                                                      random.NextEnumValue<BoundaryConditionDataType>());
-
-            // Call
-            IUnit variableUnit = condition.VariableUnit;
-
-            // Assert
-            Assert.That(variableUnit, Is.TypeOf<Unit>());
-            Assert.That(variableUnit.Name, Is.EqualTo(unitDescription));
-            Assert.That(variableUnit.Symbol, Is.EqualTo(unit));
         }
     }
 }

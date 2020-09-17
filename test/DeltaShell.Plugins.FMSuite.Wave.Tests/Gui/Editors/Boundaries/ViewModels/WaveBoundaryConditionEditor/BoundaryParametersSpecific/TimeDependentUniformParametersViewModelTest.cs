@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.NGHS.TestUtils;
@@ -96,7 +95,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
             var stateIsValid = false;
-            void VerifyStateAtGenerateSeries(object _) => 
+
+            void VerifyStateAtGenerateSeries(object _) =>
                 stateIsValid = !viewModel.TimeDependentParametersFunctions
                                          .Contains(waveEnergyFunction.UnderlyingFunction);
 
@@ -109,13 +109,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(stateIsValid);
 
-            IFunction[] expectedEnergyFunctions = {waveEnergyFunction.UnderlyingFunction};
+            IFunction[] expectedEnergyFunctions =
+            {
+                waveEnergyFunction.UnderlyingFunction
+            };
             Assert.That(viewModel.TimeDependentParametersFunctions, Is.EqualTo(expectedEnergyFunctions));
             Assert.That(observer.NCalls, Is.EqualTo(2));
 
-            Assert.That(observer.EventArgses[0].PropertyName, 
+            Assert.That(observer.EventArgses[0].PropertyName,
                         Is.EqualTo(nameof(viewModel.TimeDependentParametersFunctions)));
-            Assert.That(observer.EventArgses[1].PropertyName, 
+            Assert.That(observer.EventArgses[1].PropertyName,
                         Is.EqualTo(nameof(viewModel.TimeDependentParametersFunctions)));
 
             Assert.That(observer.Senders[0], Is.EqualTo(viewModel));

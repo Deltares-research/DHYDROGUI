@@ -82,14 +82,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void ConvertToExpressionTrees_MultipleExpressions_OneControlGroup_ReturnsCorrectTree()
         {
             // Setup
-            string leafInput = $"{RtcXmlTag.Input}some_input";
+            var leafInput = $"{RtcXmlTag.Input}some_input";
 
             const string nameA = "A";
-            string idA = $"{ControlGroupName}/{nameA}";
+            var idA = $"{ControlGroupName}/{nameA}";
             var operatorA = Operator.Subtract; // TODO random
 
             const string nameB = "B";
-            string idB = $"{ControlGroupName}/{nameB}";
+            var idB = $"{ControlGroupName}/{nameB}";
             var operatorB = Operator.Add; // TODO random
 
             ExpressionXML expressionA = ExpressionXMLBuilder.Create(idA, operatorA, nameA)
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void ConvertToExpressionTrees_MultipleExpressions_MultipleControlGroups_ReturnsCorrectResult()
         {
             // Setup
-            string leafInput = $"{RtcXmlTag.Input}some_input";
+            var leafInput = $"{RtcXmlTag.Input}some_input";
             const string controlGroup1 = "controlgroup_A";
             const string controlGroup2 = "controlgroup_B";
 
@@ -131,11 +131,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             const string expressionNameB = "B";
             var operatorB = Operator.Add; // TODO random
 
-            string idA1 = $"{controlGroup1}/{expressionNameA}";
-            string idB1 = $"{controlGroup1}/{expressionNameB}";
+            var idA1 = $"{controlGroup1}/{expressionNameA}";
+            var idB1 = $"{controlGroup1}/{expressionNameB}";
 
-            string idA2 = $"{controlGroup2}/{expressionNameA}";
-            string idB2 = $"{controlGroup2}/{expressionNameB}";
+            var idA2 = $"{controlGroup2}/{expressionNameA}";
+            var idB2 = $"{controlGroup2}/{expressionNameB}";
 
             TriggerXML[] triggers = WrapTriggers(
                 ExpressionXMLBuilder.Create(idA1, operatorA, expressionNameA)
@@ -180,33 +180,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void ConvertToExpressionTrees_WithComplexExample_ReturnsCorrectTree()
         {
             // Setup
-            string leafInput = $"{RtcXmlTag.Input}some_input"; // TODO random : constant or param
-            var @operator = Operator.Add;                      // TODO random
+            var leafInput = $"{RtcXmlTag.Input}some_input"; // TODO random : constant or param
+            var @operator = Operator.Add;                   // TODO random
 
             const string nameA = "A";
-            string idA = $"{ControlGroupName}/{nameA}";
+            var idA = $"{ControlGroupName}/{nameA}";
 
             const string nameB = "B";
-            string idB = $"{ControlGroupName}/{nameB}";
+            var idB = $"{ControlGroupName}/{nameB}";
 
             const string nameC = "C";
-            string idC = $"{ControlGroupName}/{nameC}";
+            var idC = $"{ControlGroupName}/{nameC}";
 
             const string nameD = "D";
-            string idD = $"{ControlGroupName}/{nameD}";
+            var idD = $"{ControlGroupName}/{nameD}";
 
             const string nameE = "E";
-            string idE = $"{ControlGroupName}/{nameE}";
+            var idE = $"{ControlGroupName}/{nameE}";
 
             const string nameF = "F";
-            string idF1 = $"{ControlGroupName}/{nameF}_1";
-            string idF2 = $"{ControlGroupName}/{nameF}_2";
+            var idF1 = $"{ControlGroupName}/{nameF}_1";
+            var idF2 = $"{ControlGroupName}/{nameF}_2";
 
             const string nameG = "G";
-            string idG = $"{ControlGroupName}/{nameG}";
+            var idG = $"{ControlGroupName}/{nameG}";
 
             const string nameH = "H";
-            string idH = $"{ControlGroupName}/{nameH}";
+            var idH = $"{ControlGroupName}/{nameH}";
 
             var condition2 =
                 (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition, ControlGroupName,
@@ -893,7 +893,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                         $"The returned data access object should be a {nameof(ExpressionTree)}");
 
             const string expectedName = "expression_name";
-            string expectedId = $"{ControlGroupName}/{expectedName}";
+            var expectedId = $"{ControlGroupName}/{expectedName}";
 
             Assert.That(tree.ControlGroupName, Is.EqualTo(ControlGroupName));
             Assert.That(tree.Id, Is.EqualTo(expectedId));
@@ -989,12 +989,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         private IEnumerable<TestCaseData> ExpressionTestCases()
         {
             const string yName = "expression_name";
-            string id = $"{ControlGroupName}/{yName}";
+            var id = $"{ControlGroupName}/{yName}";
 
             var constantValue = random.NextDouble().ToString();
             var constantLeafNode = new ConstantValueLeafNode(constantValue);
 
-            string inputReference = $"{RtcXmlTag.Input}some_input";
+            var inputReference = $"{RtcXmlTag.Input}some_input";
             var inputLeafNode = new ParameterLeafNode(inputReference);
 
             const string expressionReference = "some_expression";
@@ -1065,10 +1065,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             const string nameC = "C";
             const string nameD = "D";
 
-            string idA = $"{ControlGroupName}/{nameA}";
-            string idB = $"{ControlGroupName}/{nameB}";
-            string idC = $"{ControlGroupName}/{nameC}";
-            string idD = $"{ControlGroupName}/{nameD}";
+            var idA = $"{ControlGroupName}/{nameA}";
+            var idB = $"{ControlGroupName}/{nameB}";
+            var idC = $"{ControlGroupName}/{nameC}";
+            var idD = $"{ControlGroupName}/{nameD}";
 
             IList<ExpressionXML> expressions =
                 RetrieveExampleSetExpressionElements(idA, nameA, idB, nameB, idC, nameC, idD, nameD);
@@ -1121,7 +1121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                                                                                  string idC, string nameC,
                                                                                  string idD, string nameD)
         {
-            string leafInput = $"{RtcXmlTag.Input}some_input";
+            var leafInput = $"{RtcXmlTag.Input}some_input";
             var @operator = Operator.Add; // TODO random
 
             return new List<ExpressionXML>

@@ -42,9 +42,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string projectDirName = projectName + ProjectDirExtension;
             string projectFileName = projectName + ProjectFileExtension;
             string modelDirName = modelName;
-            string outputWAQDirName = $"DFM_DELWAQ_{modelName}";
+            var outputWAQDirName = $"DFM_DELWAQ_{modelName}";
             string mduFileName = modelName + ".mdu";
-            string explicitWorkingDirName = $"{modelName}_output";
+            var explicitWorkingDirName = $"{modelName}_output";
 
             // Set expected paths
             string projectFilePath = Path.Combine(testDirPath, projectFileName);
@@ -182,9 +182,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string projectDirName = projectName + ProjectDirExtension;
             string projectFileName = projectName + ProjectFileExtension;
             string modelDirName = modelName;
-            string outputWAQDirName = $"DFM_DELWAQ_{modelName}";
+            var outputWAQDirName = $"DFM_DELWAQ_{modelName}";
             string mduFileName = modelName + ".mdu";
-            string explicitWorkingDirName = $"{modelName}_output";
+            var explicitWorkingDirName = $"{modelName}_output";
 
             // Set expected default paths
             string projectFilePath = Path.Combine(testDirPath, projectFileName);

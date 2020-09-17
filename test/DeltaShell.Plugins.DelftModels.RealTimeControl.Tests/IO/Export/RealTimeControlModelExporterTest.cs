@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
                 // When
                 new RealTimeControlModelExporter().Export(model, tempDirectory.Path);
-                
+
                 string expectedFileContentPath = Path.Combine(tempDirectory.Path, "expected_state_import.xml");
                 RealTimeControlXmlWriter.GetStateVectorXml(tempDirectory.Path, model.ControlGroups).Save(expectedFileContentPath);
                 string exportedRestartFile = Path.Combine(tempDirectory.Path, RealTimeControlXMLFiles.XmlImportState);
@@ -52,7 +52,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 FileAssert.AreEqual(expectedFileContentPath, exportedRestartFile);
             }
         }
-
 
         private static void AddControlGroupToModel(IRealTimeControlModel model)
         {

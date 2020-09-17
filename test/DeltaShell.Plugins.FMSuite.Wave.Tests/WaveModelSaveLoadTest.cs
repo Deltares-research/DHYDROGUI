@@ -18,7 +18,7 @@ using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
-using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
+using Does = NUnit.Framework.Does;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 {
@@ -341,7 +341,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 waveModel.ModelSaveTo(Path.Combine(saveModelDir, "input", "Waves.mdw"), true);
 
                 // Assert
-                Assert.That(Path.Combine(saveModelDir, "output", "wavm-Waves.nc"), NUnit.Framework.Does.Not.Exist());
+                Assert.That(Path.Combine(saveModelDir, "output", "wavm-Waves.nc"), Does.Not.Exist());
             }
         }
 
@@ -357,29 +357,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             // Assert
             var e = Assert.Throws<InvalidOperationException>(Call);
             Assert.That(e.Message, Is.EqualTo("Model cannot be directly saved under the root."));
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void ModelSaveTo_WithOutput_SavesOutput(bool switchTo)
-        {
-            // Setup
-            using (var temp = new TemporaryDirectory())
-            using (var model = new WaveModel())
-            {
-                string origOutputFile = temp.CopyTestDataFileToTempDirectory("output_wavm\\wavm-wave.nc");
-
-                model.WavmFunctionStores.First().Path = origOutputFile;
-
-                // Call
-                model.ModelSaveTo(Path.Combine(temp.Path, "input", "Waves.mdw"), switchTo);
-
-                // Assert
-                string expectedOutputFile = Path.Combine(temp.Path, "output", "wavm-wave.nc");
-                Assert.That(expectedOutputFile, Does.Exist);
-                Assert.That(origOutputFile, Does.Exist);
-                Assert.That(model.WavmFunctionStores.First().Path, Is.EqualTo(switchTo ? expectedOutputFile : origOutputFile));
-            }
         }
 
         [Test]
@@ -409,10 +386,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 model.ModelSaveTo(mdwFilePath, switchTo);
 
                 // Assert
-                Assert.That(outputDir, Does.Exist);
-                Assert.That(outputFile, Does.Exist);
-                Assert.That(someOutputFile, Does.Exist);
-                Assert.That(someOtherOutputFile, Does.Exist);
+                Assert.That(outputDir, NGHS.TestUtils.AssertConstraints.Does.Exist);
+                Assert.That(outputFile, NGHS.TestUtils.AssertConstraints.Does.Exist);
+                Assert.That(someOutputFile, NGHS.TestUtils.AssertConstraints.Does.Exist);
+                Assert.That(someOtherOutputFile, NGHS.TestUtils.AssertConstraints.Does.Exist);
             }
         }
 
@@ -444,6 +421,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ModelSaveTo_WithOutput_SavesOutput(bool switchTo)
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string origOutputFile = temp.CopyTestDataFileToTempDirectory("output_wavm\\wavm-wave.nc");
+
+                model.WavmFunctionStores.First().Path = origOutputFile;
+
+                // Call
+                model.ModelSaveTo(Path.Combine(temp.Path, "input", "Waves.mdw"), switchTo);
+
+                // Assert
+                string expectedOutputFile = Path.Combine(temp.Path, "output", "wavm-wave.nc");
+                Assert.That(expectedOutputFile, NGHS.TestUtils.AssertConstraints.Does.Exist);
+                Assert.That(origOutputFile, NGHS.TestUtils.AssertConstraints.Does.Exist);
+                Assert.That(model.WavmFunctionStores.First().Path, Is.EqualTo(switchTo ? expectedOutputFile : origOutputFile));
+            }
+        }
+
         private static DeltaShellApplication GetRunningApplication()
         {
             var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
@@ -469,7 +469,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         private static string AssertExists(string dir, string relPath)
         {
             string path = Path.Combine(dir, relPath);
-            Assert.That(path, Does.Exist);
+            Assert.That(path, NGHS.TestUtils.AssertConstraints.Does.Exist);
 
             return path;
         }

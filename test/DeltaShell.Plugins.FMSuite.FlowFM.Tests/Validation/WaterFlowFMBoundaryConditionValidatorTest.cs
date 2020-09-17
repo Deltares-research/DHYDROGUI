@@ -194,10 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 SedimentFractionNames = new List<string> {"testFrac"}
             };
 
-            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
-            {
-                Feature = boundary
-            };
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries) {Feature = boundary};
             AddPointDataToBoundaryCondition(flowBoundaryCondition, model);
 
             model.Boundaries.Add(boundary);

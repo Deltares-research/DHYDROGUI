@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         {
             void Call() => WaveDirectoryStructureMigrationHelper.MigrateFileStructure(null);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("mdwPath"));
         }
 
@@ -76,36 +77,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             }
         }
 
-        private static void AssertSameFiles(DirectoryInfo sourceDirectoryInfo, DirectoryInfo referenceDirectoryInfo)
-        {
-            FileInfo[] sourceFiles = sourceDirectoryInfo.GetFiles();
-            FileInfo[] referenceFiles = referenceDirectoryInfo.GetFiles();
-
-            Assert.That(sourceFiles.Length, Is.EqualTo(referenceFiles.Length));
-
-            for (var i = 0; i < sourceFiles.Length; i++)
-            {
-                Assert.That(sourceFiles[i].Name, Is.EqualTo(referenceFiles[i].Name));
-            }
-
-            DirectoryInfo[] sourceSubDirectories = sourceDirectoryInfo.GetDirectories();
-            DirectoryInfo[] referenceSubDirectories = referenceDirectoryInfo.GetDirectories();
-
-            Assert.That(sourceSubDirectories.Length, Is.EqualTo(referenceSubDirectories.Length));
-
-            for (var i = 0; i < sourceSubDirectories.Length; i++)
-            {
-                AssertSameFiles(sourceSubDirectories[i], 
-                                referenceSubDirectories[i]);
-            }
-        }
-
         [Test]
         public void GetTemporaryMigrationDirectoryName_SrcDirectoryNull_ThrowsArgumentNullException()
         {
             void Call() => WaveDirectoryStructureMigrationHelper.GetTemporaryMigrationDirectoryName(null);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("srcDirectory"));
         }
 
@@ -115,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var dirInfo = new DirectoryInfo("C:\\");
             void Call() => WaveDirectoryStructureMigrationHelper.GetTemporaryMigrationDirectoryName(dirInfo);
 
-            Assert.Throws<System.ArgumentException>(Call);
+            Assert.Throws<ArgumentException>(Call);
         }
 
         [Test]
@@ -173,12 +150,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         public void TryParseDatabasePath_ExpectedResults(string connectionString, string expectedDatabasePath, bool couldParse)
         {
             // Call
-            bool hasParsed = 
+            bool hasParsed =
                 WaveDirectoryStructureMigrationHelper.TryParseDatabasePath(connectionString, out string databasePath);
 
             // Assert
             Assert.That(hasParsed, Is.EqualTo(couldParse));
             Assert.That(databasePath, Is.EqualTo(expectedDatabasePath));
+        }
+
+        private static void AssertSameFiles(DirectoryInfo sourceDirectoryInfo, DirectoryInfo referenceDirectoryInfo)
+        {
+            FileInfo[] sourceFiles = sourceDirectoryInfo.GetFiles();
+            FileInfo[] referenceFiles = referenceDirectoryInfo.GetFiles();
+
+            Assert.That(sourceFiles.Length, Is.EqualTo(referenceFiles.Length));
+
+            for (var i = 0; i < sourceFiles.Length; i++)
+            {
+                Assert.That(sourceFiles[i].Name, Is.EqualTo(referenceFiles[i].Name));
+            }
+
+            DirectoryInfo[] sourceSubDirectories = sourceDirectoryInfo.GetDirectories();
+            DirectoryInfo[] referenceSubDirectories = referenceDirectoryInfo.GetDirectories();
+
+            Assert.That(sourceSubDirectories.Length, Is.EqualTo(referenceSubDirectories.Length));
+
+            for (var i = 0; i < sourceSubDirectories.Length; i++)
+            {
+                AssertSameFiles(sourceSubDirectories[i],
+                                referenceSubDirectories[i]);
+            }
         }
     }
 }

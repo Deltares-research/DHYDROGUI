@@ -30,7 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
         }
 
-
         [Test]
         [TestCase(null, "somePath", "relativeDirectory")]
         [TestCase("somePath", null, "goalDirectory")]
@@ -60,15 +59,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 const string polyLineFileContent = "Poly joke beach, Cornwall, England";
                 const string polyLineFileName = "cornwall.pol";
 
-
                 string oldPolFilePath = tempDir.CreateFile(Path.Combine(inputDir, polyLineFileName), polyLineFileContent);
                 var oldPolFileInfo = new FileInfo(oldPolFilePath);
 
                 var obstacleFileInformation = new DelftIniCategory("ObstacleFileInformation");
-                obstacleFileInformation.AddProperties( new []
+                obstacleFileInformation.AddProperties(new[]
                 {
                     new DelftIniProperty("File", "100.0", ""),
-                    new DelftIniProperty("PolylineFile", polyLineFileName, ""), 
+                    new DelftIniProperty("PolylineFile", polyLineFileName, ""),
                 });
 
                 var oldCategories = new DelftIniCategory[6];
@@ -79,16 +77,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 {
                     oldCategories[i] = new DelftIniCategory("Obstacle");
 
-                    oldCategories[i].AddProperties(new []
+                    oldCategories[i].AddProperties(new[]
                     {
-                        new DelftIniProperty("Name", $"SomeName_{i}", ""), 
-                        new DelftIniProperty("Type", "Sheet", ""), 
-                        new DelftIniProperty("TransmCoef", "5.67", ""), 
-                        new DelftIniProperty("Height", "4.56", ""), 
-                        new DelftIniProperty("Alpha", "3.45", ""), 
-                        new DelftIniProperty("Beta", "2.34", ""), 
-                        new DelftIniProperty("Reflections", "specular", ""), 
-                        new DelftIniProperty("ReflecCoef", "1.23", ""), 
+                        new DelftIniProperty("Name", $"SomeName_{i}", ""),
+                        new DelftIniProperty("Type", "Sheet", ""),
+                        new DelftIniProperty("TransmCoef", "5.67", ""),
+                        new DelftIniProperty("Height", "4.56", ""),
+                        new DelftIniProperty("Alpha", "3.45", ""),
+                        new DelftIniProperty("Beta", "2.34", ""),
+                        new DelftIniProperty("Reflections", "specular", ""),
+                        new DelftIniProperty("ReflecCoef", "1.23", ""),
                     });
                 }
 
@@ -117,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var obsFileInfo = new FileInfo(Path.Combine(absoluteGoalDir, obstacleFileName));
                 Assert.That(obsFileInfo.Exists, Is.True);
 
-                IList<DelftIniCategory> newCategories = new DelftIniReader().ReadDelftIniFile(obsFileInfo.OpenRead(), 
+                IList<DelftIniCategory> newCategories = new DelftIniReader().ReadDelftIniFile(obsFileInfo.OpenRead(),
                                                                                               obsFileInfo.FullName);
 
                 Assert.That(newCategories.Count, Is.EqualTo(oldCategories.Length));
@@ -133,8 +131,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                     for (var j = 0; j < oldProperties.Length; j++)
                     {
-                        Assert.That(newProperties[j].Name,    Is.EqualTo(oldProperties[j].Name));
-                        Assert.That(newProperties[j].Value,   Is.EqualTo(oldProperties[j].Value));
+                        Assert.That(newProperties[j].Name, Is.EqualTo(oldProperties[j].Name));
+                        Assert.That(newProperties[j].Value, Is.EqualTo(oldProperties[j].Value));
                         Assert.That(newProperties[j].Comment, Is.EqualTo(oldProperties[j].Comment));
                     }
                 }
@@ -164,10 +162,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var oldPolInfo = new FileInfo(oldPolPath);
 
                 var obstacleFileInformation = new DelftIniCategory("ObstacleFileInformation");
-                obstacleFileInformation.AddProperties( new []
+                obstacleFileInformation.AddProperties(new[]
                 {
                     new DelftIniProperty("File", "100.0", ""),
-                    new DelftIniProperty("PolylineFile", $"./{polSubDir}/{polyLineFileName}", ""), 
+                    new DelftIniProperty("PolylineFile", $"./{polSubDir}/{polyLineFileName}", ""),
                 });
 
                 var oldCategories = new DelftIniCategory[6];
@@ -178,16 +176,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 {
                     oldCategories[i] = new DelftIniCategory("Obstacle");
 
-                    oldCategories[i].AddProperties(new []
+                    oldCategories[i].AddProperties(new[]
                     {
-                        new DelftIniProperty("Name", $"SomeName_{i}", ""), 
-                        new DelftIniProperty("Type", "Sheet", ""), 
-                        new DelftIniProperty("TransmCoef", "5.67", ""), 
-                        new DelftIniProperty("Height", "4.56", ""), 
-                        new DelftIniProperty("Alpha", "3.45", ""), 
-                        new DelftIniProperty("Beta", "2.34", ""), 
-                        new DelftIniProperty("Reflections", "specular", ""), 
-                        new DelftIniProperty("ReflecCoef", "1.23", ""), 
+                        new DelftIniProperty("Name", $"SomeName_{i}", ""),
+                        new DelftIniProperty("Type", "Sheet", ""),
+                        new DelftIniProperty("TransmCoef", "5.67", ""),
+                        new DelftIniProperty("Height", "4.56", ""),
+                        new DelftIniProperty("Alpha", "3.45", ""),
+                        new DelftIniProperty("Beta", "2.34", ""),
+                        new DelftIniProperty("Reflections", "specular", ""),
+                        new DelftIniProperty("ReflecCoef", "1.23", ""),
                     });
                 }
 
@@ -216,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var obsFileInfo = new FileInfo(Path.Combine(absoluteGoalDir, obstacleFileName));
                 Assert.That(obsFileInfo.Exists, Is.True);
 
-                IList<DelftIniCategory> newCategories = new DelftIniReader().ReadDelftIniFile(obsFileInfo.OpenRead(), 
+                IList<DelftIniCategory> newCategories = new DelftIniReader().ReadDelftIniFile(obsFileInfo.OpenRead(),
                                                                                               obsFileInfo.FullName);
 
                 Assert.That(newCategories.Count, Is.EqualTo(oldCategories.Length));
@@ -248,14 +246,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                     for (var j = 0; j < oldProperties.Length; j++)
                     {
-                        Assert.That(newProperties[j].Name,    Is.EqualTo(oldProperties[j].Name));
-                        Assert.That(newProperties[j].Value,   Is.EqualTo(oldProperties[j].Value));
+                        Assert.That(newProperties[j].Name, Is.EqualTo(oldProperties[j].Name));
+                        Assert.That(newProperties[j].Value, Is.EqualTo(oldProperties[j].Value));
                         Assert.That(newProperties[j].Comment, Is.EqualTo(oldProperties[j].Comment));
                     }
                 }
             }
         }
-
 
         [Test]
         [Category(TestCategory.Integration)]
@@ -280,10 +277,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var oldPolInfo = new FileInfo(oldPolPath);
 
                 var obstacleFileInformation = new DelftIniCategory("ObstacleFileInformation");
-                obstacleFileInformation.AddProperties( new []
+                obstacleFileInformation.AddProperties(new[]
                 {
                     new DelftIniProperty("File", "100.0", ""),
-                    new DelftIniProperty("PolylineFile", oldPolPath, ""), 
+                    new DelftIniProperty("PolylineFile", oldPolPath, ""),
                 });
 
                 var oldCategories = new DelftIniCategory[6];
@@ -294,16 +291,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 {
                     oldCategories[i] = new DelftIniCategory("Obstacle");
 
-                    oldCategories[i].AddProperties(new []
+                    oldCategories[i].AddProperties(new[]
                     {
-                        new DelftIniProperty("Name", $"SomeName_{i}", ""), 
-                        new DelftIniProperty("Type", "Sheet", ""), 
-                        new DelftIniProperty("TransmCoef", "5.67", ""), 
-                        new DelftIniProperty("Height", "4.56", ""), 
-                        new DelftIniProperty("Alpha", "3.45", ""), 
-                        new DelftIniProperty("Beta", "2.34", ""), 
-                        new DelftIniProperty("Reflections", "specular", ""), 
-                        new DelftIniProperty("ReflecCoef", "1.23", ""), 
+                        new DelftIniProperty("Name", $"SomeName_{i}", ""),
+                        new DelftIniProperty("Type", "Sheet", ""),
+                        new DelftIniProperty("TransmCoef", "5.67", ""),
+                        new DelftIniProperty("Height", "4.56", ""),
+                        new DelftIniProperty("Alpha", "3.45", ""),
+                        new DelftIniProperty("Beta", "2.34", ""),
+                        new DelftIniProperty("Reflections", "specular", ""),
+                        new DelftIniProperty("ReflecCoef", "1.23", ""),
                     });
                 }
 
@@ -332,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var obsFileInfo = new FileInfo(Path.Combine(absoluteGoalDir, obstacleFileName));
                 Assert.That(obsFileInfo.Exists, Is.True);
 
-                IList<DelftIniCategory> newCategories = new DelftIniReader().ReadDelftIniFile(obsFileInfo.OpenRead(), 
+                IList<DelftIniCategory> newCategories = new DelftIniReader().ReadDelftIniFile(obsFileInfo.OpenRead(),
                                                                                               obsFileInfo.FullName);
 
                 Assert.That(newCategories.Count, Is.EqualTo(oldCategories.Length));
@@ -364,8 +361,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                     for (var j = 0; j < oldProperties.Length; j++)
                     {
-                        Assert.That(newProperties[j].Name,    Is.EqualTo(oldProperties[j].Name));
-                        Assert.That(newProperties[j].Value,   Is.EqualTo(oldProperties[j].Value));
+                        Assert.That(newProperties[j].Name, Is.EqualTo(oldProperties[j].Name));
+                        Assert.That(newProperties[j].Value, Is.EqualTo(oldProperties[j].Value));
                         Assert.That(newProperties[j].Comment, Is.EqualTo(oldProperties[j].Comment));
                     }
                 }
@@ -379,7 +376,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         [TestCase("westerscheldt.zip")]
         public void CreateMdwMigration_ExpectedResults(string testFileName)
         {
-            
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
@@ -412,16 +408,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 Assert.That(resultFiles.Length, Is.EqualTo(referenceFiles.Length));
 
                 for (var i = 0; i < resultFiles.Length; i++)
-                    Assert.That(Path.GetFileName(resultFiles[i]), 
+                {
+                    Assert.That(Path.GetFileName(resultFiles[i]),
                                 Is.EqualTo(Path.GetFileName(referenceFiles[i])));
+                }
 
                 Assert.That(File.Exists(resultMdwPath), Is.True);
 
                 var reader = new DelftIniReader();
-                IList<DelftIniCategory> newCategories = 
+                IList<DelftIniCategory> newCategories =
                     reader.ReadDelftIniFile(new FileStream(resultMdwPath, FileMode.Open), resultMdwPath);
 
-                IList<DelftIniCategory> referenceCategories = 
+                IList<DelftIniCategory> referenceCategories =
                     reader.ReadDelftIniFile(new FileStream(referenceMdwPath, FileMode.Open), referenceMdwPath);
 
                 for (var i = 0; i < newCategories.Count; i++)
@@ -435,8 +433,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                     for (var j = 0; j < referenceProperties.Length; j++)
                     {
-                        Assert.That(newProperties[j].Name,    Is.EqualTo(referenceProperties[j].Name));
-                        Assert.That(newProperties[j].Value,   Is.EqualTo(referenceProperties[j].Value));
+                        Assert.That(newProperties[j].Name, Is.EqualTo(referenceProperties[j].Name));
+                        Assert.That(newProperties[j].Value, Is.EqualTo(referenceProperties[j].Value));
                         Assert.That(newProperties[j].Comment, Is.EqualTo(referenceProperties[j].Comment));
                     }
                 }
@@ -446,8 +444,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                     string newObsPath = Path.Combine(sourceMdwPath, Path.GetFileName(path));
                     IList<DelftIniCategory> obsNewCategories =
                         reader.ReadDelftIniFile(new FileStream(newObsPath, FileMode.Open), newObsPath);
-                    
-                    IList<DelftIniCategory> obsReferenceCategories = 
+
+                    IList<DelftIniCategory> obsReferenceCategories =
                         reader.ReadDelftIniFile(new FileStream(path, FileMode.Open), path);
 
                     for (var i = 0; i < obsNewCategories.Count; i++)
@@ -461,8 +459,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                         for (var j = 0; j < obsReferenceProperties.Length; j++)
                         {
-                            Assert.That(obsNewProperties[j].Name,    Is.EqualTo(obsReferenceProperties[j].Name));
-                            Assert.That(obsNewProperties[j].Value,   Is.EqualTo(obsReferenceProperties[j].Value));
+                            Assert.That(obsNewProperties[j].Name, Is.EqualTo(obsReferenceProperties[j].Name));
+                            Assert.That(obsNewProperties[j].Value, Is.EqualTo(obsReferenceProperties[j].Value));
                             Assert.That(obsNewProperties[j].Comment, Is.EqualTo(obsReferenceProperties[j].Comment));
                         }
                     }

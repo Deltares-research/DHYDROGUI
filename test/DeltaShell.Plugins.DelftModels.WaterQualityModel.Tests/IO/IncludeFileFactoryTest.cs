@@ -39,10 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
 
                 //Check for the CHEZY seg function in the include.
-                var initSettings = new WaqInitializationSettings
-                {
-                    ProcessCoefficients = waqModel.ProcessCoefficients
-                };
+                var initSettings = new WaqInitializationSettings {ProcessCoefficients = waqModel.ProcessCoefficients};
                 string text = IncludeFileFactory.CreateSegfunctionsInclude(initSettings);
                 Assert.IsFalse(string.IsNullOrEmpty(text));
 
@@ -301,7 +298,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // Given
             const string inputString = "file_path";
-            string expectedString = $"UGRID '{inputString}'";
+            var expectedString = $"UGRID '{inputString}'";
 
             // When
             string result = IncludeFileFactory.CreateGridFileInclude(inputString);
@@ -877,10 +874,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void TestSurfParametersWritten()
         {
             const string SurfacesFile = "uni3d.srf";
-            var waqInitializationSettings = new WaqInitializationSettings
-            {
-                SurfacesFile = SurfacesFile
-            };
+            var waqInitializationSettings = new WaqInitializationSettings {SurfacesFile = SurfacesFile};
 
             string expectedString = "PARAMETERS" + Environment.NewLine +
                                     "'Surf'" + Environment.NewLine +

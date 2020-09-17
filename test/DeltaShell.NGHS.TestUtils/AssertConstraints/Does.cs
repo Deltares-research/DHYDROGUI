@@ -1,6 +1,4 @@
-﻿using NUnit.Framework.Constraints;
-
-namespace DeltaShell.NGHS.TestUtils.AssertConstraints
+﻿namespace DeltaShell.NGHS.TestUtils.AssertConstraints
 {
     /// <summary>
     /// Helper class with properties and methods that supply
