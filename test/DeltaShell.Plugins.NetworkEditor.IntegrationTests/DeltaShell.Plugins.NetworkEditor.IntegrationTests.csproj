@@ -224,7 +224,6 @@
   <ItemGroup>
     <Compile Include="DeltaShellNetworkEditorIntegrationTest.cs" />
     <Compile Include="NHibernate\NHibernateDrainageBasinIntegrationTest.cs" />
-    <Compile Include="NHibernate\NHibernateHydroRegionIntegrationTest.cs" />
     <Compile Include="NHibernate\NHibernateHydroRegionTestBase.cs" />
     <Compile Include="NHibernate\NHibernateNetCdfFunctionStoreTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
