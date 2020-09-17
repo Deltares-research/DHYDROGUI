@@ -171,7 +171,6 @@
     <Compile Include="MapLayers\HydroAreaLayerStyles.cs" />
     <Compile Include="MapLayers\CustomRenderers\EmbankmentRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\EnclosureRenderer.cs" />
-    <Compile Include="MapLayers\Editors\DrainageBasinFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\HydroAreaFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\EmbankmentInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\LateralSourceInteractor.cs" />
