@@ -15,9 +15,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
     public class WavmFunctionStoreMigrationHelperTest
     {
         [Test]
-        public void RemoveWavmFunctionStores_ModelNull_ThrowsArgumentNullException()
+        public void DisconnectWavmFunctionStores_ModelNull_ThrowsArgumentNullException()
         {
-            void Call() => WavmFunctionStoreMigrationHelper.RemoveWavmFunctionStores(null, Substitute.For<ILogHandler>());
+            void Call() => WavmFunctionStoreMigrationHelper.DisconnectWavmFunctionStores(null, Substitute.For<ILogHandler>());
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("waveModel"));
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void RemoveWavmFunctionStores_FileNotExists_FunctionStoreRemoved()
+        public void DisconnectWavmFunctionStores_FileNotExists_FunctionStorePathIsSetToEmpty()
         {
             // Setup
             string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), "wavm-wad.nc"));
@@ -48,18 +48,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                WavmFunctionStoreMigrationHelper.RemoveWavmFunctionStores(model, logHandler);
+                WavmFunctionStoreMigrationHelper.DisconnectWavmFunctionStores(model, logHandler);
 
                 // Assert
                 logHandler.Received(1).ReportWarningFormat("The link with {0} has been broken.", functionStoreName);
-                Assert.That(model.WavmFunctionStores, Has.No.Member(functionStore));
+                Assert.That(model.WavmFunctionStores, Has.Member(functionStore));
+                Assert.That(functionStore.Path, Is.EqualTo(string.Empty));
                 functionStore.Close();
             }
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void RemoveWavmFunctionStores_FileExists_FunctionStoreRemoved()
+        public void DisconnectWavmFunctionStores_FileExists_FunctionStorePathIsSetToEmpty()
         {
             // Setup
             string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), "wavm-wad.nc"));
@@ -80,11 +81,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                WavmFunctionStoreMigrationHelper.RemoveWavmFunctionStores(model, logHandler);
+                WavmFunctionStoreMigrationHelper.DisconnectWavmFunctionStores(model, logHandler);
 
                 // Assert
                 logHandler.Received(1).ReportWarningFormat("The link with {0} has been broken.", functionStoreName);
-                Assert.That(model.WavmFunctionStores, Has.No.Member(functionStore));
+                Assert.That(model.WavmFunctionStores, Has.Member(functionStore));
+                Assert.That(functionStore.Path, Is.EqualTo(string.Empty));
                 functionStore.Close();
             }
         }

@@ -16,15 +16,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     public static class WavmFunctionStoreMigrationHelper
     {
         /// <summary>
-        /// Removes the invalid wavm function stores from the provided
-        /// <paramref name="waveModel"/>.
+        /// Disconnects the wavm function stores from the provided <paramref name="waveModel"/>.
         /// </summary>
         /// <param name="waveModel">The wave model.</param>
         /// <param name="logHandler">The log handler to log any unlinked function stores with.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
-        public static void RemoveWavmFunctionStores(WaveModel waveModel, ILogHandler logHandler)
+        public static void DisconnectWavmFunctionStores(WaveModel waveModel, ILogHandler logHandler)
         {
             Ensure.NotNull(waveModel, nameof(waveModel));
 
@@ -36,14 +35,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 logHandler?.ReportWarningFormat(Resources.WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_been_broken_,
                                                 wavmFunctionStore.Name);
 
-                wavmFunctionStore?.Close();
-                waveModel.DataItems.Remove(dataItem);
+                wavmFunctionStore.Close();
+                wavmFunctionStore.Path = string.Empty;
             }
         }
 
         private static IEnumerable<IDataItem> GetWavmFunctionStoreDataItems(WaveModel model) =>
             WaveDomainHelper.GetAllDomains(model.OuterDomain)
                             .Select(domain => model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name))
-                            .Where(di => di != null);
+                            .Where(di => di != null || di.Value != null);
     }
 }

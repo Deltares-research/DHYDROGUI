@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 log.ErrorFormat(Resources.WaveModel110LegacyLoader_OnAfterInitialize_Could_not_determine_dsproj_location_from_database_connection___0_, 
                                 dbConnection.ConnectionString);
             }
-            
+
             string modelPath = Path.Combine(dbPath + "_data", model.Name);
             string mdwPath = Path.Combine(modelPath, $"{model.Name}.mdw");
             
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 string activityName = string.Format(Resources.WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__, 
                                                     waveModel.Name);
                 var logHandler = new LogHandler(activityName, log);
-                WavmFunctionStoreMigrationHelper.RemoveWavmFunctionStores(waveModel, logHandler);
+                WavmFunctionStoreMigrationHelper.DisconnectWavmFunctionStores(waveModel, logHandler);
                 logHandler.LogReport();
             }
         }
