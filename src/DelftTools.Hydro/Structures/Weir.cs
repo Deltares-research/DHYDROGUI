@@ -63,11 +63,6 @@ namespace DelftTools.Hydro.Structures
                     return (weirFormula as GeneralStructureWeirFormula).WidthStructureCentre;
                 }
 
-                if (weirFormula is FreeFormWeirFormula)
-                {
-                    return (weirFormula as FreeFormWeirFormula).CrestWidth;
-                }
-
                 return crestWidth;
             }
             set
@@ -100,11 +95,6 @@ namespace DelftTools.Hydro.Structures
                 if (weirFormula is GeneralStructureWeirFormula)
                 {
                     return (weirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre;
-                }
-
-                if (weirFormula is FreeFormWeirFormula)
-                {
-                    return (weirFormula as FreeFormWeirFormula).CrestLevel;
                 }
 
                 return crestLevel;
@@ -186,7 +176,7 @@ namespace DelftTools.Hydro.Structures
         public virtual FlowDirection FlowDirection { get; set; }
 
         public virtual bool SpecifyCrestLevelAndWidthOnWeir =>
-            !(weirFormula is GeneralStructureWeirFormula || weirFormula is FreeFormWeirFormula);
+            !(weirFormula is GeneralStructureWeirFormula);
 
         public override void CopyFrom(object source)
         {
@@ -212,11 +202,6 @@ namespace DelftTools.Hydro.Structures
 
         public override StructureType GetStructureType()
         {
-            if (weirFormula is FreeFormWeirFormula)
-            {
-                return StructureType.UniversalWeir;
-            }
-
             if (weirFormula is GatedWeirFormula)
             {
                 return StructureType.Orifice;

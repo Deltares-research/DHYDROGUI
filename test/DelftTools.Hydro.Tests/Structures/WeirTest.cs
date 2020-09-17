@@ -91,7 +91,7 @@ namespace DelftTools.Hydro.Tests.Structures
                 CrestLevel = -1,
                 Name = "Target Weir",
                 AllowNegativeFlow = false,
-                WeirFormula = new FreeFormWeirFormula(),
+                WeirFormula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = false
             };
             targetWeir.CopyFrom(sourceWeir);
@@ -122,11 +122,9 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void IsRectangle()
         {
-            IWeir simpleweir = new Weir("simple") {};
-            IWeir freeformweir = new Weir("freeform") {WeirFormula = new FreeFormWeirFormula()};
+            IWeir simpleweir = new Weir("simple");
 
             Assert.IsTrue(simpleweir.IsRectangle);
-            Assert.IsFalse(freeformweir.IsRectangle);
         }
 
         [Test]
@@ -217,7 +215,6 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(0, weir.CrestWidth);
         }
 
-        [TestCase(typeof(FreeFormWeirFormula), StructureType.UniversalWeir)]
         [TestCase(typeof(GatedWeirFormula), StructureType.Orifice)]
         [TestCase(typeof(SimpleWeirFormula), StructureType.Weir)]
         [TestCase(typeof(GeneralStructureWeirFormula), StructureType.GeneralStructure)]

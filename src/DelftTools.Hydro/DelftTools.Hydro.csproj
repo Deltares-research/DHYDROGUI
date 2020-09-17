@@ -230,7 +230,6 @@
     <Compile Include="Structures\PumpControlDirection.cs" />
     <Compile Include="Structures\Weir.cs" />
     <Compile Include="Structures\Weir2D.cs" />
-    <Compile Include="Structures\WeirFormula\FreeFormWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\GatedWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\IGatedWeirFormula.cs" />
@@ -304,7 +303,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Structures\Pump.hbm.xml" />
     <EmbeddedResource Include="Structures\Weir.hbm.xml" />
-    <EmbeddedResource Include="Structures\WeirFormula\FreeFormWeirFormula.hbm.xml" />
     <EmbeddedResource Include="Structures\WeirFormula\GatedWeirFormula.hbm.xml" />
     <EmbeddedResource Include="Structures\WeirFormula\SimpleWeirFormula.hbm.xml" />
   </ItemGroup>
