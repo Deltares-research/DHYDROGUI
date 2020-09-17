@@ -1846,8 +1846,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void
-            Test_When_HydFile_IsImported_OverExisting_HydFile_WithSame_CoordinateSystem_NoInfoMessageIsThrown()
+        public void Test_When_HydFile_IsImported_OverExisting_HydFile_WithSame_CoordinateSystem_NoInfoMessageIsThrown()
         {
             ICoordinateSystem epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
 
@@ -1859,6 +1858,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 //Import hyd file
                 string hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
                 Assert.IsTrue(File.Exists(hydPath));
+
                 var importer = new HydFileImporter();
                 importer.ImportItem(hydPath, model);
 
@@ -1866,8 +1866,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
 
                 //Import a hyd file with the same coordinate system, assert that there is only 1 message thrown which is from the output timers.
-                TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPath, model), "Output timers");
-                TestHelper.AssertLogMessagesCount(() => importer.ImportItem(hydPath, model), 1);
+                Action call = () => importer.ImportItem(hydPath, model);
+
+                string[] messages = TestHelper.GetAllRenderedMessages(call).ToArray();
+                Assert.That(messages, Has.Length.EqualTo(3));
+                Assert.That(messages[0], Is.EqualTo("Start importing model data."));
+                Assert.That(messages[1], Does.Contain("Output timers"));
+                Assert.That(messages[2], Is.EqualTo("Importing model data successful."));
             }
         }
 
