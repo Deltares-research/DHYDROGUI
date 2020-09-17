@@ -47,7 +47,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             // Assert
             Assert.That(canImportOnResult, Is.False);
         }
-        
+
+        [Test]
+        public void ImportItem_WithTargetObject_ThrowsArgumentException()
+        {
+            // Setup
+            var importer = new RealTimeControlModelImporter();
+
+            // Call
+            TestDelegate call = () => importer.ImportItem("path", new object());
+
+            // Assert
+            Assert.That(call, Throws.ArgumentException
+                                    .With.Message.EqualTo("Null is expected, because target argument is unused."));
+        }
+
         [Test]
         public void GivenAnInvalidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndNullIsReturned()
         {
