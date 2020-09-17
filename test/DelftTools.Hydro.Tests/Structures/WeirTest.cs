@@ -158,23 +158,6 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void BindingTest()
-        {
-            var pierweir = new Weir("pier") {WeirFormula = new PierWeirFormula()};
-            var callCount = 0;
-
-            ((INotifyPropertyChanged) pierweir).PropertyChanged += (s, e) =>
-                //pierweir.PropertyChanged += (s, e) =>
-            {
-                callCount++;
-                Assert.AreEqual(pierweir, s);
-                Assert.AreEqual("CrestShape", e.PropertyName);
-            };
-            pierweir.CrestShape = CrestShape.Triangular;
-            Assert.AreEqual(1, callCount);
-        }
-
-        [Test]
         public void PropertyChangedForFormula()
         {
             //translates the event so view etc don't have to know about formula. 
@@ -247,7 +230,6 @@ namespace DelftTools.Hydro.Tests.Structures
 
         [TestCase(typeof(FreeFormWeirFormula), StructureType.UniversalWeir)]
         [TestCase(typeof(GatedWeirFormula), StructureType.Orifice)]
-        [TestCase(typeof(PierWeirFormula), StructureType.AdvancedWeir)]
         [TestCase(typeof(RiverWeirFormula), StructureType.RiverWeir)]
         [TestCase(typeof(SimpleWeirFormula), StructureType.Weir)]
         [TestCase(typeof(GeneralStructureWeirFormula), StructureType.GeneralStructure)]

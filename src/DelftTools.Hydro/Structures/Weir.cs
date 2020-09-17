@@ -222,11 +222,6 @@ namespace DelftTools.Hydro.Structures
                 return StructureType.Orifice;
             }
 
-            if (weirFormula is PierWeirFormula)
-            {
-                return StructureType.AdvancedWeir;
-            }
-
             if (weirFormula is RiverWeirFormula)
             {
                 return StructureType.RiverWeir;

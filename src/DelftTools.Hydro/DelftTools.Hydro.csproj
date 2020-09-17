@@ -234,7 +234,6 @@
     <Compile Include="Structures\WeirFormula\GatedWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\IGatedWeirFormula.cs" />
-    <Compile Include="Structures\WeirFormula\PierWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\RiverWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\SimpleWeirFormula.cs" />
     <Compile Include="HydroTimeSeriesFactory.cs" />
@@ -308,7 +307,6 @@
     <EmbeddedResource Include="Structures\Weir.hbm.xml" />
     <EmbeddedResource Include="Structures\WeirFormula\FreeFormWeirFormula.hbm.xml" />
     <EmbeddedResource Include="Structures\WeirFormula\GatedWeirFormula.hbm.xml" />
-    <EmbeddedResource Include="Structures\WeirFormula\PierWeirFormula.hbm.xml" />
     <EmbeddedResource Include="Structures\WeirFormula\RiverWeirFormula.hbm.xml" />
     <EmbeddedResource Include="Structures\WeirFormula\SimpleWeirFormula.hbm.xml" />
   </ItemGroup>
