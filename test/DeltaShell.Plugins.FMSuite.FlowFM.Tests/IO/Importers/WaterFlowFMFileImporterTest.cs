@@ -1,5 +1,10 @@
-﻿using DeltaShell.Dimr;
+﻿using DelftTools.Hydro;
+using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
@@ -10,15 +15,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void Constructor_ExpectedValues()
         {
-            var importer = new WaterFlowFMFileImporter(() => null);
+            // Call
+            var importer = new WaterFlowFMFileImporter(null);
 
-            Assert.IsTrue(importer is IDimrModelFileImporter, "The IDimrModelFileImporter interface is not implemented by WaterFlowFMFileImporter");
-            Assert.AreEqual("mdu", importer.MasterFileExtension, $"Expected mdu for master file extension, but was {importer.MasterFileExtension}");
-            Assert.AreEqual("Flow Flexible Mesh Model", importer.Name, $"Expected Flow Flexible Mesh Model for importer name, but was {importer.Name}");
-            Assert.AreEqual("D-Flow FM 2D/3D", importer.Category, $"Expected D-Flow FM 2D/3D for importer category, but was {importer.Category}");
-            Assert.AreEqual(string.Empty, importer.Description, $"Expected empty string for importer description, but was {importer.Description}");
-            Assert.IsTrue(importer.OpenViewAfterImport, "The view should be opened after import");
-            Assert.IsTrue(importer.CanImportOnRootLevel, "The importer should be able to import on Root level");
+            // Assert
+            Assert.That(importer, Is.InstanceOf<ModelFileImporterBase>());
+            Assert.That(importer, Is.InstanceOf<IDimrModelFileImporter>());
+            Assert.That(importer.Name, Is.EqualTo("Flow Flexible Mesh Model"));
+            Assert.That(importer.Category, Is.EqualTo("D-Flow FM 2D/3D"));
+            Assert.That(importer.Description, Is.Empty);
+            Assert.That(importer.Image, Is.Not.Null);
+
+            CollectionAssert.AreEqual(new[] {typeof(IHydroModel)}, importer.SupportedItemTypes);
+            Assert.That(importer.CanImportOnRootLevel, Is.True);
+            Assert.That(importer.FileFilter, Is.EqualTo("Flexible Mesh Model Definition|*.mdu"));
+            Assert.That(importer.TargetDataDirectory, Is.Null);
+            Assert.That(importer.ShouldCancel, Is.False);
+            Assert.That(importer.ProgressChanged, Is.Null);
+            Assert.That(importer.OpenViewAfterImport, Is.True);
+
+            Assert.That(importer.MasterFileExtension, Is.EqualTo("mdu"));
+        }
+
+        [Test]
+        public void CanImportOn_TargetObjectWaterFlowFMModel_ReturnsTrue()
+        {
+            // Setup
+            var importer = new WaterFlowFMFileImporter(null);
+            using (var target = new WaterFlowFMModel())
+            {
+                // Call
+                bool result = importer.CanImportOn(target);
+
+                // Assert
+                Assert.That(result, Is.True);
+            }
+        }
+
+        [Test]
+        public void CanImportOn_TargetObjectICompositeActivity_ReturnsTrue()
+        {
+            // Setup
+            var target = Substitute.For<ICompositeActivity>();
+            var importer = new WaterFlowFMFileImporter(null);
+
+            // Call
+            bool result = importer.CanImportOn(target);
+
+            // Assert
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void CanImportOn_TargetObjectNull_ReturnsFalse()
+        {
+            // Setup
+            var importer = new WaterFlowFMFileImporter(null);
+
+            // Call
+            bool result = importer.CanImportOn(null);
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void CanImportOn_TargetObjectUnsupportedType_ReturnsFalse()
+        {
+            // Setup
+            var target = new object();
+            var importer = new WaterFlowFMFileImporter(null);
+
+            // Call
+            bool result = importer.CanImportOn(target);
+
+            // Assert
+            Assert.That(result, Is.False);
         }
     }
 }
