@@ -43,6 +43,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         private static IEnumerable<IDataItem> GetWavmFunctionStoreDataItems(WaveModel model) =>
             WaveDomainHelper.GetAllDomains(model.OuterDomain)
                             .Select(domain => model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name))
-                            .Where(di => di != null || di.Value != null);
+                            .Where(di => di != null && di.Value != null);
     }
 }
