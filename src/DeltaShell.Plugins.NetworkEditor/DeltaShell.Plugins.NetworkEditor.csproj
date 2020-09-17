@@ -178,7 +178,6 @@
     <Compile Include="MapLayers\Editors\Interactors\ChannelInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroLinkInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroObjectToHydroLinkRelationInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\RunoffBoundaryFeatureInteractor.cs" />
     <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\DiffuseLateralSourceInteractor.cs" />
