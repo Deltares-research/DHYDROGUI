@@ -56,15 +56,5 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 gui.DocumentViewsResolver.OpenViewForData(dataItem.Value);
             }
         }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void DeleteBranchShouldRemoveBoundaryNodes()
-        {
-            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0), new Point(100, 100));
-            network.Branches.Remove(network.Branches[0]);
-            NetworkHelper.RemoveUnusedNodes(network);
-            Assert.AreEqual(2, network.HydroNodes.Count(n => !n.IsConnectedToMultipleBranches));
-        }
     }
 }
