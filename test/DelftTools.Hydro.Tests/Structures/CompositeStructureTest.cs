@@ -31,17 +31,6 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void CompositeStructure1Gate()
-        {
-            var compositeBranchStructure = new CompositeBranchStructure();
-            IGate gate = new Gate("test");
-            compositeBranchStructure.Structures.Add(gate);
-
-            ValidationResult validationResult = compositeBranchStructure.Validate();
-            Assert.AreEqual(true, validationResult.IsValid);
-        }
-
-        [Test]
         public void Composite2IdenticalWeirs()
         {
             // 2 identical and thus overlapping weirs
@@ -50,21 +39,6 @@ namespace DelftTools.Hydro.Tests.Structures
             compositeBranchStructure.Structures.Add(weir1);
             IWeir weir2 = new Weir("test");
             compositeBranchStructure.Structures.Add(weir2);
-
-            ValidationResult validationResult = compositeBranchStructure.Validate();
-            // offsetY is representing property only and should not generate validation error
-            Assert.IsTrue(validationResult.IsValid);
-        }
-
-        [Test]
-        public void Composite2IdenticalGates()
-        {
-            // 2 identical and thus overlapping weirs
-            var compositeBranchStructure = new CompositeBranchStructure();
-            IGate gate1 = new Gate("test");
-            compositeBranchStructure.Structures.Add(gate1);
-            IGate gate2 = new Gate("test");
-            compositeBranchStructure.Structures.Add(gate2);
 
             ValidationResult validationResult = compositeBranchStructure.Validate();
             // offsetY is representing property only and should not generate validation error
@@ -88,28 +62,6 @@ namespace DelftTools.Hydro.Tests.Structures
                 CrestWidth = 100
             };
             compositeBranchStructure.Structures.Add(weir2);
-
-            ValidationResult validationResult = compositeBranchStructure.Validate();
-            Assert.AreEqual(true, validationResult.IsValid);
-        }
-
-        [Test]
-        public void Composite2NeightbourGates()
-        {
-            // 2 identical and thus overlapping weirs
-            var compositeBranchStructure = new CompositeBranchStructure();
-            IGate gate1 = new Gate("test")
-            {
-                OffsetY = 0,
-                OpeningWidth = 100
-            };
-            compositeBranchStructure.Structures.Add(gate1);
-            IGate gate2 = new Gate("test")
-            {
-                OffsetY = 100,
-                OpeningWidth = 100
-            };
-            compositeBranchStructure.Structures.Add(gate2);
 
             ValidationResult validationResult = compositeBranchStructure.Validate();
             Assert.AreEqual(true, validationResult.IsValid);

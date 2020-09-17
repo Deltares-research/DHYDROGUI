@@ -66,27 +66,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        public void CloneWithGate()
-        {
-            var gate = new Gate() {Name = "gate"};
-            var compositeStructure = new CompositeBranchStructure() {Structures = {gate}};
-            gate.ParentStructure = compositeStructure;
-            var channel = new Channel()
-            {
-                BranchFeatures =
-                {
-                    compositeStructure,
-                    gate
-                }
-            };
-
-            var channelClone = (Channel) channel.Clone();
-            var compositeStructureClone = (CompositeBranchStructure) channelClone.BranchFeatures[0];
-
-            channelClone.BranchFeatures[1].Should().Be.SameInstanceAs(compositeStructureClone.Structures[0]);
-        }
-
-        [Test]
         public void CloneWithWeirDoesNotChangeItemOrder()
         {
             var weir1 = new Weir {Name = "weir1"};
@@ -116,38 +95,6 @@ namespace DelftTools.Hydro.Tests
 
             channelClone.BranchFeatures[1].Should("cloned weir1").Be.SameInstanceAs(compositeStructureClone.Structures[0]);
             channelClone.BranchFeatures[2].Should("cloned weir2").Be.SameInstanceAs(compositeStructureClone.Structures[1]);
-        }
-
-        [Test]
-        public void CloneWithGateDoesNotChangeItemOrder()
-        {
-            var gate1 = new Gate {Name = "gate1"};
-            var gate2 = new Gate() {Name = "gate2"};
-            var compositeStructure = new CompositeBranchStructure
-            {
-                Structures =
-                {
-                    gate1,
-                    gate2
-                }
-            };
-            gate1.ParentStructure = compositeStructure;
-            gate2.ParentStructure = compositeStructure;
-            var channel = new Channel
-            {
-                BranchFeatures =
-                {
-                    compositeStructure,
-                    gate1,
-                    gate2
-                }
-            };
-
-            var channelClone = (Channel) channel.Clone();
-            var compositeStructureClone = (CompositeBranchStructure) channelClone.BranchFeatures[0];
-
-            channelClone.BranchFeatures[1].Should("cloned gate1").Be.SameInstanceAs(compositeStructureClone.Structures[0]);
-            channelClone.BranchFeatures[2].Should("cloned gate2").Be.SameInstanceAs(compositeStructureClone.Structures[1]);
         }
     }
 }

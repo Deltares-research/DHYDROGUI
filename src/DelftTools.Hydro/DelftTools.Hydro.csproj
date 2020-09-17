@@ -223,7 +223,6 @@
     <Compile Include="RunoffBoundary.cs" />
     <Compile Include="Structures\BridgeFrictionType.cs" />
     <Compile Include="Structures\CompositeBranchStructure.cs" />
-    <Compile Include="Structures\Gate.cs" />
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\ICompositeBranchStructure.cs" />
     <Compile Include="Structures\IExtraResistance.cs" />
@@ -389,9 +388,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\polder_soft.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Structures\Gate.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HydroArea.hbm.xml" />

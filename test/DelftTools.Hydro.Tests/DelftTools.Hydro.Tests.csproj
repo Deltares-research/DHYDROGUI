@@ -56,7 +56,6 @@
     <Compile Include="RunoffBoundaryTest.cs" />
     <Compile Include="Structures\BridgePillarTest.cs" />
     <Compile Include="Structures\CompositeStructureTest.cs" />
-    <Compile Include="Structures\GateTest.cs" />
     <Compile Include="Structures\PumpTest.cs" />
     <Compile Include="Structures\WeirFormula\FreeFormWeirFormulaTest.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormulaTest.cs" />
