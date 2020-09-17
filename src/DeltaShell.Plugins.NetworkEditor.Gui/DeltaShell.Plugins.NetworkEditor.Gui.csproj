@@ -267,7 +267,6 @@
     <Compile Include="Layers\Providers\ThinDamsLayerProvider.cs" />
     <Compile Include="Layers\Providers\WeirsLayerProvider.cs" />
     <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />
-    <Compile Include="MapTools\IHydroNetworkEditorMapTool.cs" />
     <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
     <Compile Include="NetworkEditorGuiPlugin.cs" />
     <Compile Include="ProjectExplorer\HydroAreaProjectTreeViewNodePresenter.cs" />

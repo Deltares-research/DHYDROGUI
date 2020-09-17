@@ -1,62 +1,17 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
-using DelftTools.Utils.Drawing;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Extensions.CoordinateSystems;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Geometries;
 using SharpMap.Api;
-using SharpMap.Api.Layers;
-using SharpMap.CoordinateSystems.Transformations;
-using SharpMap.Extensions.CoordinateSystems;
-using SharpMap.Layers;
-using SharpMap.Rendering;
-using SharpMap.Rendering.Thematics;
-using SharpMap.Styles;
 using SharpMap.UI.Forms;
-using SharpMap.UI.Helpers;
 using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
     //class is swiss army knife..todo identify separate responsibilities and split it
-    public class HydroRegionEditorMapTool : MapTool, IHydroNetworkEditorMapTool
+    public class HydroRegionEditorMapTool : MapTool
     {
-        public const string AddChannelScribleToolName = "add branch (scribble way)";
-        public const string AddChannelToolName = "add channel";
-        public const string AddCatchmentToolName = "add catchment";
-        public const string InsertNodeToolName = "insert new node";
-        public const string AddWasteWaterTreatmentPlantToolName = "add waste water treatment plant";
-        public const string AddRunoffBoundaryToolName = "add runoff boundary";
-        public const string AddHydroLinkToolName = "add hydro link";
-        public const string AddCompositeStructureToolName = "add composite structure";
-        public const string AddPumpToolName = "add pump";
-        public const string AddLateralSourceToolName = "add lateral source";
-        public const string AddDiffuseLateralSourceToolName = "add diffuse lateral source";
-        public const string AddRetentionToolName = "add retention";
-        public const string AddObservationPointToolName = "add observation point";
-        public const string AddWeirToolName = "add weir";
-        public const string AddCulvertToolName = "add culvert";
-        public const string AddBridgeToolName = "add bridge";
-        public const string AddExtraResistanceToolName = "add new extra resistance";
-        public const string AddNetworkLocationToolName = "add new network location";
-
         public const string ThinDamToolName = "Thin dam tool (2D)";
         public const string FixedWeirToolName = "Fixed weir tool (2D)";
         public const string ObservationPointToolName = "Observation point tool (2D)";
@@ -72,24 +27,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private static bool TopologyRulesEnabledState;
 
-        private static readonly Cursor NewInsertNodeCursor = MapCursors.CreateArrowOverlayCuror(Resources.NodeOnMultipleBranches);
-        private static readonly Cursor NewLateralSourceCursor = MapCursors.CreateArrowOverlayCuror(Resources.LateralSourceSmall);
-        private static readonly Cursor NewPumpCursor = MapCursors.CreateArrowOverlayCuror(Resources.PumpSmall);
-        private static readonly Cursor AddCompositeStructureCursor = MapCursors.CreateArrowOverlayCuror(Resources.StructureFeatureSmall);
-        private static readonly Cursor NewRetentionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Retention);
-        private static readonly Cursor NewObservationPointToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Observation);
-        private static readonly Cursor AddNewWeirCursor = MapCursors.CreateArrowOverlayCuror(Resources.WeirSmall);
-        private static readonly Cursor NewExtraResistanceToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.ExtraResistanceSmall);
-        private static readonly Cursor NewWwtpToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.wwtp);
-        private static readonly Cursor NewRunoffBoundaryToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.runoff);
-        private static readonly Cursor NewLinkToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Link);
-
         // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
         private readonly List<IMapTool> mapTools = new List<IMapTool>();
         
         private IMap map;
-
-        private INetworkCoverageGroupLayer activeNetworkCoverageGroupLayer;
 
         public HydroRegionEditorMapTool()
         {
@@ -103,38 +44,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         public virtual float Tolerance { get; set; }
 
-        public IEnumerable<IHydroRegion> HydroRegions
-        {
-            get { return Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region); }
-        }
-
-        /// <summary>
-        /// The active coveragelayer used by the NetworkLocationTool.
-        /// </summary>
-        public INetworkCoverageGroupLayer ActiveNetworkCoverageGroupLayer
-        {
-            get { return activeNetworkCoverageGroupLayer; }
-            set
-            {
-                var activateTool = false;
-                if (activeNetworkCoverageGroupLayer != null)
-                {
-                    if (null != NetworkLocationTool)
-                    {
-                        activateTool = NetworkLocationTool.IsActive;
-                    }
-                    ResetCurrentNetworkCoverageEditor(activeNetworkCoverageGroupLayer);
-                }
-
-                activeNetworkCoverageGroupLayer = value;
-
-                if (activeNetworkCoverageGroupLayer != null)
-                {
-                    SetCurrentNetworkCoverageEditor(activeNetworkCoverageGroupLayer, activateTool);
-                }
-            }
-        }
-
         public override IMapControl MapControl
         {
             get { return base.MapControl; }
@@ -143,11 +52,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 if (MapControl != null)
                 {
                     RemoveNetworkEditorTools();
-
-                    if (map != null) // TODO: this is DANGEROUS, remember Map instead of MapControl!
-                    {
-                        map.CollectionChanged -= LayersCollectionChanged;
-                    }
 
                     var control = (MapControl) MapControl;
                     control.MouseUp -= MapControlMouseUp;
@@ -161,19 +65,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 {
                     AddNetworkEditorTools();
 
-                    MapControl.Map.CollectionChanged += LayersCollectionChanged;
                     map = MapControl.Map;
 
                     var control = (MapControl)MapControl;
                     control.MouseUp += MapControlMouseUp;
                     control.KeyDown += MapControlKeyDown;
                     control.KeyUp += MapControlKeyUp;
-
-                    NetworkCoverageGroupLayer networkCoverageGroupLayer = Map.GetAllVisibleLayers(true).OfType<NetworkCoverageGroupLayer>().FirstOrDefault();
-                    if(networkCoverageGroupLayer != null)
-                    {
-                        ActiveNetworkCoverageGroupLayer = networkCoverageGroupLayer;
-                    }
                 }
             }
         }
@@ -203,115 +100,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             MapControl.SelectTool.OnMouseDown(worldPosition, e);
         }
 
-        private IMapTool NetworkLocationTool { get; set; }
-
-        private bool FeatureTypeLayerFilter<T>(ILayer layer)
-        {
-            // TODO: extend this filter to take only selected HydroRegionLayer into account
-            if (layer.DataSource == null || layer is LabelLayer)
-            {
-                return false;
-            }
-
-            return typeof(T).IsAssignableFrom(layer.DataSource.FeatureType);
-        }
-
         private void AddNetworkEditorTools()
         {
-            // TODO: extend to multiple regions!
-
-            // HydroNetwork
-            var newLineTool = new NewLineTool(FeatureTypeLayerFilter<Channel>, AddChannelToolName)
-                                  {
-                                      AutoCurve = false,
-                                      MinDistance = 0,
-                                      IsActive = false,
-                                      Cursor = MapCursors.CreateArrowOverlayCuror(Resources.new_branch_small)
-                                  };
-            AddMapTool(newLineTool);
-
-            var newLineTool2 = new NewLineTool(FeatureTypeLayerFilter<Channel>, AddChannelScribleToolName)
-                                   {
-                                       AutoCurve = true,
-                                       MinDistance = 15,
-                                       IsActive = false,
-                                       Cursor = MapCursors.CreateArrowOverlayCuror(Resources.new_autobranch_small)
-                                   };
-            AddMapTool(newLineTool2);
-
-            var newInsertNodeTool = new NewPointFeatureTool<HydroNode>(InsertNodeToolName) { Cursor = NewInsertNodeCursor };
-            AddMapTool(newInsertNodeTool);
-
-           var newStructureFeatureTool = new NewPointFeatureTool<CompositeBranchStructure>(AddCompositeStructureToolName) { Cursor = AddCompositeStructureCursor };
-            AddMapTool(newStructureFeatureTool);
-
-            var newPumpTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
-                  && layer.DataSource.FeatureType == typeof(Pump) && layer.DataSource is HydroNetworkFeatureCollection, AddPumpToolName) { Cursor = NewPumpCursor };
-
-            AddMapTool(newPumpTool);
-
-            var newLateralSourceTool = new NewPointFeatureTool<LateralSource>(AddLateralSourceToolName) { Cursor = NewLateralSourceCursor };
-            AddMapTool(newLateralSourceTool);
-
-            var newDiffuseLateralSourceTool = new NewLineTool(FeatureTypeLayerFilter<LateralSource>, AddDiffuseLateralSourceToolName)
-                                                  {
-                                                      AutoCurve = true,
-                                                      Cursor = NewLateralSourceCursor
-                                                  };
-            AddMapTool(newDiffuseLateralSourceTool);
-
-            var newRetentionTool = new NewPointFeatureTool<Retention>(AddRetentionToolName) { Cursor = NewRetentionToolCursor };
-            AddMapTool(newRetentionTool);
-
-            var newObservationPointTool = new NewPointFeatureTool<ObservationPoint>(AddObservationPointToolName) { Cursor = NewObservationPointToolCursor };
-            AddMapTool(newObservationPointTool);
-
-            var newWeirTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
-                  && layer.DataSource.FeatureType == typeof(Weir) && layer.DataSource is HydroNetworkFeatureCollection, AddWeirToolName) { Cursor = AddNewWeirCursor };
-            AddMapTool(newWeirTool);
-
-            var newExtraResistanceTool = new NewPointFeatureTool<ExtraResistance>(AddExtraResistanceToolName) { Cursor = NewExtraResistanceToolCursor };
-            AddMapTool(newExtraResistanceTool);
-
-            // DrainageBasin
-            Func<ILayer, bool> isCatchmentLayer = FeatureTypeLayerFilter<Catchment>;
-            var newLineToolCatchment = new NewLineTool(isCatchmentLayer, AddCatchmentToolName)
-            {
-                CloseLine = true,
-                KeepDuplicates = true,
-                AutoCurve = true,
-                MinDistance = 10,
-                IsActive = false,
-                ActualSnapping = false
-            };
-            AddMapTool(newLineToolCatchment);
-
-            var newWwtpTool = new NewPointFeatureTool<WasteWaterTreatmentPlant>(AddWasteWaterTreatmentPlantToolName) { Cursor = NewWwtpToolCursor };
-            AddMapTool(newWwtpTool);
-
-            var newRunoffBoundaryTool = new NewPointFeatureTool<RunoffBoundary>(AddRunoffBoundaryToolName) { Cursor = NewRunoffBoundaryToolCursor };
-            AddMapTool(newRunoffBoundaryTool);
-
-            var newLinkTool = new NewArrowLineTool(FeatureTypeLayerFilter<HydroLink>, AddHydroLinkToolName)
-                {
-                    AddNewFeature = (g, cs, sourecSr, targetSr, tool) =>
-                        {
-                            // Find the correct link layer to add to
-                            IHydroRegion region = HydroRegion.GetCommonRegion((IHydroObject) sourecSr.SnappedFeature,(IHydroObject) targetSr.SnappedFeature);
-                            ILayer layer = tool.Layers.FirstOrDefault(l => Equals(l.DataSource.Features, region.Links));
-                            if (layer == null)
-                            {
-                                return;
-                            }
-
-                            layer.DataSource.Add(GetLocalGeometry(g, cs, layer.CoordinateSystem));
-                            layer.RenderRequired = true;
-                        },
-                    Cursor = NewLinkToolCursor
-                };
-
-            AddMapTool(newLinkTool);
-
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ThinDamsPluralName, ThinDamToolName, Resources.thindam));
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.FixedWeirsPluralName, FixedWeirToolName, Resources.fixedweir));
             AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.ObservationPointsPluralName, ObservationPointToolName, Resources.Observation));
@@ -326,20 +116,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
 
             MapControl.ActivateTool(MapControl.SelectTool);
-        }
-
-        private static IGeometry GetLocalGeometry(IGeometry geometry, ICoordinateSystem sourceCoordinateSystem, ICoordinateSystem targetCoordinateSystem)
-        {
-            if (sourceCoordinateSystem == null || targetCoordinateSystem == null ||
-                sourceCoordinateSystem == targetCoordinateSystem)
-            {
-                return geometry;
-            }
-
-            var coordinateSystemFactory = new OgrCoordinateSystemFactory();
-            ICoordinateTransformation transformation = coordinateSystemFactory.CreateTransformation(sourceCoordinateSystem, targetCoordinateSystem);
-
-            return GeometryTransform.TransformGeometry(geometry, transformation.MathTransform);
         }
 
         private void MapControlKeyDown(object sender, KeyEventArgs e)
@@ -377,133 +153,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
             mapTools.Add(mapTool);
             MapControl.Tools.Add(mapTool);
-        }
-
-        private void RemoveMapTool(IMapTool mapTool)
-        {
-            mapTools.Remove(mapTool);
-            MapControl.Tools.Remove(mapTool);
-        }
-
-        /// <summary>
-        /// Called when a networklocation is to be added to the active ActiveNetworkCoverageLayer.
-        /// See AddNewFeatureFromGeometryDelegate for the handling of the default network features.
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="geometry"></param>
-        /// <returns></returns>
-        [Obsolete("TODO: move into NetworkLocationFeatureEditor (after making it independent from MapControl)")]
-        private IFeature AddNetworkLocationGeometryDelegate(IFeatureProvider provider, IGeometry geometry)
-        {
-            var branch = (IBranch) MapControl.SnapTool.SnapResult.SnappedFeature;
-            double offset = GeometryHelper.Distance((ILineString) branch.Geometry, geometry.Coordinates[0]);
-
-            //double distance = GeometryHelper.Distance((ILineString)branch.Geometry, branchFeature.Geometry.Coordinates[0]);
-            if (branch.IsLengthCustom)
-            {
-                offset *= branch.Length / branch.Geometry.Length;
-            }
-            var location = new NetworkLocation(branch, offset) {Geometry = geometry};
-
-            //cannot add double locations..should maybe include a miminal distance based on the current zoom level.
-            if (!ActiveNetworkCoverageGroupLayer.NetworkCoverage.Locations.Values.Contains(location))
-            {
-                ActiveNetworkCoverageGroupLayer.NetworkCoverage.BeginEdit(string.Format("Add new network location to {0}", ActiveNetworkCoverageGroupLayer.NetworkCoverage));
-                ActiveNetworkCoverageGroupLayer.NetworkCoverage.Locations.Values.Add(location);    
-                ActiveNetworkCoverageGroupLayer.NetworkCoverage.EndEdit();
-            }
-            
-            ActiveNetworkCoverageGroupLayer.RenderRequired = true;
-
-            return location;
-        }
-
-        private void LayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            object removedOrAddedItem = e.GetRemovedOrAddedItem();
-            if (removedOrAddedItem is INetworkCoverageGroupLayer)
-            {
-                var networkCoverageLayer = (INetworkCoverageGroupLayer)removedOrAddedItem;
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Replace:
-                        throw new NotImplementedException();
-
-                    case NotifyCollectionChangedAction.Add:
-                        // if a network coverage is already in editing mode; reset interactor
-                        ActiveNetworkCoverageGroupLayer = networkCoverageLayer;
-                        SetCoverageLayerTheme(networkCoverageLayer);
-                        break;
-
-                    case NotifyCollectionChangedAction.Remove:
-                        ActiveNetworkCoverageGroupLayer = null;
-
-                        // should we try to set editing to another networkcoverage if available?
-                        break;
-                }
-            }
-        }
-
-        private void SetCoverageLayerTheme(INetworkCoverageGroupLayer networkCoverageGroupLayer)
-        {
-            int count = MapControl.Map.GetAllLayers(true).Count(l => l is INetworkCoverageGroupLayer);
-
-            if (networkCoverageGroupLayer.NetworkCoverage.SegmentGenerationMethod !=
-                     SegmentGenerationMethod.RouteBetweenLocations)
-            {
-                // Create a different style for each added coverage layer to prevent all layers look the same
-                // todo: move this to sharpmap?
-                ShapeType shapeType = VectorRenderingHelper.GetIndexedShapeType(count);
-                Brush brush = new SolidBrush(ColorHelper.GetIndexedColor(255, count));
-                networkCoverageGroupLayer.LocationLayer.Style.Shape = shapeType;
-                networkCoverageGroupLayer.LocationLayer.Style.Fill = brush;
-                if (networkCoverageGroupLayer.LocationLayer.Theme is CustomTheme)
-                {
-                    ((VectorStyle) ((CustomTheme) networkCoverageGroupLayer.LocationLayer.Theme).DefaultStyle).Shape
-                        = shapeType;
-                    ((VectorStyle) ((CustomTheme) networkCoverageGroupLayer.LocationLayer.Theme).DefaultStyle).Fill =
-                        brush;
-                }
-            }
-        }
-
-        [EditAction]
-        private void SetCurrentNetworkCoverageEditor(INetworkCoverageGroupLayer networkCoverageGroupLayer, bool activateTool)
-        {
-            if (null == networkCoverageGroupLayer)
-            {
-                return;
-            }
-
-            NetworkLocationTool = new NewPointFeatureTool(l => l.Equals(networkCoverageGroupLayer.LocationLayer), AddNetworkLocationToolName)
-                                      {
-                                          IsActive = activateTool,
-                                          Cursor = MapCursors.CreateArrowOverlayCuror(Resources.NetworkLocationSmall)
-                                      };
-            AddMapTool(NetworkLocationTool);
-
-            networkCoverageGroupLayer.LocationLayer.DataSource.AddNewFeatureFromGeometryDelegate = AddNetworkLocationGeometryDelegate;
-        }
-
-        /// <summary>
-        /// Clears the network coverage interactor.
-        /// </summary>
-        /// <param name="networkCoverageGroupLayer"></param>
-        /// 
-        [EditAction]
-        private void ResetCurrentNetworkCoverageEditor(INetworkCoverageGroupLayer networkCoverageGroupLayer)
-        {
-            if (null == NetworkLocationTool || null == networkCoverageGroupLayer)
-            {
-                return;
-            }
-
-            RemoveMapTool(NetworkLocationTool);
-            NetworkLocationTool = null;
-            if (networkCoverageGroupLayer.LocationLayer.DataSource != null)
-            {
-                networkCoverageGroupLayer.LocationLayer.DataSource.AddNewFeatureFromGeometryDelegate = null;
-            }
         }
     }
 }
