@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
+using DeltaShell.NGHS.Common.Properties;
 using log4net;
 
 namespace DeltaShell.NGHS.Common.IO
@@ -29,10 +30,9 @@ namespace DeltaShell.NGHS.Common.IO
 
         public object ImportItem(string path, object target = null)
         {
-            log.InfoFormat("Start importing model data.");
+            log.Info(Resources.ModelFileImporterBase_ImportItem_Start_importing_model_data);
             object importedObject = OnImportItem(path, target);
-
-            log.InfoFormat("Import model data successful.");
+            log.Info(Resources.ModelFileImporterBase_ImportItem_Stop_importing_model_data);
 
             return importedObject;
         }
@@ -43,6 +43,7 @@ namespace DeltaShell.NGHS.Common.IO
         /// <param name="path">The file path to import the data from.</param>
         /// <param name="target">The optional target to import the data to.</param>
         /// <returns>The type of object to import.</returns>
+        /// <remarks>This method can throw any exceptions.</remarks>
         protected abstract object OnImportItem(string path, object target = null);
     }
 }

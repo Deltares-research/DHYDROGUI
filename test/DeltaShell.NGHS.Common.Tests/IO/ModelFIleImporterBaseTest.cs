@@ -81,8 +81,25 @@ namespace DeltaShell.NGHS.Common.Tests.IO
             TestHelper.AssertLogMessagesAreGenerated(call, new[]
             {
                 "Start importing model data.",
-                "Import model data successful."
+                "Importing model data successful."
             }, 2);
+        }
+
+        [Test]
+        public void ImportItem_OnImportItemThrowsException_SameExceptionPassed()
+        {
+            // Setup
+            var exception = new Exception("Something went wrong when calling OnImportItem");
+            var importer = new TestModelFileImporterBase
+            {
+                ThrowOnImportItemException = exception
+            };
+
+            // Call
+            TestDelegate call = () => importer.ImportItem(null);
+
+            // Assert
+            Assert.That(call, Throws.Exception.SameAs(exception));
         }
 
         private class TestModelFileImporterBase : ModelFileImporterBase
@@ -102,6 +119,8 @@ namespace DeltaShell.NGHS.Common.Tests.IO
             public Tuple<string, object> OnImportItemArguments { get; private set; }
             public bool IsOnImportItemCalled { get; private set; }
 
+            public Exception ThrowOnImportItemException { private get; set; }
+
             public override bool CanImportOn(object targetObject)
             {
                 throw new NotImplementedException();
@@ -109,6 +128,11 @@ namespace DeltaShell.NGHS.Common.Tests.IO
 
             protected override object OnImportItem(string path, object target = null)
             {
+                if (ThrowOnImportItemException != null)
+                {
+                    throw ThrowOnImportItemException;
+                }
+
                 OnImportItemArguments = new Tuple<string, object>(path, target);
                 IsOnImportItemCalled = true;
                 return ImportedItem;
