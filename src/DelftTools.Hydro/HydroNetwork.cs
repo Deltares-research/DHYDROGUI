@@ -13,7 +13,7 @@ namespace DelftTools.Hydro
     /// </summary>
     [DisplayName("Hydro Network")]
     [Entity]
-    public partial class HydroNetwork : Network, IHydroNetwork
+    public class HydroNetwork : Network, IHydroNetwork
     {
         public virtual IEnumerable<IChannel> Channels { get; protected set; }
 

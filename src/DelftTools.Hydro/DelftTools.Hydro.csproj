@@ -175,7 +175,6 @@
     <Compile Include="ILongNameable.cs" />
     <Compile Include="IStructure.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
-    <Compile Include="HydroNetwork.Eventing.cs" />
     <Compile Include="Structures\BridgePillar.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Helpers\ActivitiesExtensions.cs" />
