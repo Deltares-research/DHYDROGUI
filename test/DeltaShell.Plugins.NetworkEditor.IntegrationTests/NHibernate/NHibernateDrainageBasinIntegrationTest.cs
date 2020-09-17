@@ -13,45 +13,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
     public class NHibernateDrainageBasinIntegrationTest : NHibernateHydroRegionTestBase
     {
         [Test]
-        public void SaveLoadCatchment()
-        {
-            var catchment = new Catchment
-            {
-                Name = "testName",
-                LongName = "longName",
-                Geometry =
-                    new Polygon(
-                        new LinearRing(new[]
-                        {
-                            new Coordinate(0, 0),
-                            new Coordinate(10, 0),
-                            new Coordinate(10, 10),
-                            new Coordinate(0, 0)
-                        })),
-                IsGeometryDerivedFromAreaSize = true,
-                CatchmentType = CatchmentType.GreenHouse,
-                SubCatchments = {new Catchment()}
-            };
-
-            catchment.SetAreaSize(500);
-
-            var basin = new DrainageBasin();
-            basin.Catchments.Add(catchment);
-
-            DrainageBasin retrievedBasin = SaveLoadObject(basin, "catch.dsproj");
-
-            Assert.AreEqual(1, retrievedBasin.Catchments.Count);
-            Catchment retrievedCatchment = retrievedBasin.Catchments.First();
-            Assert.AreEqual(catchment.Name, retrievedCatchment.Name);
-            Assert.AreEqual(retrievedBasin, retrievedCatchment.Basin);
-            Assert.AreEqual(catchment.LongName, retrievedCatchment.LongName);
-            Assert.AreEqual(catchment.Geometry, retrievedCatchment.Geometry);
-            Assert.AreEqual(catchment.AreaSize, retrievedCatchment.AreaSize);
-            Assert.AreEqual(catchment.CatchmentType, retrievedCatchment.CatchmentType);
-            Assert.AreEqual(catchment.SubCatchments.Count, retrievedCatchment.SubCatchments.Count);
-        }
-
-        [Test]
         public void SaveLoadDefaultGeometryCatchment()
         {
             // add catchment
