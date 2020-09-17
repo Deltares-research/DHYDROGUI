@@ -202,17 +202,6 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void RiverWeirClone()
-        {
-            var weir = new Weir {WeirFormula = new RiverWeirFormula()};
-
-            var clonedWeir = (Weir) weir.Clone();
-
-            Assert.AreNotSame(((RiverWeirFormula) weir.WeirFormula).SubmergeReductionNeg,
-                              ((RiverWeirFormula) clonedWeir.WeirFormula).SubmergeReductionNeg);
-        }
-
-        [Test]
         public void SimpleWeirPolylineDefaultWidthTest()
         {
             var weir = new Weir()
@@ -230,7 +219,6 @@ namespace DelftTools.Hydro.Tests.Structures
 
         [TestCase(typeof(FreeFormWeirFormula), StructureType.UniversalWeir)]
         [TestCase(typeof(GatedWeirFormula), StructureType.Orifice)]
-        [TestCase(typeof(RiverWeirFormula), StructureType.RiverWeir)]
         [TestCase(typeof(SimpleWeirFormula), StructureType.Weir)]
         [TestCase(typeof(GeneralStructureWeirFormula), StructureType.GeneralStructure)]
         public void GivenAWeirWithTheSpecifiedFormulaWhenGetStructureTypeIsCalledTheCorrectTypeIsReturned(Type weirFormula, StructureType expectedStructureType)
