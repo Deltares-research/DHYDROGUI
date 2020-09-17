@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System.Collections.Generic;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.IO;
@@ -38,59 +39,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
-        public void CanImportOn_TargetObjectWaterFlowFMModel_ReturnsTrue()
-        {
-            // Setup
-            var importer = new WaterFlowFMFileImporter(null);
-            using (var target = new WaterFlowFMModel())
-            {
-                // Call
-                bool result = importer.CanImportOn(target);
-
-                // Assert
-                Assert.That(result, Is.True);
-            }
-        }
-
-        [Test]
-        public void CanImportOn_TargetObjectICompositeActivity_ReturnsTrue()
-        {
-            // Setup
-            var target = Substitute.For<ICompositeActivity>();
-            var importer = new WaterFlowFMFileImporter(null);
-
-            // Call
-            bool result = importer.CanImportOn(target);
-
-            // Assert
-            Assert.That(result, Is.True);
-        }
-
-        [Test]
-        public void CanImportOn_TargetObjectNull_ReturnsFalse()
+        [TestCaseSource(nameof(CanImportOnCases))]
+        public void CanImportOn_VariousTargetObjects_ReturnsExpectedValue(object targetObject,
+                                                                          bool expectedResult)
         {
             // Setup
             var importer = new WaterFlowFMFileImporter(null);
 
             // Call
-            bool result = importer.CanImportOn(null);
+            bool result = importer.CanImportOn(targetObject);
 
             // Assert
-            Assert.That(result, Is.False);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
-        [Test]
-        public void CanImportOn_TargetObjectUnsupportedType_ReturnsFalse()
+        private static IEnumerable<TestCaseData> CanImportOnCases()
         {
-            // Setup
-            var target = new object();
-            var importer = new WaterFlowFMFileImporter(null);
-
-            // Call
-            bool result = importer.CanImportOn(target);
-
-            // Assert
-            Assert.That(result, Is.False);
+            yield return new TestCaseData(Substitute.For<ICompositeActivity>(), true);
+            yield return new TestCaseData(new WaterFlowFMModel(), true);
+            yield return new TestCaseData(new object(), false);
+            yield return new TestCaseData(null, false);
         }
     }
 }
