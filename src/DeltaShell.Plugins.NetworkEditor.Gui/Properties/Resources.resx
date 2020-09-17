@@ -121,54 +121,11 @@
   <data name="BridgeSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BridgeSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ExtraResistanceSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ExtraResistanceSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="HydroRegion" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\region.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="LateralSourceSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LateralSourceSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="Link" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABYklEQVQ4T2OgC7Cf93Km/dwXMVAu6cBm
-        xuMzYDz7GXmGWEy+d2bGk///QbT5pLukG2Lcd/NM59U//yff//cfxDbsvYEwRLv1wky99ktnQDQyHx03
-        nPnxv2jfl//d13//B/F1Ws9DDNGoP3Wm69qv/yAaxm+9+PN/9fGv/6uOff1fefTr/4ojX/4X7Pn0P2PL
-        ezBuPPsdrF6t5lQMg0LpgTM1J77+B9EgA0A0SEPCulf/g5c8/O85+8Z/l2mX/ztOvgDGIDZILGf3G4ge
-        6bydZ5rO/fgPokEGgOjUAx//e2548d913fP/zmuf/Xdc/ey/yZLH/zXnPQRjz82vwOqBOIZBPH3TTLG0
-        jWdANMgAGB8dK2/5/p9v9df/eju//4eKER8bAvGrzgjs+P9fevf//2B24mrSopI7fNEZkZ3//4No7ojF
-        pKcDtqC5Z0CYI3gu6ZpBgNlv5kwm3xnkaaYxYGAAADRN9gjpfeHOAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="NetworkLocationSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NetworkLocationSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="new_autobranch_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\network_branches11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="new_branch_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\network_branches1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NodeOnMultipleBranches" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NodeOnMultipleBranches.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Observation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Observation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="runoff" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\runoff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="StructureFeatureSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\StructureFeatureSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="WeirSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\WeirSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="wwtp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\wwtp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FeatureCoverageProperties_DisplayName" xml:space="preserve">
     <value>Feature spatial data</value>
@@ -200,9 +157,6 @@
   <data name="Weir" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\weir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="PumpSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\pumpsmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="hydroarea" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hydroarea.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -226,8 +180,5 @@
   </data>
   <data name="NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped" xml:space="preserve">
     <value>Remove ungrouped</value>
-  </data>
-  <data name="Retention" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Retention.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

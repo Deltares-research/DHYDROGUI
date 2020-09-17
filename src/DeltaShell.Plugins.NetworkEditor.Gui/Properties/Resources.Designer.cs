@@ -120,16 +120,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap ExtraResistanceSmall {
-            get {
-                object obj = ResourceManager.GetObject("ExtraResistanceSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Feature spatial data.
         /// </summary>
         public static string FeatureCoverageProperties_DisplayName {
@@ -188,26 +178,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap LateralSourceSmall {
-            get {
-                object obj = ResourceManager.GetObject("LateralSourceSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Link {
-            get {
-                object obj = ResourceManager.GetObject("Link", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Remove ungrouped.
         /// </summary>
         public static string NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped {
@@ -231,46 +201,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static string NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group {
             get {
                 return ResourceManager.GetString("NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap NetworkLocationSmall {
-            get {
-                object obj = ResourceManager.GetObject("NetworkLocationSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap new_autobranch_small {
-            get {
-                object obj = ResourceManager.GetObject("new_autobranch_small", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap new_branch_small {
-            get {
-                object obj = ResourceManager.GetObject("new_branch_small", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap NodeOnMultipleBranches {
-            get {
-                object obj = ResourceManager.GetObject("NodeOnMultipleBranches", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -305,51 +235,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap PumpSmall {
-            get {
-                object obj = ResourceManager.GetObject("PumpSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Retention {
-            get {
-                object obj = ResourceManager.GetObject("Retention", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap runoff {
-            get {
-                object obj = ResourceManager.GetObject("runoff", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} only supports one feature on target layer {1}, the existing feature will be removed!{2}Press Esc to cancel.
         /// </summary>
         public static string SingleFeature2DLineTool_LogWarning_only_one_feature_supported {
             get {
                 return ResourceManager.GetString("SingleFeature2DLineTool_LogWarning_only_one_feature_supported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap StructureFeatureSmall {
-            get {
-                object obj = ResourceManager.GetObject("StructureFeatureSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -369,26 +259,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         public static System.Drawing.Bitmap Weir {
             get {
                 object obj = ResourceManager.GetObject("Weir", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap WeirSmall {
-            get {
-                object obj = ResourceManager.GetObject("WeirSmall", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap wwtp {
-            get {
-                object obj = ResourceManager.GetObject("wwtp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

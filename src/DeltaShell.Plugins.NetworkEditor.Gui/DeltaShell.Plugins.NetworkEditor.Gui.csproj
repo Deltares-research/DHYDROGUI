@@ -328,46 +328,13 @@
     <Resource Include="Resources\BridgeSmall.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ExtraResistanceSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\region.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\LateralSourceSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\NetworkLocationSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\network_branches11.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\network_branches1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\NodeOnMultipleBranches.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Observation.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\PumpSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Retention.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\runoff.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\StructureFeatureSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\WeirSmall.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\wwtp.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Editors\Structures\Views\Components\GateOpeningHeightCalculatedFieldView.xaml">
