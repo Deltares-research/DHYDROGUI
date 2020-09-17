@@ -4,22 +4,6 @@ using DelftTools.Utils;
 namespace DelftTools.Hydro
 {
     /// <summary>
-    /// shapetypes of supported culvert cross section
-    /// all types are send as Tabulated to modelapi
-    /// </summary>
-    public enum CulvertGeometryType
-    {
-        Tabulated,
-        Round, // not yet in modelapi
-        Egg,   // not yet in model api
-        Rectangle,
-        Ellipse,
-        Arch,
-        Cunette,
-        SteelCunette
-    }
-
-    /// <summary>
     /// Friction types to be used in culvert
     /// </summary>
     [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
@@ -36,12 +20,5 @@ namespace DelftTools.Hydro
 
         [Description("White colebrook")]
         WhiteColebrook = 4
-    }
-
-    public enum CulvertType
-    {
-        Culvert = 1,
-        Siphon = 2,
-        InvertedSiphon = 3
     }
 }
