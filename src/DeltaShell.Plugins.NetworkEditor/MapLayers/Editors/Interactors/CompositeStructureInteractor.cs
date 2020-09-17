@@ -137,12 +137,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             Layer.RenderRequired = true;
         }
 
-        public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
-        {
-            // HACK, TODO: remove this hack, ugly delegate to create related interactors is used in IRelatedFeatureInteractor
-            return HydroNetworkFeatureEditor.GetFeatureRelationInteractor(feature);
-        }
-
         public override bool AllowSingleClickAndMove()
         {
             return true;

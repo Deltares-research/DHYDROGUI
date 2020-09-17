@@ -180,7 +180,6 @@
     <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\DiffuseLateralSourceInteractor.cs" />
-    <Compile Include="MapLayers\Editors\HydroNetworkFeatureEditor.cs" />
     <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="Properties\PluginInfo.cs" />

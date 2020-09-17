@@ -29,12 +29,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             base.Add(feature);
         }
 
-        public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
-        {
-            // HACK, TODO: remove this hack, ugly delegate to create related interactors is used in IRelatedFeatureInteractor
-            return HydroNetworkFeatureEditor.GetFeatureRelationInteractor(feature);
-        }
-
         public override void Delete()
         {
             var channel = (Channel) SourceFeature;
