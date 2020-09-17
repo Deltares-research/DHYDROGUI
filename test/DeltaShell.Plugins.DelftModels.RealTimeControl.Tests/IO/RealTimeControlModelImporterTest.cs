@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DelftTools.TestUtils;
+using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using NUnit.Framework;
 
@@ -10,20 +10,44 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
     [TestFixture]
     public class RealTimeControlModelImporterTest
     {
-        private RealTimeControlModelImporter importer;
-
-        [TestFixtureSetUp]
-        public void SetUp()
+        [Test]
+        public void Constructor_ExpectedValues()
         {
-            importer = new RealTimeControlModelImporter();
+            // Call
+            var importer = new RealTimeControlModelImporter();
+
+            // Assert
+            Assert.That(importer, Is.InstanceOf<ModelFileImporterBase>());
+            Assert.That(importer, Is.InstanceOf<IDimrModelFileImporter>());
+            Assert.That(importer.Name, Is.EqualTo("RTC-Tools xml files"));
+            Assert.That(importer.Category, Is.EqualTo("Xml files"));
+            Assert.That(importer.Description, Is.Empty);
+            Assert.That(importer.Image, Is.Not.Null);
+
+            Assert.That(importer.SupportedItemTypes, Is.Empty);
+            Assert.That(importer.CanImportOnRootLevel, Is.False);
+            Assert.That(importer.FileFilter, Is.EqualTo("xml files|*.xml"));
+            Assert.That(importer.TargetDataDirectory, Is.Null);
+            Assert.That(importer.ShouldCancel, Is.False);
+            Assert.That(importer.ProgressChanged, Is.Null);
+            Assert.That(importer.OpenViewAfterImport, Is.False);
+
+            Assert.That(importer.MasterFileExtension, Is.EqualTo("json"));
         }
 
-        [TestFixtureTearDown]
-        public void TearDown()
+        [Test]
+        public void CanImportOn_Always_ReturnsFalse()
         {
-            importer = null;
-        }
+            // Setup
+            var importer = new RealTimeControlModelImporter();
 
+            // Call
+            bool canImportOnResult = importer.CanImportOn(null);
+
+            // Assert
+            Assert.That(canImportOnResult, Is.False);
+        }
+        
         [Test]
         public void GivenAnInvalidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndNullIsReturned()
         {
@@ -34,54 +58,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             object modelObject = null;
 
+            var importer = new RealTimeControlModelImporter();
+
             // When
-            Assert.DoesNotThrow(
-                () => modelObject = importer.ImportItem(directoryPath));
+            TestDelegate call = () => modelObject = importer.ImportItem(directoryPath);
 
             // Then
+            Assert.That(call, Throws.Nothing);
             Assert.Null(modelObject, "After importing from invalid directory, rtcModel object was expected to be NULL.");
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenCanImportOnRootLevelIsCalled_ThenExpectedIsReturned()
-        {
-            Assert.AreEqual(false, importer.CanImportOnRootLevel);
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenCategoryIsCalled_ThenExpectedIsReturned()
-        {
-            Assert.AreEqual("Xml files", importer.Category);
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenFileFilterIsCalled_ThenExpectedIsReturned()
-        {
-            Assert.AreEqual("xml files|*.xml", importer.FileFilter);
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenMasterFileExtensionIsCalled_ThenExpectedIsReturned()
-        {
-            Assert.AreEqual("json", importer.MasterFileExtension);
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenNameIsCalled_ThenExpectedIsReturned()
-        {
-            Assert.AreEqual("RTC-Tools xml files", importer.Name);
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenOpenViewAfterImportIsCalled_ThenExpectedIsReturned()
-        {
-            Assert.AreEqual(false, importer.OpenViewAfterImport);
-        }
-
-        [Test]
-        public void GivenARealTimeControlModelImporter_WhenSupportedItemTypesIsCalled_ThenExpectedIsReturned()
-        {
-            Assert.AreEqual(new List<Type>(), importer.SupportedItemTypes);
         }
     }
 }
