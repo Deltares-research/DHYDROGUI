@@ -1,3 +1,4 @@
+using System;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
@@ -11,16 +12,7 @@ namespace DelftTools.Hydro
     {
         public HydroLink() {}
 
-        public HydroLink(IHydroObject source, IHydroObject target)
-        {
-            if (source != null && target != null)
-            {
-                Name = "HL_" + source.Name + "_" + target.Name;
-            }
-
-            Source = source;
-            Target = target;
-        }
+        public HydroLink(IHydroObject source, IHydroObject target) {}
 
         [FeatureAttribute]
         [Aggregation]
@@ -37,34 +29,9 @@ namespace DelftTools.Hydro
         [FeatureAttribute]
         public virtual string Name { get; set; }
 
-        public override string ToString()
-        {
-            return Name + " (" + Source + " -> " + Target + ")";
-        }
-
         public virtual object Clone()
         {
-            return new HydroLink
-            {
-                Source = Source,
-                Target = Target,
-                Attributes = (IFeatureAttributeCollection) Attributes?.Clone(),
-                Geometry = (IGeometry) Geometry?.Clone()
-            };
-        }
-
-        // TODO: remove and use <any> in mapping
-        protected virtual IFeature SourceFeature
-        {
-            get => Source;
-            set => Source = (IHydroObject) value;
-        }
-
-        // TODO: remove and use <any> in mapping
-        protected virtual IFeature TargetFeature
-        {
-            get => Target;
-            set => Target = (IHydroObject) value;
+            throw new NotImplementedException();
         }
     }
 }
