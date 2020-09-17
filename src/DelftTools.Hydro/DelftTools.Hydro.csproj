@@ -225,7 +225,6 @@
     <Compile Include="Structures\CompositeBranchStructure.cs" />
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\ICompositeBranchStructure.cs" />
-    <Compile Include="Structures\IExtraResistance.cs" />
     <Compile Include="Structures\IFrictionData.cs" />
     <Compile Include="Structures\IGate.cs" />
     <Compile Include="Structures\IGroundLayer.cs" />
