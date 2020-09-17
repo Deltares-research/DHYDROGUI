@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void DisconnectWavmFunctionStores_FileNotExists_FunctionStoreRemoved()
+        public void DisconnectWavmFunctionStores_FileNotExists_FunctionStorePathIsSetToEmpty()
         {
             // Setup
             string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), "wavm-wad.nc"));
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void DisconnectWavmFunctionStores_FileExists_FunctionStoreRemoved()
+        public void DisconnectWavmFunctionStores_FileExists_FunctionStorePathIsSetToEmpty()
         {
             // Setup
             string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), "wavm-wad.nc"));
