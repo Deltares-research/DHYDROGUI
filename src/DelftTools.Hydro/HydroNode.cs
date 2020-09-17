@@ -1,12 +1,10 @@
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro
@@ -16,144 +14,50 @@ namespace DelftTools.Hydro
     {
         public HydroNode() : this("hydro node") {}
 
-        public HydroNode(string name) : base(name)
-        {
-            Links = new EventedList<HydroLink>();
-        }
+        public HydroNode(string name) : base(name) {}
 
-        [DisplayName("Y")]
-        [FeatureAttribute(Order = 4)]
-        public virtual double YCoordinate
-        {
-            get
-            {
-                var point = Geometry as IPoint;
-                return point?.Y ?? 0;
-            }
-        }
-
-        [DisplayName("X")]
-        [FeatureAttribute(Order = 3)]
-        public virtual double XCoordinate
-        {
-            get
-            {
-                var point = Geometry as IPoint;
-                return point?.X ?? 0;
-            }
-        }
-
-        public virtual IHydroNetwork HydroNetwork => (IHydroNetwork) network;
+        public virtual IHydroNetwork HydroNetwork => throw new NotImplementedException();
 
         [DisplayName("Long name")]
         [FeatureAttribute(Order = 2)]
         public virtual string LongName { get; set; }
 
         [Aggregation]
-        public override IEventedList<IBranch> IncomingBranches
-        {
-            get => base.IncomingBranches;
-            set
-            {
-                if (base.IncomingBranches != null)
-                {
-                    base.IncomingBranches.CollectionChanged -= OnBranchesCollectionChanged;
-                }
-
-                base.IncomingBranches = value;
-
-                if (base.IncomingBranches != null)
-                {
-                    base.IncomingBranches.CollectionChanged += OnBranchesCollectionChanged;
-                }
-            }
-        }
+        public override IEventedList<IBranch> IncomingBranches { get; set; }
 
         [Aggregation]
-        public override IEventedList<IBranch> OutgoingBranches
-        {
-            get => base.OutgoingBranches;
-            set
-            {
-                if (base.OutgoingBranches != null)
-                {
-                    base.OutgoingBranches.CollectionChanged -= OnBranchesCollectionChanged;
-                }
+        public override IEventedList<IBranch> OutgoingBranches { get; set; }
 
-                base.OutgoingBranches = value;
-
-                if (base.OutgoingBranches != null)
-                {
-                    base.OutgoingBranches.CollectionChanged += OnBranchesCollectionChanged;
-                }
-            }
-        }
-
-        public virtual IHydroRegion Region => HydroNetwork;
+        public virtual IHydroRegion Region { get; }
 
         [Aggregation]
         public virtual IEventedList<HydroLink> Links { get; set; }
 
-        public virtual bool CanBeLinkSource => false;
+        public virtual bool CanBeLinkSource => throw new NotImplementedException();
 
-        public virtual bool CanBeLinkTarget => !IsConnectedToMultipleBranches;
+        public virtual bool CanBeLinkTarget => throw new NotImplementedException();
 
         /// <summary>
         /// Returns the features of the node (as objects)
         /// </summary>
         public virtual IEnumerable<object> GetDirectChildren()
         {
-            return NodeFeatures.Cast<object>();
-        }
-
-        public override object Clone()
-        {
-            var hydroNode = (HydroNode) base.Clone();
-            hydroNode.LongName = LongName;
-
-            hydroNode.Links = new EventedList<HydroLink>(Links);
-
-            return hydroNode;
+            throw new NotImplementedException();
         }
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {
-            return Region.AddNewLink(this, target);
+            throw new NotImplementedException();
         }
 
         public virtual void UnlinkFrom(IHydroObject target)
         {
-            Region.RemoveLink(this, target);
+            throw new NotImplementedException();
         }
 
         public virtual bool CanLinkTo(IHydroObject target)
         {
-            return Region.CanLinkTo(this, target);
-        }
-
-        [EditAction]
-        private void RepairLinks()
-        {
-            if (IsConnectedToMultipleBranches)
-            {
-                // remove all links
-                foreach (HydroLink link in Links.ToArray())
-                {
-                    link.Source.UnlinkFrom(link.Target);
-                }
-
-                Links.Clear();
-            }
-        }
-
-        [EditAction]
-        private void OnBranchesCollectionChanged(object sender,
-                                                 NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
-        {
-            if (sender is IList<IBranch>)
-            {
-                RepairLinks();
-            }
+            throw new NotImplementedException();
         }
     }
 }
