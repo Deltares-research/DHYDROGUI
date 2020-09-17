@@ -223,7 +223,6 @@
     <Compile Include="RunoffBoundary.cs" />
     <Compile Include="Structures\BridgeFrictionType.cs" />
     <Compile Include="Structures\CompositeBranchStructure.cs" />
-    <Compile Include="Structures\ExtraResistance.cs" />
     <Compile Include="Structures\Gate.cs" />
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\ICompositeBranchStructure.cs" />
@@ -326,9 +325,6 @@
     <EmbeddedResource Include="Structures\WeirFormula\PierWeirFormula.hbm.xml" />
     <EmbeddedResource Include="Structures\WeirFormula\RiverWeirFormula.hbm.xml" />
     <EmbeddedResource Include="Structures\WeirFormula\SimpleWeirFormula.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Structures\ExtraResistance.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Structures\WeirFormula\GeneralStructureWeirFormula.hbm.xml" />
