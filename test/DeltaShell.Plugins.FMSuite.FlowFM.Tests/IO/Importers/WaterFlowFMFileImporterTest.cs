@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
@@ -85,5 +86,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(renderedMessages.Contains(waterFlowFmFileImporterError), Is.True, $"Not found error message: {waterFlowFmFileImporterError}\n Log messages: {renderMessagesAsString}");
         }
 
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenFmModelWithUnsupportedBoundaries_WhenImportItem_ThenDoesNotThrow()
+        {
+            const string relativeFilePath = @"c003_westerschelde_2d_dynamo\westerscheldt01.mdu";
+            string testFilePath = TestHelper.GetTestFilePath(relativeFilePath);
+            Assert.That(File.Exists(testFilePath));
+            WaterFlowFMModel importedModel = null;
+
+            // When
+            var importer = new WaterFlowFMFileImporter(() => null);
+            TestDelegate testAction = () => importedModel = (WaterFlowFMModel) importer.ImportItem(testFilePath);
+
+            // Then
+            Assert.That(testAction, Throws.Nothing);
+            Assert.That(importedModel, Is.Not.Null);
+        }
     }
 }
