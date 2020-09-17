@@ -225,7 +225,6 @@
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\ICompositeBranchStructure.cs" />
     <Compile Include="Structures\IGate.cs" />
-    <Compile Include="Structures\IGully.cs" />
     <Compile Include="Structures\IManhole.cs" />
     <Compile Include="Structures\IPump.cs" />
     <Compile Include="Structures\IWeir.cs" />
