@@ -179,7 +179,6 @@
     <Compile Include="Structures\BridgePillar.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Friction.cs" />
-    <Compile Include="FrictionTypeConverter.cs" />
     <Compile Include="Helpers\ActivitiesExtensions.cs" />
     <Compile Include="Helpers\ActivityExtensions.cs" />
     <Compile Include="Helpers\ICoordinateSystemExtensions.cs" />
