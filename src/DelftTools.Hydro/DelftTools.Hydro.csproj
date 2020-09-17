@@ -208,7 +208,6 @@
     <Compile Include="IHydroNetwork.cs" />
     <Compile Include="IHydroNetworkFeature.cs" />
     <Compile Include="IHydroNode.cs" />
-    <Compile Include="IPipe.cs" />
     <Compile Include="IStructure1D.cs" />
     <Compile Include="LateralSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
