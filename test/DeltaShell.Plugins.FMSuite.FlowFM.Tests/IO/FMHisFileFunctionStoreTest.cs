@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
@@ -41,6 +42,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(10, store.Functions.Count);
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenFMHisFileWithPump_WhenCreatingFunctionStore_ThenFunctionsDoesNotContainIntegerFunction_pump_actual_stage()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string hisFilePathTemp = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(TestHelper.GetTestFilePath(@"output_hisfiles\D3DFMIQ-2084.nc"));
+                NetCdfFile netCdfFile = null;
+
+                // Check precondition
+                try
+                {
+                    netCdfFile = NetCdfFile.OpenExisting(hisFilePathTemp, false);
+                    NetCdfVariable variablePumpActualStage = netCdfFile.GetVariableByName("pump_actual_stage");
+                    Assert.That(variablePumpActualStage, Is.Not.Null);
+                    NetCdfDataType type = netCdfFile.GetVariableDataType(variablePumpActualStage);
+                    Assert.That(type, Is.EqualTo(NetCdfDataType.NcInteger));
+                }
+                finally
+                {
+                    netCdfFile?.Close();
+                }
+
+                // Act
+                var store = new FMHisFileFunctionStore(hisFilePathTemp);
+
+                // Assert
+                Assert.That(store.Functions.Select(f => f.Name).ToArray(), Has.No.Member("Actual stage of pump (pump_actual_stage)"));
+            }
+        }
+        
         [Test]
         [Category(TestCategory.DataAccess)]
         [TestCase(@"output_hisfiles\FlowFMWithTimeZones_his.nc", "Monday, 01 January 2001 00:00:00")]
