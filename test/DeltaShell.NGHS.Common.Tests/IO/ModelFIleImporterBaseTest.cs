@@ -86,7 +86,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
         }
 
         [Test]
-        public void ImportItem_OnImportItemThrowsException_SameExceptionPassed()
+        public void ImportItem_OnImportItemThrowsException_LogsErrorAndThrowsException()
         {
             // Setup
             var exception = new Exception("Something went wrong when calling OnImportItem");
@@ -95,11 +95,32 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 ThrowOnImportItemException = exception
             };
 
+            var isExceptionThrown = false;
+            Exception thrownException = null;
+
             // Call
-            TestDelegate call = () => importer.ImportItem(null);
+            Action call = () =>
+            {
+                try
+                {
+                    importer.ImportItem(null);
+                }
+                catch (Exception e)
+                {
+                    isExceptionThrown = true;
+                    thrownException = e;
+                }
+            };
 
             // Assert
-            Assert.That(call, Throws.Exception.SameAs(exception));
+            TestHelper.AssertLogMessagesAreGenerated(call, new[]
+            {
+                "Start importing model data.",
+                "Importing model data failed."
+            }, 2);
+
+            Assert.That(isExceptionThrown, Is.True);
+            Assert.That(thrownException, Is.SameAs(exception));
         }
 
         private class TestModelFileImporterBase : ModelFileImporterBase

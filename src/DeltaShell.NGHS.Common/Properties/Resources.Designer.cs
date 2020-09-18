@@ -61,6 +61,15 @@ namespace DeltaShell.NGHS.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Importing model data failed..
+        /// </summary>
+        public static string ModelFileImporterBase_ImportItem_Importing_model_data_failed {
+            get {
+                return ResourceManager.GetString("ModelFileImporterBase_ImportItem_Importing_model_data_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start importing model data..
         /// </summary>
         public static string ModelFileImporterBase_ImportItem_Start_importing_model_data {

@@ -31,10 +31,19 @@ namespace DeltaShell.NGHS.Common.IO
         public object ImportItem(string path, object target = null)
         {
             log.Info(Resources.ModelFileImporterBase_ImportItem_Start_importing_model_data);
-            object importedObject = OnImportItem(path, target);
-            log.Info(Resources.ModelFileImporterBase_ImportItem_Stop_importing_model_data);
 
-            return importedObject;
+            try
+            {
+                object importedObject = OnImportItem(path, target);
+                log.Info(Resources.ModelFileImporterBase_ImportItem_Stop_importing_model_data);
+
+                return importedObject;
+            }
+            catch
+            {
+                log.Error(Resources.ModelFileImporterBase_ImportItem_Importing_model_data_failed);
+                throw;
+            }
         }
 
         /// <summary>
