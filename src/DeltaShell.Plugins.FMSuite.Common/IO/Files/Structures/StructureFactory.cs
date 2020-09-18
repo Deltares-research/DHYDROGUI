@@ -147,9 +147,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private static string GetNotSupportedTimeSeriesMessage(string structuerName, ModelProperty modelProperty, Steerable steerableProperty)
+        private static string GetNotSupportedTimeSeriesMessage(string structureName, ModelProperty modelProperty, Steerable steerableProperty)
         {
-           return $"Trying to generate Time series for 2D Structure: {structuerName}, property: {modelProperty} mapped as {modelProperty.PropertyDefinition.FilePropertyName}, type: {steerableProperty.Mode} which is not yet supported.";
+           return $"Trying to generate Time series for 2D Structure: {structureName}, property: {modelProperty} mapped as {modelProperty.PropertyDefinition.FilePropertyName}, type: {steerableProperty.Mode} which is not yet supported.";
         }
 
         #region Pump
