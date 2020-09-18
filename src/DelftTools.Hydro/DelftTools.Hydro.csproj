@@ -158,7 +158,6 @@
     <Compile Include="BranchStructure.cs" />
     <Compile Include="Catchment.cs" />
     <Compile Include="Channel.cs" />
-    <Compile Include="CulvertFrictionType.cs" />
     <Compile Include="DrainageBasin.cs" />
     <Compile Include="Embankment.cs" />
     <Compile Include="GroupableFeature2D.cs" />
