@@ -637,4 +637,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel_Save_project_after_model_run_with_write_restart" xml:space="preserve">
     <value>Please save the project after a model run with 'write restart' on.</value>
   </data>
+  <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_" xml:space="preserve">
+    <value>Error while importing a {0} from {1}</value>
+  </data>
 </root>

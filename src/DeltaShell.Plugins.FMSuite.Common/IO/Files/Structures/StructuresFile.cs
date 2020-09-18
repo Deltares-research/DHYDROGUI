@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -91,9 +90,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 return structures;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Log.ErrorFormat($"Error while reading and converting 2D Structures from {structuresFilePath}");
+                Log.ErrorFormat(Resources.StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_converting_2D_Structures_from__0_, structuresFilePath);
                 throw;
             }
         }
@@ -208,8 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
             catch (Exception e) 
             {
-                string errorMessage = $"Failed to convert .ini structure definition '{structure.Name}' to actual structure.";
-                Log.Error(errorMessage);
+                Log.ErrorFormat(Resources.StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_, structure.Name);
 
                 if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
                     e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
