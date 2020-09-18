@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var visitor = new SpectrumParametersVisitor(category, filesManager);
 
             const string fileName = "file.txt";
-            string filePath = $"D:\\some_directory\\{fileName}";
+            var filePath = $"D:\\some_directory\\{fileName}";
             var parameters = new FileBasedParameters(filePath);
 
             // Call

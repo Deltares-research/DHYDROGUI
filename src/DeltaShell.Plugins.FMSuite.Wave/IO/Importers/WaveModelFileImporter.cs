@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
     /// <summary>
     /// Importer for importing D-Waves models from .mdw files.
     /// </summary>
-    /// <seealso cref="IDimrModelFileImporter" />
+    /// <seealso cref="IDimrModelFileImporter"/>
     public class WaveModelFileImporter : IDimrModelFileImporter
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaveModelFileImporter));

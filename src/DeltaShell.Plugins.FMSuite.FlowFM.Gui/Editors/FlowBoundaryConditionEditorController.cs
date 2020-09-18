@@ -213,8 +213,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     FlowBoundaryCondition firstTransportConstituent =
                         boundaryConditions.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                                            .FirstOrDefault(
-                                                bc => FlowBoundaryCondition.AlwaysAllowedQuantities.Contains(bc.FlowQuantity));
+                                          .FirstOrDefault(
+                                              bc => FlowBoundaryCondition.AlwaysAllowedQuantities.Contains(bc.FlowQuantity));
 
                     if (firstTransportConstituent != null)
                     {

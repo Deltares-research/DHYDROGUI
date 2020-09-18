@@ -93,29 +93,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         private void Bind()
         {
-            inputTypeCBox.DataBindings.Add(new Binding(nameof(inputTypeCBox.SelectedValue), 
+            inputTypeCBox.DataBindings.Add(new Binding(nameof(inputTypeCBox.SelectedValue),
                                                        meteoData,
-                                                       nameof(WaveMeteoData.FileType), 
+                                                       nameof(WaveMeteoData.FileType),
                                                        false,
                                                        DataSourceUpdateMode.OnPropertyChanged));
-            xyVectorFileControl.DataBindings.Add(new Binding(nameof(xyVectorFileControl.FileName), 
+            xyVectorFileControl.DataBindings.Add(new Binding(nameof(xyVectorFileControl.FileName),
                                                              meteoData,
-                                                             nameof(WaveMeteoData.XYVectorFilePath), 
+                                                             nameof(WaveMeteoData.XYVectorFilePath),
                                                              false,
                                                              DataSourceUpdateMode.OnPropertyChanged));
-            xComponentFileControl.DataBindings.Add(new Binding(nameof(xComponentFileControl.FileName), 
+            xComponentFileControl.DataBindings.Add(new Binding(nameof(xComponentFileControl.FileName),
                                                                meteoData,
-                                                               nameof(WaveMeteoData.XComponentFilePath), 
+                                                               nameof(WaveMeteoData.XComponentFilePath),
                                                                false,
                                                                DataSourceUpdateMode.OnPropertyChanged));
-            yComponentFileControl.DataBindings.Add(new Binding(nameof(yComponentFileControl.FileName), 
+            yComponentFileControl.DataBindings.Add(new Binding(nameof(yComponentFileControl.FileName),
                                                                meteoData,
-                                                               nameof(WaveMeteoData.YComponentFilePath), 
+                                                               nameof(WaveMeteoData.YComponentFilePath),
                                                                false,
                                                                DataSourceUpdateMode.OnPropertyChanged));
-            spiderWebFileControl.DataBindings.Add(new Binding(nameof(spiderWebFileControl.FileName), 
+            spiderWebFileControl.DataBindings.Add(new Binding(nameof(spiderWebFileControl.FileName),
                                                               meteoData,
-                                                              nameof(WaveMeteoData.SpiderWebFilePath), 
+                                                              nameof(WaveMeteoData.SpiderWebFilePath),
                                                               false,
                                                               DataSourceUpdateMode.OnPropertyChanged));
         }

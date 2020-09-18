@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var boundaryConditions = new List<IBoundaryCondition>();
             var sourcesAndSinks = new List<SourceAndSink>();
 
-            var modelReferenceDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var modelReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
             foreach (ExtForceFileItem extForceFileItem in GetSupportedFileItems(extForceFileItems))
             {
@@ -307,7 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             if (uniqueFeature == feature2D)
             {
-                boundaryConditionSets.Add(new BoundaryConditionSet { Feature = feature2D });
+                boundaryConditionSets.Add(new BoundaryConditionSet {Feature = feature2D});
             }
 
             BoundaryCondition boundaryCondition;
@@ -315,9 +315,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             try
             {
                 boundaryCondition = ReadBoundaryConditionData(filePath,
-                                                                                 uniqueFeature,
-                                                                                 extForceFileItem,
-                                                                                 modelReferenceDate);
+                                                              uniqueFeature,
+                                                              extForceFileItem,
+                                                              modelReferenceDate);
             }
             catch (Exception e)
             {
@@ -412,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void ReadHeatFluxModelData(IEnumerable<ExtForceFileItem> extForceFileItems,
                                            WaterFlowFMModelDefinition modelDefinition)
         {
-            var modelReferenceDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var modelReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             switch (modelDefinition.HeatFluxModel.Type)
             {
                 case HeatFluxModelType.None:
@@ -425,7 +425,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private void ReadCompositeTemperatureData(IEnumerable<ExtForceFileItem> extForceFileItems,
-                                          WaterFlowFMModelDefinition modelDefinition, DateTime modelReferenceDate)
+                                                  WaterFlowFMModelDefinition modelDefinition, DateTime modelReferenceDate)
         {
             HeatFluxModel heatFluxModel = modelDefinition.HeatFluxModel;
 
@@ -633,12 +633,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             if (extForceFileItem.ModelData.TryGetValue(ExtForceFileConstants.AveragingTypeKey, out object value))
             {
-                operation.AveragingMethod = (GridCellAveragingMethod)value;
+                operation.AveragingMethod = (GridCellAveragingMethod) value;
             }
 
             if (extForceFileItem.ModelData.TryGetValue(ExtForceFileConstants.RelSearchCellSizeKey, out value))
             {
-                operation.RelativeSearchCellSize = (double)value;
+                operation.RelativeSearchCellSize = (double) value;
             }
 
             switch (extForceFileItem.Method)
@@ -662,7 +662,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void ReadWindItems(IEnumerable<ExtForceFileItem> extForceFileItems,
                                    WaterFlowFMModelDefinition modelDefinition)
         {
-            var refDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             foreach (
                 ExtForceFileItem extForceFileItem in
                 extForceFileItems.Where(i => ExtForceQuantNames.WindQuantityNames.Values.Contains(i.Quantity)))
@@ -712,14 +712,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                             out fileExtension))
                 {
                     // create a quantity name from the type and the tracer name if it is set to tracer.
-                    string quantityName = quantityType.ToString();
+                    var quantityName = quantityType.ToString();
                     if (quantityType == FlowBoundaryQuantityType.Tracer)
                     {
                         quantityName += "_" + extForceFileItem.Quantity.Substring(9); // remove tracerbnd
                     }
 
                     var boundaryCondition =
-                        (FlowBoundaryCondition)new FlowBoundaryConditionFactory().CreateBoundaryCondition(
+                        (FlowBoundaryCondition) new FlowBoundaryConditionFactory().CreateBoundaryCondition(
                             feature2D, quantityName, dataType);
                     if (boundaryCondition == null)
                     {
@@ -772,8 +772,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private SourceAndSink ReadSourceAndSinkData(string filePath, Feature2D feature2D,
-                                                          ExtForceFileItem extForceFileItem,
-                                                          DateTime modelReferenceDate)
+                                                    ExtForceFileItem extForceFileItem,
+                                                    DateTime modelReferenceDate)
         {
             if (!Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink))
             {

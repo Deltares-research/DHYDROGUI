@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 // Assert
                 var thrownException = Assert.Throws<InvalidOperationException>(Call);
-                string expectedExceptionMessage = $"No errors were reported in the diagnostics file {diaFilePath}";
+                var expectedExceptionMessage = $"No errors were reported in the diagnostics file {diaFilePath}";
                 Assert.That(thrownException.Message, Is.EqualTo(expectedExceptionMessage));
             }
         }

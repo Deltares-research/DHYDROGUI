@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 var controlHost = new ElementHost
                 {
                     Dock = DockStyle.Fill,
-                    Child = new StructureView { DataContext = new StructureViewModel(weir) }
+                    Child = new StructureView {DataContext = new StructureViewModel(weir)}
                 };
                 StructureControl = controlHost;
                 structureViewPanel.AutoScrollMinSize = new Size(StructureControl.Width, StructureControl.Height);

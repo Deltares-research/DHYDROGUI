@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         {
             // Given
             const string missingControlGroupName = "not_existing_control_group_name";
-            string id = $"[TimeRule]{missingControlGroupName}/time_rule_name";
+            var id = $"[TimeRule]{missingControlGroupName}/time_rule_name";
 
             string expectedMessage = string.Format(Resources.RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___,
                                                    missingControlGroupName, id, RealTimeControlXMLFiles.XmlTools);
@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         {
             // Given
             const string missingRuleName = "not_existing_rule_name";
-            string id = $"[TimeRule]control_group_name/{missingRuleName}";
+            var id = $"[TimeRule]control_group_name/{missingRuleName}";
 
             var controlGroup = new ControlGroup();
             controlGroup.Rules.AddRange(new List<RuleBase>
@@ -300,7 +300,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         {
             // Given
             const string missingConditionName = "not_existing_condition_name";
-            string id = $"[TimeCondition]control_group_name/{missingConditionName}";
+            var id = $"[TimeCondition]control_group_name/{missingConditionName}";
             var controlGroup = new ControlGroup();
 
             string expectedMessage = string.Format(
@@ -324,7 +324,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             foreach (string tag in tagsOfInterest)
             {
                 // Given
-                string id = $"[Status]{tag}[Delayed]";
+                var id = $"[Status]{tag}[Delayed]";
 
                 // When
                 string resultedTag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);

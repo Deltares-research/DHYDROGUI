@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -22,22 +20,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             Assert.AreEqual(typeof(RealTimeControlModel), realTimeControlModelNodePresenter.NodeTagType);
         }
 
-        private static RealTimeControlModelNodePresenter GetRealTimeControlModelNodePresenter()
-        {
-            var mockRepo = new MockRepository();
-            var gui = mockRepo.StrictMock<IGui>();
-            var pluginGuiMock = mockRepo.StrictMock<GuiPlugin>();
-            pluginGuiMock.Expect(pg => pg.Gui).Return(gui);
-
-            return new RealTimeControlModelNodePresenter(pluginGuiMock);
-        }
-
         [Test]
         public void GetChildNodeObjects_ContainsRestartOutputTreeFolder()
         {
             // Setup
             RealTimeControlModelNodePresenter nodePresenter = GetRealTimeControlModelNodePresenter();
-            var model = new RealTimeControlModel() {RestartOutput = new EventedList<RealTimeControlRestartFile>(new[] {new RealTimeControlRestartFile()})};
+            var model = new RealTimeControlModel()
+            {
+                RestartOutput = new EventedList<RealTimeControlRestartFile>(new[]
+                {
+                    new RealTimeControlRestartFile()
+                })
+            };
 
             // Call
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
@@ -60,14 +54,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
 
             // Assert
-            TreeFolder inputTreeFolder = 
+            TreeFolder inputTreeFolder =
                 childObjects.OfType<TreeFolder>().Single(f => f.Text == "Input");
-            TreeFolder initialConditionsFolder = 
+            TreeFolder initialConditionsFolder =
                 inputTreeFolder.ChildItems.OfType<TreeFolder>().Single(f => f.Text == "Initial Conditions");
-            RealTimeControlRestartFile inputRestartFile = 
+            RealTimeControlRestartFile inputRestartFile =
                 initialConditionsFolder.ChildItems.OfType<RealTimeControlRestartFile>().Single();
 
             Assert.That(inputRestartFile, Is.Not.Null);
+        }
+
+        private static RealTimeControlModelNodePresenter GetRealTimeControlModelNodePresenter()
+        {
+            var mockRepo = new MockRepository();
+            var gui = mockRepo.StrictMock<IGui>();
+            var pluginGuiMock = mockRepo.StrictMock<GuiPlugin>();
+            pluginGuiMock.Expect(pg => pg.Gui).Return(gui);
+
+            return new RealTimeControlModelNodePresenter(pluginGuiMock);
         }
     }
 }

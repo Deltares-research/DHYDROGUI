@@ -1421,7 +1421,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
         {
             const string timeUnit = "seconds since 2001-01-01 00:00:00";
             const string valUnit = "kg/m³";
-            string quantity = $"sedfracbnd{sedimentFractionName}";
+            var quantity = $"sedfracbnd{sedimentFractionName}";
 
             return CreateBcBlockData(boundaryName, supportPointName, timeUnit, valUnit, quantity);
         }

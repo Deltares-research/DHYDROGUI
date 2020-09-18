@@ -7,6 +7,6 @@ namespace DeltaShell.Dimr.xsd
     {
         [XmlAttribute("schemaLocation", Namespace = XmlSchema.InstanceNamespace)]
         public string XsiSchemaLocation { get; set; } = "http://schemas.deltares.nl/dimr " +
-            "http://content.oss.deltares.nl/schemas/dimr-1.0.xsd";
+                                                        "http://content.oss.deltares.nl/schemas/dimr-1.0.xsd";
     }
 }

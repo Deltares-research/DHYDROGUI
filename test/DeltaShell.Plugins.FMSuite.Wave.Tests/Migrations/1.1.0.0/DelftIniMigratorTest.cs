@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         public void Constructor_ExpectedResults()
         {
             // Setup
-            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping = 
+            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>();
             var iniReader = Substitute.For<IDelftIniReader>();
             var iniWriter = Substitute.For<IDelftIniWriter>();
@@ -30,18 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
             // Assert
             Assert.That(migrator, Is.InstanceOf<IDelftIniMigrator>());
-        }
-
-        private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
-        {
-            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping = 
-                new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>();
-            var iniReader = Substitute.For<IDelftIniReader>();
-            var iniWriter = Substitute.For<IDelftIniWriter>();
-
-            yield return new TestCaseData(null, iniReader, iniWriter, "migrationBehaviourMapping");
-            yield return new TestCaseData(migrationBehaviourMapping, null, iniWriter, "iniReader");
-            yield return new TestCaseData(migrationBehaviourMapping, iniReader, null, "iniWriter");
         }
 
         [Test]
@@ -57,34 +45,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
         }
 
-        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
-        {
-            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
-        }
-
         [Test]
         public void MigrateFile_SourceFileStreamNull_ThrowsArgumentNullException()
         {
             // Setup
-            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping = 
+            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>();
             var iniReader = Substitute.For<IDelftIniReader>();
             var iniWriter = Substitute.For<IDelftIniWriter>();
             var logHandler = Substitute.For<ILogHandler>();
 
             var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter, false);
-            
+
             // Call | Assert
-            void Call() => migrator.MigrateFile(null, 
-                                                "./imaginary/toad/to/src.ini", 
-                                                "./imaginary/toad/to/tgt.ini", 
+            void Call() => migrator.MigrateFile(null,
+                                                "./imaginary/toad/to/src.ini",
+                                                "./imaginary/toad/to/tgt.ini",
                                                 logHandler);
-            
+
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("sourceFileStream"));
         }
@@ -93,20 +71,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         public void MigrateFile_SourceFilePath_ThrowsArgumentNullException()
         {
             // Setup
-            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping = 
+            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>();
             var iniReader = Substitute.For<IDelftIniReader>();
             var iniWriter = Substitute.For<IDelftIniWriter>();
             var logHandler = Substitute.For<ILogHandler>();
 
             var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter, false);
-            
+
             // Call | Assert
-            void Call() => migrator.MigrateFile(new MemoryStream(), 
+            void Call() => migrator.MigrateFile(new MemoryStream(),
                                                 null,
-                                                "./imaginary/toad/to/tgt.ini", 
+                                                "./imaginary/toad/to/tgt.ini",
                                                 logHandler);
-            
+
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("sourceFilePath"));
         }
@@ -115,24 +93,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         public void MigrateFile_TargetFilePath_ThrowsArgumentNullException()
         {
             // Setup
-            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping = 
+            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>();
             var iniReader = Substitute.For<IDelftIniReader>();
             var iniWriter = Substitute.For<IDelftIniWriter>();
             var logHandler = Substitute.For<ILogHandler>();
 
             var migrator = new DelftIniMigrator(migrationBehaviourMapping, iniReader, iniWriter, false);
-            
+
             // Call | Assert
-            void Call() => migrator.MigrateFile(new MemoryStream(), 
-                                                "./imaginary/toad/to/src.ini", 
+            void Call() => migrator.MigrateFile(new MemoryStream(),
+                                                "./imaginary/toad/to/src.ini",
                                                 null,
                                                 logHandler);
-            
+
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("targetFilePath"));
         }
-
 
         [Test]
         public void MigrateFile_MigratesPropertiesDefinedInMigrationBehaviourCorrectly()
@@ -148,31 +125,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             const string categoryName = "categoryName";
             var category = new DelftIniCategory(categoryName);
 
-            DelftIniProperty[] properties = 
+            DelftIniProperty[] properties =
                 Enumerable.Range(0, 5)
                           .Select(i => new DelftIniProperty($"someName_{i}", $"someValue_{i}", $"(someComment_{i}"))
                           .ToArray();
-            IMigrationBehaviour[] migrationBehaviours = 
+            IMigrationBehaviour[] migrationBehaviours =
                 Enumerable.Range(0, 5)
                           .Select(_ => Substitute.For<IMigrationBehaviour>())
                           .ToArray();
 
             category.AddProperties(properties);
 
-            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationMapping = 
+            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationMapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>
-            {
-                {categoryName, new Dictionary<string, IMigrationBehaviour>
                 {
-                    { properties[0].Name, migrationBehaviours[0] },
-                    { properties[1].Name, migrationBehaviours[1] },
-                    { properties[2].Name, migrationBehaviours[2] },
-                    { properties[3].Name, migrationBehaviours[3] },
-                    { properties[4].Name, migrationBehaviours[4] },
-                }},
-            };
+                    {
+                        categoryName, new Dictionary<string, IMigrationBehaviour>
+                        {
+                            {properties[0].Name, migrationBehaviours[0]},
+                            {properties[1].Name, migrationBehaviours[1]},
+                            {properties[2].Name, migrationBehaviours[2]},
+                            {properties[3].Name, migrationBehaviours[3]},
+                            {properties[4].Name, migrationBehaviours[4]},
+                        }
+                    },
+                };
 
-            DelftIniCategory[] categories = {category};
+            DelftIniCategory[] categories =
+            {
+                category
+            };
 
             var iniReader = Substitute.For<IDelftIniReader>();
             iniReader.ReadDelftIniFile(sourceFile, sourcePath).Returns(categories);
@@ -194,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             for (var i = 0; i < 5; i++)
             {
                 migrationBehaviours[i].Received(1).MigrateProperty(properties[i], logHandler);
-                migrationBehaviours[i].DidNotReceive().MigrateProperty(Arg.Is<DelftIniProperty>(x => !x.Name.Equals(properties[i].Name)), 
+                migrationBehaviours[i].DidNotReceive().MigrateProperty(Arg.Is<DelftIniProperty>(x => !x.Name.Equals(properties[i].Name)),
                                                                        logHandler);
             }
         }
@@ -219,19 +201,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var property = new DelftIniProperty(propertyName, propertyValue, propertyComment);
             category.AddProperty(property);
 
-            DelftIniCategory[] categories = {category};
+            DelftIniCategory[] categories =
+            {
+                category
+            };
 
             var migrationBehaviour = Substitute.For<IMigrationBehaviour>();
 
-            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationMapping = 
+            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationMapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>
-            {
-                {categoryName, new Dictionary<string, IMigrationBehaviour>
                 {
-                    { "notSomeName", migrationBehaviour },
-                }},
-            };
-
+                    {
+                        categoryName, new Dictionary<string, IMigrationBehaviour>
+                        {
+                            {"notSomeName", migrationBehaviour},
+                        }
+                    },
+                };
 
             var iniReader = Substitute.For<IDelftIniReader>();
             iniReader.ReadDelftIniFile(sourceFile, sourcePath).Returns(categories);
@@ -277,30 +263,52 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 string sourcePath = Path.Combine(tempDir.Path, sourceSubDirectory, fileName);
 
                 var delftIniWriter = new DelftIniWriter();
-                delftIniWriter.WriteDelftIniFile(Enumerable.Empty<DelftIniCategory>(), 
-                                                 sourcePath, 
+                delftIniWriter.WriteDelftIniFile(Enumerable.Empty<DelftIniCategory>(),
+                                                 sourcePath,
                                                  false);
-                
+
                 const string goalDirName = "dooWahDooWah";
                 string goalDir = tempDir.CreateDirectory(goalDirName);
                 string goalPath = Path.Combine(goalDir, fileName);
 
-                var migrator = new DelftIniMigrator(new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>(), 
-                                                    new DelftIniReader(), 
-                                                    delftIniWriter, 
+                var migrator = new DelftIniMigrator(new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>(),
+                                                    new DelftIniReader(),
+                                                    delftIniWriter,
                                                     removeOriginalIniFile);
                 var sourceStream = new FileStream(sourcePath, FileMode.Open);
 
                 // Call
-                migrator.MigrateFile(sourceStream, 
-                                     sourcePath,  
-                                     goalPath, 
+                migrator.MigrateFile(sourceStream,
+                                     sourcePath,
+                                     goalPath,
                                      logHandler);
 
                 // Assert
                 Assert.That(File.Exists(goalPath), Is.True);
                 Assert.That(File.Exists(sourcePath), Is.EqualTo(!removeOriginalIniFile));
             }
+        }
+
+        private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
+        {
+            IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping =
+                new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>();
+            var iniReader = Substitute.For<IDelftIniReader>();
+            var iniWriter = Substitute.For<IDelftIniWriter>();
+
+            yield return new TestCaseData(null, iniReader, iniWriter, "migrationBehaviourMapping");
+            yield return new TestCaseData(migrationBehaviourMapping, null, iniWriter, "iniReader");
+            yield return new TestCaseData(migrationBehaviourMapping, iniReader, null, "iniWriter");
+        }
+
+        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
+        {
+            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
         }
     }
 }

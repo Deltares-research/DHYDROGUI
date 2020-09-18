@@ -20,18 +20,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             var fixture = new Fixture();
 
-            GeneralStructureWeirFormula formula = 
+            GeneralStructureWeirFormula formula =
                 fixture.Build<GeneralStructureWeirFormula>()
                        .With(f => f.HorizontalDoorOpeningWidthTimeSeries, new TimeSeries())
                        .With(f => f.LowerEdgeLevelTimeSeries, new TimeSeries())
                        .Create();
-            var weir = new Weir2D { WeirFormula = formula };
+            var weir = new Weir2D {WeirFormula = formula};
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
             {
                 // Call
-                var viewModel = 
-                    new GeneralStructureViewModel(formula, 
+                var viewModel =
+                    new GeneralStructureViewModel(formula,
                                                   weirPropertiesViewModel);
 
                 // Assert
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 // Call | Assert
                 void Call() => new GeneralStructureViewModel(null, weirPropertiesViewModel);
 
-                var exception = Assert.Throws<System.ArgumentNullException>(Call);
+                var exception = Assert.Throws<ArgumentNullException>(Call);
                 Assert.That(exception.ParamName, Is.EqualTo("formula"));
             }
         }
@@ -93,97 +93,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new GeneralStructureWeirFormula();
             void Call() => new GeneralStructureViewModel(formula, null);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("weirPropertiesViewModel"));
-        }
-
-        private IEnumerable<TestCaseData> GetPropertySetData()
-        {
-            // Stream fields
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Upstream1Width = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.Upstream1Width ?? double.NaN),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.WidthStructureLeftSide),
-                                          nameof(GeneralStructureViewModel.Upstream1Width));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Upstream2Width = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.Upstream2Width ?? double.NaN),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.WidthLeftSideOfStructure),
-                                          nameof(GeneralStructureViewModel.Upstream2Width));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Upstream1Level= v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.Upstream1Level),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.BedLevelLeftSideStructure),
-                                          nameof(GeneralStructureViewModel.Upstream1Level));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Upstream2Level = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.Upstream2Level),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.BedLevelLeftSideOfStructure),
-                                          nameof(GeneralStructureViewModel.Upstream2Level));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Downstream1Width = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.Downstream1Width ?? double.NaN),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.WidthStructureRightSide),
-                                          nameof(GeneralStructureViewModel.Downstream1Width));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Downstream2Width = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.Downstream2Width ?? double.NaN),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.WidthRightSideOfStructure),
-                                          nameof(GeneralStructureViewModel.Downstream2Width));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Downstream1Level= v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.Downstream1Level),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.BedLevelRightSideStructure),
-                                          nameof(GeneralStructureViewModel.Downstream1Level));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Downstream2Level = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.Downstream2Level),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.BedLevelRightSideOfStructure),
-                                          nameof(GeneralStructureViewModel.Downstream2Level));
-
-            // Coefficients
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.FreeGateFlowPositive = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.FreeGateFlowPositive),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.PositiveFreeGateFlow),
-                                          nameof(GeneralStructureViewModel.FreeGateFlowPositive));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.FreeGateFlowNegative = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.FreeGateFlowNegative),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.NegativeFreeGateFlow),
-                                          nameof(GeneralStructureViewModel.FreeGateFlowNegative));
-
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.DrownedGateFlowPositive = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.DrownedGateFlowPositive),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.PositiveDrownedGateFlow),
-                                          nameof(GeneralStructureViewModel.DrownedGateFlowPositive));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.DrownedGateFlowNegative = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.DrownedGateFlowNegative),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.NegativeDrownedGateFlow),
-                                          nameof(GeneralStructureViewModel.DrownedGateFlowNegative));
-
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.FreeWeirFlowPositive = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.FreeWeirFlowPositive),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.PositiveFreeWeirFlow),
-                                          nameof(GeneralStructureViewModel.FreeWeirFlowPositive));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.FreeWeirFlowNegative = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.FreeWeirFlowNegative),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.NegativeFreeWeirFlow),
-                                          nameof(GeneralStructureViewModel.FreeWeirFlowNegative));
-
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.DrownedWeirFlowPositive = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.DrownedWeirFlowPositive),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.PositiveDrownedWeirFlow),
-                                          nameof(GeneralStructureViewModel.DrownedWeirFlowPositive));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.DrownedWeirFlowNegative = v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.DrownedWeirFlowNegative),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.NegativeDrownedWeirFlow),
-                                          nameof(GeneralStructureViewModel.DrownedWeirFlowNegative));
-
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.ContractionCoefficientPositive= v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.ContractionCoefficientPositive),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.PositiveContractionCoefficient),
-                                          nameof(GeneralStructureViewModel.ContractionCoefficientPositive));
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.ContractionCoefficientNegative= v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.ContractionCoefficientNegative),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.NegativeContractionCoefficient),
-                                          nameof(GeneralStructureViewModel.ContractionCoefficientNegative));
-
-            // Extra Resistance
-            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.ExtraResistance= v), 
-                                          new Func<GeneralStructureViewModel,   double>((f)    => f.ExtraResistance),
-                                          new Func<GeneralStructureWeirFormula, double>((f)    => f.ExtraResistance),
-                                          nameof(GeneralStructureViewModel.ExtraResistance));
         }
 
         [Test]
@@ -197,13 +108,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var fixture = new Fixture();
 
             var value = fixture.Create<double>();
-            GeneralStructureWeirFormula formula = 
+            GeneralStructureWeirFormula formula =
                 fixture.Build<GeneralStructureWeirFormula>()
                        .With(f => f.HorizontalDoorOpeningWidthTimeSeries, new TimeSeries())
                        .With(f => f.LowerEdgeLevelTimeSeries, new TimeSeries())
                        .Create();
-            var weir = new Weir2D { WeirFormula = formula };
-            
+            var weir = new Weir2D {WeirFormula = formula};
+
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
@@ -238,13 +149,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var fixture = new Fixture();
 
             var value = fixture.Create<double>();
-            GeneralStructureWeirFormula formula = 
+            GeneralStructureWeirFormula formula =
                 fixture.Build<GeneralStructureWeirFormula>()
                        .With(f => f.HorizontalDoorOpeningWidthTimeSeries, new TimeSeries())
                        .With(f => f.LowerEdgeLevelTimeSeries, new TimeSeries())
                        .Create();
-            var weir = new Weir2D { WeirFormula = formula };
-            
+            var weir = new Weir2D {WeirFormula = formula};
+
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
@@ -266,6 +177,95 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 // Clean up
                 viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
             }
+        }
+
+        private IEnumerable<TestCaseData> GetPropertySetData()
+        {
+            // Stream fields
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Upstream1Width = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.Upstream1Width ?? double.NaN),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.WidthStructureLeftSide),
+                                          nameof(GeneralStructureViewModel.Upstream1Width));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Upstream2Width = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.Upstream2Width ?? double.NaN),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.WidthLeftSideOfStructure),
+                                          nameof(GeneralStructureViewModel.Upstream2Width));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Upstream1Level = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.Upstream1Level),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.BedLevelLeftSideStructure),
+                                          nameof(GeneralStructureViewModel.Upstream1Level));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Upstream2Level = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.Upstream2Level),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.BedLevelLeftSideOfStructure),
+                                          nameof(GeneralStructureViewModel.Upstream2Level));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Downstream1Width = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.Downstream1Width ?? double.NaN),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.WidthStructureRightSide),
+                                          nameof(GeneralStructureViewModel.Downstream1Width));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Downstream2Width = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.Downstream2Width ?? double.NaN),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.WidthRightSideOfStructure),
+                                          nameof(GeneralStructureViewModel.Downstream2Width));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Downstream1Level = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.Downstream1Level),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.BedLevelRightSideStructure),
+                                          nameof(GeneralStructureViewModel.Downstream1Level));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Downstream2Level = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.Downstream2Level),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.BedLevelRightSideOfStructure),
+                                          nameof(GeneralStructureViewModel.Downstream2Level));
+
+            // Coefficients
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.FreeGateFlowPositive = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.FreeGateFlowPositive),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.PositiveFreeGateFlow),
+                                          nameof(GeneralStructureViewModel.FreeGateFlowPositive));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.FreeGateFlowNegative = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.FreeGateFlowNegative),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.NegativeFreeGateFlow),
+                                          nameof(GeneralStructureViewModel.FreeGateFlowNegative));
+
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.DrownedGateFlowPositive = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.DrownedGateFlowPositive),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.PositiveDrownedGateFlow),
+                                          nameof(GeneralStructureViewModel.DrownedGateFlowPositive));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.DrownedGateFlowNegative = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.DrownedGateFlowNegative),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.NegativeDrownedGateFlow),
+                                          nameof(GeneralStructureViewModel.DrownedGateFlowNegative));
+
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.FreeWeirFlowPositive = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.FreeWeirFlowPositive),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.PositiveFreeWeirFlow),
+                                          nameof(GeneralStructureViewModel.FreeWeirFlowPositive));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.FreeWeirFlowNegative = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.FreeWeirFlowNegative),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.NegativeFreeWeirFlow),
+                                          nameof(GeneralStructureViewModel.FreeWeirFlowNegative));
+
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.DrownedWeirFlowPositive = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.DrownedWeirFlowPositive),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.PositiveDrownedWeirFlow),
+                                          nameof(GeneralStructureViewModel.DrownedWeirFlowPositive));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.DrownedWeirFlowNegative = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.DrownedWeirFlowNegative),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.NegativeDrownedWeirFlow),
+                                          nameof(GeneralStructureViewModel.DrownedWeirFlowNegative));
+
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.ContractionCoefficientPositive = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.ContractionCoefficientPositive),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.PositiveContractionCoefficient),
+                                          nameof(GeneralStructureViewModel.ContractionCoefficientPositive));
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.ContractionCoefficientNegative = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.ContractionCoefficientNegative),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.NegativeContractionCoefficient),
+                                          nameof(GeneralStructureViewModel.ContractionCoefficientNegative));
+
+            // Extra Resistance
+            yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.ExtraResistance = v),
+                                          new Func<GeneralStructureViewModel, double>((f) => f.ExtraResistance),
+                                          new Func<GeneralStructureWeirFormula, double>((f) => f.ExtraResistance),
+                                          nameof(GeneralStructureViewModel.ExtraResistance));
         }
     }
 }

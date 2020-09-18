@@ -242,10 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             string ruleName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(lookupTableElement.id);
             List<DateRecord2DataXML> records = (lookupTableElement.Item as TableLookupTableXML)?.record;
 
-            var rule = new HydraulicRule
-            {
-                Name = ruleName
-            };
+            var rule = new HydraulicRule {Name = ruleName};
 
             if (records != null)
             {

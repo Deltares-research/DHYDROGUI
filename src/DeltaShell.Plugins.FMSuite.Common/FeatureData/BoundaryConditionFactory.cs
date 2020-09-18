@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     {
         public abstract bool SupportsMultipleConditionsPerSet { get; }
 
-        public abstract IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D, 
+        public abstract IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D,
                                                                    string quantity,
                                                                    BoundaryConditionDataType dataType,
                                                                    string quantityType = null);

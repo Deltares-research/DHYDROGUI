@@ -1,7 +1,6 @@
 ﻿using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
-using NetTopologySuite.IO;
 using NUnit.Framework;
 using SharpTestsEx;
 
@@ -10,8 +9,6 @@ namespace DelftTools.Hydro.Tests
     [TestFixture]
     public class HydroRegionTest
     {
-        private static readonly WKTReader wktReader = new WKTReader();
-
         [Test]
         public void GetAllRegions()
         {

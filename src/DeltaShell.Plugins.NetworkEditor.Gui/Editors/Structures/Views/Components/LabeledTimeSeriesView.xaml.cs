@@ -18,19 +18,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         /// <summary>
         /// The structure name property
         /// </summary>
-        public static readonly DependencyProperty StructureNameProperty = 
-            DependencyProperty.Register(nameof(StructureName), 
-                                        typeof(string), 
-                                        typeof(LabeledTimeSeriesView), 
+        public static readonly DependencyProperty StructureNameProperty =
+            DependencyProperty.Register(nameof(StructureName),
+                                        typeof(string),
+                                        typeof(LabeledTimeSeriesView),
                                         new PropertyMetadata(default(string)));
 
         /// <summary>
         /// The label property
         /// </summary>
-        public static readonly DependencyProperty LabelProperty = 
-            DependencyProperty.Register(nameof(Label), 
-                                        typeof(string), 
-                                        typeof(LabeledTimeSeriesView), 
+        public static readonly DependencyProperty LabelProperty =
+            DependencyProperty.Register(nameof(Label),
+                                        typeof(string),
+                                        typeof(LabeledTimeSeriesView),
                                         new PropertyMetadata(default(string)));
 
         /// <summary>
@@ -55,19 +55,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         /// <summary>
         /// The time series property
         /// </summary>
-        public static readonly DependencyProperty TimeSeriesProperty = 
-            DependencyProperty.Register(nameof(TimeSeries), 
-                                        typeof(TimeSeries), 
-                                        typeof(LabeledTimeSeriesView), 
+        public static readonly DependencyProperty TimeSeriesProperty =
+            DependencyProperty.Register(nameof(TimeSeries),
+                                        typeof(TimeSeries),
+                                        typeof(LabeledTimeSeriesView),
                                         new PropertyMetadata(default(TimeSeries)));
 
         /// <summary>
         /// The is time series property
         /// </summary>
-        public static readonly DependencyProperty IsTimeSeriesProperty = 
+        public static readonly DependencyProperty IsTimeSeriesProperty =
             DependencyProperty.Register(nameof(IsTimeSeries),
-                                        typeof(bool), 
-                                        typeof(LabeledTimeSeriesView), 
+                                        typeof(bool),
+                                        typeof(LabeledTimeSeriesView),
                                         new FrameworkPropertyMetadata(default(bool),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
             get => (string) GetValue(StructureNameProperty);
             set => SetValue(StructureNameProperty, value);
         }
-        
+
         /// <summary>
         /// Gets or sets the label of this <see cref="LabeledButton"/>.
         /// </summary>
@@ -115,7 +115,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
             get => (TimeSeries) GetValue(TimeSeriesProperty);
             set => SetValue(TimeSeriesProperty, value);
         }
-
 
         /// <summary>
         /// Gets or sets the unit of this <see cref="LabeledValueBox"/>.

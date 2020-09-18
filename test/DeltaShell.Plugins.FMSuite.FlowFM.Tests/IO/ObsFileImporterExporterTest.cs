@@ -102,10 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             allPoints.AddRange(pointsGroupA);
             allPoints.AddRange(pointsGroupB);
 
-            var obsFileImporterExporter = new ObsFileImporterExporter<GroupableFeature2DPoint>()
-            {
-                EqualityComparer = new GroupableFeatureComparer<GroupableFeature2DPoint>()
-            };
+            var obsFileImporterExporter = new ObsFileImporterExporter<GroupableFeature2DPoint>() {EqualityComparer = new GroupableFeatureComparer<GroupableFeature2DPoint>()};
 
             try
             {

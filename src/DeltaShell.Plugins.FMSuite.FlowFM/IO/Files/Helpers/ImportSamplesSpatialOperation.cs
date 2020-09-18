@@ -9,9 +9,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
     /// <summary>
     /// Spatial operation that imports the samples.
     /// </summary>
-    /// <seealso cref="ImportSamplesOperation" />
+    /// <seealso cref="ImportSamplesOperation"/>
     public class ImportSamplesSpatialOperation : ImportSamplesOperation
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportSamplesSpatialOperation"/> class.
+        /// </summary>
+        public ImportSamplesSpatialOperation() : base(false)
+        {
+            RelativeSearchCellSize = 1;
+            AveragingMethod = GridCellAveragingMethod.ClosestPoint;
+            InterpolationMethod = SpatialInterpolationMethod.Averaging;
+        }
+
         /// <summary>
         /// Gets or sets the relative search cell size.
         /// </summary>
@@ -26,16 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         /// Gets or sets the interpolation method.
         /// </summary>
         public SpatialInterpolationMethod InterpolationMethod { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ImportSamplesSpatialOperation"/> class.
-        /// </summary>
-        public ImportSamplesSpatialOperation() : base(false)
-        {
-            RelativeSearchCellSize = 1;
-            AveragingMethod = GridCellAveragingMethod.ClosestPoint;
-            InterpolationMethod = SpatialInterpolationMethod.Averaging;
-        }
 
         /// <summary>
         /// Creates an <see cref="ImportSamplesOperation"/> with an <see cref="InterpolateOperation"/>.

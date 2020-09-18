@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Assert
                 Assert.IsInstanceOf<FMNetCdfFileFunctionStore>(store);
 
-                string retrievedReferenceDate = ((ICoverage)store.Functions.First()).Time.Attributes["ncRefDate"];
+                string retrievedReferenceDate = ((ICoverage) store.Functions.First()).Time.Attributes["ncRefDate"];
                 Assert.AreEqual(expectedReferenceDate, retrievedReferenceDate);
             }
         }

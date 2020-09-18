@@ -15,13 +15,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
-
         private string outputSnappedFeaturesPath;
 
         private CacheFile cacheFile = null;
 
         public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
 
         /// <summary>
         /// Gets the mdu file.

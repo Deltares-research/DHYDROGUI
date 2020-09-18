@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         private static WaterFlowFMModel GetFMModelWithDefaultSandAndMudFractions()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
+            string mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
 
             var fmModel = new WaterFlowFMModel();
             fmModel.ImportFromMdu(mduPath);

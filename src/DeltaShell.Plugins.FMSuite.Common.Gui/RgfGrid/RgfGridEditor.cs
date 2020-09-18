@@ -188,10 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                 IList<string> messageBoxTexts = GetMessageBoxTextsWhenInvalidGridType(validGridType);
                 if (MessageBox.Show(messageBoxTexts[0], messageBoxTexts[1], MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
                 {
-                    var config = new RgfConfig()
-                    {
-                        AdditionalGeometryPaths = copiedAdditionalPaths.Select(Path.GetFileName).ToList()
-                    };
+                    var config = new RgfConfig() {AdditionalGeometryPaths = copiedAdditionalPaths.Select(Path.GetFileName).ToList()};
 
                     config.AddGridFileNames(new Tuple<string, string>(copies[0].FileName,
                                                                       copies[0].Type == GridType.FM ? RgfConfig.FMGridKeyword : RgfConfig.GrdKeyword));

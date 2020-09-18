@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -19,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         {
             void Call() => WavmFunctionStoreMigrationHelper.DisconnectWavmFunctionStores(null, Substitute.For<ILogHandler>());
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("waveModel"));
         }
 
@@ -38,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 // Associate wavm file function store with the outer domain
                 const string functionStoreName = "someName";
-                var functionStore = new WavmFileFunctionStore(ncPath) { Name = functionStoreName };
+                var functionStore = new WavmFileFunctionStore(ncPath) {Name = functionStoreName};
                 var dataItem = new DataItem(functionStore, DataItemRole.Output, WaveModel.WavmStoreDataItemTag + model.OuterDomain.Name);
                 model.DataItems.Add(dataItem);
 
@@ -73,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 // Associate wavm file function store with the outer domain
                 const string functionStoreName = "someName";
-                var functionStore = new WavmFileFunctionStore(ncPath) { Name = functionStoreName };
+                var functionStore = new WavmFileFunctionStore(ncPath) {Name = functionStoreName};
                 var dataItem = new DataItem(functionStore, DataItemRole.Output, WaveModel.WavmStoreDataItemTag + model.OuterDomain.Name);
                 model.DataItems.Add(dataItem);
 

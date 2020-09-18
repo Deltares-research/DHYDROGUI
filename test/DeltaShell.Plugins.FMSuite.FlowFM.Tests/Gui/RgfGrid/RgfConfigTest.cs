@@ -146,10 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
         public void GivenARgfConfigWithNullAdditionalGridPaths_WhenItIsConvertedToDelftIniCategories_ThenItThrowsAnInvalidOperationException()
         {
             // Given
-            var config = new RgfConfig()
-            {
-                AdditionalGeometryPaths = null
-            };
+            var config = new RgfConfig() {AdditionalGeometryPaths = null};
 
             // When
             void testAction()
@@ -170,10 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
         public void GivenARgfConfigWithANullGridFilePaths_WhenItIsConvertedToDelftIniCategories_ThenItThrowsAnInvalidOperationException()
         {
             // Given
-            var config = new RgfConfig()
-            {
-                GridFileNames = null
-            };
+            var config = new RgfConfig() {GridFileNames = null};
 
             // When
             void testAction()

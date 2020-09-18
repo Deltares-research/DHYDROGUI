@@ -29,7 +29,6 @@ using DeltaShell.Plugins.ProjectExplorer;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using SharpTestsEx;
-using CategoryAttribute = NUnit.Framework.CategoryAttribute;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 {
@@ -188,7 +187,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ConnectOutput_RestartFiles_ReconnectsTheRestartFiles()
         {
             using (var tempDir = new TemporaryDirectory())
@@ -900,7 +899,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // Arrange
             var model = new RealTimeControlModel();
-            
+
             // Act, Assert
             Assert.IsFalse(model.UseRestart);
         }
@@ -909,10 +908,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void UseRestart_WhenARestartFileHasBeenSetAsInitialCondition_ShouldReturnTrue()
         {
             // Arrange
-            var model = new RealTimeControlModel
-            {
-                RestartInput = new RealTimeControlRestartFile("test", "test")
-            };
+            var model = new RealTimeControlModel {RestartInput = new RealTimeControlRestartFile("test", "test")};
 
             // Act, Assert
             Assert.IsTrue(model.UseRestart);

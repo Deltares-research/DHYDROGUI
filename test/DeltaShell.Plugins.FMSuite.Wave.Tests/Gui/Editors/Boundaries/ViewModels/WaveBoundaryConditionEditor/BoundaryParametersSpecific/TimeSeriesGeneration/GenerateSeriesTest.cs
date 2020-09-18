@@ -153,7 +153,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(selectedFunction.TimeArgument.AllValues.Count, Is.EqualTo(25));
 
             foreach (IWaveEnergyFunction<TSpreading> waveEnergyFunction in others)
+            {
                 VerifyNotCalled(waveEnergyFunction);
+            }
         }
 
         private static void AllCalled(IWaveEnergyFunction<TSpreading> selectedFunction, IEnumerable<IWaveEnergyFunction<TSpreading>> others)
@@ -161,7 +163,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(selectedFunction.TimeArgument.AllValues.Count, Is.EqualTo(25));
 
             foreach (IWaveEnergyFunction<TSpreading> waveEnergyFunction in others)
+            {
                 Assert.That(waveEnergyFunction.TimeArgument.AllValues.Count, Is.EqualTo(25));
+            }
         }
 
         private static void NoCalled(IWaveEnergyFunction<TSpreading> selectedFunction,
@@ -170,7 +174,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             VerifyNotCalled(selectedFunction);
 
             foreach (IWaveEnergyFunction<TSpreading> waveEnergyFunction in others)
+            {
                 VerifyNotCalled(waveEnergyFunction);
+            }
         }
 
         private static IEnumerable<TestCaseData> GetExecuteGenerateTimeSeriesData()

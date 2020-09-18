@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // When
             var reader = new BndExtForceFile();
             string embankmentFilePath = Path.Combine(Directory.GetParent(boundaryFilePath).FullName, "Embankment01_bnk.pliz");
-            string warningMessage = $"Embankment file '{embankmentFilePath}' with only 1 point detected and it will not be imported.";
+            var warningMessage = $"Embankment file '{embankmentFilePath}' with only 1 point detected and it will not be imported.";
             TestHelper.AssertAtLeastOneLogMessagesContains(() => reader.Read(boundaryFilePath, modelDefinition, boundaryFilePath), warningMessage);
 
             // Then

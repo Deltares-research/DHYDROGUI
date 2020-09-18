@@ -71,10 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             filePath = TestHelper.CreateLocalCopy(filePath);
 
             //Import
-            var importer = new BcmFileImporter
-            {
-                DeleteDataBeforeImport = true
-            };
+            var importer = new BcmFileImporter {DeleteDataBeforeImport = true};
 
             var model = new WaterFlowFMModel();
             model.Name = "newname";
@@ -109,10 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             filePath = TestHelper.CreateLocalCopy(filePath);
 
             //Import
-            var importer = new BcmFileImporter
-            {
-                DeleteDataBeforeImport = true
-            };
+            var importer = new BcmFileImporter {DeleteDataBeforeImport = true};
 
             var model = new WaterFlowFMModel();
             model.Name = "newname";
@@ -197,10 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             filePath = TestHelper.CreateLocalCopy(filePath);
 
             //Import
-            var importer = new BcmFileImporter
-            {
-                DeleteDataBeforeImport = true
-            };
+            var importer = new BcmFileImporter {DeleteDataBeforeImport = true};
 
             var myobject = new object();
             importer.ImportItem(filePath, myobject);

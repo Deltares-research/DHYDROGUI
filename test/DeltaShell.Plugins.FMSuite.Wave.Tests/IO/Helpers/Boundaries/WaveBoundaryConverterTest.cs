@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("mdwDirPath"));
         }
-        
+
         [Test]
         public void Convert_LogHandlerNull_ThrowsArgumentNullException()
         {
@@ -728,10 +728,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<T>(Arg.Any<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>())
                                       .Returns(new SpatiallyVaryingDataComponent<ConstantParameters<T>>());
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
-                                                            PeriodImportExportType.Mean, 
-                                                            mdwValues, 
-                                                            definition:KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
+                                                            PeriodImportExportType.Mean,
+                                                            mdwValues,
+                                                            definition: KnownWaveBoundariesFileConstants.OrientationDefinitionType);
             category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
             category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
 
@@ -771,8 +771,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<T>(Arg.Any<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>())
                                       .Returns(new SpatiallyVaryingDataComponent<ConstantParameters<T>>());
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
-                                                            PeriodImportExportType.Mean, 
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
+                                                            PeriodImportExportType.Mean,
                                                             mdwValues);
             category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
 
@@ -812,8 +812,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             importDataComponentFactory.CreateSpatiallyVaryingFileBasedComponent(Arg.Any<IEnumerable<Tuple<SupportPoint, string>>>())
                                       .Returns(new SpatiallyVaryingDataComponent<FileBasedParameters>());
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
-                                                            PeriodImportExportType.Mean, 
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
+                                                            PeriodImportExportType.Mean,
                                                             mdwValues,
                                                             "from file");
             category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
@@ -837,7 +837,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             logHandler.Received().ReportWarning(string.Format(expectedInvalidDistanceMessage, invalidDistance));
             importDataComponentFactory.Received().CreateSpatiallyVaryingFileBasedComponent(Arg.Is<IEnumerable<Tuple<SupportPoint, string>>>(a => !a.Any()));
         }
-        
+
         [Test]
         [TestCaseSource(nameof(InvalidDistanceTestCases))]
         public void Convert_InvalidDistanceAndTimeDependentBoundary_ExpectedResults(double invalidDistance)
@@ -854,8 +854,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             importDataComponentFactory.CreateSpatiallyVaryingTimeDependentComponent<T>(Arg.Any<IEnumerable<Tuple<SupportPoint, IWaveEnergyFunction<T>>>>())
                                       .Returns(new SpatiallyVaryingDataComponent<TimeDependentParameters<T>>());
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
-                                                            PeriodImportExportType.Mean, 
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
+                                                            PeriodImportExportType.Mean,
                                                             mdwValues);
             category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
 
@@ -1162,15 +1162,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         private static Dictionary<string, List<IFunction>> CreateUniformTimeSeriesData(BcwTestValues bcwValues) =>
-            new Dictionary<string, List<IFunction>>
-            {
-                {
-                    "boundary_name", new List<IFunction>
-                    {
-                        CreateTimeSeriesFunction(bcwValues, 0)
-                    }
-                }
-            };
+            new Dictionary<string, List<IFunction>> {{"boundary_name", new List<IFunction> {CreateTimeSeriesFunction(bcwValues, 0)}}};
 
         private static Dictionary<string, List<IFunction>> GetSpatiallyVaryingTimeSeries(BcwTestValues bcwValues) =>
             new Dictionary<string, List<IFunction>>

@@ -7,6 +7,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 {
     public partial class MeteoFileSelectionControl : UserControl, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public MeteoFileSelectionControl()
         {
             InitializeComponent();
@@ -39,6 +41,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             }
         }
 
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private void selMeteoBtn_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -47,13 +54,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                                ? ImportIntoDirectory(openFileDialog1.FileName)
                                : openFileDialog1.FileName;
             }
-        }
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

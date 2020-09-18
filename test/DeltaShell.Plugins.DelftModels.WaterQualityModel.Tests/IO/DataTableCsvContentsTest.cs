@@ -63,10 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             dataTableFileContents.DataRows.Add(locationA);
 
             var locationB = new LocationData {Name = "B"};
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>
-            {
-                {"Not_in_SubstancesInFile", "1.1"}
-            };
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string> {{"Not_in_SubstancesInFile", "1.1"}};
             dataTableFileContents.DataRows.Add(locationB);
 
             // call
@@ -172,10 +169,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             dataTableFileContents.DataRows.Add(locationA);
 
             var locationB = new LocationData {Name = "B"};
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>
-            {
-                {"haha", "1.1"}
-            };
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string> {{"haha", "1.1"}};
             dataTableFileContents.DataRows.Add(locationB);
 
             // call
@@ -199,17 +193,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Name = "first"
             };
 
-            var locationData = new LocationData()
-            {
-                Name = "loc 1"
-            };
+            var locationData = new LocationData() {Name = "loc 1"};
 
             // add one timeslot
             locationData.TimeDependentSubstanceData.Add(new DateTime(1999, 12, 16, 0, 0, 0),
-                                                        new Dictionary<string, string>()
-                                                        {
-                                                            {"NH4", "10"}
-                                                        });
+                                                        new Dictionary<string, string>() {{"NH4", "10"}});
             dataTableFileContents.DataRows.Add(locationData);
 
             string content = dataTableFileContents.CreateDataTableDelwaqFormat();

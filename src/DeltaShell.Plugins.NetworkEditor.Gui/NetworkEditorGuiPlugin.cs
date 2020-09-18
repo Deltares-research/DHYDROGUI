@@ -420,9 +420,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void OnDocumentViewAdded(IView view)
         {
             var coverageView = view as CoverageView;
-            if (coverageView == null && view is ICompositeView)
+            if (coverageView == null && view is ICompositeView compositeView)
             {
-                coverageView = ((ICompositeView) view).ChildViews.OfType<CoverageView>().FirstOrDefault();
+                coverageView = compositeView.ChildViews.OfType<CoverageView>().FirstOrDefault();
             }
 
             if (coverageView != null)
@@ -435,18 +435,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
                 IMap map = mapView.Map;
 
-                if (coverageView.Coverage is IFeatureCoverage)
+                if (coverageView.Coverage is IFeatureCoverage featureCoverage && !map.Layers.OfType<HydroRegionMapLayer>().Any())
                 {
                     // add region
-                    var featureCoverage = (IFeatureCoverage) coverageView.Coverage;
-
-                    if (!map.Layers.OfType<HydroRegionMapLayer>().Any())
+                    IRegion region = GetRegionForFeatureCoverage(featureCoverage);
+                    if (region != null)
                     {
-                        IRegion region = GetRegionForFeatureCoverage(featureCoverage);
-                        if (region != null)
-                        {
-                            AddRegionLayer(region, map);
-                        }
+                        AddRegionLayer(region, map);
                     }
                 }
             }
@@ -496,7 +491,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private IHydroRegion GetRegionFromActiveView()
         {
             IView activeView = Gui.DocumentViews.ActiveView;
-            if (activeView == null || activeView.Data == null)
+            if (activeView?.Data == null)
             {
                 return null; // strange bug
             }
@@ -508,8 +503,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (activeView is MapView || activeView is ProjectItemMapView)
             {
                 // when region is dragged onto an opened mapview
-                MapView mapView = activeView is ProjectItemMapView
-                                      ? ((ProjectItemMapView) activeView).MapView
+                MapView mapView = activeView is ProjectItemMapView view 
+                                      ? view.MapView
                                       : (MapView) activeView;
 
                 HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);

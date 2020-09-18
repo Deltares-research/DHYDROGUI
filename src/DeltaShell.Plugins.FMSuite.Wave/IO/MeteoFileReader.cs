@@ -10,7 +10,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     /// <summary>
     /// Reader for meteo files (e.g. *.wnd).
     /// </summary>
-    /// <seealso cref="NGHSFileBase"/>.
+    /// <seealso cref="NGHSFileBase"/>
+    /// .
     public class MeteoFileReader : NGHSFileBase
     {
         /// <summary>

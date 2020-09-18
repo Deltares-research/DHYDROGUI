@@ -61,16 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(exception.ParamName, Is.EqualTo("property"));
         }
 
-        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
-        {
-            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
-        }
-
         [Test]
         public void MigrateProperty_NotAffected_ReturnsUnchangedProperty()
         {
@@ -95,7 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
             VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
         }
-
 
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -270,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 const string propertyComment = "Comment";
                 var property = new DelftIniProperty(propertyName, oldPath, propertyComment);
 
-                var behaviour = new NoDependentsFileMigrateBehaviour(propertyName, 
+                var behaviour = new NoDependentsFileMigrateBehaviour(propertyName,
                                                                      tempDir.Path,
                                                                      goalDir);
 
@@ -310,6 +299,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(property.Comment, Is.EqualTo(comment));
 
             VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+        }
+
+        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
+        {
+            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
         }
     }
 }

@@ -10,19 +10,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// <see cref="FileMigrateBehaviour"/> defines the base migration of a
     /// property describing a path to a file. When the file at the specified property
     /// exists it is migrated, otherwise a warning is logged.
-    ///
     /// Implementation of the actual file migration is left to the specific base class.
     /// </summary>
-    /// <seealso cref="IMigrationBehaviour" />
+    /// <seealso cref="IMigrationBehaviour"/>
     public abstract class FileMigrateBehaviour : IMigrationBehaviour
     {
-        private readonly string expectedKey;
-        private readonly string relativeDirectory;
-
         /// <summary>
         /// The directory to which files are migrated.
         /// </summary>
         protected readonly string GoalDirectory;
+
+        private readonly string expectedKey;
+        private readonly string relativeDirectory;
 
         /// <summary>
         /// Creates a new <see cref="NoDependentsFileMigrateBehaviour"/>.
@@ -50,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         {
             Ensure.NotNull(property, nameof(property));
 
-            if (property.Name != expectedKey || 
+            if (property.Name != expectedKey ||
                 property.Value.Trim() == string.Empty)
             {
                 return;

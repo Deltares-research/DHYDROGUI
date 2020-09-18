@@ -29,6 +29,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Wind
             SpiderWeb
         }
 
+        private const string UniformSeriesFilter = "uniform series (*.wnd)|*.wnd";
+        private const string UniformXSeriesFilter = "uniform x series (*.wnd)|*.wnd";
+        private const string UniformYSeriesFilter = "uniform y series (*.wnd)|*.wnd";
+        private const string UniformXYSeriesFilter = "uniform xy series (*.wnd)|*.wnd";
+        private const string UniformPolarSeriesFilter = "uniform polar series (*.wnd)|*.wnd";
+        private const string XComponentArcInfoFilter = "x-component arcinfo (*.amu)|*.amu";
+        private const string YComponentArcInfoFilter = "y-component arcinfo (*.amv)|*.amv";
+        private const string PressureComponentArcInfoFilter = "pressure arcinfo (*.amp)|*.amp";
+        private const string MeteoCurviGridFilter = "meteo curvilinear grid (*.apwxwy)|*.apwxwy";
+        private const string SpiderWebFileFilter = "spider web wind file (*.spw)|*.spw";
+
+        private WindDefinitionType type;
+
+        public FileBasedWindDefinition()
+        {
+            WindFiles = new Dictionary<FileBasedWindQuantity, ExtForceValue>();
+            Type = WindDefinitionType.WindXWindY;
+        }
+
+        public FileBasedWindDefinition(WindDefinitionType type)
+        {
+            WindFiles = new Dictionary<FileBasedWindQuantity, ExtForceValue>();
+            Type = type;
+        }
+
         public static IDictionary<string, int> WindFileTypes { get; } = new Dictionary<string, int>
         {
             {UniformSeriesFilter, 1},
@@ -100,31 +125,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Wind
                     }
                 }
             };
-
-        private const string UniformSeriesFilter = "uniform series (*.wnd)|*.wnd";
-        private const string UniformXSeriesFilter = "uniform x series (*.wnd)|*.wnd";
-        private const string UniformYSeriesFilter = "uniform y series (*.wnd)|*.wnd";
-        private const string UniformXYSeriesFilter = "uniform xy series (*.wnd)|*.wnd";
-        private const string UniformPolarSeriesFilter = "uniform polar series (*.wnd)|*.wnd";
-        private const string XComponentArcInfoFilter = "x-component arcinfo (*.amu)|*.amu";
-        private const string YComponentArcInfoFilter = "y-component arcinfo (*.amv)|*.amv";
-        private const string PressureComponentArcInfoFilter = "pressure arcinfo (*.amp)|*.amp";
-        private const string MeteoCurviGridFilter = "meteo curvilinear grid (*.apwxwy)|*.apwxwy";
-        private const string SpiderWebFileFilter = "spider web wind file (*.spw)|*.spw";
-
-        private WindDefinitionType type;
-
-        public FileBasedWindDefinition()
-        {
-            WindFiles = new Dictionary<FileBasedWindQuantity, ExtForceValue>();
-            Type = WindDefinitionType.WindXWindY;
-        }
-
-        public FileBasedWindDefinition(WindDefinitionType type)
-        {
-            WindFiles = new Dictionary<FileBasedWindQuantity, ExtForceValue>();
-            Type = type;
-        }
 
         public WindDefinitionType Type
         {

@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             var dateTime = new DateTime(2000, 1, 1, 0, 0, 0);
             // create network
             INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
-            
+
             //IFeatureCoverage featureCoverage = new FeatureCoverage(); { HydroNetwork = network };
             var featureCoverage = new FeatureCoverage("Test");
             IVariable timeVariable = new Variable<DateTime>("time");

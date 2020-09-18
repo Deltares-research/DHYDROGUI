@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
@@ -41,14 +40,12 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
-using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
-using SharpMap.SpatialOperations;
 using SharpMap.UI.Tools;
 using Control = System.Windows.Controls.Control;
 
@@ -304,7 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel { ShowModelRunConsole = true };
+            var model = new WaterFlowFMModel {ShowModelRunConsole = true};
             model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
@@ -397,7 +394,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel { ShowModelRunConsole = true };
+            var model = new WaterFlowFMModel {ShowModelRunConsole = true};
             model.ImportFromMdu(mduPath);
 
             ActivityRunner.RunActivity(model);
@@ -890,7 +887,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.That(File.Exists(mduFilePath));
                 // 2. Prepare Test Project
                 using (var gui = new DeltaShellGui())
-                using(var fmModel = new WaterFlowFMModel())
+                using (var fmModel = new WaterFlowFMModel())
                 {
                     IApplication app = gui.Application;
                     // Load app plugins
@@ -906,21 +903,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
 
                     TimeSeries hisTimeSerie = fmModel.OutputHisFileStore.Functions
-                                                 .OfType<TimeSeries>()
-                                                 .FirstOrDefault();
+                                                     .OfType<TimeSeries>()
+                                                     .FirstOrDefault();
                     Assert.That(hisTimeSerie, Is.Not.Null, "No timeserie was found.");
 
                     FileBasedFeatureCoverage hisCoverage = fmModel.OutputHisFileStore.Functions
-                                                               .OfType<FileBasedFeatureCoverage>()
-                                                               .FirstOrDefault();
+                                                                  .OfType<FileBasedFeatureCoverage>()
+                                                                  .FirstOrDefault();
                     Assert.That(hisCoverage, Is.Not.Null, "No output coverage was found.");
 
                     // Simulate behaviour what normally will be done if you select observation cross section and then query timeseries
                     IFunction hisTimeSerieForObsCrossSection = hisCoverage.GetTimeSeries(fmModel.Area.ObservationCrossSections.FirstOrDefault());
                     Assert.That(hisCoverage, Is.Not.Null, "No output coverage for the observation cross section was found.");
                     hisTimeSerieForObsCrossSection.Parent = hisCoverage;
-                    var list = new List<IFunction>{hisTimeSerieForObsCrossSection};
-                    
+                    var list = new List<IFunction> {hisTimeSerieForObsCrossSection};
 
                     // 4. Do test action
                     Action mainWindowShown = () =>

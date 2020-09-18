@@ -37,7 +37,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             string parameterName = value.GetParameterName();
 
-            var concatNames = new List<string>(new[] {feature, dataItemName, parameterName});
+            var concatNames = new List<string>(new[]
+            {
+                feature,
+                dataItemName,
+                parameterName
+            });
 
             concatNames.RemoveAll(s => s == null);
 
@@ -102,7 +107,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                           parameterName, itemString));
             }
 
-            return new[] {dataItem};
+            return new[]
+            {
+                dataItem
+            };
         }
 
         private IFeature GetAreaFeature(string featureCategory, string featureName)
@@ -142,7 +150,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (category == GridPropertyName)
             {
-                return new[] {grid};
+                return new[]
+                {
+                    grid
+                };
             }
 
             return !string.IsNullOrEmpty(itemName)

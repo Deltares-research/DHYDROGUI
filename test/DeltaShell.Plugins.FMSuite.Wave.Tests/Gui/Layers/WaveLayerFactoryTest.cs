@@ -238,10 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
             var grid = new CurvilinearGrid(1, 1,
                                            xCoordinates, yCoordinates,
-                                           string.Empty)
-            {
-                Name = gridName
-            };
+                                           string.Empty) {Name = gridName};
 
             var factory = new WaveLayerFactory();
 

@@ -330,10 +330,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             rule2 = Substitute.For<RuleBase>();
 
             var rootNode = Substitute.For<IBranchNode>();
-            rootNode.GetChildNodes().Returns(new List<IExpressionNode>
-            {
-                new ParameterLeafNode(inputName)
-            });
+            rootNode.GetChildNodes().Returns(new List<IExpressionNode> {new ParameterLeafNode(inputName)});
 
             var expressionTree = new ExpressionTree(rootNode, "", expressionId, expression);
 

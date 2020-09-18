@@ -604,7 +604,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             /* Not include Morphology / Sediment MDUs if UseMorSed has not been selected */
             propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.morphology));
             WaterFlowFMProperty useMorSedProp = properties.FirstOrDefault(md => md.PropertyDefinition.MduPropertyName == "UseMorSed");
-            if (useMorSedProp != null && 
+            if (useMorSedProp != null &&
                 (!config.WriteMorphologySediment || int.TryParse(GetPropertyValue(useMorSedProp, config), out int useMorSed) && useMorSed != 1))
             {
                 propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.sediment));
@@ -779,7 +779,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     for (var i = 0; i < dataColumnWithData.Count; ++i)
                     {
-                        syncedList[i] = (double)dataColumnWithData[i];
+                        syncedList[i] = (double) dataColumnWithData[i];
                     }
                 }
             }
