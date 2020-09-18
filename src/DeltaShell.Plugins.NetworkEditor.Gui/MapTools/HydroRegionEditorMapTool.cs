@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Geometries;
-using SharpMap.Api;
 using SharpMap.UI.Forms;
 using SharpMap.UI.Tools;
 
@@ -25,12 +24,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string EnclosureToolName = "Enclosure tool";
         public const string BridgePillarToolName = "Bridge pillar tool";
 
-        private static bool TopologyRulesEnabledState;
+        private static bool topologyRulesEnabledState;
 
         // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
         private readonly List<IMapTool> mapTools = new List<IMapTool>();
-
-        private IMap map;
 
         public HydroRegionEditorMapTool()
         {
@@ -39,10 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         public override IMapControl MapControl
         {
-            get
-            {
-                return base.MapControl;
-            }
+            get => base.MapControl;
             set
             {
                 if (MapControl != null)
@@ -61,8 +55,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 {
                     AddNetworkEditorTools();
 
-                    map = MapControl.Map;
-
                     var control = (MapControl) MapControl;
                     control.MouseUp += MapControlMouseUp;
                     control.KeyDown += MapControlKeyDown;
@@ -73,10 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         public override bool IsActive
         {
-            get
-            {
-                return true;
-            }
+            get => true;
             set {}
         }
 
@@ -127,7 +116,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private void MapControlKeyDown(object sender, KeyEventArgs e)
         {
-            TopologyRulesEnabledState = TopologyRulesEnabled;
+            topologyRulesEnabledState = TopologyRulesEnabled;
             TopologyRulesEnabled = true;
         }
 
@@ -135,7 +124,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
             // remember topologyrule state; to reset properly. 
             // When tool is active (eg drawing branch) keydown/up should not reset TopologyRulesEnabled
-            TopologyRulesEnabled = TopologyRulesEnabledState;
+            TopologyRulesEnabled = topologyRulesEnabledState;
         }
 
         private void MapControlMouseUp(object sender, MouseEventArgs e)
