@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         [Category(TestCategory.WindowsForms)]
         public void ChangingPumpDirectionToNegativeShouldUpdatePumpViewCorrectly()
         {
-            var pump = new Pump {Branch = new Channel()};
+            var pump = new Pump();
             var pumpView = new PumpView {Data = pump};
 
             var radioDirectionIsNegative = (RadioButton) pumpView.Controls.Find("radioButtonNegative", true)[0];
