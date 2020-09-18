@@ -843,13 +843,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                        || bcs.Feature.Name == supportPointName);
         }
 
-        private static void LogWarningParsePropertyFailed(BcBlockData dataBlock, string propertyName,
-                                                          string propertyValue)
-        {
-            Log.Warn(
-                $"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}: {propertyName} {propertyValue} could not be parsed; omitting dataBlock block.");
-        }
-
         private static string GetFractionNameFromQuantityName(string quantityName)
         {
             return quantityName.Replace(ExtForceQuantNames.ConcentrationAtBound, string.Empty);
@@ -896,6 +889,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     return bc.DataType == forcingTypeDefinition.ForcingType;
             }
         }
+
+        private static string VerticalProfileTypeString(VerticalProfileType type)
+        {
+            if (VerticalDefinitionKeys.Values.Contains(type))
+            {
+                return VerticalDefinitionKeys.First(kvp => kvp.Value == type).Key;
+            }
+
+            throw new NotImplementedException("Vertical profile definition " + type +
+                                              " not supported by bc file writer");
+        }
+
+        private static string VerticalProfileDefinitionString(VerticalProfileDefinition verticalProfile)
+        {
+            if (verticalProfile.Type == VerticalProfileType.Uniform ||
+                verticalProfile.Type == VerticalProfileType.TopBottom)
+            {
+                return null;
+            }
+
+            using (CultureUtils.SwitchToInvariantCulture())
+            {
+                return string.Join(" ", verticalProfile.SortedPointDepths.Select(d => d.ToString()));
+            }
+        }
+
+        #region Parse Datablocks
 
         private static ForcingTypeDefinition ParseForcingType(BcBlockData dataBlock)
         {
@@ -997,31 +1017,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
         }
 
-        private static string VerticalProfileTypeString(VerticalProfileType type)
-        {
-            if (VerticalDefinitionKeys.Values.Contains(type))
-            {
-                return VerticalDefinitionKeys.First(kvp => kvp.Value == type).Key;
-            }
-
-            throw new NotImplementedException("Vertical profile definition " + type +
-                                              " not supported by bc file writer");
-        }
-
-        private static string VerticalProfileDefinitionString(VerticalProfileDefinition verticalProfile)
-        {
-            if (verticalProfile.Type == VerticalProfileType.Uniform ||
-                verticalProfile.Type == VerticalProfileType.TopBottom)
-            {
-                return null;
-            }
-
-            using (CultureUtils.SwitchToInvariantCulture())
-            {
-                return string.Join(" ", verticalProfile.SortedPointDepths.Select(d => d.ToString()));
-            }
-        }
-
         private static bool ParseVerticalPosition(BcQuantityData quantityData, out int layerIndex)
         {
             if (quantityData.VerticalPosition == null)
@@ -1061,24 +1056,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
         }
 
-        private static string VerticalInterpolationString(VerticalInterpolationType verticalInterpolationType)
-        {
-            switch (verticalInterpolationType)
-            {
-                case VerticalInterpolationType.Linear:
-                    return "linear";
-                case VerticalInterpolationType.Logarithmic:
-                    return "log";
-                case VerticalInterpolationType.Step:
-                    return "block";
-                case VerticalInterpolationType.Uniform:
-                    return null;
-                default:
-                    throw new NotImplementedException(
-                        $"Vertical interpolation type {verticalInterpolationType} not supported by bc file writer.");
-            }
-        }
-
         private static InterpolationType ParseTimeInterpolationType(BcBlockData dataBlock)
         {
             if (string.IsNullOrEmpty(dataBlock.TimeInterpolationType) ||
@@ -1096,6 +1073,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             LogWarningParsePropertyFailed(dataBlock, "time interpolation type",
                                           dataBlock.TimeInterpolationType);
             throw new NotSupportedException($"Not able to map {dataBlock.TimeInterpolationType} to any valid type.");
+        }
+
+        private static void LogWarningParsePropertyFailed(BcBlockData dataBlock, string propertyName,
+                                                          string propertyValue)
+        {
+            Log.Warn(
+                $"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}: {propertyName} {propertyValue} could not be parsed; omitting dataBlock block.");
+        }
+
+        #endregion
+
+        private static string VerticalInterpolationString(VerticalInterpolationType verticalInterpolationType)
+        {
+            switch (verticalInterpolationType)
+            {
+                case VerticalInterpolationType.Linear:
+                    return "linear";
+                case VerticalInterpolationType.Logarithmic:
+                    return "log";
+                case VerticalInterpolationType.Step:
+                    return "block";
+                case VerticalInterpolationType.Uniform:
+                    return null;
+                default:
+                    throw new NotImplementedException(
+                        $"Vertical interpolation type {verticalInterpolationType} not supported by bc file writer.");
+            }
         }
 
         private static string TimeInterpolationString(InterpolationType interpolationType)
