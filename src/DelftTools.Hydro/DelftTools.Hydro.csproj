@@ -195,7 +195,6 @@
     <Compile Include="ObservationCrossSection2D.cs" />
     <Compile Include="ObservationPoint.cs" />
     <Compile Include="FlowDirection.cs" />
-    <Compile Include="Helpers\HydroNetworkHelper.cs" />
     <Compile Include="HydroNetwork.cs" />
     <Compile Include="HydroNode.cs" />
     <Compile Include="IChannel.cs" />

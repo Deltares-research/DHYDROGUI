@@ -37,20 +37,6 @@ namespace DelftTools.Hydro
 
         public override bool CanBeLinkTarget => true;
 
-        public static LateralSource CreateDefault(IBranch branch)
-        {
-            var lateralSource = new LateralSource
-            {
-                Branch = branch,
-                Network = branch.Network,
-                Chainage = 0,
-                Geometry = new Point(branch.Geometry.Coordinates[0])
-            };
-            lateralSource.Name =
-                HydroNetworkHelper.GetUniqueFeatureName(lateralSource.Network as HydroNetwork, lateralSource);
-            return lateralSource;
-        }
-
         public override object Clone()
         {
             var clone = (ILateralSource) base.Clone();
