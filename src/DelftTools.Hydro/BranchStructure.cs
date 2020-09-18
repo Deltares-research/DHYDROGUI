@@ -23,13 +23,6 @@ namespace DelftTools.Hydro
         }
 
         [NoNotifyPropertyChange]
-        public virtual IChannel Channel
-        {
-            get => (IChannel) Branch;
-            set => Branch = value;
-        }
-
-        [NoNotifyPropertyChange]
         public virtual double OffsetY { get; set; }
 
         [Aggregation]

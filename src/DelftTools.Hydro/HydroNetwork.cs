@@ -15,8 +15,6 @@ namespace DelftTools.Hydro
     [Entity]
     public class HydroNetwork : Network, IHydroNetwork
     {
-        public virtual IEnumerable<IChannel> Channels { get; protected set; }
-
         public virtual IEventedList<IRegion> SubRegions { get; set; }
 
         public virtual IEnumerable<IRegion> AllRegions => HydroRegion.GetAllRegions(this);

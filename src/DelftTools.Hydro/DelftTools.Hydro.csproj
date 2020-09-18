@@ -190,7 +190,6 @@
     <Compile Include="FlowDirection.cs" />
     <Compile Include="HydroNetwork.cs" />
     <Compile Include="HydroNode.cs" />
-    <Compile Include="IChannel.cs" />
     <Compile Include="IHydroNetwork.cs" />
     <Compile Include="IHydroNetworkFeature.cs" />
     <Compile Include="IHydroNode.cs" />
