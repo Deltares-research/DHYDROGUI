@@ -53,7 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.BoundariesLayerName, BoundaryToolName, BoundaryIcon));
             tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceAndSinkToolName, SourceSinkIcon));
             tools.Add(new Feature2DPointTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceToolName, SourceIcon));
-            tools.Add(new GenerateEmbankmentsMapTool());
             tools.Add(new MergeEmbankmentsMapTool());
             tools.Add(new GridWizardMapTool());
             tools.OfType<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
