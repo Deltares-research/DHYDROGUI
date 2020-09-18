@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Given
             var input = new Input
             {
-                Feature = new ObservationPoint(),
+                Feature = new Weir2D(),
                 ParameterName = "CrestLevel",
                 UnitName = "[m]"
             };

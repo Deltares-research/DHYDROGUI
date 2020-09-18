@@ -185,7 +185,6 @@
     <Compile Include="IObservationPoint.cs" />
     <Compile Include="LandBoundary2D.cs" />
     <Compile Include="ObservationCrossSection2D.cs" />
-    <Compile Include="ObservationPoint.cs" />
     <Compile Include="FlowDirection.cs" />
     <Compile Include="IHydroNetwork.cs" />
     <Compile Include="IHydroNetworkFeature.cs" />
