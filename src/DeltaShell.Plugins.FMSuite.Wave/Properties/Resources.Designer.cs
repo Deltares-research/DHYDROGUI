@@ -61,6 +61,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to While saving the following error was thrown: {0}, validate the model for more information..
+        /// </summary>
+        public static string BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_ {
+            get {
+                return ResourceManager.GetString("BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_mode" +
+                        "l_for_more_information_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No values given for {0}..
+        /// </summary>
+        public static string BcwFile_WriteBoundaryData_No_values_given_for__0__ {
+            get {
+                return ResourceManager.GetString("BcwFile_WriteBoundaryData_No_values_given_for__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Migrating {0}.
         /// </summary>
         public static string DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_ {
