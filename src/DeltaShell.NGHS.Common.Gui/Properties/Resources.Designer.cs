@@ -22,7 +22,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeltaShell.NGHS.Common.Gui.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,12 +61,161 @@ namespace DeltaShell.NGHS.Common.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string ContextMenuFactory_Delete {
+            get {
+                return ResourceManager.GetString("ContextMenuFactory_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export ....
+        /// </summary>
+        public static string ContextMenuFactory_Export {
+            get {
+                return ResourceManager.GetString("ContextMenuFactory_Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import ....
+        /// </summary>
+        public static string ContextMenuFactory_Import {
+            get {
+                return ResourceManager.GetString("ContextMenuFactory_Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open with ....
+        /// </summary>
+        public static string ContextMenuFactory_Open_with {
+            get {
+                return ResourceManager.GetString("ContextMenuFactory_Open_with", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Properties.
+        /// </summary>
+        public static string ContextMenuFactory_Properties {
+            get {
+                return ResourceManager.GetString("ContextMenuFactory_Properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string ContextMenuFactory_Rename {
+            get {
+                return ResourceManager.GetString("ContextMenuFactory_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap DeleteHS {
+            get {
+                object obj = ResourceManager.GetObject("DeleteHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap import {
+            get {
+                object obj = ResourceManager.GetObject("import", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap properties {
+            get {
+                object obj = ResourceManager.GetObject("properties", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove restart.
+        /// </summary>
+        public static string RemoveRestart {
+            get {
+                return ResourceManager.GetString("RemoveRestart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap restart {
+            get {
+                object obj = ResourceManager.GetObject("restart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap restart_empty {
+            get {
+                object obj = ResourceManager.GetObject("restart_empty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart: empty.
+        /// </summary>
+        public static string RestartFileNodePresenter_Restart_empty {
+            get {
+                return ResourceManager.GetString("RestartFileNodePresenter_Restart_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart.
+        /// </summary>
+        public static string RestartFolderName {
+            get {
+                return ResourceManager.GetString("RestartFolderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Converting strings to Types is currently not supported..
         /// </summary>
-        internal static string TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_not_supported_ {
+        public static string TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_not_supported_ {
             get {
                 return ResourceManager.GetString("TypeToDescriptionConverter_ConvertBack_Converting_strings_to_Types_is_currently_n" +
                         "ot_supported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use as restart.
+        /// </summary>
+        public static string UseAsRestart {
+            get {
+                return ResourceManager.GetString("UseAsRestart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use last restart.
+        /// </summary>
+        public static string UseLastRestart {
+            get {
+                return ResourceManager.GetString("UseLastRestart", resourceCulture);
             }
         }
     }

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
@@ -48,8 +47,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                                  rootObject.ProcessCoefficients, rootObject.WaqProcessesRules)),
                 new ValidationReport("Loads", ValidateLoads(rootObject)),
                 new ValidationReport(@"Observation points / areas", ValidateObservationPointsAndAreas(rootObject)),
-                new ValidationReport("Input restart state", ValidateRestartInput(rootObject)),
-                new ValidationReport("Output restart state", ValidateRestartOutput(rootObject)),
                 new ValidationReport("Segment function file existance", ValidateExistanceSegmentFiles(rootObject))
             });
         }
@@ -535,61 +532,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 yield return new ValidationIssue(model, ValidationSeverity.Error,
                                                  string.Format("This machine cannot use more threads than {0}.",
                                                                Environment.ProcessorCount));
-            }
-        }
-
-        private IEnumerable<ValidationIssue> ValidateRestartOutput(WaterQualityModel model)
-        {
-            if (!model.WriteRestart)
-            {
-                yield break;
-            }
-
-            if (model.UseSaveStateTimeRange)
-            {
-                // cannot write multiple restart states in command line mode
-                yield return new ValidationIssue(model, ValidationSeverity.Error,
-                                                 "Cannot use save state time range when running in Command Line mode");
-            }
-
-            ValidationReport report = RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(
-                model.UseSaveStateTimeRange,
-                model.SaveStateStartTime,
-                model.SaveStateStopTime,
-                model.SaveStateTimeStep,
-                model);
-
-            foreach (ValidationIssue issue in report.GetAllIssuesRecursive()
-                                                    .Where(i => i.Severity == ValidationSeverity.Error))
-            {
-                yield return issue;
-            }
-
-            foreach (ValidationIssue issue in report.GetAllIssuesRecursive()
-                                                    .Where(i => i.Severity == ValidationSeverity.Warning))
-            {
-                yield return issue;
-            }
-        }
-
-        private static IEnumerable<ValidationIssue> ValidateRestartInput(WaterQualityModel model)
-        {
-            if (!model.UseRestart)
-            {
-                yield break;
-            }
-
-            IEnumerable<string> errors, warnings;
-            model.ValidateInputState(out errors, out warnings);
-
-            foreach (string error in errors)
-            {
-                yield return new ValidationIssue(model, ValidationSeverity.Error, error);
-            }
-
-            foreach (string warning in warnings)
-            {
-                yield return new ValidationIssue(model, ValidationSeverity.Warning, warning);
             }
         }
     }

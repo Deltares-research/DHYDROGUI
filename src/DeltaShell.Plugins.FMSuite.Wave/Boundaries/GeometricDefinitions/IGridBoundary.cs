@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GeoAPI.Geometries;
 using NetTopologySuite.Mathematics;
 
@@ -54,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// <returns>
         /// The world coordinate location corresponding with <paramref name="boundaryCoordinate"/>
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="boundaryCoordinate"/> is <c>null</c>.
         /// </exception>
         Coordinate GetWorldCoordinateFromBoundaryCoordinate(GridBoundaryCoordinate boundaryCoordinate);

@@ -2,202 +2,381 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using DelftTools.Controls;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using log4net;
-using Netron.GraphLib;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 {
+    /// <summary>
+    /// Helper class to assist with the copy paste actions of the Real Time Control Model.
+    /// </summary>
     public class RealTimeControlModelCopyPasteHelper
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlModelCopyPasteHelper));
-        private static IEnumerable<ShapeBase> copiedShapes;
+        private static readonly ILog log = LogManager.GetLogger(typeof(RealTimeControlModelCopyPasteHelper));
 
-        public static IEnumerable<ShapeBase> CopiedShapes
+        private static RealTimeControlModelCopyPasteHelper instance;
+        private readonly List<ShapeBase> copiedShapes;
+
+        private RealTimeControlModelCopyPasteHelper()
         {
-            set
+            copiedShapes = new List<ShapeBase>();
+            IsDataSet = false;
+        }
+
+        /// <summary>
+        /// Gets the instance of <see cref="RealTimeControlModelCopyPasteHelper"/>.
+        /// </summary>
+        public static RealTimeControlModelCopyPasteHelper Instance
+        {
+            get
             {
-                copiedShapes = value;
+                return instance ?? (instance = new RealTimeControlModelCopyPasteHelper());
             }
         }
 
-        public static bool IsClipBoardRtcObjectSet()
-        {
-            object clipBoardData = Clipboard.GetData("rtcObjects");
+        /// <summary>
+        /// Gets the collection of copied shapes.
+        /// </summary>
+        public IEnumerable<ShapeBase> CopiedShapes => copiedShapes;
 
-            return clipBoardData != null
-                   && clipBoardData.ToString().Equals("copies rtc shapes")
-                   && copiedShapes != null;
+        /// <summary>
+        /// Gets the indicator whether the data is set for copying.
+        /// </summary>
+        public bool IsDataSet { get; private set; }
+
+        /// <summary>
+        /// Sets the copied data to the helper.
+        /// </summary>
+        /// <param name="shapes">The collection of <see cref="ShapeBase"/> to set.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="shapes"/>
+        /// is <c>null</c>.
+        /// </exception>
+        public void SetCopiedData(IEnumerable<ShapeBase> shapes)
+        {
+            if (shapes == null)
+            {
+                throw new ArgumentNullException(nameof(shapes));
+            }
+
+            IsDataSet = shapes.Any();
+            copiedShapes.AddRange(shapes);
         }
 
-        public static IEnumerable<ShapeBase> GetClipBoardRtcObjects()
+        /// <summary>
+        /// Clears the data that is set.
+        /// </summary>
+        public void ClearData()
         {
-            return copiedShapes;
+            IsDataSet = false;
+            copiedShapes.Clear();
         }
 
-        public static void SetRtcObjectsToClipBoard(IEnumerable<ShapeBase> shapeCollection)
+        /// <summary>
+        /// Copies the shapes to the <see cref="ControlGroupEditorController"/>.
+        /// </summary>
+        /// <param name="controller">
+        /// The <see cref="ControlGroupEditorController"/> to copy the shapes to.
+        /// </param>
+        /// <param name="mea">The location to place the copied shapes at.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="controller"/> is <c>null</c>.</exception>
+        public void CopyShapesToController(ControlGroupEditorController controller, Point mea)
         {
-            CopiedShapes = null;
-            Clipboard.Clear();
-            if (shapeCollection == null || !shapeCollection.Any())
+            if (controller == null)
+            {
+                throw new ArgumentNullException(nameof(controller));
+            }
+
+            if (!IsDataSet)
             {
                 return;
             }
 
-            Clipboard.SetData("rtcObjects", "copies rtc shapes");
-            copiedShapes = shapeCollection;
+            Dictionary<Input, Input> inputMapping = CopyConnectionPointData<Input>();
+            Dictionary<Output, Output> outputMapping = CopyConnectionPointData<Output>();
+            Dictionary<MathematicalExpression, MathematicalExpression> mathematicalExpressionMapping = CopyMathematicalExpressions(inputMapping);
+
+            Dictionary<RuleBase, RuleBase> ruleMapping = CopyRules(inputMapping, mathematicalExpressionMapping, outputMapping);
+            List<SignalBase> copiedSignals = CopySignals(inputMapping, ruleMapping);
+            List<ConditionBase> copiedConditions = CopyConditions(inputMapping, ruleMapping, mathematicalExpressionMapping);
+
+            ControlGroup controlGroup = controller.ControlGroup;
+            List<RuleBase> copiedRules = ruleMapping.Values.ToList();
+            List<MathematicalExpression> copiedExpressions = mathematicalExpressionMapping.Values.ToList();
+            List<Output> copiedOutputs = outputMapping.Values.ToList();
+            List<Input> copiedInputs = inputMapping.Values.ToList();
+            PostProcessCopiedData(controlGroup, copiedRules, copiedSignals, copiedExpressions, copiedConditions, copiedOutputs);
+            AddDataToController(controller, mea, copiedRules, copiedConditions, copiedInputs, copiedOutputs, copiedSignals, copiedExpressions);
         }
 
-        public static void CloneRtcObjectsFromClipBoardAndPlaceOnGraph(IEnumerable<ShapeBase> clipBoardRtcObjects, ControlGroupEditorController controller, Point mea)
+        private static void AddDataToController(ControlGroupEditorController controller,
+                                                Point mea,
+                                                List<RuleBase> copiedRules,
+                                                List<ConditionBase> copiedConditions,
+                                                List<Input> inputs,
+                                                List<Output> copiedOutputs,
+                                                List<SignalBase> copiedSignals,
+                                                List<MathematicalExpression> copiedExpressions)
         {
-            var clonedRtcObjects = new List<object>();
-            var source = new Dictionary<object, object>();
-            var target = new Dictionary<object, object>();
+            controller.AddShapesToControlGroupAndPlace(copiedRules,
+                                                       copiedConditions,
+                                                       inputs,
+                                                       copiedOutputs,
+                                                       copiedSignals,
+                                                       copiedExpressions,
+                                                       mea);
 
-            foreach (Shape shape in clipBoardRtcObjects)
-            {
-                object clone = ((ICloneable) shape.Tag).Clone();
-                clonedRtcObjects.Add(clone);
-                source.Add(clone, shape.Tag);
-                target.Add(shape.Tag, clone);
-            }
+            controller.AddConnections(copiedRules, copiedConditions, copiedSignals, copiedExpressions, true);
+        }
 
-            // SOBEK3-562: Clear data from cloned connection points (inputs & outputs) since the cloned dataitems are not reconnected.
-            foreach (Input input in clonedRtcObjects.OfType<Input>())
-            {
-                Log.InfoFormat("It is not possible to copy and paste internal data for control group inputs, the connection to {0} will be reset.", input.Name);
-                input.Reset();
-            }
+        private static void PostProcessCopiedData(ControlGroup controlGroup,
+                                                  List<RuleBase> copiedRules,
+                                                  List<SignalBase> copiedSignals,
+                                                  List<MathematicalExpression> copiedExpressions,
+                                                  List<ConditionBase> copiedConditions,
+                                                  List<Output> copiedOutputs)
+        {
+            RenameCopiedDataWithUniqueNames(copiedRules, controlGroup.Rules, "Rule");
+            RenameCopiedDataWithUniqueNames(copiedSignals, controlGroup.Signals, "Signal");
+            RenameCopiedDataWithUniqueNames(copiedExpressions, controlGroup.MathematicalExpressions, "Expression");
+            RenameCopiedDataWithUniqueNames(copiedConditions, controlGroup.Conditions, "Condition");
+            ResetOutputs(copiedOutputs);
+        }
 
-            foreach (Output output in clonedRtcObjects.OfType<Output>())
+        #region Post process helpers
+
+        private static void ResetOutputs(IEnumerable<Output> outputs)
+        {
+            foreach (Output output in outputs)
             {
-                Log.InfoFormat("It is not possible to copy and paste internal data for control group outputs, the connection to {0} will be reset.", output.Name);
+                log.InfoFormat("It is not possible to copy and paste internal data for control group outputs, the connection to {0} will be reset.", output.Name);
                 output.Reset();
             }
-
-            foreach (object o in clonedRtcObjects)
-            {
-                SetClonedInputsAndOutputsToClonedObjects(source, target, o);
-            }
-
-            PlaceShapesAndConnections(clonedRtcObjects, controller, mea);
         }
 
-        private static void SetClonedInputsAndOutputsToClonedObjects(Dictionary<object, object> source, Dictionary<object, object> target, object o)
-        {
-            if (o is RuleBase ruleTarget)
-            {
-                var ruleSource = (RuleBase) source[ruleTarget];
-                foreach (IInput input in ruleSource.Inputs)
-                {
-                    if (target.ContainsKey(input))
-                    {
-                        ruleTarget.Inputs.Add((IInput) target[input]);
-                    }
-                }
-
-                foreach (Output output in ruleSource.Outputs)
-                {
-                    if (target.ContainsKey(output))
-                    {
-                        ruleTarget.Outputs.Add((Output) target[output]);
-                    }
-                }
-            }
-
-            if (o is ConditionBase conditionTarget)
-            {
-                var conditionSource = (ConditionBase) source[conditionTarget];
-                foreach (RtcBaseObject trueOutput in conditionSource.TrueOutputs)
-                {
-                    if (target.ContainsKey(trueOutput))
-                    {
-                        conditionTarget.TrueOutputs.Add((RtcBaseObject) target[trueOutput]);
-                    }
-                }
-
-                foreach (RtcBaseObject falseOutput in conditionSource.FalseOutputs)
-                {
-                    if (target.ContainsKey(falseOutput))
-                    {
-                        conditionTarget.FalseOutputs.Add((RtcBaseObject) target[falseOutput]);
-                    }
-                }
-
-                if (conditionSource.Input != null && target.ContainsKey(conditionSource.Input))
-                {
-                    conditionTarget.Input = (IInput) target[conditionSource.Input];
-                }
-            }
-
-            if (o is SignalBase signalTarget)
-            {
-                var signalSource = (SignalBase) source[signalTarget];
-                foreach (Input input in signalSource.Inputs)
-                {
-                    if (target.ContainsKey(input))
-                    {
-                        signalTarget.Inputs.Add((Input) target[input]);
-                    }
-                }
-
-                foreach (RuleBase ruleBase in signalSource.RuleBases)
-                {
-                    if (target.ContainsKey(ruleBase))
-                    {
-                        signalTarget.RuleBases.Add((RuleBase) target[ruleBase]);
-                    }
-                }
-            }
-        }
-
-        private static void PlaceShapesAndConnections(List<object> cloned, ControlGroupEditorController controller, Point mea)
-        {
-            ControlGroup controlGroup = controller.ControlGroup;
-            IList<RuleBase> clonedRules = GetUniquelyNamedClones(cloned, controlGroup.Rules, "Rule");
-            IList<SignalBase> clonedSignals = GetUniquelyNamedClones(cloned, controlGroup.Signals, "Signal");
-            IList<ConditionBase> clonedConditions = GetUniquelyNamedClones(cloned, controlGroup.Conditions, "Condition");
-            IList<MathematicalExpression> clonedMathExpressions = GetUniquelyNamedClones(cloned, controlGroup.MathematicalExpressions,
-                                                                                         "Expression");
-
-            controller.AddShapesToControlGroupAndPlace(clonedRules,
-                                                       clonedConditions,
-                                                       cloned.Where(c => c is Input).Cast<Input>().ToList(),
-                                                       cloned.Where(c => c is Output).Cast<Output>().ToList(),
-                                                       clonedSignals, clonedMathExpressions, mea);
-
-            controller.AddConnections(clonedRules, clonedConditions, clonedSignals, clonedMathExpressions, true);
-        }
-
-        private static IList<T> GetUniquelyNamedClones<T>(List<object> clonedObjects, IEnumerable<T> existingObjects, string objName)
+        private static void RenameCopiedDataWithUniqueNames<T>(IEnumerable<T> copiedData, IEnumerable<T> controllerData, string objName)
             where T : RtcBaseObject
         {
-            List<T> newObjects = clonedObjects.OfType<T>().ToList();
-            List<T> copyExistingObjects = existingObjects.ToList();
-
-            foreach (T newObject in newObjects)
+            if (!controllerData.Any())
             {
-                if (!copyExistingObjects.Any())
-                {
-                    continue;
-                }
-
-                T identicalName = copyExistingObjects.FirstOrDefault(o => o.Name == newObject.Name);
-                if (identicalName == null)
-                {
-                    continue;
-                }
-
-                newObject.Name = RealTimeControlModelHelper.GetUniqueName(objName + " - Copy {0}",
-                                                                          copyExistingObjects, "Copy");
-
-                copyExistingObjects.Add(newObject);
+                return;
             }
 
-            return newObjects;
+            List<T> currentObjects = controllerData.ToList();
+            var existingNames = new HashSet<string>(currentObjects.Select(d => d.Name));
+            foreach (T copy in copiedData)
+            {
+                if (existingNames.Contains(copy.Name))
+                {
+                    string uniqueName = RealTimeControlModelHelper.GetUniqueName(objName + " - Copy {0}",
+                                                                                 currentObjects, "Copy");
+                    copy.Name = uniqueName;
+                    existingNames.Add(uniqueName);
+                    currentObjects.Add(copy);
+                }
+            }
         }
+
+        #endregion
+
+        #region Copy helpers
+
+        private Dictionary<T, T> CopyConnectionPointData<T>() where T : ConnectionPoint
+        {
+            IEnumerable<T> inputs = copiedShapes.Select(s => s.Tag).OfType<T>();
+            var mapping = new Dictionary<T, T>();
+            foreach (T input in inputs)
+            {
+                mapping[input] = (T) input.Clone();
+            }
+
+            return mapping;
+        }
+
+        private Dictionary<RuleBase, RuleBase> CopyRules(IReadOnlyDictionary<Input, Input> inputMapping,
+                                                         IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping,
+                                                         IReadOnlyDictionary<Output, Output> outputMapping)
+        {
+            IEnumerable<RuleBase> rules = copiedShapes.Select(s => s.Tag).OfType<RuleBase>();
+
+            var mapping = new Dictionary<RuleBase, RuleBase>();
+            foreach (RuleBase rule in rules)
+            {
+                var copiedRule = (RuleBase) rule.Clone();
+                SetInputs(copiedRule.Inputs, rule.Inputs, inputMapping, expressionMapping);
+                SetOutputs(copiedRule, rule, outputMapping);
+                mapping[rule] = copiedRule;
+            }
+
+            return mapping;
+        }
+
+        private List<SignalBase> CopySignals(IReadOnlyDictionary<Input, Input> inputMapping,
+                                             IReadOnlyDictionary<RuleBase, RuleBase> ruleMapping)
+        {
+            IEnumerable<SignalBase> signals = copiedShapes.Select(s => s.Tag).OfType<SignalBase>();
+
+            var copiedSignals = new List<SignalBase>();
+            foreach (SignalBase signal in signals)
+            {
+                var copiedSignal = (SignalBase) signal.Clone();
+                SetInputs(copiedSignal.Inputs, signal.Inputs, inputMapping);
+                SetRules(copiedSignal.RuleBases, signal.RuleBases, ruleMapping);
+                copiedSignals.Add(copiedSignal);
+            }
+
+            return copiedSignals;
+        }
+
+        private Dictionary<MathematicalExpression, MathematicalExpression> CopyMathematicalExpressions(IReadOnlyDictionary<Input, Input> inputMapping)
+        {
+            IEnumerable<MathematicalExpression> mathematicalExpressions = copiedShapes.Select(s => s.Tag).OfType<MathematicalExpression>();
+
+            var expressionMapping = new Dictionary<MathematicalExpression, MathematicalExpression>();
+            foreach (MathematicalExpression mathematicalExpression in mathematicalExpressions)
+            {
+                var copiedMathematicalExpression = (MathematicalExpression) mathematicalExpression.Clone();
+                expressionMapping[mathematicalExpression] = copiedMathematicalExpression;
+            }
+
+            // Gather all the objects that can be connected to a condition in the true and false outputs
+            // Then set the input, as a mathematical expression can have a mathematical expression as an input.
+            // Failing to comply will result in a KeyNotFoundException.
+            foreach ((MathematicalExpression source, MathematicalExpression target) in expressionMapping)
+            {
+                SetInputs(target.Inputs, source.Inputs, inputMapping, expressionMapping);
+            }
+
+            return expressionMapping;
+        }
+
+        private List<ConditionBase> CopyConditions(IReadOnlyDictionary<Input, Input> inputMapping,
+                                                   IReadOnlyDictionary<RuleBase, RuleBase> ruleMapping,
+                                                   IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping)
+        {
+            IEnumerable<ConditionBase> conditions = copiedShapes.Select(s => s.Tag).OfType<ConditionBase>();
+
+            var copiedConditions = new List<ConditionBase>();
+            var conditionMapping = new Dictionary<RtcBaseObject, RtcBaseObject>();
+
+            Dictionary<IInput, IInput> iInputMapping = GetIInputMapping(inputMapping, expressionMapping);
+            foreach (ConditionBase condition in conditions)
+            {
+                var copiedCondition = (ConditionBase) condition.Clone();
+                copiedCondition.Input = null;
+
+                if (condition.Input != null && iInputMapping.ContainsKey(condition.Input))
+                {
+                    copiedCondition.Input = iInputMapping[condition.Input];
+                }
+
+                conditionMapping[condition] = copiedCondition;
+                copiedConditions.Add(copiedCondition);
+            }
+
+            // Gather all the objects that can be connected to a condition in the true and false outputs
+            Dictionary<RtcBaseObject, RtcBaseObject> rtcObjectMapping =
+                conditionMapping.Concat(ruleMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key, kvp => (RtcBaseObject) kvp.Value))
+                                .Concat(expressionMapping.ToDictionary(kvp => (RtcBaseObject) kvp.Key, kvp => (RtcBaseObject) kvp.Value))
+                                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            // Then set all the values or a KeyNotFoundException can be thrown as the ConditionBases are not mapped yet.
+            foreach (ConditionBase originalCondition in conditions)
+            {
+                var copiedCondition = (ConditionBase) conditionMapping[originalCondition];
+
+                SetOutputs(copiedCondition.TrueOutputs, originalCondition.TrueOutputs, rtcObjectMapping);
+                SetOutputs(copiedCondition.FalseOutputs, originalCondition.FalseOutputs, rtcObjectMapping);
+            }
+
+            return copiedConditions;
+        }
+
+        #endregion
+
+        #region Data helpers
+
+        private static Dictionary<IInput, IInput> GetIInputMapping(IReadOnlyDictionary<Input, Input> inputMapping,
+                                                                   IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping)
+        {
+            Dictionary<IInput, IInput> iInputMapping = inputMapping.ToDictionary(kvp => (IInput) kvp.Key, kvp => (IInput) kvp.Value)
+                                                                   .Concat(expressionMapping.ToDictionary(kvp => (IInput) kvp.Key, kvp => (IInput) kvp.Value))
+                                                                   .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return iInputMapping;
+        }
+
+        private static void SetInputs(IEventedList<IInput> targetInputs,
+                                      IEnumerable<IInput> sourceInputs,
+                                      IReadOnlyDictionary<Input, Input> inputMapping,
+                                      IReadOnlyDictionary<MathematicalExpression, MathematicalExpression> expressionMapping)
+        {
+            Dictionary<IInput, IInput> iInputMapping = GetIInputMapping(inputMapping, expressionMapping);
+
+            var inputsToAdd = new List<IInput>();
+            foreach (IInput sourceInput in sourceInputs)
+            {
+                IInput castInput = sourceInput;
+                if (iInputMapping.ContainsKey(castInput))
+                {
+                    inputsToAdd.Add(iInputMapping[castInput]);
+                }
+            }
+
+            targetInputs.AddRange(inputsToAdd);
+        }
+
+        private static void SetInputs(IEventedList<Input> targetInputs,
+                                      IEnumerable<Input> sourceInputs,
+                                      IReadOnlyDictionary<Input, Input> inputMapping)
+        {
+            IEnumerable<Input> inputsToAdd = GetItemsToAdd(sourceInputs, inputMapping);
+            targetInputs.AddRange(inputsToAdd);
+        }
+
+        private static void SetRules(IEventedList<RuleBase> targetRules,
+                                     IEnumerable<RuleBase> sourceRules,
+                                     IReadOnlyDictionary<RuleBase, RuleBase> ruleMapping)
+        {
+            IEnumerable<RuleBase> rulesToAdd = GetItemsToAdd(sourceRules, ruleMapping);
+            targetRules.AddRange(rulesToAdd);
+        }
+
+        private static void SetOutputs(RuleBase target,
+                                       RuleBase source,
+                                       IReadOnlyDictionary<Output, Output> outputMapping)
+        {
+            IEnumerable<Output> outputsToAdd = GetItemsToAdd(source.Outputs, outputMapping);
+            target.Outputs.AddRange(outputsToAdd);
+        }
+
+        private static void SetOutputs(IEventedList<RtcBaseObject> targetOutputs,
+                                       IEnumerable<RtcBaseObject> sourceOutput,
+                                       IReadOnlyDictionary<RtcBaseObject, RtcBaseObject> objectMapping)
+        {
+            IEnumerable<RtcBaseObject> objectsToBeAdded = GetItemsToAdd(sourceOutput, objectMapping);
+            targetOutputs.AddRange(objectsToBeAdded);
+        }
+
+        private static IEnumerable<T> GetItemsToAdd<T>(IEnumerable<T> items,
+                                                       IReadOnlyDictionary<T, T> mapping)
+            where T : RtcBaseObject
+        {
+            var itemsToAdd = new List<T>();
+            foreach (T item in items)
+            {
+                if (mapping.ContainsKey(item))
+                {
+                    itemsToAdd.Add(mapping[item]);
+                }
+            }
+
+            return itemsToAdd;
+        }
+
+        #endregion
     }
 }

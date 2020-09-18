@@ -1371,6 +1371,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please save the project after a model run with &apos;write restart&apos; on..
+        /// </summary>
+        public static string WaterFlowFMModel_Save_project_after_model_run_with_write_restart {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_Save_project_after_model_run_with_write_restart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No grid points defined between structure {0} and {1}.
         /// </summary>
         public static string WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_ {
@@ -1519,6 +1528,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_" +
                         "defined__all_channels_will_be_using_the_default_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input restart file does not exist; cannot restart..
+        /// </summary>
+        public static string WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart {
+            get {
+                return ResourceManager.GetString("WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does" +
+                        "_not_exist_cannot_restart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input restart state.
+        /// </summary>
+        public static string WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state {
+            get {
+                return ResourceManager.GetString("WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state", resourceCulture);
             }
         }
         

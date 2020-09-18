@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 
@@ -23,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// The <see cref="ILineString"/> displaying the <see cref="IWaveBoundary"/>.
         /// <c>null</c> if no <see cref="ILineString"/> could be created.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveBoundary"/> is <c>null</c>.
         /// </exception>
         ILineString ConstructBoundaryLineGeometry(IWaveBoundary waveBoundary);
@@ -38,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// of <paramref name="waveBoundary"/>. If no start point could be generated
         /// then <c>null</c> is returned.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveBoundary"/> is <c>null</c>.
         /// </exception>
         IPoint ConstructBoundaryStartPoint(IWaveBoundary waveBoundary);
@@ -53,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// of <paramref name="waveBoundary"/>. If no end point could be generated
         /// then <c>null</c> is returned.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveBoundary"/> is <c>null</c>.
         /// </exception>
         IPoint ConstructBoundaryEndPoint(IWaveBoundary waveBoundary);
@@ -63,8 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// </summary>
         /// <param name="supportPoint">The support point.</param>
         /// <returns>The point geometry of the support point.</returns>
-        /// <exception
-        ///     cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
         /// </exception>
         IPoint ConstructBoundarySupportPoint(SupportPoint supportPoint);

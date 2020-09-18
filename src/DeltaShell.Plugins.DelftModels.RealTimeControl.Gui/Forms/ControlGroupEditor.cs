@@ -19,7 +19,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private ControlGroup controlGroup;
 
-        private IList<ShapeBase> shapes = new List<ShapeBase>();
+        private readonly IList<ShapeBase> shapes = new List<ShapeBase>();
 
         public ControlGroupEditor()
         {
@@ -74,6 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             graphControl.NetronGraph.OnDoubleClick += GraphControlOnDoubleClick;
             graphControl.NetronGraph.MouseUp += OnGraphControlMouseUp;
+            graphControl.NetronGraph.MouseDown += OnGraphControlMouseDown;
         }
 
         public IGui Gui { get; set; } // selection and opening views
@@ -182,21 +183,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public void Link(Shape shape, IDataItem dataItem)
         {
-            if (shape.Tag is Input)
+            if (shape.Tag is Input input)
             {
                 if ((dataItem.Role & DataItemRole.Output) == DataItemRole.Output)
                 {
-                    var input = (Input) shape.Tag;
                     LinkDataItems(Model.GetDataItemByValue(input), dataItem);
                 }
             }
-            else if (shape.Tag is Output)
+            else if (shape.Tag is Output output && (dataItem.Role & DataItemRole.Input) == DataItemRole.Input)
             {
-                if ((dataItem.Role & DataItemRole.Input) == DataItemRole.Input)
-                {
-                    var output = (Output) shape.Tag;
-                    LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
-                }
+                LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
             }
 
             shape.Text = dataItem.ToString();
@@ -387,7 +383,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 graphControl.ContextMenuItems.Add(new MenuItem("Copy", CopyAction) {Tag = selectedShapes});
             }
 
-            if (RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet() && !selectedShapes.Any())
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
+            if (helper.IsDataSet && !selectedShapes.Any())
             {
                 graphControl.ContextMenuItems.Add(new MenuItem("Paste", PasteAction));
             }
@@ -422,20 +419,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void PasteAction(object sender, EventArgs e)
         {
-            IEnumerable<ShapeBase> clipBoardRtcObjects = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
-
             Point mea = PointToClient(MousePosition);
-            if (clipBoardRtcObjects.Any())
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
+            if (helper.IsDataSet)
             {
-                RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(
-                    clipBoardRtcObjects, controller, mea);
+                helper.CopyShapesToController(controller, mea);
+                helper.ClearData();
             }
         }
 
         private void CopyAction(object sender, EventArgs e)
         {
             var menuItem = (MenuItem) sender;
-            RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard((IEnumerable<ShapeBase>) menuItem.Tag);
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
+            helper.SetCopiedData((IEnumerable<ShapeBase>) menuItem.Tag);
         }
 
         private void CopyAsImageToClipboard(object sender, EventArgs e)
@@ -703,13 +700,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 Entity entity = graphControl.NetronGraph.HitEntity(point);
                 if (entity is Shape)
                 {
-                    if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
+                    if (CanLinkFeatureToShape(dragEventArgs, feature, entity, typeof(InputItemShape),
                                               DataItemRole.Output))
                     {
                         return true;
                     }
 
-                    if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
+                    if (CanLinkFeatureToShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
                                               DataItemRole.Input))
                     {
                         return true;
@@ -734,14 +731,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 if (entity is Shape)
                 {
                     if (entity is InputItemShape &&
-                        CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
+                        CanLinkFeatureToShape(dragEventArgs, feature, entity, typeof(InputItemShape),
                                               DataItemRole.Output))
                     {
                         DropFeatureOnShape(feature, entity, DataItemRole.Output);
                     }
 
                     if (entity is OutputItemShape &&
-                        CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
+                        CanLinkFeatureToShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
                                               DataItemRole.Input))
                     {
                         DropFeatureOnShape(feature, entity, DataItemRole.Input);
@@ -786,16 +783,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             Link((Shape) entity, dataItem);
         }
 
-        private bool CanLinkFeaturetoShape(DragEventArgs dragEventArgs, IFeature feature, Entity entity, Type t,
+        private bool CanLinkFeatureToShape(DragEventArgs dragEventArgs, IFeature feature, Entity entity, Type t,
                                            DataItemRole role)
         {
-            if (entity.GetType() == t)
+            if (entity.GetType() == t && Model.GetChildDataItemLocationsFromControlledModels(role).Contains(feature))
             {
-                if (Model.GetChildDataItemLocationsFromControlledModels(role).Contains(feature))
-                {
-                    dragEventArgs.Effect = DragDropEffects.Link;
-                    return true;
-                }
+                dragEventArgs.Effect = DragDropEffects.Link;
+                return true;
             }
 
             return false;
@@ -862,6 +856,121 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 created = null;
 
                 ResetNewObjectButtons();
+            }
+
+            IEnumerable<ShapeBase> graphShapes = graphControl.GetShapes<ShapeBase>();
+            if (graphShapes != null)
+            {
+                foreach (ShapeBase shape in graphShapes)
+                {
+                    shape.HighLightedConnectors = null;
+                }
+            }
+        }
+
+        private void OnGraphControlMouseDown(object sender, MouseEventArgs e)
+        {
+            object hoveredItem = TypeUtils.GetField(graphControl.NetronGraph, "Hover");
+            if (!(hoveredItem is Connector activeConnector))
+            {
+                return;
+            }
+
+            IEnumerable<ShapeBase> shapesOnGraph = graphControl.GetShapes<ShapeBase>();
+            if (shapesOnGraph == null)
+            {
+                return;
+            }
+
+            ShapeBase[] shapeBases = shapesOnGraph as ShapeBase[] ?? shapesOnGraph.ToArray();
+            Connector[] allConnectors = shapeBases.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
+            var owner = activeConnector.BelongsTo as ShapeBase;
+
+            if (owner is OutputItemShape)
+            {
+                return;
+            }
+
+            ConnectorType activeConnectionType = GetActiveConnectionType(owner, activeConnector);
+            IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors).ToList();
+
+            if (!allowedConnectors.Any())
+            {
+                return;
+            }
+
+            foreach (ShapeBase shape in shapeBases)
+            {
+                shape.HighLightedConnectors = allowedConnectors;
+            }
+        }
+
+        private static ConnectorType GetActiveConnectionType(ShapeBase owner, Connector activeConnector)
+        {
+            ConnectorType activeConnectionType = owner is MathematicalExpressionShape ? ConvertConnectorNameToType(activeConnector.Name) : ConvertTo(activeConnector.ConnectorLocation);
+            return activeConnectionType;
+        }
+
+        private static IEnumerable<Connector> FilterAllowableConnectors(ShapeBase sourceShape,
+                                                                        ConnectorType sourceConnection,
+                                                                        IEnumerable<Connector> availableConnectors)
+        {
+            var allowedConnectors = new List<Connector>();
+
+            if (sourceShape is MathematicalExpressionShape && (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top))
+            {
+                return allowedConnectors;
+            }
+
+            foreach (Connector availableConnector in availableConnectors)
+            {
+                var targetShape = availableConnector.BelongsTo as ShapeBase;
+
+                ConnectorType targetConnectionType = targetShape is MathematicalExpressionShape ? ConvertConnectorNameToType(availableConnector.Name) : ConvertTo(availableConnector.ConnectorLocation);
+
+                if (sourceShape == targetShape)
+                {
+                    continue;
+                }
+
+                if (ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
+                {
+                    allowedConnectors.Add(availableConnector);
+                }
+            }
+
+            return allowedConnectors;
+        }
+
+        private static ConnectorType ConvertConnectorNameToType(string connectorName)
+        {
+            switch (connectorName)
+            {
+                case "Left":
+                    return ConnectorType.Left;
+                case "Top":
+                    return ConnectorType.Top;
+                case "Bottom":
+                    return ConnectorType.Bottom;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        private static ConnectorType ConvertTo(ConnectorLocation connectorLocation)
+        {
+            switch (connectorLocation)
+            {
+                case ConnectorLocation.North:
+                    return ConnectorType.Top;
+                case ConnectorLocation.East:
+                    return ConnectorType.Right;
+                case ConnectorLocation.West:
+                    return ConnectorType.Left;
+                case ConnectorLocation.South:
+                    return ConnectorType.Bottom;
+                default:
+                    throw new NotSupportedException();
             }
         }
 

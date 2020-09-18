@@ -14,11 +14,12 @@ using log4net;
 
 namespace DeltaShell.Dimr
 {
-    public class DimrRunner
+    public class DimrRunner : IDisposable
     {
         private const decimal fileVersion = 1;
         private const string createdBy = "Deltares, Coupling Team";
         private static readonly ILog log = LogManager.GetLogger(typeof(DimrRunner));
+        private bool disposed = false;
 
         private static readonly dimrDocumentationXML documentation = new dimrDocumentationXML
         {
@@ -180,9 +181,7 @@ namespace DeltaShell.Dimr
 
             model.ConnectOutput(outputDirectory);
 
-            string dimrLogDirectory = model is IDimrModel dimrModel ? 
-                                          dimrModel.DimrExportDirectoryPath : model.ExplicitWorkingDirectory;
-            DimrRunHelper.ConnectDimrRunLogFile(model, dimrLogDirectory);
+            DimrRunHelper.ConnectDimrRunLogFile(model, model.DimrExportDirectoryPath);
         }
         
         public static string GenerateDimrXML(IDimrModel dimrModel, string workDirectory)
@@ -274,7 +273,6 @@ namespace DeltaShell.Dimr
             dimrFile = GenerateDimrXML(model, exportPath);
 
             // initialize dimr
-            log.Info(model.KernelVersions);
             dimrApi = DimrApiFactory.CreateNew(!runLocal);
 
             if (dimrApi == null)
@@ -380,6 +378,27 @@ namespace DeltaShell.Dimr
             }
 
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                dimrApi?.Dispose();
+            }
+
+            disposed = true;
         }
     }
 }

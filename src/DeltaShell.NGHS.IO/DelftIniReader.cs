@@ -11,22 +11,16 @@ namespace DeltaShell.NGHS.IO
     /// <summary>
     /// Reader for Delft Ini-files.
     /// </summary>
-    public class DelftIniReader : NGHSFileBase
+    public class DelftIniReader : NGHSFileBase, IDelftIniReader
     {
         /// <summary>
         /// Regular expression for a key/value/comment line, where key is a string without white-spaces,
         /// value can be anything and an optional comment
         /// starting with the '#' character.
         /// </summary>
-        private const string KeyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#]*)(#(?<comment>.*))?$";
+        private const string keyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#]*)(#(?<comment>.*))?$";
 
-        /// <summary>
-        /// Reads a Delft .ini format file.
-        /// </summary>
-        /// <param name="stream"> The <see cref="Stream"/> to read the ini file from. </param>
-        /// <param name="filePath"> The path to the file location. </param>
-        /// <returns> A collection of <see cref="DelftIniCategory"/> instances. </returns>
-        /// <remarks> The stream is implicitly disposed. </remarks>
+        /// <inheritdoc cref="IDelftIniReader"/>
         public IList<DelftIniCategory> ReadDelftIniFile(Stream stream, string filePath)
         {
             OpenInputFile(stream);
@@ -78,13 +72,13 @@ namespace DeltaShell.NGHS.IO
         /// <returns>A size 3 array of strings, where first item is the key, second the value and third the comment.</returns>
         /// <exception cref="FormatException">
         /// When <paramref name="lineContent"/> does not match to
-        /// <see cref="KeyValueCommentPattern"/>.
+        /// <see cref="keyValueCommentPattern"/>.
         /// </exception>
         protected virtual string[] GetKeyValueComment(string lineContent)
         {
             var result = new string[3];
 
-            MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, lineContent);
+            MatchCollection matches = RegularExpression.GetMatches(keyValueCommentPattern, lineContent);
             if (matches.Count == 0)
             {
                 throw new FormatException(string.Format(Resources.DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_,

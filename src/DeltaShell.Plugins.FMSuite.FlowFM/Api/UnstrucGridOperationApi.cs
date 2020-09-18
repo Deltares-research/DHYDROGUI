@@ -116,8 +116,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             /* When initializing this api for GridSnap features, we are not interested in doing a full export, only in having
              the api running.*/
             model.ExportTo(mduFilePath, false, fullExport, fullExport);
-            model.SetModelStateHandlerModelWorkingDirectory(model.ExplicitWorkingDirectory ??
-                                                            model.WorkingDirectoryPath ?? Environment.CurrentDirectory);
 
             // Overwrite existing mdu to ignore the properties with adjusted properties
             var mduFile = new MduFile();
@@ -392,7 +390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 api.Initialize(mduFilePath);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 api.Dispose(); // cleanup remote instance on crash!
                 throw;

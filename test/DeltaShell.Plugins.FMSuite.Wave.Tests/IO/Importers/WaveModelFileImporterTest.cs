@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
@@ -37,6 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             var importer = new WaveModelFileImporter(() => "some_directory");
 
             // Assert
+            Assert.IsInstanceOf<IDimrModelFileImporter>(importer);
             Assert.That(importer.TargetDataDirectory, Is.Null);
             Assert.That(importer.ShouldCancel, Is.False);
             Assert.That(importer.ProgressChanged, Is.Null);
@@ -289,6 +291,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 Assert.That(result, Is.SameAs(target));
                 VerifyWaveModel(target.Activities, func);
             }
+        }
+
+        [Test]
+        public void MasterFileExtension_ShouldReturnMdw()
+        {
+            // Setup 
+            var importer = new WaveModelFileImporter(() => null);
+
+            // Call
+            string masterFileExtension = importer.MasterFileExtension;
+            
+            // Assert
+            Assert.AreEqual("mdw", masterFileExtension);
         }
 
         private static void VerifyWaveModel(IEventedList<IActivity> items, Func<string> func)

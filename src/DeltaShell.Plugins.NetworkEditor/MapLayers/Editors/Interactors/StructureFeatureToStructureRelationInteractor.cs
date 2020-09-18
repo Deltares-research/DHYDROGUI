@@ -49,16 +49,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override IFeatureRelationInteractor Activate(IFeature feature, IFeature cloneFeature, AddRelatedFeature addRelatedFeature, int level, IFallOffPolicy fallOffPolicy)
         {
-            ICompositeBranchStructure CompositeBranchStructure;
-            if (null != (CompositeBranchStructure = feature as ICompositeBranchStructure))
+            ICompositeBranchStructure compositeBranchStructure;
+            if (null != (compositeBranchStructure = feature as ICompositeBranchStructure) && 
+                compositeBranchStructure.Structures.Count > 0)
             {
-                if (CompositeBranchStructure.Structures.Count > 0)
-                {
-                    // Only activate the rule when there is something to do.
-                    var cloneRule = (StructureFeatureToStructureRelationInteractor) CloneRule();
-                    cloneRule.Start(CompositeBranchStructure, cloneFeature as ICompositeBranchStructure, addRelatedFeature, level);
-                    return cloneRule;
-                }
+                // Only activate the rule when there is something to do.
+                var cloneRule = (StructureFeatureToStructureRelationInteractor) CloneRule();
+                cloneRule.Start(compositeBranchStructure, cloneFeature as ICompositeBranchStructure, addRelatedFeature, level);
+                return cloneRule;
             }
 
             return null;
@@ -70,24 +68,21 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             return structureFeatureLayerToStructureTopologyRule;
         }
 
-        private void Start(ICompositeBranchStructure CompositeBranchStructure, ICompositeBranchStructure cloneCompositeBranchStructure, AddRelatedFeature addRelatedFeature, int level)
+        private void Start(ICompositeBranchStructure compositeBranchStructure, ICompositeBranchStructure cloneCompositeBranchStructure, AddRelatedFeature addRelatedFeature, int level)
         {
-            lastFeature = CompositeBranchStructure;
+            lastFeature = compositeBranchStructure;
             clonedRelatedFeatures = new List<IStructure1D>();
 
-            foreach (IStructure1D structure in CompositeBranchStructure.Structures)
+            foreach (IStructure1D structure in compositeBranchStructure.Structures)
             {
                 //originalRelatedFeatures.Add(structure);
                 IStructure1D clone = CloneStructure(structure, cloneCompositeBranchStructure);
                 clonedRelatedFeatures.Add(clone);
-                if (null != addRelatedFeature)
-                {
-                    addRelatedFeature(null /*activeRules*/, structure, clone, level);
-                }
+                addRelatedFeature?.Invoke(null /*activeRules*/, structure, clone, level);
             }
         }
 
-        private IStructure1D CloneStructure(IStructure1D structure, ICompositeBranchStructure cloneCompositeBranchStructure)
+        private static IStructure1D CloneStructure(IStructure1D structure, ICompositeBranchStructure cloneCompositeBranchStructure)
         {
             var clone = (IStructure1D) structure.Clone();
             clone.Geometry = (IGeometry) structure.Geometry.Clone();

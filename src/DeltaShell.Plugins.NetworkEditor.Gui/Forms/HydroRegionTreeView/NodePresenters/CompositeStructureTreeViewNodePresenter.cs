@@ -49,13 +49,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             }
 
             base.OnPropertyChanged(feature, node, e);
-
-            if (!e.PropertyName.Equals("Count", StringComparison.Ordinal) || node.Nodes.Count != feature.Structures.Count)
-            {
-                return;
-            }
-
-            //node.RefreshChildNodes(true);
         }
 
         protected override Image GetImage(ICompositeBranchStructure compositeBranchStructure)

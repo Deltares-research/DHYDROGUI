@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         private void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel)
         {
-            if (subModel is IHydroModel hydroModelSubModel)
+            if (subModel is IHydroModel hydroModelSubModel && hydroModelSubModel.Region != null)
             {
                 hydroModel.Region.SubRegions.Add(hydroModelSubModel.Region);
             }

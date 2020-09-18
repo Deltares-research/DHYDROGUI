@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers
 {
     /// <summary>
     /// <see cref="IWaveBoundaryFactoryHelper"/> defines the set of methods used
-    /// by the <see cref="IWaveBoundaryFactory"/> to obtain the correct wave
+    /// by the <see cref="Factories.IWaveBoundaryFactory"/> to obtain the correct wave
     /// boundary data from view data.
     /// </summary>
     public interface IWaveBoundaryFactoryHelper
@@ -25,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
         /// The set of <see cref="GridBoundaryCoordinate"/> corresponding with the endpoints
         /// contained within <paramref name="coordinates"/>.
         /// </returns>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="System.ArgumentException">
         /// Thrown when there are less than 2 distinct coordinates provided.
         /// </exception>
         /// <remarks>

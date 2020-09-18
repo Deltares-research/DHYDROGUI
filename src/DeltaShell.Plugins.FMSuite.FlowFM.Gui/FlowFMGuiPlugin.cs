@@ -19,6 +19,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -69,55 +70,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             getActiveMapViewFunc = GetActiveMapView;
         }
 
-        public override string Name
-        {
-            get
-            {
-                return "Delft3D FM (Gui)";
-            }
-        }
+        public override string Name => "Delft3D FM (Gui)";
 
-        public override string DisplayName
-        {
-            get
-            {
-                return "D-Flow Flexible Mesh Plugin (UI)";
-            }
-        }
+        public override string DisplayName => "D-Flow Flexible Mesh Plugin (UI)";
 
-        public override string Description
-        {
-            get
-            {
-                return FlowFM.Properties.Resources.FlowFMApplicationPlugin_Description;
-            }
-        }
+        public override string Description => FlowFM.Properties.Resources.FlowFMApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get
-            {
-                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
-            }
-        }
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion
-        {
-            get
-            {
-                return "1.1.0.0";
-            }
-        }
+        public override string FileFormatVersion => "1.1.0.0";
 
         public override ResourceManager Resources { get; set; }
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get
-            {
-                return new FlowFMMapLayerProvider();
-            }
-        }
+        public override IMapLayerProvider MapLayerProvider => new FlowFMMapLayerProvider();
 
         public override IGui Gui
         {
@@ -157,21 +122,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
         }
 
-        public override IRibbonCommandHandler RibbonCommandHandler
-        {
-            get
-            {
-                return new Ribbon.Ribbon();
-            }
-        }
+        public override IRibbonCommandHandler RibbonCommandHandler => new Ribbon.Ribbon();
 
-        public static MapView ActiveMapView
-        {
-            get
-            {
-                return getActiveMapViewFunc();
-            }
-        }
+        public static MapView ActiveMapView => getActiveMapViewFunc();
 
         /// <summary>
         /// Gets the project TreeView node presenters.
@@ -190,6 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new HeatFluxModelNodePresenter {GuiPlugin = this};
             yield return new WindItemListNodePresenter {GuiPlugin = this};
             yield return new WindItemNodePresenter {GuiPlugin = this};
+            yield return new RestartFileNodePresenter(this);
 
             yield return new Feature2DPolygonTreeViewNodePresenter {GuiPlugin = this};
             yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroAreaLayerNames.LandBoundariesPluralName, Properties.Resources.landboundary) {GuiPlugin = this};

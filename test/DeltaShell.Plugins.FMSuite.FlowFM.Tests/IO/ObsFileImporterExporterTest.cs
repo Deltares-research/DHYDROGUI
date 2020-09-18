@@ -76,9 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ObsFileExportImportGroupableFeature2DPointAndReplaceDuplicatesWithEqualGroupNameAndPointName()
         {
-            var groupA = "GroupA.xyn";
-            var groupB = "GroupB.xyn";
-
             string filePathGroupA = TestHelper.GetTestFilePath("observationpointGroups\\GroupA.xyn");
             Assert.NotNull(filePathGroupA);
             Assert.IsTrue(File.Exists(filePathGroupA));

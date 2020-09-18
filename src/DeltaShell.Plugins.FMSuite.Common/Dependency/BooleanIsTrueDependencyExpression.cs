@@ -19,42 +19,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                                                       IEnumerable<ModelProperty> allProperties,
                                                       string dependencyExpression)
         {
-            ModelProperty dependencyProperty =
-                allProperties.FirstOrDefault(
-                    p =>
-                        p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
-                                                                     StringComparison.InvariantCultureIgnoreCase));
+            ModelProperty dependencyProperty = allProperties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
+                                                                                                                              StringComparison.InvariantCultureIgnoreCase));
 
-            if (dependencyProperty != null)
+            if (dependencyProperty != null && dependencyProperty.PropertyDefinition.DataType != typeof(bool))
             {
-                if (dependencyProperty.PropertyDefinition.DataType != typeof(bool))
-                {
-                    return string.Format("Model property '{0}' should be have 'boolean' data type.",
-                                         dependencyExpression);
-                }
+                return $"Model property '{dependencyExpression}' should be have 'boolean' data type.";
             }
 
             return null;
         }
 
-        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(
-            ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
         {
             return properties =>
             {
-                ModelProperty dependencyProperty =
-                    properties?.FirstOrDefault(
-                        p =>
-                            p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
-                                                                         StringComparison.InvariantCultureIgnoreCase));
+                ModelProperty dependencyProperty = properties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
+                                                                                                                                StringComparison.InvariantCultureIgnoreCase));
 
-                if (dependencyProperty != null)
-                {
-                    return FMParser.FromString<bool>(dependencyProperty.GetValueAsString());
-                }
-
-                // Property does not exist -> Do not enable!
-                return false;
+                return dependencyProperty != null && FMParser.FromString<bool>(dependencyProperty.GetValueAsString());
             };
         }
 

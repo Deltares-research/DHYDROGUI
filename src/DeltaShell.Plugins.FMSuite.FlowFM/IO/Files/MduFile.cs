@@ -343,15 +343,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
 
                 // write the bathymetry in the net file.
-                IList<ISpatialOperation> bathymetryOperations;
-                if (modelDefinition.SpatialOperations.TryGetValue(
-                        WaterFlowFMModelDefinition.BathymetryDataItemName, out bathymetryOperations) &&
-                    File.Exists(targetFile))
+                if (modelDefinition.SpatialOperations.TryGetValue(WaterFlowFMModelDefinition.BathymetryDataItemName, out IList<ISpatialOperation> bathymetryOperations) &&
+                    File.Exists(targetFile) && bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
                 {
-                    if (bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
-                    {
-                        WriteBathymetry(modelDefinition, targetFile);
-                    }
+                    WriteBathymetry(modelDefinition, targetFile);
                 }
 
                 // if needed, adjust coordinate system in netfile
@@ -580,8 +575,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IList<WaterFlowFMProperty> properties, IMduFileWriteConfig config)
         {
             WriteLine("# Generated on " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            WriteLine("# Deltares, Delft3D FM 2018 Suite Version " + FMSuiteFlowModelVersion + ", D-Flow FM Version " +
-                      FMDllVersion);
+            WriteLine($"# Deltares, Plugin D-FLOW FM Version {FMSuiteFlowModelVersion}, " +
+                      $"D-Flow FM Version {FMDllVersion}");
             SetValueToPropertyIfExists(properties, KnownProperties.Version, FMDllVersion);
             SetValueToPropertyIfExists(properties, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
             IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup =
@@ -608,21 +603,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             /* Not include Morphology / Sediment MDUs if UseMorSed has not been selected */
             propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.morphology));
-            WaterFlowFMProperty useMorSedProp =
-                properties.FirstOrDefault(md => md.PropertyDefinition.MduPropertyName == "UseMorSed");
-            if (useMorSedProp != null)
+            WaterFlowFMProperty useMorSedProp = properties.FirstOrDefault(md => md.PropertyDefinition.MduPropertyName == "UseMorSed");
+            if (useMorSedProp != null && 
+                (!config.WriteMorphologySediment || int.TryParse(GetPropertyValue(useMorSedProp, config), out int useMorSed) && useMorSed != 1))
             {
-                if (!config.WriteMorphologySediment ||
-                    int.TryParse(GetPropertyValue(useMorSedProp, config), out int useMorSed) && useMorSed != 1)
-                {
-                    propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.sediment));
-                }
+                propertiesByGroup = propertiesByGroup.Where(p => !p.Key.Equals(KnownProperties.sediment));
             }
 
             return propertiesByGroup;
         }
 
-        private void WriteMorphologySediment(string mduFilePath, IEnumerable<WaterFlowFMProperty> modelDefinition)
+        private static void WriteMorphologySediment(string mduFilePath, IEnumerable<WaterFlowFMProperty> modelDefinition)
         {
             if (modelDefinition == null)
             {
@@ -678,17 +669,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static void SetValueToPropertyIfExists(IEnumerable<WaterFlowFMProperty> modelDefinition, string name,
                                                        string value)
         {
-            if (modelDefinition == null)
-            {
-                return;
-            }
-
-            WaterFlowFMProperty waterFlowFmProperty = modelDefinition.FirstOrDefault(
+            WaterFlowFMProperty waterFlowFmProperty = modelDefinition?.FirstOrDefault(
                 p => p.PropertyDefinition.MduPropertyName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            if (waterFlowFmProperty != null)
-            {
-                waterFlowFmProperty.SetValueAsString(value);
-            }
+            waterFlowFmProperty?.SetValueAsString(value);
         }
 
         private static string GetPropertyValue(WaterFlowFMProperty prop, IMduFileWriteConfig config)

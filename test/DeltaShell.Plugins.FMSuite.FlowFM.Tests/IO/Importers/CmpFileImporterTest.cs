@@ -9,7 +9,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
     public class CmpFileImporterTest
     {
         private CmpFileImporter importer;
-        private BoundaryCondition boundaryCondition;
 
         [SetUp]
         public void Setup()
