@@ -9,6 +9,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
@@ -149,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private static string GetNotSupportedTimeSeriesMessage(string structureName, ModelProperty modelProperty, Steerable steerableProperty)
         {
-           return $"Trying to generate Time series for 2D Structure: {structureName}, property: {modelProperty} mapped as {modelProperty.PropertyDefinition.FilePropertyName}, type: {steerableProperty.Mode} which is not yet supported.";
+           return string.Format(Resources.StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_supported_, structureName, modelProperty, modelProperty.PropertyDefinition.FilePropertyName, steerableProperty.Mode);
         }
 
         #region Pump

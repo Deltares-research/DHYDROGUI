@@ -5,6 +5,8 @@ using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using NUnit.Framework;
+using CommonResources = DeltaShell.Plugins.FMSuite.Common.Properties.Resources;
+using FmResources = DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
@@ -56,10 +58,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(File.Exists(iniFilePath));
             Assert.That(File.Exists(structureFilePath));
             const string propertyName = "Horizontal opening width: REALTIME (generalstructure)";
-            string structureFactoryException = $"Trying to generate Time series for 2D Structure: Maeslantkering, property: {propertyName}, mapped as GateOpeningWidth mapped as type: External which is not yet supported.";
-            string structuresFileError = $"Error while reading and converting 2D Structures from {structureFilePath}";
-            const string convertStructureError = "Failed to convert .ini structure definition 'Maeslantkering' to actual structure.";
-            string waterFlowFmFileImporterError = $"Error while importing a Flow Flexible Mesh Model from {iniFilePath}";
+            const string structureName = "Maeslantkering";
+            const string propertyFileName = "GateOpeningWidth";
+            const string expectedMappedTime = "External";
+            string structureFactoryException = string.Format(
+                CommonResources.StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_supported_,
+                structureName, propertyName, propertyFileName,expectedMappedTime );
+            string structuresFileError =
+                string.Format(CommonResources.StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_converting_2D_Structures_from__0_, structureFilePath);
+            string convertStructureError = string.Format(CommonResources.StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_, structureName);
+            string waterFlowFmFileImporterError = string.Format(FmResources.WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_, "Flow Flexible Mesh Model", iniFilePath);
 
             // When
             var importer = new WaterFlowFMFileImporter(() => null);

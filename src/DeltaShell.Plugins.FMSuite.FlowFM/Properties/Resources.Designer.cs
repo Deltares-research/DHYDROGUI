@@ -1284,6 +1284,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while importing a {0} from {1}.
+        /// </summary>
+        public static string WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grid is empty.
         /// </summary>
         public static string WaterFlowFMGridValidator_Validate_Grid_is_empty {
