@@ -159,11 +159,6 @@ namespace DelftTools.Hydro.Structures
             CapacityTimeSeries = (TimeSeries) pump.CapacityTimeSeries.Clone(true);
         }
 
-        public override StructureType GetStructureType()
-        {
-            return StructureType.Pump;
-        }
-
         [EditAction]
         private void OnCanBeTimeDependentSet()
         {

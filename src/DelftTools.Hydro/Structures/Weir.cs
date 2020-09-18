@@ -200,7 +200,7 @@ namespace DelftTools.Hydro.Structures
             CrestLevelTimeSeries = (TimeSeries) copyFrom.CrestLevelTimeSeries.Clone(true);
         }
 
-        public override StructureType GetStructureType()
+        public StructureType GetStructureType()
         {
             if (weirFormula is GatedWeirFormula)
             {

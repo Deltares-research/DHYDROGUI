@@ -12,25 +12,8 @@ namespace DelftTools.Hydro
     [Entity(FireOnCollectionChange = false)]
     public abstract class BranchStructure : BranchFeatureHydroObject, IStructure1D
     {
-        // TODO: check if we need composite structure here, maybe better via Owner, so that child structures will exist only in composite structures
-        private ICompositeBranchStructure parentStructure;
-
-        [Aggregation]
-        public virtual ICompositeBranchStructure ParentStructure
-        {
-            get => parentStructure;
-            set => parentStructure = value;
-        }
-
         [NoNotifyPropertyChange]
         public virtual double OffsetY { get; set; }
-
-        [Aggregation]
-        public virtual IHydroNetwork HydroNetwork
-        {
-            get => (IHydroNetwork) base.Network;
-            set => base.Network = value;
-        }
 
         public virtual string Description { get; set; }
 
@@ -38,42 +21,9 @@ namespace DelftTools.Hydro
         [FeatureAttribute(Order = 1)]
         public virtual string LongName { get; set; }
 
-        [NoNotifyPropertyChange] // this is handled in the base class (BranchFeature)
-        public override double Chainage
-        {
-            get => ParentStructure?.Chainage ?? base.Chainage;
-            set
-            {
-                if (ParentStructure != null && Math.Abs(ParentStructure.Chainage - value) >= double.Epsilon)
-                {
-                    // if CompositeBranchStructure has a different chainage then update that (and all children)
-                    ParentStructure.Chainage = value;
-                }
-                else
-                {
-                    base.Chainage = value;
-                }
-            }
-        }
-
         public virtual int CompareTo(BranchStructure other)
         {
-            if (parentStructure == null)
-            {
-                return CompareTo((IBranchFeature) other);
-            }
-
-            if (parentStructure != other.parentStructure)
-            {
-                return CompareTo((IBranchFeature) other);
-            }
-
-            if (parentStructure.Structures.IndexOf(this) > parentStructure.Structures.IndexOf(other))
-            {
-                return 1;
-            }
-
-            return -1;
+            return CompareTo((IBranchFeature) other);
         }
 
         public override void CopyFrom(object source)
@@ -88,7 +38,5 @@ namespace DelftTools.Hydro
             var other = (BranchStructure) obj;
             return CompareTo(other);
         }
-
-        public abstract StructureType GetStructureType();
     }
 }
