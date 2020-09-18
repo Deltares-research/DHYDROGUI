@@ -9,7 +9,7 @@ using NetTopologySuite.Extensions.Features;
 namespace DelftTools.Hydro
 {
     [Entity]
-    public class Catchment : Feature, ICopyFrom, IHydroObject, IComparable, INameable
+    public class Catchment : Feature, ICopyFrom, IHydroObject, IComparable
     {
         public virtual bool IsGeometryDerivedFromAreaSize { get; set; }
 
