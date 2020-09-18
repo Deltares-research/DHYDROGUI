@@ -140,7 +140,6 @@
     <Compile Include="FeatureData\BridgePillarFmModelFeatureCoordinateDataSyncExtensions.cs" />
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
-    <Compile Include="FeatureData\EmbankmentGenerator.cs" />
     <Compile Include="FeatureData\EmbankmentMerger.cs" />
     <Compile Include="Coverages\CoverageDepthLayersList.cs" />
     <Compile Include="Coverages\FileBasedFeatureCoverage.cs" />
