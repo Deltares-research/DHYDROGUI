@@ -173,7 +173,6 @@
     <Compile Include="MapLayers\CustomRenderers\EnclosureRenderer.cs" />
     <Compile Include="MapLayers\Editors\HydroAreaFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\EmbankmentInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\HydroObjectToHydroLinkRelationInteractor.cs" />
     <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
     <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
@@ -184,7 +183,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="MapLayers\Editors\Interactors\StructureFeatureToStructureRelationInteractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NetworkEditorApplicationPlugin.cs" />
   </ItemGroup>
