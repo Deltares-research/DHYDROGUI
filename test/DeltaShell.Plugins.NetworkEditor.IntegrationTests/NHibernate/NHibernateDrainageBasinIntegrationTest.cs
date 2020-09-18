@@ -86,30 +86,5 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(basin, retrievedWwtp.Basin);
             Assert.AreEqual(wwtp.Description, retrievedWwtp.Description);
         }
-
-        [Test]
-        public void SaveLoadRunoffBoundary()
-        {
-            var boundary = new RunoffBoundary
-            {
-                Name = "testName",
-                Description = "testDescr",
-                Geometry = new Point(55, 33)
-            };
-
-            var path = "rb.dsproj";
-
-            var basin = new DrainageBasin();
-            basin.Boundaries.Add(boundary);
-
-            DrainageBasin retrievedBasin = SaveLoadObject(basin, path);
-
-            Assert.AreEqual(1, retrievedBasin.Boundaries.Count);
-            RunoffBoundary retrievedBoundary = retrievedBasin.Boundaries.First();
-            Assert.AreEqual(boundary.Geometry, retrievedBoundary.Geometry);
-            Assert.AreEqual(boundary.Name, retrievedBoundary.Name);
-            Assert.AreEqual(basin, retrievedBoundary.Basin);
-            Assert.AreEqual(boundary.Description, retrievedBoundary.Description);
-        }
     }
 }

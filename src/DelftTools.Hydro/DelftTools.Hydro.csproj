@@ -206,7 +206,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RunoffBoundary.cs" />
     <Compile Include="Structures\BridgeFrictionType.cs" />
     <Compile Include="Structures\CompositeBranchStructure.cs" />
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
@@ -345,11 +344,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\unpaved.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="RunoffBoundary.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\sacramento.png" />

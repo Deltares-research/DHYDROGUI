@@ -17,8 +17,6 @@ namespace DelftTools.Hydro
     [DisplayName("Drainage Basin")]
     public class DrainageBasin : RegionBase, IDrainageBasin
     {
-        public virtual IEventedList<RunoffBoundary> Boundaries { get; }
-
         public virtual IEventedList<Catchment> Catchments { get; set; }
 
         public virtual IEventedList<WasteWaterTreatmentPlant> WasteWaterTreatmentPlants { get; set; }
