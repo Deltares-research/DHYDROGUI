@@ -205,7 +205,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Structures\BridgeFrictionType.cs" />
-    <Compile Include="Structures\CompositeBranchStructure.cs" />
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\ICompositeBranchStructure.cs" />
     <Compile Include="Structures\IGate.cs" />
@@ -282,7 +281,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Structures\CompositeBranchStructure.hbm.xml" />
     <EmbeddedResource Include="Structures\ICompositeBranchStructure.hbm.xml" />
     <EmbeddedResource Include="Structures\IWeirFormula.hbm.xml">
       <SubType>Designer</SubType>
