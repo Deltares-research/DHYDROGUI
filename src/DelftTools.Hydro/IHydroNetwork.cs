@@ -8,6 +8,5 @@ namespace DelftTools.Hydro
 {
     public interface IHydroNetwork : INetwork, IHydroRegion
     {
-        IEnumerable<IChannel> Channels { get; }
     }
 }
