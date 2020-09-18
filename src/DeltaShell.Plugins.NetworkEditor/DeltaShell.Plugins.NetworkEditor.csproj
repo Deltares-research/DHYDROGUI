@@ -174,7 +174,6 @@
     <Compile Include="MapLayers\Editors\HydroAreaFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\EmbankmentInteractor.cs" />
     <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
     <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
