@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
             catch (Exception e)
             {
-                Log.Error($"While saving the following error was thrown: {e.Message}, validate the model for more information.");
+                Log.ErrorFormat(Resources.BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_, e.Message);
             }
             finally
             {

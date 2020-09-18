@@ -61,6 +61,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to While saving the following error was thrown: {0}, validate the model for more information..
+        /// </summary>
+        public static string BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_ {
+            get {
+                return ResourceManager.GetString("BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_mode" +
+                        "l_for_more_information_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No values given for {0}..
+        /// </summary>
+        public static string BcwFile_WriteBoundaryData_No_values_given_for__0__ {
+            get {
+                return ResourceManager.GetString("BcwFile_WriteBoundaryData_No_values_given_for__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Migrating {0}.
         /// </summary>
         public static string DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_ {
@@ -76,15 +95,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("FileMigrateBehaviour_HandleNotExists_The_file_associated_with_property__0____1__a" +
                         "t__2___does_not_exist_and_thus_is_not_migrated_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No values given for {0}..
-        /// </summary>
-        public static string BcwFile_WriteBoundaryData_No_values_given_for__0__ {
-            get {
-                return ResourceManager.GetString("BcwFile_WriteBoundaryData_No_values_given_for__0__", resourceCulture);
             }
         }
         
@@ -538,16 +548,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_f" +
                         "alse_when_using_Spherical_Coordinate_Systems_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error found while saving. Please validate the model before saving. Error: {0}.
-        /// </summary>
-        public static string WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_saving__Error___0_ {
-            get {
-                return ResourceManager.GetString("WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_" +
-                        "saving__Error___0_", resourceCulture);
             }
         }
         

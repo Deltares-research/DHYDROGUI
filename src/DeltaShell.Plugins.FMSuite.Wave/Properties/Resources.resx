@@ -331,7 +331,7 @@
   <data name="BcwFile_WriteBoundaryData_No_values_given_for__0__" xml:space="preserve">
     <value>No values given for {0}.</value>
   </data>
-  <data name="WaveModel_ModelSaveTo_Error_found_while_saving__Please_validate_the_model_before_saving__Error___0_" xml:space="preserve">
-    <value>Error found while saving. Please validate the model before saving. Error: {0}</value>
+  <data name="BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_" xml:space="preserve">
+    <value>While saving the following error was thrown: {0}, validate the model for more information.</value>
   </data>
 </root>

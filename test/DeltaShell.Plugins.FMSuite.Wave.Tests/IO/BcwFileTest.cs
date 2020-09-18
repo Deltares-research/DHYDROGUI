@@ -123,13 +123,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Given
             const string boundaryConditionName = "boundary_condition";
-            string expectedLine = $"location             '{boundaryConditionName}'";
             const string fileName = "Waves.bcw";
             var bcwFile = new BcwFile();
             var functions = new List<IFunction>();
             string noValuesComponent = KnownWaveProperties.WaveHeight;
             string expectedErrorMssg = string.Format(Resources.BcwFile_WriteBoundaryData_No_values_given_for__0__, noValuesComponent);
-            string expectedLogMssg = $"While saving the following error was thrown: {expectedErrorMssg}, validate the model for more information.";
+            string expectedLogMssg = string.Format(Resources.BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_, expectedErrorMssg);
 
             // Generate Time series function with no values in one of the components.
             var timeSeriesFunction = new TimeSeries();
