@@ -156,7 +156,6 @@
     </Compile>
     <Compile Include="BranchFeatureHydroObject.cs" />
     <Compile Include="BranchStructure.cs" />
-    <Compile Include="Catchment.cs" />
     <Compile Include="Channel.cs" />
     <Compile Include="Embankment.cs" />
     <Compile Include="GroupableFeature2D.cs" />
@@ -294,9 +293,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ObservationPoint.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Catchment.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HydroRegion.hbm.xml">
