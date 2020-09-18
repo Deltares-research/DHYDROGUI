@@ -222,7 +222,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DeltaShellNetworkEditorIntegrationTest.cs" />
     <Compile Include="NHibernate\NHibernateHydroRegionTestBase.cs" />
     <Compile Include="NHibernate\NHibernateNetCdfFunctionStoreTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

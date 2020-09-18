@@ -15,7 +15,7 @@ namespace DelftTools.Hydro.Tests
             var subRegion2 = new HydroRegion();
 
             var subRegion1 = new HydroRegion {SubRegions = {subRegion2}};
-            var subRegion3 = new HydroNetwork();
+            var subRegion3 = new HydroRegion();
             var region = new HydroRegion
             {
                 SubRegions =
