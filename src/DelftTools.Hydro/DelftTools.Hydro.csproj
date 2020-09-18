@@ -175,7 +175,6 @@
     <Compile Include="Helpers\ICoordinateSystemExtensions.cs" />
     <Compile Include="HydroArea.cs" />
     <Compile Include="HydroRegion.cs" />
-    <Compile Include="HydroLink.cs" />
     <Compile Include="IHasCoordinateSystem.cs" />
     <Compile Include="IHydFileModel.cs" />
     <Compile Include="IHydroModel.cs" />

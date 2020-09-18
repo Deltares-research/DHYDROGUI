@@ -18,59 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
 
         public void Update(DateTime time, object value = null)
         {
-            List<IHydroObject> catchments = RRInputWaterLevel.FeatureVariable.Values.OfType<IHydroObject>().ToList();
-            if (catchments.Count == 0)
-            {
-                return;
-            }
-
-            int timeIndex = GetActualOrPreviousTimeIndex(FlowOutputWaterLevel.Time, time);
-            if (timeIndex < 0)
-            {
-                return;
-            }
-
-            List<INetworkFeature> linkedFlowFeatures = catchments.Select(f =>
-            {
-                List<INetworkFeature> networkFeatures = f.Links.Select(l => OtherSide(l, f)).OfType<INetworkFeature>().ToList();
-
-                if (networkFeatures.Count > 1)
-                {
-                    throw new NotSupportedException("Converting value from two linked features is not supported yet");
-                }
-
-                return networkFeatures.FirstOrDefault();
-            }).ToList();
-
-            // Throw away features without links; They should not propagate values.
-            catchments = catchments.Where((f, i) => linkedFlowFeatures[i] != null).ToList();
-            linkedFlowFeatures = linkedFlowFeatures.Where(f => f != null).ToList();
-
-            foreach (INetworkFeature networkFeature in linkedFlowFeatures.Where(f => !networkFeatureLocationIndex.ContainsKey(f)))
-            {
-                networkFeatureLocationIndex[networkFeature] = FindIndexOfUpstreamLocation(networkFeature);
-            }
-
-            var inputWaterLevels = new double[catchments.Count];
-            for (var i = 0; i < catchments.Count; i++)
-            {
-                int locationIndex = networkFeatureLocationIndex[linkedFlowFeatures[i]];
-                inputWaterLevels[i] = FlowOutputWaterLevel.GetValues<double>(
-                    new VariableIndexRangeFilter(FlowOutputWaterLevel.Time, timeIndex),
-                    new VariableIndexRangeFilter(FlowOutputWaterLevel.Locations, locationIndex))[0];
-            }
-
-            bool oldValue = RRInputWaterLevel.Store.FireEvents;
-            try
-            {
-                RRInputWaterLevel.Store.FireEvents = false;
-                RRInputWaterLevel.Time.Clear();
-                RRInputWaterLevel[time] = inputWaterLevels;
-            }
-            finally
-            {
-                RRInputWaterLevel.Store.FireEvents = oldValue;
-            }
+            // TODO D3DFMIQ-2083
         }
 
         public override object DeepClone()

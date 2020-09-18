@@ -24,28 +24,11 @@ namespace DelftTools.Hydro
 
         public virtual IEnumerable<IHydroObject> AllHydroObjects { get; }
 
-        public virtual IEventedList<HydroLink> Links { get; set; }
-
         public new virtual bool EditWasCancelled { get; }
 
         public virtual IEnumerable<object> GetDirectChildren()
         {
             yield break;
-        }
-
-        public virtual HydroLink AddNewLink(IHydroObject source, IHydroObject target)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void RemoveLink(IHydroObject source, IHydroObject target)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool CanLinkTo(IHydroObject source, IHydroObject target)
-        {
-            return false;
         }
     }
 }

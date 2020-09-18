@@ -17,14 +17,7 @@ namespace DelftTools.Hydro
     [Entity]
     public class HydroRegion : RegionBase, IHydroRegion
     {
-        private IEventedList<HydroLink> links;
-
         private bool isCloning;
-
-        public HydroRegion()
-        {
-            Initialize();
-        }
 
         public override IEventedList<IRegion> SubRegions
         {
@@ -58,70 +51,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual IEventedList<HydroLink> Links
-        {
-            get => links;
-            set
-            {
-                if (links != null)
-                {
-                    links.CollectionChanged -= OnLinksCollectionChanged;
-                }
-
-                links = value;
-
-                if (links != null)
-                {
-                    links.CollectionChanged += OnLinksCollectionChanged;
-                }
-            }
-        }
-
-        public static HydroLink AddNewLink(IHydroObject source, IHydroObject target)
-        {
-            var link = new HydroLink(source, target);
-
-            IHydroRegion commonRegion = GetCommonRegion(source, target);
-            commonRegion.Links.Add(link);
-
-            return link;
-        }
-
-        public static void RemoveLink(IHydroObject source, IHydroObject target)
-        {
-            HydroLink link = source.Links.First(l => Equals(l.Source, source) && Equals(l.Target, target));
-
-            IHydroRegion commonRegion = GetCommonRegion(source, target);
-
-            commonRegion.Links.Remove(link);
-        }
-
-        public static bool CanLinkTo(IHydroObject source, IHydroObject target)
-        {
-            if (!source.CanBeLinkSource)
-            {
-                return false;
-            }
-
-            if (!target.CanBeLinkTarget)
-            {
-                return false;
-            }
-
-            if (Equals(source, target))
-            {
-                return false;
-            }
-
-            // source and target have common parent region
-            if (GetCommonRegion(source, target) == null)
-            {
-                return false;
-            }
-
-            return false;
-        }
-
         public static IHydroRegion GetCommonRegion(IHydroObject source, IHydroObject target)
         {
             if (Equals(source.Region, target.Region))
@@ -143,23 +72,24 @@ namespace DelftTools.Hydro
             List<IHydroObject> originalObjects = original.AllHydroObjects.ToList();
             List<IHydroObject> clonedObjects = clone.AllHydroObjects.ToList();
 
-            foreach (HydroLink link in original.Links)
-            {
-                var linkClone = (HydroLink) link.Clone();
+            //TODO D3DFMIQ-2083
+            //foreach (HydroLink link in original.Links)
+            //{
+            //    var linkClone = (HydroLink) link.Clone();
 
-                // repair link
-                linkClone.Source = clonedObjects[originalObjects.IndexOf(link.Source)];
-                linkClone.Target = clonedObjects[originalObjects.IndexOf(link.Target)];
+            //    // repair link
+            //    linkClone.Source = clonedObjects[originalObjects.IndexOf(link.Source)];
+            //    linkClone.Target = clonedObjects[originalObjects.IndexOf(link.Target)];
 
-                // replace link in source and target objects
-                int linkInSourceIndex = linkClone.Source.Links.IndexOf(link);
-                linkClone.Source.Links[linkInSourceIndex] = linkClone;
+            //    // replace link in source and target objects
+            //    int linkInSourceIndex = linkClone.Source.Links.IndexOf(link);
+            //    linkClone.Source.Links[linkInSourceIndex] = linkClone;
 
-                int linkInTargetIndex = linkClone.Target.Links.IndexOf(link);
-                linkClone.Target.Links[linkInTargetIndex] = linkClone;
+            //    int linkInTargetIndex = linkClone.Target.Links.IndexOf(link);
+            //    linkClone.Target.Links[linkInTargetIndex] = linkClone;
 
-                clone.Links.Add(linkClone);
-            }
+            //    clone.Links.Add(linkClone);
+            //}
         }
 
         public static IEnumerable<IHydroRegion> GetAllRegions(IHydroRegion parentRegion)
@@ -171,15 +101,9 @@ namespace DelftTools.Hydro
             }
         }
 
-        public static void RemoveLink(HydroLink link)
-        {
-            RemoveLink(link.Source, link.Target);
-        }
-
         public override object Clone()
         {
             var clone = (HydroRegion) base.Clone();
-            clone.Initialize();
             clone.Name = Name;
             clone.Geometry = (IGeometry) Geometry?.Clone();
             clone.Attributes = (IFeatureAttributeCollection) Attributes?.Clone();
@@ -192,27 +116,7 @@ namespace DelftTools.Hydro
 
         public override IEnumerable<object> GetDirectChildren()
         {
-            return SubRegions.Cast<object>().Union(Links.Cast<object>());
-        }
-
-        void IHydroRegion.RemoveLink(IHydroObject source, IHydroObject target)
-        {
-            RemoveLink(source, target);
-        }
-
-        bool IHydroRegion.CanLinkTo(IHydroObject source, IHydroObject target)
-        {
-            return CanLinkTo(source, target);
-        }
-
-        HydroLink IHydroRegion.AddNewLink(IHydroObject source, IHydroObject target)
-        {
-            return AddNewLink(source, target);
-        }
-
-        private void Initialize()
-        {
-            Links = new EventedList<HydroLink>();
+            return SubRegions;
         }
 
         [EditAction]
@@ -232,41 +136,7 @@ namespace DelftTools.Hydro
                     break;
 
                 case NotifyCollectionChangeAction.Remove:
-                    HydroLink[] links = subRegion.GetAllItemsRecursive().OfType<IHydroObject>()
-                                                 .Where(o => o.Links != null)
-                                                 .SelectMany(o => o.Links).Where(l => Links.Contains(l)).ToArray();
-                    foreach (HydroLink link in links)
-                    {
-                        RemoveLink(link);
-                    }
-
                     break;
-            }
-        }
-
-        [EditAction]
-        private void OnLinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (isCloning)
-            {
-                return;
-            }
-
-            var link = e.GetRemovedOrAddedItem() as HydroLink;
-
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                link.Source.Links.Remove(link);
-                link.Target.Links.Remove(link);
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                link.Source.Links.Add(link);
-                link.Target.Links.Add(link);
-            }
-            else
-            {
-                throw new NotSupportedException();
             }
         }
     }

@@ -14,20 +14,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         public EmbankmentInteractor(ILayer layer, IFeature feature, IEditableObject editableObject)
             : base(layer, feature, ((VectorLayer) layer).Style, editableObject) {}
 
-        public override void Stop()
-        {
-            base.Stop();
-
-            var embankment = (Embankment) SourceFeature;
-
-            foreach (HydroLink link in embankment.Links)
-            {
-                IGeometry geometry = link.Geometry;
-                geometry.Coordinates[0] = embankment.Geometry.Coordinates[0];
-                link.Geometry = geometry;
-            }
-        }
-
         public override bool InsertTracker(Coordinate coordinate, SnapResult snapResult)
         {
             coordinate.Z = 0.0d;

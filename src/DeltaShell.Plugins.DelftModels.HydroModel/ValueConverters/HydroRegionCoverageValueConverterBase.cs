@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -173,55 +170,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
         }
 
         protected abstract void Convert(DateTime dateTimeToUpdate = default(DateTime));
-
-        protected DateTime[] SynchronizeTimeValues(DateTime dateTimeToUpdate)
-        {
-            bool updateOnlySpecificTimeSlice = dateTimeToUpdate != default(DateTime);
-
-            if (updateOnlySpecificTimeSlice && ConvertedValue.Time.Values.Count - 1 == OriginalValue.Time.Values.Count) // we're only one time step off
-            {
-                if (!OriginalValue.Time.Values.Contains(dateTimeToUpdate))
-                {
-                    OriginalValue.Time.Values.Add(dateTimeToUpdate);
-                }
-
-                return new[]
-                {
-                    dateTimeToUpdate
-                };
-            }
-
-            if (OriginalValue.Time.Values.Count > 0)
-            {
-                OriginalValue.Time.RemoveValues();
-            }
-
-            if (ConvertedValue.Time.Values.Count > 0)
-            {
-                OriginalValue.Time.Values.AddRange(ConvertedValue.Time.Values);
-            }
-
-            return ConvertedValue.Time.Values.ToArray();
-        }
-
-        protected static IHydroObject OtherSide(HydroLink hydroLink, IHydroObject me)
-        {
-            return Equals(hydroLink.Source, me) ? hydroLink.Target : hydroLink.Source;
-        }
-
-        protected static int GetActualOrPreviousTimeIndex(IVariable<DateTime> timeVariable, DateTime timeToUpdate)
-        {
-            IMultiDimensionalArray<DateTime> timeValues = timeVariable.Values;
-            int timeIndex = timeValues.IndexOf(timeToUpdate);
-            if (timeIndex == -1)
-            {
-                ArrayList adapter = ArrayList.Adapter(timeValues);
-                // first index smaller:
-                timeIndex = ~adapter.BinarySearch(timeToUpdate) - 1;
-            }
-
-            return timeIndex;
-        }
 
         private bool IsInitialized
         {
