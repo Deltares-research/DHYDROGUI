@@ -36,29 +36,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ChannelTest.cs" />
-    <Compile Include="DrainageBasinTest.cs" />
     <Compile Include="GroupableFeatureComparerTest.cs" />
     <Compile Include="GroupableFeatureExtensionsTest.cs" />
     <Compile Include="GroupablePointFeatureTest.cs" />
-    <Compile Include="Helpers\HydroNetworkHelperTest.cs" />
     <Compile Include="Helpers\ThreadingHelperTest.cs" />
     <Compile Include="HydroAreaTest.cs" />
-    <Compile Include="HydroNetworkExtensionsTest.cs" />
-    <Compile Include="HydroNodeTest.cs" />
     <Compile Include="HydroRegionTest.cs" />
     <Compile Include="HydroTimeSeriesFactoryTest.cs" />
-    <Compile Include="LateralSourceTest.cs" />
     <Compile Include="NameableFeatureComparerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RunoffBoundaryTest.cs" />
     <Compile Include="Structures\BridgePillarTest.cs" />
-    <Compile Include="Structures\CompositeStructureTest.cs" />
     <Compile Include="Structures\PumpTest.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormulaTest.cs" />
     <Compile Include="Structures\WeirTest.cs" />
     <Compile Include="TestClassSetup.cs" />
-    <Compile Include="WasteWaterTreatmentPlantTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AutoFixture, Version=4.11.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
