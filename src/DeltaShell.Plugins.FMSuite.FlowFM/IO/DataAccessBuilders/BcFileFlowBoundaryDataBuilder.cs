@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
@@ -208,63 +209,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             using (CultureUtils.SwitchToInvariantCulture())
             {
-                if (!TryParseForcingType(dataBlock, out ForcingTypeDefinition forcingTypeDefinition))
-                {
-                    LogWarningParsePropertyFailed(dataBlock, "function type", dataBlock.FunctionType);
+                DaoDataBlock daoDataBlock = GetDaoDataBlock(dataBlock);
+                if (daoDataBlock == null)
                     return false;
-                }
 
-                if (ExcludedDataTypes?.Contains(forcingTypeDefinition.ForcingType) == true)
-                {
-                    Log.Info(
-                        $"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}: skipping boundary dataBlock of function type {forcingTypeDefinition.ForcingType}.");
-                    return true;
-                }
-
-                if (!TryParseDepthLayerDefinition(dataBlock, out VerticalProfileDefinition verticalProfileDefinition))
-                {
-                    LogWarningParsePropertyFailed(dataBlock, "vertical profile definition",
-                                                  dataBlock.VerticalPositionDefinition);
-                    return false;
-                }
-
-                if (!TryParseVerticalInterpolationType(
-                        dataBlock, out VerticalInterpolationType verticalInterpolationType))
-                {
-                    LogWarningParsePropertyFailed(dataBlock, "vertical interpolation type",
-                                                  dataBlock.VerticalInterpolationType);
-                    return false;
-                }
-
-                if (!TryParseTimeInterpolationType(dataBlock, out InterpolationType timeInterpolationType))
-                {
-                    LogWarningParsePropertyFailed(dataBlock, "time interpolation type",
-                                                  dataBlock.TimeInterpolationType);
-                    return false;
-                }
-
-                if (!TryParseSeriesIndex(dataBlock, out int seriesIndex))
-                {
-                    LogWarningParsePropertyFailed(dataBlock, dataBlock.SeriesIndex, "series index");
-                    return false;
-                }
-
-                seriesIndex--; //to C-style indexing.
-
-                if (!TryParseOffset(dataBlock, out double offset))
-                {
-                    LogWarningParsePropertyFailed(dataBlock, "offset", dataBlock.Offset);
-                    return false;
-                }
-
-                if (!TryParseFactor(dataBlock, out double factor))
-                {
-                    LogWarningParsePropertyFailed(dataBlock, "factor", dataBlock.Factor);
-                    return false;
-                }
 
                 // parse the Quantities in bc / bcm file
-                string[] componentKeys = forcingTypeDefinition.ComponentDefinitions;
+                string[] componentKeys = daoDataBlock.ForcingTypeDefinition.ComponentDefinitions;
                 var argVariables = new Dictionary<int, BcQuantityData>();
                 var compVariables = new Dictionary<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData>();
 
@@ -273,15 +224,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     string quantityName = GetQuantityName(quantityData);
 
                     // if it's an argument quantity, add it to the argVariables and continue
-                    if (forcingTypeDefinition.ArgumentDefinitions.Contains(quantityName))
+                    if (daoDataBlock.ForcingTypeDefinition.ArgumentDefinitions.Contains(quantityName))
                     {
-                        argVariables.Add(forcingTypeDefinition.ArgumentDefinitions.ToList().IndexOf(quantityName),
+                        argVariables.Add(daoDataBlock.ForcingTypeDefinition.ArgumentDefinitions.ToList().IndexOf(quantityName),
                                          quantityData);
 
                         continue;
                     }
 
-                    quantityName = ParseQuantityName(componentKeys, quantityName, forcingTypeDefinition);
+                    quantityName = ParseQuantityName(componentKeys, quantityName, daoDataBlock.ForcingTypeDefinition);
 
                     // if we haven't match the quantity, give a warning and continue
                     if (quantityName == null)
@@ -302,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                         }
 
                         if (quantityKeyValuePair.Key != null &&
-                            TryParseVerticalPosition(quantityData, out int layerIndex))
+                            ParseVerticalPosition(quantityData, out int layerIndex))
                         {
                             int totalComponents =
                                 QuantityNameToTypeDictionary.Count(kvp =>
@@ -370,17 +321,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                                                                     MatchBoundaryCondition(
                                                                                         bc, flowQuantityEnum,
                                                                                         quantity.Value,
-                                                                                        forcingTypeDefinition))
+                                                                                        daoDataBlock.ForcingTypeDefinition))
                                                                          .ToList();
 
-                        boundaryCondition = existingConditions.ElementAtOrDefault(seriesIndex);
+                        boundaryCondition = existingConditions.ElementAtOrDefault(daoDataBlock.SeriesIndex);
 
                         if (boundaryCondition != null)
                         {
                             continue;
                         }
 
-                        bool isCorrection = IsCorrectionDataType(forcingTypeDefinition);
+                        bool isCorrection = IsCorrectionDataType(daoDataBlock.ForcingTypeDefinition);
 
                         if (CanCreateNewBoundaryCondition && !isCorrection)
                         {
@@ -392,7 +343,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                             }
 
                             boundaryCondition = CreateNewBoundaryCondition(quantity.Value.QuantityName, flowQuantityEnum,
-                                                                           forcingTypeDefinition.ForcingType,
+                                                                           daoDataBlock.ForcingTypeDefinition.ForcingType,
                                                                            matchingBoundaryConditionSet.Feature,
                                                                            timelag, quantityGroup);
 
@@ -404,7 +355,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                         else
                         {
                             Log.Warn(
-                                $"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}: quantity {quantity.Value} and forcing type {forcingTypeDefinition.ForcingType} do not match given boundary condition.");
+                                $"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}: quantity {quantity.Value} and forcing type {daoDataBlock.ForcingTypeDefinition.ForcingType} do not match given boundary condition.");
                         }
                     }
 
@@ -413,7 +364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                         continue;
                     }
 
-                    switch (forcingTypeDefinition.ForcingType)
+                    switch (daoDataBlock.ForcingTypeDefinition.ForcingType)
                     {
                         // adjust boundary condition for correction blocks
                         case BoundaryConditionDataType.AstroCorrection
@@ -426,8 +377,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                             break;
                     }
 
-                    boundaryCondition.Offset = offset;
-                    boundaryCondition.Factor = factor;
+                    boundaryCondition.Offset = daoDataBlock.Offset;
+                    boundaryCondition.Factor = daoDataBlock.Factor;
 
                     int dataIndex = matchingBoundaryConditionSet
                                     .SupportPointNames.ToList().IndexOf(dataBlock.SupportPoint);
@@ -477,22 +428,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                         if (!boundaryCondition.IsVerticallyUniform)
                         {
                             boundaryCondition.PointDepthLayerDefinitions[verticalProfileIndex] =
-                                verticalProfileDefinition;
+                                daoDataBlock.VerticalProfileDefinition;
                         }
 
                         // TODO: move this code to vertical profile (see TOOLS-21777)
-                        boundaryCondition.VerticalInterpolationType = verticalInterpolationType;
+                        boundaryCondition.VerticalInterpolationType = daoDataBlock.VerticalInterpolationType;
 
                         IFunction existingData = boundaryCondition.GetDataAtPoint(dataPoint);
                         try
                         {
                             existingData.BeginEdit(new DefaultEditAction("Importing dataBlock..."));
-                            if (forcingTypeDefinition.ForcingType == BoundaryConditionDataType.AstroCorrection ||
-                                forcingTypeDefinition.ForcingType == BoundaryConditionDataType.HarmonicCorrection)
+                            if (daoDataBlock.ForcingTypeDefinition.ForcingType == BoundaryConditionDataType.AstroCorrection ||
+                                daoDataBlock.ForcingTypeDefinition.ForcingType == BoundaryConditionDataType.HarmonicCorrection)
                             {
                                 IMultiDimensionalArray existingArgument = existingData.Arguments[0].GetValues();
 
-                                Type type = forcingTypeDefinition.ForcingType ==
+                                Type type = daoDataBlock.ForcingTypeDefinition.ForcingType ==
                                             BoundaryConditionDataType.AstroCorrection
                                                 ? typeof(string)
                                                 : typeof(double);
@@ -540,7 +491,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                     variable.SetValues(ParseValues(arg.Value, variable.ValueType, dataBlock.SupportPoint));
                                     if (variable is IVariable<DateTime>)
                                     {
-                                        variable.InterpolationType = timeInterpolationType;
+                                        variable.InterpolationType = daoDataBlock.InterpolationType;
                                     }
                                 }
 
@@ -946,88 +897,104 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
         }
 
-        private static bool TryParseForcingType(BcBlockData dataBlock, out ForcingTypeDefinition forcingType)
+        private static ForcingTypeDefinition ParseForcingType(BcBlockData dataBlock)
         {
-            return ForcingTypeDefinitions.TryGetValue(dataBlock.FunctionType, out forcingType);
+            try
+            {
+                return ForcingTypeDefinitions[dataBlock.FunctionType];
+            }
+            catch
+            {
+                LogWarningParsePropertyFailed(dataBlock, "function type", dataBlock.FunctionType);
+                throw;
+            }
         }
 
-        private static bool TryParseSeriesIndex(BcBlockData dataBlock, out int index)
+        private static int ParseSeriesIndex(BcBlockData dataBlock)
         {
-            if (dataBlock.SeriesIndex != null)
+            try
             {
-                return int.TryParse(dataBlock.SeriesIndex, out index);
+                // C-style indexing.
+                return dataBlock.SeriesIndex != null ? int.Parse(dataBlock.SeriesIndex) -1: 0;
             }
-
-            index = 1;
-            return true;
+            catch
+            {
+                LogWarningParsePropertyFailed(dataBlock, dataBlock.SeriesIndex, "series index");
+                throw;
+            }
         }
 
-        private static bool TryParseOffset(BcBlockData dataBlock, out double offset)
+        private static double ParseOffset(BcBlockData dataBlock)
         {
-            bool offsetParsed;
-            if (dataBlock.Offset == null)
+            try
             {
-                offset = 0;
-                offsetParsed = true;
-            }
-            else
-            {
-                offsetParsed = double.TryParse(dataBlock.Offset, out offset);
-            }
+                if (dataBlock.Offset == null)
+                {
+                    return 0;
+                }
 
-            return offsetParsed;
+                return double.Parse(dataBlock.Offset);
+            }
+            catch
+            {
+                LogWarningParsePropertyFailed(dataBlock, "offset", dataBlock.Offset);
+                throw;
+            }
         }
 
-        private static bool TryParseFactor(BcBlockData dataBlock, out double factor)
+        private static double ParseFactor(BcBlockData dataBlock)
         {
-            bool factorParsed;
-            if (dataBlock.Factor == null)
+            try
             {
-                factor = 1;
-                factorParsed = true;
+                return dataBlock.Factor == null ? 1 : double.Parse(dataBlock.Factor);
             }
-            else
+            catch
             {
-                factorParsed = double.TryParse(dataBlock.Factor, out factor);
+                LogWarningParsePropertyFailed(dataBlock, "factor", dataBlock.Factor);
+                throw;
             }
-
-            return factorParsed;
         }
 
-        private static bool TryParseDepthLayerDefinition(BcBlockData dataBlock,
-                                                         out VerticalProfileDefinition depthLayerDefinition)
+        private static VerticalProfileDefinition ParseDepthLayerDefinition(BcBlockData dataBlock)
         {
             if (dataBlock.VerticalPositionType == null)
             {
-                depthLayerDefinition = new VerticalProfileDefinition();
-                return true;
+                return new VerticalProfileDefinition();
             }
 
-            string verticalPositionType = dataBlock.VerticalPositionType.ToLower();
-            if (VerticalDefinitionKeys.ContainsKey(verticalPositionType))
+            try
             {
-                VerticalProfileType type = VerticalDefinitionKeys[verticalPositionType];
-                var depths = new List<double>();
-                if (type != VerticalProfileType.Uniform && type != VerticalProfileType.TopBottom)
+                string verticalPositionType = dataBlock.VerticalPositionType.ToLower();
+                if (!VerticalDefinitionKeys.ContainsKey(verticalPositionType))
                 {
-                    depths = dataBlock.VerticalPositionDefinition.Split().Select(double.Parse).ToList();
-                    IEnumerable<double> sortedDepths = VerticalProfileDefinition.SortDepths(depths, type);
-                    if (!depths.SequenceEqual(sortedDepths))
-                    {
-                        Log.WarnFormat(
-                            "File {0}, block starting at line {1}: vertical profile depths not correctly ordered; omitting dataBlock block.",
-                            dataBlock.FilePath, dataBlock.LineNumber);
-                    }
+                    throw new NotSupportedException($"Not possible to generate a Vertical Profile Definition for {verticalPositionType}.");
                 }
 
-                depthLayerDefinition = VerticalProfileDefinition.Create(type, depths);
-            }
-            else
-            {
-                depthLayerDefinition = null;
-            }
+                VerticalProfileType type = VerticalDefinitionKeys[verticalPositionType];
+                var depths = new List<double>();
+                if (type == VerticalProfileType.Uniform || type == VerticalProfileType.TopBottom)
+                {
+                    return VerticalProfileDefinition.Create(type, depths);
+                }
 
-            return depthLayerDefinition != null;
+                depths = dataBlock.VerticalPositionDefinition.Split().Select(double.Parse).ToList();
+                IEnumerable<double> sortedDepths = VerticalProfileDefinition.SortDepths(depths, type);
+                if (!depths.SequenceEqual(sortedDepths))
+                {
+                    Log.WarnFormat(
+                        "File {0}, block starting at line {1}: vertical profile depths not correctly ordered; omitting dataBlock block.",
+                        dataBlock.FilePath, dataBlock.LineNumber);
+                }
+
+                return VerticalProfileDefinition.Create(type, depths);
+
+            }
+            catch
+            {
+                LogWarningParsePropertyFailed(dataBlock, "vertical profile definition",
+                                              dataBlock.VerticalPositionDefinition);
+                throw;
+            }
         }
 
         private static string VerticalProfileTypeString(VerticalProfileType type)
@@ -1055,7 +1022,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
         }
 
-        private static bool TryParseVerticalPosition(BcQuantityData quantityData, out int layerIndex)
+        private static bool ParseVerticalPosition(BcQuantityData quantityData, out int layerIndex)
         {
             if (quantityData.VerticalPosition == null)
             {
@@ -1072,27 +1039,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return result;
         }
 
-        private static bool TryParseVerticalInterpolationType(BcBlockData dataBlock,
-                                                              out VerticalInterpolationType verticalInterpolationType)
+        private static VerticalInterpolationType ParseVerticalInterpolationType(BcBlockData dataBlock)
         {
             string interpolationType = dataBlock.VerticalInterpolationType;
             if (string.IsNullOrEmpty(interpolationType) || interpolationType.ToLower() == "linear")
             {
-                verticalInterpolationType = VerticalInterpolationType.Linear;
-                return true;
+                return VerticalInterpolationType.Linear;
             }
 
             switch (interpolationType.ToLower())
             {
                 case "block":
-                    verticalInterpolationType = VerticalInterpolationType.Step;
-                    return true;
+                    return VerticalInterpolationType.Step;
                 case "log":
-                    verticalInterpolationType = VerticalInterpolationType.Logarithmic;
-                    return true;
+                    return VerticalInterpolationType.Logarithmic;
                 default:
-                    verticalInterpolationType = VerticalInterpolationType.Uniform;
-                    return false;
+                    LogWarningParsePropertyFailed(dataBlock, "vertical interpolation type",
+                                                  dataBlock.VerticalInterpolationType);
+                    // throw new NotSupportedException("Default interpolation is not supported.");
+                    return VerticalInterpolationType.Uniform;
             }
         }
 
@@ -1114,25 +1079,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
         }
 
-        private static bool TryParseTimeInterpolationType(BcBlockData dataBlock,
-                                                          out InterpolationType interpolationType)
+        private static InterpolationType ParseTimeInterpolationType(BcBlockData dataBlock)
         {
             if (string.IsNullOrEmpty(dataBlock.TimeInterpolationType) ||
                 dataBlock.TimeInterpolationType.ToLower() == "linear")
             {
-                interpolationType = InterpolationType.Linear;
-                return true;
+                return InterpolationType.Linear;
             }
 
             if (dataBlock.TimeInterpolationType.ToLower().Contains("block"))
             {
                 //TODO: implement this correctly
-                interpolationType = InterpolationType.Constant;
-                return true;
+                return InterpolationType.Constant;
             }
-
-            interpolationType = InterpolationType.None;
-            return false;
+            
+            LogWarningParsePropertyFailed(dataBlock, "time interpolation type",
+                                          dataBlock.TimeInterpolationType);
+            throw new NotSupportedException($"Not able to map {dataBlock.TimeInterpolationType} to any valid type.");
         }
 
         private static string TimeInterpolationString(InterpolationType interpolationType)
@@ -1369,6 +1332,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             public BoundaryConditionDataType ForcingType;
             public string[] ArgumentDefinitions;
             public string[] ComponentDefinitions;
+        }
+
+        private DaoDataBlock GetDaoDataBlock(BcBlockData dataBlock)
+        {
+            try
+            {
+                var daoDataBlock = new DaoDataBlock
+                {
+                    ForcingTypeDefinition = ParseForcingType(dataBlock),
+                    VerticalProfileDefinition = ParseDepthLayerDefinition(dataBlock),
+                    VerticalInterpolationType = ParseVerticalInterpolationType(dataBlock),
+                    InterpolationType = ParseTimeInterpolationType(dataBlock),
+                    SeriesIndex = ParseSeriesIndex(dataBlock),
+                    Offset = ParseOffset(dataBlock),
+                    Factor = ParseFactor(dataBlock)
+                };
+
+                if (ExcludedDataTypes?.Contains(daoDataBlock.ForcingTypeDefinition.ForcingType) != true)
+                {
+                    return daoDataBlock;
+                }
+                Log.Info($"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}: skipping boundary dataBlock of function type {daoDataBlock.ForcingTypeDefinition.ForcingType}.");
+            }
+            catch(Exception)
+            {
+                Log.Error($"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}, not possible to parse boundary data block.");
+            }
+
+            return null;
+        }
+
+        private class DaoDataBlock
+        {
+            public ForcingTypeDefinition ForcingTypeDefinition { get; set; }
+            public VerticalProfileDefinition VerticalProfileDefinition { get; set; }
+            public VerticalInterpolationType VerticalInterpolationType { get; set; }
+            public InterpolationType InterpolationType { get; set; }
+            public int SeriesIndex { get; set; }
+            public double Offset { get; set; }
+            public double Factor { get; set; }
         }
     }
 }

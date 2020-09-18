@@ -117,15 +117,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             {
                 string errorMessage = $"Error while importing a {Name} from {path}";
                 log.Error($"{errorMessage}");
-
-                if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
-                    e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
-                {
-                    // Do not stop the current import.
-                    return null;
-                }
-
-                throw;
+                return null;
+                // if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
+                //     e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
+                // {
+                //     // Do not stop the current import.
+                //     return null;
+                // }
+                //
+                // throw;
             }
         }
 
