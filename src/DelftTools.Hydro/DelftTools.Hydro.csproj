@@ -167,7 +167,6 @@
     <Compile Include="GroupableFeatureExtensions.cs" />
     <Compile Include="GroupablePointFeature.cs" />
     <Compile Include="HydroAreaLayerNames.cs" />
-    <Compile Include="HydroNetworkExtensions.cs" />
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="ILongNameable.cs" />
     <Compile Include="IStructure.cs" />
