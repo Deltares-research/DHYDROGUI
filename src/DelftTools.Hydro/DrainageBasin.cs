@@ -19,8 +19,6 @@ namespace DelftTools.Hydro
     {
         public virtual IEventedList<Catchment> Catchments { get; set; }
 
-        public virtual IEventedList<WasteWaterTreatmentPlant> WasteWaterTreatmentPlants { get; set; }
-
         public virtual IEnumerable<IHydroObject> AllHydroObjects => throw new NotImplementedException();
 
         public virtual IEnumerable<Catchment> AllCatchments { get; }

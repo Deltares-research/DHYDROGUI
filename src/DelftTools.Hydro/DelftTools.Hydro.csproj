@@ -229,7 +229,6 @@
     <Compile Include="HydroTimeSeriesFactory.cs" />
     <Compile Include="StructureType.cs" />
     <Compile Include="Structures\ThinDam2D.cs" />
-    <Compile Include="WasteWaterTreatmentPlant.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -306,11 +305,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Catchment.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="WasteWaterTreatmentPlant.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HydroRegion.hbm.xml">

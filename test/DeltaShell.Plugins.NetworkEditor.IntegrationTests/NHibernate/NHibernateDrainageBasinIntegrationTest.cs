@@ -35,56 +35,5 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             Assert.AreNotEqual(oldArea, retrievedCatchment.Geometry.Area); //check if change in area, changes geometry (when IsGeometryDerivedFromAreaSize)
         }
-
-        [Test]
-        public void SaveLoadHydroLink()
-        {
-            var catchment = new Catchment();
-            var wwtp = new WasteWaterTreatmentPlant();
-            var basin = new DrainageBasin
-            {
-                Catchments = {catchment},
-                WasteWaterTreatmentPlants = {wwtp}
-            };
-
-            catchment.LinkTo(wwtp);
-
-            DrainageBasin retrievedBasin = SaveLoadObject(basin, "link.dsproj");
-
-            Assert.AreEqual(1, retrievedBasin.Links.Count);
-
-            HydroLink retrievedLink = retrievedBasin.Links.First();
-            var retrievedCatchment = (Catchment) retrievedLink.Source;
-            var retrievedWwtp = (WasteWaterTreatmentPlant) retrievedLink.Target;
-
-            Assert.AreEqual(1, retrievedCatchment.Links.Count);
-            Assert.AreEqual(1, retrievedWwtp.Links.Count);
-            Assert.AreSame(retrievedLink, retrievedWwtp.Links.First());
-        }
-
-        [Test]
-        public void SaveLoadWasteWaterTreatmentPlant()
-        {
-            var wwtp = new WasteWaterTreatmentPlant
-            {
-                Name = "testName",
-                Description = "testDescr",
-                Geometry = new Point(55, 33)
-            };
-
-            var path = "wwtp.dsproj";
-
-            var basin = new DrainageBasin();
-            basin.WasteWaterTreatmentPlants.Add(wwtp);
-
-            DrainageBasin retrievedBasin = SaveLoadObject(basin, path);
-
-            Assert.AreEqual(1, retrievedBasin.WasteWaterTreatmentPlants.Count);
-            WasteWaterTreatmentPlant retrievedWwtp = retrievedBasin.WasteWaterTreatmentPlants.First();
-            Assert.AreEqual(wwtp.Geometry, retrievedWwtp.Geometry);
-            Assert.AreEqual(wwtp.Name, retrievedWwtp.Name);
-            Assert.AreEqual(basin, retrievedWwtp.Basin);
-            Assert.AreEqual(wwtp.Description, retrievedWwtp.Description);
-        }
     }
 }
