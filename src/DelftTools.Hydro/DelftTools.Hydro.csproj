@@ -177,7 +177,6 @@
     <Compile Include="Helpers\ActivitiesExtensions.cs" />
     <Compile Include="Helpers\ActivityExtensions.cs" />
     <Compile Include="Helpers\ICoordinateSystemExtensions.cs" />
-    <Compile Include="Helpers\ThreadingHelper.cs" />
     <Compile Include="HydroArea.cs" />
     <Compile Include="HydroRegion.cs" />
     <Compile Include="HydroLink.cs" />

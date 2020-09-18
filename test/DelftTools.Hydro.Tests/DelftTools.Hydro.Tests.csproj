@@ -39,7 +39,6 @@
     <Compile Include="GroupableFeatureComparerTest.cs" />
     <Compile Include="GroupableFeatureExtensionsTest.cs" />
     <Compile Include="GroupablePointFeatureTest.cs" />
-    <Compile Include="Helpers\ThreadingHelperTest.cs" />
     <Compile Include="HydroAreaTest.cs" />
     <Compile Include="HydroRegionTest.cs" />
     <Compile Include="HydroTimeSeriesFactoryTest.cs" />
