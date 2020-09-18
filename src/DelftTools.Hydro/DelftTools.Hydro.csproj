@@ -188,7 +188,6 @@
     <Compile Include="IHydroObject.cs" />
     <Compile Include="IModelMerge.cs" />
     <Compile Include="IObservationPoint.cs" />
-    <Compile Include="IRetention.cs" />
     <Compile Include="LandBoundary2D.cs" />
     <Compile Include="ObservationCrossSection2D.cs" />
     <Compile Include="ObservationPoint.cs" />
@@ -207,7 +206,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Retention.cs" />
     <Compile Include="RunoffBoundary.cs" />
     <Compile Include="Structures\BridgeFrictionType.cs" />
     <Compile Include="Structures\CompositeBranchStructure.cs" />
@@ -306,9 +304,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ObservationPoint.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Retention.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Catchment.hbm.xml" />
