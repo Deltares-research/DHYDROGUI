@@ -29,6 +29,7 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Converters.WellKnownText;
@@ -254,46 +255,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(0, retrievedFeatureCoverage.FeatureVariable.Values.Count);
 
             store.Dispose();
-        }
-
-        [Test]
-        public void ModifyingInternalCollectionInFeaturesAfterSaveShouldNotThrowException()
-        {
-            var hydroNode = new HydroNode
-            {
-                Name = "feature1",
-                Geometry = new Point(100, 100)
-            };
-            IList<IFeature> features = new List<IFeature> {hydroNode};
-
-            var coverage = new FeatureCoverage();
-
-            var store = new NetCdfFunctionStore();
-            store.CreateNew(TestHelper.GetCurrentMethodName() + ".nc");
-            store.Functions.Add(coverage);
-
-            coverage.Components.Add(new Variable<double>("value"));
-            coverage.Arguments.Add(new Variable<IFeature>("feature"));
-            coverage.Features = new EventedList<IFeature>(features);
-            coverage.FeatureVariable.SetValues(features);
-
-            IFeature feature = features[0];
-            IList<double> values = coverage.GetValues<double>(new VariableValueFilter<IFeature>(coverage.FeatureVariable, feature));
-            Assert.AreEqual(1, values.Count);
-            Assert.AreEqual(coverage.Components[0].DefaultValue, values[0]);
-
-            IList<double> allValues = coverage.GetValues<double>();
-            Assert.AreEqual(1, allValues.Count);
-
-            var valuesArray = new[]
-            {
-                1.0
-            };
-            coverage.SetValues(valuesArray);
-
-            hydroNode.Links.Add(new HydroLink(null, null)); //triggers a bubbling collection changed
-
-            //we should get here without exception
         }
 
         [Test]
