@@ -1869,10 +1869,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Action call = () => importer.ImportItem(hydPath, model);
 
                 string[] messages = TestHelper.GetAllRenderedMessages(call).ToArray();
-                Assert.That(messages, Has.Length.EqualTo(3));
-                Assert.That(messages[0], Is.EqualTo("Start importing model data."));
-                Assert.That(messages[1], Does.Contain("Output timers"));
-                Assert.That(messages[2], Is.EqualTo("Importing model data successful."));
+                IEnumerable<string> outputTimerMessages = messages.Where(m => m.Contains("Output timers"));
+                Assert.That(outputTimerMessages.Count(), Is.EqualTo(1));
             }
         }
 

@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
         {
             if (target != null)
             {
-                throw new ArgumentException("Null is expected, because target argument is unused.");
+                throw new ArgumentException(Resources.RealTimeControlModelImporter_OnImportItem_Target_null_expected);
             }
 
             return RealTimeControlModelXmlReader.Read(path);

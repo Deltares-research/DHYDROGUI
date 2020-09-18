@@ -35,7 +35,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.That(importer.Description, Is.Empty);
             Assert.That(importer.Image, Is.Not.Null);
 
-            CollectionAssert.AreEqual(new[] {typeof(WaterQualityModel)}, importer.SupportedItemTypes);
+            CollectionAssert.AreEqual(new[]
+            {
+                typeof(WaterQualityModel)
+            }, importer.SupportedItemTypes);
             Assert.That(importer.CanImportOnRootLevel, Is.True);
             Assert.That(importer.FileFilter, Is.EqualTo("Hydrodynamics File (*.hyd)|*.hyd"));
             Assert.That(importer.TargetDataDirectory, Is.Null);
@@ -209,13 +212,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.IsNotNull(model.Boundaries);
                 Assert.AreEqual(6, model.Boundaries.Count);
 
-                var expectedBoundaries = new[] {"sea_002.pli", "sacra_001.pli", "sanjoa_001.pli", "yolo_001.pli", "CC.pli", "tracy.pli"};
+                var expectedBoundaries = new[]
+                {
+                    "sea_002.pli",
+                    "sacra_001.pli",
+                    "sanjoa_001.pli",
+                    "yolo_001.pli",
+                    "CC.pli",
+                    "tracy.pli"
+                };
                 CollectionAssert.AreEqual(expectedBoundaries, model.Boundaries.Select(b => b.Name).ToArray());
 
                 Assert.IsNotNull(model.BoundaryNodeIds);
                 Assert.AreEqual(model.Boundaries.Count, model.BoundaryNodeIds.Count);
 
-                var expectedNumberOfBoundaryNodeIds = new[] {105, 4, 3, 24, 1, 1};
+                var expectedNumberOfBoundaryNodeIds = new[]
+                {
+                    105,
+                    4,
+                    3,
+                    24,
+                    1,
+                    1
+                };
                 for (var i = 0; i < model.Boundaries.Count; i++)
                 {
                     int[] ids = model.BoundaryNodeIds[model.Boundaries[i]];
@@ -269,9 +288,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.AreEqual(63814, model.NumberOfDelwaqSegmentsPerHydrodynamicLayer);
                 Assert.AreEqual(7, model.NumberOfWaqSegmentLayers);
                 Assert.AreEqual(7, model.HydrodynamicLayerThicknesses.Length);
-                CollectionAssert.AreEqual(new[] {0.142857, 0.142857, 0.142857, 0.142857, 0.142857, 0.142857, 0.142857}, model.HydrodynamicLayerThicknesses);
+                CollectionAssert.AreEqual(new[]
+                {
+                    0.142857,
+                    0.142857,
+                    0.142857,
+                    0.142857,
+                    0.142857,
+                    0.142857,
+                    0.142857
+                }, model.HydrodynamicLayerThicknesses);
                 Assert.AreEqual(7, model.NumberOfHydrodynamicLayersPerWaqLayer.Length);
-                CollectionAssert.AreEqual(new[] {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}, model.NumberOfHydrodynamicLayersPerWaqLayer);
+                CollectionAssert.AreEqual(new[]
+                {
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                }, model.NumberOfHydrodynamicLayersPerWaqLayer);
             }
         }
 
@@ -310,9 +347,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                                 "Test precondition: Checking that the model type between two imports does not change.");
 
                 const double observationHeight = 1.1;
-                model.ObservationPoints.AddRange(new[] {new WaterQualityObservationPoint {Z = observationHeight}, new WaterQualityObservationPoint {Z = observationHeight}, new WaterQualityObservationPoint {Z = observationHeight}});
+                model.ObservationPoints.AddRange(new[]
+                {
+                    new WaterQualityObservationPoint {Z = observationHeight},
+                    new WaterQualityObservationPoint {Z = observationHeight},
+                    new WaterQualityObservationPoint {Z = observationHeight}
+                });
                 const double loadHeight = 2.2;
-                model.Loads.AddRange(new[] {new WaterQualityLoad {Z = loadHeight}, new WaterQualityLoad {Z = loadHeight}});
+                model.Loads.AddRange(new[]
+                {
+                    new WaterQualityLoad {Z = loadHeight},
+                    new WaterQualityLoad {Z = loadHeight}
+                });
 
                 new SubFileImporter().Import(model.SubstanceProcessLibrary,
                                              Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
@@ -583,7 +629,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Envelope extend = coverage.Grid.GetExtents();
             var expectedCoordinates = new[]
             {
-                new Coordinate(extend.MinX, extend.MinY), new Coordinate(extend.MaxX, extend.MinY), new Coordinate(extend.MaxX, extend.MaxY), new Coordinate(extend.MinX, extend.MaxY), new Coordinate(extend.MinX, extend.MinY) // To close the loop of the mask!
+                new Coordinate(extend.MinX, extend.MinY),
+                new Coordinate(extend.MaxX, extend.MinY),
+                new Coordinate(extend.MaxX, extend.MaxY),
+                new Coordinate(extend.MinX, extend.MaxY),
+                new Coordinate(extend.MinX, extend.MinY) // To close the loop of the mask!
             };
             Coordinate[] coordinates = polygonMaskGeometry.Coordinates;
 
