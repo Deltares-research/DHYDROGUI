@@ -22,12 +22,6 @@ namespace DelftTools.Hydro
         [FeatureAttribute(Order = 2)]
         public virtual string LongName { get; set; }
 
-        [Aggregation]
-        public override IEventedList<IBranch> IncomingBranches { get; set; }
-
-        [Aggregation]
-        public override IEventedList<IBranch> OutgoingBranches { get; set; }
-
         public virtual IHydroRegion Region { get; }
 
         [Aggregation]
