@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
@@ -7,6 +8,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
@@ -486,7 +488,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                             {
                                 foreach (KeyValuePair<int, BcQuantityData> arg in argVariables)
                                 {
-                                    IVariable variable = existingData.Arguments[arg.Key];
+                                    // IVariable variable = existingData.Arguments[arg.Key];
+                                    IVariable variable = existingData.Arguments.ElementAtOrDefault(arg.Key);
+                                    if (variable == null)
+                                    {
+                                        throw new ArgumentOutOfRangeException($"Boundary Quantity Data {arg.Value} has not been imported correctly.");
+                                    }
                                     variable.Values.Clear();
                                     variable.SetValues(ParseValues(arg.Value, variable.ValueType, dataBlock.SupportPoint));
                                     if (variable is IVariable<DateTime>)
@@ -498,21 +505,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                 foreach (KeyValuePair<System.Tuple<FlowBoundaryQuantityType, int>, BcQuantityData> comp
                                     in quantityGroup)
                                 {
-                                    IVariable variable = existingData.Components[comp.Key.Item2];
+                                    IVariable variable = existingData.Components.ElementAtOrDefault(comp.Key.Item2);
+                                    if (variable == null)
+                                    {
+                                        throw new ArgumentOutOfRangeException($"Component {comp.Key.Item1} has not been imported correctly.");
+                                    }
                                     variable.SetValues(ParseValues(comp.Value, variable.ValueType, dataBlock.SupportPoint));
                                 }
                             }
 
                             existingData.EndEdit();
                         }
-                        catch (Exception)
+                        catch (Exception e)
                         {
+                            Log.ErrorFormat($"Skipped DataPoint {dataPoint} for Boundary Condition {boundaryCondition.Name} could not be added as the following exception was risen during import: {e.Message}");
                             if (addedData)
                             {
                                 boundaryCondition.DataPointIndices.Remove(dataPoint);
                             }
-
-                            throw;
                         }
                     }
 
