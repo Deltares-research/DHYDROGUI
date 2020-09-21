@@ -204,7 +204,7 @@ namespace DelftTools.Hydro.Structures
             CrestLevelTimeSeries = (TimeSeries) copyFrom.CrestLevelTimeSeries.Clone(true);
         }
 
-        public StructureType GetStructureType()
+        public virtual StructureType GetStructureType()
         {
             if (weirFormula is GatedWeirFormula)
             {
@@ -301,6 +301,6 @@ namespace DelftTools.Hydro.Structures
             return CompareTo(other);
         }
 
-        public IHydroRegion Region { get; }
+        public virtual IHydroRegion Region { get; }
     }
 }

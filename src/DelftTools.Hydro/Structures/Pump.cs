@@ -201,6 +201,6 @@ namespace DelftTools.Hydro.Structures
             return CompareTo(other);
         }
 
-        public IHydroRegion Region { get; }
+        public virtual IHydroRegion Region { get; }
     }
 }

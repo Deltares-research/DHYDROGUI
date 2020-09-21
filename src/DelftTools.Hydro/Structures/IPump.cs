@@ -3,7 +3,7 @@ using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface IPump : IStructure, IBranchFeature
+    public interface IPump : IStructure
     {
         string Name { get; set; }
         string LongName { get; set; }
