@@ -271,6 +271,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Structures\ICompositeBranchStructure.hbm.xml" />
     <EmbeddedResource Include="Structures\IWeirFormula.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
