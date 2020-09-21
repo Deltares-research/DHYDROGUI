@@ -4,11 +4,13 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
     [Entity(FireOnCollectionChange = false)]
-    public class Weir : BranchStructure, IWeir
+    public class Weir : BranchFeature, IWeir
     {
         private IWeirFormula weirFormula;
         private double crestLevel;
@@ -182,6 +184,8 @@ namespace DelftTools.Hydro.Structures
         {
             base.CopyFrom(source);
             var copyFrom = (Weir) source;
+            OffsetY = copyFrom.OffsetY;
+            LongName = copyFrom.LongName;
             CrestWidth = copyFrom.CrestWidth;
             CrestLevel = copyFrom.CrestLevel;
             CrestShape = copyFrom.CrestShape;
@@ -276,5 +280,27 @@ namespace DelftTools.Hydro.Structures
                            ? FlowDirection.Negative
                            : FlowDirection.None;
         }
+
+        [NoNotifyPropertyChange]
+        public virtual double OffsetY { get; set; }
+
+        public virtual string Description { get; set; }
+
+        [DisplayName("Long name")]
+        [FeatureAttribute(Order = 1)]
+        public virtual string LongName { get; set; }
+
+        public virtual int CompareTo(Weir other)
+        {
+            return CompareTo((IBranchFeature) other);
+        }
+
+        public override int CompareTo(object obj)
+        {
+            var other = (Weir) obj;
+            return CompareTo(other);
+        }
+
+        public IHydroRegion Region { get; }
     }
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -14,7 +16,7 @@ namespace DelftTools.Hydro.Structures
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
-    public class Pump : BranchStructure, IPump
+    public class Pump : BranchFeature, IPump
     {
         private bool canBeTimedependent;
         private bool useCapacityTimeSeries;
@@ -137,8 +139,11 @@ namespace DelftTools.Hydro.Structures
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
+
             var pump = (Pump) source;
 
+            OffsetY = pump.OffsetY;
+            LongName = pump.LongName;
             Attributes = (IFeatureAttributeCollection) pump.Attributes.Clone();
             Capacity = pump.Capacity;
             StopDelivery = pump.StopDelivery;
@@ -175,5 +180,27 @@ namespace DelftTools.Hydro.Structures
                 CapacityTimeSeries = null;
             }
         }
+
+        [NoNotifyPropertyChange]
+        public virtual double OffsetY { get; set; }
+
+        public virtual string Description { get; set; }
+
+        [DisplayName("Long name")]
+        [FeatureAttribute(Order = 1)]
+        public virtual string LongName { get; set; }
+
+        public virtual int CompareTo(Pump other)
+        {
+            return CompareTo((IBranchFeature) other);
+        }
+
+        public override int CompareTo(object obj)
+        {
+            var other = (Pump) obj;
+            return CompareTo(other);
+        }
+
+        public IHydroRegion Region { get; }
     }
 }
