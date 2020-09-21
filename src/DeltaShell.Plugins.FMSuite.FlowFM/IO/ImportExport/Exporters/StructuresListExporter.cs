@@ -114,10 +114,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                     yield return typeof(IList<IWeir>);
                     yield return typeof(IEventedList<IWeir>);
                     break;
-                case StructuresListType.Gates:
-                    yield return typeof(IList<IGate>);
-                    yield return typeof(IEventedList<IGate>);
-                    break;
             }
         }
 

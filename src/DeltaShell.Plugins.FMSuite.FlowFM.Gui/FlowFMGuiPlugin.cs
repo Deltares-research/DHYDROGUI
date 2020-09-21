@@ -438,7 +438,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ThinDam2D, ThinDam2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IWeir, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IPump, Feature2D>>();
-            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IGate, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<SourceAndSink, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<BoundaryConditionSet, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<BridgePillar, BridgePillar>>();

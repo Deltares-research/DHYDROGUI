@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             var list = new List<IStructure>();
             foreach (IStructure structure in structures)
             {
-                if (structure is IPump || structure is IWeir || structure is IGate)
+                if (structure is IPump || structure is IWeir)
                 {
                     list.Add(structure);
                 }
@@ -458,12 +458,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             if (weir != null)
             {
                 return ConstructWeirProperties(weir, structureType, path, refDate);
-            }
-
-            var gate = structure as IGate;
-            if (gate != null)
-            {
-                return ConstructGateProperties(gate, structureType, path, refDate);
             }
 
             throw new NotImplementedException();
@@ -718,78 +712,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private IEnumerable<DelftIniProperty> ConstructGateProperties(IStructure1D structure, string structureType,
-                                                                      string path, DateTime refDate)
-        {
-            var gate = (IGate) structure;
-            var properties = new List<DelftIniProperty>();
-
-            if (gate.UseSillLevelTimeSeries)
-            {
-                string timeFilePath = ConstructTimeFilePath(gate, KnownStructureProperties.CrestLevel);
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, timeFilePath, structureType));
-                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), gate.SillLevelTimeSeries, refDate);
-            }
-            else
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, gate.SillLevel, structureType));
-            }
-
-            if (gate.UseLowerEdgeLevelTimeSeries)
-            {
-                string timeFilePath = ConstructTimeFilePath(gate, KnownStructureProperties.GateLowerEdgeLevel);
-                properties.Add(ConstructProperty(KnownStructureProperties.GateLowerEdgeLevel, timeFilePath,
-                                                 structureType));
-                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), gate.LowerEdgeLevelTimeSeries,
-                              refDate);
-            }
-            else
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateLowerEdgeLevel, gate.LowerEdgeLevel,
-                                                 structureType));
-            }
-
-            if (gate.UseOpeningWidthTimeSeries)
-            {
-                string timeFilePath = ConstructTimeFilePath(gate, KnownStructureProperties.GateOpeningWidth);
-                properties.Add(
-                    ConstructProperty(KnownStructureProperties.GateOpeningWidth, timeFilePath, structureType));
-                WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), gate.OpeningWidthTimeSeries,
-                              refDate);
-            }
-            else
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningWidth, gate.OpeningWidth,
-                                                 structureType));
-            }
-
-            properties.Add(ConstructProperty(KnownStructureProperties.GateHeight, gate.DoorHeight, structureType));
-
-            // switch the horizontal direction, because enums aren't used very nicely in the csv file (structure definition).
-            string horizontalDirection;
-            switch (gate.HorizontalOpeningDirection)
-            {
-                case GateOpeningDirection.Symmetric:
-                    horizontalDirection = "symmetric";
-                    break;
-                case GateOpeningDirection.FromLeft:
-                    horizontalDirection = "from_left";
-                    break;
-                case GateOpeningDirection.FromRight:
-                    horizontalDirection = "from_right";
-                    break;
-                default:
-                    throw new ArgumentException("We can't write " + gate.HorizontalOpeningDirection);
-            }
-
-            properties.Add(ConstructProperty(KnownStructureProperties.GateOpeningHorizontalDirection,
-                                             horizontalDirection, structureType));
-            AddDoubleOrEmptyPropertyConditionally(properties, KnownStructureProperties.CrestWidth, gate.SillWidth,
-                                                  structureType);
-
-            return properties;
-        }
-
         /// <summary>
         /// Construct the set of gated weir properties to be written to the
         /// structures.ini file.
@@ -925,11 +847,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             if (structure is IPump)
             {
                 return StructureRegion.StructureTypeName.Pump;
-            }
-
-            if (structure is IGate)
-            {
-                return StructureRegion.StructureTypeName.Gate;
             }
 
             var weir = structure as IWeir;
