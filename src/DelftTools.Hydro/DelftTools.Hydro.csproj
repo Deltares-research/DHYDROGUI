@@ -196,7 +196,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
-    <Compile Include="Structures\IGate.cs" />
+    <Compile Include="Structures\GateOpeningDirection.cs" />
     <Compile Include="Structures\IPump.cs" />
     <Compile Include="Structures\IWeir.cs" />
     <Compile Include="Structures\IWeirFormula.cs" />
