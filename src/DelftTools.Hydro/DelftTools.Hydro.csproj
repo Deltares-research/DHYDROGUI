@@ -154,7 +154,6 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="BranchFeatureHydroObject.cs" />
     <Compile Include="BranchStructure.cs" />
     <Compile Include="Embankment.cs" />
     <Compile Include="GroupableFeature2D.cs" />

@@ -1,16 +1,13 @@
-using System;
 using System.ComponentModel;
-using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
-using NetTopologySuite.Geometries;
+using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro
 {
     [Entity(FireOnCollectionChange = false)]
-    public abstract class BranchStructure : BranchFeatureHydroObject, IStructure1D
+    public abstract class BranchStructure : BranchFeature, IStructure1D
     {
         [NoNotifyPropertyChange]
         public virtual double OffsetY { get; set; }
@@ -38,5 +35,7 @@ namespace DelftTools.Hydro
             var other = (BranchStructure) obj;
             return CompareTo(other);
         }
+
+        public IHydroRegion Region { get; }
     }
 }
