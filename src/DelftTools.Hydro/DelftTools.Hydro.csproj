@@ -181,7 +181,6 @@
     <Compile Include="IHydroRegion.cs" />
     <Compile Include="IHydroObject.cs" />
     <Compile Include="IModelMerge.cs" />
-    <Compile Include="IObservationPoint.cs" />
     <Compile Include="LandBoundary2D.cs" />
     <Compile Include="ObservationCrossSection2D.cs" />
     <Compile Include="FlowDirection.cs" />
