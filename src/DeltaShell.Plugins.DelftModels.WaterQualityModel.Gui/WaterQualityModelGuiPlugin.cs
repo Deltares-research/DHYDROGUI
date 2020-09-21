@@ -627,14 +627,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 model.HydroDataChanged += ModelOnHydroDataChanged;
             }
 
-            if ((removedOrAddedItem as IDataItemSet)?.Value is IEventedList<WaterQualityObservationVariableOutput>)
+            if (!(removedOrAddedItem is IDataItemSet dataItemSet))
+            {
+                return;
+            }
+
+            if (dataItemSet.Value is IEventedList<WaterQualityObservationVariableOutput>)
             {
                 // Close any opened view for observation points/areas data if the corresponding model output is removed
                 CloseMonitoringOutputViews((IDataItemSet) removedOrAddedItem);
                 return;
             }
 
-            if ((removedOrAddedItem as IDataItem)?.Value is WaterQualityObservationVariableOutput)
+            if (dataItemSet.Value is WaterQualityObservationVariableOutput)
             {
                 // Close any opened view for observation points/areas data if the corresponding model output is removed
                 CloseMonitoringOutputViews((WaterQualityObservationVariableOutput) ((IDataItem) removedOrAddedItem).Value);
@@ -731,25 +736,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         private void ActivityRunnerOnActivityCompleted(object sender, ActivityEventArgs e)
         {
             // Update the text of any opened/related substance process library view after a sub file import finished
-            var fileImportActivity = e.Activity as FileImportActivity;
-            if (fileImportActivity == null)
+            SubstanceProcessLibrary substanceProcessLibrary = GetSubstanceProcessLibraryFromActivity(e.Activity);
+            if (substanceProcessLibrary == null)
             {
                 return;
             }
 
-            if (fileImportActivity.FileImporter is SubFileImporter)
+            foreach (SubstanceProcessLibraryView view in GetViewsUsingSubstanceProcessLibrary(substanceProcessLibrary))
             {
-                var substanceProcessLibrary =
-                    (fileImportActivity.ImportedItemOwner as IDataItem)?.Value as SubstanceProcessLibrary;
-                if (substanceProcessLibrary != null)
-                {
-                    gui.DocumentViews
-                       .OfType<SubstanceProcessLibraryView>()
-                       .Where(v => Equals(v.Data, substanceProcessLibrary))
-                       .ForEach(v => v.Text = $@"{gui.SelectedModel.Name}:{substanceProcessLibrary.Name}");
-                }
+                view.Text = $@"{gui.SelectedModel.Name}:{substanceProcessLibrary.Name}";
             }
         }
+
+        private static SubstanceProcessLibrary GetSubstanceProcessLibraryFromActivity(IActivity activity) =>
+            activity is FileImportActivity fileImportActivity &&
+            fileImportActivity.FileImporter is SubFileImporter &&
+            (fileImportActivity.ImportedItemOwner as IDataItem)?.Value is SubstanceProcessLibrary library
+                ? library
+                : null;
+
+        private IEnumerable<SubstanceProcessLibraryView> GetViewsUsingSubstanceProcessLibrary(SubstanceProcessLibrary library) =>
+            gui.DocumentViews
+               .OfType<SubstanceProcessLibraryView>()
+               .Where(v => Equals(v.Data, library));
 
         [InvokeRequired]
         private void CloseMonitoringOutputViews(WaterQualityObservationVariableOutput observationVariableOutput)

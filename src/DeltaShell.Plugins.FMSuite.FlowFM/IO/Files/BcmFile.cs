@@ -224,18 +224,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private DateTime StringDateToDateTime(string value, string format)
         {
-            DateTime date;
             try
             {
-                date = DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
+                return DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
             }
             catch (Exception)
             {
                 log.Error("Could not load the reference time correctly, check the format. Using Now as a time reference instead.");
-                date = DateTime.Now;
+                return DateTime.Now;
             }
-
-            return date;
         }
 
         private BcmBlockData ReadDataBlock(out string line, string blockName)
