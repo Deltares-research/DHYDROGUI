@@ -71,6 +71,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skipped DataPoint {0} for Boundary Condition {1} could not be added as the following exception was risen during import: {2}.
+        /// </summary>
+        public static string BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Boundary_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_import___2_ {
+            get {
+                return ResourceManager.GetString("BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Bounda" +
+                        "ry_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_" +
+                        "import___2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Support point &apos;{0}&apos; contains a time zone offset, the time points will be adjusted to their equivalents in UTC..
         /// </summary>
         public static string BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset {

@@ -640,4 +640,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_" xml:space="preserve">
     <value>Error while importing a {0} from {1}</value>
   </data>
+  <data name="BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Boundary_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_import___2_" xml:space="preserve">
+    <value>Skipped DataPoint {0} for Boundary Condition {1} could not be added as the following exception was risen during import: {2}</value>
+  </data>
 </root>

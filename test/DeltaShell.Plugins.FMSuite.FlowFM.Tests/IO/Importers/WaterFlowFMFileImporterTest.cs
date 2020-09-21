@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro.Properties;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -110,6 +111,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             // Then
             Assert.That(testAction, Throws.Nothing);
+            Assert.That(importedModel, Is.Not.Null);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenFmModelWithUnsupportedBoundaries_WhenImportItem_ThenLogsExpectedMessage()
+        {
+            const string relativeFilePath = @"c003_westerschelde_2d_dynamo\westerscheldt01.mdu";
+            string testFilePath = TestHelper.GetTestFilePath(relativeFilePath);
+            Assert.That(File.Exists(testFilePath));
+            const int errorDataPoint = 0;
+            const string errorComponent = "Tracer";
+            const string errorBoundaryCondition = "RiverBoundary01-Green";
+            string exceptionMessage = $"Specified argument was out of the range of valid values.\r\nParameter name: {errorComponent}";
+            string expectedLogMssg = string.Format(FmResources.BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Boundary_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_import___2_,
+                                                   errorDataPoint, errorBoundaryCondition, exceptionMessage);
+            WaterFlowFMModel importedModel = null;
+
+            // When
+            var importer = new WaterFlowFMFileImporter(() => null);
+            TestHelper.AssertAtLeastOneLogMessagesContains( () => importedModel = (WaterFlowFMModel)importer.ImportItem(testFilePath), expectedLogMssg);
+
+            // Then
             Assert.That(importedModel, Is.Not.Null);
         }
     }

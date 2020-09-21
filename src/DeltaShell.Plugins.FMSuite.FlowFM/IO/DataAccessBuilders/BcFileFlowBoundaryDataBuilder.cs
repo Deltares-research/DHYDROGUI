@@ -492,7 +492,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                     IVariable variable = existingData.Arguments.ElementAtOrDefault(arg.Key);
                                     if (variable == null)
                                     {
-                                        throw new ArgumentOutOfRangeException($"Boundary Quantity Data {arg.Value} has not been imported correctly.");
+                                        throw new ArgumentOutOfRangeException(arg.Value.ToString());
                                     }
                                     variable.Values.Clear();
                                     variable.SetValues(ParseValues(arg.Value, variable.ValueType, dataBlock.SupportPoint));
@@ -508,7 +508,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                     IVariable variable = existingData.Components.ElementAtOrDefault(comp.Key.Item2);
                                     if (variable == null)
                                     {
-                                        throw new ArgumentOutOfRangeException($"Component {comp.Key.Item1} has not been imported correctly.");
+                                        throw new ArgumentOutOfRangeException(comp.Key.Item1.ToString());
                                     }
                                     variable.SetValues(ParseValues(comp.Value, variable.ValueType, dataBlock.SupportPoint));
                                 }
@@ -518,7 +518,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                         }
                         catch (Exception e)
                         {
-                            Log.ErrorFormat($"Skipped DataPoint {dataPoint} for Boundary Condition {boundaryCondition.Name} could not be added as the following exception was risen during import: {e.Message}");
+                            var ef = string.Format(Resources.BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Boundary_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_import___2_, dataPoint, boundaryCondition.Name, e.Message);
+                            Log.ErrorFormat(ef);
                             if (addedData)
                             {
                                 boundaryCondition.DataPointIndices.Remove(dataPoint);
