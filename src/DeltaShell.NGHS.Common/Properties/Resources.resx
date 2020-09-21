@@ -147,4 +147,13 @@
   <data name="RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_must_be_expressed_by_model_start_time_plus_a_positive_integer_multiple_of_the_model_time_step_" xml:space="preserve">
     <value>The restart stop time must be expressed by model start time plus a positive integer multiple of the model time step.</value>
   </data>
+  <data name="ModelFileImporterBase_ImportItem_Start_importing_model_data" xml:space="preserve">
+    <value>Start importing model data.</value>
+  </data>
+  <data name="ModelFileImporterBase_ImportItem_Stop_importing_model_data" xml:space="preserve">
+    <value>Importing model data successful.</value>
+  </data>
+  <data name="ModelFileImporterBase_ImportItem_Importing_model_data_failed" xml:space="preserve">
+    <value>Importing model data failed.</value>
+  </data>
 </root>

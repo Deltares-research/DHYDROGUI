@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -22,8 +23,47 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     public class HydFileImporterTest
     {
         [Test]
+        public void Constructor_ExpectedValues()
+        {
+            // Call
+            var importer = new HydFileImporter();
+
+            // Assert
+            Assert.That(importer, Is.InstanceOf<ModelFileImporterBase>());
+            Assert.That(importer.Name, Is.EqualTo("Hydrodynamics (*.hyd)"));
+            Assert.That(importer.Category, Is.EqualTo("Water Quality"));
+            Assert.That(importer.Description, Is.Empty);
+            Assert.That(importer.Image, Is.Not.Null);
+
+            CollectionAssert.AreEqual(new[]
+            {
+                typeof(WaterQualityModel)
+            }, importer.SupportedItemTypes);
+            Assert.That(importer.CanImportOnRootLevel, Is.True);
+            Assert.That(importer.FileFilter, Is.EqualTo("Hydrodynamics File (*.hyd)|*.hyd"));
+            Assert.That(importer.TargetDataDirectory, Is.Null);
+            Assert.That(importer.ShouldCancel, Is.False);
+            Assert.That(importer.ProgressChanged, Is.Null);
+            Assert.That(importer.OpenViewAfterImport, Is.True);
+
+            Assert.That(importer.ExpandModelNode, Is.Null);
+        }
+
+        [Test]
+        public void CanImportOn_Always_ReturnsTrue()
+        {
+            // Setup
+            var importer = new HydFileImporter();
+
+            // Call
+            bool canImportOnResult = importer.CanImportOn(null);
+
+            // Assert
+            Assert.That(canImportOnResult, Is.True);
+        }
+
+        [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void GetTimesForNonexistentFileTest()
         {
             // Setup
@@ -34,7 +74,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 var importer = new HydFileImporter();
 
                 // Call
-                importer.ImportItem(filePath, model);
+                TestDelegate call = () => importer.ImportItem(filePath, model);
+
+                // Assert
+                Assert.That(call, Throws.TypeOf<FileNotFoundException>());
             }
         }
 
@@ -279,7 +322,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             using (var model = new WaterQualityModel())
             {
                 // Call & Assert
-                TestHelper.AssertIsFasterThan(5000, () => { new HydFileImporter().ImportItem(hydPath, model); }, false, true);
+                TestHelper.AssertIsFasterThan(5000, () =>
+                {
+                    new HydFileImporter().ImportItem(hydPath, model);
+                }, false, true);
             }
         }
 

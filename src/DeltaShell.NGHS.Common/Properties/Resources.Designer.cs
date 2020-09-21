@@ -61,6 +61,33 @@ namespace DeltaShell.NGHS.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Importing model data failed..
+        /// </summary>
+        public static string ModelFileImporterBase_ImportItem_Importing_model_data_failed {
+            get {
+                return ResourceManager.GetString("ModelFileImporterBase_ImportItem_Importing_model_data_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start importing model data..
+        /// </summary>
+        public static string ModelFileImporterBase_ImportItem_Start_importing_model_data {
+            get {
+                return ResourceManager.GetString("ModelFileImporterBase_ImportItem_Start_importing_model_data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Importing model data successful..
+        /// </summary>
+        public static string ModelFileImporterBase_ImportItem_Stop_importing_model_data {
+            get {
+                return ResourceManager.GetString("ModelFileImporterBase_ImportItem_Stop_importing_model_data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Restart interval.
         /// </summary>
         public static string RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_interval {
