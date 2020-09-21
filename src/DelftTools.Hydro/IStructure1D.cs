@@ -6,7 +6,7 @@ namespace DelftTools.Hydro
     /// <summary>
     /// Hydro structure.
     /// </summary>
-    public interface IStructure1D : IStructure, IHydroNetworkFeature, IBranchFeature //TODO : get this inheritance out
+    public interface IStructure1D : IStructure, IBranchFeature //TODO : get this inheritance out
     {
         /// <summary>
         /// Y offset relative in the profile. This value is used by the structure view to display
