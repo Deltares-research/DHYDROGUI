@@ -51,7 +51,6 @@ namespace DelftTools.Hydro.Tests.Structures
             IWeir weir = new Weir("Weir one")
             {
                 Geometry = new Point(7, 0),
-                OffsetY = 175,
                 CrestWidth = 75,
                 CrestLevel = -3,
                 AllowNegativeFlow = true
@@ -59,7 +58,6 @@ namespace DelftTools.Hydro.Tests.Structures
             var clonedWeir = (IWeir) weir.Clone();
 
             Assert.AreEqual(clonedWeir.Name, weir.Name);
-            Assert.AreEqual(clonedWeir.OffsetY, weir.OffsetY);
             Assert.AreEqual(clonedWeir.Geometry, weir.Geometry);
             Assert.AreEqual(clonedWeir.CrestWidth, weir.CrestWidth);
             Assert.AreEqual(clonedWeir.CrestLevel, weir.CrestLevel);
@@ -86,7 +84,6 @@ namespace DelftTools.Hydro.Tests.Structures
             IWeir targetWeir = new Weir("Target Weir", false)
             {
                 Geometry = new Point(42, 0),
-                OffsetY = 571,
                 CrestWidth = 55,
                 CrestLevel = -1,
                 Name = "Target Weir",
@@ -97,7 +94,6 @@ namespace DelftTools.Hydro.Tests.Structures
             targetWeir.CopyFrom(sourceWeir);
 
             Assert.AreNotEqual(sourceWeir.Name, targetWeir.Name);
-            Assert.AreEqual(sourceWeir.OffsetY, targetWeir.OffsetY);
             Assert.AreEqual(sourceWeir.CrestWidth, targetWeir.CrestWidth);
             Assert.AreEqual(sourceWeir.CrestLevel, targetWeir.CrestLevel);
             Assert.AreEqual(sourceWeir.AllowNegativeFlow, targetWeir.AllowNegativeFlow);

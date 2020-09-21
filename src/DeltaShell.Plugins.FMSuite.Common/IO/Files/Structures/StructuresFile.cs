@@ -463,7 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             throw new NotImplementedException();
         }
 
-        private IEnumerable<DelftIniProperty> ConstructWeirProperties(IStructure1D structure, string structureType,
+        private IEnumerable<DelftIniProperty> ConstructWeirProperties(IStructure structure, string structureType,
                                                                       string path, DateTime refDate)
         {
             var weir = (IWeir) structure;
@@ -487,7 +487,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         }
 
         private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(
-            IStructure1D structure, string path, string structureType, DateTime refDate)
+            IStructure structure, string path, string structureType, DateTime refDate)
         {
             var properties = new List<DelftIniProperty>();
 
@@ -637,7 +637,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructPumpProperties(IStructure1D structure, string structureType,
+        private IEnumerable<DelftIniProperty> ConstructPumpProperties(IStructure structure, string structureType,
                                                                       string path, DateTime refDate)
         {
             var pump = (IPump) structure;
@@ -658,7 +658,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         }
 
         private IEnumerable<DelftIniProperty> ConstructSimpleWeirProperties(
-            IStructure1D structure, string path, string structureType, DateTime refDate)
+            IStructure structure, string path, string structureType, DateTime refDate)
         {
             var weir = (IWeir) structure;
             var properties = new List<DelftIniProperty>();
@@ -723,7 +723,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <returns>
         /// The set of properties which should be written to structures.ini
         /// </returns>
-        private IEnumerable<DelftIniProperty> ConstructGatedWeirProperties(IStructure1D structure,
+        private IEnumerable<DelftIniProperty> ConstructGatedWeirProperties(IStructure structure,
                                                                            string structureType,
                                                                            string path,
                                                                            DateTime refDate)
@@ -813,7 +813,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private void ConstructTimeSeriesProperty(string path,
                                                  ICollection<DelftIniProperty> properties,
-                                                 IStructure1D structure,
+                                                 IStructure structure,
                                                  string propertyName,
                                                  string structureType,
                                                  TimeSeries timeSeries,
@@ -889,7 +889,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             });
         }
 
-        private string ConstructTimeFilePath(IStructure1D structure, string propertyName)
+        private string ConstructTimeFilePath(IStructure structure, string propertyName)
         {
             string filePath = string.Format("{0}_{1}.tim", structure.Name, propertyName);
             if (TimFolder != null)

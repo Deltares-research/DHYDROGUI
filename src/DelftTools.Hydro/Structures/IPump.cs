@@ -1,8 +1,9 @@
 using DelftTools.Functions;
+using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface IPump : IStructure1D
+    public interface IPump : IStructure, IBranchFeature
     {
         string Name { get; set; }
         string LongName { get; set; }

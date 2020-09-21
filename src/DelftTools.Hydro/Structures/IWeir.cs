@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using DelftTools.Functions;
+using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -15,7 +16,7 @@ namespace DelftTools.Hydro.Structures
         UserDefined
     }
 
-    public interface IWeir : IStructure1D
+    public interface IWeir : IStructure, IBranchFeature
     {
         string Name { get; set; }
         string LongName { get; set; }

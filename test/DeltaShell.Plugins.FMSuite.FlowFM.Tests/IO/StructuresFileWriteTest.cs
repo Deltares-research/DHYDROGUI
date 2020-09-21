@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void StructuresFileWriteGeneralStructureGivesExpectedResultTest()
         {
-            var structs = new List<IStructure1D>();
+            var structs = new List<IStructure>();
 
             var generalStructureWeir = new Weir("weir01")
             {

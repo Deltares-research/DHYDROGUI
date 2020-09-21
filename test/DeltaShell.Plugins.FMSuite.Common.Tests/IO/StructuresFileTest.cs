@@ -344,7 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 }),
                 WeirFormula = initialFormula
             };
-            var structures = new IStructure1D[]
+            var structures = new IStructure[]
             {
                 initialGeneralStructure
             };
