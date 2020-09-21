@@ -258,6 +258,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Channel.hbm.xml" />
+    <EmbeddedResource Include="HydroNetwork.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HydroNode.hbm.xml" />
     <EmbeddedResource Include="IStructure.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -278,9 +283,20 @@
     <EmbeddedResource Include="Structures\WeirFormula\GeneralStructureWeirFormula.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ObservationPoint.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HydroRegion.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="IHydroRegion.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HydroLink.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\greenhouse.png" />
@@ -311,6 +327,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Embankment.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HydroNetwork.3.5.1.hbm.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
