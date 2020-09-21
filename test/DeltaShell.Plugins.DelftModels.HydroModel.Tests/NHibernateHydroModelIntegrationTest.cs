@@ -9,7 +9,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.IntegrationTestUtils;
-using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -141,66 +140,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 ProjectRepository.Close();
             }
-        }
-
-        [Test]
-        public void SaveLoadDataItemWithConverter()
-        {
-            var converter = new HydroRegionFeatureCoverageFromNetworkCoverageValueConverter
-            {
-                OriginalValue =
-                    new FeatureCoverage
-                    {
-                        Arguments =
-                        {
-                            new Variable<DateTime>(),
-                            new Variable<IFeature>()
-                        }
-                    },
-                ConvertedValue = new NetworkCoverage("b", true),
-                HydroRegion = new HydroRegion()
-            };
-
-            var dataItem = new DataItem
-            {
-                ValueType = typeof(INetworkCoverage),
-                ValueConverter = converter
-            };
-            var folder = new Folder();
-            folder.Items.Add(dataItem);
-
-            Folder folderAfterLoad = SaveAndRetrieveObject(folder); //cannot use test method with dataitem directly
-            IDataItem dataItemAfterLoad = folderAfterLoad.DataItems.First();
-            var converterAfterLoad = dataItemAfterLoad.ValueConverter as HydroRegionFeatureCoverageFromNetworkCoverageValueConverter;
-
-            converterAfterLoad.OriginalValue.Should().Not.Be.Null();
-            converterAfterLoad.ConvertedValue.Should().Not.Be.Null();
-            converterAfterLoad.HydroRegion.Should().Not.Be.Null();
-        }
-
-        [Test]
-        public void SaveLoadHydroRegionFeatureCoverageFromNetworkCoverageValueConverter()
-        {
-            var converter = new HydroRegionFeatureCoverageFromNetworkCoverageValueConverter
-            {
-                OriginalValue =
-                    new FeatureCoverage
-                    {
-                        Arguments =
-                        {
-                            new Variable<DateTime>(),
-                            new Variable<IFeature>()
-                        }
-                    },
-                ConvertedValue = new NetworkCoverage("b", true),
-                HydroRegion = new HydroRegion()
-            };
-
-            HydroRegionFeatureCoverageFromNetworkCoverageValueConverter converterAfterLoad = SaveAndRetrieveObject(converter);
-
-            converterAfterLoad.OriginalValue.Should().Not.Be.Null();
-            converterAfterLoad.ConvertedValue.Should().Not.Be.Null();
-            converterAfterLoad.HydroRegion.Should().Not.Be.Null();
         }
 
         private static void ValidateWorkflow(IEventedList<IActivity> activities)
