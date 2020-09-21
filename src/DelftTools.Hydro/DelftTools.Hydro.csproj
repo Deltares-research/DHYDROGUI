@@ -196,7 +196,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
-    <Compile Include="Structures\ICompositeBranchStructure.cs" />
     <Compile Include="Structures\IGate.cs" />
     <Compile Include="Structures\IPump.cs" />
     <Compile Include="Structures\IWeir.cs" />
@@ -271,7 +270,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Structures\ICompositeBranchStructure.hbm.xml" />
     <EmbeddedResource Include="Structures\IWeirFormula.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
