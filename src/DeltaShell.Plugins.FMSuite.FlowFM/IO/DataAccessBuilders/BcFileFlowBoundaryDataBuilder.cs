@@ -1368,11 +1368,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 {
                     return daoDataBlock;
                 }
-                Log.Info($"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}: skipping boundary dataBlock of function type {daoDataBlock.ForcingTypeDefinition.ForcingType}.");
+                Log.InfoFormat(Resources.BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___skipping_boundary_dataBlock_of_function_type__2__, dataBlock.FilePath, dataBlock.LineNumber, daoDataBlock.ForcingTypeDefinition.ForcingType);
             }
             catch(Exception)
             {
-                Log.Error($"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}, not possible to parse boundary data block.");
+                Log.ErrorFormat(Resources.BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___not_possible_to_parse_boundary_data_block_, dataBlock.FilePath, dataBlock.LineNumber);
             }
 
             return null;
