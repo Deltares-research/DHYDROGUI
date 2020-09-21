@@ -203,37 +203,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             converterAfterLoad.HydroRegion.Should().Not.Be.Null();
         }
 
-        [Test]
-        public void SaveLoadHydroLinksFeatureCoverageValueConverter()
-        {
-            var converter = new HydroLinksFeatureCoverageValueConverter
-            {
-                OriginalValue = new FeatureCoverage
-                {
-                    Arguments =
-                    {
-                        new Variable<DateTime>(),
-                        new Variable<IFeature>()
-                    }
-                },
-                ConvertedValue = new FeatureCoverage
-                {
-                    Arguments =
-                    {
-                        new Variable<DateTime>(),
-                        new Variable<IFeature>()
-                    }
-                },
-                HydroRegion = new HydroRegion()
-            };
-
-            HydroLinksFeatureCoverageValueConverter converterAfterLoad = SaveAndRetrieveObject(converter);
-
-            converterAfterLoad.OriginalValue.Should().Not.Be.Null();
-            converterAfterLoad.ConvertedValue.Should().Not.Be.Null();
-            converterAfterLoad.HydroRegion.Should().Not.Be.Null();
-        }
-
         private static void ValidateWorkflow(IEventedList<IActivity> activities)
         {
             Assert.That(activities, Has.Count.EqualTo(2),
