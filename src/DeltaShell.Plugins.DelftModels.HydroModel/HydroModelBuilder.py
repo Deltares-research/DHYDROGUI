@@ -33,7 +33,6 @@ corePlugin = HydroAssembly("DelftTools.Shell.Core", True)
 from DelftTools.Hydro import *
 from GeoAPI.Extensions.Coverages import *
 from DeltaShell.Plugins.DelftModels.HydroModel import *
-from DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters import *
 from DelftTools.Shell.Core.Extensions import *
 from DelftTools.Shell.Core.Workflow import *
 from DelftTools.Shell.Core.Workflow.DataItems import *
