@@ -303,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 CreateDummyInputCacheFileForMdu(inputMduFilePath);
 
                 // When
-                using (WaterFlowFMModel model = new WaterFlowFMModel())
+                using (var model = new WaterFlowFMModel())
                 {
                     model.ImportFromMdu(inputMduFilePath);
 
@@ -334,7 +334,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string testTempDirectory = tempDirectory.Path;
                 string saveFolderPath = Path.Combine(testTempDirectory, "SaveLocation");
                 Directory.CreateDirectory(saveFolderPath);
-                
+
                 string saveFolderCacheFilePath = Path.Combine(saveFolderPath, "test.cache");
                 string mduFilePath = Path.Combine(saveFolderPath, "test.mdu");
 
@@ -343,11 +343,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     byte[] info = new UTF8Encoding(true).GetBytes("test");
                     fs.Write(info, 0, info.Length);
                 }
-                
+
                 model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 model.WorkingDirectoryPathFunc = () => testTempDirectory;
                 model.CacheFile.UpdatePathToMduLocation(mduFilePath);
-                
+
                 // When 
                 model.Initialize();
 

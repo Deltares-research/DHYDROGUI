@@ -30,7 +30,8 @@ namespace DeltaShell.NGHS.IO.FunctionStores
         /// <param name="timeStepIndex">Timestep index (zero based)</param>
         /// <param name="parameterName">Substances name</param>
         /// <param name="locationIndex">Filter on this segment index (default -1 - no filtering)</param>
-        /// <returns>Values for the chosen
+        /// <returns>
+        /// Values for the chosen
         /// <param name="timeStepIndex"/>
         /// and
         /// <param name="parameterName"/>

@@ -41,6 +41,6 @@
         <TextBlock Grid.Column="2"
                    Text="{Binding ElementName=LabeledValueBoxControl, Path=Unit, Converter={StaticResource UnitStringToUnitDisplayStringConverter}}"
                    Style="{StaticResource LabelTextBlockStyle}"
-                   Width="{StaticResource UnitWidthValue}"/>
+                   Width="{StaticResource UnitWidthValue}" />
     </Grid>
 </UserControl>

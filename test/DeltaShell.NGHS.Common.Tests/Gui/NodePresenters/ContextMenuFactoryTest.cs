@@ -81,7 +81,11 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
 
             var documentViewsResolver = Substitute.For<IViewResolver>();
             var viewInfo = new ViewInfo();
-            documentViewsResolver.GetViewInfosFor(item).Returns(new[] {viewInfo, viewInfo});
+            documentViewsResolver.GetViewInfosFor(item).Returns(new[]
+            {
+                viewInfo,
+                viewInfo
+            });
 
             var gui = Substitute.For<IGui>();
             gui.CommandHandler.Returns(commandHandler);
@@ -99,6 +103,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
                     openAndOpenWithItem = toolStripItem;
                 }
             }
+
             Assert.That(openAndOpenWithItem != null, Is.EqualTo(canOpen));
             if (!canOpen)
             {
@@ -119,7 +124,10 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
 
             var documentViewsResolver = Substitute.For<IViewResolver>();
             var viewInfo = new ViewInfo();
-            documentViewsResolver.GetViewInfosFor(item).Returns(new[] { viewInfo });
+            documentViewsResolver.GetViewInfosFor(item).Returns(new[]
+            {
+                viewInfo
+            });
 
             var gui = Substitute.For<IGui>();
             gui.CommandHandler.Returns(commandHandler);
@@ -137,6 +145,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
                     openAndOpenWithItem = toolStripItem;
                 }
             }
+
             Assert.That(openAndOpenWithItem, Is.Null);
         }
     }

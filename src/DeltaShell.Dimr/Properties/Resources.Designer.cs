@@ -69,5 +69,14 @@ namespace DeltaShell.Dimr.Properties {
                         "as_been_detected_Please_inspect_your_diagnostic_files", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not load the Dimr api..
+        /// </summary>
+        internal static string DimrRunner_Could_not_load_dimr_api {
+            get {
+                return ResourceManager.GetString("DimrRunner_Could_not_load_dimr_api", resourceCulture);
+            }
+        }
     }
 }

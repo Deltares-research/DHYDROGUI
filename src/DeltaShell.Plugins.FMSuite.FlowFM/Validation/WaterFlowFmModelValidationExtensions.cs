@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 TabName = model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).PropertyDefinition.Category
             };
 
-            ValidationReport[] validationReports = 
+            ValidationReport[] validationReports =
             {
                 ValidateSpatiallyVaryingSedimentCoverage(model),
                 ValidateCoordinateSystem(model),
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 WaterFlowFMBoundaryConditionValidator.Validate(model),
                 FMStructuresValidator.Validate(model),
                 ValidateRestartInput(model),
-                RestartTimeRangeValidator.ValidateWriteRestartSettings(model.WriteRestart, 
+                RestartTimeRangeValidator.ValidateWriteRestartSettings(model.WriteRestart,
                                                                        model.RestartStartTime, model.RestartStopTime, model.RestartTimeStep,
                                                                        model.StartTime, model.TimeStep, outputParametersShortcut),
                 WaterFlowFMEmbankmentValidator.Validate(model),
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             if (!model.UseRestart)
             {
-                return new ValidationReport(Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state, 
+                return new ValidationReport(Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state,
                                             Enumerable.Empty<ValidationReport>());
             }
 
@@ -184,8 +184,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (!model.RestartInput.Exists)
             {
                 issues.Add(new ValidationIssue(Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state,
-                                                   ValidationSeverity.Error,
-                                                   Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart));
+                                               ValidationSeverity.Error,
+                                               Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart));
             }
 
             return new ValidationReport(Resources.WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state, issues);

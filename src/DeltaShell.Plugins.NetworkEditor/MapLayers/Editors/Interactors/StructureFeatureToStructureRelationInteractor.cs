@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         public override IFeatureRelationInteractor Activate(IFeature feature, IFeature cloneFeature, AddRelatedFeature addRelatedFeature, int level, IFallOffPolicy fallOffPolicy)
         {
             ICompositeBranchStructure compositeBranchStructure;
-            if (null != (compositeBranchStructure = feature as ICompositeBranchStructure) && 
+            if (null != (compositeBranchStructure = feature as ICompositeBranchStructure) &&
                 compositeBranchStructure.Structures.Count > 0)
             {
                 // Only activate the rule when there is something to do.

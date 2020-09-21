@@ -70,8 +70,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public WaveModel(string mdwPath) : this(model => BuildModelFromMdw(model, mdwPath)) {}
 
-        private string InputDirPath => Path.GetDirectoryName(MdwFilePath);
-
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
             runner = new DimrRunner(this);
@@ -292,6 +290,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         [Category("Run mode")]
         public bool ShowModelRunConsole { get; set; }
 
+        /// <summary>
+        /// Gets or sets the function to retrieve the working directory path.
+        /// </summary>
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
+
         public IHydroRegion Region => null;
 
         /// <summary>
@@ -363,11 +366,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         public override IBasicModelInterface BMIEngine => runner.Api;
-
-        /// <summary>
-        /// Gets or sets the function to retrieve the working directory path.
-        /// </summary>
-        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
 
         public void AddSubDomain(IWaveDomainData domain, IWaveDomainData subDomain)
         {
@@ -529,6 +527,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             // write spatial data:
             SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
+            SaveOutput(targetDir, switchTo);
         }
 
         public void ReloadAllGrids()
@@ -718,6 +717,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             base.StopTime = StopTime;
             base.TimeStep = TimeStep;
         }
+
+        private string InputDirPath => Path.GetDirectoryName(MdwFilePath);
 
         [EditAction]
         private void RemoveDataItemsForDomain(IWaveDomainData domain)
@@ -1453,11 +1454,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// <exception cref="NotSupportedException">
         /// Thrown when this property is set, because the model should use the application's working directory.
         /// </exception>
-        public virtual string DimrExportDirectoryPath
-        {
-            get => Path.Combine(WorkingDirectoryPathFunc(), Name);
-            set => throw new NotSupportedException("Cannot set dimr export directory.");
-        }
+        public virtual string DimrExportDirectoryPath => Path.Combine(WorkingDirectoryPathFunc(), Name);
 
         public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;
 

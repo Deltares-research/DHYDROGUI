@@ -11,11 +11,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// <see cref="DelftIniMigrator"/> implements the interface with which to migrate
     /// delft ini files.
     /// </summary>
-    /// <seealso cref="IDelftIniMigrator" />
+    /// <seealso cref="IDelftIniMigrator"/>
     public sealed class DelftIniMigrator : IDelftIniMigrator
     {
-        private readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> 
+        private readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>
             migrationBehaviourMapping;
+
         private readonly IDelftIniReader iniReader;
         private readonly IDelftIniWriter iniWriter;
         private readonly bool removeOriginalIniFile;
@@ -37,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// </exception>
         public DelftIniMigrator(
             IReadOnlyDictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>> migrationBehaviourMapping,
-            IDelftIniReader iniReader, 
+            IDelftIniReader iniReader,
             IDelftIniWriter iniWriter,
             bool removeOriginalIniFile)
         {
@@ -51,16 +52,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             this.removeOriginalIniFile = removeOriginalIniFile;
         }
 
-        public void MigrateFile(Stream sourceFileStream, 
+        public void MigrateFile(Stream sourceFileStream,
                                 string sourceFilePath,
-                                string targetFilePath, 
+                                string targetFilePath,
                                 ILogHandler logHandler)
         {
             Ensure.NotNull(sourceFileStream, nameof(sourceFileStream));
             Ensure.NotNull(sourceFilePath, nameof(sourceFilePath));
             Ensure.NotNull(targetFilePath, nameof(targetFilePath));
 
-            IList<DelftIniCategory> categories = 
+            IList<DelftIniCategory> categories =
                 iniReader.ReadDelftIniFile(sourceFileStream, sourceFilePath);
 
             foreach (DelftIniCategory category in categories)
@@ -89,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             }
         }
 
-        private static void MigrateProperty(DelftIniProperty property, 
+        private static void MigrateProperty(DelftIniProperty property,
                                             IReadOnlyDictionary<string, IMigrationBehaviour> categoryMapping,
                                             ILogHandler logHandler)
         {

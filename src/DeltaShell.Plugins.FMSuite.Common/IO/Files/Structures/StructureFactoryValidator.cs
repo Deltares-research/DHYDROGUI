@@ -9,7 +9,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 {
     public static class StructureFactoryValidator
     {
-        public static readonly StructureType[] SupportedTypes = {
+        public static readonly StructureType[] SupportedTypes =
+        {
             StructureType.Pump,
             StructureType.Weir,
             StructureType.Gate,

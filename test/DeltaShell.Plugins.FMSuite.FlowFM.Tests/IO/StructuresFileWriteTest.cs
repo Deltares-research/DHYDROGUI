@@ -68,10 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
-            var structuresFile = new StructuresFile()
-            {
-                StructureSchema = schema
-            };
+            var structuresFile = new StructuresFile() {StructureSchema = schema};
 
             string exportFilePath = TestHelper.GetCurrentMethodName() + ".ini";
             FileUtils.DeleteIfExists(exportFilePath);
@@ -268,10 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(
                 StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
-            var structuresFile = new StructuresFile()
-            {
-                StructureSchema = schema
-            };
+            var structuresFile = new StructuresFile() {StructureSchema = schema};
             return structuresFile;
         }
 

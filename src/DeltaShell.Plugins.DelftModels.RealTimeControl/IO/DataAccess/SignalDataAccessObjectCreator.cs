@@ -46,10 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             string signalName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(lookupTableElement.id);
             List<DateRecord2DataXML> records = (lookupTableElement.Item as TableLookupTableXML)?.record;
 
-            var signal = new LookupSignal
-            {
-                Name = signalName
-            };
+            var signal = new LookupSignal {Name = signalName};
 
             if (records != null)
             {

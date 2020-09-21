@@ -21,17 +21,16 @@ namespace DelftTools.Hydro
     {
         private IEventedList<Route> routes;
 
-
         public HydroNetwork()
         {
             Name = "network1";
-           Routes = new EventedList<Route>();
+            Routes = new EventedList<Route>();
 
             Links = new EventedList<HydroLink>();
             SubRegions = new EventedList<IRegion>();
         }
 
-      public virtual IEventedList<Route> Routes
+        public virtual IEventedList<Route> Routes
         {
             get => routes;
             protected set
@@ -50,7 +49,7 @@ namespace DelftTools.Hydro
             }
         }
 
-       public override IEventedList<IBranch> Branches
+        public override IEventedList<IBranch> Branches
         {
             get => base.Branches;
             set
@@ -96,7 +95,7 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<IManhole> Manholes { get; protected set; }
 
         public virtual IEnumerable<IStructure1D> Structures { get; protected set; }
-        public virtual IEnumerable<ICompositeBranchStructure> CompositeBranchStructures { get; protected set; } 
+        public virtual IEnumerable<ICompositeBranchStructure> CompositeBranchStructures { get; protected set; }
         public virtual IEnumerable<IPump> Pumps { get; protected set; }
         public virtual IEnumerable<IWeir> Weirs { get; protected set; }
         public virtual IEnumerable<IGate> Gates { get; protected set; }
@@ -153,7 +152,7 @@ namespace DelftTools.Hydro
         public override object Clone()
         {
             var clone = (HydroNetwork) base.Clone();
-            
+
             foreach (Route route in Routes)
             {
                 var clonedRoute = (Route) route.Clone();
@@ -161,7 +160,7 @@ namespace DelftTools.Hydro
                 clone.Routes.Add(clonedRoute);
             }
 
-           foreach (IRegion subRegion in SubRegions)
+            foreach (IRegion subRegion in SubRegions)
             {
                 clone.SubRegions.Add((IHydroRegion) subRegion.Clone());
             }

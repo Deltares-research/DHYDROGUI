@@ -193,15 +193,14 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
         {
             if (connectors != null)
             {
-                Pen linePen = new Pen(Color.Red, 5);
+                var linePen = new Pen(Color.Red, 5);
 
-                RectangleF[] rectangles = new RectangleF[connectors.AsList().Count];
-                int countRectangles = 0;
-                foreach (var connector in connectors)
+                var rectangles = new RectangleF[connectors.AsList().Count];
+                var countRectangles = 0;
+                foreach (Connector connector in connectors)
                 {
-
-                    RectangleF rectangle = new RectangleF(connector.Location.X, connector.Location.Y, 2,
-                                                          2);
+                    var rectangle = new RectangleF(connector.Location.X, connector.Location.Y, 2,
+                                                   2);
                     rectangles[countRectangles] = rectangle;
                     countRectangles++;
                 }

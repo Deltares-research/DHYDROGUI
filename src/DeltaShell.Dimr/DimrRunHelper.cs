@@ -17,8 +17,9 @@ namespace DeltaShell.Dimr
         /// DataItem tag name.
         /// </summary>
         public const string dimrRunLogfileDataItemTag = "DimrRunLog";
+
         private const string dimrRunLogfileName = "dimr_redirected.log";
-        
+
         /// <summary>
         /// Method for reading the DimrRunLog file and storing the content
         /// in a TextDocument.
@@ -46,7 +47,7 @@ namespace DeltaShell.Dimr
         private static IDataItem GetLogDataItem(IModel model)
         {
             IDataItem logDataItem = model.DataItems.FirstOrDefault(di => di.Tag == dimrRunLogfileDataItemTag);
-            
+
             //add an dimr run log output dataitem if needed.
             if (logDataItem == null)
             {
@@ -62,7 +63,7 @@ namespace DeltaShell.Dimr
         private static string ReadLogFile(string completeDimrLogFilename)
         {
             var stringBuilder = new StringBuilder();
-            
+
             using (Stream objStream = File.OpenRead(completeDimrLogFilename))
             {
                 // Read data from file until read position is not equals to length of file

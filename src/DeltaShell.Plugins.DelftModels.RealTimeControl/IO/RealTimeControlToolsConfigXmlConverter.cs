@@ -5,7 +5,7 @@ using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
-using ExpressionObjectGroup = System.Collections.Generic.List<DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess.ExpressionObject>; 
+using ExpressionObjectGroup = System.Collections.Generic.List<DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess.ExpressionObject>;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {

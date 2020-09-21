@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 var i = 2;
                 while (true)
                 {
-                    string newFileName = $"{fileNameWithoutExtension}__{i:00000}{extension}";
+                    var newFileName = $"{fileNameWithoutExtension}__{i:00000}{extension}";
                     if (!previousPaths.Contains(newFileName))
                     {
                         item.FileName = newFileName;
@@ -269,7 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             foreach (int i in boundaryCondition.DataPointIndices)
             {
-                string quantity =
+                var quantity =
                     $"{boundaryCondition.VariableDescription.ToLower()} {boundaryCondition.DataType.GetDescription().ToLower()} at {boundaryConditionSet.SupportPointNames[i]}";
 
                 string filePath;

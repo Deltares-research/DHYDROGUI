@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// <see cref="LegacyLoader"/> for the <see cref="WaveModel"/> to migrate
     /// to the directory structure associated with file format version 1.2.0.0.
     /// </summary>
-    /// <seealso cref="LegacyLoader" />
+    /// <seealso cref="LegacyLoader"/>
     public class WaveModel110LegacyLoader : LegacyLoader
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(WaveModel110LegacyLoader));
@@ -26,35 +26,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 
             if (!(entity is WaveModel model))
             {
-                log.ErrorFormat(Resources.WaveModel110LegacyLoader_OnAfterInitialize_Provided_entity_is_not_a__0_, 
+                log.ErrorFormat(Resources.WaveModel110LegacyLoader_OnAfterInitialize_Provided_entity_is_not_a__0_,
                                 nameof(WaveModel));
                 return;
             }
-            
+
             if (!WaveDirectoryStructureMigrationHelper.TryParseDatabasePath(
-                    dbConnection.ConnectionString, 
+                    dbConnection.ConnectionString,
                     out string dbPath))
             {
-                log.ErrorFormat(Resources.WaveModel110LegacyLoader_OnAfterInitialize_Could_not_determine_dsproj_location_from_database_connection___0_, 
+                log.ErrorFormat(Resources.WaveModel110LegacyLoader_OnAfterInitialize_Could_not_determine_dsproj_location_from_database_connection___0_,
                                 dbConnection.ConnectionString);
             }
-            
+
             string modelPath = Path.Combine(dbPath + "_data", model.Name);
             string mdwPath = Path.Combine(modelPath, $"{model.Name}.mdw");
-            
+
             WaveDirectoryStructureMigrationHelper.MigrateFileStructure(mdwPath);
         }
 
         public override void OnAfterProjectMigrated(Project project)
         {
             base.OnAfterProjectMigrated(project);
-            
+
             foreach (WaveModel waveModel in GetAllWaveModelsFromProject(project))
             {
-                string activityName = string.Format(Resources.WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__, 
+                string activityName = string.Format(Resources.WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__,
                                                     waveModel.Name);
                 var logHandler = new LogHandler(activityName, log);
-                WavmFunctionStoreMigrationHelper.RemoveWavmFunctionStores(waveModel, logHandler);
+                WavmFunctionStoreMigrationHelper.DisconnectWavmFunctionStores(waveModel, logHandler);
                 logHandler.LogReport();
             }
         }

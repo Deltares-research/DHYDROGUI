@@ -79,10 +79,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (conveyanceTypeProperty != null && waterFlowFmProperty == conveyanceTypeProperty)
                     {
                         bool useMorSed = modelDefinition.UseMorphologySediment;
-                        if (useMorSed && 
+                        if (useMorSed &&
                             Enum.TryParse(waterFlowFmProperty.GetValueAsString(), out Conveyance2DType currentConveyanceType) &&
                             currentConveyanceType != Conveyance2DType.RisHU &&
-                            currentConveyanceType != Conveyance2DType.RisH && 
+                            currentConveyanceType != Conveyance2DType.RisH &&
                             currentConveyanceType != Conveyance2DType.RisAperP)
                         {
                             issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WaterFlowFMModelDefinitionValidator_Validate_));

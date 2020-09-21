@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using AutoFixture;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -14,9 +15,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         [Test]
         public void Constructor_SetsPropertiesCorrectly()
         {
-            var formula = new SimpleWeirFormula { LateralContraction = 20.0 };
-            
-            var weir = new Weir2D { WeirFormula = formula };
+            var formula = new SimpleWeirFormula {LateralContraction = 20.0};
+
+            var weir = new Weir2D {WeirFormula = formula};
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
             {
@@ -25,9 +26,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                     new SimpleWeirViewModel(formula, weirPropertiesViewModel);
 
                 Assert.That(viewModel, Is.InstanceOf(typeof(INotifyPropertyChanged)));
-                Assert.That(viewModel.WeirPropertiesViewModel, 
+                Assert.That(viewModel.WeirPropertiesViewModel,
                             Is.SameAs(weirPropertiesViewModel));
-                Assert.That(viewModel.ContractionCoefficient, 
+                Assert.That(viewModel.ContractionCoefficient,
                             Is.EqualTo(formula.LateralContraction));
             }
         }
@@ -43,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 // Call | Assert
                 void Call() => new SimpleWeirViewModel(null, weirPropertiesViewModel);
 
-                var exception = Assert.Throws<System.ArgumentNullException>(Call);
+                var exception = Assert.Throws<ArgumentNullException>(Call);
                 Assert.That(exception.ParamName, Is.EqualTo("formula"));
             }
         }
@@ -55,7 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new SimpleWeirFormula();
             void Call() => new SimpleWeirViewModel(formula, null);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("weirPropertiesViewModel"));
         }
 
@@ -63,8 +64,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void ContractionCoefficient_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new SimpleWeirFormula() { LateralContraction=  6.0 };
-            var weir2D = new Weir2D { WeirFormula = formula };
+            var formula = new SimpleWeirFormula() {LateralContraction = 6.0};
+            var weir2D = new Weir2D {WeirFormula = formula};
 
             const double contractionCoefficient = 20.0;
 
@@ -80,14 +81,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 viewModel.ContractionCoefficient = contractionCoefficient;
 
                 // Assert
-                Assert.That(viewModel.ContractionCoefficient, 
+                Assert.That(viewModel.ContractionCoefficient,
                             Is.EqualTo(contractionCoefficient));
-                Assert.That(formula.LateralContraction, 
+                Assert.That(formula.LateralContraction,
                             Is.EqualTo(contractionCoefficient));
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1),
                             "Expected a single property changed event to be fired.");
                 Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
-                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName,
                             Is.EqualTo(nameof(viewModel.ContractionCoefficient)));
 
                 // Cleanup
@@ -102,8 +103,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var fixture = new Fixture();
             var lateralContraction = fixture.Create<double>();
 
-            var formula = new SimpleWeirFormula() { LateralContraction=  lateralContraction };
-            var weir2D = new Weir2D { WeirFormula = formula };
+            var formula = new SimpleWeirFormula() {LateralContraction = lateralContraction};
+            var weir2D = new Weir2D {WeirFormula = formula};
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
@@ -117,9 +118,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 viewModel.ContractionCoefficient = lateralContraction;
 
                 // Assert
-                Assert.That(viewModel.ContractionCoefficient, 
+                Assert.That(viewModel.ContractionCoefficient,
                             Is.EqualTo(lateralContraction));
-                Assert.That(formula.LateralContraction, 
+                Assert.That(formula.LateralContraction,
                             Is.EqualTo(lateralContraction));
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0),
                             "Expected a no property changed event to be fired.");

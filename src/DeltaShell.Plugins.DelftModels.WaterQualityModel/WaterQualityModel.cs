@@ -132,6 +132,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
+        public virtual bool UseRestart { get; set; }
+
+        public virtual bool WriteRestart { get; set; }
+
         /// <summary>
         /// Imports the contents of a HydFile into the WAQ model.
         /// </summary>
@@ -405,10 +409,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             modelSettings.WorkingDirectoryPathFuncWithModelName = () => Path.Combine(WorkingDirectoryWithoutModelName(), GetWaqDataFolderName());
         }
-
-        public virtual bool UseRestart { get; set; }
-
-        public virtual bool WriteRestart { get; set; }
 
         [EditAction]
         protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -32,12 +32,10 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="path">The path to the unstructured grid.</param>
         /// <param name="loadFlowLinksAndCells">
         /// if set to <c>true</c> [load flow links and cells].
-        ///
         /// <paramref name="loadFlowLinksAndCells"/> defaults to false.
         /// </param>
         /// <param name="callCreateCells">
         /// if set to <c>true</c> and the grid is in UGrid convention then CreateCells will be called.
-        /// 
         /// <paramref name="callCreateCells"/> defaults to false.
         /// </param>
         /// <returns>
@@ -52,8 +50,8 @@ namespace DeltaShell.NGHS.IO.Grid
         /// grids, the data associated with cells will be incorrect, if the indices
         /// are reshuffled.
         /// </remarks>
-        public static UnstructuredGrid LoadFromFile(string path, 
-                                                    bool loadFlowLinksAndCells = false, 
+        public static UnstructuredGrid LoadFromFile(string path,
+                                                    bool loadFlowLinksAndCells = false,
                                                     bool callCreateCells = false)
         {
             if (!File.Exists(path) || Path.GetFileName(path) == null)

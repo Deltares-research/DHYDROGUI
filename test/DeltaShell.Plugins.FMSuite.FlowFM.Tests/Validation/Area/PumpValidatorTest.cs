@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
 
-            string expectedMessage = $"pump '{pump.Name}' not within grid extent";
+            var expectedMessage = $"pump '{pump.Name}' not within grid extent";
             Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
         }
 
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
 
-            string expectedMessage =
+            var expectedMessage =
                 $"pump '{pump.Name}': Capacity must be greater than or equal to 0.";
             Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
         }
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
 
-            string expectedMessage =
+            var expectedMessage =
                 $"pump '{pump.Name}': Suction start level must be greater than or equal to suction stop level.";
             Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
         }

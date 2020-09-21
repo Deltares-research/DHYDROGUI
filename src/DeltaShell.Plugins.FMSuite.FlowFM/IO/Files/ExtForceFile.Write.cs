@@ -284,10 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string directory = GetDirectoryName();
             string pliFilePath = Path.Combine(directory, extForceFileItem.FileName);
 
-            new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D>
-            {
-                sourceAndSink.Feature
-            });
+            new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> {sourceAndSink.Feature});
             string dataFilePath = Path.ChangeExtension(pliFilePath, ExtForceQuantNames.TimFileExtension);
 
             IFunction originalFunction = sourceAndSink.Function;
@@ -334,10 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string directory = GetDirectoryName();
             string pliFilePath = Path.Combine(directory, extForceFileItem.FileName);
 
-            new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D>
-            {
-                boundaryCondition.Feature
-            });
+            new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> {boundaryCondition.Feature});
 
             int count = boundaryCondition.Feature.Geometry.Coordinates.Length;
 
@@ -366,7 +360,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     continue;
                 }
-                
+
                 switch (boundaryCondition.DataType)
                 {
                     case BoundaryConditionDataType.HarmonicCorrection:

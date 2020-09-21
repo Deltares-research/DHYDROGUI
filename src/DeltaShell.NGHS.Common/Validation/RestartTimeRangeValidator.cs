@@ -11,7 +11,7 @@ namespace DeltaShell.NGHS.Common.Validation
     public static class RestartTimeRangeValidator
     {
         /// <summary>
-        /// Method for validating the write restart settings. 
+        /// Method for validating the write restart settings.
         /// </summary>
         /// <param name="writeRestart"> Setting if writing restart files should be done during a run. </param>
         /// <param name="restartStartTime"> The restart start time. </param>
@@ -27,23 +27,26 @@ namespace DeltaShell.NGHS.Common.Validation
                                                                     DateTime modelStartTime, TimeSpan modelTimeStep, object viewData = null)
         {
             var issues = new List<ValidationIssue>();
-            
-            if (!writeRestart) return new ValidationReport(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings, issues);
-            
-            var modelTimeStepSeconds = (long)modelTimeStep.TotalSeconds;
-            
+
+            if (!writeRestart)
+            {
+                return new ValidationReport(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings, issues);
+            }
+
+            var modelTimeStepSeconds = (long) modelTimeStep.TotalSeconds;
+
             ValidateRestartTimeStep(modelTimeStepSeconds, restartTimeStep, issues, viewData);
 
             ValidateRestartStopTimeIsNotBeforeRestartStartTime(restartStartTime, restartStopTime, issues, viewData);
-            
+
             ValidateRestartStartTime(restartStartTime, modelStartTime, modelTimeStepSeconds, issues, viewData);
-            
+
             ValidateRestartStopTime(restartStopTime, modelStartTime, modelTimeStepSeconds, issues, viewData);
 
             return new ValidationReport(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings, issues);
         }
 
-        private static void ValidateRestartStopTime(DateTime restartStopTime, DateTime modelStartTime, long modelTimeStepSeconds, 
+        private static void ValidateRestartStopTime(DateTime restartStopTime, DateTime modelStartTime, long modelTimeStepSeconds,
                                                     ICollection<ValidationIssue> issues, object viewData)
         {
             if (restartStopTime < modelStartTime ||
@@ -54,7 +57,7 @@ namespace DeltaShell.NGHS.Common.Validation
             }
         }
 
-        private static void ValidateRestartStartTime(DateTime restartStartTime, DateTime modelStartTime, long modelTimeStepSeconds, 
+        private static void ValidateRestartStartTime(DateTime restartStartTime, DateTime modelStartTime, long modelTimeStepSeconds,
                                                      ICollection<ValidationIssue> issues, object viewData)
         {
             if (restartStartTime < modelStartTime ||
@@ -74,7 +77,7 @@ namespace DeltaShell.NGHS.Common.Validation
                 return;
             }
 
-            var restartTimeStepSeconds = (long)restartTimeStep.TotalSeconds;
+            var restartTimeStepSeconds = (long) restartTimeStep.TotalSeconds;
 
             if (modelTimeStepSeconds > 0 && restartTimeStepSeconds % modelTimeStepSeconds != 0)
             {

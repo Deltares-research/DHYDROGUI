@@ -1359,22 +1359,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             switch (functionName)
             {
                 case "Salinity":
-                    hydroData = new TestHydroDataStub(new HydFileData()
-                    {
-                        SalinityRelativePath = dataFile
-                    });
+                    hydroData = new TestHydroDataStub(new HydFileData() {SalinityRelativePath = dataFile});
                     break;
                 case "Tau":
-                    hydroData = new TestHydroDataStub(new HydFileData()
-                    {
-                        ShearStressesRelativePath = dataFile
-                    });
+                    hydroData = new TestHydroDataStub(new HydFileData() {ShearStressesRelativePath = dataFile});
                     break;
                 case "Temp":
-                    hydroData = new TestHydroDataStub(new HydFileData()
-                    {
-                        TemperatureRelativePath = dataFile
-                    });
+                    hydroData = new TestHydroDataStub(new HydFileData() {TemperatureRelativePath = dataFile});
                     break;
                 default:
                     throw new InvalidOperationException("The test case is not supported by the model. " + functionName);

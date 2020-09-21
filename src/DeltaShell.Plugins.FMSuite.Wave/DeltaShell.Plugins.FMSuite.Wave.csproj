@@ -248,6 +248,11 @@
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProvider.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinitionLoadHelper.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Validation\WaveBoundariesValidator.cs" />
     <Compile Include="Validation\WaveCouplingValidator.cs" />
     <Compile Include="Validation\WaveOutputParametersValidator.cs" />
@@ -269,11 +274,6 @@
     <Compile Include="ModelDefinition\WaveModelDefinition.cs" />
     <Compile Include="ModelDefinition\WaveModelProperty.cs" />
     <Compile Include="ModelDefinition\WaveModelPropertyDefinition.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="WaveModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -307,8 +307,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

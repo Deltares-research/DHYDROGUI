@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                           string candidateZipFileName,
                                           string candidateMduFileName)
         {
-            string testName = $"{testModel.Parent.Name}.{testModel.Name}";
+            var testName = $"{testModel.Parent.Name}.{testModel.Name}";
 
             if (hasMultipleZipFiles && hasMultipleMduFiles)
             {

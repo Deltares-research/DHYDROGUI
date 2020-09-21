@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         {
             if (realTimeControlModel.UseRestart)
             {
-                using(StreamWriter stream = File.CreateText(Path.Combine(directory, RealTimeControlXMLFiles.XmlImportState)))
+                using (StreamWriter stream = File.CreateText(Path.Combine(directory, RealTimeControlXMLFiles.XmlImportState)))
                 {
                     stream.Write(realTimeControlModel.RestartInput.Content);
                 }

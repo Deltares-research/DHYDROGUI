@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
+using DelftTools.Units;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
@@ -92,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Given
             const string boundaryConditionName = "boundary_condition";
-            string expectedLine = $"location             '{boundaryConditionName}'";
+            var expectedLine = $"location             '{boundaryConditionName}'";
             const string fileName = "Waves.bcw";
             var bcwFile = new BcwFile();
 
@@ -112,6 +116,57 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                                 "When a boundary condition does not have any functions, the only line in the file is expected to describe the name of the boundary condition.");
             });
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenABoundaryConditionNameWithTimeSeriesWithoutValues_WhenWriteIsCalled_ThenExceptionIsRisen()
+        {
+            // Given
+            const string boundaryConditionName = "boundary_condition";
+            const string fileName = "Waves.bcw";
+            var bcwFile = new BcwFile();
+            var functions = new List<IFunction>();
+            string noValuesComponent = KnownWaveProperties.WaveHeight;
+            string expectedErrorMssg = string.Format(Resources.BcwFile_WriteBoundaryData_No_values_given_for__0__, noValuesComponent);
+            string expectedLogMssg = string.Format(Resources.BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_, expectedErrorMssg);
+
+            // Generate Time series function with no values in one of the components.
+            var timeSeriesFunction = new TimeSeries();
+            timeSeriesFunction.Attributes.Add("time_function", "dummy");
+            timeSeriesFunction.Attributes.Add("reference_date", "20200616");
+            timeSeriesFunction.Attributes.Add("time_unit", "days");
+            timeSeriesFunction.Arguments[0].DefaultValue = new DateTime(2000, 1, 1);
+            var dummyUnit = new Unit("dummy unit");
+            var components = new List<string>
+            {
+                KnownWaveProperties.WaveHeight,
+                KnownWaveProperties.Period,
+                KnownWaveProperties.Direction,
+                KnownWaveProperties.DirectionalSpreadingValue
+            };
+            timeSeriesFunction.Arguments[0].Values.Add(new DateTime());
+            timeSeriesFunction.Components.AddRange(
+                components.Select(c => new Variable<double>(c) {Unit = dummyUnit}));
+            timeSeriesFunction.Components
+                              .Single(c => c.Name.Equals(noValuesComponent))
+                              .Values.Clear();
+
+            functions.Add(timeSeriesFunction);
+            var boundaryConditionToFunctionsMappings = new Dictionary<string, List<IFunction>> {{boundaryConditionName, functions}};
+
+            // When
+            TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
+            {
+                string filePath = Path.Combine(tempDirectory, fileName);
+                TestDelegate testAction = () => bcwFile.Write(boundaryConditionToFunctionsMappings, filePath);
+
+                // Then
+                Assert.That(testAction, Throws.Nothing);
+                TestHelper.AssertAtLeastOneLogMessagesContains(testAction.Invoke, expectedLogMssg);
+            });
+        }
+
+
 
         [Test]
         [Category(TestCategory.DataAccess)]

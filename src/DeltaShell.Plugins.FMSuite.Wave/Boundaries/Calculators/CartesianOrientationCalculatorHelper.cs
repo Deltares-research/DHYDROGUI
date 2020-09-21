@@ -128,8 +128,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// Thrown when <paramref name="valueVectorPairs"/> or <paramref name="referenceVector"/>
         /// is <c>null</c>.
         /// </exception>
-        internal static T GetValueClosestAlignedWithVector<T>(IEnumerable<Tuple<T, Vector2D>> valueVectorPairs, 
-                                                              Vector2D referenceVector, 
+        internal static T GetValueClosestAlignedWithVector<T>(IEnumerable<Tuple<T, Vector2D>> valueVectorPairs,
+                                                              Vector2D referenceVector,
                                                               T defaultValue)
         {
             Ensure.NotNull(valueVectorPairs, nameof(valueVectorPairs));

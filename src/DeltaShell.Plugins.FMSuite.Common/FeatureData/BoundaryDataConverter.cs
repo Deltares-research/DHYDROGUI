@@ -11,12 +11,46 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         private static readonly IDictionary<BoundaryConditionDataType, IList<BoundaryConditionDataType>>
             conversionDictionary = new Dictionary<BoundaryConditionDataType, IList<BoundaryConditionDataType>>
             {
-                {BoundaryConditionDataType.TimeSeries, new[] {BoundaryConditionDataType.TimeSeries}},
-                {BoundaryConditionDataType.AstroComponents, new[] {BoundaryConditionDataType.AstroComponents, BoundaryConditionDataType.AstroCorrection}},
-                {BoundaryConditionDataType.AstroCorrection, new[] {BoundaryConditionDataType.AstroComponents, BoundaryConditionDataType.AstroCorrection}},
-                {BoundaryConditionDataType.Harmonics, new[] {BoundaryConditionDataType.Harmonics, BoundaryConditionDataType.HarmonicCorrection}},
-                {BoundaryConditionDataType.HarmonicCorrection, new[] {BoundaryConditionDataType.Harmonics, BoundaryConditionDataType.HarmonicCorrection}},
-                {BoundaryConditionDataType.Qh, new[] {BoundaryConditionDataType.Qh}}
+                {
+                    BoundaryConditionDataType.TimeSeries, new[]
+                    {
+                        BoundaryConditionDataType.TimeSeries
+                    }
+                },
+                {
+                    BoundaryConditionDataType.AstroComponents, new[]
+                    {
+                        BoundaryConditionDataType.AstroComponents,
+                        BoundaryConditionDataType.AstroCorrection
+                    }
+                },
+                {
+                    BoundaryConditionDataType.AstroCorrection, new[]
+                    {
+                        BoundaryConditionDataType.AstroComponents,
+                        BoundaryConditionDataType.AstroCorrection
+                    }
+                },
+                {
+                    BoundaryConditionDataType.Harmonics, new[]
+                    {
+                        BoundaryConditionDataType.Harmonics,
+                        BoundaryConditionDataType.HarmonicCorrection
+                    }
+                },
+                {
+                    BoundaryConditionDataType.HarmonicCorrection, new[]
+                    {
+                        BoundaryConditionDataType.Harmonics,
+                        BoundaryConditionDataType.HarmonicCorrection
+                    }
+                },
+                {
+                    BoundaryConditionDataType.Qh, new[]
+                    {
+                        BoundaryConditionDataType.Qh
+                    }
+                }
             };
 
         public static bool CanConvert(BoundaryConditionDataType sourceDataType,

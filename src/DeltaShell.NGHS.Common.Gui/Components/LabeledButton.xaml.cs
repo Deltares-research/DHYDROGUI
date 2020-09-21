@@ -12,28 +12,28 @@ namespace DeltaShell.NGHS.Common.Gui.Components
         /// <summary>
         /// The label property
         /// </summary>
-        public static readonly DependencyProperty LabelProperty = 
-            DependencyProperty.Register(nameof(Label), 
-                                        typeof(string), 
-                                        typeof(LabeledButton), 
+        public static readonly DependencyProperty LabelProperty =
+            DependencyProperty.Register(nameof(Label),
+                                        typeof(string),
+                                        typeof(LabeledButton),
                                         new PropertyMetadata(default(string)));
 
         /// <summary>
         /// The button label property
         /// </summary>
-        public static readonly DependencyProperty ButtonLabelProperty = 
-            DependencyProperty.Register(nameof(ButtonLabel), 
-                                        typeof(string), 
-                                        typeof(LabeledButton), 
+        public static readonly DependencyProperty ButtonLabelProperty =
+            DependencyProperty.Register(nameof(ButtonLabel),
+                                        typeof(string),
+                                        typeof(LabeledButton),
                                         new PropertyMetadata(default(string)));
 
         /// <summary>
         /// The button command property
         /// </summary>
-        public static readonly DependencyProperty ButtonCommandProperty = 
-            DependencyProperty.Register(nameof(ButtonCommand), 
-                                        typeof(ICommand), 
-                                        typeof(LabeledButton), 
+        public static readonly DependencyProperty ButtonCommandProperty =
+            DependencyProperty.Register(nameof(ButtonCommand),
+                                        typeof(ICommand),
+                                        typeof(LabeledButton),
                                         new PropertyMetadata(default(ICommand)));
 
         /// <summary>

@@ -104,12 +104,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Contains<ShapeFileImporter<ILineString, Weir2D>>(importers);
         }
 
-        private static void Contains<T>(IFileImporter[] source, int n = 1)
-        {
-            Assert.That(source.OfType<T>().ToList(), Has.Count.EqualTo(n),
-                        $"Collection should contain {n} of {typeof(T).Name}");
-        }
-
         [Test]
         public void GetFileExporters_ContainsExpectedExporterForEmbankments()
         {
@@ -123,6 +117,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         $"No file exporter with the expected type was found: {nameof(expectedType)}.");
             Assert.That(embankmentExporter.Mode, Is.EqualTo(Feature2DImportExportMode.Export),
                         $"The property {embankmentExporter.Mode} of the file exporter was incorrect.");
+        }
+
+        private static void Contains<T>(IFileImporter[] source, int n = 1)
+        {
+            Assert.That(source.OfType<T>().ToList(), Has.Count.EqualTo(n),
+                        $"Collection should contain {n} of {typeof(T).Name}");
         }
 
         /// <summary>

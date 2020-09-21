@@ -60,6 +60,8 @@ namespace DeltaShell.NGHS.IO
 
         protected string CurrentLine { get; private set; }
 
+        protected virtual bool ExcludeEqualsIdentifier => true;
+
         /// <summary>
         /// Opens a FM suite related file.
         /// </summary>
@@ -458,7 +460,5 @@ namespace DeltaShell.NGHS.IO
 
             return doWriteLine;
         }
-
-        protected virtual bool ExcludeEqualsIdentifier => true;
     }
 }

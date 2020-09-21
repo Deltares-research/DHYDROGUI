@@ -16,14 +16,14 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
         {
             // Arrange
             DateTime modelStartTime = DateTime.Today.AddDays(6);
-            var modelTimeStep = new TimeSpan(0,12,0,0);
-            
+            var modelTimeStep = new TimeSpan(0, 12, 0, 0);
+
             DateTime restartStartTime = DateTime.Today.AddDays(2);
             DateTime restartStopTime = DateTime.Today.AddDays(1);
             var restartTimeStep = new TimeSpan(0, 13, 0, 0);
 
             // Act
-            ValidationReport validationReport = RestartTimeRangeValidator.ValidateWriteRestartSettings(false, restartStartTime, restartStopTime, restartTimeStep, 
+            ValidationReport validationReport = RestartTimeRangeValidator.ValidateWriteRestartSettings(false, restartStartTime, restartStopTime, restartTimeStep,
                                                                                                        modelStartTime, modelTimeStep);
             // Assert
             Assert.IsNotNull(validationReport);
@@ -66,7 +66,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             ValidationReport validationReport = RestartTimeRangeValidator.ValidateWriteRestartSettings(true, restartStartTime, restartStopTime, restartTimeStep,
                                                                                                        modelStartTime, modelTimeStep);
             // Assert
-            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step, 
+            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step,
                             validationReport.GetAllIssuesRecursive().First().ViewData);
         }
 
@@ -88,7 +88,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
                                                                                                        modelStartTime, modelTimeStep, viewData);
             // Assert
             AssertExpectedErrorInValidationReport(validationReport,
-                                                  Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_positive_value_, 
+                                                  Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_positive_value_,
                                                   Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step,
                                                   viewData);
         }
@@ -158,7 +158,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             // Assert
             AssertExpectedErrorInValidationReport(validationReport,
                                                   Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_start_time_must_be_expressed_by_model_start_time_plus_a_positive_integer_multiple_of_the_model_time_step_,
-                                                  Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_start_time, 
+                                                  Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_start_time,
                                                   viewData);
         }
 
@@ -181,7 +181,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             // Assert
             AssertExpectedErrorInValidationReport(validationReport,
                                                   Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_start_time_must_be_expressed_by_model_start_time_plus_a_positive_integer_multiple_of_the_model_time_step_,
-                                                  Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_start_time, 
+                                                  Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_start_time,
                                                   viewData);
         }
 
@@ -222,7 +222,7 @@ namespace DeltaShell.NGHS.Common.Tests.Validation
             // Assert
             AssertExpectedErrorInValidationReport(validationReport,
                                                   Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_stop_time_must_be_expressed_by_model_start_time_plus_a_positive_integer_multiple_of_the_model_time_step_,
-                                                  Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_stop_time, 
+                                                  Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_stop_time,
                                                   viewData);
         }
 

@@ -181,11 +181,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     return null;
                 }
 
-                pathParts = new[] {rootFolder, workingDirectory, xmlDirectory};
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    xmlDirectory
+                };
             }
             else
             {
-                pathParts = new[] {rootFolder, workingDirectory, fileName};
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    fileName
+                };
             }
 
             return Path.Combine(pathParts);

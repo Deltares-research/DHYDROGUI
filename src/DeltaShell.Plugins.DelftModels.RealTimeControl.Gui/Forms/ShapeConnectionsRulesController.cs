@@ -9,11 +9,80 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
     {
         private static readonly Dictionary<Type, IEnumerable<ConnectionRule>> connectionMapping = new Dictionary<Type, IEnumerable<ConnectionRule>>
         {
-            {typeof(InputItemShape), new[] {new ConnectionRule(typeof(ConditionShape), new HashSet<ConnectorType>(new[] {ConnectorType.Top})), new ConnectionRule(typeof(SignalShape), new HashSet<ConnectorType>(new[] {ConnectorType.Top})), new ConnectionRule(typeof(RuleShape), new HashSet<ConnectorType>(new[] {ConnectorType.Top})), new ConnectionRule(typeof(MathematicalExpressionShape), new HashSet<ConnectorType>(new[] {ConnectorType.Top}))}},
-            {typeof(ConditionShape), new[] {new ConnectionRule(typeof(RuleShape), new HashSet<ConnectorType>(new[] {ConnectorType.Left})), new ConnectionRule(typeof(MathematicalExpressionShape), new HashSet<ConnectorType>(new[] {ConnectorType.Left}))}},
-            {typeof(RuleShape), new[] {new ConnectionRule(typeof(OutputItemShape), new HashSet<ConnectorType>(new[] {ConnectorType.Left}))}},
-            {typeof(SignalShape), new[] {new ConnectionRule(typeof(RuleShape), new HashSet<ConnectorType>(new[] {ConnectorType.Left, ConnectorType.Top, ConnectorType.Bottom}))}},
-            {typeof(MathematicalExpressionShape), new[] {new ConnectionRule(typeof(ConditionShape), new HashSet<ConnectorType>(new[] {ConnectorType.Top, ConnectorType.Left})), new ConnectionRule(typeof(RuleShape), new HashSet<ConnectorType>(new[] {ConnectorType.Top, ConnectorType.Left, ConnectorType.Bottom})), new ConnectionRule(typeof(MathematicalExpressionShape), new HashSet<ConnectorType>(new[] {ConnectorType.Top}))}}
+            {
+                typeof(InputItemShape), new[]
+                {
+                    new ConnectionRule(typeof(ConditionShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Top
+                    })),
+                    new ConnectionRule(typeof(SignalShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Top
+                    })),
+                    new ConnectionRule(typeof(RuleShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Top
+                    })),
+                    new ConnectionRule(typeof(MathematicalExpressionShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Top
+                    }))
+                }
+            },
+            {
+                typeof(ConditionShape), new[]
+                {
+                    new ConnectionRule(typeof(RuleShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Left
+                    })),
+                    new ConnectionRule(typeof(MathematicalExpressionShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Left
+                    }))
+                }
+            },
+            {
+                typeof(RuleShape), new[]
+                {
+                    new ConnectionRule(typeof(OutputItemShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Left
+                    }))
+                }
+            },
+            {
+                typeof(SignalShape), new[]
+                {
+                    new ConnectionRule(typeof(RuleShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Left,
+                        ConnectorType.Top,
+                        ConnectorType.Bottom
+                    }))
+                }
+            },
+            {
+                typeof(MathematicalExpressionShape), new[]
+                {
+                    new ConnectionRule(typeof(ConditionShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Top,
+                        ConnectorType.Left
+                    })),
+                    new ConnectionRule(typeof(RuleShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Top,
+                        ConnectorType.Left,
+                        ConnectorType.Bottom
+                    })),
+                    new ConnectionRule(typeof(MathematicalExpressionShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Top
+                    }))
+                }
+            }
         };
 
         /// <summary>

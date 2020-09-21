@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Windows;
-using System.Windows.Media.Animation;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -371,7 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             using (var temp = new TemporaryDirectory())
             {
                 var mdwFile = new MdwFile();
-                var modelDef = new WaveModelDefinition { OuterDomain = new WaveDomainData("Outer") };
+                var modelDef = new WaveModelDefinition {OuterDomain = new WaveDomainData("Outer")};
                 string targetPath = Path.Combine(temp.Path, "output.mdw");
 
                 modelDef.TimePointData.HydroDataType = InputFieldDataType.Constant;
@@ -1177,7 +1175,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                                                    ? "circle"
                                                    : "sector";
 
-            string[] content = {"[Domain]", $"DirSpace  = {directionalSpaceTypeValue}", $"NDir      = {domainData.NDir}", $"StartDir  = {ToDoubleString(domainData.StartDir)}", $"EndDir    = {ToDoubleString(domainData.EndDir)}", $"FreqMin   = {ToDoubleString(domainData.FreqMin)}", $"FreqMax   = {ToDoubleString(domainData.FreqMax)}", $"NFreq     = {domainData.NFreq}", "[Output]", "[General]"};
+            string[] content =
+            {
+                "[Domain]",
+                $"DirSpace  = {directionalSpaceTypeValue}",
+                $"NDir      = {domainData.NDir}",
+                $"StartDir  = {ToDoubleString(domainData.StartDir)}",
+                $"EndDir    = {ToDoubleString(domainData.EndDir)}",
+                $"FreqMin   = {ToDoubleString(domainData.FreqMin)}",
+                $"FreqMax   = {ToDoubleString(domainData.FreqMax)}",
+                $"NFreq     = {domainData.NFreq}",
+                "[Output]",
+                "[General]"
+            };
 
             File.WriteAllLines(filePath, content);
 
@@ -1323,7 +1333,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             string filePath = Path.Combine(tempDirPath, "file.mdw");
 
-            string[] content = {"[Domain]", "[Output]", "[General]"};
+            string[] content =
+            {
+                "[Domain]",
+                "[Output]",
+                "[General]"
+            };
 
             File.WriteAllLines(filePath, content);
 

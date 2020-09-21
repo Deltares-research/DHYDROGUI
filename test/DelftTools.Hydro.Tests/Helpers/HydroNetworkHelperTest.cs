@@ -457,7 +457,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.That(nameAlreadyExistCreateNew, Is.Not.Null);
             Assert.That(nameAlreadyExistCreateNew, Is.Not.EqualTo(link.Name));
         }
-        
+
         /// <summary>
         /// Creates a simple test network of 1 branch and 2 nodes. The branch has '3' parts, in the center of
         /// the first and last is a cross section.
@@ -501,7 +501,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             network.Branches.Add(branch1);
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
-            
+
             branch1.Source = node1;
             branch1.Target = node2;
 

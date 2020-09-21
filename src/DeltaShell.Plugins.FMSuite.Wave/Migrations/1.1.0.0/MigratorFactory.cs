@@ -74,57 +74,57 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             var mapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IMigrationBehaviour>>()
                 {
-                    {"General",  CreateGeneralCategoryMigrations(relativeDirectory, goalDirectory)},
-                    {"Domain",   CreateDomainCategoryMigrations(relativeDirectory, goalDirectory)},
+                    {"General", CreateGeneralCategoryMigrations(relativeDirectory, goalDirectory)},
+                    {"Domain", CreateDomainCategoryMigrations(relativeDirectory, goalDirectory)},
                     {"Boundary", CreateBoundaryCategoryMigrations(relativeDirectory, goalDirectory)},
-                    {"Output",   CreateOutputCategoryMigrations(relativeDirectory, goalDirectory)},
+                    {"Output", CreateOutputCategoryMigrations(relativeDirectory, goalDirectory)},
                 };
 
             return new DelftIniMigrator(mapping, new DelftIniReader(), new DelftIniWriter(), true);
         }
 
-        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateGeneralCategoryMigrations(string relativeDirectory, 
+        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateGeneralCategoryMigrations(string relativeDirectory,
                                                                                                         string goalDirectory)
         {
             return new Dictionary<string, IMigrationBehaviour>
             {
-                { "FlowFile",     new NoDependentsFileMigrateBehaviour("FlowFile", relativeDirectory, goalDirectory) },
-                { "FlowMudFile",  new NoDependentsFileMigrateBehaviour("FlowMudFile", relativeDirectory, goalDirectory) },
-                { "ObstacleFile", new DelftIniFileMigrateBehaviour("ObstacleFile", relativeDirectory, goalDirectory, CreateObsMigrator(relativeDirectory, goalDirectory)) },
-                { "TSeriesFile",  new NoDependentsFileMigrateBehaviour("TSeriesFile", relativeDirectory, goalDirectory) },
-                { "MeteoFile",    new NoDependentsFileMigrateBehaviour("MeteoFile", relativeDirectory, goalDirectory) },
+                {"FlowFile", new NoDependentsFileMigrateBehaviour("FlowFile", relativeDirectory, goalDirectory)},
+                {"FlowMudFile", new NoDependentsFileMigrateBehaviour("FlowMudFile", relativeDirectory, goalDirectory)},
+                {"ObstacleFile", new DelftIniFileMigrateBehaviour("ObstacleFile", relativeDirectory, goalDirectory, CreateObsMigrator(relativeDirectory, goalDirectory))},
+                {"TSeriesFile", new NoDependentsFileMigrateBehaviour("TSeriesFile", relativeDirectory, goalDirectory)},
+                {"MeteoFile", new NoDependentsFileMigrateBehaviour("MeteoFile", relativeDirectory, goalDirectory)},
             };
         }
 
-        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateDomainCategoryMigrations(string relativeDirectory, 
+        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateDomainCategoryMigrations(string relativeDirectory,
                                                                                                        string goalDirectory)
         {
             return new Dictionary<string, IMigrationBehaviour>
             {
-                { "Grid",         new NoDependentsFileMigrateBehaviour("Grid", relativeDirectory, goalDirectory) },
-                { "BedLevelGrid", new NoDependentsFileMigrateBehaviour("BedLevelGrid", relativeDirectory, goalDirectory) },
-                { "BedLevel",     new NoDependentsFileMigrateBehaviour("BedLevel", relativeDirectory, goalDirectory) },
-                { "MeteoFile",    new NoDependentsFileMigrateBehaviour("MeteoFile", relativeDirectory, goalDirectory) },
+                {"Grid", new NoDependentsFileMigrateBehaviour("Grid", relativeDirectory, goalDirectory)},
+                {"BedLevelGrid", new NoDependentsFileMigrateBehaviour("BedLevelGrid", relativeDirectory, goalDirectory)},
+                {"BedLevel", new NoDependentsFileMigrateBehaviour("BedLevel", relativeDirectory, goalDirectory)},
+                {"MeteoFile", new NoDependentsFileMigrateBehaviour("MeteoFile", relativeDirectory, goalDirectory)},
             };
         }
 
-        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateBoundaryCategoryMigrations(string relativeDirectory, 
+        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateBoundaryCategoryMigrations(string relativeDirectory,
                                                                                                          string goalDirectory)
         {
             return new Dictionary<string, IMigrationBehaviour>
             {
-                { "Spectrum", new NoDependentsFileMigrateBehaviour("Spectrum", relativeDirectory, goalDirectory) },
+                {"Spectrum", new NoDependentsFileMigrateBehaviour("Spectrum", relativeDirectory, goalDirectory)},
             };
         }
 
-        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateOutputCategoryMigrations(string relativeDirectory, 
+        private static IReadOnlyDictionary<string, IMigrationBehaviour> CreateOutputCategoryMigrations(string relativeDirectory,
                                                                                                        string goalDirectory)
         {
             return new Dictionary<string, IMigrationBehaviour>
             {
-                { "LocationFile", new NoDependentsFileMigrateBehaviour("LocationFile", relativeDirectory, goalDirectory) },
-                { "CurveFile",    new NoDependentsFileMigrateBehaviour("CurveFile", relativeDirectory, goalDirectory) },
-                { "COMFile",      new NoDependentsFileMigrateBehaviour("COMFile", relativeDirectory, goalDirectory) },
+                {"LocationFile", new NoDependentsFileMigrateBehaviour("LocationFile", relativeDirectory, goalDirectory)},
+                {"CurveFile", new NoDependentsFileMigrateBehaviour("CurveFile", relativeDirectory, goalDirectory)},
+                {"COMFile", new NoDependentsFileMigrateBehaviour("COMFile", relativeDirectory, goalDirectory)},
             };
         }
     }

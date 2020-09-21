@@ -72,7 +72,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             // the performance issue. Ideally this would be solved within the framework, however
             // the current state of the framework this would be too much of a risk.
             IEnumerable<IFunction> functionsToUpdate = TimeDependentParametersFunctions;
-            TimeDependentParametersFunctions = new IFunction[] { new Function(), };
+            TimeDependentParametersFunctions = new IFunction[]
+            {
+                new Function(),
+            };
 
             generateSeries.Execute(ObservedParameters.WaveEnergyFunction);
             TimeDependentParametersFunctions = functionsToUpdate;

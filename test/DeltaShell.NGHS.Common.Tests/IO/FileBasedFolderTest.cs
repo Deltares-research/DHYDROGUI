@@ -717,7 +717,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
         public void SetPath_WhenValueContainsInvalidChars_ThenArgumentExceptionIsThrown(char invalidCharacter)
         {
             // Setup
-            string path = $"c:/{invalidCharacter}folder_path";
+            var path = $"c:/{invalidCharacter}folder_path";
 
             // Call
             void Call() => new FileBasedFolder().Path = path;

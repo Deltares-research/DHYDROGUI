@@ -124,18 +124,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             yield return new RealTimeControlRestartFileImporter(GetRealTimeControlModels);
         }
 
-        private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
-
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             yield return new RtcDataAccessListener();
         }
 
+        private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+
         private void HybridProjectRepositoryOnProjectOpening(object sender, ProjectOpeningEventArgs e)
         {
             Ensure.NotNull(e, nameof(e), "Empty project path is not allowed");
 
-            var projectFilePath = e.ProjectPath;
+            string projectFilePath = e.ProjectPath;
 
             if (string.IsNullOrEmpty(projectFilePath) || !File.Exists(projectFilePath))
             {

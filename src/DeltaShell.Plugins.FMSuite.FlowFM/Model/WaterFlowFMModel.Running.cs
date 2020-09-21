@@ -36,6 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 FileUtils.DeleteIfExists(WorkingOutputDirectoryPath);
                 FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
             }
+
             runner.OnInitialize();
 
             ReportProgressText();

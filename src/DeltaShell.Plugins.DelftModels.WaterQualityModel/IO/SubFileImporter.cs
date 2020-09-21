@@ -28,6 +28,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </summary>
         public string DefaultFilePath { private get; set; }
 
+        /// <summary>
+        /// Flag to check if the Sub file is successfully imported
+        /// </summary>
+        public bool IsSubFileSuccessfullyImported { get; private set; }
+
         public string Name => "Substance Process Library";
 
         public string Category { get; private set; }
@@ -52,11 +57,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public string TargetDataDirectory { get; set; }
 
         public bool ShouldCancel { get; set; }
-
-        /// <summary>
-        /// Flag to check if the Sub file is successfully imported
-        /// </summary>
-        public bool IsSubFileSuccessfullyImported { get; private set; } 
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
