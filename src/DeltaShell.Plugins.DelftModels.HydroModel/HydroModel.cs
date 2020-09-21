@@ -27,7 +27,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
-using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -1291,8 +1290,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             clonedHydroModel.RelinkInternalDataItemLinks(this);
             clonedHydroModel.RelinkExternalDataItemLinks(this);
 
-            RewireHydroRegionValueConverters(this, clonedHydroModel);
-
             clonedHydroModel.creating = true;
             clonedHydroModel.RefreshDefaultModelWorkflows();
             if (CurrentWorkflow != null)
@@ -1303,40 +1300,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             clonedHydroModel.creating = false;
 
             return clonedHydroModel;
-        }
-
-        private void RewireHydroRegionValueConverters(HydroModel hydroModel, HydroModel clonedHydroModel)
-        {
-            List<object> sourceItems = hydroModel.GetAllItemsRecursive().ToList();
-            List<object> clonedItems = clonedHydroModel.GetAllItemsRecursive().ToList();
-
-            List<IDataItem> sourceDataItems = sourceItems.OfType<IDataItem>().Where(di => di.ValueConverter is IHydroRegionValueConverter).ToList();
-            List<IDataItem> clonedDataItems = clonedItems.OfType<IDataItem>().Where(di => di.ValueConverter is IHydroRegionValueConverter).ToList();
-
-            if (sourceDataItems.Count != clonedDataItems.Count)
-            {
-                throw new InvalidOperationException("DataItems with HydroRegion value converters count does not match after clone");
-            }
-
-            List<IHydroRegion> sourceRegions = sourceItems.OfType<IHydroRegion>().ToList();
-            List<IHydroRegion> clonedRegions = clonedItems.OfType<IHydroRegion>().ToList();
-
-            if (sourceRegions.Count != clonedRegions.Count)
-            {
-                throw new InvalidOperationException("Number of regions does not match after clone");
-            }
-
-            for (var i = 0; i < sourceDataItems.Count; i++)
-            {
-                IDataItem source = sourceDataItems[i];
-                IDataItem clone = clonedDataItems[i];
-
-                IHydroRegion sourceRegion = ((IHydroRegionValueConverter) source.ValueConverter).HydroRegion;
-                int indexInSource = sourceRegions.IndexOf(sourceRegion);
-
-                var clonedConverter = (IHydroRegionValueConverter) clone.ValueConverter;
-                clonedConverter.HydroRegion = clonedRegions[indexInSource];
-            }
         }
 
         public override bool IsLinkAllowed(IDataItem source, IDataItem target)
