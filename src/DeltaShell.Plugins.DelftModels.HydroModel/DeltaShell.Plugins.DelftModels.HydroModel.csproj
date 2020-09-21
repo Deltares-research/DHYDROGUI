@@ -79,7 +79,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ValueConverters\HydroRegionCoverageValueConverterBase.cs" />
     <Compile Include="ValueConverters\IHydroRegionValueConverter.cs" />
     <Compile Include="HydroModelExtensions.cs" />
   </ItemGroup>
