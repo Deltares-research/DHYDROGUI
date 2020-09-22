@@ -20,7 +20,6 @@ namespace DelftTools.Hydro.Structures
     {
         string Name { get; set; }
         string LongName { get; set; }
-        double Chainage { get; set; }
 
         /// <summary>
         /// Indicates if time dependent parameters can be used.

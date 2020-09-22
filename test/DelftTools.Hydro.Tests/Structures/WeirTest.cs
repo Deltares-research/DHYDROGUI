@@ -72,7 +72,6 @@ namespace DelftTools.Hydro.Tests.Structures
             IWeir sourceWeir = new Weir("Source Weir", true)
             {
                 Geometry = new Point(7, 0),
-                OffsetY = 175,
                 CrestWidth = 75,
                 CrestLevel = -3,
                 Name = "Source Weir",

@@ -34,7 +34,6 @@ namespace DelftTools.Hydro.Structures
             Name = name;
             CrestWidth = 0.0;
             CrestLevel = 0.0;
-            OffsetY = 0;
             FlowDirection = FlowDirection.Both;
             CrestShape = CrestShape.Sharp;
             CanBeTimedependent = allowTimeVaryingData;
@@ -184,7 +183,6 @@ namespace DelftTools.Hydro.Structures
         {
             base.CopyFrom(source);
             var copyFrom = (Weir) source;
-            OffsetY = copyFrom.OffsetY;
             LongName = copyFrom.LongName;
             CrestWidth = copyFrom.CrestWidth;
             CrestLevel = copyFrom.CrestLevel;
@@ -280,9 +278,6 @@ namespace DelftTools.Hydro.Structures
                            ? FlowDirection.Negative
                            : FlowDirection.None;
         }
-
-        [NoNotifyPropertyChange]
-        public virtual double OffsetY { get; set; }
 
         public virtual string Description { get; set; }
 
