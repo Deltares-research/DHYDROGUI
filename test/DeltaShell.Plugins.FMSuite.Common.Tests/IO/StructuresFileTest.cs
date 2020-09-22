@@ -1171,7 +1171,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual("pump01", pump.Name);
             Assert.IsNull(pump.LongName);
             Assert.IsNull(pump.Branch);
-            Assert.IsNaN(pump.Chainage);
             Assert.AreEqual(new Point(500, 360), pump.Geometry);
             Assert.AreEqual(3.0, pump.Capacity);
         }
