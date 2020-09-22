@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             rtcModel.CleanUpModelAfterModelCoupling();
 
             // Then
-            Assert.AreEqual("observation_CrestLevel", input.Name,
+            Assert.AreEqual("Structure_CrestLevel", input.Name,
                             "The clean up should not have changed the name of the output");
             Assert.AreEqual("CrestLevel", input.ParameterName,
                             "The clean up should not have changed the parameter name of the output");
