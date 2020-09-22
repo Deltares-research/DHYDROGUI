@@ -127,7 +127,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsTrue(pump.CanBeTimedependent);
             Assert.IsNull(pump.LongName);
             Assert.IsNull(pump.Branch);
-            Assert.IsNaN(pump.Chainage);
             Assert.AreEqual(new Point(680, 360), pump.Geometry);
             Assert.IsFalse(pump.UseCapacityTimeSeries);
             Assert.AreEqual(2.0, pump.Capacity);
@@ -151,7 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsTrue(pump.CanBeTimedependent);
             Assert.IsNull(pump.LongName);
             Assert.IsNull(pump.Branch);
-            Assert.IsNaN(pump.Chainage);
             Assert.AreEqual(new LineString(new[]
             {
                 new Coordinate(1, 2),
@@ -309,7 +307,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsTrue(weir.CanBeTimedependent);
             Assert.IsNull(weir.LongName);
             Assert.IsNull(weir.Branch);
-            Assert.IsNaN(weir.Chainage);
             Assert.AreEqual(new Point(680, 360), weir.Geometry);
             Assert.IsFalse(weir.UseCrestLevelTimeSeries);
             Assert.AreEqual(2.0, weir.CrestLevel);
@@ -339,7 +336,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsTrue(weir.CanBeTimedependent);
             Assert.IsNull(weir.LongName);
             Assert.IsNull(weir.Branch);
-            Assert.IsNaN(weir.Chainage);
             Assert.AreEqual(new Point(680, 360), weir.Geometry);
             Assert.AreEqual(23.5, weir.CrestWidth);
             Assert.IsTrue(weir.UseCrestLevelTimeSeries);
@@ -383,7 +379,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual("Gate01", gate.Name);
             Assert.IsNull(gate.LongName);
             Assert.IsNull(gate.Branch);
-            Assert.IsNaN(gate.Chainage);
             Assert.AreEqual(new Point(500, 360), gate.Geometry);
             Assert.IsFalse(gate.UseCrestLevelTimeSeries);
             Assert.AreEqual(2.0, gate.CrestLevel);
@@ -429,7 +424,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual("Gate02", gate.Name);
             Assert.IsNull(gate.LongName);
             Assert.IsNull(gate.Branch);
-            Assert.IsNaN(gate.Chainage);
             Assert.AreEqual(new LineString(new[]
                             {
                                 new Coordinate(1, 2),
