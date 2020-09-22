@@ -25,6 +25,7 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using Netron.GraphLib;
 using Clipboard = DelftTools.Controls.Clipboard;
+using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 {
@@ -192,6 +193,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
             else if (shape.Tag is Output output && (dataItem.Role & DataItemRole.Input) == DataItemRole.Input)
             {
+                if (dataItem.LinkedTo == null)
+                {
+                    LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
+                    return;
+                }
+
+                string[] linkedElements = dataItem.LinkedTo.ToString().Split('.');
+                string currentControlGroup = context.ControlGroup.ToString();
+                if (linkedElements[0].Equals(currentControlGroup))
+                {
+                    return;
+                }
+
+                DialogResult dialogResult = MessageBox.Show(Resources.RealTimeControlModelNodePresenter_OutputLocationWarningMessage,
+                                  Resources.RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning,
+                                  MessageBoxButtons.OKCancel,
+                                  MessageBoxIcon.Warning);
+
+                if (dialogResult == DialogResult.Cancel)
+                {
+                    return;
+                }
                 LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
             }
 

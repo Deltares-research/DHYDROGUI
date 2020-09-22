@@ -573,6 +573,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             mockModel.Expect(m => m.EndEdit()).IgnoreArguments();
             mockInputDataItem.Expect(i => i.LinkedBy).IgnoreArguments().Return(new EventedList<IDataItem>());
             mockInputDataItem.Expect(i => i.LinkTo(null)).IgnoreArguments().Return(true);
+            mockInputDataItem.Stub(i => i.LinkedTo).Return(null);
 
             mocks.ReplayAll();
 
@@ -627,6 +628,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             flowDataItem.Expect(i => i.LinkedBy).IgnoreArguments().Return(new EventedList<IDataItem> {existingLinkedDataItem});
             existingLinkedDataItem.Expect(l => l.Unlink()).IgnoreArguments();
             flowDataItem.Expect(i => i.LinkTo(null)).IgnoreArguments().Return(true);
+            flowDataItem.Stub(i => i.LinkedTo).Return(null);
 
             mocks.ReplayAll();
 

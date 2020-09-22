@@ -889,6 +889,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output Location Already Assigned to a different output. Are you sure you want to assign it?.
+        /// </summary>
+        internal static string RealTimeControlModelNodePresenter_OutputLocationWarningMessage {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_OutputLocationWarningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output Location Warning.
+        /// </summary>
+        internal static string RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Interpolation.
         /// </summary>
         internal static string RelativeTimeRuleProperties_Category_Interpolation {

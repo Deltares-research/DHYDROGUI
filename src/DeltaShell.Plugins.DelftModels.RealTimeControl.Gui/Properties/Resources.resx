@@ -511,4 +511,10 @@
   <data name="ControlGroupEditor_SaveAsImageAction_PNG_image___png" xml:space="preserve">
     <value>PNG image|*.png</value>
   </data>
+  <data name="RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" xml:space="preserve">
+    <value>Output Location Warning</value>
+  </data>
+  <data name="RealTimeControlModelNodePresenter_OutputLocationWarningMessage" xml:space="preserve">
+    <value>Output Location Already Assigned to a different output. Are you sure you want to assign it?</value>
+  </data>
 </root>
