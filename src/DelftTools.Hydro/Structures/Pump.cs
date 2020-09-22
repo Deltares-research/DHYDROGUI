@@ -94,43 +94,6 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 11, ExportName = "ControlDir")]
         public virtual PumpControlDirection ControlDirection { get; set; }
 
-        public virtual double OffsetZ
-        {
-            get
-            {
-                double[] relevantZValues;
-                switch (ControlDirection)
-                {
-                    case PumpControlDirection.DeliverySideControl:
-                        relevantZValues = new[]
-                        {
-                            StopDelivery,
-                            StartDelivery
-                        };
-                        break;
-                    case PumpControlDirection.SuctionSideControl:
-                        relevantZValues = new[]
-                        {
-                            StartSuction,
-                            StopSuction
-                        };
-                        break;
-                    default:
-                        relevantZValues = new[]
-                        {
-                            StartSuction,
-                            StopSuction,
-                            StartDelivery,
-                            StopDelivery
-                        };
-                        break;
-                }
-
-                //return the middle between min and max
-                return (relevantZValues.Min() + relevantZValues.Max()) / 2;
-            }
-        }
-
         /// <summary>
         /// reduction table
         /// </summary>
@@ -142,7 +105,6 @@ namespace DelftTools.Hydro.Structures
 
             var pump = (Pump) source;
 
-            OffsetY = pump.OffsetY;
             LongName = pump.LongName;
             Attributes = (IFeatureAttributeCollection) pump.Attributes.Clone();
             Capacity = pump.Capacity;
@@ -180,9 +142,6 @@ namespace DelftTools.Hydro.Structures
                 CapacityTimeSeries = null;
             }
         }
-
-        [NoNotifyPropertyChange]
-        public virtual double OffsetY { get; set; }
 
         public virtual string Description { get; set; }
 

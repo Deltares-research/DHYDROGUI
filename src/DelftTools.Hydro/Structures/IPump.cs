@@ -7,7 +7,6 @@ namespace DelftTools.Hydro.Structures
     {
         string Name { get; set; }
         string LongName { get; set; }
-        double Chainage { get; set; }
 
         /// <summary>
         /// Indicates if <see cref="CapacityTimeSeries"/> can be used.
@@ -28,18 +27,6 @@ namespace DelftTools.Hydro.Structures
         double StartSuction { get; set; }
         double StopSuction { get; set; }
         PumpControlDirection ControlDirection { get; set; }
-
-        // Designer properties
-        /// <summary>
-        /// Y offset relative in the profile. This value is used by the structure view to display
-        /// the pump in the structure designer. It is not used by the 1d model engine.
-        /// </summary>
-        double OffsetY { get; set; }
-
-        /// <summary>
-        /// Y offset relative in the profile. Calculated based on levels. For visualization only
-        /// </summary>
-        double OffsetZ { get; }
 
         /// <summary>
         /// reduction table
