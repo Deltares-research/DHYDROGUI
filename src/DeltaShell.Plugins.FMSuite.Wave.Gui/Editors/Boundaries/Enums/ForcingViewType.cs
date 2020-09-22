@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
         [Description("Parametrized (Time Series)")]
         TimeSeries = 2,
 
-        [Description("Filebased Spectrum")]
+        [Description("Spectrum based (From file)")]
         FileBased = 3
     }
 }
