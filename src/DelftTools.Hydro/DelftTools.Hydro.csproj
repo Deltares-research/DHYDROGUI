@@ -212,13 +212,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Uml\CrossSectionDefinition.cd" />
-    <None Include="Uml\DrainageBasin.cd" />
-    <None Include="Uml\HydroArea.cd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Uml\HydroNetwork.cd" />
-    <None Include="Uml\HydroRegion.cd" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
