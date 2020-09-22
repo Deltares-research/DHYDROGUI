@@ -19,14 +19,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             ((INotifyPropertyChange) grid).PropertyChanged += OnGridPropertyChanged;
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            if (grid != null)
-            {
-                ((INotifyPropertyChange) grid).PropertyChanged -= OnGridPropertyChanged;
-            }
+            base.Dispose(disposing);
 
-            base.Dispose();
+            if (disposing)
+            {
+                if (grid != null)
+                {
+                    ((INotifyPropertyChange) grid).PropertyChanged -= OnGridPropertyChanged;
+                }
+            }
         }
 
         private void OnGridPropertyChanged(object sender, PropertyChangedEventArgs e)
