@@ -527,6 +527,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             // write spatial data:
             SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
+            SaveOutput(targetDir, switchTo);
         }
 
         public void ReloadAllGrids()

@@ -437,7 +437,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 modelDefinition
                     .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile)
                     .SetValueAsString(tSeriesFile);
-
                 new BcwFile().Write(allTimeSeriesPerBoundary, Path.Combine(targetFile, tSeriesFile));
             }
             else

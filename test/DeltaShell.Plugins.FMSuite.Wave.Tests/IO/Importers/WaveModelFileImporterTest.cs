@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -9,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
@@ -38,115 +38,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             var importer = new WaveModelFileImporter(() => "some_directory");
 
             // Assert
-            Assert.IsInstanceOf<IDimrModelFileImporter>(importer);
+            Assert.That(importer, Is.InstanceOf<ModelFileImporterBase>());
+            Assert.That(importer, Is.InstanceOf<IDimrModelFileImporter>());
+
+            Assert.That(importer.Name, Is.EqualTo("Waves Model"));
+            Assert.That(importer.Category, Is.EqualTo("D-Flow FM 2D/3D"));
+            Assert.That(importer.Description, Is.Empty);
+            Assert.That(importer.Image, Is.Not.Null);
+
+            CollectionAssert.AreEqual(new[] {typeof(IHydroModel)}, importer.SupportedItemTypes);
+            Assert.That(importer.CanImportOnRootLevel, Is.True);
+            Assert.That(importer.FileFilter, Is.EqualTo("Master Definition WAVE File|*.mdw"));
             Assert.That(importer.TargetDataDirectory, Is.Null);
             Assert.That(importer.ShouldCancel, Is.False);
             Assert.That(importer.ProgressChanged, Is.Null);
-        }
+            Assert.That(importer.OpenViewAfterImport, Is.True);
 
-        [Test]
-        public void GetName_ReturnsCorrectName()
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            string result = importer.Name;
-
-            // Assert
-            Assert.That(result, Is.EqualTo("Waves Model"));
-        }
-
-        [Test]
-        public void GetCategory_ReturnsCorrectCategory()
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            string result = importer.Category;
-
-            // Assert
-            Assert.That(result, Is.EqualTo("D-Flow FM 2D/3D"));
-        }
-
-        [Test]
-        public void GetDescription_ReturnsCorrectDescription()
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            string result = importer.Description;
-
-            // Assert
-            Assert.That(result, Is.EqualTo(string.Empty));
-        }
-
-        [Test]
-        public void GetImage_ReturnsNotNull()
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            Bitmap result = importer.Image;
-
-            // Assert
-            Assert.That(result, Is.Not.Null);
-        }
-
-        [Test]
-        public void GetSupportedItemTypes_ReturnsCorrectCollection()
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            List<Type> result = importer.SupportedItemTypes.ToList();
-
-            // Assert
-            Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0], Is.EqualTo(typeof(IHydroModel)));
-        }
-
-        [Test]
-        public void GetOpenViewAfterImport_ReturnsTrue()
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            bool result = importer.OpenViewAfterImport;
-
-            // Assert
-            Assert.That(result, Is.True);
-        }
-
-        [Test]
-        public void GetCanImportOnRootLevel_ReturnsTrue()
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            bool result = importer.CanImportOnRootLevel;
-
-            // Assert
-            Assert.That(result, Is.True);
-        }
-
-        [Test]
-        public void GetFileFilter_ReturnsCorrectFileFilter()
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            string result = importer.FileFilter;
-
-            // Assert
-            Assert.That(result, Is.EqualTo("Master Definition WAVE File|*.mdw"));
+            Assert.That(importer.MasterFileExtension, Is.EqualTo("mdw"));
         }
 
         [Test]
@@ -274,25 +182,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void MasterFileExtension_ShouldReturnMdw()
-        {
-            // Setup 
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            string masterFileExtension = importer.MasterFileExtension;
-
-            // Assert
-            Assert.AreEqual("mdw", masterFileExtension);
-        }
-
-        private IEnumerable<TestCaseData> CanImportOnCases()
-        {
-            yield return new TestCaseData(Substitute.For<ICompositeActivity>(), true);
-            yield return new TestCaseData(new WaveModel(), true);
-            yield return new TestCaseData(new object(), false);
-        }
-
         [TestCaseSource(nameof(CanImportOnCases))]
         public void CanImportOn_ReturnsCorrectResult(object obj, bool expectedResult)
         {
@@ -304,6 +193,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        private static IEnumerable<TestCaseData> CanImportOnCases()
+        {
+            yield return new TestCaseData(Substitute.For<ICompositeActivity>(), true);
+            yield return new TestCaseData(new WaveModel(), true);
+            yield return new TestCaseData(new object(), false);
+            yield return new TestCaseData(null, false);
         }
 
         private static void VerifyWaveModel(IEventedList<IActivity> items, Func<string> func)

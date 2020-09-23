@@ -149,19 +149,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
 
         #region IDisposable
 
-        public override void Dispose()
-        {
-            base.Dispose();
-            Dispose(true);
 
-            // This has not been done in the parent classes.
-            // In an attempt to do it somewhat correctly here, we suppress it here.
-            GC.SuppressFinalize(this);
-        }
-
-        // Since this class is sealed, this method is private and non-virtual.
-        private void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             if (disposing)
             {
                 DeregisterBoundaries(boundaryProvider.Boundaries);
