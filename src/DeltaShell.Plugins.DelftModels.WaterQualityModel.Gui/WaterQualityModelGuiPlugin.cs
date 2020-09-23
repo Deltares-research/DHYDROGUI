@@ -635,14 +635,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             if (dataItemSet.Value is IEventedList<WaterQualityObservationVariableOutput>)
             {
                 // Close any opened view for observation points/areas data if the corresponding model output is removed
-                CloseMonitoringOutputViews((IDataItemSet) removedOrAddedItem);
+                CloseMonitoringOutputViews(dataItemSet);
                 return;
             }
 
-            if (dataItemSet.Value is WaterQualityObservationVariableOutput)
+            if (dataItemSet.Value is WaterQualityObservationVariableOutput value)
             {
                 // Close any opened view for observation points/areas data if the corresponding model output is removed
-                CloseMonitoringOutputViews((WaterQualityObservationVariableOutput) ((IDataItem) removedOrAddedItem).Value);
+                CloseMonitoringOutputViews(value);
             }
         }
 
