@@ -889,7 +889,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Output Location Already Assigned to a different output. Are you sure you want to assign it?.
+        ///   Looks up a localized string similar to Output RTC rule already Assigned to a different output. Are you sure you want to assign it?.
         /// </summary>
         internal static string RealTimeControlModelNodePresenter_OutputLocationWarningMessage {
             get {

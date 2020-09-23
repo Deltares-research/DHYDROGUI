@@ -199,13 +199,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     return;
                 }
 
-                string[] linkedElements = dataItem.LinkedTo.ToString().Split('.');
-                string currentControlGroup = context.ControlGroup.ToString();
-                if (linkedElements[0].Equals(currentControlGroup))
-                {
+                if (context.ControlGroup.Name.Equals(dataItem.LinkedTo.Parent.Name))
                     return;
-                }
-
+                
                 DialogResult dialogResult = MessageBox.Show(Resources.RealTimeControlModelNodePresenter_OutputLocationWarningMessage,
                                   Resources.RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning,
                                   MessageBoxButtons.OKCancel,
