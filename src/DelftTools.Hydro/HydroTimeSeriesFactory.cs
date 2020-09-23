@@ -7,14 +7,6 @@ namespace DelftTools.Hydro
 {
     public static class HydroTimeSeriesFactory
     {
-        public static TimeSeries CreateWaterLevelTimeSeries()
-        {
-            TimeSeries ts = CreateTimeSeries("water level time series", "level", "m AD");
-
-            ts.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardNames.WaterLevel;
-            return ts;
-        }
-
         public static TimeSeries CreateTimeSeries(string seriesName, string componentName, string unit)
         {
             var ts = new TimeSeries

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using NUnit.Framework;

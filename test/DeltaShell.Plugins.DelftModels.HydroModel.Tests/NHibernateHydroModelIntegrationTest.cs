@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.IntegrationTestUtils;
@@ -15,11 +11,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.NetworkEditor;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Feature;
-using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
-using SharpTestsEx;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {

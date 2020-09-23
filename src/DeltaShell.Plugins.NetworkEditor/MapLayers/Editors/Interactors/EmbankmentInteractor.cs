@@ -1,4 +1,3 @@
-using DelftTools.Hydro;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;

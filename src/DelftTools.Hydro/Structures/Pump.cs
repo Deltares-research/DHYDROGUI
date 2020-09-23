@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;

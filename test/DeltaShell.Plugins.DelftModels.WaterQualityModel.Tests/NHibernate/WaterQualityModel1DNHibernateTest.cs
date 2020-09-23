@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils;

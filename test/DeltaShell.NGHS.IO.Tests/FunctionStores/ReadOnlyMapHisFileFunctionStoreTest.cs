@@ -164,13 +164,13 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         {
             string path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "rrrunoff.his");
 
-            var wier = new Weir2D {Name = "Catchment1"};
+            var weir = new Weir2D {Name = "Catchment1"};
             var featureCoverage = new FeatureCoverage("Outflow(hbv)")
             {
                 IsTimeDependent = true,
                 Features = new EventedList<IFeature>(new IFeature[]
                 {
-                    wier
+                    weir
                 })
             };
 
@@ -193,7 +193,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
             var timeFilter = new VariableValueFilter<DateTime>(featureCoverage.Time, featureCoverage.Time.Values[1]);
             Assert.AreEqual(1, featureCoverage.GetValues<double>(timeFilter).Count);
 
-            IFunction timeSeries = featureCoverage.GetTimeSeries(wier);
+            IFunction timeSeries = featureCoverage.GetTimeSeries(weir);
             Assert.AreEqual(25, timeSeries.Arguments[0].Values.Count);
             Assert.AreEqual(25, timeSeries.GetValues().Count);
 
