@@ -34,13 +34,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             var validationIssues = new List<ValidationIssue>();
 
             validationIssues.AddRange(GetTimeStepTimeIntervalValidationIssues(model));
-            validationIssues.AddRange(GetBoundaryValidationIssues(model.BoundaryContainer));
+            validationIssues.AddRange(GetBoundaryValidationIssues(model));
 
             return new ValidationReport(KnownWaveCategories.GeneralCategory, validationIssues);
         }
 
-        private static IEnumerable<ValidationIssue> GetBoundaryValidationIssues(IBoundaryContainer boundaryContainer)
+        private static IEnumerable<ValidationIssue> GetBoundaryValidationIssues(WaveModel model)
         {
+            IBoundaryContainer boundaryContainer = model.BoundaryContainer;
             bool useFile = boundaryContainer.DefinitionPerFileUsed;
 
             if (!useFile)
@@ -52,7 +53,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (string.IsNullOrWhiteSpace(filePath))
             {
-                yield return new ValidationIssue(boundaryContainer, ValidationSeverity.Error,
+                var waveValidationShortcut = new WaveValidationShortcut()
+                {
+                    WaveModel = model,
+                    TabName = KnownWaveCategories.GeneralCategory
+                };
+                yield return new ValidationIssue(waveValidationShortcut, ValidationSeverity.Error,
                                                  Resources.WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected);
             }
         }
