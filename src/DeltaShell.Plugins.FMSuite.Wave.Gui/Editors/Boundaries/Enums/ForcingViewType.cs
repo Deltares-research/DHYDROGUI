@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using DelftTools.Utils;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
 {
@@ -7,13 +9,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
     /// </summary>
     public enum ForcingViewType
     {
-        [Description("Parametrized (Constant)")]
+        [ResourcesDescription(typeof(Resources), nameof(Resources.ForcingViewType_Constant_Description))]
         Constant = 1,
 
-        [Description("Parametrized (Time Series)")]
+        [ResourcesDescription(typeof(Resources), nameof(Resources.ForcingViewType_TimeSeries_Description))]
         TimeSeries = 2,
 
-        [Description("Spectrum based (From file)")]
+        [ResourcesDescription(typeof(Resources), nameof(Resources.ForcingViewType_FileBased_Description))]
         FileBased = 3
     }
 }
