@@ -668,6 +668,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No spectrum file has been selected..
+        /// </summary>
+        public static string WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Waves Model Properties.
         /// </summary>
         public static string WavePropertiesValidator_Validate_Waves_Model_Properties {

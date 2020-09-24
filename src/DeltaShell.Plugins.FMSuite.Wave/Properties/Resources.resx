@@ -337,4 +337,7 @@
   <data name="WaveBoundariesValidator_Validate_FilePath_cannot_be_empty" xml:space="preserve">
     <value>Forcing Type "Spectrum based (From file)" has been selected but file has not been added.</value>
   </data>
+  <data name="WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected" xml:space="preserve">
+    <value>No spectrum file has been selected.</value>
+  </data>
 </root>

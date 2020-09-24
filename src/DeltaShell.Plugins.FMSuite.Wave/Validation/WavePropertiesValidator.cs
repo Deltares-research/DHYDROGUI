@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
@@ -23,9 +24,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             return new ValidationReport(Resources.WavePropertiesValidator_Validate_Waves_Model_Properties,
                                         new List<ValidationReport>
                                         {
-                                            new ValidationReport(KnownWaveCategories.GeneralCategory, GetTimeStepTimeIntervalValidationIssues(waveModel)),
+                                            GenerateGeneralCategoryValidationReport(waveModel),
                                             new ValidationReport(KnownWaveCategories.ProcessesCategory, GetProcessesValidationIssues(waveModel))
                                         });
+        }
+
+        private static ValidationReport GenerateGeneralCategoryValidationReport(WaveModel model)
+        {
+            var validationIssues = new List<ValidationIssue>();
+
+            validationIssues.AddRange(GetTimeStepTimeIntervalValidationIssues(model));
+            validationIssues.AddRange(GetBoundaryValidationIssues(model.BoundaryContainer));
+
+            return new ValidationReport(KnownWaveCategories.GeneralCategory, validationIssues);
+        }
+
+        private static IEnumerable<ValidationIssue> GetBoundaryValidationIssues(IBoundaryContainer boundaryContainer)
+        {
+            bool useFile = boundaryContainer.DefinitionPerFileUsed;
+
+            if (!useFile)
+            {
+                yield break;
+            }
+
+            string filePath = boundaryContainer.FilePathForBoundariesPerFile;
+
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                yield return new ValidationIssue(boundaryContainer, ValidationSeverity.Error,
+                                                 Resources.WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected);
+            }
         }
 
         private static IEnumerable<ValidationIssue> GetTimeStepTimeIntervalValidationIssues(WaveModel model)
