@@ -6,8 +6,6 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
 {
-    // TODO (MWT): Add tests for verifying descriptions
-    // TODO (MWT): Move descriptions to Resources
     [TestFixture]
     public class ForcingViewTypeTest :
         EnumValuesTestFixture<ForcingViewType>
