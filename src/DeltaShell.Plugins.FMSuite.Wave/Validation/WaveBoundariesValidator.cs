@@ -291,7 +291,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             /// <summary>
             /// Visit method for validating <see cref="FileBasedParameters"/>.
-            /// Must be defined for visitor pattern.
             /// </summary>
             /// <param name="fileBasedParameters"> The visited <see cref="FileBasedParameters"/>. </param>
             /// <exception cref="ArgumentNullException">
