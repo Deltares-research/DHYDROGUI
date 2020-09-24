@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
@@ -61,23 +62,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 yield return new ValidationIssue(timerCategory, ValidationSeverity.Error,
                                                  "Model start time precedes reference time", validationShortcut);
             }
-
+            /*
             ValidationIssue[] issues = new[]
             {
                 CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.HisOutputDeltaT, "His output"),
                 CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.MapOutputDeltaT, "Map output"),
                 CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.WaqOutputDeltaT, "Waq output")
-            };
+            };*/
 
-            foreach (ValidationIssue issue in issues.Where(i => i != null))
+            var issues = new List<ValidationIssue>();
+            if (waterFlowFmModel.WriteHisFile)
             {
-                yield return issue;
+                ValidationIssue issue = CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.HisOutputDeltaT, "His output");
+                issues.Add(issue);
+            }
+            if (waterFlowFmModel.WriteMapFile)
+            {
+                ValidationIssue issue = CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.MapOutputDeltaT, "Map output");
+                issues.Add(issue);
+            }
+
+            issues.Add(CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.WaqOutputDeltaT, "Waq output"));
+
+            foreach (ValidationIssue issue in issues)
+            {
+                if (issue != null)
+                    yield return issue;
             }
         }
 
         private static ValidationIssue CreateMultipleOfModelTimeStepIssue(
             WaterFlowFMModel waterFlowFmModel, string guiTimeSpanParameter, string outputName)
         {
+
             WaterFlowFMProperty waterFlowFmProperty =
                 waterFlowFmModel.ModelDefinition.GetModelProperty(guiTimeSpanParameter);
             var parameterTimeSpan = (TimeSpan) waterFlowFmProperty.Value;
