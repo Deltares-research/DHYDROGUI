@@ -334,4 +334,7 @@
   <data name="BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_" xml:space="preserve">
     <value>While saving the following error was thrown: {0}, validate the model for more information.</value>
   </data>
+  <data name="WaveBoundariesValidator_Validate_FilePath_cannot_be_empty" xml:space="preserve">
+    <value>Forcing Type "Spectrum based (From file)" has been selected but file has not been added.</value>
+  </data>
 </root>
