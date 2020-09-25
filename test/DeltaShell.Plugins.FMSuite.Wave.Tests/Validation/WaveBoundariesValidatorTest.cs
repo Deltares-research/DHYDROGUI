@@ -869,10 +869,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             IList<ValidationIssue> allIssues = report.GetAllIssuesRecursive();
             Assert.AreEqual(1, allIssues.Count);
             Assert.IsTrue(allIssues.Any(i =>
-                                           i.Severity == ValidationSeverity.Error &&
-                                           i.Message == string.Format(
-                                               Resources.WaveBoundariesValidator_Validate_FilePath_cannot_be_empty,
-                                               boundaries[0].Name)));
+                                            i.Severity == ValidationSeverity.Error &&
+                                            i.Message == string.Format(
+                                                Resources.WaveBoundariesValidator_Validate_FilePath_cannot_be_empty,
+                                                boundaries[0].Name)));
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
