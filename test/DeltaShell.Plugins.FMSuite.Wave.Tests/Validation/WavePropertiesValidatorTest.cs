@@ -183,18 +183,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 const string expectedMessage = "No spectrum file has been selected.";
                 IEnumerable<ValidationIssue> validationIssues = validationReport.GetAllIssuesRecursive();
                 Assert.IsTrue(validationIssues.Any(
-                                  i =>i.Severity == ValidationSeverity.Error && i.Message == expectedMessage));
-
+                                  i => i.Severity == ValidationSeverity.Error && i.Message == expectedMessage));
             }
         }
 
         [Test]
-        public void Validate_ValidWaveModelWithBoundaryDefinitionPerFileUsedAndValidFilePath_ThenNoErrorShouldBeGiven()
+        public void Validate_ValidWaveModelWithBoundaryDefinitionPerFileUsedAndNonEmptyFilePath_ThenNoErrorShouldBeGiven()
         {
             // Arrange
             using (var model = new WaveModel())
             {
-                const string filePath = "ValidFilePath.sp2";
+                const string filePath = "NonEmptyFilePath";
 
                 model.BoundaryContainer.DefinitionPerFileUsed = true;
                 model.BoundaryContainer.FilePathForBoundariesPerFile = filePath;
@@ -207,7 +206,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<ValidationIssue> validationIssues = generalReport.GetAllIssuesRecursive();
 
                 Assert.That(validationIssues, Has.Count.EqualTo(0));
-
             }
         }
 
@@ -215,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         [TestCase(null)]
         [TestCase("")]
         [TestCase("    ")]
-        [TestCase("ValidFilePath.sp2")]
+        [TestCase("NonEmptyFilePath")]
         public void Validate_ValidWaveModelWithoutBoundaryDefinitionPerFileUsed_ThenNoErrorShouldBeGiven(string filePath)
         {
             // Arrange
@@ -230,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 // Assert
                 ValidationReport generalReport = validationReport.SubReports.Single(r => r.Category == KnownWaveCategories.GeneralCategory);
                 IEnumerable<ValidationIssue> validationIssues = generalReport.GetAllIssuesRecursive();
-                
+
                 Assert.That(validationIssues, Has.Count.EqualTo(0));
             }
         }

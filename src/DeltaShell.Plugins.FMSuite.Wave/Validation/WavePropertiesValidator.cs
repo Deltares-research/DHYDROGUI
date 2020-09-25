@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             IVariable windSpeedValueTimeSeries = waveModel.TimePointData.InputFields.Components.FirstOrDefault(c => c.Name == "Wind Speed");
 
             WaveModelProperty quadrupletsProperty = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Quadruplets);
-            var quadrupletsSelected = Convert.ToBoolean(quadrupletsProperty.Value);
+            bool quadrupletsSelected = Convert.ToBoolean(quadrupletsProperty.Value);
 
             if (quadrupletsSelected)
             {
