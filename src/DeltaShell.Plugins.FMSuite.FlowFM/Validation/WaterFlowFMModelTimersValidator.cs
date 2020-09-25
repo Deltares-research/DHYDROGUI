@@ -62,13 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 yield return new ValidationIssue(timerCategory, ValidationSeverity.Error,
                                                  "Model start time precedes reference time", validationShortcut);
             }
-            /*
-            ValidationIssue[] issues = new[]
-            {
-                CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.HisOutputDeltaT, "His output"),
-                CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.MapOutputDeltaT, "Map output"),
-                CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.WaqOutputDeltaT, "Waq output")
-            };*/
 
             var issues = new List<ValidationIssue>();
             if (waterFlowFmModel.WriteHisFile)
