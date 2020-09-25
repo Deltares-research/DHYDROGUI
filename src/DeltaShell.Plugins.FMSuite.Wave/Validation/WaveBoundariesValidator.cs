@@ -300,7 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             public void Visit(FileBasedParameters fileBasedParameters)
             {
                 Ensure.NotNull(fileBasedParameters, nameof(fileBasedParameters));
-                
+
                 if (string.IsNullOrWhiteSpace(fileBasedParameters.FilePath))
                 {
                     ValidationIssues.Add(new ValidationIssue(VariableDescription, ValidationSeverity.Error,
