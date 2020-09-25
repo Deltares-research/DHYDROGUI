@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using DelftTools.Utils;
+﻿using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
