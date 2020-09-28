@@ -75,7 +75,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 issues.Add(issue);
             }
 
-            issues.Add(CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.WaqOutputDeltaT, "Waq output"));
+            if (waterFlowFmModel.SpecifyWaqOutputInterval)
+            {
+                ValidationIssue issue = CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.WaqOutputDeltaT, "Waq output");
+                issues.Add(issue);
+            }
 
             foreach (ValidationIssue issue in issues)
             {
