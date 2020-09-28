@@ -62,6 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
             {
                 var newWaqInterval = new TimeSpan((long) (model.TimeStep.TotalMilliseconds * factor));
+                model.ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value = true;
                 model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value = newWaqInterval;
 
                 var validator = new WaterFlowFMModelTimersValidator();
@@ -160,6 +161,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
+        public void ValidatingWaterFlowFMModelInvalidWaqFileTimerWithUncheckedRstFlagNoIssues()
+        {
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
+            {
+                model.TimeStep = new TimeSpan(0, 0, 5, 0);
+                var newWaqTimer = new TimeSpan(0, 0, 6, 0);
+                model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value = newWaqTimer;
+                model.ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value = false;
+
+                var validator = new WaterFlowFMModelTimersValidator();
+
+                // call
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                // assert
+                Assert.AreEqual(0, issues.Length);
+            }
+        }
+
+        [Test]
         public void ValidatingWaterFlowFMModelWaqIntervalIsIntegerMultipleOfTimeStepZeroTimeStep()
         {
             // this will return an issue, because you cannot devide by 0. So waq will not output.
@@ -167,6 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             {
                 model.TimeStep = new TimeSpan(0);
                 var newWaqInterval = new TimeSpan(500);
+                model.ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value = true;
                 model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value = newWaqInterval;
 
                 var validator = new WaterFlowFMModelTimersValidator();
