@@ -103,6 +103,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
+        public void ValidatingWaterFlowFMModelInvalidHisFileTimerWithUncheckedHisFlagNoIssues()
+        {
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
+            {
+                model.TimeStep = new TimeSpan(0, 0, 5, 0);
+                var newHisTimer = new TimeSpan(0, 0, 6, 0);
+                model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = newHisTimer;
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value = false;
+
+                var validator = new WaterFlowFMModelTimersValidator();
+
+                // call
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                // assert
+                Assert.AreEqual(0, issues.Length);
+            }
+        }
+
+        [Test]
+        public void ValidatingWaterFlowFMModelInvalidMapFileTimerWithUncheckedMapFlagNoIssues()
+        {
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
+            {
+                model.TimeStep = new TimeSpan(0, 0, 5, 0);
+                var newMapTimer = new TimeSpan(0, 0, 6, 0);
+                model.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = newMapTimer;
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value = false;
+
+                var validator = new WaterFlowFMModelTimersValidator();
+
+                // call
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                // assert
+                Assert.AreEqual(0, issues.Length);
+            }
+        }
+
+        [Test]
+        public void ValidatingWaterFlowFMModelInvalidRstFileTimerWithUncheckedRstFlagNoIssues()
+        {
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
+            {
+                model.TimeStep = new TimeSpan(0, 0, 5, 0);
+                var newRstTimer = new TimeSpan(0, 0, 6, 0);
+                model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = newRstTimer;
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = false;
+
+                var validator = new WaterFlowFMModelTimersValidator();
+
+                // call
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                // assert
+                Assert.AreEqual(0, issues.Length);
+            }
+        }
+
+        [Test]
         public void ValidatingWaterFlowFMModelWaqIntervalIsIntegerMultipleOfTimeStepZeroTimeStep()
         {
             // this will return an issue, because you cannot devide by 0. So waq will not output.
