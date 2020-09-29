@@ -13,7 +13,7 @@ import json
 import logging
 
 # Production Server
-TEAMCITY_URL = "https://build.deltares.nl"
+TEAMCITY_URL = "https://dpcbuild.deltares.nl"
 # Test Server
 # TEAMCITY_URL = "http://tl-ts001.xtr.deltares.nl:8080"
 
@@ -22,11 +22,11 @@ JSON_RESPONSE_HEADER = {'Accept': 'application/json'}
 
 # 0: nuget package id, 1: nuget package build configuration id
 NUGET_PACKAGES = [
-    ("Dimr.Libs", "DeltaShell_3rdPartyNuGetPackages_Dimr"),
-    ("RGFGRID", "DeltaShell_3rdPartyNuGetPackages_Rgfgrid"),
-    ("DIDO", "DeltaShell_3rdPartyNuGetPackages_Dido"),
-    ("PLCT.Libs", "DeltaShell_3rdPartyNuGetPackages_PlctWaq"),
-    ("Substances.Libs", "DeltaShell_3rdPartyNuGetPackages_SubstancesWaq")
+    ("Dimr.Libs", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Dimr"),
+    ("RGFGRID", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Rgfgrid"),
+    ("DIDO", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Dido"),
+    ("PLCT.Libs", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Plct"),
+    ("Substances.Libs", "DHydroUserInterface_DHydroExternalLibraries_KernelNuGetPackages_Substances")
 ]
 
 
