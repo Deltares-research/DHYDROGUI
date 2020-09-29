@@ -64,7 +64,6 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
                 addToolStripSeparator = true;
             }
 
-
             if (HasExportItem(data, gui))
             {
                 menu.Items.Add(GetExportItem(data, gui));
@@ -151,7 +150,7 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
                 Tag = data,
                 Image = import,
                 Enabled = true
-        };
+            };
             importItem.Click += (s, a) => gui.CommandHandler.ImportOn(data);
 
             return importItem;
@@ -169,8 +168,11 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
                 Text = Resources.ContextMenuFactory_Export,
                 Tag = data,
                 Enabled = true
-        };
-            exportItem.Click += (s, a) => { gui.CommandHandler.ExportFrom(data); };
+            };
+            exportItem.Click += (s, a) =>
+            {
+                gui.CommandHandler.ExportFrom(data);
+            };
 
             return exportItem;
         }

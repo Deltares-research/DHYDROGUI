@@ -47,7 +47,6 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
 
             // Assert
             Assert.That(menu.Items, Has.Exactly(0).Matches<ToolStripItem>(i => i.Text.Equals("Import ...")));
-
         }
 
         [Test]
@@ -89,7 +88,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
             Assert.That(menu.Items, Has.Exactly(0)
                                        .Matches<ToolStripItem>(i => i.Text.Equals("Export ...")));
         }
-        
+
         [TestCase(true)]
         [TestCase(false)]
         public void GivenItem_WhenCanOpenSelectViewDialogAndGetViewInfosGreaterThanOne_ThenOpenAndOpenWithIsVisibleAndEnabled(bool canOpen)
