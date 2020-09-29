@@ -515,6 +515,6 @@
     <value>Output Location Warning</value>
   </data>
   <data name="RealTimeControlModelNodePresenter_OutputLocationWarningMessage" xml:space="preserve">
-    <value>Output RTC rule already Assigned to a different output. Are you sure you want to assign it?</value>
+    <value>Output RTC rule already assigned to a different output. Are you sure you want to assign it?</value>
   </data>
 </root>

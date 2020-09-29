@@ -520,7 +520,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         public void ControlGroupEditorSupportsCopyPaste()
         {
             // Setup
-            var helper = RealTimeControlModelCopyPasteHelper.Instance;
+            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.ClearData();
 
             // Precondition
