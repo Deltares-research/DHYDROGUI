@@ -11,10 +11,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
     public class HydroNetworkFeatureCollectionTest
     {
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Type 'System.Int32' is not a IFeature.")]
         public void ThrowExceptionWithImpossibleFeatureType()
         {
-            var channelFeatureCollection = new HydroNetworkFeatureCollection {FeatureType = typeof(int)};
+            Assert.That(() => new HydroNetworkFeatureCollection {FeatureType = typeof(int)}, 
+                        Throws.ArgumentException.With.Message.EqualTo("Type 'System.Int32' is not a IFeature."));
         }
 
         /// <summary>
@@ -167,7 +167,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException))]
         public void GivenPumpHydroNetworkFeatureCollection_WhenInsertingPumpInFeatureCollection_ThenNotSupportedExceptionIsThrown()
         {
             var network = new HydroNetwork();
@@ -176,7 +175,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
 
             Assert.That(network.Pumps.Count, Is.EqualTo(1));
-            hydroNodeFeatureCollection.Features.Insert(0, new Pump());
+
+            Assert.That(() => hydroNodeFeatureCollection.Features.Insert(0, new Pump()), Throws.InstanceOf<NotSupportedException>());
         }
 
         #endregion
@@ -210,7 +210,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException))]
         public void GivenPumpHydroNetworkFeatureCollection_WhenReplacingPumpInFeatureCollection_ThenNotSupportedExceptionIsThrown()
         {
             var network = new HydroNetwork();
@@ -219,7 +218,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
 
             Assert.That(network.Pumps.Count, Is.EqualTo(1));
-            hydroNodeFeatureCollection.Features[0] = new Pump("ReplacingPump");
+
+            Assert.That(() => hydroNodeFeatureCollection.Features[0] = new Pump("ReplacingPump"), Throws.InstanceOf<NotSupportedException>());
         }
 
         #endregion

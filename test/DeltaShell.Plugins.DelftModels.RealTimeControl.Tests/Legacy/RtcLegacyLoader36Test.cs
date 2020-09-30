@@ -6,12 +6,10 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy;
 using log4net.Core;
 using NSubstitute;
 using NUnit.Framework;
-using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
 {
@@ -65,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
                 string explicitWorkingDir = Path.Combine(projectDir, "Real-Time_Control_output");
 
                 Assert.That(projectDir, Does.Exist);
-                Assert.That(explicitWorkingDir, NUnit.Framework.Does.Not.Exist());
+                Assert.That(explicitWorkingDir, Does.Not.Exist);
                 Assert.That(Directory.EnumerateFiles(projectDir), Is.Empty);
 
                 Assert.That(model.RestartOutput, Is.Not.Empty);

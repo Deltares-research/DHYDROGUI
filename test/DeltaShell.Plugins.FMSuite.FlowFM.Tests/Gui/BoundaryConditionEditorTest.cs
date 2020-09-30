@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Ignore] // not supported for now
+        [Ignore("Ignored.")] // not supported for now
         public void ShowWithTimeSeriesDataAndZLayers()
         {
             FlowBoundaryCondition bc = CreateBoundaryCondition(FlowBoundaryQuantityType.Velocity);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
@@ -10,7 +11,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
     [TestFixture]
-    [RequiresSTA]
+    [Apartment(ApartmentState.STA)]
     [Category(TestCategory.Wpf)]
     public class SettingsTemplateSelectorTest
     {
