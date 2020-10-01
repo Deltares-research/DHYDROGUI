@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Project explorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel, IFileBased
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -1457,5 +1457,51 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         #endregion
+
+        void IFileBased.CreateNew(string path)
+        {
+            
+        }
+
+        void IFileBased.Close()
+        {
+            
+        }
+
+        void IFileBased.Open(string path)
+        {
+            
+        }
+
+        void IFileBased.CopyTo(string destinationPath)
+        {
+            
+        }
+
+        void IFileBased.SwitchTo(string newPath)
+        {
+            
+        }
+
+        void IFileBased.Delete()
+        {
+            
+        }
+
+        string IFileBased.Path { get; set; }
+
+        IEnumerable<string> IFileBased.Paths 
+        {
+            get
+            {
+                yield return ((IFileBased)this).Path;
+            }
+        }
+
+        bool IFileBased.IsFileCritical => true;
+
+        public virtual bool IsOpen { get; set; }
+
+        bool IFileBased.CopyFromWorkingDirectory => false;
     }
 }

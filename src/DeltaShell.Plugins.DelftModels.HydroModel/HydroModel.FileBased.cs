@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {
@@ -133,14 +134,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public static IEnumerable<IDataItem> GetDataItems(IModel model, DataItemRole role)
         {
-            if (model is IFileBased)
-            {
-                return model.GetChildDataItemLocations(role).SelectMany(model.GetChildDataItems);
-            }
-            else
+            if (model is ILinkedDataItemsModel)
             {
                 return model.AllDataItems.Where(di => (di.Role & role) == role);
             }
+
+            return model.GetChildDataItemLocations(role).SelectMany(model.GetChildDataItems);
         }
 
         /// <summary>
