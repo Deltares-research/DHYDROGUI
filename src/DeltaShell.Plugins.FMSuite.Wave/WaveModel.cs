@@ -49,7 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                              IHydroModel, IDimrModel
     {
         // Also add model specific data items to the exclude list in <see cref="BuildModel"/>
-        public const string SwanLogDataItemTag = "SwanLogDataItemTag";
         private static readonly ILog log = LogManager.GetLogger(typeof(WaveModel));
 
         private static readonly string GridPropertyName = nameof(WaveDomainData.Grid);
@@ -88,9 +87,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             ((INotifyPropertyChanged) this).PropertyChanged += (s, e) => MarkDirty();
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
-
-            dataItems.Add(new DataItem(new TextDocument(true) {Name = "Swan run log"}, DataItemRole.Output,
-                                       SwanLogDataItemTag));
 
             InitializeCouplingTime();
 

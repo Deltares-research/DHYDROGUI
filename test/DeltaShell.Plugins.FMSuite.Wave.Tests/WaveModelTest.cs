@@ -480,20 +480,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ClearOutput_WithSwanRunLogDataItem_ThenSwanRunLogContentIsEmpty()
         {
-            // Setup
-            var waveModel = new WaveModel();
-            var swanTextDocument = (TextDocument) waveModel.GetDataItemByTag(WaveModel.SwanLogDataItemTag).Value;
-            swanTextDocument.Content = new Random().Next(100).ToString();
+            //// Setup
+            //var waveModel = new WaveModel();
+            //var swanTextDocument = (TextDocument) waveModel.GetDataItemByTag(WaveModel.SwanLogDataItemTag).Value;
+            //swanTextDocument.Content = new Random().Next(100).ToString();
 
-            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
-            // As we do not focus on model run, we use reflection to set this field and omit the model run.
-            TypeUtils.SetField(waveModel, "outputIsEmpty", false);
+            //// Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
+            //// As we do not focus on model run, we use reflection to set this field and omit the model run.
+            //TypeUtils.SetField(waveModel, "outputIsEmpty", false);
 
-            // Call
-            waveModel.ClearOutput();
+            //// Call
+            //waveModel.ClearOutput();
 
-            // Assert
-            Assert.That(swanTextDocument.Content, Is.Empty, "Swan run log should be empty after clearing model output.");
+            //// Assert
+            //Assert.That(swanTextDocument.Content, Is.Empty, "Swan run log should be empty after clearing model output.");
+            Assert.Fail("Should be improved as part of D3DFMIQ-2286");
         }
 
         [Test]
@@ -589,32 +590,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ConnectOutput_WhenModelHasMultipleDomains_ShouldConnectWavmFileAndReadSwanDiagFile()
         {
-            using (var tempDirectory = new TemporaryDirectory())
-            using (var waveModel = new WaveModel())
-            {
-                // Arrange
-                waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("Inner"));
+            //using (var tempDirectory = new TemporaryDirectory())
+            //using (var waveModel = new WaveModel())
+            //{
+            //    // Arrange
+            //    waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("Inner"));
 
-                string outputDirectory =
-                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains");
-                string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
+            //    string outputDirectory =
+            //        Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains");
+            //    string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
 
-                // Act
-                waveModel.ConnectOutput(outputDirectoryInTemp);
+            //    // Act
+            //    waveModel.ConnectOutput(outputDirectoryInTemp);
 
-                // Assert
-                Assert.IsFalse(waveModel.OutputIsEmpty);
-                IEnumerable<WavmFileFunctionStore> functionStores = waveModel.WavmFunctionStores.ToList();
-                Assert.AreEqual(2, functionStores.Count());
-                Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves-Outer.nc"),
-                                functionStores.First().Path);
-                Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves-Inner.nc"),
-                                functionStores.Last().Path);
+            //    // Assert
+            //    Assert.IsFalse(waveModel.OutputIsEmpty);
+            //    IEnumerable<WavmFileFunctionStore> functionStores = waveModel.WavmFunctionStores.ToList();
+            //    Assert.AreEqual(2, functionStores.Count());
+            //    Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves-Outer.nc"),
+            //                    functionStores.First().Path);
+            //    Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves-Inner.nc"),
+            //                    functionStores.Last().Path);
 
-                IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == WaveModel.SwanLogDataItemTag);
-                Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")),
-                                ((TextDocument) swanLogDataItem.Value).Content);
-            }
+            //    IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == WaveModel.SwanLogDataItemTag);
+            //    Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")),
+            //                    ((TextDocument) swanLogDataItem.Value).Content);
+            //}
+            Assert.Fail("Should be improved as part of D3DFMIQ-2286");
         }
 
         [Test]
