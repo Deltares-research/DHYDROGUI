@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Calculation Input change warning.
+        ///   Looks up a localized string similar to Link change warning.
         /// </summary>
         public static string InquiryHelper_InquireContinuation_Confirm {
             get {
@@ -551,6 +551,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         public static string RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input {
             get {
                 return ResourceManager.GetString("RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output RTC rule already assigned to a different output. Are you sure you want to assign it?.
+        /// </summary>
+        public static string RealTimeControlModelNodePresenter_OutputLocationWarningMessage {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_OutputLocationWarningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" +
+                        "", resourceCulture);
             }
         }
         

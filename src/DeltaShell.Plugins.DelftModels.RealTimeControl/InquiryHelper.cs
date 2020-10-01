@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             MessageBoxResult dialog = MessageBox.Show(
                 query,
-                Resources.InquiryHelper_InquireContinuation_Confirm,
+                Resources.RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning,
                 MessageBoxButton.OKCancel);
             return dialog == MessageBoxResult.OK;
         }

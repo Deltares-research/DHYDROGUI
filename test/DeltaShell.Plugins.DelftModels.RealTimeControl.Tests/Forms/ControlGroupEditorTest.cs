@@ -27,7 +27,6 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using Netron.GraphLib;
 using NetTopologySuite.Extensions.Features;
-using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Clipboard = DelftTools.Controls.Clipboard;
@@ -580,7 +579,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             using (var control = new ControlGroupEditor {Model = mockModel})
             {
-                control.Link(mockOutputShape, mockInputDataItem);
+                control.Link(mockOutputShape, mockInputDataItem, null);
             }
 
             mocks.VerifyAll();
@@ -606,7 +605,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             using (var control = new ControlGroupEditor {Model = mockModel})
             {
-                control.Link(shape, dataItem);
+                control.Link(shape, dataItem, null);
             }
 
             mocks.VerifyAll();
@@ -635,39 +634,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             using (var control = new ControlGroupEditor {Model = rtcModel})
             {
-                control.Link(shape, flowDataItem);
+                control.Link(shape, flowDataItem, null);
             }
 
             mocks.VerifyAll();
-        }
-
-        [Test]
-        public void ControlGroupEditor_InquiryHelperThrowsNullExceptionWithNullArguments()
-        {
-            // Setup
-            var InquiryHelper = new InquiryHelper();
-
-            // Call
-            TestDelegate call = () => InquiryHelper.InquireContinuation(null);
-
-            // Assert
-            Assert.That(call, Throws.InstanceOf<ArgumentNullException>()
-                                    .With.Property(nameof(ArgumentNullException.ParamName))
-                                    .EqualTo("query"));
-        }
-
-        [Test]
-        public void ControlGroupEditor_InquiryHelperWithParameterIsInstanceOfIInquiryHelper()
-        {
-            // Setup
-            var inquiryHelper = Substitute.For<IInquiryHelper>();
-            var instance = new InquiryHelper();
-
-            // Call
-            inquiryHelper.InquireContinuation("test");
-
-            // Assert
-            Assert.That(instance, Is.InstanceOf<IInquiryHelper>());
         }
 
         private static void AssertCopyXmlToClipboard(RtcBaseObject rtcBaseObject, string controlGroupName)

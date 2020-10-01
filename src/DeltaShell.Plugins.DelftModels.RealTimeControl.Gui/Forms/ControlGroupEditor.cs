@@ -51,6 +51,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private ControlGroup controlGroup;
 
+        private InquiryHelper inquiryHelper;
+
         public ControlGroupEditor()
         {
             InitializeComponent();
@@ -75,6 +77,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             graphControl.NetronGraph.OnDoubleClick += GraphControlOnDoubleClick;
             graphControl.NetronGraph.MouseUp += OnGraphControlMouseUp;
             graphControl.NetronGraph.MouseDown += OnGraphControlMouseDown;
+
+            inquiryHelper = new InquiryHelper();
         }
 
         public IGui Gui { get; set; } // selection and opening views
@@ -181,7 +185,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             Clipboard.SetText(stringBuilder.ToString());
         }
 
-        public void Link(Shape shape, IDataItem dataItem)
+        public void Link(Shape shape, IDataItem dataItem, IInquiryHelper inquiryHelper)
         {
             if (shape.Tag is Input input)
             {
@@ -203,8 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     return;
                 }
 
-                IInquiryHelper helper = new InquiryHelper();
-                bool result = helper.InquireContinuation(Resources.RealTimeControlModelNodePresenter_OutputLocationWarningMessage);
+                bool result = inquiryHelper.InquireContinuation(Resources.RealTimeControlModelNodePresenter_OutputLocationWarningMessage);
 
                 if (!result)
                 {
@@ -432,7 +435,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 return;
             }
 
-            Link(graphControl.GetSelectedShapes<ShapeBase>().First(), dialog.SelectedDataItem);
+            Link(graphControl.GetSelectedShapes<ShapeBase>().First(), dialog.SelectedDataItem, null);
             graphControl.Refresh();
         }
 
@@ -668,7 +671,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             var menuItem = (MenuItem) sender;
             var tuple = (DelftTools.Utils.Tuple<Shape, IDataItem>) menuItem.Tag;
-            Link(tuple.First, tuple.Second);
+            Link(tuple.First, tuple.Second, inquiryHelper);
             graphControl.Refresh();
         }
 
@@ -676,7 +679,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             var menuItem = (MenuItem) sender;
             var tuple = (DelftTools.Utils.Tuple<Shape, IDataItem>) menuItem.Tag;
-            Link(tuple.First, tuple.Second);
+            Link(tuple.First, tuple.Second, inquiryHelper);
         }
 
         private void LinkDataItems(IDataItem target, IDataItem source, bool unlinkExisting = false)
@@ -799,7 +802,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
 
             IDataItem dataItem = dataItems.FirstOrDefault(e => e.GetParameterName() == answer);
-            Link((Shape) entity, dataItem);
+            Link((Shape) entity, dataItem, null);
         }
 
         private bool CanLinkFeatureToShape(DragEventArgs dragEventArgs, IFeature feature, Entity entity, Type t,
