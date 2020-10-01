@@ -24,8 +24,6 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using Netron.GraphLib;
-using ValidationAspects;
-using NetronGraphControl = DelftTools.Controls.Swf.Graph.NetronGraphControl;
 using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
@@ -44,14 +42,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroupEditor));
         private readonly XNamespace fns = "http://www.wldelft.nl/fews";
+
+        private readonly IList<ShapeBase> shapes = new List<ShapeBase>();
         private object created, lastCreated;
 
         private ControlGroupEditorViewContext context;
         private ControlGroupEditorController controller;
 
         private ControlGroup controlGroup;
-
-        private IList<ShapeBase> shapes = new List<ShapeBase>();
 
         public ControlGroupEditor()
         {
@@ -185,21 +183,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public void Link(Shape shape, IDataItem dataItem)
         {
-            if (shape.Tag is Input)
+            if (shape.Tag is Input input)
             {
                 if ((dataItem.Role & DataItemRole.Output) == DataItemRole.Output)
                 {
-                    var input = (Input) shape.Tag;
                     LinkDataItems(Model.GetDataItemByValue(input), dataItem);
                 }
             }
-            else if (shape.Tag is Output)
+            else if (shape.Tag is Output output && (dataItem.Role & DataItemRole.Input) == DataItemRole.Input)
             {
-                if ((dataItem.Role & DataItemRole.Input) == DataItemRole.Input)
-                {
-                    var output = (Output) shape.Tag;
-                    LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
-                }
+                LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
             }
 
             shape.Text = dataItem.ToString();
@@ -390,7 +383,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 graphControl.ContextMenuItems.Add(new MenuItem("Copy", CopyAction) {Tag = selectedShapes});
             }
 
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
             if (helper.IsDataSet && !selectedShapes.Any())
             {
                 graphControl.ContextMenuItems.Add(new MenuItem("Paste", PasteAction));
@@ -427,7 +420,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void PasteAction(object sender, EventArgs e)
         {
             Point mea = PointToClient(MousePosition);
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
             if (helper.IsDataSet)
             {
                 helper.CopyShapesToController(controller, mea);
@@ -438,8 +431,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void CopyAction(object sender, EventArgs e)
         {
             var menuItem = (MenuItem) sender;
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
-            helper.SetCopiedData((IEnumerable<ShapeBase>)menuItem.Tag);
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
+            helper.SetCopiedData((IEnumerable<ShapeBase>) menuItem.Tag);
         }
 
         private void CopyAsImageToClipboard(object sender, EventArgs e)
@@ -707,13 +700,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 Entity entity = graphControl.NetronGraph.HitEntity(point);
                 if (entity is Shape)
                 {
-                    if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
+                    if (CanLinkFeatureToShape(dragEventArgs, feature, entity, typeof(InputItemShape),
                                               DataItemRole.Output))
                     {
                         return true;
                     }
 
-                    if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
+                    if (CanLinkFeatureToShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
                                               DataItemRole.Input))
                     {
                         return true;
@@ -738,14 +731,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 if (entity is Shape)
                 {
                     if (entity is InputItemShape &&
-                        CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
+                        CanLinkFeatureToShape(dragEventArgs, feature, entity, typeof(InputItemShape),
                                               DataItemRole.Output))
                     {
                         DropFeatureOnShape(feature, entity, DataItemRole.Output);
                     }
 
                     if (entity is OutputItemShape &&
-                        CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
+                        CanLinkFeatureToShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
                                               DataItemRole.Input))
                     {
                         DropFeatureOnShape(feature, entity, DataItemRole.Input);
@@ -790,16 +783,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             Link((Shape) entity, dataItem);
         }
 
-        private bool CanLinkFeaturetoShape(DragEventArgs dragEventArgs, IFeature feature, Entity entity, Type t,
+        private bool CanLinkFeatureToShape(DragEventArgs dragEventArgs, IFeature feature, Entity entity, Type t,
                                            DataItemRole role)
         {
-            if (entity.GetType() == t)
+            if (entity.GetType() == t && Model.GetChildDataItemLocationsFromControlledModels(role).Contains(feature))
             {
-                if (Model.GetChildDataItemLocationsFromControlledModels(role).Contains(feature))
-                {
-                    dragEventArgs.Effect = DragDropEffects.Link;
-                    return true;
-                }
+                dragEventArgs.Effect = DragDropEffects.Link;
+                return true;
             }
 
             return false;
@@ -866,13 +856,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 created = null;
 
                 ResetNewObjectButtons();
-
             }
 
-            IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
-            if (shapes != null)
+            IEnumerable<ShapeBase> graphShapes = graphControl.GetShapes<ShapeBase>();
+            if (graphShapes != null)
             {
-                foreach (var shape in shapes)
+                foreach (ShapeBase shape in graphShapes)
                 {
                     shape.HighLightedConnectors = null;
                 }
@@ -882,7 +871,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void OnGraphControlMouseDown(object sender, MouseEventArgs e)
         {
             object hoveredItem = TypeUtils.GetField(graphControl.NetronGraph, "Hover");
-            if ((hoveredItem == null) || (!(hoveredItem is Connector activeConnector)))
+            if (!(hoveredItem is Connector activeConnector))
             {
                 return;
             }
@@ -928,10 +917,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             var allowedConnectors = new List<Connector>();
 
-            if (sourceShape is MathematicalExpressionShape)
+            if (sourceShape is MathematicalExpressionShape && (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top))
             {
-                if (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top)
-                    return allowedConnectors;
+                return allowedConnectors;
             }
 
             foreach (Connector availableConnector in availableConnectors)

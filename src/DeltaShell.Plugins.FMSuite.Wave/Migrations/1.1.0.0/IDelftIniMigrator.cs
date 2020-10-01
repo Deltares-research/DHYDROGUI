@@ -49,9 +49,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// <exception cref="System.Security.SecurityException">
         /// Thrown when the caller does not have the required permission.
         /// </exception>
-        void MigrateFile(Stream sourceFileStream, 
+        void MigrateFile(Stream sourceFileStream,
                          string sourceFilePath,
-                         string targetFilePath, 
+                         string targetFilePath,
                          ILogHandler logHandler);
     }
 }

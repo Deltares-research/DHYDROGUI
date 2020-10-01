@@ -90,10 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         private static IBoundaryProvider GetProviderWithNElements(int nElements)
         {
             var provider = Substitute.For<IBoundaryProvider>();
-            var boundaries = new EventedList<IWaveBoundary>
-            {
-                GetBoundaryMockWithName(UniqueBoundaryNameProvider.DefaultBoundaryName)
-            };
+            var boundaries = new EventedList<IWaveBoundary> {GetBoundaryMockWithName(UniqueBoundaryNameProvider.DefaultBoundaryName)};
 
             const string template = UniqueBoundaryNameProvider.DefaultBoundaryName + "({0})";
 

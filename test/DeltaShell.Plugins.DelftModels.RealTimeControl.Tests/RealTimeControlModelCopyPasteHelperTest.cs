@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void Setup()
         {
             // As the helper is a singleton, reset its state before every test begins
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.ClearData();
 
             // Precondition
@@ -35,8 +35,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void Instance_Always_ReturnsSameInstance()
         {
             // Call
-            RealTimeControlModelCopyPasteHelper firstInstance = RealTimeControlModelCopyPasteHelper.Instance;
-            RealTimeControlModelCopyPasteHelper secondInstance = RealTimeControlModelCopyPasteHelper.Instance;
+            var firstInstance = RealTimeControlModelCopyPasteHelper.Instance;
+            var secondInstance = RealTimeControlModelCopyPasteHelper.Instance;
 
             // Assert
             Assert.That(firstInstance, Is.SameAs(secondInstance));
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void Instance_ExpectedProperties()
         {
             // Call
-            RealTimeControlModelCopyPasteHelper instance = RealTimeControlModelCopyPasteHelper.Instance;
+            var instance = RealTimeControlModelCopyPasteHelper.Instance;
 
             // Assert
             Assert.That(instance.CopiedShapes, Is.Empty);
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void SetCopiedData_ShapesNull_ThrowsArgumentNullException()
         {
             // Setup
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
 
             // Call
             TestDelegate call = () => helper.SetCopiedData(null);
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void SetCopiedData_CollectionEmpty_SetsCopiedShapesAndIsDataSetFalse()
         {
             // Setup
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
 
             // Call
             helper.SetCopiedData(Enumerable.Empty<ShapeBase>());
@@ -86,8 +86,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void SetCopiedData_CollectionNotEmpty_SetsCopiedShapesAndIsDataSetTrue()
         {
             // Setup
-            var shapes = new[] {new TestShape(), new TestShape(), new TestShape()};
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var shapes = new[]
+            {
+                new TestShape(),
+                new TestShape(),
+                new TestShape()
+            };
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
 
             // Call
             helper.SetCopiedData(shapes);
@@ -101,8 +106,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void GivenHelperWithSetData_WhenClearingCopiedData_ThenDataIsClearedAndDataSetFalse()
         {
             // Given
-            var shapes = new[] {new TestShape(), new TestShape(), new TestShape()};
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var shapes = new[]
+            {
+                new TestShape(),
+                new TestShape(),
+                new TestShape()
+            };
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
 
             helper.SetCopiedData(shapes);
 
@@ -121,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void CopyShapesToController_ControllerNull_ThrowsArgumentNullException()
         {
             // Setup
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
 
             // Call
             TestDelegate call = () => helper.CopyShapesToController(null, Point.Empty);
@@ -138,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Given
             using (var controlGroupEditor = new ControlGroupEditor {Data = new ControlGroup()})
             {
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
 
                 // Precondition
                 Assert.That(helper.CopiedShapes, Is.Empty);
@@ -173,7 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -183,7 +193,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Action call = () => helper.CopyShapesToController(controlGroupEditor.Controller, Point.Empty);
 
                 // Then
-                string expectedMessage = $"It is not possible to copy and paste internal data for control group outputs, the connection to {output.Name} will be reset.";
+                var expectedMessage = $"It is not possible to copy and paste internal data for control group outputs, the connection to {output.Name} will be reset.";
                 TestHelper.AssertLogMessageIsGenerated(call, expectedMessage);
 
                 IEnumerable<ShapeBase> actualShapes = graphControl.GetShapes<ShapeBase>();
@@ -227,8 +237,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             var rule = Substitute.For<RuleBase>();
             rule.Name = ruleName;
-            rule.Inputs = new EventedList<IInput>(new[] {input});
-            rule.Outputs = new EventedList<Output>(new[] {output});
+            rule.Inputs = new EventedList<IInput>(new[]
+            {
+                input
+            });
+            rule.Outputs = new EventedList<Output>(new[]
+            {
+                output
+            });
             rule.Clone().Returns(clonedRule);
 
             var controlGroup = new ControlGroup();
@@ -241,7 +257,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -313,8 +329,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             var rule = Substitute.For<RuleBase>();
             rule.Name = ruleName;
-            rule.Inputs = new EventedList<IInput>(new[] {input});
-            rule.Outputs = new EventedList<Output>(new[] {output});
+            rule.Inputs = new EventedList<IInput>(new[]
+            {
+                input
+            });
+            rule.Outputs = new EventedList<Output>(new[]
+            {
+                output
+            });
             rule.Clone().Returns(clonedRule);
 
             var controlGroup = new ControlGroup();
@@ -327,7 +349,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -400,8 +422,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             var rule = Substitute.For<RuleBase>();
             rule.Name = ruleName;
-            rule.Inputs = new EventedList<IInput>(new[] { input });
-            rule.Outputs = new EventedList<Output>(new[] { output });
+            rule.Inputs = new EventedList<IInput>(new[]
+            {
+                input
+            });
+            rule.Outputs = new EventedList<Output>(new[]
+            {
+                output
+            });
             rule.Clone().Returns(clonedRule);
 
             var controlGroup = new ControlGroup();
@@ -409,12 +437,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);
 
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<RuleShape>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -452,7 +480,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 RuleBase copiedRule = rules.Single(r => string.Equals(r.Name, "Rule - Copy 1"));
                 Assert.That(copiedRule, Is.Not.SameAs(rule));
-                Assert.That(copiedRule.Inputs, Is.Empty); 
+                Assert.That(copiedRule.Inputs, Is.Empty);
                 Assert.That(copiedRule.Outputs, Is.Empty);
             }
         }
@@ -482,8 +510,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             var signal = Substitute.For<SignalBase>();
             signal.Name = signalName;
-            signal.Inputs = new EventedList<Input>(new[] {input});
-            signal.RuleBases = new EventedList<RuleBase>(new[] {rule});
+            signal.Inputs = new EventedList<Input>(new[]
+            {
+                input
+            });
+            signal.RuleBases = new EventedList<RuleBase>(new[]
+            {
+                rule
+            });
             signal.Clone().Returns(clonedSignal);
 
             var controlGroup = new ControlGroup();
@@ -496,7 +530,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -556,8 +590,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             var signal = Substitute.For<SignalBase>();
             signal.Name = signalName;
-            signal.Inputs = new EventedList<Input>(new[] { input });
-            signal.RuleBases = new EventedList<RuleBase>(new[] { rule });
+            signal.Inputs = new EventedList<Input>(new[]
+            {
+                input
+            });
+            signal.RuleBases = new EventedList<RuleBase>(new[]
+            {
+                rule
+            });
             signal.Clone().Returns(clonedSignal);
 
             var controlGroup = new ControlGroup();
@@ -565,12 +605,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             controlGroup.Signals.Add(signal);
             controlGroup.Rules.Add(rule);
 
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<SignalShape>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -607,10 +647,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 SignalBase copiedSignal = actualSignals.Single(s => string.Equals(s.Name, "Signal - Copy 1"));
                 Assert.That(copiedSignal, Is.Not.SameAs(signal));
-                Assert.That(copiedSignal.Inputs, Is.Empty);   
+                Assert.That(copiedSignal.Inputs, Is.Empty);
                 Assert.That(copiedSignal.RuleBases, Is.Empty);
             }
-
         }
 
         [Test]
@@ -640,7 +679,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -693,14 +732,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             expression.Inputs.Add(inputExpression);
 
             var controlGroup = new ControlGroup();
-            controlGroup.MathematicalExpressions.AddRange(new []{inputExpression, expression});
+            controlGroup.MathematicalExpressions.AddRange(new[]
+            {
+                inputExpression,
+                expression
+            });
 
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -751,12 +794,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             controlGroup.Inputs.Add(input);
             controlGroup.MathematicalExpressions.Add(expression);
 
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<MathematicalExpressionShape>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -787,9 +830,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 MathematicalExpression copiedExpression = actualMathematicalExpressions.Single(s => string.Equals(s.Name, "Expression - Copy 1"));
                 Assert.That(copiedExpression, Is.Not.SameAs(expression));
-                Assert.That(copiedExpression.Inputs, Is.Empty); 
+                Assert.That(copiedExpression.Inputs, Is.Empty);
             }
-
         }
 
         [Test]
@@ -812,7 +854,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -864,12 +906,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             controlGroup.Conditions.Add(conditionBase);
             controlGroup.MathematicalExpressions.Add(input);
 
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -899,7 +941,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 ConditionBase originalCondition = actualConditions.Single(c => string.Equals(c.Name, conditionBase.Name));
                 Assert.That(originalCondition, Is.SameAs(conditionBase));
                 Assert.That(originalCondition.Input, Is.SameAs(input));
-                
+
                 ConditionBase copiedCondition = actualConditions.Single(c => string.Equals(c.Name, "Condition - Copy 1"));
                 Assert.That(copiedCondition, Is.Not.SameAs(conditionBase));
                 Assert.That(copiedCondition.Input, Is.Not.SameAs(input));
@@ -955,14 +997,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var controlGroup = new ControlGroup();
             controlGroup.Inputs.Add(input);
             controlGroup.Conditions.Add(conditionBase);
-            controlGroup.Rules.AddRange(new[] {ruleTrueOutput, ruleFalseOutput});
+            controlGroup.Rules.AddRange(new[]
+            {
+                ruleTrueOutput,
+                ruleFalseOutput
+            });
 
             using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -1049,14 +1095,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var controlGroup = new ControlGroup();
             controlGroup.Inputs.Add(input);
             controlGroup.Conditions.Add(conditionBase);
-            controlGroup.MathematicalExpressions.AddRange(new[] {expressionTrueOutput, expressionFalseOutput});
+            controlGroup.MathematicalExpressions.AddRange(new[]
+            {
+                expressionTrueOutput,
+                expressionFalseOutput
+            });
 
             using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -1139,7 +1189,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var conditionFalseOutput = Substitute.For<ConditionBase>();
             conditionFalseOutput.Name = conditionFalseOutputName;
             conditionFalseOutput.Clone().Returns(clonedFalseOutputCondition);
-            
+
             const string conditionName = "Condition";
             var clonedCondition = Substitute.For<ConditionBase>();
             clonedCondition.Name = conditionName;
@@ -1153,14 +1203,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             var controlGroup = new ControlGroup();
             controlGroup.Inputs.Add(input);
-            controlGroup.Conditions.AddRange(new[] {conditionBase, conditionTrueOutput, conditionFalseOutput});
+            controlGroup.Conditions.AddRange(new[]
+            {
+                conditionBase,
+                conditionTrueOutput,
+                conditionFalseOutput
+            });
 
             using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -1210,7 +1265,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Feature = inputFeature
             };
 
-
             var ruleTrueOutput = Substitute.For<RuleBase>();
             var ruleFalseOutput = Substitute.For<RuleBase>();
 
@@ -1228,14 +1282,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var controlGroup = new ControlGroup();
             controlGroup.Inputs.Add(input);
             controlGroup.Conditions.Add(conditionBase);
-            controlGroup.Rules.AddRange(new[] { ruleTrueOutput, ruleFalseOutput });
+            controlGroup.Rules.AddRange(new[]
+            {
+                ruleTrueOutput,
+                ruleFalseOutput
+            });
 
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 GraphControl graphControl = controlGroupEditor.GraphControl;
                 IEnumerable<ShapeBase> shapes = graphControl.GetShapes<ConditionShape>();
 
-                RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+                var helper = RealTimeControlModelCopyPasteHelper.Instance;
                 helper.SetCopiedData(shapes);
 
                 // Precondition
@@ -1277,8 +1335,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 ConditionBase copiedCondition = actualConditions.Single(s => string.Equals(s.Name, "Condition - Copy 1"));
                 Assert.That(copiedCondition.Input, Is.Not.SameAs(input));
-                Assert.That(copiedCondition.TrueOutputs, Is.Empty);   
-                Assert.That(copiedCondition.FalseOutputs, Is.Empty); 
+                Assert.That(copiedCondition.TrueOutputs, Is.Empty);
+                Assert.That(copiedCondition.FalseOutputs, Is.Empty);
             }
         }
 

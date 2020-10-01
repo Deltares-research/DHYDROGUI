@@ -144,7 +144,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public object ImportItem(string path, object target = null)
         {
-            string[] filePaths = path == null ? FilePaths : new[] {path};
+            string[] filePaths = path == null
+                                     ? FilePaths
+                                     : new[]
+                                     {
+                                         path
+                                     };
 
             if (filePaths == null)
             {

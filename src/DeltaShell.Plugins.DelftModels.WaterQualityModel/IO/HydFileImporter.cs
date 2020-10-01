@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
-    public class HydFileImporter : IFileImporter
+    public class HydFileImporter : ModelFileImporterBase
     {
-        private readonly Func<string> StoreWorkingDirectoryPathFunc;
+        private readonly Func<string> storeWorkingDirectoryPathFunc;
 
         /// <summary>
         /// Constructor needed for connecting the Application.WorkingDirectory to the
@@ -19,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="getWorkingDirectoryPathFunc"> </param>
         public HydFileImporter(Func<string> getWorkingDirectoryPathFunc)
         {
-            StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
+            storeWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
         }
 
         /// <summary>
@@ -33,15 +34,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool SkipImportTimers { get; set; }
 
-        public string Name => "Hydrodynamics (*.hyd)";
+        public override string Name => "Hydrodynamics (*.hyd)";
 
-        public string Category => "Water Quality";
+        public override string Category => "Water Quality";
 
-        public string Description => string.Empty;
+        public override string Description => string.Empty;
 
-        public Bitmap Image => Resources.hydFile;
+        public override Bitmap Image => Resources.hydFile;
 
-        public IEnumerable<Type> SupportedItemTypes
+        public override IEnumerable<Type> SupportedItemTypes
         {
             get
             {
@@ -49,20 +50,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public bool CanImportOnRootLevel => true;
+        public override bool CanImportOnRootLevel => true;
 
-        public string FileFilter => "Hydrodynamics File (*.hyd)|*.hyd";
+        public override string FileFilter => "Hydrodynamics File (*.hyd)|*.hyd";
 
         // automatic setters used by the application plugin
-        public string TargetDataDirectory { get; set; }
+        public override string TargetDataDirectory { get; set; }
 
-        public bool ShouldCancel { get; set; }
+        public override bool ShouldCancel { get; set; }
 
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public override ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        public bool OpenViewAfterImport => true;
+        public override bool OpenViewAfterImport => true;
 
-        public bool CanImportOn(object targetObject)
+        public override bool CanImportOn(object targetObject)
         {
             return true;
         }
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Import data on a water quality model,
         /// or create a new one if the target doesn't exist.
         /// </summary>
-        public object ImportItem(string path, object target = null)
+        protected override object OnImportItem(string path, object target = null)
         {
             if (!File.Exists(path))
             {
@@ -86,9 +87,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             if (model == null)
             {
                 model = new WaterQualityModel();
-                if (StoreWorkingDirectoryPathFunc != null)
+                if (storeWorkingDirectoryPathFunc != null)
                 {
-                    model.SetWorkingDirectoryInModelSettings(StoreWorkingDirectoryPathFunc);
+                    model.SetWorkingDirectoryInModelSettings(storeWorkingDirectoryPathFunc);
                 }
             }
 

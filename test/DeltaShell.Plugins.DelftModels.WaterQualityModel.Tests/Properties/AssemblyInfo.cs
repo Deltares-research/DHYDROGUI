@@ -4,6 +4,7 @@
 
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using NUnit.Framework;
 
 [assembly: AssemblyTitle("DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests")]
@@ -32,4 +33,4 @@ using NUnit.Framework;
 //
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: RequiresSTA]
+[assembly: Apartment(ApartmentState.STA)]

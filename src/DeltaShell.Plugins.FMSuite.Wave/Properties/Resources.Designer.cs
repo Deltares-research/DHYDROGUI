@@ -61,6 +61,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to While saving the following error was thrown: {0}, validate the model for more information..
+        /// </summary>
+        public static string BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_ {
+            get {
+                return ResourceManager.GetString("BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_mode" +
+                        "l_for_more_information_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No values given for {0}..
+        /// </summary>
+        public static string BcwFile_WriteBoundaryData_No_values_given_for__0__ {
+            get {
+                return ResourceManager.GetString("BcwFile_WriteBoundaryData_No_values_given_for__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Migrating {0}.
         /// </summary>
         public static string DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_ {
@@ -620,6 +639,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unlinking existing wavm.nc files in {0}:.
+        /// </summary>
+        public static string WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_in__0__ {
+            get {
+                return ResourceManager.GetString("WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_" +
+                        "in__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Option &quot;Write Tables&quot; is selected but there are no Observation Points in your model..
         /// </summary>
         public static string WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_ {
@@ -708,6 +737,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         public static string WaveTimePointValidator_Validate_No_time_points_defined {
             get {
                 return ResourceManager.GetString("WaveTimePointValidator_Validate_No_time_points_defined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The link with {0} has been broken..
+        /// </summary>
+        public static string WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_been_broken_ {
+            get {
+                return ResourceManager.GetString("WavmFunctionStoreMigrationHelper_RemoveWavmFunctionStores_The_link_with__0__has_b" +
+                        "een_broken_", resourceCulture);
             }
         }
     }

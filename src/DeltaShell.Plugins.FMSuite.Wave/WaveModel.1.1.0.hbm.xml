@@ -4,7 +4,7 @@
                    assembly="DeltaShell.Plugins.FMSuite.Wave">
 
   <joined-subclass name="DeltaShell.Plugins.FMSuite.Wave.WaveModel" lazy="false"
-                   extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" 
+                   extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core"
                    table="wave_model"
                    persister="DeltaShell.Plugins.Data.NHibernate.LegacyLoaderInjector`1[[DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0.WaveModel110LegacyLoader, DeltaShell.Plugins.FMSuite.Wave]], DeltaShell.Plugins.Data.NHibernate">
     <key column="project_item_id" />

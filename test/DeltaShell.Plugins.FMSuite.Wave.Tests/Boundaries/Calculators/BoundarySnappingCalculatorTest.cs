@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
     [TestFixture]
     public class BoundarySnappingCalculatorTest
     {
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
 
         [Test]
         public void Constructor_ExpectedValues()
@@ -297,8 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         /// <remarks>
         /// Assumes grid of 10x10;
         /// </remarks>
-        /// >
-        private IEnumerable<TestCaseData> CoordinateFromDistanceTestData()
+        private static IEnumerable<TestCaseData> CoordinateFromDistanceTestData()
         {
             const int maxIndex = 9;
 

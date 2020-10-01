@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers
             Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
-        private IEnumerable<TestCaseData> GetAddSpatialPropertyArgumentNullCases()
+        private static IEnumerable<TestCaseData> GetAddSpatialPropertyArgumentNullCases()
         {
             yield return new TestCaseData(null, "property_name", "category");
             yield return new TestCaseData(new DelftIniCategory(""), null, "propertyName");
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers
             Assert.That(property.Value, Is.EqualTo(expectedPropValue));
         }
 
-        private IEnumerable<TestCaseData> GetAddSpatialDataCases()
+        private static IEnumerable<TestCaseData> GetAddSpatialDataCases()
         {
             var value = 1.1;
             var expectedStr = "1.1000000";

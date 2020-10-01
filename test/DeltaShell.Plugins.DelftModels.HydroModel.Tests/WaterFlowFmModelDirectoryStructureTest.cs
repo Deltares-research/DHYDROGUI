@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static List<string> filtersOutputWAQ;
         private static List<string> filtersSnapped;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             // Get TestData Directory
@@ -1500,7 +1500,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
                     AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    AssertThatOutputNotExists(modelDirSave, importedModel); 
+                    AssertThatOutputNotExists(modelDirSave, importedModel);
                 }
             }
             finally
@@ -2502,7 +2502,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     continue;
                 }
 
-                string assertMsgNotEqualContent =
+                var assertMsgNotEqualContent =
                     $"Checksum of file {sourceDirFilesAndChecksums[i].Item1} does not match checksum of file {targetDirFilesAndChecksums[i].Item1} in {curDir}";
 
                 // time is written in mdu

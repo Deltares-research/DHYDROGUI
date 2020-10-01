@@ -14,16 +14,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
     [TestFixture]
     public class DelftIniFileMigrateBehaviourTest
     {
-        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
-        {
-            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
-        }
-
         [Test]
         public void Constructor_ExpectedBehaviour()
         {
@@ -37,22 +27,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(behaviour, Is.InstanceOf<IMigrationBehaviour>());
         }
 
-        private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
-        {
-            var migrator = Substitute.For<IDelftIniMigrator>();
-
-            yield return new TestCaseData(null, ".", ".", migrator, "expectedKey");
-            yield return new TestCaseData("key", null, ".", migrator, "relativeDirectory");
-            yield return new TestCaseData("key", ".", null, migrator, "goalDirectory");
-            yield return new TestCaseData("key", ".", ".", null, "migrator");
-        }
-
         [Test]
         [TestCaseSource(nameof(Constructor_ParameterNull_Data))]
-        public void Constructor_ParameterNull_ThrowsArgumentNullException(string key, 
-                                                                          string relativeDirectory, 
-                                                                          string goalDirectory, 
-                                                                          IDelftIniMigrator migrator, 
+        public void Constructor_ParameterNull_ThrowsArgumentNullException(string key,
+                                                                          string relativeDirectory,
+                                                                          string goalDirectory,
+                                                                          IDelftIniMigrator migrator,
                                                                           string expectedParameter)
         {
             void Call() => new DelftIniFileMigrateBehaviour(key, relativeDirectory, goalDirectory, migrator);
@@ -86,9 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
             var property = new DelftIniProperty(key, value, comment);
 
-            var behaviour = new DelftIniFileMigrateBehaviour("notKey", 
-                                                             ".", 
-                                                             ".", 
+            var behaviour = new DelftIniFileMigrateBehaviour("notKey",
+                                                             ".",
+                                                             ".",
                                                              migrator);
 
             // Call
@@ -109,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var migrator = Substitute.For<IDelftIniMigrator>();
-            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
+            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()),
                                  Arg.Any<string>(),
                                  Arg.Any<string>(),
                                  Arg.Any<ILogHandler>());
@@ -135,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
                                                                  Path.Combine(tempDir.Path, subDirectory),
-                                                                 goalDir, 
+                                                                 goalDir,
                                                                  migrator);
 
                 // Call 
@@ -147,9 +127,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 Assert.That(property.Value, Is.EqualTo(fileName));
 
                 migrator.Received(1).MigrateFile(Arg.Any<Stream>(),
-                                                 oldPath, 
-                                                 expectedPath, 
-                                                 Arg.Any<ILogHandler>() );
+                                                 oldPath,
+                                                 expectedPath,
+                                                 Arg.Any<ILogHandler>());
 
                 VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
             }
@@ -162,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var migrator = Substitute.For<IDelftIniMigrator>();
-            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
+            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()),
                                  Arg.Any<string>(),
                                  Arg.Any<string>(),
                                  Arg.Any<ILogHandler>());
@@ -189,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
                                                                  Path.Combine(tempDir.Path, subDirectory),
-                                                                 goalDir, 
+                                                                 goalDir,
                                                                  migrator);
 
                 // Call 
@@ -201,14 +181,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 Assert.That(property.Value, Is.EqualTo(fileName));
 
                 migrator.Received(1).MigrateFile(Arg.Any<Stream>(),
-                                                 absolutePath, 
-                                                 expectedPath, 
-                                                 Arg.Any<ILogHandler>() );
+                                                 absolutePath,
+                                                 expectedPath,
+                                                 Arg.Any<ILogHandler>());
 
                 VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
             }
         }
-
 
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -218,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var logHandler = Substitute.For<ILogHandler>();
             var migrator = Substitute.For<IDelftIniMigrator>();
 
-            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
+            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()),
                                  Arg.Any<string>(),
                                  Arg.Any<string>(),
                                  Arg.Any<ILogHandler>());
@@ -237,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
                                                                  tempDir.Path,
-                                                                 goalDir, 
+                                                                 goalDir,
                                                                  migrator);
 
                 // Call 
@@ -277,6 +256,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(property.Comment, Is.EqualTo(comment));
 
             VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+        }
+
+        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
+        {
+            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
+            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
+        }
+
+        private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
+        {
+            var migrator = Substitute.For<IDelftIniMigrator>();
+
+            yield return new TestCaseData(null, ".", ".", migrator, "expectedKey");
+            yield return new TestCaseData("key", null, ".", migrator, "relativeDirectory");
+            yield return new TestCaseData("key", ".", null, migrator, "goalDirectory");
+            yield return new TestCaseData("key", ".", ".", null, "migrator");
         }
     }
 }

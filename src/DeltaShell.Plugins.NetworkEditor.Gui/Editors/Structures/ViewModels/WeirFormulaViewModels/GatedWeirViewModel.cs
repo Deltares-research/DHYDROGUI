@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// <see cref="GatedWeirViewModel"/> provides the view model for the
     /// <see cref="Views.WeirFormulaViews.GatedWeirView"/>.
     /// </summary>
-    /// <seealso cref="WeirViewModel" />
+    /// <seealso cref="WeirViewModel"/>
     [Description("Simple Gate")]
     public sealed class GatedWeirViewModel : WeirViewModel
     {

@@ -5,7 +5,6 @@ using System.Text;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
-using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
 
 namespace DeltaShell.NGHS.Common.Tests.IO.Restart
 {
@@ -257,7 +256,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
 
 
 
-        private IEnumerable<TestCaseData> GetPathTestCases()
+        private static IEnumerable<TestCaseData> GetPathTestCases()
         {
             yield return new TestCaseData(null, null, string.Empty, true);
             yield return new TestCaseData("path/to/the.file", "path/to/the.file", "the.file", false);

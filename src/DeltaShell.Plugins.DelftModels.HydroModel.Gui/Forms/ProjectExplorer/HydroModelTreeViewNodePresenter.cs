@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
         /// </summary>
         /// <param name="nodeData">The hydro model contained in the node.</param>
         /// <returns>
-        ///   <c>true</c> if this instance can remove the specified hydro model; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance can remove the specified hydro model; otherwise, <c>false</c>.
         /// </returns>
         protected override bool CanRemove(HydroModel nodeData)
         {

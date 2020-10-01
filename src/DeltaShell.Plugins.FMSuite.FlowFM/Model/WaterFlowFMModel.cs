@@ -312,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
             else
             {
-                DataItems.Add(new DataItem(coverage, name) { Role = DataItemRole.Input });
+                DataItems.Add(new DataItem(coverage, name) {Role = DataItemRole.Input});
             }
         }
 
@@ -853,10 +853,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                     var newOperation = new AddSamplesOperation(false) {Name = spatialOperationValueConverter.SpatialOperationSet.Name};
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
-                                              new PointCloudFeatureProvider
-                                              {
-                                                  PointCloud = coverage.ToPointCloud(0, true)
-                                              });
+                                              new PointCloudFeatureProvider {PointCloud = coverage.ToPointCloud(0, true)});
 
                     spatialOperationsLookupTable.Add(dataItem.Name, new[]
                     {

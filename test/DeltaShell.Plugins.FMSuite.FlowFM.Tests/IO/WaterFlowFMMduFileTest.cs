@@ -680,7 +680,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(saveDirectory);
             }
         }
-        
+
         [Test]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462. Only slashSeparated is failing for now.
         [TestCase("HydroAreaCollection\\FlowFM.mdu", 2)]
@@ -1210,7 +1210,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var fixedWeir = new FixedWeir
                 {
                     GroupName = fixedWeirGroupName,
-                    Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 100)})
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(0, 100)
+                    })
                 };
                 area.FixedWeirs.Add(fixedWeir);
                 area.ThinDams.Add(new ThinDam2D
@@ -1269,7 +1273,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var fixedWeir = new FixedWeir
                 {
                     GroupName = fixedWeirGroupName,
-                    Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 100)})
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(0, 100)
+                    })
                 };
                 area.FixedWeirs.Add(fixedWeir);
                 area.ThinDams.Add(new ThinDam2D

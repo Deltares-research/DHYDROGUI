@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
     [SetUpFixture]
     public class TestClassSetup
     {
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDownWPFGuiAndWorkerThread()
         {
             // Ensure shut down of background thread to ensure no COM erros are thrown.

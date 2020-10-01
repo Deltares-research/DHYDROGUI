@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
     [TestFixture]
     public class StructureViewModelTest
     {
-        public IEnumerable<TestCaseData> GetConstructorData()
+        public static IEnumerable<TestCaseData> GetConstructorData()
         {
             var simpleWeirFormula = new SimpleWeirFormula();
             var simpleWeir = new Weir2D {WeirFormula = simpleWeirFormula};
@@ -75,10 +75,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             }
         }
 
-        public IEnumerable<TestCaseData> GetFormulaTypeData()
+        public static IEnumerable<TestCaseData> GetFormulaTypeData()
         {
-            var simpleWeir = new Weir2D() {WeirFormula = new SimpleWeirFormula()};
-            var gatedWeir = new Weir2D() {WeirFormula = new GatedWeirFormula(true)};
+            var simpleWeir = new Weir2D {WeirFormula = new SimpleWeirFormula()};
+            var gatedWeir = new Weir2D {WeirFormula = new GatedWeirFormula(true)};
 
             yield return new TestCaseData(gatedWeir,  typeof(SimpleWeirViewModel),       typeof(SimpleWeirFormula));
             yield return new TestCaseData(simpleWeir, typeof(GatedWeirViewModel),        typeof(GatedWeirFormula));
@@ -118,15 +118,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             }
         }
 
-        public IEnumerable<TestCaseData> GetFormulaTypeNoChangeData()
+        public static IEnumerable<TestCaseData> GetFormulaTypeNoChangeData()
         {
-            var simpleWeir = new Weir2D() {WeirFormula = new SimpleWeirFormula()};
+            var simpleWeir = new Weir2D {WeirFormula = new SimpleWeirFormula()};
             yield return new TestCaseData(simpleWeir,  typeof(SimpleWeirViewModel), typeof(SimpleWeirFormula));
 
-            var gatedWeir = new Weir2D() {WeirFormula = new GatedWeirFormula(true)};
+            var gatedWeir = new Weir2D {WeirFormula = new GatedWeirFormula(true)};
             yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel), typeof(GatedWeirFormula));
 
-            var generalStructure = new Weir2D() {WeirFormula = new GeneralStructureWeirFormula()};
+            var generalStructure = new Weir2D {WeirFormula = new GeneralStructureWeirFormula()};
             yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel), typeof(GeneralStructureWeirFormula));
         }
 

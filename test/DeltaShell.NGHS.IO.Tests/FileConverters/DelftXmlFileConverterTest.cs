@@ -50,18 +50,18 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Reader cannot be null")]
         public void NoFileShouldThrowException()
         {
-            DelftXmlFileConverter.Convert<dimrXML>(null, new List<string>());
+            Assert.That(() => DelftXmlFileConverter.Convert<dimrXML>(null, new List<string>()), 
+                        Throws.ArgumentException.With.Message.EqualTo("Reader cannot be null"));
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Unsupported Features cannot be null")]
         public void NoUnsupportedFeaturesShouldThrowException()
         {
             var xmlReader = MockRepository.GenerateStrictMock<StreamReader>();
-            DelftXmlFileConverter.Convert<dimrXML>(xmlReader, null);
+            Assert.That(() => DelftXmlFileConverter.Convert<dimrXML>(xmlReader, null), 
+                        Throws.ArgumentException.With.Message.EqualTo("Unsupported Features cannot be null"));
         }
 
         [Test]

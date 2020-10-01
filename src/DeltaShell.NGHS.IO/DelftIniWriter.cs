@@ -7,10 +7,11 @@ namespace DeltaShell.NGHS.IO
     /// <see cref="DelftIniWriter"/> implements the interface with which to write delft .ini
     /// files given a set of <see cref="DelftIniCategory"/>.
     /// </summary>
-    /// <seealso cref="NGHSFileBase" />
+    /// <seealso cref="NGHSFileBase"/>
     public class DelftIniWriter : NGHSFileBase, IDelftIniWriter
     {
-        /// <inheritdoc cref="IDelftIniWriter"/>>
+        /// <inheritdoc cref="IDelftIniWriter"/>
+        /// >
         public virtual void WriteDelftIniFile(IEnumerable<DelftIniCategory> categories, string iniFile, bool writeComment = true)
         {
             OpenOutputFile(iniFile);

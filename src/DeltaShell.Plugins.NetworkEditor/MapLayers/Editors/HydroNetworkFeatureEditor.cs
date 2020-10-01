@@ -114,12 +114,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             var vectorLayer = layer as VectorLayer;
             VectorStyle vectorStyle = vectorLayer != null ? vectorLayer.Style : null;
 
-            
             if (feature is ICompositeBranchStructure)
             {
                 featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
             }
-           else if (feature is INode)
+            else if (feature is INode)
             {
                 featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
             }

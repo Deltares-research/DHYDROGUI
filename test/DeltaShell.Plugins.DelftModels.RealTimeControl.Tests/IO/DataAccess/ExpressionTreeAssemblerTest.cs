@@ -119,8 +119,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                                                                                     Operator opp,
                                                                                     string yValue)
         {
-            string param1 = $"{id}_Param1";
-            string param2 = $"{id}_Param2";
+            var param1 = $"{id}_Param1";
+            var param2 = $"{id}_Param2";
 
             var expressionObject = new ExpressionObject(id,
                                                         opp,
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
 
         private static Tuple<ExpressionObject[], ExpressionTree[]> GetTwoLeavesData(string groupName, string postFix)
         {
-            string id = $"[{groupName}]twoLeavesOneBranch_{postFix}";
+            var id = $"[{groupName}]twoLeavesOneBranch_{postFix}";
             const Operator opp = Operator.Add;
 
             Tuple<ExpressionObject, BranchNode> results = ConstructBranchNodeItems(id, groupName, opp, id);
@@ -180,13 +180,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
 
         private static Tuple<ExpressionObject[], ExpressionTree[]> GetOneLeafData(string groupName, string postFix)
         {
-            string idBottom = $"[{groupName}]oneLeafOneBranch_{postFix}";
+            var idBottom = $"[{groupName}]oneLeafOneBranch_{postFix}";
             const Operator opp = Operator.Add;
 
             Tuple<ExpressionObject, BranchNode> results = ConstructBranchNodeItems(idBottom, groupName, opp, idBottom);
 
-            string idTop = $"[{groupName}]parentBranch{postFix}";
-            string parentLeafParam = $"[{groupName}]parentLeaf{postFix}";
+            var idTop = $"[{groupName}]parentBranch{postFix}";
+            var parentLeafParam = $"[{groupName}]parentLeaf{postFix}";
 
             var rootBranch = new BranchNode(Operator.Multiply, idTop)
             {
@@ -230,15 +230,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
 
         private static Tuple<ExpressionObject[], ExpressionTree[]> GetTwoBranchData(string groupName, string postFix)
         {
-            string idBottom1 = $"[{groupName}]twoLeavesOneBranch1_{postFix}";
+            var idBottom1 = $"[{groupName}]twoLeavesOneBranch1_{postFix}";
             const Operator opp = Operator.Add;
 
             Tuple<ExpressionObject, BranchNode> results1 = ConstructBranchNodeItems(idBottom1, groupName, opp, idBottom1);
 
-            string idBottom2 = $"[{groupName}]twoLeavesOneBranch2_{postFix}";
+            var idBottom2 = $"[{groupName}]twoLeavesOneBranch2_{postFix}";
             Tuple<ExpressionObject, BranchNode> results2 = ConstructBranchNodeItems(idBottom2, groupName, opp, idBottom2);
 
-            string idTop = $"[{groupName}]ParentBranch_{postFix}";
+            var idTop = $"[{groupName}]ParentBranch_{postFix}";
             var rootBranch = new BranchNode(Operator.Multiply, idTop)
             {
                 FirstNode = results1.Item2,
@@ -285,12 +285,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             const string groupName = "groupName";
             const string postFix = "1";
 
-            string idBottom1 = $"[{groupName}]twoLeavesOneBranch1_{postFix}";
-            string idBottom2 = $"[{groupName}]twoLeavesOneBranch2_{postFix}";
+            var idBottom1 = $"[{groupName}]twoLeavesOneBranch1_{postFix}";
+            var idBottom2 = $"[{groupName}]twoLeavesOneBranch2_{postFix}";
 
             const Operator opp = Operator.Add;
 
-            string idTop = $"[{groupName}]ParentBranch_{postFix}";
+            var idTop = $"[{groupName}]ParentBranch_{postFix}";
             var rootBranch = new BranchNode(opp, idTop)
             {
                 FirstNode = new ParameterLeafNode(idBottom1),

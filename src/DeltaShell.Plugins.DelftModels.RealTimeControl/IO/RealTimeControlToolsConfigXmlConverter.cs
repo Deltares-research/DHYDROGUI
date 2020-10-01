@@ -5,6 +5,7 @@ using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
+using ExpressionObjectGroup = System.Collections.Generic.List<DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess.ExpressionObject>;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
@@ -100,7 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 }
             }
 
-            if (expressionGroup.ExpressionObjects.Any())
+            if (expressionGroup.Any())
             {
                 expressionGroups.Add(expressionGroup);
             }
@@ -114,8 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
             foreach (ExpressionObjectGroup expressionGroup in expressionGroups)
             {
-                IEnumerable<IGrouping<string, ExpressionObject>> expressionsGroupedByControlGroup =
-                    expressionGroup.ExpressionObjects.GroupBy(e => e.ControlGroupName);
+                IEnumerable<IGrouping<string, ExpressionObject>> expressionsGroupedByControlGroup = expressionGroup.GroupBy(e => e.ControlGroupName);
 
                 foreach (IGrouping<string, ExpressionObject> group in expressionsGroupedByControlGroup)
                 {

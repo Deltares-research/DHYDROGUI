@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
@@ -28,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// <param name="snappingCalculatorProvider">The snapping calculator provider.</param>
         /// <param name="factoryHelper">The factory helper.</param>
         /// <param name="nameProvider">The unique boundary name provider.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any argument is <c>null</c>.
         /// </exception>
         public WaveBoundaryFactory(IBoundarySnappingCalculatorProvider snappingCalculatorProvider,

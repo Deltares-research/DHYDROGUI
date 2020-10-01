@@ -23,7 +23,6 @@ using Rhino.Mocks;
 using SharpMapTestUtils;
 using SharpTestsEx;
 using Arg = NSubstitute.Arg;
-using File = System.IO.File;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
@@ -429,7 +428,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(hydroModelWorkFlow3.Data, hydroModelWorkFlowData3);
             Assert.AreEqual(hydroModelWorkFlow4.Data, hydroModelWorkFlowData4);
         }
-        
+
         [Test]
         public void GivenAHydroModelWithIDimrModel_WhenFinishIsCalled_ThenAfterSuccessfulIntegratedModelRunActionsShouldBeCalled()
         {
@@ -437,7 +436,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var hydroModel = new HydroModel())
             {
                 var activity = Substitute.For<IDimrModel>();
-                var workflow = new SequentialActivity { Activities = { activity } };
+                var workflow = new SequentialActivity {Activities = {activity}};
                 hydroModel.CurrentWorkflow = workflow;
 
                 // When 
@@ -470,13 +469,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     fs.Write(info, 0, info.Length);
                 }
 
-                var activity = new WaterFlowFMModel
-                {
-                    Grid = UnstructuredGridTestHelper.GenerateRegularGrid(20, 20, 20, 20)
-                };
+                var activity = new WaterFlowFMModel {Grid = UnstructuredGridTestHelper.GenerateRegularGrid(20, 20, 20, 20)};
                 activity.CacheFile.UpdatePathToMduLocation(mduFilePath);
-                
-                var workflow = new SequentialActivity { Activities = { activity } };
+
+                var workflow = new SequentialActivity {Activities = {activity}};
                 hydroModel.CurrentWorkflow = workflow;
 
                 // When 
@@ -484,13 +480,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 // Then
                 Assert.AreEqual(cacheFilePath, activity.CacheFile.Path);
-                Assert.IsTrue(File.Exists(Path.Combine(hydroModel.WorkingDirectoryPath, activity.DirectoryName, activity.Name+".cache")));
+                Assert.IsTrue(File.Exists(Path.Combine(hydroModel.WorkingDirectoryPath, activity.DirectoryName, activity.Name + ".cache")));
             }
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-
         public void GivenAHydroModelWithFMModelAfterSuccessFulRun_WhenFinishIsCalled_ThenTheCacheFilePathOfTheFMShouldReferToTheOneInWorkingDirectory()
         {
             // Given
@@ -498,12 +493,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 var activity = new WaterFlowFMModel();
                 string testTempDirectory = Path.GetTempPath();
-                string nonExistingMduFilePath = Path.Combine(testTempDirectory, "SaveLocation", activity.Name+".mdu");
+                string nonExistingMduFilePath = Path.Combine(testTempDirectory, "SaveLocation", activity.Name + ".mdu");
                 activity.CacheFile.UpdatePathToMduLocation(nonExistingMduFilePath);
 
                 hydroModel.WorkingDirectoryPathFunc = () => testTempDirectory;
-                
-                var workflow = new SequentialActivity { Activities = { activity } };
+
+                var workflow = new SequentialActivity {Activities = {activity}};
                 hydroModel.CurrentWorkflow = workflow;
 
                 // When 
@@ -611,17 +606,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     hydroModel.Activities.Add(activity);
                     hydroModel.CurrentWorkflow = workflow;
-                    
+
                     // Act
                     hydroModel.Cleanup();
 
                     // Assert
                     activity.Received(1).ConnectOutput(hydroModel.WorkingDirectoryPath);
-                    Assert.AreEqual(text, ((TextDocument)hydroModel.DataItems.First(di => di.Tag == "DimrRunLog").Value).Content);
-
+                    Assert.AreEqual(text, ((TextDocument) hydroModel.DataItems.First(di => di.Tag == "DimrRunLog").Value).Content);
                 }
             }
         }
+
         [Test]
         [Category(TestCategory.Integration)]
         public void GivenHydroModel_WhenChangeCurrentWorkflow_ThenUpdatesRunsInIntegratedModelProperties()
@@ -630,8 +625,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             IActivity firstDummyActivity = Substitute.For<IActivity, IDimrModel>();
             IActivity secondDummyActivity = Substitute.For<IActivity, IDimrModel>();
 
-            var firstWorkflow = new SequentialActivity { Activities = { firstDummyActivity } };
-            var lastWorkflow = new SequentialActivity { Activities = { secondDummyActivity } };
+            var firstWorkflow = new SequentialActivity {Activities = {firstDummyActivity}};
+            var lastWorkflow = new SequentialActivity {Activities = {secondDummyActivity}};
 
             using (var hydroModel = new HydroModel())
             {
@@ -640,16 +635,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 hydroModel.CurrentWorkflow = firstWorkflow;
 
                 // 2. Verify initial expectations.
-                Assert.That(((IDimrModel)firstDummyActivity).RunsInIntegratedModel, Is.True);
-                Assert.That(((IDimrModel)secondDummyActivity).RunsInIntegratedModel, Is.False);
+                Assert.That(((IDimrModel) firstDummyActivity).RunsInIntegratedModel, Is.True);
+                Assert.That(((IDimrModel) secondDummyActivity).RunsInIntegratedModel, Is.False);
 
                 // 3. Run test.
                 TestDelegate testAction = () => hydroModel.CurrentWorkflow = lastWorkflow;
 
                 // 4. Verify final expectations.
                 Assert.That(testAction, Throws.Nothing);
-                Assert.That(((IDimrModel)firstDummyActivity).RunsInIntegratedModel, Is.False);
-                Assert.That(((IDimrModel)secondDummyActivity).RunsInIntegratedModel, Is.True);
+                Assert.That(((IDimrModel) firstDummyActivity).RunsInIntegratedModel, Is.False);
+                Assert.That(((IDimrModel) secondDummyActivity).RunsInIntegratedModel, Is.True);
             }
         }
 
@@ -675,7 +670,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var hydroModel = new HydroModel();
 
             // Act, Assert
-            Assert.AreEqual(DefaultModelSettings.DefaultDeltaShellWorkingDirectory, 
+            Assert.AreEqual(DefaultModelSettings.DefaultDeltaShellWorkingDirectory,
                             hydroModel.WorkingDirectoryPathFunc());
         }
 
@@ -701,6 +696,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             public string Description { get; }
 
+            public string FileFilter { get; }
+
+            public Bitmap Icon { get; }
+
             public bool Export(object item, string path)
             {
                 using (FileStream fs = File.Create(path))
@@ -721,10 +720,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 throw new NotImplementedException();
             }
-
-            public string FileFilter { get; }
-
-            public Bitmap Icon { get; }
         }
 
         private class TimeDepModel : TimeDependentModelBase

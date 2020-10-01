@@ -34,17 +34,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Item not set")]
         public void GivenAnWaterFlowFMFileExporter_WhenExportIsCalledWithANullItem_ThenAnExceptionIsThrown()
         {
-            exporter.Export(null, Arg<string>.Is.Anything);
+            Assert.That(() => exporter.Export(null, Arg<string>.Is.Anything), Throws.Exception.With.Message.EqualTo("Item not set"));
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Unexpected object type: System.Object")]
         public void GivenAnWaterFlowFMFileExporterAndANotWaterFlowFMModelItem_WhenExportIsCalled_ThenAnExceptionIsThrown()
         {
-            exporter.Export(new object(), Arg<string>.Is.Anything);
+            Assert.That(() => exporter.Export(new object(), Arg<string>.Is.Anything), Throws.Exception.With.Message.EqualTo("Unexpected object type: System.Object"));
         }
 
         [Test]

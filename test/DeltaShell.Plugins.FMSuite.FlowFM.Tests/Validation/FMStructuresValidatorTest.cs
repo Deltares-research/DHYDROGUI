@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue =
+            var expectedIssue =
                 $"'{weir.Name}': crest level time series does not contain any values.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue =
+            var expectedIssue =
                 $"'{weir.Name}': crest level time series does not span the model run interval.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue =
+            var expectedIssue =
                 $"'{weir.Name}': lateral contraction coefficient must be greater than or equal to zero.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue = $"'{weir.Name}': door height must be greater than or equal to 0.";
+            var expectedIssue = $"'{weir.Name}': door height must be greater than or equal to 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue =
+            var expectedIssue =
                 $"'{weir.Name}': opening width time series values must be greater than or equal to 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue = $"'{weir.Name}': opening width time series does not span the model run interval.";
+            var expectedIssue = $"'{weir.Name}': opening width time series does not span the model run interval.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue = $"'{weir.Name}': opening width time series does not contain any values.";
+            var expectedIssue = $"'{weir.Name}': opening width time series does not contain any values.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue = $"'{weir.Name}': opening width must be greater than or equal to 0.";
+            var expectedIssue = $"'{weir.Name}': opening width must be greater than or equal to 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue = $"'{weir.Name}': lower edge level time series does not span the model run interval.";
+            var expectedIssue = $"'{weir.Name}': lower edge level time series does not span the model run interval.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -296,7 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue = $"'{weir.Name}': lower edge level time series does not contain any values.";
+            var expectedIssue = $"'{weir.Name}': lower edge level time series does not contain any values.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -321,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue = $"Crest Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
+            var expectedIssue = $"Crest Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -352,7 +352,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue = $"'{weir.Name}': only symmetric horizontal door opening direction is supported for general structures.";
+            var expectedIssue = $"'{weir.Name}': only symmetric horizontal door opening direction is supported for general structures.";
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
             Assert.That(numberOfMessages, Is.EqualTo(1));
@@ -382,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue =
+            var expectedIssue =
                 $"Upstream 2 Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
@@ -414,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue =
+            var expectedIssue =
                 $"Upstream 1 Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
@@ -446,7 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue =
+            var expectedIssue =
                 $"Downstream 1 Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
@@ -478,7 +478,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            string expectedIssue =
+            var expectedIssue =
                 $"Downstream 2 Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));

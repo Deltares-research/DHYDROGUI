@@ -804,24 +804,62 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             public static void GivenNullSourceShapeExceptionIsThrown()
             {
                 InputItemShape sourceShape = null;
-                ConditionShape targetShape = new ConditionShape();
+                var targetShape = new ConditionShape();
                 Assert.Throws<ArgumentNullException>(
-                    () => ShapeConnectionsRulesController.
-                        IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
-                                                                            targetShape,
-                                                                            targetBottomConnectorType));
+                    () => ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
+                                                                                                              targetShape,
+                                                                                                              targetBottomConnectorType));
             }
 
             [Test]
             public static void GivenNullTargetShapeExceptionIsThrown()
             {
                 InputItemShape targetShape = null;
-                ConditionShape sourceShape = new ConditionShape();
+                var sourceShape = new ConditionShape();
                 Assert.Throws<ArgumentNullException>(
-                    () => ShapeConnectionsRulesController.
-                        IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
-                                                                            targetShape,
-                                                                            targetBottomConnectorType));
+                    () => ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
+                                                                                                              targetShape,
+                                                                                                              targetBottomConnectorType));
+            }
+
+            [Test]
+            [TestCaseSource(nameof(GetInputCompatibleConnectionsTestCaseData))]
+            public static void GivenInputShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
+            {
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
+            }
+
+            [Test]
+            [TestCaseSource(nameof(GetConditionShapeCompatibleConnectionsTestCaseData))]
+            public static void GivenConditionShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
+            {
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
+            }
+
+            [Test]
+            [TestCaseSource(nameof(GetSignalShapeCompatibleConnectionsTestCaseData))]
+            public static void GivenSignalShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
+            {
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
+            }
+
+            [Test]
+            [TestCaseSource(nameof(GetRuleShapeCompatibleConnectionsTestCaseData))]
+            public static void GivenRuleShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
+            {
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
+            }
+
+            [Test]
+            [TestCaseSource(nameof(GetMathematicalExpressionShapeCompatibleConnectionsTestCaseData))]
+            public static void GivenMathematicalExpressionShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
+            {
+                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
+                Assert.That(result, Is.EqualTo(isCompatible));
             }
 
             private static IEnumerable<TestCaseData> GetInputCompatibleConnectionsTestCaseData()
@@ -987,47 +1025,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Top, false);
                 yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Left, true);
                 yield return new TestCaseData(new RuleShape(), new OutputItemShape(), ConnectorType.Right, false);
-            }
-
-
-            [Test]
-            [TestCaseSource(nameof(GetInputCompatibleConnectionsTestCaseData))]
-            public static void GivenInputShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
-            {
-                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
-                Assert.That(result, Is.EqualTo(isCompatible));
-            }
-
-            [Test]
-            [TestCaseSource(nameof(GetConditionShapeCompatibleConnectionsTestCaseData))]
-            public static void GivenConditionShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
-            {
-                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
-                Assert.That(result, Is.EqualTo(isCompatible));
-            }
-
-            [Test]
-            [TestCaseSource(nameof(GetSignalShapeCompatibleConnectionsTestCaseData))]
-            public static void GivenSignalShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
-            {
-                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
-                Assert.That(result, Is.EqualTo(isCompatible));
-            }
-
-            [Test]
-            [TestCaseSource(nameof(GetRuleShapeCompatibleConnectionsTestCaseData))]
-            public static void GivenRuleShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
-            {
-                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
-                Assert.That(result, Is.EqualTo(isCompatible));
-            }
-
-            [Test]
-            [TestCaseSource(nameof(GetMathematicalExpressionShapeCompatibleConnectionsTestCaseData))]
-            public static void GivenMathematicalExpressionShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
-            {
-                bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, connectorType);
-                Assert.That(result, Is.EqualTo(isCompatible));
             }
         }
 

@@ -216,12 +216,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
         }
 
-        private IEnumerable<Func<string, IList<FixedWeir>>> GetFixedWeirReadFunctions()
+        private static IEnumerable<Func<string, IList<FixedWeir>>> GetFixedWeirReadFunctions()
         {
             return GetReadFunctions<FixedWeir>();
         }
 
-        private IEnumerable<Func<string, IList<Feature2D>>> GetFeature2DReadFunctions()
+        private static IEnumerable<Func<string, IList<Feature2D>>> GetFeature2DReadFunctions()
         {
             return GetReadFunctions<Feature2D>();
         }

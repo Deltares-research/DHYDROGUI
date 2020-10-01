@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
@@ -14,13 +15,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         {
             // Setup
             var formula = new GatedWeirFormula(true);
-            var weir = new Weir2D { WeirFormula = formula };
+            var weir = new Weir2D {WeirFormula = formula};
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
             {
                 // Call
-                var viewModel = 
-                    new GatedWeirViewModel(formula, 
+                var viewModel =
+                    new GatedWeirViewModel(formula,
                                            weirPropertiesViewModel);
 
                 // Assert
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 // Call | Assert
                 void Call() => new GatedWeirViewModel(null, weirPropertiesViewModel);
 
-                var exception = Assert.Throws<System.ArgumentNullException>(Call);
+                var exception = Assert.Throws<ArgumentNullException>(Call);
                 Assert.That(exception.ParamName, Is.EqualTo("formula"));
             }
         }
@@ -53,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new GatedWeirFormula(true);
             void Call() => new GatedWeirViewModel(formula, null);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("weirPropertiesViewModel"));
         }
     }

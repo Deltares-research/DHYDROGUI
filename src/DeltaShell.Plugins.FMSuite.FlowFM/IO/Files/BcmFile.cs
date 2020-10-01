@@ -81,14 +81,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        protected override List<string> SupportedProcesses
-        {
-            get
-            {
-                return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct()
-                                         .ToList();
-            }
-        }
+        protected override List<string> SupportedProcesses => supportedProcesses.Select(FlowBoundaryCondition.GetProcessNameForQuantity).Distinct()
+                                                                                .ToList();
 
         protected override void WriteBlock(BcBlockData block)
         {
@@ -100,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             var startDateTime = new DateTime();
             blocknr++;
-            WriteKeyValuePairLine(BlockKey, WriteBetweenCommas(string.Format("Boundary Section : {0}", blocknr)));
+            WriteKeyValuePairLine(BlockKey, WriteBetweenCommas($"Boundary Section : {blocknr}"));
             WriteKeyValuePairLine(LocationKey, WriteBetweenCommas(bcmBlock.Location));
             WriteKeyValuePairLine(ContentsKey, WriteBetweenCommas("Uniform"));
             WriteKeyValuePairLine(TimeFunctionKey, WriteBetweenCommas("non-equidistant"));
@@ -113,8 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (bcmBlock.Quantities != null && bcmBlock.Quantities.Count > 0)
             {
                 //Extract start time reference.
-                var bcmBlockQuantity = bcmBlock.Quantities[0] as BcmQuantityData;
-                if (bcmBlockQuantity == null)
+                if (!(bcmBlock.Quantities[0] is BcmQuantityData bcmBlockQuantity))
                 {
                     return;
                 }
@@ -179,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                       {
                                                           ' '
                                                       }, StringSplitOptions.RemoveEmptyEntries) // Split the item
-                                                      : new string[]
+                                                      : new[]
                                                       {
                                                           element
                                                       }) // Keep the entire item
@@ -197,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             WriteKeyValuePairLine(ParameterKey, valueString);
         }
 
-        private string WriteBetweenCommas(string value)
+        private static string WriteBetweenCommas(string value)
         {
             return "\'" + value + "\'";
         }
@@ -231,42 +224,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private DateTime StringDateToDateTime(string value, string format)
         {
-            var date = new DateTime();
             try
             {
-                date = DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
+                return DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                log.Error(
-                    "Could not load the reference time correctly, check the format. Using Now as a time reference instead.");
-                date = DateTime.Now;
+                log.Error("Could not load the reference time correctly, check the format. Using Now as a time reference instead.");
+                return DateTime.Now;
             }
-
-            return date;
         }
 
         private BcmBlockData ReadDataBlock(out string line, string blockName)
         {
-            string blockValue = blockName; //supportPointName
             string contentsValue = null;
-            string verticalProfileDefinition = null;
             string locationValue = blockName;
-            var timeFunctionValue = "timeseries"; //time-function
-            var referenceTimeValue =
-                new DateTime(); //with the timeUnitValue helps determine the time reference and time steps for each entry.
-            string timeUnitValue = null;
-            string interpolationValue = null; //timeInterpolationType
-            string parameterValue = null;
-            string recordsInTableValues = null;
-            string unitValue = null;
+            const string timeFunctionValue = "timeseries"; //time-function
+            var referenceTimeValue = new DateTime();       //with the timeUnitValue helps determine the time reference and time steps for each entry.
+            string interpolationValue = null;              //timeInterpolationType
 
-            var parameterCount = 0;
             var quantityDataList = new List<BcQuantityData>();
-
-            BcmQuantityData quantityData = null;
-
-            int lineNumber = LineNumber;
 
             line = GetNextLine();
 
@@ -280,8 +257,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 if (split[0] == ParameterKey)
                 {
-                    parameterValue = split[1];
-                    quantityData = new BcmQuantityData
+                    string parameterValue = split[1];
+                    var quantityData = new BcmQuantityData
                     {
                         QuantityName = parameterValue,
                         ReferenceTime = referenceTimeValue.ToString("yyyyMMdd")
@@ -309,46 +286,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     referenceTimeValue = StringDateToDateTime(split[1], "yyyyMMdd");
                 }
 
-                if (split[0] == TimeUnitKey)
+                if (split[0] == RecordsInTableKey && split.Length == 2)
                 {
-                    timeUnitValue = split[1];
-                }
-
-                if (split[0] == RecordsInTableKey)
-                {
-                    if (split.Length == 2)
+                    int parameterCount = quantityDataList.Count;
+                    int.TryParse(split[1], out int recordNumber);
+                    //Read number of records
+                    while (recordNumber > 0)
                     {
-                        parameterCount = quantityDataList.Count;
-                        var recordNumber = 0;
-                        int.TryParse(split[1], out recordNumber);
-                        //Read number of records
-                        while (recordNumber > 0)
+                        line = GetNextLine();
+                        if (line == null)
                         {
-                            line = GetNextLine();
-                            if (line == null)
-                            {
-                                break;
-                            }
+                            break;
+                        }
 
-                            recordNumber -= 1;
+                        recordNumber -= 1;
 
-                            string[] columns = SplitString(line);
-                            if (columns.Length < parameterCount)
+                        string[] columns = SplitString(line);
+                        if (columns.Length < parameterCount)
+                        {
+                            log.WarnFormat("Omitting line {0} with less than {1} columns", LineNumber,
+                                           parameterCount);
+                        }
+                        else if (columns.Length > parameterCount)
+                        {
+                            log.WarnFormat("Omitting line {0} with more than {1} columns", LineNumber,
+                                           parameterCount);
+                        }
+                        else
+                        {
+                            for (var i = 0; i < parameterCount; ++i)
                             {
-                                log.WarnFormat("Omitting line {0} with less than {1} columns", LineNumber,
-                                               parameterCount);
-                            }
-                            else if (columns.Length > parameterCount)
-                            {
-                                log.WarnFormat("Omitting line {0} with more than {1} columns", LineNumber,
-                                               parameterCount);
-                            }
-                            else
-                            {
-                                for (var i = 0; i < parameterCount; ++i)
-                                {
-                                    quantityDataList[i].Values.Add(columns[i]);
-                                }
+                                quantityDataList[i].Values.Add(columns[i]);
                             }
                         }
                     }
@@ -361,23 +329,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
             }
 
-            if (blockName == null || !quantityDataList.Any()
-            ) //FunctionType cannot be null! but for now we are hardcoding it.
+            if (blockName == null || !quantityDataList.Any()) //FunctionType cannot be null! but for now we are hardcoding it.
             {
                 return null;
             }
 
-            return
-                new BcmBlockData
-                {
-                    FilePath = InputFilePath,
-                    SupportPoint = blockName,
-                    FunctionType =
-                        contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
-                    TimeInterpolationType = interpolationValue,
-                    Location = locationValue,
-                    Quantities = quantityDataList
-                };
+            return new BcmBlockData
+            {
+                FilePath = InputFilePath,
+                SupportPoint = blockName,
+                FunctionType = contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
+                TimeInterpolationType = interpolationValue,
+                Location = locationValue,
+                Quantities = quantityDataList
+            };
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Utils.Guards;
+﻿using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 
@@ -22,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         /// Creates a new <see cref="UniformDataComponent{T}"/>.
         /// </summary>
         /// <param name="data">The data of this <see cref="UniformDataComponent{T}"/>.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="data"/> is <c>null</c>.
         /// </exception>
         public UniformDataComponent(T data)
@@ -34,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         /// <summary>
         /// Gets or sets the data.
         /// </summary>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="value"/> is <c>null</c>.
         /// </exception>
         public T Data

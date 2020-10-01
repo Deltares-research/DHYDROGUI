@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
@@ -10,7 +11,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
     [TestFixture]
-    [RequiresSTA]
+    [Apartment(ApartmentState.STA)]
     [Category(TestCategory.Wpf)]
     public class SettingsTemplateSelectorTest
     {
@@ -36,10 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         public void SelectTemplate_GivenWpfGuiCategory_WithCustomControl_ReturnsTemplate()
         {
-            var item = new WpfGuiCategory("dummyCategory", null)
-            {
-                CustomControl = new UserControl()
-            };
+            var item = new WpfGuiCategory("dummyCategory", null) {CustomControl = new UserControl()};
             VerifyCall(item, "TabCustomContentTemplate");
         }
 
@@ -53,10 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         public void SelectTemplate_GivenWpfGuiSubCategory_WithCustomControl_ReturnsTemplate()
         {
-            var item = new WpfGuiSubCategory("dummySubCategory", null)
-            {
-                CustomControl = new UserControl()
-            };
+            var item = new WpfGuiSubCategory("dummySubCategory", null) {CustomControl = new UserControl()};
             VerifyCall(item, "SubCategoryCustomTemplate");
         }
 

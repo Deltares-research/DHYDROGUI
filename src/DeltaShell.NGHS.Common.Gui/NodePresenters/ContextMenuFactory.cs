@@ -25,7 +25,8 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
         /// <param name="nodePresenter">
         /// The node presenter for the <paramref name="data"/> object.
         /// </param>
-        /// <param name="node"> Tree node for the <paramref name="data"/> object.
+        /// <param name="node">
+        /// Tree node for the <paramref name="data"/> object.
         /// </param>
         /// <returns> A <see cref="ContextMenuStrip"/> object with defined functionality. </returns>
         public static ContextMenuStrip CreateMenuFor(object data, IGui gui, ITreeNodePresenter nodePresenter, ITreeNode node)
@@ -88,9 +89,8 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
             return openWithItem;
         }
 
-        private static bool HasRenameItem(ITreeNodePresenter nodePresenter, ITreeNode node) => 
+        private static bool HasRenameItem(ITreeNodePresenter nodePresenter, ITreeNode node) =>
             nodePresenter.CanRenameNode(node);
-
 
         private static ToolStripItem GetRenameItem(object data, ITreeNode node)
         {
@@ -105,13 +105,12 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
             return renameItem;
         }
 
-        private static bool HasDeleteItem(ITreeNodePresenter nodePresenter, ITreeNode node) => 
+        private static bool HasDeleteItem(ITreeNodePresenter nodePresenter, ITreeNode node) =>
             node != null && nodePresenter.CanRemove(null, node.Tag);
 
-
-        private static ToolStripItem GetDeleteItem(object data, 
-                                                       ITreeNodePresenter nodePresenter, 
-                                                       ITreeNode node)
+        private static ToolStripItem GetDeleteItem(object data,
+                                                   ITreeNodePresenter nodePresenter,
+                                                   ITreeNode node)
         {
             var deleteItem = new ClonableToolStripMenuItem
             {
@@ -138,7 +137,6 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
 
             return importItem;
         }
-
 
         private static ToolStripItem GetExportItem(object data, IGui gui)
         {

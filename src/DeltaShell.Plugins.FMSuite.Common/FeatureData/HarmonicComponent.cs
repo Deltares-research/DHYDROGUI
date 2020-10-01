@@ -247,6 +247,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             };
 
         public static readonly ReadOnlyDictionary<string, double> DefaultAstroComponentsRadPerHour = new ReadOnlyDictionary<string, double>(defaultAstroComponentsRadPerHour);
+
         // frequency in rad/h
 
         private readonly string name;

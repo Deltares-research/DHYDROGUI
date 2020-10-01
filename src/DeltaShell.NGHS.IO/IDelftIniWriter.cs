@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 
 namespace DeltaShell.NGHS.IO
@@ -16,12 +15,12 @@ namespace DeltaShell.NGHS.IO
         /// <param name="categories">Data to be written.</param>
         /// <param name="iniFile">File path to write to.</param>
         /// <param name="writeComment"></param>
-        /// <exception cref="UnauthorizedAccessException">Access is denied.</exception>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="System.UnauthorizedAccessException">Access is denied.</exception>
+        /// <exception cref="System.ArgumentException">
         /// <paramref name="iniFile"/> is an empty string ("") or contains the name of a system device
         /// (com1, com2, and so on).
         /// </exception>
-        /// <exception cref="ArgumentNullException"><paramref name="iniFile"/> is null.</exception>
+        /// <exception cref="System.ArgumentNullException"><paramref name="iniFile"/> is null.</exception>
         /// <exception cref="System.IO.DirectoryNotFoundException">
         /// The specified path is invalid (for example, it is on an unmapped drive).
         /// </exception>

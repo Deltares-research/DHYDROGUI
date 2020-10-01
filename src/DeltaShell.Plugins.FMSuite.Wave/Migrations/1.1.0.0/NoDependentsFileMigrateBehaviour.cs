@@ -7,10 +7,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// <see cref="NoDependentsFileMigrateBehaviour"/> defines the migration of a
     /// property describing a path to a file without dependents (i.e. containing references to other files).
     /// </summary>
-    /// <seealso cref="FileMigrateBehaviour" />
-    public sealed class NoDependentsFileMigrateBehaviour : FileMigrateBehaviour 
+    /// <seealso cref="FileMigrateBehaviour"/>
+    public sealed class NoDependentsFileMigrateBehaviour : FileMigrateBehaviour
     {
-
         /// <summary>
         /// Creates a new <see cref="NoDependentsFileMigrateBehaviour"/>.
         /// </summary>
@@ -22,9 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// </exception>
         public NoDependentsFileMigrateBehaviour(string expectedKey,
                                                 string relativeDirectory,
-                                                string goalDirectory) : base(expectedKey, relativeDirectory, goalDirectory)
-        {
-        }
+                                                string goalDirectory) : base(expectedKey, relativeDirectory, goalDirectory) {}
 
         protected override void HandleMigration(FileInfo filePathInfo, DelftIniProperty property)
         {

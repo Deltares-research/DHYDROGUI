@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [TestCase("Obw.zip", "Obw.dsproj", "obw_wave")]
         [TestCase("WaddenZee.zip", "wad.dsproj", "wad")]
         [TestCase("Westerscheldt.zip", "Westerscheldt.dsproj", "Waves")]
+        [TestCase("A4-Storm_wavecon.zip", "Project4.dsproj", "Waves")]
         public void GivenAPreviousModel_WhenThisModelIsOpened_ThenTheModelIsCorrectlyMigrated(string zipName, string dsprojName, string waveName)
         {
             // Given
@@ -47,9 +48,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 app.SaveProjectAs(dsprojPath);
 
                 // Then
-                var modelWaveFolder = 
+                var modelWaveFolder =
                     new DirectoryInfo(Path.Combine(temporaryDirectory.Path, "old_model", dsprojName + "_data", waveName));
-                var expectedWaveFolder = 
+                var expectedWaveFolder =
                     new DirectoryInfo(Path.Combine(temporaryDirectory.Path, "expected_dsproj_data", dsprojName + "_data", waveName));
 
                 AssertExpectedFolderStructure(modelWaveFolder, expectedWaveFolder);
@@ -99,8 +100,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 DirectoryInfo nextExpectedDirectory = expectedDirectories.Dequeue();
                 DirectoryInfo nextActualDirectory = actualDirectories.Dequeue();
 
-                Assert.That(Path.GetFileName(nextActualDirectory.Name), 
-                            Is.EqualTo(Path.GetFileName(nextExpectedDirectory.Name)), 
+                Assert.That(Path.GetFileName(nextActualDirectory.Name),
+                            Is.EqualTo(Path.GetFileName(nextExpectedDirectory.Name)),
                             $"Expected the wave model (sub) directories to be equal, but found a difference in {nextActualDirectory.Name}:");
 
                 AssertEqualFiles(nextExpectedDirectory, nextActualDirectory);

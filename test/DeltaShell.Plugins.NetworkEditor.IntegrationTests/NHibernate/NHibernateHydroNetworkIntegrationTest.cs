@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -8,16 +5,13 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
-using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.IO;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Api;
@@ -25,7 +19,6 @@ using SharpMap.Api.Enums;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 {
@@ -125,7 +118,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 }),
                 LongName = "Channel"
             };
-           
+
             network.Nodes.AddRange(new[]
             {
                 node1,
@@ -378,12 +371,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(pump.LongName, retrievedPump.LongName);
         }
 
-        
-
-        
-
-        
-
         [Test]
         public void SaveLoadWeir()
         {
@@ -486,29 +473,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
-        public void SaveLoadDiffuseLateralSource()
-        {
-            IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(200, 0), new Point(200, 200));
-            IBranch branch1 = hydroNetwork.Branches[0];
-
-            var lateralSource = new LateralSource
-            {
-                Name = "Source1",
-                Chainage = 10
-            };
-            branch1.BranchFeatures.Add(lateralSource);
-            lateralSource.Branch = branch1;
-            HydroRegionEditorHelper.UpdateBranchFeatureGeometry(lateralSource, 40);
-
-            LateralSource retrievedLateralSource = SaveLoadBranchFeature(lateralSource, TestHelper.GetCurrentMethodName());
-
-            Assert.AreEqual(lateralSource.Name, retrievedLateralSource.Name);
-            Assert.AreEqual(lateralSource.Chainage, retrievedLateralSource.Chainage);
-            Assert.AreEqual(lateralSource.IsDiffuse, retrievedLateralSource.IsDiffuse);
-            Assert.AreEqual(lateralSource.Length, retrievedLateralSource.Length);
-        }
-
-        [Test]
         public void SaveLoadRetention()
         {
             var retention = new Retention()
@@ -578,7 +542,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             IChannel branch = CreateChannel(fromNode, toNode);
             network.Branches.Add(branch);
-            
+
             network.Name = "NetworkWithAllSubItems";
             var project = new Project();
             project.RootFolder.Add(new DataItem(network));

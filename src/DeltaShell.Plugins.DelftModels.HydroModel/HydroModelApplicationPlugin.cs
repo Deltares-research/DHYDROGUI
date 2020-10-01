@@ -22,7 +22,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     [Extension(typeof(IPlugin))]
     public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
-        public static int MainThreadId { get; set; }
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelApplicationPlugin));
 
         public HydroModelApplicationPlugin()
@@ -105,11 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        private void ApplicationRemoveProjectExporter()
-        {
-            var exporters = (List<IFileExporter>)Application.FileExporters;
-            exporters.RemoveAll(e => e is IProjectItemExporter);
-        }
+        public static int MainThreadId { get; set; }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
         {
@@ -155,9 +150,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             var initializeThread = new Thread(InitializeModelBuilder) {Priority = ThreadPriority.BelowNormal};
             initializeThread.Start();
-          
-            base.Activate();
 
+            base.Activate();
         }
 
         public override IEnumerable<IFileExporter> GetFileExporters()
@@ -167,13 +161,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList(), 
+            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList(),
                                                      () => Application.WorkDirectory);
         }
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             return Enumerable.Empty<IDataAccessListener>();
+        }
+
+        private void ApplicationRemoveProjectExporter()
+        {
+            var exporters = (List<IFileExporter>) Application.FileExporters;
+            exporters.RemoveAll(e => e is IProjectItemExporter);
         }
 
         private void ApplicationProjectClosing(Project project)

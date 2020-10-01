@@ -669,10 +669,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             };
 
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge,
-                                                                  BoundaryConditionDataType.TimeSeries)
-            {
-                Feature = feature
-            };
+                                                                  BoundaryConditionDataType.TimeSeries) {Feature = feature};
 
             flowBoundaryCondition.AddPoint(0);
             flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[]
@@ -1162,104 +1159,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             var messageList = new List<string>
             {
-                "Exporting to mdu file",
                 "Initializing",
-                "0,00 %",
-                "00:17:59 (1,39 %)",
-                "00:10:12 (2,78 %)",
-                "00:07:13 (4,17 %)",
-                "00:05:20 (5,56 %)",
-                "00:04:14 (6,94 %)",
-                "00:03:32 (8,33 %)",
-                "00:03:00 (9,72 %)",
-                "00:02:35 (11,11 %)",
-                "00:02:16 (12,50 %)",
-                "00:02:01 (13,89 %)",
-                "00:01:48 (15,28 %)",
-                "00:01:38 (16,67 %)",
-                "00:01:29 (18,06 %)",
-                "00:01:22 (19,44 %)",
-                "00:01:15 (20,83 %)",
-                "00:01:09 (22,22 %)",
-                "00:01:04 (23,61 %)",
-                "00:01:00 (25,00 %)",
-                "00:00:56 (26,39 %)",
-                "00:00:53 (27,78 %)",
-                "00:00:50 (29,17 %)",
-                "00:00:46 (30,56 %)",
-                "00:00:44 (31,94 %)",
-                "00:00:41 (33,33 %)",
-                "00:00:39 (34,72 %)",
-                "00:00:37 (36,11 %)",
-                "00:00:35 (37,50 %)",
-                "00:00:33 (38,89 %)",
-                "00:00:31 (40,28 %)",
-                "00:00:30 (41,67 %)",
-                "00:00:28 (43,06 %)",
-                "00:00:27 (44,44 %)",
-                "00:00:25 (45,83 %)",
-                "00:00:24 (47,22 %)",
-                "00:00:23 (48,61 %)",
-                "00:00:21 (50,00 %)",
-                "00:00:20 (51,39 %)",
-                "00:00:19 (52,78 %)",
-                "00:00:18 (54,17 %)",
-                "00:00:17 (55,56 %)",
-                "00:00:16 (56,94 %)",
-                "00:00:16 (58,33 %)",
-                "00:00:15 (59,72 %)",
-                "00:00:14 (61,11 %)",
-                "00:00:13 (62,50 %)",
-                "00:00:12 (63,89 %)",
-                "00:00:12 (65,28 %)",
-                "00:00:11 (66,67 %)",
-                "00:00:10 (68,06 %)",
-                "00:00:10 (69,44 %)",
-                "00:00:09 (70,83 %)",
-                "00:00:08 (72,22 %)",
-                "00:00:08 (73,61 %)",
-                "00:00:07 (75,00 %)",
-                "00:00:07 (76,39 %)",
-                "00:00:06 (77,78 %)",
-                "00:00:06 (79,17 %)",
-                "00:00:05 (80,56 %)",
-                "00:00:05 (81,94 %)",
-                "00:00:04 (83,33 %)",
-                "00:00:04 (84,72 %)",
-                "00:00:03 (86,11 %)",
-                "00:00:03 (87,50 %)",
-                "00:00:03 (88,89 %)",
-                "00:00:02 (90,28 %)",
-                "00:00:02 (91,67 %)",
-                "00:00:01 (93,06 %)",
-                "00:00:01 (94,44 %)",
-                "00:00:01 (95,83 %)",
-                "00:00:00 (97,22 %)",
-                "00:00:00 (98,61 %)",
-                "00:00:00 (100,00 %)",
-                "Reading map file",
-                "Reading his file",
-                "Reading dia file",
-                "00:00:00 (100,00 %)"
+                "0,00%",
+                "0,00%",
+                "Initializing",
+                "0,00%",
+                "0,00%"
             };
 
             try
             {
-                var counter = 0;
-
                 var fmModel = new WaterFlowFMModel();
                 fmModel.ImportFromMdu(mduFilePath);
 
                 fmModel.ReferenceTime = fmModel.StartTime;
+
+                var messages = new List<string>();
                 fmModel.ProgressChanged += (sender, args) =>
                 {
-                    Assert.AreEqual(fmModel.ProgressText, messageList[counter],
-                                    "Progress text when running FM model is different than expected.");
-                    counter++;
+                    messages.Add(fmModel.ProgressText);
                 };
+
                 ActivityRunner.RunActivity(fmModel);
-                counter = 0;
                 ActivityRunner.RunActivity(fmModel);
+
+                Assert.That(messages, Is.EquivalentTo(messageList));
             }
             finally
             {
@@ -1875,6 +1799,127 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
+        [Test]
+        public void Constructor_CorrectRestartData()
+        {
+            // Call
+            var model = new WaterFlowFMModel();
+
+            // Assert
+            Assert.That(model.UseRestart, Is.False);
+            Assert.That(model.WriteRestart, Is.False);
+            Assert.That(model.RestartInput, Is.Not.Null);
+            Assert.That(model.RestartInput.Path, Is.Null);
+            Assert.That(model.RestartOutput, Is.Not.Null);
+            Assert.That(model.RestartOutput, Is.Empty);
+        }
+
+        [Test]
+        public void SetRestartInput_Null_ThrowsArgumentNullException()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+
+            // Call
+            void Call() => model.RestartInput = null;
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("value"));
+        }
+
+        [Test]
+        public void SetRestartInput_SetsCorrectly()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var restartFile = new RestartFile();
+
+            // Call
+            model.RestartInput = restartFile;
+
+            // Assert
+            Assert.That(model.RestartInput, Is.SameAs(restartFile));
+        }
+
+        [Test]
+        public void Finish_WriteRestartOn_LogsCorrectWarning()
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = true;
+                model.RestartTimeStep = model.TimeStep;
+
+                // Call
+                void Call() => model.Finish();
+
+                // Assert
+                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(warnings, Contains.Item("Please save the project after a model run with 'write restart' on."));
+            }
+        }
+
+        [Test]
+        public void Finish_WriteRestartOff_DoesNotLogWarning()
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = false;
+
+                // Call
+                void Call() => model.Finish();
+
+                // Assert
+                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+                Assert.That(warnings, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void RestartTimeStep_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var restartTimeStep = new TimeSpan(0, 13, 0, 0);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = restartTimeStep;
+
+            // Call
+            TimeSpan retrievedRestartTimeStep = model.RestartTimeStep;
+
+            // Assert
+            Assert.AreEqual(restartTimeStep, retrievedRestartTimeStep);
+        }
+
+        [Test]
+        public void RestartStartTime_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            DateTime restartStartTime = DateTime.Today.AddHours(12);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value = restartStartTime;
+
+            // Call
+            DateTime retrievedRestartStartTime = model.RestartStartTime;
+
+            // Assert
+            Assert.AreEqual(restartStartTime, retrievedRestartStartTime);
+        }
+
+        [Test]
+        public void RestartStopTime_ShouldReturnValueStoredInModelDefinitionProperties()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            DateTime restartStopTime = DateTime.Today.AddHours(12);
+            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value = restartStopTime;
+
+            // Call
+            DateTime retrievedRestartStopTime = model.RestartStopTime;
+
+            // Assert
+            Assert.AreEqual(restartStopTime, retrievedRestartStopTime);
+        }
+
         [TestCase(
             new[]
             {
@@ -2007,49 +2052,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
-        [Test]
-        public void Constructor_CorrectRestartData()
-        {
-            // Call
-            var model = new WaterFlowFMModel();
-
-            // Assert
-            Assert.That(model.UseRestart, Is.False);
-            Assert.That(model.WriteRestart, Is.False);
-            Assert.That(model.RestartInput, Is.Not.Null);
-            Assert.That(model.RestartInput.Path, Is.Null);
-            Assert.That(model.RestartOutput, Is.Not.Null);
-            Assert.That(model.RestartOutput, Is.Empty);
-        }
-
-        [Test]
-        public void SetRestartInput_Null_ThrowsArgumentNullException()
-        {
-            // Setup
-            var model = new WaterFlowFMModel();
-
-            // Call
-            void Call() => model.RestartInput = null;
-
-            // Assert
-            var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("value"));
-        }
-
-        [Test]
-        public void SetRestartInput_SetsCorrectly()
-        {
-            // Setup
-            var model = new WaterFlowFMModel();
-            var restartFile = new RestartFile();
-
-            // Call
-            model.RestartInput = restartFile;
-
-            // Assert
-            Assert.That(model.RestartInput, Is.SameAs(restartFile));
-        }
-
         [TestCase(null, false)]
         [TestCase("path/to/the.file", true)]
         public void GetUseRestart_ReturnsCorrectResult(string filePath, bool expected)
@@ -2062,84 +2064,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void Finish_WriteRestartOn_LogsCorrectWarning()
-        {
-            using (WaterFlowFMModel model = new WaterFlowFMModel())
-            {
-                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = true;
-                model.RestartTimeStep = model.TimeStep;
-
-                // Call
-                void Call() => model.Finish();
-
-                // Assert
-                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
-                Assert.That(warnings, Contains.Item("Please save the project after a model run with 'write restart' on."));
-            }
-        }
-
-        [Test]
-        public void Finish_WriteRestartOff_DoesNotLogWarning()
-        {
-            using (WaterFlowFMModel model = new WaterFlowFMModel())
-            {
-                model.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value = false;
-
-                // Call
-                void Call() => model.Finish();
-
-                // Assert
-                IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
-                Assert.That(warnings, Is.Empty);
-            }
-        }
-
-        [Test]
-        public void RestartTimeStep_ShouldReturnValueStoredInModelDefinitionProperties()
-        {
-            // Setup
-            var model = new WaterFlowFMModel();
-            var restartTimeStep = new TimeSpan(0,13,0,0);
-            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = restartTimeStep;
-
-            // Call
-            TimeSpan retrievedRestartTimeStep = model.RestartTimeStep;
-
-            // Assert
-            Assert.AreEqual(restartTimeStep, retrievedRestartTimeStep);
-        }
-
-        [Test]
-        public void RestartStartTime_ShouldReturnValueStoredInModelDefinitionProperties()
-        {
-            // Setup
-            var model = new WaterFlowFMModel();
-            DateTime restartStartTime = DateTime.Today.AddHours(12);
-            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value = restartStartTime;
-            
-            // Call
-            DateTime retrievedRestartStartTime = model.RestartStartTime;
-
-            // Assert
-            Assert.AreEqual(restartStartTime,retrievedRestartStartTime);
-        }
-
-        [Test]
-        public void RestartStopTime_ShouldReturnValueStoredInModelDefinitionProperties()
-        {
-            // Setup
-            var model = new WaterFlowFMModel();
-            DateTime restartStopTime = DateTime.Today.AddHours(12);
-            model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value = restartStopTime;
-
-            // Call
-            DateTime retrievedRestartStopTime = model.RestartStopTime;
-
-            // Assert
-            Assert.AreEqual(restartStopTime, retrievedRestartStopTime);
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)

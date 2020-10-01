@@ -6,69 +6,19 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Gui;
-using DeltaShell.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
-using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
-using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using SharpMap.Layers;
-using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 {
     [TestFixture]
     public class DeltaShellNetworkEditorIntegrationTest
     {
-        [Test] //TOOLS-6594
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        public void DeleteLocationFromCoverageWithoutSegmentLayerDoesNotCauseCrash()
-        {
-            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
-
-            INetworkCoverage networkCoverage = new NetworkCoverage {Network = network};
-
-            // set values
-            var location = new NetworkLocation(network.Branches[0], 0.0);
-            networkCoverage[location] = 0.1;
-            networkCoverage[new NetworkLocation(network.Branches[0], 100.0)] = 0.2;
-            networkCoverage[new NetworkLocation(network.Branches[1], 0.0)] = 0.3;
-            networkCoverage[new NetworkLocation(network.Branches[1], 50.0)] = 0.4;
-            networkCoverage[new NetworkLocation(network.Branches[1], 200.0)] = 0.5;
-
-            var coverageView = new CoverageView {Data = networkCoverage};
-
-            MapView mapView = coverageView.ChildViews.OfType<MapView>().First();
-            NetworkCoverageGroupLayer networkCoverageLayer = mapView.Map.GetAllLayers(true).OfType<NetworkCoverageGroupLayer>().First();
-
-            //remove segment layer
-            networkCoverageLayer.LayersReadOnly = false;
-            networkCoverageLayer.Layers.Remove(networkCoverageLayer.SegmentLayer);
-            networkCoverageLayer.LayersReadOnly = true;
-
-            MapControl mapControl = mapView.MapControl;
-            mapControl.Visible = false; //prevent rendering
-
-            var hydroNetworkEditorMapTool = new HydroRegionEditorMapTool {IsActive = true};
-            mapControl.Tools.Add(hydroNetworkEditorMapTool);
-
-            hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer = networkCoverageLayer;
-
-            //remove a location
-            mapControl.SelectTool.Select(networkCoverage.Locations.Values.First());
-            Assert.DoesNotThrow(() => mapControl.DeleteTool.DeleteSelection());
-
-            coverageView.Dispose();
-        }
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Slow)]

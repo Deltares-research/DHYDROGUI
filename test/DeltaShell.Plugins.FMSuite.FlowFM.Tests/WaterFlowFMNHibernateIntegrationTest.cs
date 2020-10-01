@@ -64,7 +64,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     Name = "BridgePillar2Test",
                     Geometry =
-                        new LineString(new[] {new Coordinate(20.0, 60.0, 0), new Coordinate(140.0, 8.0, 1.0), new Coordinate(180.0, 4.0, 2.0), new Coordinate(260.0, 0.0, 3.0)})
+                        new LineString(new[]
+                        {
+                            new Coordinate(20.0, 60.0, 0),
+                            new Coordinate(140.0, 8.0, 1.0),
+                            new Coordinate(180.0, 4.0, 2.0),
+                            new Coordinate(260.0, 0.0, 3.0)
+                        })
                 };
 
                 model.Area.BridgePillars.Add(pillar);
@@ -177,7 +183,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     Name = "BridgePillar2Test",
                     Geometry =
-                        new LineString(new[] {new Coordinate(20.0, 60.0, 0), new Coordinate(140.0, 8.0, 1.0), new Coordinate(180.0, 4.0, 2.0), new Coordinate(260.0, 0.0, 3.0)})
+                        new LineString(new[]
+                        {
+                            new Coordinate(20.0, 60.0, 0),
+                            new Coordinate(140.0, 8.0, 1.0),
+                            new Coordinate(180.0, 4.0, 2.0),
+                            new Coordinate(260.0, 0.0, 3.0)
+                        })
                 };
 
                 /* Set data model */
@@ -279,7 +291,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         new Feature
                         {
                             Geometry = new Polygon(
-                                new LinearRing(new[] {new Coordinate(0, 0), new Coordinate(10, 10), new Coordinate(20, -20), new Coordinate(0, 0)}))
+                                new LinearRing(new[]
+                                {
+                                    new Coordinate(0, 0),
+                                    new Coordinate(10, 10),
+                                    new Coordinate(20, -20),
+                                    new Coordinate(0, 0)
+                                }))
                         }
                     }, typeof(Feature));
 

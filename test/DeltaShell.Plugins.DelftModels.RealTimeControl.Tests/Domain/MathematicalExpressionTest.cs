@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             IList<KeyValuePair<char, string>> expectedKeyValuePairs = new List<KeyValuePair<char, string>>();
             for (var i = 0; i <= 26; i++)
             {
-                string inputName = $"input_name_{i}";
+                var inputName = $"input_name_{i}";
                 IInput input = Substitute.For<IInput, INotifyPropertyChange>();
                 input.Name = inputName;
 

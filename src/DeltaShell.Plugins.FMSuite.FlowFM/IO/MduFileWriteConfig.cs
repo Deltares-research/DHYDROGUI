@@ -3,7 +3,7 @@
     /// <summary>
     /// Concrete implementation of the <see cref="IMduFileWriteConfig"/> interface.
     /// </summary>
-    /// <seealso cref="IMduFileWriteConfig" />
+    /// <seealso cref="IMduFileWriteConfig"/>
     public class MduFileWriteConfig : IMduFileWriteConfig
     {
         /// <summary>

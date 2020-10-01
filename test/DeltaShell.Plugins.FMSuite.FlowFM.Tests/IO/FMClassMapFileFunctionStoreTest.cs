@@ -1,7 +1,11 @@
-﻿using DelftTools.Functions;
+﻿using System.Linq;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
+using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -31,6 +35,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             UnstructuredGrid grid = classMapFileFunctionStore.Grid;
             Assert.AreEqual(16597, grid.Cells.Count);
             Assert.AreEqual(typeof(UnstructuredGrid), grid.GetType());
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(@"output_classmapfiles\FlowFMWithTimeZones_clm.nc", "Monday, 01 January 2001 00:00:00")]
+        [TestCase(@"output_classmapfiles\FlowFMWithoutTimeZones_clm.nc", "Friday, 01 May 1992 00:00:00")]
+        public void OpenClassMapFileWithOrWithoutTimeZones_ShouldSetReferenceDateInFunctionsCorrectly(string classMapFilePath, string expectedReferenceDate)
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string classMapFilePathTemp = tempDirectory.CopyTestDataFileToTempDirectory(TestHelper.GetTestFilePath(classMapFilePath));
+
+                // Act
+                var store = new FMClassMapFileFunctionStore(classMapFilePathTemp);
+
+                // Assert
+                Assert.IsInstanceOf<FMNetCdfFileFunctionStore>(store);
+
+                string retrievedReferenceDate = ((ICoverage) store.Functions.First()).Time.Attributes["ncRefDate"];
+                Assert.AreEqual(expectedReferenceDate, retrievedReferenceDate);
+            }
         }
 
         private static void AssertCorrectFunctionData(IFunction function, string functionName, string componentName, string argumentName)

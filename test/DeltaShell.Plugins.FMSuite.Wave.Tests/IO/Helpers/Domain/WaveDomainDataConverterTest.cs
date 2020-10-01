@@ -21,57 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
         private readonly Random rand = new Random();
         private readonly DomainEqualityComparer comparer = new DomainEqualityComparer();
 
-        [TestCaseSource(nameof(ArgumentNullCases))]
-        public void Convert_ArgumentNull_ThrowsArgumentNullException(IEnumerable<DelftIniCategory> domainCategories, ILogHandler logHandler, string expParamName)
-        {
-            // Call
-            void Call() => WaveDomainDataConverter.Convert(domainCategories, "some/path", logHandler).ToList();
-
-            // Assert
-            var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo(expParamName));
-        }
-
-        private IEnumerable<TestCaseData> ArgumentNullCases()
-        {
-            yield return new TestCaseData(null, Substitute.For<ILogHandler>(), "domainCategories");
-            yield return new TestCaseData(Enumerable.Empty<DelftIniCategory>(), null, "logHandler");
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        public void Convert_MdwDirPathNullOrEmpty_ThrowsArgumentException(string mdwDirPath)
-        {
-            // Call
-            void Call() => WaveDomainDataConverter.Convert(Enumerable.Empty<DelftIniCategory>(), mdwDirPath, Substitute.For<ILogHandler>()).ToList();
-
-            // Assert
-            var e = Assert.Throws<ArgumentException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("mdwDirPath"));
-        }
-
-        [TestCaseSource(nameof(ValidDomainCases))]
-        public void Convert_ReturnsTheCorrectWaveDomainData(bool useDefDir, bool useDefFreq, bool useDefMeteo, bool useDefHydro, WaveMeteoData meteoData)
-        {
-            // Setup
-            using (var temp = new TemporaryDirectory())
-            {
-                WaveDomainData domain = CreateWaveDomainData(useDefDir, useDefFreq, useDefMeteo, useDefHydro, meteoData);
-                DelftIniCategory category = CreateCategory(domain);
-                CreateFiles(temp, domain);
-
-                var logHandler = Substitute.For<ILogHandler>();
-
-                // Call
-                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
-
-                // Assert
-                WaveDomainData resultDomain = result.First();
-                Assert.That(resultDomain, Is.EqualTo(domain).Using(comparer));
-                logHandler.DidNotReceiveWithAnyArgs().ReportWarning(Arg.Any<string>());
-            }
-        }
-
         [Test]
         public void Convert_FilesDoesNotExist_UseGlobalMeteoDataIsTrue()
         {
@@ -84,7 +33,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
             var logHandler = Substitute.For<ILogHandler>();
 
             // Call
-            IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, @"c:\some\dir", logHandler);
+            IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[]
+            {
+                category
+            }, @"c:\some\dir", logHandler);
 
             // Assert
             WaveDomainData resultDomain = result.First();
@@ -115,7 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[]
+                {
+                    category
+                }, temp.Path, logHandler);
 
                 // Assert
                 WaveDomainData resultDomain = result.First();
@@ -146,7 +101,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[]
+                {
+                    category
+                }, temp.Path, logHandler);
 
                 // Assert
                 WaveDomainData resultDomain = result.First();
@@ -177,7 +135,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[]
+                {
+                    category
+                }, temp.Path, logHandler);
 
                 // Assert
                 WaveDomainData resultDomain = result.First();
@@ -208,12 +169,69 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[]
+                {
+                    category
+                }, temp.Path, logHandler);
 
                 // Assert
                 WaveDomainData resultDomain = result.First();
                 Assert.That(resultDomain.UseGlobalMeteoData, Is.True);
                 logHandler.Received(1).ReportWarning("Meteo data could not be created for domain 'the_domain'. Defaulted to global settings.");
+            }
+        }
+
+        [TestCaseSource(nameof(ArgumentNullCases))]
+        public void Convert_ArgumentNull_ThrowsArgumentNullException(IEnumerable<DelftIniCategory> domainCategories, ILogHandler logHandler, string expParamName)
+        {
+            // Call
+            void Call() => WaveDomainDataConverter.Convert(domainCategories, "some/path", logHandler).ToList();
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo(expParamName));
+        }
+
+        private static IEnumerable<TestCaseData> ArgumentNullCases()
+        {
+            yield return new TestCaseData(null, Substitute.For<ILogHandler>(), "domainCategories");
+            yield return new TestCaseData(Enumerable.Empty<DelftIniCategory>(), null, "logHandler");
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void Convert_MdwDirPathNullOrEmpty_ThrowsArgumentException(string mdwDirPath)
+        {
+            // Call
+            void Call() => WaveDomainDataConverter.Convert(Enumerable.Empty<DelftIniCategory>(), mdwDirPath, Substitute.For<ILogHandler>()).ToList();
+
+            // Assert
+            var e = Assert.Throws<ArgumentException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("mdwDirPath"));
+        }
+
+        [TestCaseSource(nameof(ValidDomainCases))]
+        public void Convert_ReturnsTheCorrectWaveDomainData(bool useDefDir, bool useDefFreq, bool useDefMeteo, bool useDefHydro, WaveMeteoData meteoData)
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            {
+                WaveDomainData domain = CreateWaveDomainData(useDefDir, useDefFreq, useDefMeteo, useDefHydro, meteoData);
+                DelftIniCategory category = CreateCategory(domain);
+                CreateFiles(temp, domain);
+
+                var logHandler = Substitute.For<ILogHandler>();
+
+                // Call
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[]
+                {
+                    category
+                }, temp.Path, logHandler);
+
+                // Assert
+                WaveDomainData resultDomain = result.First();
+                Assert.That(resultDomain, Is.EqualTo(domain).Using(comparer));
+                logHandler.DidNotReceiveWithAnyArgs().ReportWarning(Arg.Any<string>());
             }
         }
 
@@ -234,7 +252,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[] {category}, temp.Path, logHandler);
+                IEnumerable<WaveDomainData> result = WaveDomainDataConverter.Convert(new[]
+                {
+                    category
+                }, temp.Path, logHandler);
 
                 // Assert
                 WaveDomainData resultDomain = result.First();
@@ -245,15 +266,53 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
 
         private static IEnumerable<string[]> VariousUnsupportedMeteoFileCombinations()
         {
-            yield return new string[] {"meteo.spw", "meteo.spw"};
-            yield return new string[] {"meteo.amu"};
-            yield return new string[] {"meteo.amu", "meteo.amu"};
-            yield return new string[] {"meteo.amv"};
-            yield return new string[] {"meteo.amv", "meteo.amv"};
-            yield return new string[] {"meteo.wnd", "meteo.wnd", "meteo.wnd"};
-            yield return new string[] {"meteo.wnd", "meteo.amu", "meteo.spw"};
-            yield return new string[] {"meteo.wnd", "meteo.amu", "meteo.amv"};
-            yield return new string[] {"meteo.amu", "meteo.amu", "meteo.amv"};
+            yield return new string[]
+            {
+                "meteo.spw",
+                "meteo.spw"
+            };
+            yield return new string[]
+            {
+                "meteo.amu"
+            };
+            yield return new string[]
+            {
+                "meteo.amu",
+                "meteo.amu"
+            };
+            yield return new string[]
+            {
+                "meteo.amv"
+            };
+            yield return new string[]
+            {
+                "meteo.amv",
+                "meteo.amv"
+            };
+            yield return new string[]
+            {
+                "meteo.wnd",
+                "meteo.wnd",
+                "meteo.wnd"
+            };
+            yield return new string[]
+            {
+                "meteo.wnd",
+                "meteo.amu",
+                "meteo.spw"
+            };
+            yield return new string[]
+            {
+                "meteo.wnd",
+                "meteo.amu",
+                "meteo.amv"
+            };
+            yield return new string[]
+            {
+                "meteo.amu",
+                "meteo.amu",
+                "meteo.amv"
+            };
         }
 
         private static IEnumerable<TestCaseData> ValidDomainCases()
@@ -476,6 +535,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
                 return true;
             }
 
+            public int GetHashCode(WaveDomainData node) => throw new NotImplementedException();
+
             private static bool Equals(SpectralDomainData x, SpectralDomainData y)
             {
                 if (x.UseDefaultFrequencySpace != y.UseDefaultFrequencySpace)
@@ -556,8 +617,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
 
                 return true;
             }
-
-            public int GetHashCode(WaveDomainData node) => throw new NotImplementedException();
 
             private static bool Equals(double x, double y) => Math.Abs(x - y) < 1E-7;
         }

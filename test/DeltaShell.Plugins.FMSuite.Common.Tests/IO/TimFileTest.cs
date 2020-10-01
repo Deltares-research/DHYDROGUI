@@ -110,14 +110,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             // 1. Prepare test data
             string filepath = TestHelper.GetTestFilePath(Path.Combine("timFiles", fileName));
-            double[] firstValues = {392.30, 0.10, 25.0};
-            double[] lastValues = {190.86, 0.10, 25.0};
+            double[] firstValues =
+            {
+                392.30,
+                0.10,
+                25.0
+            };
+            double[] lastValues =
+            {
+                190.86,
+                0.10,
+                25.0
+            };
             const int expectedComponents = 3;
             const int expectedValues = 50;
 
             var refDate = new DateTime(2014, 5, 1, 0, 0, 0);
             TimeSeries readTimeSeries = null;
-            
+
             // 2. Verify initial expectations.
             Assert.That(File.Exists(filepath));
 
@@ -237,11 +247,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void ReadTimFile_HandlesNullFunction()
         {
             var fileReader = new TimFile();
-            fileReader.Read(string.Empty, null, DateTime.MinValue);
+            Assert.That(() => fileReader.Read(string.Empty, null, DateTime.MinValue),
+                Throws.ArgumentException);
         }
     }
 }

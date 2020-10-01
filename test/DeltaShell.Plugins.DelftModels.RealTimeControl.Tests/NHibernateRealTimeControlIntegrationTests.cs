@@ -25,10 +25,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     [Category(TestCategory.Slow)]
     public class NHibernateRealTimeControlIntegrationTests : NHibernateIntegrationTestBase
     {
-        [TestFixtureSetUp]
-        public override void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
             factory.AddPlugin(new RealTimeControlGuiPlugin());
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
             factory.AddPlugin(new RealTimeControlApplicationPlugin());
@@ -284,7 +284,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             DirectionalCondition retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateDirectionalCondition(null));
             Assert.IsNotNull(retrievedEntity);
-            Assert.IsInstanceOfType(typeof(DirectionalCondition), retrievedEntity);
+            Assert.That(retrievedEntity, Is.InstanceOf<DirectionalCondition>());
             Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfConditions(RealTimeControlTestHelper.GenerateDirectionalCondition(null), retrievedEntity));
         }
 

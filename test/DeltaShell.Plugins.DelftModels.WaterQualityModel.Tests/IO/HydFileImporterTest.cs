@@ -23,7 +23,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void GetTimesForNonexistentFileTest()
         {
             // Setup
@@ -34,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 var importer = new HydFileImporter();
 
                 // Call
-                importer.ImportItem(filePath, model);
+                Assert.That(() => importer.ImportItem(filePath, model), Throws.InstanceOf<FileNotFoundException>());
             }
         }
 

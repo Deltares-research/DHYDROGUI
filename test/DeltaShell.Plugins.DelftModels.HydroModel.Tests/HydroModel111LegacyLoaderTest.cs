@@ -4,7 +4,6 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using NUnit.Framework;
 using Does = NUnit.Framework.Does;
 
@@ -47,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 legacyLoader.OnAfterProjectMigrated(project);
 
                 // Assert
-                Assert.That(explicitWorkDir, Does.Not.Exist());
+                Assert.That(explicitWorkDir, Does.Not.Exist);
             }
         }
     }

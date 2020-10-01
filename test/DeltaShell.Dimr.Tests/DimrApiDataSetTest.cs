@@ -23,7 +23,7 @@ namespace DeltaShell.Dimr.Tests
             DimrApiDataSet.SetSharedPath(environment);
 
             // Assert
-            string expectedValue = $"{DimrApiDataSet.SharedDllPath};{somePath}";
+            var expectedValue = $"{DimrApiDataSet.SharedDllPath};{somePath}";
             environment.Received(1)
                        .SetVariable(EnvironmentConstants.PathKey,
                                     expectedValue,
@@ -34,7 +34,7 @@ namespace DeltaShell.Dimr.Tests
         public void SetSharedPath_Contained_DoesNotAddSecondSharedPath()
         {
             // Setup
-            string somePath = $"bin;more/bin;super/more/bin;{DimrApiDataSet.SharedDllPath}";
+            var somePath = $"bin;more/bin;super/more/bin;{DimrApiDataSet.SharedDllPath}";
             var environment = Substitute.For<IEnvironment>();
             environment.GetVariable(EnvironmentConstants.PathKey,
                                     EnvironmentVariableTarget.Process)
@@ -62,7 +62,7 @@ namespace DeltaShell.Dimr.Tests
             DimrApiDataSet.SetSharedPath(environment);
 
             // Assert
-            string expectedValue = $"{DimrApiDataSet.SharedDllPath}";
+            var expectedValue = $"{DimrApiDataSet.SharedDllPath}";
             environment.Received(1)
                        .SetVariable(EnvironmentConstants.PathKey,
                                     expectedValue,

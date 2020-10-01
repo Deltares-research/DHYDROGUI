@@ -37,8 +37,8 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="filePath">File name for NetCDF dataset to be opened.</param>
         /// <param name="uGridGlobalMetaData">The global metadata of the NetCDF file</param>
         /// <param name="mode">NetCDF open mode, e.g. NF90_NOWRITE.</param>
-        int CreateFile(string filePath, 
-                       UGridGlobalMetaData uGridGlobalMetaData, 
+        int CreateFile(string filePath,
+                       UGridGlobalMetaData uGridGlobalMetaData,
                        GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write);
 
         /// <summary>

@@ -13,18 +13,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views
             InitializeComponent();
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing && DataContext is IDisposable dataContext)
             {
                 dataContext.Dispose();
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

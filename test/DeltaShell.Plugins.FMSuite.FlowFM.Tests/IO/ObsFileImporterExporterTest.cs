@@ -76,9 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ObsFileExportImportGroupableFeature2DPointAndReplaceDuplicatesWithEqualGroupNameAndPointName()
         {
-            var groupA = "GroupA.xyn";
-            var groupB = "GroupB.xyn";
-
             string filePathGroupA = TestHelper.GetTestFilePath("observationpointGroups\\GroupA.xyn");
             Assert.NotNull(filePathGroupA);
             Assert.IsTrue(File.Exists(filePathGroupA));
@@ -105,10 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             allPoints.AddRange(pointsGroupA);
             allPoints.AddRange(pointsGroupB);
 
-            var obsFileImporterExporter = new ObsFileImporterExporter<GroupableFeature2DPoint>()
-            {
-                EqualityComparer = new GroupableFeatureComparer<GroupableFeature2DPoint>()
-            };
+            var obsFileImporterExporter = new ObsFileImporterExporter<GroupableFeature2DPoint>() {EqualityComparer = new GroupableFeatureComparer<GroupableFeature2DPoint>()};
 
             try
             {

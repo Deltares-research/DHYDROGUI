@@ -8,9 +8,8 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
-using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using NSubstitute;
 using NUnit.Framework;
@@ -38,7 +37,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             var importer = new WaveModelFileImporter(() => "some_directory");
 
             // Assert
-            Assert.IsInstanceOf<IDimrModelFileImporter>(importer);
             Assert.That(importer.TargetDataDirectory, Is.Null);
             Assert.That(importer.ShouldCancel, Is.False);
             Assert.That(importer.ProgressChanged, Is.Null);
@@ -149,26 +147,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             Assert.That(result, Is.EqualTo("Master Definition WAVE File|*.mdw"));
         }
 
-        private IEnumerable<TestCaseData> CanImportOnCases()
-        {
-            yield return new TestCaseData(Substitute.For<ICompositeActivity>(), true);
-            yield return new TestCaseData(new WaveModel(), true);
-            yield return new TestCaseData(new object(), false);
-        }
-
-        [TestCaseSource(nameof(CanImportOnCases))]
-        public void CanImportOn_ReturnsCorrectResult(object obj, bool expectedResult)
-        {
-            // Setup
-            var importer = new WaveModelFileImporter(() => null);
-
-            // Call
-            bool result = importer.CanImportOn(obj);
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedResult));
-        }
-
         [Test]
         public void ImportItem_TargetNull_ReturnsImportedWaveModel()
         {
@@ -238,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 Assert.That(model, Is.Not.Null);
                 Assert.That(model, Is.Not.SameAs(target));
                 Assert.That(model.WorkingDirectoryPathFunc, Is.SameAs(func));
-                Assert.That(owner.Items, Collection.OnlyContains(model));
+                CollectionContainsOnlyAssert.AssertContainsOnly(owner.Items, model);
             }
         }
 
@@ -293,17 +271,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             }
         }
 
-        [Test]
-        public void MasterFileExtension_ShouldReturnMdw()
+        private static IEnumerable<TestCaseData> CanImportOnCases()
         {
-            // Setup 
+            yield return new TestCaseData(Substitute.For<ICompositeActivity>(), true);
+            yield return new TestCaseData(new WaveModel(), true);
+            yield return new TestCaseData(new object(), false);
+        }
+
+        [TestCaseSource(nameof(CanImportOnCases))]
+        public void CanImportOn_ReturnsCorrectResult(object obj, bool expectedResult)
+        {
+            // Setup
             var importer = new WaveModelFileImporter(() => null);
 
             // Call
-            string masterFileExtension = importer.MasterFileExtension;
-            
+            bool result = importer.CanImportOn(obj);
+
             // Assert
-            Assert.AreEqual("mdw", masterFileExtension);
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         private static void VerifyWaveModel(IEventedList<IActivity> items, Func<string> func)

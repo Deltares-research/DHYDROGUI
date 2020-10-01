@@ -50,8 +50,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             try
             {
-                sender = sender is IDataItem
-                             ? ((IDataItem) sender).Value
+                sender = sender is IDataItem item
+                             ? item.Value
                              : sender; // Set sender to its value if it is a data item
 
                 var modelSettings = sender as WaterQualityModelSettings;
@@ -107,13 +107,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             try
             {
                 object removedOrAddedItem = e.GetRemovedOrAddedItem();
-                var dataItem = removedOrAddedItem as IDataItem;
-                if (dataItem != null)
+                if (removedOrAddedItem is IDataItem dataItem && IsChildOfWaterQualityModelDataItemSet(waterQualityModel, dataItem))
                 {
-                    if (IsChildOfWaterQualityModelDataItemSet(waterQualityModel, dataItem))
-                    {
-                        HandleFunctionListCollectionChanged(waterQualityModel.Grid, e.Action, dataItem);
-                    }
+                    HandleFunctionListCollectionChanged(waterQualityModel.Grid, e.Action, dataItem);
                 }
 
                 var substance = removedOrAddedItem as WaterQualitySubstance;
@@ -438,18 +434,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private static void AddMonitoringOutputDataItemTimeSeries(WaterQualityModel waterQualityModel,
                                                                   object outputItem, string unit)
         {
-            string monitoringOutputTimeSeriesName;
-            int monitoringOutputtInsertPosition;
-
             GetMonitoringOutputTimeSeriesPositionAndName(waterQualityModel, outputItem,
-                                                         out monitoringOutputTimeSeriesName,
-                                                         out monitoringOutputtInsertPosition);
+                                                         out string monitoringOutputTimeSeriesName,
+                                                         out int monitoringOutputInsertPosition);
 
             foreach (WaterQualityObservationVariableOutput observationVariableOutput in waterQualityModel
                 .ObservationVariableOutputs)
             {
                 observationVariableOutput.AddTimeSeries(new Tuple<string, string>(monitoringOutputTimeSeriesName, unit),
-                                                        monitoringOutputtInsertPosition);
+                                                        monitoringOutputInsertPosition);
             }
         }
 
@@ -479,8 +472,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                                        .Where(op => op.ShowInHis)
                                                                        .ToList()
                                                                        .IndexOf(outputParameter);
-
-                return;
             }
 
             // Todo : Enable when fraction is supported
