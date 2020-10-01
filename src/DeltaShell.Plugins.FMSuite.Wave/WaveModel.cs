@@ -266,6 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        [Obsolete("Will be removed as part of D3DFMIQ-2272")]
         public IEnumerable<WavmFileFunctionStore> WavmFunctionStores
         {
             get
@@ -503,9 +504,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             ExportModelInputTo(targetMdwFilePath, switchTo);
-
-            string targetOutputDir = Path.Combine(modelDir, FileConstants.OutputDirectoryName);
-            SaveOutput(targetOutputDir, switchTo);
         }
 
         /// <summary>
@@ -527,7 +525,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             // write spatial data:
             SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
-            SaveOutput(targetDir, switchTo);
         }
 
         public void ReloadAllGrids()
@@ -621,14 +618,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 yield return domain.Bathymetry;
             }
 
-            foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
-            {
-                if (wavmFileFunctionStore != null && !string.IsNullOrEmpty(wavmFileFunctionStore.Path))
-                {
-                    yield return wavmFileFunctionStore;
-                }
-            }
-
             foreach (IWaveBoundary boundary in BoundaryContainer.Boundaries)
             {
                 yield return boundary;
@@ -684,31 +673,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             base.OnProgressChanged();
         }
 
-        protected virtual void ReconnectWavmFile(string outputPath)
-        {
-            ReportProgressText("Reading output (WAVM) file");
-            List<IWaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain).ToList();
-            if (domains.Count > 1)
-            {
-                for (var i = 0; i < domains.Count; ++i)
-                {
-                    string wavmFile = Path.Combine(outputPath, "wavm-" + Name + "-" + domains[i].Name + ".nc");
-                    ConnectWavmFile(wavmFile, i);
-                }
-            }
-            else
-            {
-                string wavmFile = Path.Combine(outputPath, "wavm-" + Name + ".nc");
-                ConnectWavmFile(wavmFile, 0);
-            }
-        }
-
         protected override void OnClearOutput()
         {
-            BeginEdit(new DefaultEditAction("Clearing all wave output"));
-            WavmFunctionStores.ForEach(fs => fs.Close());
-            GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag).Content = string.Empty;
-            EndEdit();
         }
 
         internal void SyncModelTimesWithBase()
@@ -726,7 +692,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             foreach (IWaveDomainData subdomain in WaveDomainHelper.GetAllDomains(domain))
             {
                 DataItems.RemoveAllWhere(di => Equals(subdomain.Bathymetry, di.Value));
-                DataItems.RemoveAllWhere(di => di.Tag.Equals(WavmStoreDataItemTag + subdomain.Name));
             }
         }
 
@@ -736,8 +701,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             foreach (IWaveDomainData subdomain in WaveDomainHelper.GetAllDomains(domain))
             {
                 DataItems.Add(new DataItem(subdomain.Bathymetry, DataItemRole.Input));
-                AddDataItem(new WavmFileFunctionStore(""), DataItemRole.Input,
-                            WavmStoreDataItemTag + subdomain.Name);
             }
         }
 
@@ -1083,45 +1046,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             });
         }
 
-        private void SaveOutput(string targetDirectory, bool switchTo)
-        {
-            FileUtils.CreateDirectoryIfNotExists(targetDirectory);
-
-            foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
-            {
-                string oldOutputFilePath = wavmFileFunctionStore.Path;
-                string wavmOutputFileName = Path.GetFileName(oldOutputFilePath);
-                if (wavmOutputFileName == null)
-                {
-                    continue;
-                }
-
-                string newOutputFilePath = Path.Combine(targetDirectory, wavmOutputFileName);
-                if (wavmFileFunctionStore.Functions.Count == 0)
-                {
-                    if (File.Exists(newOutputFilePath) && !FileUtils.IsDirectory(newOutputFilePath))
-                    {
-                        FileUtils.DeleteIfExists(newOutputFilePath);
-                        wavmFileFunctionStore.Path = string.Empty;
-                    }
-
-                    continue;
-                }
-
-                bool savingToTheSameOutputFile = string.Equals(Path.GetFullPath(oldOutputFilePath), Path.GetFullPath(newOutputFilePath), StringComparison.CurrentCultureIgnoreCase);
-                if (string.IsNullOrEmpty(oldOutputFilePath) || savingToTheSameOutputFile || !File.Exists(oldOutputFilePath))
-                {
-                    continue;
-                }
-
-                File.Copy(oldOutputFilePath, newOutputFilePath, true);
-                if (switchTo)
-                {
-                    wavmFileFunctionStore.Path = newOutputFilePath;
-                }
-            }
-        }
-
         private void SaveBathymetries(IEnumerable<IWaveDomainData> allDomains, string projectPath)
         {
             foreach (IWaveDomainData domain in allDomains)
@@ -1149,25 +1073,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             WaveEnvironmentHelper.DimrRun = false;
-        }
-
-        private void ConnectWavmFile(string wavmFile, int i)
-        {
-            if (File.Exists(wavmFile))
-            {
-                BeginEdit(new DefaultEditAction("Reconnect output (WAVM) file"));
-
-                WavmFunctionStores.ElementAt(i).Path = wavmFile;
-                OutputIsEmpty = false;
-
-                EndEdit();
-            }
-            else
-            {
-                Log.WarnFormat(
-                    Resources.WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__,
-                    wavmFile);
-            }
         }
 
         private void ReportProgressText(string text = null)
@@ -1205,34 +1110,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     curvilinearCoverage.EndEdit();
                     bathyValueConverter.SpatialOperationSet.SetDirty();
                 }
-            }
-        }
-
-        private void ReconnectSwanDiagFile(string outputPath)
-        {
-            ReportProgressText("Reading Swan dia file");
-            string swanDiagFile = Path.Combine(outputPath,
-                                               "swn-diag." + Name);
-            var swanLog = GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag);
-
-            if (File.Exists(swanDiagFile))
-            {
-                try
-                {
-                    string log = File.ReadAllText(swanDiagFile);
-                    swanLog.Content = log;
-                }
-                catch (Exception ex)
-                {
-                    Log.ErrorFormat(Resources.WaveModel_ReadSwanDiagFile_Error_reading_log_file__0__1_,
-                                    swanDiagFile, ex.Message);
-                }
-            }
-            else
-            {
-                Log.WarnFormat(
-                    Resources.WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__,
-                    swanDiagFile);
             }
         }
 
@@ -1290,7 +1167,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private DateTime stopTime;
 
         private TimeSpan timeStep;
-        //private IHydroRegion region;
 
         string IFileBased.Path
         {
@@ -1435,8 +1311,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual void ConnectOutput(string outputPath)
         {
-            ReconnectWavmFile(outputPath);
-            ReconnectSwanDiagFile(outputPath);
         }
 
         public new virtual ActivityStatus Status
