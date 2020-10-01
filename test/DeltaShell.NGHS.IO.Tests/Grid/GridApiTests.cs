@@ -827,19 +827,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(AccessViolationException))]
         public void CreateFileNullExceptionTest()
         {
-            DoWithMockedGridApi(
-                gridApi =>
-                {
-                    var wrapper = new GridWrapper();
+            void Test() => DoWithMockedGridApi(gridApi =>
+            {
+                var wrapper = new GridWrapper();
 
-                    TypeUtils.SetField(gridApi, WrapperVarName, wrapper);
-                    var metaData = new UGridGlobalMetaData("My Model", "My Source", "1.0");
-                    gridApi.CreateFile(null, metaData);
-                },
-                remoteGridApi => {});
+                TypeUtils.SetField(gridApi, WrapperVarName, wrapper);
+                var metaData = new UGridGlobalMetaData("My Model", "My Source", "1.0");
+                gridApi.CreateFile(null, metaData);
+            }, remoteGridApi => {});
+
+            Assert.That(Test, Throws.InstanceOf<AccessViolationException>());
         }
 
         [Test]

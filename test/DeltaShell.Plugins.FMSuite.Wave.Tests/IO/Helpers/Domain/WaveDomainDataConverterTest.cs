@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Domain
             Assert.That(e.ParamName, Is.EqualTo(expParamName));
         }
 
-        private IEnumerable<TestCaseData> ArgumentNullCases()
+        private static IEnumerable<TestCaseData> ArgumentNullCases()
         {
             yield return new TestCaseData(null, Substitute.For<ILogHandler>(), "domainCategories");
             yield return new TestCaseData(Enumerable.Empty<DelftIniCategory>(), null, "logHandler");

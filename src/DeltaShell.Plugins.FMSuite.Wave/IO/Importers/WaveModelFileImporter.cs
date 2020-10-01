@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
@@ -16,8 +17,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
     /// <summary>
     /// Importer for importing D-Waves models from .mdw files.
     /// </summary>
-    /// <seealso cref="IDimrModelFileImporter"/>
-    public class WaveModelFileImporter : IDimrModelFileImporter
+    /// <seealso cref="IDimrModelFileImporter" />
+    public class WaveModelFileImporter : ModelFileImporterBase, IDimrModelFileImporter
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaveModelFileImporter));
         private readonly Func<string> getWorkingDirectoryPathFunc;
@@ -38,15 +39,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             this.getWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
         }
 
-        public string Name => "Waves Model";
+        public override string Name => "Waves Model";
 
-        public string Category => "D-Flow FM 2D/3D";
+        public override string Category => "D-Flow FM 2D/3D";
 
-        public string Description => string.Empty;
+        public override string Description => string.Empty;
 
-        public Bitmap Image => Resources.wave;
+        public override Bitmap Image => Resources.wave;
 
-        public IEnumerable<Type> SupportedItemTypes
+        public override IEnumerable<Type> SupportedItemTypes
         {
             get
             {
@@ -54,17 +55,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             }
         }
 
-        public bool OpenViewAfterImport => true;
+        public override bool OpenViewAfterImport => true;
 
-        public bool CanImportOnRootLevel => true;
+        public override bool CanImportOnRootLevel => true;
 
-        public string FileFilter => "Master Definition WAVE File|*.mdw";
+        public override string FileFilter => "Master Definition WAVE File|*.mdw";
 
-        public string TargetDataDirectory { get; set; }
+        public override string TargetDataDirectory { get; set; }
 
-        public bool ShouldCancel { get; set; }
+        public override bool ShouldCancel { get; set; }
 
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public override ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         /// <summary>
         /// MasterFileExtension needed for dimr xml import for
@@ -73,12 +74,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         /// </summary>
         public string MasterFileExtension => "mdw";
 
-        public bool CanImportOn(object targetObject)
+        public override bool CanImportOn(object targetObject)
         {
             return targetObject is ICompositeActivity || targetObject is WaveModel;
         }
 
-        public object ImportItem(string path, object target = null)
+        protected override object OnImportItem(string path, object target = null)
         {
             try
             {

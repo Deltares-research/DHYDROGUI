@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                     // After running the .cache file should be generated in the working directory.
                     string fullPath = Path.GetFullPath(model.CacheFile.Path);
-                    Assert.That(fullPath, Is.StringStarting(model.WorkingDirectoryPath));
+                    Assert.That(fullPath, Does.StartWith(model.WorkingDirectoryPath));
                 }
             }
         }
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                     // After running and saving the .cache file should be in the save directory.
                     string fullPath = Path.GetFullPath(model.CacheFile.Path);
-                    Assert.That(fullPath, Is.StringStarting(model.WorkingDirectoryPath));
+                    Assert.That(fullPath, Does.StartWith(model.WorkingDirectoryPath));
                 }
             }
         }
@@ -284,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                     // After running and saving the .cache file should be in the save directory.
                     string fullPath = Path.GetFullPath(model.CacheFile.Path);
-                    Assert.That(fullPath, Is.StringStarting(model.WorkingDirectoryPath));
+                    Assert.That(fullPath, Does.StartWith(model.WorkingDirectoryPath));
                 }
             }
         }

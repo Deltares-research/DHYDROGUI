@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             filesManager.Received(1).Add(filePath3, Arg.Is<Action<string>>(a => MatchesAction(parameters3, a)));
         }
 
-        private IEnumerable<TestCaseData> ConstructorArgumentNullCases()
+        private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
         {
             yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "category");
             yield return new TestCaseData(new DelftIniCategory(""), null, "filesManager");

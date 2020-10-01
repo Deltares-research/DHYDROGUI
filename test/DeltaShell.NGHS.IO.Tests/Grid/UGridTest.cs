@@ -61,35 +61,41 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException]
         public void TestIfFilenameIsNullUgridShouldThrowException()
         {
-            using (var uGrid = new UGrid(null))
+            Assert.That(() =>
             {
-                uGrid.Initialize();
-            }
+                using (var uGrid = new UGrid(null))
+                {
+                    uGrid.Initialize();
+                }
+            }, Throws.Exception);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException]
         public void TestIfFilenameIsEmptyStringUgridShouldThrowException()
         {
-            using (var uGrid = new UGrid(string.Empty))
+            Assert.That(() =>
             {
-                uGrid.Initialize();
-            }
+                using (var uGrid = new UGrid(string.Empty))
+                {
+                    uGrid.Initialize();
+                }
+            }, Throws.Exception);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [ExpectedException]
         public void TestIfFileDoesNotExistUgridShouldThrowException()
         {
-            using (var uGrid = new UGrid("thisFileDoesntExist.nc"))
+            Assert.That(() =>
             {
-                uGrid.Initialize();
-            }
+                using (var uGrid = new UGrid("thisFileDoesntExist.nc"))
+                {
+                    uGrid.Initialize();
+                }
+            }, Throws.Exception);
         }
 
         [Test]
@@ -147,17 +153,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(NullReferenceException), ExpectedMessage = "Object reference not set to an instance of an object.")]
         public void TestNullGlobalMetaData()
         {
-            string testFilePath =
-                TestHelper.GetTestFilePath(DUMMY_TEST_FILE);
+            string testFilePath = TestHelper.GetTestFilePath(DUMMY_TEST_FILE);
             string localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
             FileUtils.DeleteIfExists(localCopyOfTestFile);
-            //var metadata = new UGridGlobalMetaData();
+
             using (var uGrid = new UGrid(localCopyOfTestFile, null))
             {
-                uGrid.CreateFile();
+                Assert.That(() => uGrid.CreateFile(), Throws.InstanceOf<NullReferenceException>());
             }
         }
 
@@ -453,7 +457,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [Ignore]
+        [Ignore("Ignored.")]
         [Category(TestCategory.DataAccess)]
         public void TestCallWriteGeometry()
         {
@@ -463,7 +467,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [Ignore]
+        [Ignore("Ignored.")]
         [Category(TestCategory.DataAccess)]
         public void TestCallWriteMapFile()
         {

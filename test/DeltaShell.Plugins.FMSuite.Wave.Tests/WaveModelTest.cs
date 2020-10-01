@@ -23,7 +23,6 @@ using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
-using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 {

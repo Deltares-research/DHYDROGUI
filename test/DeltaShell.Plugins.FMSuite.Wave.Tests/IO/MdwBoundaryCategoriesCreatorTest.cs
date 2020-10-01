@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             filesManager.DidNotReceiveWithAnyArgs().Add(null, null);
         }
 
-        private IEnumerable<TestCaseData> ConstructorArgumentNullCases()
+        private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
         {
             yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "boundaryContainer");
             yield return new TestCaseData(Substitute.For<IBoundaryContainer>(), null, "filesManager");

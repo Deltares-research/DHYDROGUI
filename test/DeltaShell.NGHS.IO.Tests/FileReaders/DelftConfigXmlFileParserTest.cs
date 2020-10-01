@@ -114,17 +114,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void ConfigurationPathDoesNotExist()
         {
-            delftConfigXmlParser.Read<dimrXML>(null);
+            Assert.That(() => delftConfigXmlParser.Read<dimrXML>(null), Throws.InstanceOf<FileNotFoundException>());
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void ConfigurationFilePathIsEmpty()
         {
-            delftConfigXmlParser.Read<dimrXML>("");
+            Assert.That(() => delftConfigXmlParser.Read<dimrXML>(""), Throws.InstanceOf<FileNotFoundException>());
         }
 
         [Test]

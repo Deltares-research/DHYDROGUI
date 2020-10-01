@@ -21,9 +21,9 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
     [Category(TestCategory.Slow)]
     internal class HydroNetworkNHibernateTest : NHibernateIntegrationTestBase
     {
-        public override void TestFixtureSetUp()
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
         }
 

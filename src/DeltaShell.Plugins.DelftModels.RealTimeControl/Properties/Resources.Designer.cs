@@ -518,6 +518,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Null is expected, because target argument is unused..
+        /// </summary>
+        public static string RealTimeControlModelImporter_OnImportItem_Target_null_expected {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelImporter_OnImportItem_Target_null_expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import time series for signals are not existing, export failed..
         /// </summary>
         public static string RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_export_failed {

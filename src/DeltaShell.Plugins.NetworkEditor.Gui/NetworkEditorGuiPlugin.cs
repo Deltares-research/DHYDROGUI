@@ -197,11 +197,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(disposing);
 
-            Instance = null;
+            if (disposing)
+            {
+                Instance = null;
+            }
         }
 
         public override IMenuItem GetContextMenu(object sender, object data)

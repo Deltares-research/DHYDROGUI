@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
     [TestFixture]
     public class ExpressionObjectTest
     {
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
 
         [Test]
         public void Constructor_IdNull_ThrowsArgumentNullException()
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                                             .Using(new ExpressionObjectEqualityComparer()));
         }
 
-        private IEnumerable<TestCaseData> GetTestCases()
+        private static IEnumerable<TestCaseData> GetTestCases()
         {
             const string controlGroupName = "control_group_name";
             const string id = controlGroupName + "/expression_id";

@@ -12,13 +12,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
     {
         private RealTimeControlModelImporter importer;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             importer = new RealTimeControlModelImporter();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             importer = null;
