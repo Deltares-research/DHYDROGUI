@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// </summary>
         /// <param name="query">The query the user should answer.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="query"/> is <c>null</c>.</exception>
-        /// <returns></returns>
+        /// <returns><c>true</c> if the user confirmed, <c>false</c> otherwise.</returns>
         public bool InquireContinuation(string query)
         {
             if (query == null)
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             MessageBoxResult dialog = MessageBox.Show(
                 query,
-                Resources.CalculationInputChangeInquiryHelper_InquireContinuation_Confirm,
+                Resources.InquiryHelper_InquireContinuation_Confirm,
                 MessageBoxButton.OKCancel);
             return dialog == MessageBoxResult.OK;
         }
