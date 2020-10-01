@@ -95,6 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void DoubleClickingOutputItemProjectShouldEnableMapLayer()
         {
             string mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\Waves.mdw"));

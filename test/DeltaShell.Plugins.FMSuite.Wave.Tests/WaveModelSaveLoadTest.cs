@@ -313,6 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void SaveWaveModel_AfterClearingExistingOutput_ThenWaveOutputFileIsRemoved()
         {
             // Setup
@@ -359,6 +360,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [TestCase(true)]
         [TestCase(false)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ModelSaveTo_WithOutput_SavesOutput(bool switchTo)
         {
             // Setup
@@ -381,6 +383,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void WaveOutputSaveLoadTest()
         {
             using (DeltaShellApplication app = GetRunningApplication())

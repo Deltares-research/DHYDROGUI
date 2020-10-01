@@ -458,6 +458,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void TestUpdatingGridFileIsSyncedWithDataItemTag()
         {
             const string originalName = "Outer";
@@ -475,6 +476,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ClearOutput_WithSwanRunLogDataItem_ThenSwanRunLogContentIsEmpty()
         {
             // Setup
@@ -494,6 +496,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ClearOutput_WithOutputFunctions_ThenFunctionsAreRemovedFromModel()
         {
             // Setup
@@ -535,6 +538,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ConnectOutput_ShouldConnectWavmFileAndReadSwanDiagFile()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -561,6 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ConnectOutput_WhenOutputWAVMFileIsMissing_ShouldGiveLogWarningToUser()
         {
             // Arrange
@@ -580,6 +585,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ConnectOutput_WhenModelHasMultipleDomains_ShouldConnectWavmFileAndReadSwanDiagFile()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -612,6 +618,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ConnectOutput_WhenModelHasMultipleDomainsAndOutputWAVMFilesAreMissing_ShouldGiveLogWarningToUser()
         {
             // Arrange
@@ -641,6 +648,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ConnectOutput_WhenModelHasMultipleDomainsAndOneOfTheOutputWAVMFilesIsMissing_ShouldGiveLogWarningToUserAndConnectTheExisting()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -677,6 +685,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ConnectOutput_WhenSwanFileMissing_ShouldGiveLogWarningToUser()
         {
             using (var tempDirectory = new TemporaryDirectory())
