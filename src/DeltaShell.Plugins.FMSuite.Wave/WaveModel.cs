@@ -66,8 +66,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private IGridOperationApi gridOperationApi;
         private double previousProgress = 0;
 
+        /// <summary>
+        /// Creates a new empty <see cref="WaveModel"/>.
+        /// </summary>
         public WaveModel() : this(BuildEmptyModel) {}
 
+        /// <summary>
+        /// Creates a new <see cref="WaveModel"/> from the provided <paramref name="mdwPath"/>.
+        /// </summary>
+        /// <param name="mdwPath">The path to the mdw file.</param>
         public WaveModel(string mdwPath) : this(model => BuildModelFromMdw(model, mdwPath)) {}
 
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
@@ -102,6 +109,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </summary>
         public bool IsCoupledToFlow { get; set; }
 
+        /// <summary>
+        /// Gets the model definition.
+        /// </summary>
         public WaveModelDefinition ModelDefinition
         {
             get => modelDefinition;
