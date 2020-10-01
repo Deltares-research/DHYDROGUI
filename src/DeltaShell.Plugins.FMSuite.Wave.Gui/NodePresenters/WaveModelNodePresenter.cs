@@ -150,27 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private static IEnumerable<object> GetOutputItems(WaveModel model)
         {
-            IDataItem dataItem = model.GetDataItemByTag(WaveModel.SwanLogDataItemTag);
-            var swanLog = dataItem.Value as TextDocument;
-            if (swanLog != null && !string.IsNullOrEmpty(swanLog.Content))
-            {
-                yield return dataItem;
-            }
-
-            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
-            {
-                IDataItem subDataItem = model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name);
-                if (subDataItem == null)
-                {
-                    continue;
-                }
-
-                var functionStore = subDataItem.Value as WavmFileFunctionStore;
-                if (functionStore != null && functionStore.Functions.Any() && !string.IsNullOrEmpty(functionStore.Path))
-                {
-                    yield return subDataItem;
-                }
-            }
+            yield break;
         }
 
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaveModel model)

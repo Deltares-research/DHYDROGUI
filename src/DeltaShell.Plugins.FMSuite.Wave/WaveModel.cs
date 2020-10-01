@@ -49,7 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                              IHydroModel, IDimrModel
     {
         // Also add model specific data items to the exclude list in <see cref="BuildModel"/>
-        public const string WavmStoreDataItemTag = "WavmStoreDataItemTag";
         public const string SwanLogDataItemTag = "SwanLogDataItemTag";
         private static readonly ILog log = LogManager.GetLogger(typeof(WaveModel));
 
@@ -61,7 +60,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private string progressText;
 
         private IWaveDomainData outerDomain;
-        private string previousGridName;
 
         private IGridOperationApi gridOperationApi;
         private double previousProgress = 0;
@@ -264,7 +262,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 if (outerDomain != null)
                 {
-                    ((INotifyPropertyChanging) outerDomain).PropertyChanging -= OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged) outerDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
                     RemoveDataItemsForDomain(outerDomain);
                 }
@@ -274,7 +271,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
                 if (outerDomain != null)
                 {
-                    ((INotifyPropertyChanging) outerDomain).PropertyChanging += OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged) outerDomain).PropertyChanged += OnOuterDomainPropertyChanged;
                     AddDataItemsForDomain(outerDomain);
 
@@ -289,11 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             get
             {
-                return
-                    WaveDomainHelper.GetAllDomains(outerDomain).Select(
-                                        domain => GetDataItemByTag(WavmStoreDataItemTag + domain.Name))
-                                    .Where(di => di != null)
-                                    .Select(di => di.Value as WavmFileFunctionStore);
+                yield break;
             }
         }
 
@@ -712,54 +704,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private void OnOuterDomainPropertyChanging(object sender, PropertyChangingEventArgs e)
-        {
-            if (!(sender is WaveDomainData domain) || e.PropertyName != nameof(domain.GridFileName))
-            {
-                return;
-            }
-
-            previousGridName = domain.Name;
-        }
-
         private void OnOuterDomainPropertyChanged(object sender, PropertyChangedEventArgs eventArgs)
         {
-            if (!(sender is WaveDomainData domain))
+            if (!(sender is WaveDomainData domain) || eventArgs.PropertyName != GridPropertyName)
             {
                 return;
             }
 
-            if (eventArgs.PropertyName == nameof(domain.GridFileName) && !string.IsNullOrEmpty(previousGridName))
+            if (Equals(OuterDomain, domain))
             {
-                var dataItem = GetDataItemByTag(WavmStoreDataItemTag + previousGridName) as DataItem;
-                if (dataItem == null)
-                {
-                    return;
-                }
-
-                dataItem.Tag = WavmStoreDataItemTag + domain.Name;
-                dataItemByTagDictionaryIsDirty = true;
+                gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
             }
 
-            if (eventArgs.PropertyName == GridPropertyName)
+            UpdateBathymetry(domain);
+            UpdateBathymetryOperations(domain);
+
+            if (domain.Grid != null)
             {
-                if (Equals(OuterDomain, domain))
-                {
-                    gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
-                }
+                UpdateCoordinateSystem(domain.Grid.CoordinateSystem);
+            }
 
-                UpdateBathymetry(domain);
-                UpdateBathymetryOperations(domain);
-
-                if (domain.Grid != null)
-                {
-                    UpdateCoordinateSystem(domain.Grid.CoordinateSystem);
-                }
-
-                if (domain.Grid != null)
-                {
-                    CoordinateSystem = domain.Grid.CoordinateSystem;
-                }
+            if (domain.Grid != null)
+            {
+                CoordinateSystem = domain.Grid.CoordinateSystem;
             }
         }
 
@@ -835,7 +802,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 if (outerDomain != null)
                 {
-                    ((INotifyPropertyChanging) outerDomain).PropertyChanging -= OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged) outerDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
                 }
 
@@ -843,7 +809,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 ReplaceDataItemsForDomain(outerDomain);
                 if (outerDomain != null)
                 {
-                    ((INotifyPropertyChanging) outerDomain).PropertyChanging += OnOuterDomainPropertyChanging;
                     ((INotifyPropertyChanged) outerDomain).PropertyChanged += OnOuterDomainPropertyChanged;
                     gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
                 }

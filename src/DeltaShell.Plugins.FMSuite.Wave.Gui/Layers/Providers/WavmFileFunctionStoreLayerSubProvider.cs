@@ -47,48 +47,53 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 
         public ILayer CreateLayer(object sourceData, object parentData)
         {
-            if (!(sourceData is WavmFileFunctionStore store &&
-                  store.Functions.Any()))
-            {
-                return null;
-            }
+            // TODO: D3DFMIQ-2283
+            return null;
+            //if (!(sourceData is WavmFileFunctionStore store &&
+            //      store.Functions.Any()))
+            //{
+            //    return null;
+            //}
 
-            string domainName = store.Path;
-            var overrideDomainName = true;
+            //string domainName = store.Path;
+            //var overrideDomainName = true;
 
-            if (parentData is IWaveModel model)
-            {
-                IDataItem dataItem = model.GetDataItemByValue(store);
-                string dataItemTag = dataItem.Tag;
+            //if (parentData is IWaveModel model)
+            //{
+            //    IDataItem dataItem = model.GetDataItemByValue(store);
+            //    string dataItemTag = dataItem.Tag;
 
-                if (dataItemTag.StartsWith(WaveModel.WavmStoreDataItemTag))
-                {
-                    var paramsValue = new string(dataItemTag.Skip(WaveModel.WavmStoreDataItemTag.Length).ToArray());
-                    domainName = string.Join(" ", paramsValue, "WAVM");
-                    overrideDomainName = false;
-                }
-            }
+            //    if (dataItemTag.StartsWith(WaveModel.WavmStoreDataItemTag))
+            //    {
+            //        var paramsValue = new string(dataItemTag.Skip(WaveModel.WavmStoreDataItemTag.Length).ToArray());
+            //        domainName = string.Join(" ", paramsValue, "WAVM");
+            //        overrideDomainName = false;
+            //    }
+            //}
 
-            return factory.CreateOutputLayer(domainName, overrideDomainName);
+            //return factory.CreateOutputLayer(domainName, overrideDomainName);
         }
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)
         {
-            if (!(data is WavmFileFunctionStore store))
-            {
-                yield break;
-            }
+            // TODO: D3DFMIQ-2283
+            yield break;
 
-            WaveModel waveModel = getWaveModelsFunc?.Invoke().FirstOrDefault(m => m.WavmFunctionStores.Contains(store));
-            if (waveModel == null)
-            {
-                yield return store.Grid;
-            }
+            //if (!(data is WavmFileFunctionStore store))
+            //{
+            //    yield break;
+            //}
 
-            foreach (IFunction coverage in store.Functions)
-            {
-                yield return coverage;
-            }
+            //WaveModel waveModel = getWaveModelsFunc?.Invoke().FirstOrDefault(m => m.WavmFunctionStores.Contains(store));
+            //if (waveModel == null)
+            //{
+            //    yield return store.Grid;
+            //}
+
+            //foreach (IFunction coverage in store.Functions)
+            //{
+            //    yield return coverage;
+            //}
         }
     }
 }

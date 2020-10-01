@@ -461,18 +461,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void TestUpdatingGridFileIsSyncedWithDataItemTag()
         {
-            const string originalName = "Outer";
-            const string newName = "Blarg";
+            //const string originalName = "Outer";
+            //const string newName = "Blarg";
 
-            var waveModel = new WaveModel {OuterDomain = new WaveDomainData(originalName)};
+            //var waveModel = new WaveModel {OuterDomain = new WaveDomainData(originalName)};
 
-            var dataItem = waveModel.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + originalName) as DataItem;
-            Assert.NotNull(dataItem);
+            //var dataItem = waveModel.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + originalName) as DataItem;
+            //Assert.NotNull(dataItem);
 
-            // Simulate setting a new Grid Filepath
-            waveModel.OuterDomain.GridFileName = newName;
+            //// Simulate setting a new Grid Filepath
+            //waveModel.OuterDomain.GridFileName = newName;
 
-            Assert.AreEqual(WaveModel.WavmStoreDataItemTag + newName, dataItem.Tag);
+            //Assert.AreEqual(WaveModel.WavmStoreDataItemTag + newName, dataItem.Tag);
+            Assert.Fail("Needs to be reimplemented as part of the D-Waves output epic D3DFMIQ-2272");
         }
 
         [Test]
