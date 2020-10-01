@@ -25,7 +25,6 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using Netron.GraphLib;
 using Clipboard = DelftTools.Controls.Clipboard;
-using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 {
@@ -204,12 +203,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     return;
                 }
 
-                DialogResult dialogResult = MessageBox.Show(Resources.RealTimeControlModelNodePresenter_OutputLocationWarningMessage,
-                                                            Resources.RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning,
-                                                            MessageBoxButtons.OKCancel,
-                                                            MessageBoxIcon.Warning);
+                IInquiryHelper helper = new InquiryHelper();
+                bool result = helper.InquireContinuation(Resources.RealTimeControlModelNodePresenter_OutputLocationWarningMessage);
 
-                if (dialogResult == DialogResult.Cancel)
+                if (!result)
                 {
                     return;
                 }
@@ -405,7 +402,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 graphControl.ContextMenuItems.Add(new MenuItem("Copy", CopyAction) {Tag = selectedShapes});
             }
 
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
             if (helper.IsDataSet && !selectedShapes.Any())
             {
                 graphControl.ContextMenuItems.Add(new MenuItem("Paste", PasteAction));
@@ -442,7 +439,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void PasteAction(object sender, EventArgs e)
         {
             Point mea = PointToClient(MousePosition);
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
             if (helper.IsDataSet)
             {
                 helper.CopyShapesToController(controller, mea);
@@ -453,7 +450,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void CopyAction(object sender, EventArgs e)
         {
             var menuItem = (MenuItem) sender;
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.SetCopiedData((IEnumerable<ShapeBase>) menuItem.Tag);
         }
 

@@ -427,4 +427,7 @@
   <data name="RtcLegacyLoader36_an_error_occurred_while_deleting_file" xml:space="preserve">
     <value>An error occurred while deleting {0}: {1}</value>
   </data>
+  <data name="CalculationInputChangeInquiryHelper_InquireContinuation_Confirm" xml:space="preserve">
+    <value>Calculation Input change warning</value>
+  </data>
 </root>

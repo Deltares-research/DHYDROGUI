@@ -120,6 +120,7 @@
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.d2e10fc\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
@@ -166,6 +167,8 @@
     <Compile Include="Domain\ITimeDependentRtcObject.cs" />
     <Compile Include="Domain\LookupSignal.cs" />
     <Compile Include="Domain\Restart\RealTimeControlRestartFile.cs" />
+    <Compile Include="IInquiryHelper.cs" />
+    <Compile Include="InquiryHelper.cs" />
     <Compile Include="IO\DataAccess\BranchNode.cs" />
     <Compile Include="IO\DataAccess\ConditionDataAccessObject.cs" />
     <Compile Include="IO\DataAccess\ConditionDataAccessObjectCreator.cs" />

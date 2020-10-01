@@ -27,6 +27,7 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using Netron.GraphLib;
 using NetTopologySuite.Extensions.Features;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Clipboard = DelftTools.Controls.Clipboard;
@@ -520,7 +521,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         public void ControlGroupEditorSupportsCopyPaste()
         {
             // Setup
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.ClearData();
 
             // Precondition
@@ -638,6 +639,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             }
 
             mocks.VerifyAll();
+        }
+
+        [Test]
+        public void ControlGroupEditor_InquiryHelperThrowsNullExceptionWithNullArguments()
+        {
+            // Setup
+            var InquiryHelper = new InquiryHelper();
+
+            // Call
+            TestDelegate call = () => InquiryHelper.InquireContinuation(null);
+
+            // Assert
+            Assert.That(call, Throws.InstanceOf<ArgumentNullException>()
+                                    .With.Property(nameof(ArgumentNullException.ParamName))
+                                    .EqualTo("query"));
+        }
+
+        [Test]
+        public void ControlGroupEditor_InquiryHelperWithParameterIsInstanceOfIInquiryHelper()
+        {
+            // Setup
+            var inquiryHelper = Substitute.For<IInquiryHelper>();
+            var instance = new InquiryHelper();
+
+            // Call
+            inquiryHelper.InquireContinuation("test");
+
+            // Assert
+            Assert.That(instance, Is.InstanceOf<IInquiryHelper>());
         }
 
         private static void AssertCopyXmlToClipboard(RtcBaseObject rtcBaseObject, string controlGroupName)

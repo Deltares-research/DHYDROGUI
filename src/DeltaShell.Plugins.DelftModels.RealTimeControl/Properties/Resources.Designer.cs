@@ -71,6 +71,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Calculation Input change warning.
+        /// </summary>
+        public static string CalculationInputChangeInquiryHelper_InquireContinuation_Confirm {
+            get {
+                return ResourceManager.GetString("CalculationInputChangeInquiryHelper_InquireContinuation_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         public static string Categories_General {
