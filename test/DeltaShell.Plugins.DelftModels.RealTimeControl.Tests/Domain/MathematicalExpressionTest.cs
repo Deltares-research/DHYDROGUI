@@ -25,12 +25,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.That(mathematicalExpression.Inputs, Is.Empty);
             Assert.That(mathematicalExpression.InputMapping, Is.Not.Null);
             Assert.That(mathematicalExpression.InputMapping, Is.Empty);
+
             Assert.That(mathematicalExpression.Expression, Is.EqualTo(string.Empty));
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void AddInput_UpdatesInputMappingCorrectly()
+        public void AddInput_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -43,18 +44,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Add(input);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(1));
 
             const char expectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
-            Assert.That(mapping[expectedKey], Is.EqualTo(inputName));
+            Assert.That(mapping[expectedKey].Name, Is.EqualTo(inputName));
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void AddSecondInput_UpdatesInputMappingCorrectly()
+        public void AddSecondInput_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -73,22 +74,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Add(secondInput);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(2));
 
             const char firstExpectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
-            Assert.That(mapping[firstExpectedKey], Is.EqualTo(firstInputName));
+            Assert.That(mapping[firstExpectedKey].Name, Is.EqualTo(firstInputName));
 
             const char secondExpectedKey = 'B';
             Assert.That(existingKeys[1], Is.EqualTo(secondExpectedKey));
-            Assert.That(mapping[secondExpectedKey], Is.EqualTo(secondInputName));
+            Assert.That(mapping[secondExpectedKey].Name, Is.EqualTo(secondInputName));
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void AddMultipleInputs_UpdatesInputMappingCorrectly()
+        public void AddMultipleInputs_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -107,13 +108,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 mathematicalExpression.Inputs.Add(input);
 
                 // Assert
-                CollectionAssert.AreEqual(mathematicalExpression.InputMapping, expectedKeyValuePairs);
+                IEnumerable<KeyValuePair<char, string>> keyValuePairs = mathematicalExpression.InputMapping.Select( im => new KeyValuePair<char, string>(im.Key, im.Value.Name));
+                CollectionAssert.AreEqual(keyValuePairs, expectedKeyValuePairs);
             }
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void AddSecondInput_WithSameName_UpdatesInputMappingCorrectly()
+        public void AddSecondInput_WithSameName_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -131,13 +133,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Add(secondInput);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
-            Assert.That(existingKeys, Has.Length.EqualTo(1));
+            Assert.That(existingKeys, Has.Length.EqualTo(2));
 
-            const char expectedKey = 'A';
-            Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
-            Assert.That(mapping[expectedKey], Is.EqualTo(inputName));
+            const char firstExpectedKey = 'A';
+            Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
+            Assert.That(mapping[firstExpectedKey], Is.EqualTo(firstInput));
+            const char secondExpectedKey = 'B';
+            Assert.That(existingKeys[1], Is.EqualTo(secondExpectedKey));
+            Assert.That(mapping[secondExpectedKey], Is.EqualTo(secondInput));
         }
 
         [Test]
@@ -162,13 +167,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Remove(firstInput);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(1));
 
             const char expectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
-            Assert.That(mapping[expectedKey], Is.EqualTo(secondInputName));
+            Assert.That(mapping[expectedKey].Name, Is.EqualTo(secondInputName));
         }
 
         [Test]
@@ -192,13 +197,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs.Remove(secondInput);
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(1));
 
             const char expectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
-            Assert.That(mapping[expectedKey], Is.EqualTo(inputName));
+            Assert.That(mapping[expectedKey].Name, Is.EqualTo(inputName));
         }
 
         [Test]
@@ -224,17 +229,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             firstInput.Name = newInputName;
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
             Assert.That(existingKeys, Has.Length.EqualTo(2));
 
             const char firstExpectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
-            Assert.That(mapping[firstExpectedKey], Is.EqualTo(newInputName));
+            Assert.That(mapping[firstExpectedKey].Name, Is.EqualTo(newInputName));
 
             const char secondExpectedKey = 'B';
             Assert.That(existingKeys[1], Is.EqualTo(secondExpectedKey));
-            Assert.That(mapping[secondExpectedKey], Is.EqualTo(originalInputName));
+            Assert.That(mapping[secondExpectedKey].Name, Is.EqualTo(originalInputName));
         }
 
         [Test]
@@ -259,13 +264,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             firstInput.Name = secondInputName;
 
             // Assert
-            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            IReadOnlyDictionary<char, IInput> mapping = mathematicalExpression.InputMapping;
             char[] existingKeys = mapping.Keys.ToArray();
-            Assert.That(existingKeys, Has.Length.EqualTo(1));
+            Assert.That(existingKeys, Has.Length.EqualTo(2));
 
             const char firstExpectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
-            Assert.That(mapping[firstExpectedKey], Is.EqualTo(secondInputName));
+            Assert.That(mapping[firstExpectedKey].Name, Is.EqualTo(secondInputName));
         }
 
         [Test]
@@ -289,7 +294,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void SetInputs_UpdatesInputMappingCorrectly()
+        public void SetInputs_UpdatesInputToCharMappingCorrectly()
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
@@ -307,14 +312,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             // Assert
             Assert.That(mathematicalExpression.InputMapping, Has.Count.EqualTo(1));
 
-            var expectedEntry = new KeyValuePair<char, string>('A', inputName);
+            var expectedEntry = new KeyValuePair<char, IInput>('A', input);
             Assert.That(mathematicalExpression.InputMapping, Has.Member(expectedEntry));
         }
 
         [Test]
         [Category(TestCategory.Integration)]
         [TestCaseSource(nameof(GetInputsTestCases))]
-        public void RenameInput_AfterSetInputs_UpdatesInputMappingCorrectly(IInput input)
+        public void RenameInput_AfterSetInputs_UpdatesInputToCharMappingCorrectly(IInput input)
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression
@@ -334,7 +339,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.That(mathematicalExpression.InputMapping, Has.Count.EqualTo(1));
 
             var expectedEntry = new KeyValuePair<char, string>('A', secondInputName);
-            Assert.That(mathematicalExpression.InputMapping, Has.Member(expectedEntry));
+            Assert.That(mathematicalExpression.InputMapping.Select( im => new KeyValuePair<char, string>(im.Key, im.Value.Name)), Has.Member(expectedEntry));
         }
 
         [Test]
