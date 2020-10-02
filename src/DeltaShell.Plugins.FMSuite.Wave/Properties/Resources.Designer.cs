@@ -280,7 +280,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Forcing Type &quot;Spectrum based (From file)&quot; has been selected but file has not been added..
+        ///   Looks up a localized string similar to Forcing Type &quot;Spectrum based (From file)&quot; has been selected but no file has been added..
         /// </summary>
         public static string WaveBoundariesValidator_Validate_FilePath_cannot_be_empty {
             get {

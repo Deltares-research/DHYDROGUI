@@ -335,7 +335,7 @@
     <value>While saving the following error was thrown: {0}, validate the model for more information.</value>
   </data>
   <data name="WaveBoundariesValidator_Validate_FilePath_cannot_be_empty" xml:space="preserve">
-    <value>Forcing Type "Spectrum based (From file)" has been selected but file has not been added.</value>
+    <value>Forcing Type "Spectrum based (From file)" has been selected but no file has been added.</value>
   </data>
   <data name="WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected" xml:space="preserve">
     <value>No spectrum file has been selected.</value>
