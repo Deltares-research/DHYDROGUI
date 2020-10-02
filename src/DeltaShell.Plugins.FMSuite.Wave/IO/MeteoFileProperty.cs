@@ -22,7 +22,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             Value = value;
         }
 
+        /// <summary>
+        /// Gets the property key of this <see cref="MeteoFileProperty"/>.
+        /// </summary>
         public string Property { get; }
+
+        /// <summary>
+        /// Gets the value of this <see cref="MeteoFileProperty"/>.
+        /// </summary>
         public string Value { get; }
     }
 }
