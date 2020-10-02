@@ -7,9 +7,14 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
 {
+    /// <summary>
+    /// <see cref="WaveModelFileExporter"/> implements the <see cref="IFileExporter"/>
+    /// to export <see cref="WaveModel"/> as a .mdw file.
+    /// </summary>
+    /// <seealso cref="IFileExporter" />
     public class WaveModelFileExporter : IFileExporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModelFileExporter));
+        private static readonly ILog log = LogManager.GetLogger(typeof(WaveModelFileExporter));
 
         public string Name => "Waves model";
 
@@ -19,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
 
         public string FileFilter => "Master Definition WAVE File|*.mdw";
 
-        public Bitmap Icon { get; private set; }
+        public Bitmap Icon { get; } = null;
 
         public bool Export(object item, string path)
         {
@@ -45,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
             }
             catch (Exception)
             {
-                Log.ErrorFormat("Export of Waves model failed to path {0}.", path);
+                log.ErrorFormat("Export of Waves model failed to path {0}.", path);
                 return false;
             }
         }
@@ -55,9 +60,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
             yield return typeof(WaveModel);
         }
 
-        public bool CanExportFor(object item)
-        {
-            return true;
-        }
+        public bool CanExportFor(object item) => true;
     }
 }
