@@ -1,6 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
-
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
+﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
 {
     /// <summary>
     /// <see cref="IVisitableSpatiallyDefinedDataComponent"/> defines method to accept a

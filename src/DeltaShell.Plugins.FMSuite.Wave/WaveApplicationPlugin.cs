@@ -10,8 +10,8 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.FMSuite.Wave

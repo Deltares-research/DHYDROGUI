@@ -7,7 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 {

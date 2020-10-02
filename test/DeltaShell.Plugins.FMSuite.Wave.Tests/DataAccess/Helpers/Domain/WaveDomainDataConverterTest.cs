@@ -8,7 +8,7 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Domain;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Domain;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
 using NUnit.Framework;

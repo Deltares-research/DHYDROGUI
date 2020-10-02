@@ -4,7 +4,7 @@ using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries;
 using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries

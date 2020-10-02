@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Exporters

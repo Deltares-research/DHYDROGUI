@@ -8,7 +8,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries;
 using GeoAPI.Geometries;
 using NSubstitute;
 using NUnit.Framework;

@@ -1,4 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
+﻿using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers.Boundaries

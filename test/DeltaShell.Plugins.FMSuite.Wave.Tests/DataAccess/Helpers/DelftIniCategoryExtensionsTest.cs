@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Helpers

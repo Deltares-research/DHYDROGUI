@@ -2,7 +2,7 @@
 using System.Linq;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
 using NUnit.Framework;

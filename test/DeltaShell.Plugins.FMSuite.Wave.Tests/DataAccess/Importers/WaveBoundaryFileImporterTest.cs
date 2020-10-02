@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
