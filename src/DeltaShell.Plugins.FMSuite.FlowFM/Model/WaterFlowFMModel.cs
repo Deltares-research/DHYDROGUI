@@ -16,6 +16,7 @@ using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -44,7 +45,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     [Entity]
     public partial class WaterFlowFMModel : TimeDependentModelBase, IFileBased, IRestartModel,
                                             IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel,
-                                            IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
+                                            IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData, 
+                                            ICoupledModel
     {
         private const string HydroAreaTag = "hydro_area_tag";
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModel));
@@ -888,5 +890,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         #endregion
+
+        public IEnumerable<IDataItem> GetDataItemsUsedForCouplingModel(DataItemRole role)
+        {
+            return GetChildDataItemLocations(role).SelectMany(GetChildDataItems);
+        }
     }
 }

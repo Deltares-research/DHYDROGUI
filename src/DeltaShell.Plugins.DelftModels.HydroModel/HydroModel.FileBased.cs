@@ -67,8 +67,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     continue;
                 }
 
-                List<IDataItem> sourceItems = GetDataItems(sourceModel, DataItemRole.Output).ToList();
-                List<IDataItem> targetItems = GetDataItems(targetModel, DataItemRole.Input).ToList();
+                List<IDataItem> sourceItems = GetDataItemsUsedForCouplingModel(sourceModel, DataItemRole.Output).ToList();
+                List<IDataItem> targetItems = GetDataItemsUsedForCouplingModel(targetModel, DataItemRole.Input).ToList();
 
                 foreach (ModelExchange exchange in exchangeInfo.Exchanges)
                 {
@@ -132,14 +132,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             return flowModel != null && rtcModel != null;
         }
 
-        public static IEnumerable<IDataItem> GetDataItems(IModel model, DataItemRole role)
+        public static IEnumerable<IDataItem> GetDataItemsUsedForCouplingModel(IModel model, DataItemRole role)
         {
-            if (model is ILinkedDataItemsModel)
+            if (model is ICoupledModel coupledModel)
             {
-                return model.AllDataItems.Where(di => (di.Role & role) == role);
+                return coupledModel.GetDataItemsUsedForCouplingModel(role);
             }
 
-            return model.GetChildDataItemLocations(role).SelectMany(model.GetChildDataItems);
+            return Enumerable.Empty<IDataItem>();
         }
 
         /// <summary>
@@ -167,8 +167,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             var modelExchange = new ModelExchangeInfo(outputModel, inputModel);
 
-            IEnumerable<IDataItem> inputDataItems = GetDataItems(inputModel, DataItemRole.Input);
-            IEnumerable<IDataItem> outputDataItems = GetDataItems(outputModel, DataItemRole.Output);
+            IEnumerable<IDataItem> inputDataItems = GetDataItemsUsedForCouplingModel(inputModel, DataItemRole.Input);
+            IEnumerable<IDataItem> outputDataItems = GetDataItemsUsedForCouplingModel(outputModel, DataItemRole.Output);
             foreach (IDataItem linkedDataItem in GetLinkedDataInputItems(inputDataItems, outputDataItems))
             {
                 modelExchange.Exchanges.Add(new ModelExchange(linkedDataItem.LinkedTo, linkedDataItem));
@@ -187,8 +187,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             // Create the name mappings of the RTC components. The name will be temporarily set to their
             // default values when being unlinked during the save operation.
-            IReadOnlyDictionary<IDataItem, string> rtcInputNameMapping = GetDataItemNameMapping(GetDataItems(rtcModel, DataItemRole.Input));
-            IReadOnlyDictionary<IDataItem, string> rtcOutputNameMapping = GetDataItemNameMapping(GetDataItems(rtcModel, DataItemRole.Output));
+            IReadOnlyDictionary<IDataItem, string> rtcInputNameMapping = GetDataItemNameMapping(GetDataItemsUsedForCouplingModel(rtcModel, DataItemRole.Input));
+            IReadOnlyDictionary<IDataItem, string> rtcOutputNameMapping = GetDataItemNameMapping(GetDataItemsUsedForCouplingModel(rtcModel, DataItemRole.Output));
 
             return new[]
             {
@@ -211,8 +211,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             var modelExchange = new ModelExchangeInfo(outputModel, inputModel);
 
-            IEnumerable<IDataItem> inputDataItems = GetDataItems(inputModel, DataItemRole.Input);
-            IEnumerable<IDataItem> outputDataItems = GetDataItems(outputModel, DataItemRole.Output);
+            IEnumerable<IDataItem> inputDataItems = GetDataItemsUsedForCouplingModel(inputModel, DataItemRole.Input);
+            IEnumerable<IDataItem> outputDataItems = GetDataItemsUsedForCouplingModel(outputModel, DataItemRole.Output);
 
             // Cache the linked data input items as due to the unlinking, changes might occur that affects
             // the collection of linked objects.

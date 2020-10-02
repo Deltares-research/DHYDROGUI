@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Project explorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel, IFileBased
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, IControllingModel, IFileBased
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -1503,5 +1503,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public virtual bool IsOpen { get; set; }
 
         bool IFileBased.CopyFromWorkingDirectory => false;
+
+        IEnumerable<IDataItem> ICoupledModel.GetDataItemsUsedForCouplingModel(DataItemRole role)
+        {
+            return AllDataItems.Where(di => di.Role  == role);
+        }
     }
 }

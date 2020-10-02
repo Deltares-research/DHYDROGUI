@@ -688,6 +688,32 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.That(exception.ParamName, Is.EqualTo("value"));
         }
 
+        [Test]
+        [TestCase(DataItemRole.Input)]
+        [TestCase(DataItemRole.Output)]
+        [TestCase(DataItemRole.None)]
+        public void GetDataItemsUsedForCouplingModel_WhenCalledForModelWhichCannotCouple_ShouldReturnEmptyList(DataItemRole role)
+        {
+            var model = Substitute.For<IModel>();
+            IEnumerable<IDataItem> dataItems = HydroModel.GetDataItemsUsedForCouplingModel(model, role);
+
+            CollectionAssert.IsEmpty(dataItems);
+        }
+
+        [Test]
+        [TestCase(DataItemRole.Input)]
+        [TestCase(DataItemRole.Output)]
+        [TestCase(DataItemRole.None)]
+        public void GetDataItemsUsedForCouplingModel_WhenCalledForModelWhichCanCouple_ShouldReturnItsDataItemsUsedForCoupling(DataItemRole role)
+        {
+            IModel model = Substitute.For<IModel, ICoupledModel>();
+            var expectedDataItems = new List<IDataItem>();
+            ((ICoupledModel) model).GetDataItemsUsedForCouplingModel(role).Returns(expectedDataItems);
+            IEnumerable<IDataItem> dataItems = HydroModel.GetDataItemsUsedForCouplingModel(model, role);
+
+            Assert.AreSame(dataItems, expectedDataItems);
+        }
+
         private class SimpleFileExporter : IFileExporter
         {
             public string Name { get; }

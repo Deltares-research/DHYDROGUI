@@ -57,6 +57,7 @@
     <Compile Include="DefaultModelSettings.cs" />
     <Compile Include="Eventing\PropertyChangedExtendedEventArgs.cs" />
     <Compile Include="EnvironmentConstants.cs" />
+    <Compile Include="ICoupledModel.cs" />
     <Compile Include="IO\FilesManager.cs" />
     <Compile Include="IO\IFilesManager.cs" />
     <Compile Include="IO\ModelFileImporterBase.cs" />
