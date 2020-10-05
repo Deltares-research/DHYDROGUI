@@ -9,7 +9,7 @@ using System.IO;
 
 namespace DeltaShell.Dimr.xsd
 {
-    public partial class dimrXML
+    public class DimrXMLSerializers
     {
         
         private static System.Xml.Serialization.XmlSerializer serializer;
@@ -32,14 +32,14 @@ namespace DeltaShell.Dimr.xsd
         /// Serializes current dimrXML object into an XML document
         /// </summary>
         /// <returns>string XML value</returns>
-        public virtual string Serialize()
+        public virtual string Serialize(dimrXML dimrXML)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
             try
             {
                 memoryStream = new System.IO.MemoryStream();
-                Serializer.Serialize(memoryStream, this);
+                Serializer.Serialize(memoryStream, dimrXML);
                 memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
                 streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
@@ -109,12 +109,12 @@ namespace DeltaShell.Dimr.xsd
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(string fileName, dimrXML dimrXML, out System.Exception exception)
         {
             exception = null;
             try
             {
-                SaveToFile(fileName);
+                SaveToFile(fileName, dimrXML);
                 return true;
             }
             catch (System.Exception e)
@@ -124,12 +124,12 @@ namespace DeltaShell.Dimr.xsd
             }
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(string fileName, dimrXML dimrXML)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize();
+                string xmlString = Serialize(dimrXML);
                 System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
