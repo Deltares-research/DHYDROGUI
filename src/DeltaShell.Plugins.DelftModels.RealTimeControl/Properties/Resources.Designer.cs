@@ -208,15 +208,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Link change warning.
-        /// </summary>
-        public static string InquiryHelper_InquireContinuation_Confirm {
-            get {
-                return ResourceManager.GetString("InquiryHelper_InquireContinuation_Confirm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Mathematical expression {0} contains invalid expression &quot;{1}&quot;..
         /// </summary>
         public static string MathematicalExpressionSerializer_ParseMathematicalExpressionToRootBranchNode_Mathematical_expression__0__contains_invalid_expression__1__ {

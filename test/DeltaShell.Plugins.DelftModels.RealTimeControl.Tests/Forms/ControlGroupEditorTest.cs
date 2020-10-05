@@ -21,12 +21,14 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using Netron.GraphLib;
 using NetTopologySuite.Extensions.Features;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Clipboard = DelftTools.Controls.Clipboard;
@@ -638,6 +640,66 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             }
 
             mocks.VerifyAll();
+        }
+
+        [Test]
+        public void Link_ShapeTagIsOutputAndInquireContinuationTrue_LinksDataItem()
+        {
+            // Arrange
+            var groupEditor = new ControlGroupEditor();
+
+            var controlGroup = new ControlGroup();
+            groupEditor.Data = controlGroup;
+            var model = Substitute.For<IRealTimeControlModel>();
+            groupEditor.Model = model;
+
+            var target = Substitute.For<IDataItem>();
+            model.GetDataItemByValue(default(object)).ReturnsForAnyArgs(target);
+            model.WhenForAnyArgs(x => x.BeginEdit(null)).Do(x => { return; });
+
+            var shape = Substitute.For<Shape>();
+            shape.Tag = new Output();
+
+            var dataItem = Substitute.For<IDataItem>();
+            dataItem.Role = DataItemRole.Input;
+
+            var inquiryHelper = Substitute.For<IInquiryHelper>();
+            inquiryHelper.InquireContinuation(Resources.RealTimeControlModelNodePresenter_OutputLocationWarningMessage).Returns(true);
+
+            // Act
+            groupEditor.Link(shape, dataItem, inquiryHelper);
+
+            // Assert
+
+            dataItem.Received(1).LinkTo(target);
+        }
+
+        [Test]
+        public void Link_ShapeTagIsOutputAndInquireContinuationTrue_DoesNotLinksDataItem()
+        {
+            // Arrange
+            var groupEditor = new ControlGroupEditor();
+
+            var controlGroup = new ControlGroup();
+            groupEditor.Data = controlGroup;
+            var model = Substitute.For<IRealTimeControlModel>();
+            groupEditor.Model = model;
+
+            var target = Substitute.For<IDataItem>();
+
+            var shape = Substitute.For<Shape>();
+            shape.Tag = new Output();
+
+            var dataItem = Substitute.For<IDataItem>();
+            dataItem.Role = DataItemRole.Input;
+            var inquiryHelper = Substitute.For<IInquiryHelper>();
+            inquiryHelper.InquireContinuation(Resources.RealTimeControlModelNodePresenter_OutputLocationWarningMessage).Returns(false);
+
+            // Act
+            groupEditor.Link(shape, dataItem, inquiryHelper);
+
+            // Assert
+            dataItem.DidNotReceive().LinkTo(target);
         }
 
         private static void AssertCopyXmlToClipboard(RtcBaseObject rtcBaseObject, string controlGroupName)
