@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
     [XmlRoot("rtcDataConfig", Namespace="http://www.wldelft.nl/fews", IsNullable=false)]
-    public partial class RTCDataConfigXML : IXmlParsedObject
+    public partial class RTCDataConfigXML
     {
         
         #region Private fields
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RTCSeriesImportXML : IXmlParsedObject
+    public partial class RTCSeriesImportXML
     {
         
         #region Private fields
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PITimeSeriesImportFileXML : IXmlParsedObject
+    public partial class PITimeSeriesImportFileXML
     {
         
         #region Private fields
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PITimeSeriesExportFileXML : IXmlParsedObject
+    public partial class PITimeSeriesExportFileXML
     {
         
         #region Private fields
@@ -243,7 +243,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class CSVTimeSeriesFileXML : IXmlParsedObject
+    public partial class CSVTimeSeriesFileXML
     {
         
         #region Private fields
@@ -334,7 +334,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RTCSeriesExportXML : IXmlParsedObject
+    public partial class RTCSeriesExportXML
     {
         
         #region Private fields
@@ -401,7 +401,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class RTCTimeSeriesXML : IXmlParsedObject
+    public partial class RTCTimeSeriesXML
     {
         
         #region Private fields
@@ -497,7 +497,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PITimeSeriesXML : IXmlParsedObject
+    public partial class PITimeSeriesXML
     {
         
         #region Private fields
@@ -619,7 +619,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TimeStepXMLData : IXmlParsedObject
+    public partial class TimeStepXMLData
     {
         
         #region Private fields
@@ -737,7 +737,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OpenMIExchangeItemXML : IXmlParsedObject
+    public partial class OpenMIExchangeItemXML
     {
         
         #region Private fields

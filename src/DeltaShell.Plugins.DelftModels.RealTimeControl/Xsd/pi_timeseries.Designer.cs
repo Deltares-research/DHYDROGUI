@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
     [XmlRoot("TimeSeries", Namespace = "http://www.wldelft.nl/fews/PI", IsNullable = false)]
-    public partial class TimeSeriesCollectionComplexType : IXmlParsedObject
+    public partial class TimeSeriesCollectionComplexType
     {
 
         #region Private fields
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class TimeSeriesComplexType : IXmlParsedObject
+    public partial class TimeSeriesComplexType
     {
 
         #region Private fields
@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class HeaderComplexType : IXmlParsedObject
+    public partial class HeaderComplexType
     {
 
         #region Private fields
@@ -617,7 +617,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class TimeStepComplexType : IXmlParsedObject
+    public partial class TimeStepComplexType
     {
 
         #region Private fields
@@ -718,7 +718,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class EventComplexType : IXmlParsedObject
+    public partial class EventComplexType
     {
 
         #region Private fields
@@ -840,7 +840,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class DateTimePropertyComplexType : IXmlParsedObject
+    public partial class DateTimePropertyComplexType
     {
 
         #region Private fields
@@ -916,7 +916,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class BoolPropertyComplexType : IXmlParsedObject
+    public partial class BoolPropertyComplexType
     {
 
         #region Private fields
@@ -977,7 +977,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class DoublePropertyComplexType : IXmlParsedObject
+    public partial class DoublePropertyComplexType
     {
 
         #region Private fields
@@ -1038,7 +1038,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class FloatPropertyComplexType : IXmlParsedObject
+    public partial class FloatPropertyComplexType
     {
 
         #region Private fields
@@ -1099,7 +1099,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class IntPropertyComplexType : IXmlParsedObject
+    public partial class IntPropertyComplexType
     {
 
         #region Private fields
@@ -1160,7 +1160,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class StringPropertyComplexType : IXmlParsedObject
+    public partial class StringPropertyComplexType
     {
 
         #region Private fields
@@ -1221,7 +1221,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class PropertiesComplexType : IXmlParsedObject
+    public partial class PropertiesComplexType
     {
 
         #region Private fields
@@ -1277,7 +1277,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class HighLevelThresholdsComplexType : IXmlParsedObject
+    public partial class HighLevelThresholdsComplexType
     {
 
         #region Private fields
@@ -1369,7 +1369,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace = "http://www.wldelft.nl/fews/PI")]
-    public partial class DateTimeComplexType : IXmlParsedObject
+    public partial class DateTimeComplexType
     {
 
         #region Private fields

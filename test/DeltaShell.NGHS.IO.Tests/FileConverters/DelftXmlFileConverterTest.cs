@@ -33,23 +33,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ConvertDimrWithExtraElementsOnRootLevel()
-        {
-            string xmlFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\ConfigXmlReader", "dimrwithextrainfo.xml");
-            using (StreamReader reader = File.OpenText(xmlFilePath))
-            {
-                var dimrXml = DelftXmlFileConverter.Convert<dimrXML>(reader, new List<string>());
-                Assert.IsNotNull(dimrXml);
-
-                Assert.AreEqual(dimrXml.UnKnownElements.Count, 1);
-
-                //Root level
-                Assert.AreEqual(dimrXml.UnKnownElements.ElementAt(0).Name, "test");
-            }
-        }
-
-        [Test]
         public void NoFileShouldThrowException()
         {
             Assert.That(() => DelftXmlFileConverter.Convert<dimrXML>(null, new List<string>()), 

@@ -23,15 +23,14 @@ namespace DeltaShell.NGHS.IO.FileReaders
         }
 
         /// <summary>
-        /// Reads an <see cref="IXmlParsedObject"/> from the
-        /// <param name="xmlFileSource"/>
+        /// Reads an instance of <typeparamref name="T"/> from the <paramref name="xmlFileSource"/>
         /// file
         /// </summary>
         /// <param name="xmlFileSource">Path to the xml file</param>
-        /// <typeparam name="T"><see cref="IXmlParsedObject"/> object to parse from the <see cref="xmlFileSource"/></typeparam>
-        /// <returns>De-serialized <see cref="IXmlParsedObject"/> object</returns>
+        /// <typeparam name="T">The type to parse from the <paramref name="xmlFileSource"/></typeparam>
+        /// <returns>De-serialized <typeparamref name="T"/> object</returns>
         /// <exception cref="FileNotFoundException">When the path to the file or the file does not exist.</exception>
-        public T Read<T>(string xmlFileSource) where T : class, IXmlParsedObject
+        public T Read<T>(string xmlFileSource) where T : class
         {
             if (string.IsNullOrEmpty(xmlFileSource) || !File.Exists(xmlFileSource))
             {
