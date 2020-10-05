@@ -16,6 +16,7 @@ using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -27,6 +28,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.ProjectExplorer;
 using GeoAPI.Extensions.Feature;
+using NSubstitute;
 using NUnit.Framework;
 using SharpTestsEx;
 
@@ -912,6 +914,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             // Act, Assert
             Assert.IsTrue(model.UseRestart);
+        }
+
+        [Test]
+        public void Constructor_RealTimeControlModelShouldBeInstanceOfICoupledModel()
+        {
+            // Arrange, Act
+            var rtcModel = new RealTimeControlModel();
+
+            // Assert
+            Assert.IsInstanceOf<ICoupledModel>(rtcModel);
+        }
+
+        [Test]
+        [TestCase(DataItemRole.Input)]
+        [TestCase(DataItemRole.Output)]
+        [TestCase(DataItemRole.None)]
+        public void GetDataItemsUsedForCouplingModel_ForDifferentRoles_ShouldReturnCorrespondingDataItems(DataItemRole role)
+        {
+            // Arrange
+            var rtcModel = new RealTimeControlModel();
+            var dataItem = Substitute.For<IDataItem>();
+            dataItem.Role.Returns(role);
+            rtcModel.DataItems.Clear();
+            rtcModel.DataItems.Add(dataItem);
+            
+            // Act
+            IList<IDataItem> couplingDataItems = ((ICoupledModel) rtcModel).GetDataItemsUsedForCouplingModel(role).ToList();
+
+            // Assert
+            Assert.AreEqual(1, couplingDataItems.Count);
+            Assert.AreSame(dataItem, couplingDataItems.First());
         }
 
         # endregion

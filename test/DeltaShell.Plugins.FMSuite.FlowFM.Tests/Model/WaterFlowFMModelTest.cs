@@ -17,6 +17,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -2064,6 +2065,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Constructor_WaterFlowFMModelShouldBeInstanceOfICoupledModel()
+        {
+            // Arrange, Act
+            var rtcModel = new WaterFlowFMModel();
+
+            // Assert
+            Assert.IsInstanceOf<ICoupledModel>(rtcModel);
+        }
+
+        [Test]
+        public void GetDataItemsUsedForCouplingModel_ForInputRoles_ShouldReturnCorrespondingDataItems()
+        {
+            // Arrange
+            var fmModel = new WaterFlowFMModel();
+            var weir = new Weir2D();
+           fmModel.Area.Weirs.Add(weir);
+
+           // Act
+            IList<IDataItem> couplingDataItems = ((ICoupledModel)fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Input).ToList();
+
+            // Assert
+            Assert.AreEqual(1, couplingDataItems.Count);
+        }
+
+        [Test]
+        public void GetDataItemsUsedForCouplingModel_ForOutputRoles_ShouldReturnCorrespondingDataItems()
+        {
+            // Arrange
+            var fmModel = new WaterFlowFMModel();
+            var observationPoint = new GroupableFeature2DPoint();
+            fmModel.Area.ObservationPoints.Add(observationPoint);
+
+            // Act
+            IList<IDataItem> couplingDataItems = ((ICoupledModel)fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Output).ToList();
+
+            // Assert
+            Assert.AreEqual(2, couplingDataItems.Count);
+        }
+
+        [Test]
+        public void GetDataItemsUsedForCouplingModel_ForNoneRoles_ShouldReturnEmptyList()
+        {
+            // Arrange
+            ICoupledModel fmModel = new WaterFlowFMModel();
+            
+            // Act
+            IList<IDataItem> couplingDataItems = fmModel.GetDataItemsUsedForCouplingModel(DataItemRole.Input).ToList();
+
+            // Assert
+            CollectionAssert.IsEmpty(couplingDataItems);
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
