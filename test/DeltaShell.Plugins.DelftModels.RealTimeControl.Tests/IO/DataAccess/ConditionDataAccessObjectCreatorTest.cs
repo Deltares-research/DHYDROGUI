@@ -270,8 +270,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             };
 
             StandardTriggerComplexType standardTriggerXml = CreateDirectionalConditionXml(id, operation,
-                                                                                  reference, inputRef,
-                                                                                  trueOutputs, falseOutputs);
+                                                                                          reference, inputRef,
+                                                                                          trueOutputs, falseOutputs);
 
             string[] trueOutputRefs =
             {
@@ -351,8 +351,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         }
 
         private static StandardTriggerComplexType CreateDirectionalConditionXml(string id, Operation operation,
-                                                                        string reference, string inputReference,
-                                                                        TriggerComplexType[] trueTriggers, TriggerComplexType[] falseTriggers)
+                                                                                string reference, string inputReference,
+                                                                                TriggerComplexType[] trueTriggers, TriggerComplexType[] falseTriggers)
         {
             var condition = new RelationalConditionComplexType
             {
@@ -375,8 +375,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         }
 
         private static StandardTriggerComplexType CreateStandardConditionXml(string id, double value, Operation operation,
-                                                                     string reference, string inputReference,
-                                                                     TriggerComplexType[] trueTriggers, TriggerComplexType[] falseTriggers)
+                                                                             string reference, string inputReference,
+                                                                             TriggerComplexType[] trueTriggers, TriggerComplexType[] falseTriggers)
         {
             var condition = new RelationalConditionComplexType
             {

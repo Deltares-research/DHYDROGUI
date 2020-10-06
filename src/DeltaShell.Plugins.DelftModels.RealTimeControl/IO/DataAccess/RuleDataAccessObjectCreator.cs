@@ -112,6 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             {
                 dataAccessObject.InputReferences.Add(pidRuleElement.input.x);
             }
+
             dataAccessObject.InputReferences.Add(pidRuleElement.input.x);
             if (pidRuleElement.input.Item is string signalId && signalId.Contains(RtcXmlTag.Signal))
             {

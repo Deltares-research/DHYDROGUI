@@ -247,7 +247,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                     },
                     missVal = -999
                 },
-                @event = new []
+                @event = new[]
                 {
                     new EventComplexType
                     {

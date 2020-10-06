@@ -102,8 +102,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             foreach (Operator @operator in Enum.GetValues(typeof(Operator)))
             {
                 ExpressionComplexType expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
-                                                                  .WithConstantAsFirstReference(constantValue)
-                                                                  .AndConstantAsSecondReference(constantValue);
+                                                                                  .WithConstantAsFirstReference(constantValue)
+                                                                                  .AndConstantAsSecondReference(constantValue);
                 var expectedResult = new ExpressionObject(id, @operator,
                                                           new ConstantLeafReference(constantValue),
                                                           new ConstantLeafReference(constantValue),
@@ -113,8 +113,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                     .SetName($" {@operator} - Constant - Constant");
 
                 expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
-                                                    .WithConstantAsFirstReference(constantValue)
-                                                    .AndInputAsSecondReference(inputReference);
+                                                            .WithConstantAsFirstReference(constantValue)
+                                                            .AndInputAsSecondReference(inputReference);
                 expectedResult = new ExpressionObject(id, @operator,
                                                       new ConstantLeafReference(constantValue),
                                                       new ParameterLeafReference(inputReference),
@@ -124,8 +124,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                     .SetName($" {@operator} - Constant - Input");
 
                 expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
-                                                    .WithConstantAsFirstReference(constantValue)
-                                                    .AndInputAsSecondReference(expressionReference);
+                                                            .WithConstantAsFirstReference(constantValue)
+                                                            .AndInputAsSecondReference(expressionReference);
                 expectedResult = new ExpressionObject(id, @operator,
                                                       new ConstantLeafReference(constantValue),
                                                       new ExpressionReference(expressionReference),
@@ -135,8 +135,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                     .SetName($" {@operator} - Constant - Expression");
 
                 expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
-                                                    .WithInputAsFirstReference(inputReference)
-                                                    .AndConstantAsSecondReference(constantValue);
+                                                            .WithInputAsFirstReference(inputReference)
+                                                            .AndConstantAsSecondReference(constantValue);
                 expectedResult = new ExpressionObject(id, @operator,
                                                       new ParameterLeafReference(inputReference),
                                                       new ConstantLeafReference(constantValue),
@@ -146,8 +146,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                     .SetName($" {@operator} - Input - Constant");
 
                 expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
-                                                    .WithInputAsFirstReference(inputReference)
-                                                    .AndInputAsSecondReference(inputReference);
+                                                            .WithInputAsFirstReference(inputReference)
+                                                            .AndInputAsSecondReference(inputReference);
                 expectedResult = new ExpressionObject(id, @operator,
                                                       new ParameterLeafReference(inputReference),
                                                       new ParameterLeafReference(inputReference),
@@ -157,8 +157,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                     .SetName($" {@operator} - Input - Input");
 
                 expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
-                                                    .WithInputAsFirstReference(inputReference)
-                                                    .AndInputAsSecondReference(expressionReference);
+                                                            .WithInputAsFirstReference(inputReference)
+                                                            .AndInputAsSecondReference(expressionReference);
                 expectedResult = new ExpressionObject(id, @operator,
                                                       new ParameterLeafReference(inputReference),
                                                       new ExpressionReference(expressionReference),
@@ -168,8 +168,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                     .SetName($" {@operator} - Input - Expression");
 
                 expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
-                                                    .WithInputAsFirstReference(expressionReference)
-                                                    .AndConstantAsSecondReference(constantValue);
+                                                            .WithInputAsFirstReference(expressionReference)
+                                                            .AndConstantAsSecondReference(constantValue);
                 expectedResult = new ExpressionObject(id, @operator,
                                                       new ExpressionReference(expressionReference),
                                                       new ConstantLeafReference(constantValue),
@@ -179,8 +179,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                     .SetName($" {@operator} - Expression - Constant");
 
                 expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
-                                                    .WithInputAsFirstReference(expressionReference)
-                                                    .AndInputAsSecondReference(inputReference);
+                                                            .WithInputAsFirstReference(expressionReference)
+                                                            .AndInputAsSecondReference(inputReference);
                 expectedResult = new ExpressionObject(id, @operator,
                                                       new ExpressionReference(expressionReference),
                                                       new ParameterLeafReference(inputReference),
@@ -190,8 +190,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                     .SetName($" {@operator} - Expression - Input");
 
                 expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
-                                                    .WithInputAsFirstReference(expressionReference)
-                                                    .AndInputAsSecondReference(expressionReference);
+                                                            .WithInputAsFirstReference(expressionReference)
+                                                            .AndInputAsSecondReference(expressionReference);
                 expectedResult = new ExpressionObject(id, @operator,
                                                       new ExpressionReference(expressionReference),
                                                       new ExpressionReference(expressionReference),

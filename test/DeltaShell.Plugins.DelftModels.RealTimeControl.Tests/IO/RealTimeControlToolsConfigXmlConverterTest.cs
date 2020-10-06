@@ -574,7 +574,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 valueOption = reference,
                 maximumPeriod = 1,
                 interpolationOption = interpolationOption,
-                controlTable = new []
+                controlTable = new[]
                 {
                     new TimeRelativeControlTableRecordComplexType
                     {
@@ -667,7 +667,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 id = tag + controlGroupName + "/" + ComponentName,
                 Item = new TableLookupTableComplexType
                 {
-                    record = new []
+                    record = new[]
                     {
                         new DateRecord2DataComplexType
                         {
@@ -721,7 +721,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             if (hasOutput)
             {
-                standardConditionElement.@true = new [] {CreateStandardConditionElement(tag, controlGroupName, conditionName + ":true_output")};
+                standardConditionElement.@true = new[]
+                {
+                    CreateStandardConditionElement(tag, controlGroupName, conditionName + ":true_output")
+                };
             }
 
             var conditionElement = new TriggerComplexType {Item = standardConditionElement};

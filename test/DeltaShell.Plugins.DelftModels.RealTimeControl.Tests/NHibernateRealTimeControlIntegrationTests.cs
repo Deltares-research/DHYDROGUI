@@ -25,16 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     [Category(TestCategory.Slow)]
     public class NHibernateRealTimeControlIntegrationTests : NHibernateIntegrationTestBase
     {
-        [OneTimeSetUp]
-        public override void OneTimeSetUp()
-        {
-            base.OneTimeSetUp();
-            factory.AddPlugin(new RealTimeControlGuiPlugin());
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
-            factory.AddPlugin(new RealTimeControlApplicationPlugin());
-            factory.AddPlugin(new CommonToolsApplicationPlugin());
-        }
-
         [Test]
         public void TestRtcOutputFileFunctionStoreIsPersisted()
         {
@@ -438,6 +428,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             LookupSignal retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateLookupSignal());
             Assert.IsNotNull(retrievedEntity);
             Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfLookupSignals(RealTimeControlTestHelper.GenerateLookupSignal(), retrievedEntity));
+        }
+
+        [OneTimeSetUp]
+        public override void OneTimeSetUp()
+        {
+            base.OneTimeSetUp();
+            factory.AddPlugin(new RealTimeControlGuiPlugin());
+            factory.AddPlugin(new NetworkEditorApplicationPlugin());
+            factory.AddPlugin(new RealTimeControlApplicationPlugin());
+            factory.AddPlugin(new CommonToolsApplicationPlugin());
         }
     }
 }
