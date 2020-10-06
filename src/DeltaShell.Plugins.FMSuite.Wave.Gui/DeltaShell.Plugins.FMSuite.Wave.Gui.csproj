@@ -341,7 +341,7 @@
     <Compile Include="Layers\Providers\ObstacleLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveModelLayerSubProvider.cs" />
-    <Compile Include="Layers\Providers\WavmFileFunctionStoreLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\OutputData\WavmFileFunctionStoreLayerSubProvider.cs" />
     <Compile Include="Layers\WaveLayerIcons.cs" />
     <Compile Include="Layers\WaveLayerNames.cs" />
     <Compile Include="Layers\WaveLayerFactory.cs" />
@@ -351,7 +351,7 @@
     <Compile Include="NodePresenters\SpatiallyVariantBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />
-    <Compile Include="NodePresenters\WavmFileFunctionStoreNodePresenter.cs" />
+    <Compile Include="NodePresenters\OutputData\WavmFileFunctionStoreNodePresenter.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

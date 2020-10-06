@@ -5,6 +5,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 {

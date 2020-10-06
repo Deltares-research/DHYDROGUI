@@ -10,6 +10,7 @@ using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData;
 using GeoAPI.Extensions.CoordinateSystems;
 using NetTopologySuite.Extensions.Coverages;
 using NSubstitute;
