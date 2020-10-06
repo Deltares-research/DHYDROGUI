@@ -9,24 +9,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// </summary>
     public class WaveOutputData : IWaveOutputData
     {
-        /// <summary>
-        /// Creates a new <see cref="WaveOutputData"/>.
-        /// </summary>
-        /// <param name="dataSourcePath">The data source path.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// </exception>
-        public WaveOutputData(string dataSourcePath)
-        {
-            ConnectTo(dataSourcePath);
-        }
-
-        public string DataSourcePath { get; private set; }
+        public string DataSourcePath { get; private set; } = null;
+        public bool IsConnected => DataSourcePath != null;
 
         public void ConnectTo(string dataSourcePath)
         {
             Ensure.NotNull(dataSourcePath, nameof(dataSourcePath));
-
             DataSourcePath = dataSourcePath;
+        }
+
+        public void Disconnect()
+        {
+            DataSourcePath = null;
         }
     }
 }

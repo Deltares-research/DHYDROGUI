@@ -11,7 +11,16 @@
         /// Gets the path to the data source on disk where the output data
         /// is read from.
         /// </summary>
+        /// <remarks>
+        /// If the data is currently disconnected, then null is returned.
+        /// </remarks>
         string DataSourcePath { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="IWaveOutputData"/>
+        /// is currently connected to an output folder.
+        /// </summary>
+        bool IsConnected { get; }
 
         /// <summary>
         /// Connects this <see cref="IWaveOutputData"/> to the specified path,
@@ -23,5 +32,10 @@
         /// </exception>
         // TODO: add relevant exceptions
         void ConnectTo(string dataSourcePath);
+
+        /// <summary>
+        /// Disconnects the output data from the current <see cref="DataSourcePath"/>.
+        /// </summary>
+        void Disconnect();
     }
 }

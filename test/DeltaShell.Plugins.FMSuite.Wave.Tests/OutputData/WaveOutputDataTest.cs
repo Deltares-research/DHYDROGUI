@@ -10,9 +10,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
     public class WaveOutputDataTest
     {
         [Test]
-        public void Constructor_DataSourcePathNull_ThrowsArgumentNullException()
+        public void Constructor_ValidDataSourcePath_ExpectedResult()
         {
-            void Call() => new WaveOutputData(null);
+            // Call
+            var outputData = new WaveOutputData();
+
+            // Assert
+            Assert.That(outputData, Is.InstanceOf<IWaveOutputData>());
+            Assert.That(outputData.DataSourcePath, Is.Null);
+            Assert.That(outputData.IsConnected, Is.False);
+        }
+
+        [Test]
+        public void ConnectTo_PathNull_ThrowsArgumentNullException()
+        {
+            
+            // Setup
+            var outputData = new WaveOutputData();
+
+            // Call | Assert
+            void Call() => outputData.ConnectTo(null);
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dataSourcePath"));
@@ -20,53 +37,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void Constructor_ValidDataSourcePath_ExpectedResult()
+        public void ConnectTo_ValidPath_ChangesDataSourcePath()
         {
-            // Setup
             using (var tempDir = new TemporaryDirectory())
             {
+                var outputData = new WaveOutputData();
+
                 // Call
-                var outputData = new WaveOutputData(tempDir.Path);
+                outputData.ConnectTo(tempDir.Path);
 
                 // Assert
-                Assert.That(outputData, Is.InstanceOf<IWaveOutputData>());
                 Assert.That(outputData.DataSourcePath, Is.EqualTo(tempDir.Path));
+                Assert.That(outputData.IsConnected, Is.True);
             }
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ConnectTo_PathNull_ThrowsArgumentNullException()
+        public void Disconnect_WithConnection_ChangesDataSourcePathToNull()
         {
-            
-            // Setup
             using (var tempDir = new TemporaryDirectory())
             {
-                var outputData = new WaveOutputData(tempDir.Path);
+                var outputData = new WaveOutputData();
+                outputData.ConnectTo(tempDir.Path);
 
-                // Call | Assert
-                void Call() => outputData.ConnectTo(null);
+                // Call
+                outputData.Disconnect();
 
-                var exception = Assert.Throws<System.ArgumentNullException>(Call);
-                Assert.That(exception.ParamName, Is.EqualTo("dataSourcePath"));
+                // Assert
+                Assert.That(outputData.DataSourcePath, Is.Null);
+                Assert.That(outputData.IsConnected, Is.False);
             }
         }
 
         [Test]
-        public void ConnectTo_ValidPath_ChangesDataSourcePath()
-        {
-            using (var tempDir = new TemporaryDirectory())
-            {
-                DirectoryInfo oldPath = Directory.CreateDirectory(Path.Combine(tempDir.Path, "old"));
-                DirectoryInfo newPath = Directory.CreateDirectory(Path.Combine(tempDir.Path, "new"));
-                var outputData = new WaveOutputData(oldPath.FullName);
+        public void Disconnect_WithoutConnection_ChangesDataSourcePathToNull()
+        { 
+            var outputData = new WaveOutputData();
 
-                // Call
-                outputData.ConnectTo(newPath.FullName);
+            // Call
+            outputData.Disconnect();
 
-                // Assert
-                Assert.That(outputData.DataSourcePath, Is.EqualTo(newPath.FullName));
-            }
+            // Assert
+            Assert.That(outputData.DataSourcePath, Is.Null);
+            Assert.That(outputData.IsConnected, Is.False);
         }
     }
 }
