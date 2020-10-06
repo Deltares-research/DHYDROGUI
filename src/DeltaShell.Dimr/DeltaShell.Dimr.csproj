@@ -81,8 +81,8 @@
     <Compile Include="DimrErrorCodeException.cs" />
     <Compile Include="DimrRunHelper.cs" />
     <Compile Include="DimrRunner.cs" />
-    <Compile Include="drtc_xsd\NGHS-RTC.cs">
-      <DependentUpon>NGHS-RTC.xsd</DependentUpon>
+    <Compile Include="drtc_xsd\rtcRuntimeConfig.cs">
+      <DependentUpon>rtcRuntimeConfig.xsd</DependentUpon>
     </Compile>
     <Compile Include="IDimrApi.cs" />
     <Compile Include="IDimrModel.cs" />
@@ -138,9 +138,6 @@
     <None Include="drtc_xsd\rtcSharedTypes.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="drtc_xsd\NGHS-RTC.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="drtc_xsd\rtcStateConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -174,9 +171,8 @@
     <Error Condition="!Exists('..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets'))" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>call "$(DevEnvDir)..\Tools\VsDevCmd.bat"
-cd "$(ProjectDir)\drtc_xsd"
-xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd .\NGHS-RTC.xsd /namespace:DeltaShell.Dimr.RtcXsd</PreBuildEvent>
+    <PreBuildEvent>cd "$(ProjectDir)\drtc_xsd"
+..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd</PreBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />

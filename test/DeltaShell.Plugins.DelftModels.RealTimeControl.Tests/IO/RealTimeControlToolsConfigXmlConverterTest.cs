@@ -345,16 +345,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             AssertPidRuleValidity(ruleObj.Object, expectedSetpointType, expectedConstantValue);
         }
 
-        [TestCase(ItemChoiceType7.settingMaxStep, Item1ChoiceType3.deadbandSetpointAbsolute,
+        [TestCase(ItemChoiceType6.settingMaxStep, Item1ChoiceType3.deadbandSetpointAbsolute,
                   IntervalRule.IntervalRuleIntervalType.Fixed, IntervalRule.IntervalRuleDeadBandType.Fixed, false)]
-        [TestCase(ItemChoiceType7.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
+        [TestCase(ItemChoiceType6.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
                   IntervalRule.IntervalRuleIntervalType.Variable, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
                   false)]
-        [TestCase(ItemChoiceType7.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
+        [TestCase(ItemChoiceType6.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
                   IntervalRule.IntervalRuleIntervalType.Signal, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
                   true)]
         public void ConvertToDataAccessObjects_IntervalRule_CorrectResultIsReturned(
-            ItemChoiceType7 intervalType,
+            ItemChoiceType6 intervalType,
             Item1ChoiceType3 deadBandType,
             IntervalRule.IntervalRuleIntervalType expectedIntervalType,
             IntervalRule.IntervalRuleDeadBandType expectedDeadBandType,
@@ -630,7 +630,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         private static RuleComplexType CreateIntervalRuleElement(string controlGroupName, bool signalAsSetpoint,
-                                                                 ItemChoiceType7 intervalType = ItemChoiceType7.settingMaxSpeed,
+                                                                 ItemChoiceType6 intervalType = ItemChoiceType6.settingMaxSpeed,
                                                                  Item1ChoiceType3 deadBandType =
                                                                      Item1ChoiceType3.deadbandSetpointAbsolute)
         {

@@ -333,9 +333,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                        : IntervalRule.IntervalRuleDeadBandType.Fixed;
         }
 
-        private static IntervalRule.IntervalRuleIntervalType GetIntervalType(ItemChoiceType7 itemType)
+        private static IntervalRule.IntervalRuleIntervalType GetIntervalType(ItemChoiceType6 itemType)
         {
-            return itemType == ItemChoiceType7.settingMaxStep
+            return itemType == ItemChoiceType6.settingMaxStep
                        ? IntervalRule.IntervalRuleIntervalType.Fixed
                        : IntervalRule.IntervalRuleIntervalType.Variable;
         }
