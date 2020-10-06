@@ -5,6 +5,7 @@ using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -228,6 +229,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
 
             return CreateReadOnlyLayer(WaveLayerNames.ActiveSupportPointsLayerName, featureProvider, style);
+        }
+
+        public ILayer CreateWaveOutputDataLayer(IWaveOutputData outputData)
+        {
+            Ensure.NotNull(outputData, nameof(outputData));
+
+            return new GroupLayer(WaveLayerNames.WaveOutputDataLayerName) {LayersReadOnly = true};
         }
 
         public ILayer CreateSelectedSupportPointLayer(IFeatureProvider featureProvider)

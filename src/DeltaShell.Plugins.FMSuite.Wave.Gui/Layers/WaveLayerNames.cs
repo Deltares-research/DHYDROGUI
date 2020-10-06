@@ -63,6 +63,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public const string ObservationCrossSectionLayerName = "Observation Cross-Sections";
 
         /// <summary>
+        /// The wave output data layer name
+        /// </summary>
+        public const string WaveOutputDataLayerName = "Output";
+
+        /// <summary>
         /// Gets the name of the domain layer given a <paramref name="domainName"/>.
         /// </summary>
         /// <param name="domainName">Name of the domain.</param>

@@ -1,4 +1,5 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using SharpMap.Api;
@@ -196,5 +197,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateActiveSupportPointsLayer(IFeatureProvider featureProvider);
+
+        /// <summary>
+        /// Creates the wave output data layer.
+        /// </summary>
+        /// <param name="outputData">The output data.</param>
+        /// <returns>
+        /// A new wave output data layer.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        ILayer CreateWaveOutputDataLayer(IWaveOutputData outputData);
     }
 }

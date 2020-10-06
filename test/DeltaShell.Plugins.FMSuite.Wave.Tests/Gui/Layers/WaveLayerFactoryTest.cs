@@ -6,6 +6,7 @@ using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -527,6 +528,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("featureProvider"));
         }
+
+        [Test]
+        public void CreateWaveOutputDataLayer_OutputDataNull_ThrowsArgumentNullException()
+        {
+            var factory = new WaveLayerFactory();
+
+            void Call() => factory.CreateWaveOutputDataLayer(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("outputData"));
+        }
+
+        [Test]
+        public void CreateWaveOutputDataLayer_ValidParameters_ExpectedResults()
+        {
+            // Setup
+            var outputData = Substitute.For<IWaveOutputData>();
+            var factory = new WaveLayerFactory();
+
+            // Call
+            ILayer layer = factory.CreateWaveOutputDataLayer(outputData);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<GroupLayer>());
+            Assert.That(layer.Name, Is.EqualTo(WaveLayerNames.WaveOutputDataLayerName));
+            Assert.That(((GroupLayer) layer).LayersReadOnly, Is.True);
+        }
+
 
         private static void AssertCorrectPointBoundaryLayer(ILayer layer,
                                                             IFeatureProvider featureProvider,
