@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
     [XmlRoot("rtcRuntimeConfig", Namespace="http://www.wldelft.nl/fews", IsNullable=false)]
-    public partial class RtcRuntimeConfigXML : IXmlParsedObject
+    public partial class RtcRuntimeConfigXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class FileXML : IXmlParsedObject
+    public partial class FileXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class FileDataXML : IXmlParsedObject
+    public partial class FileDataXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UserDefinedStateExportXML : IXmlParsedObject
+    public partial class UserDefinedStateExportXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -322,7 +322,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class LoggingXML : IXmlParsedObject
+    public partial class LoggingXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -450,7 +450,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(AnonymousType=true, Namespace="http://www.wldelft.nl/fews")]
-    public partial class LoggingXMLReportConstraintViolation : IXmlParsedObject
+    public partial class LoggingXMLReportConstraintViolation
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -506,7 +506,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ParallelizationXML : IXmlParsedObject
+    public partial class ParallelizationXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -591,7 +591,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ModesXML : IXmlParsedObject
+    public partial class ModesXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -626,7 +626,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ModeXML : IXmlParsedObject
+    public partial class ModeXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -676,7 +676,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ModeClosedLoopXML : IXmlParsedObject
+    public partial class ModeClosedLoopXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -742,7 +742,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ModeOptimizationXML : IXmlParsedObject
+    public partial class ModeOptimizationXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -823,7 +823,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class OptimizerXML : IXmlParsedObject
+    public partial class OptimizerXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -855,7 +855,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class GAMSXML : IXmlParsedObject
+    public partial class GAMSXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -906,7 +906,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTXML : IXmlParsedObject
+    public partial class IPOPTXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -1135,7 +1135,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTOutputXML : IXmlParsedObject
+    public partial class IPOPTOutputXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -1275,7 +1275,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTTerminationXML : IXmlParsedObject
+    public partial class IPOPTTerminationXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -1518,7 +1518,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTNLPScalingXML : IXmlParsedObject
+    public partial class IPOPTNLPScalingXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -1619,7 +1619,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTNLPXML : IXmlParsedObject
+    public partial class IPOPTNLPXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -1802,7 +1802,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTInitializationXML : IXmlParsedObject
+    public partial class IPOPTInitializationXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -1947,7 +1947,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTBarrierParameterXML : IXmlParsedObject
+    public partial class IPOPTBarrierParameterXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -2272,7 +2272,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTMultiplierUpdatesXML : IXmlParsedObject
+    public partial class IPOPTMultiplierUpdatesXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -2410,7 +2410,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTLineSearchXML : IXmlParsedObject
+    public partial class IPOPTLineSearchXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -2506,7 +2506,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTWarmStartXML : IXmlParsedObject
+    public partial class IPOPTWarmStartXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -2650,7 +2650,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTRestorationPhaseXML : IXmlParsedObject
+    public partial class IPOPTRestorationPhaseXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -2852,7 +2852,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTLinearSolverXML : IXmlParsedObject
+    public partial class IPOPTLinearSolverXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -3114,7 +3114,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MA27XML : IXmlParsedObject
+    public partial class MA27XML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -3213,7 +3213,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MA57XML : IXmlParsedObject
+    public partial class MA57XML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -3373,7 +3373,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MA77XML : IXmlParsedObject
+    public partial class MA77XML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -3581,7 +3581,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MA86XML : IXmlParsedObject
+    public partial class MA86XML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -3760,7 +3760,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MA97XML : IXmlParsedObject
+    public partial class MA97XML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -4228,7 +4228,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class MUMPSXML : IXmlParsedObject
+    public partial class MUMPSXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -4343,7 +4343,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PardisoXML : IXmlParsedObject
+    public partial class PardisoXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -4468,7 +4468,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTHessianPermutationXML : IXmlParsedObject
+    public partial class IPOPTHessianPermutationXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -4599,7 +4599,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTQuasiNewtonXML : IXmlParsedObject
+    public partial class IPOPTQuasiNewtonXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -4650,7 +4650,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class IPOPTDerivativeCheckerXML : IXmlParsedObject
+    public partial class IPOPTDerivativeCheckerXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -4806,7 +4806,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class SAXML : IXmlParsedObject
+    public partial class SAXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -4903,7 +4903,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class ModeSimulationXML : IXmlParsedObject
+    public partial class ModeSimulationXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -5006,7 +5006,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PIRunFileRuntimeXML : IXmlParsedObject
+    public partial class PIRunFileRuntimeXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -5070,7 +5070,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class TimeStepXML : IXmlParsedObject
+    public partial class TimeStepXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -5160,7 +5160,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PIInputRuntimeXML : IXmlParsedObject
+    public partial class PIInputRuntimeXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -5209,7 +5209,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class UserDefinedRuntimeXML : IXmlParsedObject
+    public partial class UserDefinedRuntimeXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -5304,7 +5304,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class PeriodXML : IXmlParsedObject
+    public partial class PeriodXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -5336,7 +5336,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class FileToolsXML : IXmlParsedObject
+    public partial class FileToolsXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -5366,7 +5366,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class FileScenarioTreeXML : IXmlParsedObject
+    public partial class FileScenarioTreeXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -5396,7 +5396,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class FileParameterXML : IXmlParsedObject
+    public partial class FileParameterXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }
@@ -5488,7 +5488,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.wldelft.nl/fews")]
-    public partial class FileObjectiveXML : IXmlParsedObject
+    public partial class FileObjectiveXML
     {
         [XmlIgnore]
         public List<XmlAttribute> UnKnownAttributes { get; set; }

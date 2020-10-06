@@ -24,7 +24,7 @@ namespace DeltaShell.Dimr.xsd {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.deltares.nl/dimr")]
     [System.Xml.Serialization.XmlRootAttribute("dimrConfig", Namespace="http://schemas.deltares.nl/dimr", IsNullable=false)]
-    public partial class dimrXML : IXmlParsedObject
+    public partial class dimrXML
     {
         
         private dimrDocumentationXML documentationField;
@@ -101,7 +101,7 @@ namespace DeltaShell.Dimr.xsd {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.deltares.nl/dimr")]
-    public partial class dimrDocumentationXML : IXmlParsedObject
+    public partial class dimrDocumentationXML
     {
         
         private decimal fileVersionField;
@@ -165,7 +165,7 @@ namespace DeltaShell.Dimr.xsd {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.deltares.nl/dimr")]
-    public partial class dimrCoupledItemXML : IXmlParsedObject
+    public partial class dimrCoupledItemXML
     {
         
         private string sourceNameField;
@@ -204,7 +204,7 @@ namespace DeltaShell.Dimr.xsd {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.deltares.nl/dimr")]
-    public partial class dimrCouplerXML : IXmlParsedObject
+    public partial class dimrCouplerXML
     {
         
         private string sourceComponentField;
@@ -269,7 +269,7 @@ namespace DeltaShell.Dimr.xsd {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.deltares.nl/dimr")]
-    public partial class dimrComponentXML : IXmlParsedObject
+    public partial class dimrComponentXML
     {
         
         private string libraryField;
@@ -351,7 +351,7 @@ namespace DeltaShell.Dimr.xsd {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.deltares.nl/dimr")]
-    public partial class dimrComponentOrCouplerRefXML : IXmlParsedObject
+    public partial class dimrComponentOrCouplerRefXML
     {
         
         private string nameField;
@@ -380,7 +380,7 @@ namespace DeltaShell.Dimr.xsd {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.deltares.nl/dimr")]
-    public partial class dimrStartGroupXML : IXmlParsedObject
+    public partial class dimrStartGroupXML
     {
         
         private string timeField;
@@ -449,7 +449,7 @@ namespace DeltaShell.Dimr.xsd {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.deltares.nl/dimr")]
-    public partial class dimrParallelXML : IXmlParsedObject
+    public partial class dimrParallelXML
     {
         
         private object[] itemsField;

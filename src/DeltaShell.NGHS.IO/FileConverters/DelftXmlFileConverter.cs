@@ -13,17 +13,16 @@ namespace DeltaShell.NGHS.IO.FileConverters
     public static class DelftXmlFileConverter
     {
         /// <summary>
-        /// De-serializes a
-        /// <typeparam name="T"/>
-        /// object from the supplied <see cref="file"/> and
+        /// De-serializes a <typeparamref name="T"/> object from the supplied <see cref="file"/> and
         /// lists all unsupported elements and attributes
         /// </summary>
         /// <param name="file"><see cref="StreamReader"/> to the xml file</param>
         /// <param name="unsupportedFeatures">List of unsupported item messages</param>
-        /// <returns>Parsed <see cref="IXmlParsedObject"/> object</returns>
+        /// <typeparam name="T">The type to parse from the <paramref name="file"/></typeparam>
+        /// <returns>Parsed <typeparamref name="T"/> object</returns>
         /// <exception cref="ArgumentException">When one of the arguments is null</exception>
         /// <exception cref="XmlException">When de-serializing fails</exception>
-        public static T Convert<T>(StreamReader file, List<string> unsupportedFeatures) where T : class, IXmlParsedObject
+        public static T Convert<T>(StreamReader file, List<string> unsupportedFeatures) where T : class
         {
             if (file == null)
             {
@@ -40,13 +39,11 @@ namespace DeltaShell.NGHS.IO.FileConverters
             serializer.UnknownElement += (sender, args) =>
             {
                 unsupportedFeatures.Add($"Element: \"{args.Element.Name}\" at line {args.LineNumber} position {args.LinePosition}");
-                AddUnknownItem(args.ObjectBeingDeserialized as T, args.Element, o => o.UnKnownElements, (o, l) => o.UnKnownElements = l);
             };
 
             serializer.UnknownAttribute += (sender, args) =>
             {
                 unsupportedFeatures.Add($"Attribute: \"{args.Attr.Name}\" at line {args.LineNumber} position {args.LinePosition}");
-                AddUnknownItem(args.ObjectBeingDeserialized as T, args.Attr, o => o.UnKnownAttributes, (o, l) => o.UnKnownAttributes = l);
             };
 
             try
@@ -57,23 +54,6 @@ namespace DeltaShell.NGHS.IO.FileConverters
             {
                 throw new XmlException($"Error during parsing : {e.InnerException?.Message}");
             }
-        }
-
-        private static void AddUnknownItem<T>(IXmlParsedObject xmlParsedObject, T item, Func<IXmlParsedObject, List<T>> getList, Action<IXmlParsedObject, List<T>> setList)
-        {
-            if (xmlParsedObject == null)
-            {
-                return;
-            }
-
-            List<T> list = getList?.Invoke(xmlParsedObject);
-            if (list == null)
-            {
-                list = new List<T>();
-                setList?.Invoke(xmlParsedObject, list);
-            }
-
-            list.Add(item);
         }
     }
 }

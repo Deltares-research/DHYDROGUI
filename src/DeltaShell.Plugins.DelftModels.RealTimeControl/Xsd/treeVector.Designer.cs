@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.openda.org")]
     [XmlRoot("treeVectorFile", Namespace="http://www.openda.org", IsNullable=false)]
-    public partial class TreeVectorFileXML : IXmlParsedObject
+    public partial class TreeVectorFileXML
     {
         
         #region Private fields
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.openda.org")]
-    public partial class DateTimeXML : IXmlParsedObject
+    public partial class DateTimeXML
     {
         
         #region Private fields
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.openda.org")]
-    public partial class PhysicalDimensionXML : IXmlParsedObject
+    public partial class PhysicalDimensionXML
     {
         
         #region Private fields
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.openda.org")]
-    public partial class ComputationalDimensionXML : IXmlParsedObject
+    public partial class ComputationalDimensionXML
     {
         
         #region Private fields
@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.openda.org")]
-    public partial class GridXML : IXmlParsedObject
+    public partial class GridXML
     {
         
         #region Private fields
@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.openda.org")]
-    public partial class DimensionsXML : IXmlParsedObject
+    public partial class DimensionsXML
     {
         
         #region Private fields
@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.openda.org")]
-    public partial class TreeVectorLeafXML : IXmlParsedObject
+    public partial class TreeVectorLeafXML
     {
         
         #region Private fields
@@ -494,7 +494,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd
     [DebuggerStepThrough()]
     [DesignerCategory("code")]
     [XmlType(Namespace="http://www.openda.org")]
-    public partial class TreeVectorXML : IXmlParsedObject
+    public partial class TreeVectorXML
     {
         
         #region Private fields
