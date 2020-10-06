@@ -15,9 +15,11 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
+using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -947,8 +949,478 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.AreSame(dataItem, couplingDataItems.First());
         }
 
-        # endregion
+        [Test]
+        public void CreateNew_ShouldSetIsOpenAndPathProperties()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
 
+            // Act
+            const string filePath = "test";
+            rtcModel.CreateNew(filePath);
+
+            // Assert
+            Assert.AreEqual(filePath, rtcModel.Path);
+            Assert.IsTrue(rtcModel.IsOpen);
+        }
+
+        [Test]
+        public void CreateNew_ForFilePathIsNull_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act
+            void Call () => rtcModel.CreateNew(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.AreEqual("filePath", exception.ParamName);
+        }
+
+        [Test]
+        public void CreateNew_ForRootedFilePath_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act
+            string filePath = Path.Combine("c:");
+            void Call() => rtcModel.CreateNew(filePath);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.AreEqual("projectDirectory", exception.ParamName);
+        }
+
+        [Test]
+        public void Close_ShouldSetIsOpenPropertyToFalse()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act
+            rtcModel.Close();
+
+            // Assert
+            Assert.IsFalse(rtcModel.IsOpen);
+        }
+
+        [Test]
+        public void Open_ShouldSetIsOpenPropertyToTrue()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act
+            const string filePath = "test";
+            rtcModel.Open(filePath);
+
+            // Assert
+            Assert.IsTrue(rtcModel.IsOpen);
+        }
+
+        [Test]
+        public void Open_ForFilePathIsNull_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act
+            void Call() => rtcModel.Open(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.AreEqual("filePath", exception.ParamName);
+        }
+        
+        [Test]
+        public void CopyTo_ForFilePathIsNull_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act
+            void Call() => rtcModel.CopyTo(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.AreEqual("destinationPath", exception.ParamName);
+        }
+
+        [Test]
+        public void CopyTo_ForCurrentOutputDirectoryIsNull_ShouldDoNothing()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                IFileBased rtcModel = new RealTimeControlModel();
+
+                // Act
+                string filePath = Path.Combine(tempDirectory.Path, "RtcModel");
+                rtcModel.CopyTo(filePath);
+
+                // Assert
+                var dir = new DirectoryInfo(tempDirectory.Path);
+                DirectoryInfo[] subDirs = dir.GetDirectories();
+                FileInfo[] subFiles = dir.GetFiles();
+
+                CollectionAssert.IsEmpty(subDirs);
+                CollectionAssert.IsEmpty(subFiles);
+            }
+        }
+
+        [Test]
+        public void SwitchTo_ForFilePathIsNull_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act
+            void Call() => rtcModel.SwitchTo(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.AreEqual("newPath", exception.ParamName);
+        }
+
+        [Test]
+        public void Path_ShouldReturnTheEarlierSetPath()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act
+            const string filePath = "test";
+            rtcModel.Path = filePath;
+
+            // Assert
+            Assert.AreEqual(filePath, rtcModel.Path);
+        }
+
+        [Test]
+        public void IsFileCritical_ShouldReturnTrue()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act, Assert
+            Assert.IsTrue(rtcModel.IsFileCritical);
+        }
+
+        [Test]
+        public void CopyFromWorkingDirectory_ShouldReturnFalse()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act, Assert
+            Assert.IsFalse(rtcModel.CopyFromWorkingDirectory);
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenSavingForFirstTime_NewDirectoryShouldNotExist()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string filePathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID"); 
+                string filePathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID"); 
+
+                // When
+                frameworkSimulator.NewProject(filePathBeforeSave);
+                frameworkSimulator.FirstSaveAs(filePathAfterSave);
+
+                // Then
+                // There aren't output files, so there is nothing to write.
+                // Due to that model and project_data folder is also missing.
+                DirectoryAssert.DoesNotExist(projectDirectoryAfterSave);
+                
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenRunningAndSavingForFirstTime_NewPersistentOutputDirectoryShouldExist()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+                
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
+
+                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
+                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
+                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
+                File.WriteAllText(workingDirectoryFile, "WD");
+
+                // When
+                frameworkSimulator.NewProject(pathBeforeSave);
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                frameworkSimulator.FirstSaveAs(pathAfterSave);
+
+                // Then
+                string outputFolderAfterSave = Path.Combine(projectDirectoryAfterSave, rtcModel.Name, "output");
+                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "WorkingDirectoryOutputFile");
+                Assert.IsTrue(Directory.Exists(outputFolderAfterSave));
+                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
+
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningAndSavingAgain_NewPersistentOutputDirectoryShouldExist()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
+                
+                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
+                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
+                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
+                File.WriteAllText(workingDirectoryFile, "WD");
+
+                // When
+                frameworkSimulator.NewProject(pathBeforeSave);
+                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                frameworkSimulator.Save(pathAfterSave);
+                
+                // Then
+                string outputFolderAfterSave = Path.Combine(projectDirectoryAfterSave, rtcModel.Name, "output");
+                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "WorkingDirectoryOutputFile");
+                Assert.IsTrue(Directory.Exists(outputFolderAfterSave));
+                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
+
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningAndSavingAs_NewPersistentOutputDirectoryShouldExist()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSaveAs_data");
+                string pathAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, "RealTimeControlModelGUID");
+
+                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
+                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
+                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
+                File.WriteAllText(workingDirectoryFile, "WD");
+
+                // When
+                frameworkSimulator.NewProject(pathBeforeSave);
+                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                frameworkSimulator.SaveAs(pathAfterSaveAs);
+
+                // Then
+                string outputFolderAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, rtcModel.Name, "output");
+                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSaveAs, "WorkingDirectoryOutputFile");
+                Assert.IsTrue(Directory.Exists(outputFolderAfterSaveAs));
+                Assert.IsFalse(Directory.Exists(projectDirectoryAfterSave));
+                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
+
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAnOpenedProjectWithRTCAndOutput_ThenIsOpenPropertyShouldBeTrue()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+                
+                // When
+                frameworkSimulator.OpenProject(pathBeforeSave);
+                
+                // Then
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAnOpenedProjectWithRTCAndOutput_WhenSaving_ThenPersistentOutputDirectoryShouldContainOriginalOutputFiles()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryPersistentFolder = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, "RealTimeControlModelGUID");
+                string outputFolderPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, "output");
+                Directory.CreateDirectory(outputFolderPersistentFolder);
+                string originalOutputFile = Path.Combine(outputFolderPersistentFolder, "OriginalOutputFile");
+                File.WriteAllText(originalOutputFile, "Original");
+
+                // When
+                frameworkSimulator.OpenProject(pathPersistentFolder);
+                frameworkSimulator.Save(pathPersistentFolder);
+
+                // Then
+                string outputFolderAfterSave = Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, "output");
+                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "OriginalOutputFile");
+                Assert.IsTrue(Directory.Exists(outputFolderAfterSave));
+                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAnOpenedProjectWithRTCAndOutput_WhenSavingAs_ThenNewPersistentOutputDirectoryShouldContainOriginalOutputFiles()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSaveAs = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSaveAs = Path.Combine(projectDirectoryBeforeSaveAs, "RealTimeControlModelGUID");
+                string outputFolderBeforeSaveAs = Path.Combine(projectDirectoryBeforeSaveAs, rtcModel.Name, "output");
+                Directory.CreateDirectory(outputFolderBeforeSaveAs);
+                string originalOutputFile = Path.Combine(outputFolderBeforeSaveAs, "OriginalOutputFile");
+                File.WriteAllText(originalOutputFile, "Original");
+
+                string projectDirectoryAfterSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, "RealTimeControlModelGUID");
+                
+                // When
+                frameworkSimulator.OpenProject(pathBeforeSaveAs);
+                frameworkSimulator.SaveAs(pathAfterSaveAs);
+
+                // Then
+                string expectedOutputFolderAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, rtcModel.Name, "output");
+                string expectedOutputFileAfterSaveAs = Path.Combine(expectedOutputFolderAfterSaveAs, "OriginalOutputFile");
+                Assert.IsTrue(Directory.Exists(expectedOutputFolderAfterSaveAs));
+                Assert.IsTrue(File.Exists(expectedOutputFileAfterSaveAs));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAnOpenedProjectWithRTCAndOutput_WhenRunningAndSaving_ThenPersistentOutputDirectoryShouldContainFilesFromLastRun()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryPersistentFolder = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, "RealTimeControlModelGUID");
+                string outputFolderPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, "output");
+                Directory.CreateDirectory(outputFolderPersistentFolder);
+                string originalOutputFile = Path.Combine(outputFolderPersistentFolder, "OriginalOutputFile");
+                File.WriteAllText(originalOutputFile, "Original");
+
+                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
+                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
+                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
+                File.WriteAllText(workingDirectoryFile, "WD");
+
+                // When
+                frameworkSimulator.OpenProject(pathPersistentFolder);
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                frameworkSimulator.Save(pathPersistentFolder);
+
+                // Then
+                string outputFolderAfterSave = Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, "output");
+                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "WorkingDirectoryOutputFile");
+                string notExpectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "OriginalOutputFile");
+                Assert.IsTrue(Directory.Exists(outputFolderAfterSave));
+                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
+                Assert.IsFalse(File.Exists(notExpectedOutputFileAfterSave));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAnOpenedProjectWithRTCAndOutput_WhenRunningAndSavingAs_ThenNewPersistentOutputDirectoryShouldContainFilesFromLastRun()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSaveAs = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSaveAs = Path.Combine(projectDirectoryBeforeSaveAs, "RealTimeControlModelGUID");
+                string outputFolderBeforeSaveAs = Path.Combine(projectDirectoryBeforeSaveAs, rtcModel.Name, "output");
+                Directory.CreateDirectory(outputFolderBeforeSaveAs);
+                string originalOutputFile = Path.Combine(outputFolderBeforeSaveAs, "OriginalOutputFile");
+                File.WriteAllText(originalOutputFile, "Original");
+
+                string projectDirectoryAfterSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, "RealTimeControlModelGUID");
+
+                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
+                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
+                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
+                File.WriteAllText(workingDirectoryFile, "WD");
+                
+                // When
+                frameworkSimulator.OpenProject(pathBeforeSaveAs);
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                frameworkSimulator.SaveAs(pathAfterSaveAs);
+
+                // Then
+                string expectedOutputFolderAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, rtcModel.Name, "output");
+                string expectedOutputFileAfterSaveAs = Path.Combine(expectedOutputFolderAfterSaveAs, "WorkingDirectoryOutputFile");
+                string notExpectedOutputFileAfterSaveAs = Path.Combine(expectedOutputFolderAfterSaveAs, "OriginalOutputFile");
+                Assert.IsTrue(Directory.Exists(expectedOutputFolderAfterSaveAs));
+                Assert.IsTrue(File.Exists(expectedOutputFileAfterSaveAs));
+                Assert.IsFalse(File.Exists(notExpectedOutputFileAfterSaveAs));
+            }
+        }
+
+        # endregion
+        
         # region Helper functions
 
         private static void CheckResetConnectionPoint(ConnectionPoint retrievedConnectionPointFromRtcModel)

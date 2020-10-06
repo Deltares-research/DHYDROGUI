@@ -96,6 +96,7 @@
     <Compile Include="AutoFixtureCustomizations\RandomEnumCustomization.cs" />
     <Compile Include="AutoFixtureCustomizations\RandomEnumGenerator.cs" />
     <Compile Include="CollectionContainsOnlyAssert.cs" />
+    <Compile Include="DeltaShellFrameworkSimulator.cs" />
     <Compile Include="EnumDescriptionTestFixture.cs" />
     <Compile Include="EnumValuesTestFixture.cs" />
     <Compile Include="LogAppenderEntriesTester.cs" />

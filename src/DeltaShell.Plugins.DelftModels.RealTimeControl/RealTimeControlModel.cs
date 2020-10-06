@@ -18,6 +18,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
@@ -1059,6 +1060,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.
+            currentOutputDirectoryPath = Path.Combine(workingDirectoryPath, DirectoryName);
         }
 
         #endregion
@@ -1458,29 +1460,82 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         #endregion
 
-        void IFileBased.CreateNew(string path)
-        {
-            
-        }
+        #region IFileBased
+        
+        private string path;
+        private string currentOutputDirectoryPath;
+        private string persistentOutputDirectory;
+        private bool isOpen;
 
+        // Used for Import model
+        // Creating new model
+        void IFileBased.CreateNew(string filePath)
+        {
+            Ensure.NotNull(filePath, nameof(filePath));
+
+            persistentOutputDirectory = GetOutputFolderFromDeltaShellPath(filePath);
+            path = filePath;
+            isOpen = true;
+        }
+        
         void IFileBased.Close()
         {
-            
+            isOpen = false;
         }
 
-        void IFileBased.Open(string path)
+        // Never called by DeltaShell Framework
+        void IFileBased.Open(string filePath)
         {
-            
+            Ensure.NotNull(filePath, nameof(filePath));
+            isOpen = true;
         }
 
+        // Used for Save As, called by ProjectFileBasedItemRepository.
         void IFileBased.CopyTo(string destinationPath)
         {
-            
+            Ensure.NotNull(destinationPath, nameof(destinationPath));
+
+            string targetOutputDirectory = GetOutputFolderFromDeltaShellPath(destinationPath);
+            CopyOutputFolderTo(targetOutputDirectory);
         }
 
+        // Used for Open Project, called by FileBasedDataAccessListener.
+
+        // Save, called by FileBasedDataAccessListener, so
+        // dirtyCounter change needed for activating.
+
+        // Used for Save As, called by ProjectFileBasedItemRepository.
+
+        // Used for first Save As (Moving from temp folder,
+        // since project name will be adjusted during Save As,
+        // which trigger database update,
+        // which results in a second Save of files due to FileBasedDataAccessListener)
         void IFileBased.SwitchTo(string newPath)
         {
+            Ensure.NotNull(newPath, nameof(newPath));
+
+            string expectedOutputPath = GetOutputFolderFromDeltaShellPath(newPath);
             
+            // Open project
+            if (persistentOutputDirectory == null)
+            {
+                isOpen = true;
+                currentOutputDirectoryPath = expectedOutputPath;
+                persistentOutputDirectory = expectedOutputPath;
+                return;
+            }
+
+            // Save
+            if (path == newPath)
+            {
+                currentOutputDirectoryPath = expectedOutputPath;
+                return;
+            }
+
+            // Save As
+            path = newPath;
+            currentOutputDirectoryPath = expectedOutputPath;
+            persistentOutputDirectory = expectedOutputPath;
         }
 
         void IFileBased.Delete()
@@ -1488,7 +1543,40 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             
         }
 
-        string IFileBased.Path { get; set; }
+        // Used for Open Project, called by FileBasedDataAccessListener.
+
+        // Save, called by FileBasedDataAccessListener, so
+        // dirtyCounter change needed for activating.
+
+        // Used for first Save As (Moving from temp folder,
+        // since project name will be adjusted during Save As,
+        // which trigger database update,
+        // which results in a second Save of files due to Data Access Listener)
+        string IFileBased.Path
+        {
+            get => path;
+            set
+            {
+                if (path == value)
+                {
+                    return;
+                }
+
+                path = value;
+
+                if (path == null)
+                {
+                    return;
+                }
+
+                // isOpen check needed for saving project,
+                // otherwise during opening an export will be done.
+                if (path.StartsWith("$") && isOpen)
+                {
+                    CopyOutputFolderTo(persistentOutputDirectory);
+                }
+            }
+        }
 
         IEnumerable<string> IFileBased.Paths 
         {
@@ -1500,9 +1588,63 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         bool IFileBased.IsFileCritical => true;
 
-        public virtual bool IsOpen { get; set; }
+        bool IFileBased.IsOpen => isOpen;
 
         bool IFileBased.CopyFromWorkingDirectory => false;
+
+        #region FileBased Helper Methods
+        
+        private string GetOutputFolderFromDeltaShellPath(string filePath)
+        {
+            string projectDirectory = Path.GetDirectoryName(filePath) ;
+
+            Ensure.NotNull(projectDirectory, nameof(projectDirectory));
+
+            return Path.Combine(projectDirectory, Name, "output");
+        }
+
+        private void CopyOutputFolderTo(string targetDirectory)
+        {
+            if (string.IsNullOrEmpty(currentOutputDirectoryPath))
+            {
+                return;
+            }
+
+            DirectoryCopy(currentOutputDirectoryPath, targetDirectory);
+        }
+
+        private static void DirectoryCopy(string sourceDirName, string destDirName)
+        {
+            if (sourceDirName == destDirName) return;
+
+            
+            if (!Directory.Exists(sourceDirName))
+            {
+                return;
+            }
+
+            var dir = new DirectoryInfo(sourceDirName);
+            
+            DirectoryInfo[] subDirs = dir.GetDirectories();
+
+            FileUtils.CreateDirectoryIfNotExists(destDirName, true);
+            
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string destFilePath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(destFilePath, true);
+            }
+
+            foreach (DirectoryInfo subDir in subDirs)
+            {
+                string destDirPath = Path.Combine(destDirName, subDir.Name);
+                DirectoryCopy(subDir.FullName, destDirPath);
+            }
+        }
+        #endregion
+
+        #endregion
 
         IEnumerable<IDataItem> ICoupledModel.GetDataItemsUsedForCouplingModel(DataItemRole role)
         {
