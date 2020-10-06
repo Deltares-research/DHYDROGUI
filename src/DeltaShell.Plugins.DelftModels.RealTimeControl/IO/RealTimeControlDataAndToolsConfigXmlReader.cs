@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
-    /// <summary>This class is responsible for building complete controlgroups from the data config and tools config XML files.</summary>
+    /// <summary>This class is responsible for building complete controlgroups from the data config and tools config ComplexType files.</summary>
     public class RealTimeControlDataAndToolsConfigXmlReader
     {
         private readonly ILogHandler logHandler;
@@ -31,10 +31,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             var controlGroups = new List<IControlGroup>();
 
             var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
-            RTCDataConfigXML dataConfigObject;
+            RTCDataConfigComplexType dataConfigObject;
             try
             {
-                dataConfigObject = delftConfigXmlParser.Read<RTCDataConfigXML>(dataConfigFilePath);
+                dataConfigObject = delftConfigXmlParser.Read<RTCDataConfigComplexType>(dataConfigFilePath);
             }
             catch (FileNotFoundException e)
             {
@@ -42,10 +42,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 return controlGroups;
             }
 
-            RtcToolsConfigXML toolsConfigObject;
+            RtcToolsConfigComplexType toolsConfigObject;
             try
             {
-                toolsConfigObject = delftConfigXmlParser.Read<RtcToolsConfigXML>(toolsConfigFilePath);
+                toolsConfigObject = delftConfigXmlParser.Read<RtcToolsConfigComplexType>(toolsConfigFilePath);
             }
             catch (FileNotFoundException e)
             {
@@ -53,8 +53,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 return controlGroups;
             }
 
-            RuleXML[] ruleElements = toolsConfigObject.rules.ToArray();
-            TriggerXML[] triggerElements = toolsConfigObject.triggers.ToArray();
+            RuleComplexType[] ruleElements = toolsConfigObject.rules.ToArray();
+            TriggerComplexType[] triggerElements = toolsConfigObject.triggers.ToArray();
 
             IEnumerable<IRtcDataAccessObject<RtcBaseObject>> dataAccessObjects = RealTimeControlToolsConfigXmlConverter.ConvertToDataAccessObjects(ruleElements, triggerElements, logHandler);
 
@@ -73,8 +73,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 controlGroups.Add(controlGroup);
             }
 
-            List<RTCTimeSeriesXML> allElements = dataConfigObject.importSeries.timeSeries.Concat(dataConfigObject.exportSeries.timeSeries).ToList();
-            List<PITimeSeriesXML> timeSeriesElements = allElements.Select(e => e.PITimeSeries).Where(t => t.locationId != null).ToList();
+            List<RTCTimeSeriesComplexType> allElements = dataConfigObject.importSeries.timeSeries.Concat(dataConfigObject.exportSeries.timeSeries).ToList();
+            List<PITimeSeriesComplexType> timeSeriesElements = allElements.Select(e => e.PITimeSeries).Where(t => t.locationId != null).ToList();
 
             var dataConfigSetter = new RealTimeControlDataConfigXmlSetter(logHandler);
             dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(timeSeriesElements, controlGroups);

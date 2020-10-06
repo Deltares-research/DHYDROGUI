@@ -3,31 +3,31 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Guards;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 {
     /// <summary>
-    /// Creates a <see cref="SignalDataAccessObject"/> based of a <see cref="RuleXML"/>.
+    /// Creates a <see cref="SignalDataAccessObject"/> based of a <see cref="RuleComplexType"/>.
     /// </summary>
     public static class SignalDataAccessObjectCreator
     {
         /// <summary>
         /// Creates a <see cref="SignalDataAccessObject"/> from the specified <paramref name="signalElement"/>.
         /// </summary>
-        /// <param name="signalElement"> The rule XML. </param>
+        /// <param name="signalElement"> The rule. </param>
         /// <returns>
         /// A <see cref="SignalDataAccessObject"/> created from the specified <paramref name="signalElement"/>.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="signalElement"/> is <c>null</c>.
         /// </exception>
-        public static SignalDataAccessObject Create(RuleXML signalElement)
+        public static SignalDataAccessObject Create(RuleComplexType signalElement)
         {
             Ensure.NotNull(signalElement, nameof(signalElement));
 
-            if (!(signalElement.Item is LookupTableXML lookupTableElement))
+            if (!(signalElement.Item is LookupTableComplexType lookupTableElement))
             {
                 return null;
             }
@@ -41,10 +41,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return signalDataAccessObject;
         }
 
-        private static LookupSignal CreateLookupSignal(LookupTableXML lookupTableElement)
+        private static LookupSignal CreateLookupSignal(LookupTableComplexType lookupTableElement)
         {
             string signalName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(lookupTableElement.id);
-            List<DateRecord2DataXML> records = (lookupTableElement.Item as TableLookupTableXML)?.record;
+            DateRecord2DataComplexType[] records = (lookupTableElement.Item as TableLookupTableComplexType)?.record;
 
             var signal = new LookupSignal {Name = signalName};
 
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return signal;
         }
 
-        private static void DefineFunction(IFunction function, List<DateRecord2DataXML> records)
+        private static void DefineFunction(IFunction function, IEnumerable<DateRecord2DataComplexType> records)
         {
             if (records == null || function == null)
             {

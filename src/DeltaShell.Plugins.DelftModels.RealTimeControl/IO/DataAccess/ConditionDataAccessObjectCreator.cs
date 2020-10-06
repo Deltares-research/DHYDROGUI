@@ -5,14 +5,14 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Guards;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 {
     /// <summary>
-    /// Creates a <see cref="ConditionDataAccessObject"/> based of a <see cref="StandardTriggerXML"/>.
+    /// Creates a <see cref="ConditionDataAccessObject"/> based of a <see cref="StandardTriggerComplexType"/>.
     /// </summary>
     public static class ConditionDataAccessObjectCreator
     {
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
         /// <summary>
         /// Creates a <see cref="ConditionDataAccessObject"/> from the specified <paramref name="standardTriggerXml"/>.
         /// </summary>
-        /// <param name="standardTriggerXml"> The standard trigger XML. </param>
+        /// <param name="standardTriggerXml"> The standard trigger. </param>
         /// <param name="logHandler"> The log handler. </param>
         /// <returns>
         /// A <see cref="ConditionDataAccessObject"/> created from the specified <paramref name="standardTriggerXml"/>.
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="standardTriggerXml"/> is <c>null</c>.
         /// </exception>
-        public static ConditionDataAccessObject Create(StandardTriggerXML standardTriggerXml,
+        public static ConditionDataAccessObject Create(StandardTriggerComplexType standardTriggerXml,
                                                        ILogHandler logHandler = null)
         {
             Ensure.NotNull(standardTriggerXml, nameof(standardTriggerXml));
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             var conditionDataAccessObject = new ConditionDataAccessObject(standardTriggerXml.id, condition);
 
             if (condition.Reference == StandardCondition.ReferenceType.Explicit &&
-                standardTriggerXml.condition.Item is RelationalConditionXMLX1Series seriesItem)
+                standardTriggerXml.condition.Item is RelationalConditionComplexTypeX1Series seriesItem)
             {
                 conditionDataAccessObject.InputReferences.Add(seriesItem.Value);
             }
@@ -71,17 +71,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                     case string ruleId:
                         yield return ruleId;
                         break;
-                    case StandardTriggerXML conditionElement:
+                    case StandardTriggerComplexType conditionElement:
                         yield return conditionElement.id;
                         break;
-                    case ExpressionXML expressionElement:
+                    case ExpressionComplexType expressionElement:
                         yield return expressionElement.id;
                         break;
                 }
             }
         }
 
-        private static StandardCondition CreateCondition(StandardTriggerXML standardConditionElement,
+        private static StandardCondition CreateCondition(StandardTriggerComplexType standardConditionElement,
                                                          ILogHandler logHandler)
         {
             string id = standardConditionElement.id;
@@ -104,9 +104,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 
             condition.Name = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(standardConditionElement.id);
 
-            RelationalConditionXML conditionElement = standardConditionElement.condition;
+            RelationalConditionComplexType conditionElement = standardConditionElement.condition;
             inputReferenceEnumStringType? referenceElementValue =
-                (conditionElement.Item as RelationalConditionXMLX1Series)?.@ref;
+                (conditionElement.Item as RelationalConditionComplexTypeX1Series)?.@ref;
             string reference = referenceElementValue == inputReferenceEnumStringType.EXPLICIT
                                    ? StandardCondition.ReferenceType.Explicit
                                    : StandardCondition.ReferenceType.Implicit;

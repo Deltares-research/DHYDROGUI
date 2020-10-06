@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
@@ -18,19 +18,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         }
 
         /// <summary>
-        /// Creates the connection points from XML elements.
+        /// Creates the connection points from ComplexType elements.
         /// </summary>
         /// <param name="elements">The elements.</param>
         /// <returns>A collection of connection points</returns>
         /// <remarks>If parameter elements is NULL, methods returns.</remarks>
-        public IEnumerable<ConnectionPoint> CreateConnectionPointsFromXmlElements(IEnumerable<RTCTimeSeriesXML> elements)
+        public IEnumerable<ConnectionPoint> CreateConnectionPointsFromXmlElements(IEnumerable<RTCTimeSeriesComplexType> elements)
         {
             if (elements == null)
             {
                 yield break;
             }
 
-            foreach (RTCTimeSeriesXML element in elements)
+            foreach (RTCTimeSeriesComplexType element in elements)
             {
                 string id = element.id;
 

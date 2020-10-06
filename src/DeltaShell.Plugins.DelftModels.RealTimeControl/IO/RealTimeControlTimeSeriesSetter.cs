@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
     /// <summary>
-    /// Responsible for setting the time series from the Time Series XML elements on Time Dependent RTC Objects.
+    /// Responsible for setting the time series from the Time Series ComplexType elements on Time Dependent RTC Objects.
     /// </summary>
     public class RealTimeControlTimeSeriesSetter
     {
@@ -23,9 +23,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         }
 
         /// <summary>
-        /// Sets the time series from the Time Series XML elements on Time Dependent RTC Objects.
+        /// Sets the time series from the Time Series ComplexType elements on Time Dependent RTC Objects.
         /// </summary>
-        /// <param name="timeSeriesElements">The Time Series XML elements.</param>
+        /// <param name="timeSeriesElements">The Time Series ComplexType elements.</param>
         /// <param name="controlGroups">The control groups.</param>
         /// <remarks>If parameter timeSeriesElements or controlGroups is NULL, methods returns.</remarks>
         public void SetTimeSeries(IList<TimeSeriesComplexType> timeSeriesElements, IList<IControlGroup> controlGroups)
@@ -40,13 +40,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 HeaderComplexType timeSeriesItem = timeSeriesElement.header;
                 string locationId = timeSeriesItem.locationId;
                 double missingValue = timeSeriesItem.missVal;
-                List<EventComplexType> records = timeSeriesElement.@event;
+                EventComplexType[] records = timeSeriesElement.@event;
 
                 RtcBaseObject correspondingRuleOrCondition = GetCorrespondingRuleOrCondition(locationId, controlGroups);
 
                 if (!(correspondingRuleOrCondition is ITimeDependentRtcObject timeDependentObject))
                 {
-                    logHandler.ReportWarningFormat(Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Object_with_id___0___does_not_seem_to_be_a_Time_Rule_or_Time_Condition__See_file____1___, locationId, RealTimeControlXMLFiles.XmlTimeSeries);
+                    logHandler.ReportWarningFormat(Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Object_with_id___0___does_not_seem_to_be_a_Time_Rule_or_Time_Condition__See_file____1___, locationId, RealTimeControlComplexTypeFiles.XmlTimeSeries);
                     continue;
                 }
 
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                     logHandler.ReportWarningFormat(
                         Resources
                             .RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported,
-                        locationId, RealTimeControlXMLFiles.XmlTimeSeries);
+                        locationId, RealTimeControlComplexTypeFiles.XmlTimeSeries);
                     continue;
                 }
 
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             return true;
         }
 
-        private void SetDefaultValueIntervalRule(List<EventComplexType> records, IntervalRule intervalRule)
+        private void SetDefaultValueIntervalRule(IEnumerable<EventComplexType> records, IntervalRule intervalRule)
         {
             double? fixedValue = records.FirstOrDefault()?.value;
             if (fixedValue != null)
@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 logHandler.ReportWarningFormat(
                     Resources
                         .RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value,
-                    intervalRule.Name, RealTimeControlXMLFiles.XmlTimeSeries);
+                    intervalRule.Name, RealTimeControlComplexTypeFiles.XmlTimeSeries);
             }
         }
 

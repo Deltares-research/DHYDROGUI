@@ -1,7 +1,7 @@
 ﻿using System;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
@@ -19,9 +19,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// Sets the run time settings on the RealTimeControl Model.
         /// </summary>
         /// <param name="rtcModel">The RealTimeControl Model.</param>
-        /// <param name="runTimeSettingsElement">The User Defined Runtime XML element.</param>
+        /// <param name="runTimeSettingsElement">The User Defined Runtime ComplexType element.</param>
         /// <remarks>The rtcModel and runTimeSettingsElement parameter are expected to not be NULL.</remarks>
-        public void SetRunTimeSettings(RealTimeControlModel rtcModel, UserDefinedRuntimeXML runTimeSettingsElement)
+        public void SetRunTimeSettings(RealTimeControlModel rtcModel, UserDefinedRuntimeComplexType runTimeSettingsElement)
         {
             SetStartTime(rtcModel, runTimeSettingsElement);
             SetStopTime(rtcModel, runTimeSettingsElement);
@@ -32,11 +32,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// Sets the simulation mode settings on the RealTimeControl Model.
         /// </summary>
         /// <param name="rtcModel">The RealTimeControl Model.</param>
-        /// <param name="simulationModeSettingsElement">The simulation Mode XML element.</param>
+        /// <param name="simulationModeSettingsElement">The simulation Mode ComplexType element.</param>
         /// <remarks>The rtcModel is expected to not be NULL. If simulationModeSettingsElement is NULL, no settings are set.</remarks>
-        public void SetSimulationModeSettings(RealTimeControlModel rtcModel, ModeXML simulationModeSettingsElement)
+        public void SetSimulationModeSettings(RealTimeControlModel rtcModel, ModeComplexType simulationModeSettingsElement)
         {
-            if (simulationModeSettingsElement?.Item is ModeSimulationXML simulationMode)
+            if (simulationModeSettingsElement?.Item is ModeSimulationComplexType simulationMode)
             {
                 rtcModel.LimitMemory = simulationMode.limitedMemory;
             }
@@ -46,9 +46,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// Sets the restart settings on the RealTimeControl Model
         /// </summary>
         /// <param name="rtcModel">The RealTimeControl Model.</param>
-        /// <param name="restartSettingsElement">The User Defined State Export XML element.</param>
+        /// <param name="restartSettingsElement">The User Defined State Export ComplexType element.</param>
         /// <remarks>The rtcModel and restartSettingsElement are expected to not be NULL.</remarks>
-        public void SetRestartSettings(RealTimeControlModel rtcModel, UserDefinedStateExportXML restartSettingsElement)
+        public void SetRestartSettings(RealTimeControlModel rtcModel, UserDefinedStateExportComplexType restartSettingsElement)
         {
             if (restartSettingsElement.stateTimeStep == -1)
             {
@@ -65,9 +65,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             SetRestartTimeStep(rtcModel, restartSettingsElement);
         }
 
-        private void SetTimeStep(ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
+        private void SetTimeStep(ITimeDependentModel rtcModel, UserDefinedRuntimeComplexType settings)
         {
-            TimeStepXML timeStepElement = settings.timeStep;
+            TimeStepComplexType1 timeStepElement = settings.timeStep;
             TimeSpan timeStep = GetTimeSpanFromTimeUnit(timeStepElement);
             var timeMultiplier = Convert.ToInt32(timeStepElement.multiplier);
             var timeDivider = Convert.ToInt32(timeStepElement.divider);
@@ -75,26 +75,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             rtcModel.TimeStep = MultiplyAndDivideTimeStepBy(timeStep, timeMultiplier, timeDivider);
         }
 
-        private TimeSpan GetTimeSpanFromTimeUnit(TimeStepXML timeStepXml)
+        private TimeSpan GetTimeSpanFromTimeUnit(TimeStepComplexType1 timeStepXml)
         {
-            timeStepUnitEnumStringType timeUnit = timeStepXml.unit;
+            timeStepUnitEnumStringType1 timeUnit = timeStepXml.unit;
             TimeSpan timeStep;
 
             switch (timeUnit)
             {
-                case timeStepUnitEnumStringType.second:
+                case timeStepUnitEnumStringType1.second:
                     timeStep = new TimeSpan(0, 0, 0, 1);
                     break;
-                case timeStepUnitEnumStringType.minute:
+                case timeStepUnitEnumStringType1.minute:
                     timeStep = new TimeSpan(0, 0, 1, 0);
                     break;
-                case timeStepUnitEnumStringType.hour:
+                case timeStepUnitEnumStringType1.hour:
                     timeStep = new TimeSpan(0, 1, 0, 0);
                     break;
-                case timeStepUnitEnumStringType.day:
+                case timeStepUnitEnumStringType1.day:
                     timeStep = new TimeSpan(1, 0, 0, 0);
                     break;
-                case timeStepUnitEnumStringType.week:
+                case timeStepUnitEnumStringType1.week:
                     timeStep = new TimeSpan(7, 0, 0, 0);
                     break;
                 default:
@@ -109,15 +109,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             return new TimeSpan((t.Ticks * multiplier) / divider);
         }
 
-        private void SetStartTime(ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
+        private void SetStartTime(ITimeDependentModel rtcModel, UserDefinedRuntimeComplexType settings)
         {
-            DateTimeXML startDateElement = settings.startDate;
+            DateTimeComplexType1 startDateElement = settings.startDate;
             rtcModel.StartTime = CreateDateTimeFromDateAndTime(startDateElement.date, startDateElement.time);
         }
 
-        private void SetStopTime(ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
+        private void SetStopTime(ITimeDependentModel rtcModel, UserDefinedRuntimeComplexType settings)
         {
-            DateTimeXML endDateElement = settings.endDate;
+            DateTimeComplexType1 endDateElement = settings.endDate;
             rtcModel.StopTime = CreateDateTimeFromDateAndTime(endDateElement.date, endDateElement.time);
         }
 
@@ -130,19 +130,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             return dateTime;
         }
 
-        private void SetRestartStartTime(RealTimeControlModel rtcModel, UserDefinedStateExportXML settings)
+        private void SetRestartStartTime(RealTimeControlModel rtcModel, UserDefinedStateExportComplexType settings)
         {
-            DateTimeXML startDateElement = settings.startDate;
+            DateTimeComplexType1 startDateElement = settings.startDate;
             rtcModel.SaveStateStartTime = CreateDateTimeFromDateAndTime(startDateElement.date, startDateElement.time);
         }
 
-        private void SetRestartStopTime(RealTimeControlModel rtcModel, UserDefinedStateExportXML settings)
+        private void SetRestartStopTime(RealTimeControlModel rtcModel, UserDefinedStateExportComplexType settings)
         {
-            DateTimeXML endDateElement = settings.endDate;
+            DateTimeComplexType1 endDateElement = settings.endDate;
             rtcModel.SaveStateStopTime = CreateDateTimeFromDateAndTime(endDateElement.date, endDateElement.time);
         }
 
-        private void SetRestartTimeStep(RealTimeControlModel rtcModel, UserDefinedStateExportXML settings)
+        private void SetRestartTimeStep(RealTimeControlModel rtcModel, UserDefinedStateExportComplexType settings)
         {
             double timeStepDouble = settings.stateTimeStep;
             rtcModel.SaveStateTimeStep = TimeSpan.FromSeconds(timeStepDouble);

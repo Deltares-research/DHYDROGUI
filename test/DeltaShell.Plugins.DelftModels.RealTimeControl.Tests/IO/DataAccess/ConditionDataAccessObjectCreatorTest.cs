@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         }
 
         [TestCaseSource(nameof(GetCreateTestCases))]
-        public void Create_ReturnCorrectResult(StandardTriggerXML standardTriggerXml,
+        public void Create_ReturnCorrectResult(StandardTriggerComplexType standardTriggerXml,
                                                ConditionDataAccessObject expectedResult)
         {
             // Call
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             const string reference = StandardCondition.ReferenceType.Implicit;
             const string inputReference = "input_ref";
 
-            StandardTriggerXML standardTriggerXml = GetArgumentAndExpectedStandardConditionDataAccessObject(
+            StandardTriggerComplexType standardTriggerXml = GetArgumentAndExpectedStandardConditionDataAccessObject(
                 operation, reference, inputReference,
                 out ConditionDataAccessObject expectedConditionDataAccessObject);
 
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             const string reference = StandardCondition.ReferenceType.Explicit;
             const string inputReference = "input_ref";
 
-            StandardTriggerXML standardTriggerXml = GetArgumentAndExpectedStandardConditionDataAccessObject(
+            StandardTriggerComplexType standardTriggerXml = GetArgumentAndExpectedStandardConditionDataAccessObject(
                 operation, reference, inputReference,
                 out ConditionDataAccessObject expectedConditionDataAccessObject);
 
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             string reference = StandardCondition.ReferenceType.Implicit;
             const string inputReference = "input_ref";
 
-            StandardTriggerXML standardTriggerXml = GetArgumentAndExpectedTimeConditionDataAccessObject(
+            StandardTriggerComplexType standardTriggerXml = GetArgumentAndExpectedTimeConditionDataAccessObject(
                 operation, reference, inputReference,
                 out ConditionDataAccessObject expectedConditionDataAccessObject);
 
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             string reference = StandardCondition.ReferenceType.Explicit;
             const string inputReference = "input_ref";
 
-            StandardTriggerXML standardTriggerXml = GetArgumentAndExpectedTimeConditionDataAccessObject(
+            StandardTriggerComplexType standardTriggerXml = GetArgumentAndExpectedTimeConditionDataAccessObject(
                 operation, reference, inputReference,
                 out ConditionDataAccessObject expectedConditionDataAccessObject);
 
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             const string reference = StandardCondition.ReferenceType.Implicit;
             const string inputReference = "input_ref";
 
-            StandardTriggerXML standardTriggerXml = GetArgumentAndExpectedDirectionalConditionDataAccessObject(
+            StandardTriggerComplexType standardTriggerXml = GetArgumentAndExpectedDirectionalConditionDataAccessObject(
                 operation, reference, inputReference,
                 out ConditionDataAccessObject expectedConditionDataAccessObject);
 
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             const string reference = StandardCondition.ReferenceType.Explicit;
             const string inputReference = "input_ref";
 
-            StandardTriggerXML standardTriggerXml = GetArgumentAndExpectedDirectionalConditionDataAccessObject(
+            StandardTriggerComplexType standardTriggerXml = GetArgumentAndExpectedDirectionalConditionDataAccessObject(
                 operation, reference, inputReference,
                 out ConditionDataAccessObject expectedConditionDataAccessObject);
 
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return new TestCaseData(standardTriggerXml, expectedConditionDataAccessObject);
         }
 
-        private static StandardTriggerXML GetArgumentAndExpectedStandardConditionDataAccessObject(
+        private static StandardTriggerComplexType GetArgumentAndExpectedStandardConditionDataAccessObject(
             Operation operation, string reference, string inputRef,
             out ConditionDataAccessObject expectedConditionDataAccessObject)
         {
@@ -147,21 +147,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             const string falseConditionRef = "false_cond_ref";
             const string falseExpressionRef = "false_expr_ref";
 
-            TriggerXML[] trueOutputs =
+            TriggerComplexType[] trueOutputs =
             {
                 GetStandardTriggerXml(trueConditionRef),
                 GetRuleReferenceTriggerXml(trueRuleRef),
                 GetExpressionXml(trueExpressionRef)
             };
 
-            TriggerXML[] falseOutputs =
+            TriggerComplexType[] falseOutputs =
             {
                 GetStandardTriggerXml(falseConditionRef),
                 GetRuleReferenceTriggerXml(falseRuleRef),
                 GetExpressionXml(falseExpressionRef)
             };
 
-            StandardTriggerXML standardTriggerXml =
+            StandardTriggerComplexType standardTriggerXml =
                 CreateStandardConditionXml(id, value, operation, reference, inputRef, trueOutputs, falseOutputs);
 
             string[] trueOutputRefs =
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return standardTriggerXml;
         }
 
-        private static StandardTriggerXML GetArgumentAndExpectedTimeConditionDataAccessObject(
+        private static StandardTriggerComplexType GetArgumentAndExpectedTimeConditionDataAccessObject(
             Operation operation, string reference, string inputRef,
             out ConditionDataAccessObject expectedConditionDataAccessObject)
         {
@@ -202,21 +202,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             const string falseConditionRef = "false_cond_ref";
             const string falseExpressionRef = "false_expr_ref";
 
-            TriggerXML[] trueOutputs =
+            TriggerComplexType[] trueOutputs =
             {
                 GetStandardTriggerXml(trueConditionRef),
                 GetRuleReferenceTriggerXml(trueRuleRef),
                 GetExpressionXml(trueExpressionRef)
             };
 
-            TriggerXML[] falseOutputs =
+            TriggerComplexType[] falseOutputs =
             {
                 GetStandardTriggerXml(falseConditionRef),
                 GetRuleReferenceTriggerXml(falseRuleRef),
                 GetExpressionXml(falseExpressionRef)
             };
 
-            StandardTriggerXML standardTriggerXml =
+            StandardTriggerComplexType standardTriggerXml =
                 CreateStandardConditionXml(id, value, operation, reference, inputRef, trueOutputs, falseOutputs);
 
             string[] trueOutputRefs =
@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return standardTriggerXml;
         }
 
-        private static StandardTriggerXML GetArgumentAndExpectedDirectionalConditionDataAccessObject(
+        private static StandardTriggerComplexType GetArgumentAndExpectedDirectionalConditionDataAccessObject(
             Operation operation, string reference, string inputRef,
             out ConditionDataAccessObject expectedConditionDataAccessObject)
         {
@@ -255,21 +255,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             const string falseConditionRef = "false_cond_ref";
             const string falseExpressionRef = "false_expr_ref";
 
-            TriggerXML[] trueOutputs =
+            TriggerComplexType[] trueOutputs =
             {
                 GetStandardTriggerXml(trueConditionRef),
                 GetRuleReferenceTriggerXml(trueRuleRef),
                 GetExpressionXml(trueExpressionRef)
             };
 
-            TriggerXML[] falseOutputs =
+            TriggerComplexType[] falseOutputs =
             {
                 GetStandardTriggerXml(falseConditionRef),
                 GetRuleReferenceTriggerXml(falseRuleRef),
                 GetExpressionXml(falseExpressionRef)
             };
 
-            StandardTriggerXML standardTriggerXml = CreateDirectionalConditionXml(id, operation,
+            StandardTriggerComplexType standardTriggerXml = CreateDirectionalConditionXml(id, operation,
                                                                                   reference, inputRef,
                                                                                   trueOutputs, falseOutputs);
 
@@ -350,20 +350,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return expectedConditionDataAccessObject;
         }
 
-        private static StandardTriggerXML CreateDirectionalConditionXml(string id, Operation operation,
+        private static StandardTriggerComplexType CreateDirectionalConditionXml(string id, Operation operation,
                                                                         string reference, string inputReference,
-                                                                        TriggerXML[] trueTriggers, TriggerXML[] falseTriggers)
+                                                                        TriggerComplexType[] trueTriggers, TriggerComplexType[] falseTriggers)
         {
-            var standardTriggerXml = new StandardTriggerXML {id = id};
-            var condition = new RelationalConditionXML
+            var standardTriggerXml = new StandardTriggerComplexType {id = id};
+            var condition = new RelationalConditionComplexType
             {
-                Item = new RelationalConditionXMLX1Series
+                Item = new RelationalConditionComplexTypeX1Series
                 {
                     @ref = GetXmlReferenceType(reference),
                     Value = inputReference
                 },
                 relationalOperator = GetXmlOperation(operation),
-                Item1 = new RelationalConditionXMLX2Series {@ref = inputReferenceEnumStringType.EXPLICIT}
+                Item1 = new RelationalConditionComplexTypeX2Series {@ref = inputReferenceEnumStringType.EXPLICIT}
             };
             standardTriggerXml.condition = condition;
             standardTriggerXml.@true.AddRange(trueTriggers);
@@ -372,14 +372,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return standardTriggerXml;
         }
 
-        private static StandardTriggerXML CreateStandardConditionXml(string id, double value, Operation operation,
+        private static StandardTriggerComplexType CreateStandardConditionXml(string id, double value, Operation operation,
                                                                      string reference, string inputReference,
-                                                                     TriggerXML[] trueTriggers, TriggerXML[] falseTriggers)
+                                                                     TriggerComplexType[] trueTriggers, TriggerComplexType[] falseTriggers)
         {
-            var standardTriggerXml = new StandardTriggerXML {id = id};
-            var condition = new RelationalConditionXML
+            var standardTriggerXml = new StandardTriggerComplexType {id = id};
+            var condition = new RelationalConditionComplexType
             {
-                Item = new RelationalConditionXMLX1Series
+                Item = new RelationalConditionComplexTypeX1Series
                 {
                     @ref = GetXmlReferenceType(reference),
                     Value = inputReference
@@ -395,19 +395,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return standardTriggerXml;
         }
 
-        private static TriggerXML GetRuleReferenceTriggerXml(string id)
+        private static TriggerComplexType GetRuleReferenceTriggerXml(string id)
         {
-            return new TriggerXML {Item = id};
+            return new TriggerComplexType {Item = id};
         }
 
-        private static TriggerXML GetStandardTriggerXml(string id)
+        private static TriggerComplexType GetStandardTriggerXml(string id)
         {
-            return new TriggerXML {Item = new StandardTriggerXML {id = id}};
+            return new TriggerComplexType {Item = new StandardTriggerComplexType {id = id}};
         }
 
-        private static TriggerXML GetExpressionXml(string id)
+        private static TriggerComplexType GetExpressionXml(string id)
         {
-            return new TriggerXML {Item = new ExpressionXML {id = id}};
+            return new TriggerComplexType {Item = new ExpressionComplexType {id = id}};
         }
 
         private static inputReferenceEnumStringType GetXmlReferenceType(string reference)

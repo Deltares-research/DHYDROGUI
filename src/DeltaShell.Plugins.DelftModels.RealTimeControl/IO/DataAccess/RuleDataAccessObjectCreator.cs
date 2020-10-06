@@ -3,21 +3,21 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Guards;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 {
     /// <summary>
-    /// Creates a <see cref="RuleDataAccessObject"/> based of a <see cref="RuleXML"/>.
+    /// Creates a <see cref="RuleDataAccessObject"/> based of a <see cref="RuleComplexType"/>.
     /// </summary>
     public static class RuleDataAccessObjectCreator
     {
         /// <summary>
         /// Creates a <see cref="RuleDataAccessObject"/> from the specified <paramref name="ruleElement"/>.
         /// </summary>
-        /// <param name="ruleElement"> The rule XML. </param>
+        /// <param name="ruleElement"> The rule. </param>
         /// <param name="logHandler"> The log handler. </param>
         /// <returns>
         /// A <see cref="RuleDataAccessObject"/> created from the specified <paramref name="ruleElement"/>.
@@ -25,29 +25,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="ruleElement"/> is <c>null</c>.
         /// </exception>
-        public static RuleDataAccessObject Create(RuleXML ruleElement, ILogHandler logHandler = null)
+        public static RuleDataAccessObject Create(RuleComplexType ruleElement, ILogHandler logHandler = null)
         {
             Ensure.NotNull(ruleElement, nameof(ruleElement));
 
             object item = ruleElement.Item;
             switch (item)
             {
-                case TimeAbsoluteXML timeRuleElement:
+                case TimeAbsoluteComplexType timeRuleElement:
                     return CreateTimeRuleDataAccessObject(timeRuleElement);
-                case TimeRelativeXML relativeTimeRuleElement:
+                case TimeRelativeComplexType relativeTimeRuleElement:
                     return CreateRelativeTimeRuleDataAccessObject(relativeTimeRuleElement);
-                case PidXML pidRuleElement:
+                case PidComplexType pidRuleElement:
                     return CreatePidRuleDataAccessObject(pidRuleElement);
-                case IntervalXML intervalRuleElement:
+                case IntervalComplexType intervalRuleElement:
                     return CreateIntervalRuleDataAccessObject(intervalRuleElement);
-                case LookupTableXML lookupTableElement:
+                case LookupTableComplexType lookupTableElement:
                     return CreateLookupTableRuleDataAccessObject(lookupTableElement, logHandler);
                 default:
                     return null;
             }
         }
 
-        private static RuleDataAccessObject CreateTimeRuleDataAccessObject(TimeAbsoluteXML ruleElement)
+        private static RuleDataAccessObject CreateTimeRuleDataAccessObject(TimeAbsoluteComplexType ruleElement)
         {
             TimeRule rule = CreateTimeRule(ruleElement);
 
@@ -59,14 +59,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return dataAccessObject;
         }
 
-        private static TimeRule CreateTimeRule(TimeAbsoluteXML ruleElement)
+        private static TimeRule CreateTimeRule(TimeAbsoluteComplexType ruleElement)
         {
             string ruleName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(ruleElement.id);
             return new TimeRule(ruleName);
         }
 
         private static RuleDataAccessObject CreateRelativeTimeRuleDataAccessObject(
-            TimeRelativeXML relativeTimeRuleElement)
+            TimeRelativeComplexType relativeTimeRuleElement)
         {
             RelativeTimeRule rule = CreateRelativeTimeRule(relativeTimeRuleElement);
 
@@ -77,13 +77,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return dataAccessObject;
         }
 
-        private static RelativeTimeRule CreateRelativeTimeRule(TimeRelativeXML ruleElement)
+        private static RelativeTimeRule CreateRelativeTimeRule(TimeRelativeComplexType ruleElement)
         {
             string ruleName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(ruleElement.id);
             bool fromValue = ruleElement.valueOption == timeRelativeEnumStringType.RELATIVE;
             var minimumPeriod = (int) ruleElement.maximumPeriod;
             InterpolationType interpolation = GetInterpolationType(ruleElement.interpolationOption);
-            List<TimeRelativeControlTableRecordXML> records = ruleElement.controlTable;
+            TimeRelativeControlTableRecordComplexType[] records = ruleElement.controlTable;
 
             var rule = new RelativeTimeRule(ruleName, fromValue)
             {
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return rule;
         }
 
-        private static RuleDataAccessObject CreatePidRuleDataAccessObject(PidXML pidRuleElement)
+        private static RuleDataAccessObject CreatePidRuleDataAccessObject(PidComplexType pidRuleElement)
         {
             PIDRule rule = CreatePidRule(pidRuleElement);
 
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return dataAccessObject;
         }
 
-        private static PIDRule CreatePidRule(PidXML ruleElement)
+        private static PIDRule CreatePidRule(PidComplexType ruleElement)
         {
             string ruleName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(ruleElement.id);
 
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return rule;
         }
 
-        private static RuleDataAccessObject CreateIntervalRuleDataAccessObject(IntervalXML intervalRuleElement)
+        private static RuleDataAccessObject CreateIntervalRuleDataAccessObject(IntervalComplexType intervalRuleElement)
         {
             IntervalRule rule = CreateIntervalRule(intervalRuleElement);
 
@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return dataAccessObject;
         }
 
-        private static IntervalRule CreateIntervalRule(IntervalXML intervalRuleElement)
+        private static IntervalRule CreateIntervalRule(IntervalComplexType intervalRuleElement)
         {
             string ruleName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(intervalRuleElement.id);
             IntervalRule.IntervalRuleIntervalType intervalType = GetIntervalType(intervalRuleElement.ItemElementName);
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return rule;
         }
 
-        private static RuleDataAccessObject CreateLookupTableRuleDataAccessObject(LookupTableXML lookupTableElement, ILogHandler logHandler)
+        private static RuleDataAccessObject CreateLookupTableRuleDataAccessObject(LookupTableComplexType lookupTableElement, ILogHandler logHandler)
         {
             HydraulicRule rule;
 
@@ -237,10 +237,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return dataAccessObject;
         }
 
-        private static HydraulicRule CreateHydraulicRule(LookupTableXML lookupTableElement)
+        private static HydraulicRule CreateHydraulicRule(LookupTableComplexType lookupTableElement)
         {
             string ruleName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(lookupTableElement.id);
-            List<DateRecord2DataXML> records = (lookupTableElement.Item as TableLookupTableXML)?.record;
+            DateRecord2DataComplexType[] records = (lookupTableElement.Item as TableLookupTableComplexType)?.record;
 
             var rule = new HydraulicRule {Name = ruleName};
 
@@ -252,10 +252,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return rule;
         }
 
-        private static FactorRule CreateFactorRule(LookupTableXML lookupTableElement)
+        private static FactorRule CreateFactorRule(LookupTableComplexType lookupTableElement)
         {
             string ruleName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(lookupTableElement.id);
-            DateRecord2DataXML firstRecord = (lookupTableElement.Item as TableLookupTableXML)?.record.FirstOrDefault();
+            DateRecord2DataComplexType firstRecord = (lookupTableElement.Item as TableLookupTableComplexType)?.record.FirstOrDefault();
 
             var rule = new FactorRule {Name = ruleName};
 
@@ -276,7 +276,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return signalId.Replace(RtcXmlTag.Signal, RtcXmlTag.LookupSignal);
         }
 
-        private static void DefineFunction(IFunction function, List<TimeRelativeControlTableRecordXML> records)
+        private static void DefineFunction(IFunction function, IEnumerable<TimeRelativeControlTableRecordComplexType> records)
         {
             if (records == null || function == null)
             {
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             function.Components[0].SetValues(records.Select(e => e.value));
         }
 
-        private static void DefineFunction(IFunction function, List<DateRecord2DataXML> records)
+        private static void DefineFunction(IFunction function, IEnumerable<DateRecord2DataComplexType> records)
         {
             if (records == null || function == null)
             {
@@ -305,9 +305,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                        : IntervalRule.IntervalRuleDeadBandType.Fixed;
         }
 
-        private static IntervalRule.IntervalRuleIntervalType GetIntervalType(ItemChoiceType5 itemType)
+        private static IntervalRule.IntervalRuleIntervalType GetIntervalType(ItemChoiceType7 itemType)
         {
-            return itemType == ItemChoiceType5.settingMaxStep
+            return itemType == ItemChoiceType7.settingMaxStep
                        ? IntervalRule.IntervalRuleIntervalType.Fixed
                        : IntervalRule.IntervalRuleIntervalType.Variable;
         }

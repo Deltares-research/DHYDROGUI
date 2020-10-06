@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
@@ -27,14 +27,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// <param name="elements">The elements.</param>
         /// <param name="controlGroups">The control groups.</param>
         /// <remarks>If parameter elements or controlGroups is NULL, methods returns.</remarks>
-        public void SetInterpolationAndExtrapolationRtcComponents(IList<PITimeSeriesXML> elements, IList<IControlGroup> controlGroups)
+        public void SetInterpolationAndExtrapolationRtcComponents(IList<PITimeSeriesComplexType> elements, IList<IControlGroup> controlGroups)
         {
             if (elements == null || controlGroups == null)
             {
                 return;
             }
 
-            foreach (PITimeSeriesXML element in elements)
+            foreach (PITimeSeriesComplexType element in elements)
             {
                 string id = element.locationId;
                 string tag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// <param name="hydraulicRules">The hydraulic rules.</param>
         /// <param name="modelTimeStep">The model time step.</param>
         /// <remarks>If parameter elements or hydraulicRules is NULL, methods returns.</remarks>
-        public void SetTimeLagOnHydraulicRules(IList<RTCTimeSeriesXML> elements, IList<HydraulicRule> hydraulicRules, TimeSpan modelTimeStep)
+        public void SetTimeLagOnHydraulicRules(IList<RTCTimeSeriesComplexType> elements, IList<HydraulicRule> hydraulicRules, TimeSpan modelTimeStep)
         {
             if (elements == null || hydraulicRules == null)
             {
@@ -94,12 +94,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 {
                     logHandler.ReportErrorFormat(
                         Resources.RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0___must_have_an_input__Please_check_file____1___,
-                        hydraulicRule.Name, RealTimeControlXMLFiles.XmlTools);
+                        hydraulicRule.Name, RealTimeControlComplexTypeFiles.XmlTools);
                     continue;
                 }
 
                 string correspondingElementName = RtcXmlTag.Delayed + input.Name;
-                RTCTimeSeriesXML correspondingInputElement = elements.FirstOrDefault(e => e.id == correspondingElementName);
+                RTCTimeSeriesComplexType correspondingInputElement = elements.FirstOrDefault(e => e.id == correspondingElementName);
 
                 if (correspondingInputElement == null)
                 {
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         }
 
         private void SetInterpolationAndExtrapolationOnTimeCondition(IControlGroup controlGroup,
-                                                                     PITimeSeriesXML conditionItem)
+                                                                     PITimeSeriesComplexType conditionItem)
         {
             var condition = controlGroup.GetConditionByElementId<TimeCondition>(conditionItem.locationId, logHandler);
             condition.InterpolationOptionsTime = GetInterpolationType(conditionItem.interpolationOption);
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         }
 
         private void SetInterpolationAndExtrapolationOnTimeRule(IControlGroup controlGroup,
-                                                                PITimeSeriesXML ruleItem)
+                                                                PITimeSeriesComplexType ruleItem)
         {
             var rule = (TimeRule) controlGroup.GetRuleByElementId<TimeRule>(ruleItem.locationId, logHandler);
             rule.InterpolationOptionsTime = GetInterpolationType(ruleItem.interpolationOption);
@@ -129,14 +129,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         }
 
         private void SetInterpolationAndExtrapolationOnRelativeTimeRule(IControlGroup controlGroup,
-                                                                        PITimeSeriesXML ruleItem)
+                                                                        PITimeSeriesComplexType ruleItem)
         {
             var rule = (RelativeTimeRule) controlGroup.GetRuleByElementId<RelativeTimeRule>(ruleItem.locationId, logHandler);
             rule.Interpolation = GetInterpolationType(ruleItem.interpolationOption);
         }
 
         private void SetInterpolationAndExtrapolationOnPidRule(IControlGroup controlGroup,
-                                                               PITimeSeriesXML ruleItem)
+                                                               PITimeSeriesComplexType ruleItem)
         {
             var rule = (PIDRule) controlGroup.GetRuleByElementId<PIDRule>(ruleItem.locationId, logHandler);
             rule.InterpolationOptionsTime = GetInterpolationType(ruleItem.interpolationOption);
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         }
 
         private void SetInterpolationAndExtrapolationOnIntervalRule(IControlGroup controlGroup,
-                                                                    PITimeSeriesXML ruleItem)
+                                                                    PITimeSeriesComplexType ruleItem)
         {
             var rule = (IntervalRule) controlGroup.GetRuleByElementId<IntervalRule>(ruleItem.locationId, logHandler);
             rule.InterpolationOptionsTime = GetInterpolationType(ruleItem.interpolationOption);

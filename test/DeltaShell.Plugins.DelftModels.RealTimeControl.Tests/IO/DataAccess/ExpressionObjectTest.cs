@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         }
 
         [TestCaseSource(nameof(GetTestCases))]
-        public void Constructor_ExpressionXml_InitializesInstanceCorrectly(ExpressionXML expressionXml,
+        public void Constructor_ExpressionXml_InitializesInstanceCorrectly(ExpressionComplexType expressionXml,
                                                                            ExpressionObject expectedExpressionObject)
         {
             // Call
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
 
             foreach (Operator @operator in Enum.GetValues(typeof(Operator)))
             {
-                ExpressionXML expressionXml = ExpressionXMLBuilder.Create(id, @operator, yValue)
+                ExpressionComplexType expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
                                                                   .WithConstantAsFirstReference(constantValue)
                                                                   .AndConstantAsSecondReference(constantValue);
                 var expectedResult = new ExpressionObject(id, @operator,
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 yield return new TestCaseData(expressionXml, expectedResult)
                     .SetName($" {@operator} - Constant - Constant");
 
-                expressionXml = ExpressionXMLBuilder.Create(id, @operator, yValue)
+                expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
                                                     .WithConstantAsFirstReference(constantValue)
                                                     .AndInputAsSecondReference(inputReference);
                 expectedResult = new ExpressionObject(id, @operator,
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 yield return new TestCaseData(expressionXml, expectedResult)
                     .SetName($" {@operator} - Constant - Input");
 
-                expressionXml = ExpressionXMLBuilder.Create(id, @operator, yValue)
+                expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
                                                     .WithConstantAsFirstReference(constantValue)
                                                     .AndInputAsSecondReference(expressionReference);
                 expectedResult = new ExpressionObject(id, @operator,
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 yield return new TestCaseData(expressionXml, expectedResult)
                     .SetName($" {@operator} - Constant - Expression");
 
-                expressionXml = ExpressionXMLBuilder.Create(id, @operator, yValue)
+                expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
                                                     .WithInputAsFirstReference(inputReference)
                                                     .AndConstantAsSecondReference(constantValue);
                 expectedResult = new ExpressionObject(id, @operator,
@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 yield return new TestCaseData(expressionXml, expectedResult)
                     .SetName($" {@operator} - Input - Constant");
 
-                expressionXml = ExpressionXMLBuilder.Create(id, @operator, yValue)
+                expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
                                                     .WithInputAsFirstReference(inputReference)
                                                     .AndInputAsSecondReference(inputReference);
                 expectedResult = new ExpressionObject(id, @operator,
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 yield return new TestCaseData(expressionXml, expectedResult)
                     .SetName($" {@operator} - Input - Input");
 
-                expressionXml = ExpressionXMLBuilder.Create(id, @operator, yValue)
+                expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
                                                     .WithInputAsFirstReference(inputReference)
                                                     .AndInputAsSecondReference(expressionReference);
                 expectedResult = new ExpressionObject(id, @operator,
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 yield return new TestCaseData(expressionXml, expectedResult)
                     .SetName($" {@operator} - Input - Expression");
 
-                expressionXml = ExpressionXMLBuilder.Create(id, @operator, yValue)
+                expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
                                                     .WithInputAsFirstReference(expressionReference)
                                                     .AndConstantAsSecondReference(constantValue);
                 expectedResult = new ExpressionObject(id, @operator,
@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 yield return new TestCaseData(expressionXml, expectedResult)
                     .SetName($" {@operator} - Expression - Constant");
 
-                expressionXml = ExpressionXMLBuilder.Create(id, @operator, yValue)
+                expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
                                                     .WithInputAsFirstReference(expressionReference)
                                                     .AndInputAsSecondReference(inputReference);
                 expectedResult = new ExpressionObject(id, @operator,
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 yield return new TestCaseData(expressionXml, expectedResult)
                     .SetName($" {@operator} - Expression - Input");
 
-                expressionXml = ExpressionXMLBuilder.Create(id, @operator, yValue)
+                expressionXml = ExpressionComplexTypeBuilder.Create(id, @operator, yValue)
                                                     .WithInputAsFirstReference(expressionReference)
                                                     .AndInputAsSecondReference(expressionReference);
                 expectedResult = new ExpressionObject(id, @operator,

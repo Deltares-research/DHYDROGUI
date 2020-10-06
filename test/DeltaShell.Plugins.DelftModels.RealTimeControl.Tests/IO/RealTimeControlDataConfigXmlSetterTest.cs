@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 () => dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
                     new[]
                     {
-                        new PITimeSeriesXML()
+                        new PITimeSeriesComplexType()
                     },
                     null),
                 "Method throws an unexpected exception when parameter 'controlGroups' is null.");
@@ -87,12 +87,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void GivenAnHydraulicRuleWithoutInputs_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenExpectedLogMessageIsGiven()
         {
             // Given
-            var timeSeriesElement = new RTCTimeSeriesXML();
+            var timeSeriesElement = new RTCTimeSeriesComplexType();
             var hydraulicRule = new HydraulicRule();
 
             string expectedMessage = string.Format(
                 Resources.RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0___must_have_an_input__Please_check_file____1___,
-                hydraulicRule.Name, RealTimeControlXMLFiles.XmlTools);
+                hydraulicRule.Name, RealTimeControlComplexTypeFiles.XmlTools);
 
             // When
             dataConfigSetter.SetTimeLagOnHydraulicRules(
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void GivenAnHydraulicRuleAndWithoutAMatchingInputElement_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenTimeLagIsUnchanged()
         {
             // Given
-            var timeSeriesElement = new RTCTimeSeriesXML {vectorLength = 2};
+            var timeSeriesElement = new RTCTimeSeriesComplexType {vectorLength = 2};
             var hydraulicRule = new HydraulicRule
             {
                 Inputs = {new Input {Name = InputName}},
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 () => dataConfigSetter.SetTimeLagOnHydraulicRules(
                     new[]
                     {
-                        new RTCTimeSeriesXML()
+                        new RTCTimeSeriesComplexType()
                     },
                     null,
                     timeStep),
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             PIExtrapolationOptionEnumStringType extrapolationType, ExtrapolationType expectedExtrapolation)
         {
             // Given
-            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.TimeRule, interpolationType, extrapolationType);
+            PITimeSeriesComplexType timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.TimeRule, interpolationType, extrapolationType);
             var rule = new TimeRule(ComponentName);
             controlGroup.Rules.Add(rule);
 
@@ -209,7 +209,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             PIInterpolationOptionEnumStringType interpolationType, InterpolationType expectedInterpolation)
         {
             // Given
-            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.RelativeTimeRule, interpolationType);
+            PITimeSeriesComplexType timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.RelativeTimeRule, interpolationType);
             var rule = new RelativeTimeRule {Name = ComponentName};
             controlGroup.Rules.Add(rule);
 
@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             PIExtrapolationOptionEnumStringType extrapolationType, ExtrapolationType expectedExtrapolation)
         {
             // Given
-            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.PIDRule, interpolationType, extrapolationType);
+            PITimeSeriesComplexType timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.PIDRule, interpolationType, extrapolationType);
             var rule = new PIDRule(ComponentName);
             controlGroup.Rules.Add(rule);
 
@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             PIExtrapolationOptionEnumStringType extrapolationType, ExtrapolationType expectedExtrapolation)
         {
             // Given
-            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.IntervalRule, interpolationType, extrapolationType);
+            PITimeSeriesComplexType timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.IntervalRule, interpolationType, extrapolationType);
             var rule = new IntervalRule(ComponentName);
             controlGroup.Rules.Add(rule);
 
@@ -294,7 +294,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             PIExtrapolationOptionEnumStringType extrapolationType, ExtrapolationType expectedExtrapolation)
         {
             // Given
-            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.TimeCondition, interpolationType, extrapolationType);
+            PITimeSeriesComplexType timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.TimeCondition, interpolationType, extrapolationType);
             var condition = new TimeCondition {Name = ComponentName};
             controlGroup.Conditions.Add(condition);
 
@@ -321,7 +321,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void GivenAnElementWithAnIdWithNoRtcComponentTag_WhenSetInterpolationAndExtrapolationRtcComponentsIsCalled_TheElementIsSkippedAndRuleHasDefaultInterpolationAndExtrapolation(string tag, PIInterpolationOptionEnumStringType interpolationType, PIExtrapolationOptionEnumStringType extrapolationType)
         {
             // Given
-            var timeSeriesElement = new PITimeSeriesXML
+            var timeSeriesElement = new PITimeSeriesComplexType
             {
                 locationId = tag + ControlGroupName + "/" + ComponentName,
                 interpolationOption = interpolationType,
@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void GivenAnHydraulicRuleAndAMatchingElement_WhenSetTimeLagOnHydraulicRulesIsCalled_CorrectTimeLagIsSetOnHydraulicRule(int vectorLength, int expectedTimeLag)
         {
             // Given
-            var timeSeriesElement = new RTCTimeSeriesXML
+            var timeSeriesElement = new RTCTimeSeriesComplexType
             {
                 id = RtcXmlTag.Delayed + InputName,
                 vectorLength = vectorLength
@@ -384,12 +384,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                             $"Expected time lag for hydraulic rule was expected to be {expectedTimeLag}.");
         }
 
-        private static PITimeSeriesXML CreateTimeSeriesElement(
+        private static PITimeSeriesComplexType CreateTimeSeriesElement(
             string tag,
             PIInterpolationOptionEnumStringType interpolationType = PIInterpolationOptionEnumStringType.LINEAR,
             PIExtrapolationOptionEnumStringType extrapolationType = PIExtrapolationOptionEnumStringType.BLOCK)
         {
-            var timeSeriesElement = new PITimeSeriesXML
+            var timeSeriesElement = new PITimeSeriesComplexType
             {
                 locationId = tag + ControlGroupName + "/" + ComponentName,
                 interpolationOption = interpolationType,
