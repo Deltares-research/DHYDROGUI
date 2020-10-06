@@ -286,6 +286,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        public IWaveOutputData WaveOutputData { get; } = new WaveOutputData();
+
         public MdwFile MdwFile { get; } = new MdwFile();
 
         [PropertyGrid]
