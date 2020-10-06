@@ -328,11 +328,6 @@
     <EmbeddedResource Include="WaveModel.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="OutputData\WavmFileFunctionStore.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="WaveModel.1.1.0.hbm.xml" />
   </ItemGroup>
   <ItemGroup />
