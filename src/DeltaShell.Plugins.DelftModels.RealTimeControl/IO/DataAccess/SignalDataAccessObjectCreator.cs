@@ -36,7 +36,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             LookupSignal signal = CreateLookupSignal(lookupTableElement);
             var signalDataAccessObject = new SignalDataAccessObject(id, signal);
 
-            signalDataAccessObject.InputReferences.Add(lookupTableElement.input.x.Value);
+            if (lookupTableElement.input?.x != null)
+            {
+                signalDataAccessObject.InputReferences.Add(lookupTableElement.input.x.Value);
+            }
 
             return signalDataAccessObject;
         }

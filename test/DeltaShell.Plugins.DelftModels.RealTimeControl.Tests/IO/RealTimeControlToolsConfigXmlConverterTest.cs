@@ -607,7 +607,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 settingMaxSpeed = 3,
                 kp = 4,
                 ki = 5,
-                kd = 6
+                kd = 6,
+                input = new InputPidComplexType()
             };
 
             if (expectedSetpointType == PIDRule.PIDRuleSetpointType.Constant)
@@ -1209,7 +1210,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             public ConditionXmlBuilder WithTrueOutput(object trueOutput)
             {
-                standardTriggerXml.@true = standardTriggerXml.@true.Concat(new[]
+                standardTriggerXml.@true = (standardTriggerXml.@true ?? new TriggerComplexType[0]).Concat(new[]
                 {
                     WrapTrigger(trueOutput)
                 }).ToArray();
@@ -1218,7 +1219,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             public ConditionXmlBuilder WithFalseOutput(object falseOutput)
             {
-                standardTriggerXml.@false = standardTriggerXml.@false.Concat(new[]
+                standardTriggerXml.@false = (standardTriggerXml.@false ?? new TriggerComplexType[0]).Concat(new[]
                 {
                     WrapTrigger(falseOutput)
                 }).ToArray();

@@ -354,7 +354,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                                                                         string reference, string inputReference,
                                                                         TriggerComplexType[] trueTriggers, TriggerComplexType[] falseTriggers)
         {
-            var standardTriggerXml = new StandardTriggerComplexType {id = id};
             var condition = new RelationalConditionComplexType
             {
                 Item = new RelationalConditionComplexTypeX1Series
@@ -365,18 +364,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 relationalOperator = GetXmlOperation(operation),
                 Item1 = new RelationalConditionComplexTypeX2Series {@ref = inputReferenceEnumStringType.EXPLICIT}
             };
-            standardTriggerXml.condition = condition;
-            standardTriggerXml.@true.AddRange(trueTriggers);
-            standardTriggerXml.@false.AddRange(falseTriggers);
 
-            return standardTriggerXml;
+            return new StandardTriggerComplexType
+            {
+                id = id,
+                @true = trueTriggers,
+                @false = falseTriggers,
+                condition = condition
+            };
         }
 
         private static StandardTriggerComplexType CreateStandardConditionXml(string id, double value, Operation operation,
                                                                      string reference, string inputReference,
                                                                      TriggerComplexType[] trueTriggers, TriggerComplexType[] falseTriggers)
         {
-            var standardTriggerXml = new StandardTriggerComplexType {id = id};
             var condition = new RelationalConditionComplexType
             {
                 Item = new RelationalConditionComplexTypeX1Series
@@ -388,11 +389,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
                 Item1 = value.ToString()
             };
 
-            standardTriggerXml.condition = condition;
-            standardTriggerXml.@true.AddRange(trueTriggers);
-            standardTriggerXml.@false.AddRange(falseTriggers);
-
-            return standardTriggerXml;
+            return new StandardTriggerComplexType
+            {
+                id = id,
+                @true = trueTriggers,
+                @false = falseTriggers,
+                condition = condition
+            };
         }
 
         private static TriggerComplexType GetRuleReferenceTriggerXml(string id)

@@ -54,7 +54,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             string id = ruleElement.id;
             var dataAccessObject = new RuleDataAccessObject(id, rule);
 
-            dataAccessObject.OutputReferences.Add(ruleElement.output.y);
+            if (ruleElement.output?.y != null)
+            {
+                dataAccessObject.OutputReferences.Add(ruleElement.output.y);
+            }
 
             return dataAccessObject;
         }
@@ -65,14 +68,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             return new TimeRule(ruleName);
         }
 
-        private static RuleDataAccessObject CreateRelativeTimeRuleDataAccessObject(
-            TimeRelativeComplexType relativeTimeRuleElement)
+        private static RuleDataAccessObject CreateRelativeTimeRuleDataAccessObject(TimeRelativeComplexType relativeTimeRuleElement)
         {
             RelativeTimeRule rule = CreateRelativeTimeRule(relativeTimeRuleElement);
 
             string id = relativeTimeRuleElement.id;
             var dataAccessObject = new RuleDataAccessObject(id, rule);
-            dataAccessObject.OutputReferences.Add(relativeTimeRuleElement.output.y);
+
+            if (relativeTimeRuleElement.output?.y != null)
+            {
+                dataAccessObject.OutputReferences.Add(relativeTimeRuleElement.output.y);
+            }
 
             return dataAccessObject;
         }
@@ -102,13 +108,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             string id = pidRuleElement.id;
             var dataAccessObject = new RuleDataAccessObject(id, rule);
 
+            if (pidRuleElement.input?.x != null)
+            {
+                dataAccessObject.InputReferences.Add(pidRuleElement.input.x);
+            }
             dataAccessObject.InputReferences.Add(pidRuleElement.input.x);
             if (pidRuleElement.input.Item is string signalId && signalId.Contains(RtcXmlTag.Signal))
             {
                 dataAccessObject.SignalReferences.Add(GetCorrectSignalReference(signalId));
             }
 
-            dataAccessObject.OutputReferences.Add(pidRuleElement.output.y);
+            if (pidRuleElement.output?.y != null)
+            {
+                dataAccessObject.OutputReferences.Add(pidRuleElement.output.y);
+            }
 
             return dataAccessObject;
         }
@@ -158,14 +171,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             string id = intervalRuleElement.id;
             var dataAccessObject = new RuleDataAccessObject(id, rule);
 
-            dataAccessObject.InputReferences.Add(intervalRuleElement.input.x.Value);
+            if (intervalRuleElement.input?.x != null)
+            {
+                dataAccessObject.InputReferences.Add(intervalRuleElement.input.x.Value);
+            }
+
             string signalId = intervalRuleElement.input.setpoint;
             if (signalId != null && signalId.Contains(RtcXmlTag.Signal))
             {
                 dataAccessObject.SignalReferences.Add(GetCorrectSignalReference(signalId));
             }
 
-            dataAccessObject.OutputReferences.Add(intervalRuleElement.output.y);
+            if (intervalRuleElement.output?.y != null)
+            {
+                dataAccessObject.OutputReferences.Add(intervalRuleElement.output.y);
+            }
 
             return dataAccessObject;
         }
@@ -231,8 +251,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 
             var dataAccessObject = new RuleDataAccessObject(id, rule);
 
-            dataAccessObject.InputReferences.Add(lookupTableElement.input.x.Value);
-            dataAccessObject.OutputReferences.Add(lookupTableElement.output.y);
+            if (lookupTableElement.input?.x != null)
+            {
+                dataAccessObject.InputReferences.Add(lookupTableElement.input.x.Value);
+            }
+
+            if (lookupTableElement.output?.y != null)
+            {
+                dataAccessObject.OutputReferences.Add(lookupTableElement.output.y);
+            }
 
             return dataAccessObject;
         }

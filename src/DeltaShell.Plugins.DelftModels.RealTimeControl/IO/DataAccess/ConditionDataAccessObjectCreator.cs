@@ -53,11 +53,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                 conditionDataAccessObject.InputReferences.Add(seriesItem.Value);
             }
 
-            IEnumerable<object> trueOutputs = standardTriggerXml.@true.Select(to => to.Item);
-            conditionDataAccessObject.TrueOutputReferences.AddRange(GetReferences(trueOutputs));
+            if (standardTriggerXml.@true != null)
+            {
+                IEnumerable<object> trueOutputs = standardTriggerXml.@true.Select(to => to.Item);
+                conditionDataAccessObject.TrueOutputReferences.AddRange(GetReferences(trueOutputs));
+            }
 
-            IEnumerable<object> falseOutputs = standardTriggerXml.@false.Select(to => to.Item);
-            conditionDataAccessObject.FalseOutputReferences.AddRange(GetReferences(falseOutputs));
+            if (standardTriggerXml.@false != null)
+            {
+                IEnumerable<object> falseOutputs = standardTriggerXml.@false.Select(to => to.Item);
+                conditionDataAccessObject.FalseOutputReferences.AddRange(GetReferences(falseOutputs));
+            }
 
             return conditionDataAccessObject;
         }

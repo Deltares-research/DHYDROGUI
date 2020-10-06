@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             }
 
             List<RTCTimeSeriesComplexType> allElements = dataConfigObject.importSeries.timeSeries.Concat(dataConfigObject.exportSeries.timeSeries).ToList();
-            List<PITimeSeriesComplexType> timeSeriesElements = allElements.Select(e => e.PITimeSeries).Where(t => t.locationId != null).ToList();
+            List<PITimeSeriesComplexType> timeSeriesElements = allElements.Select(e => e.PITimeSeries).Where(t => t?.locationId != null).ToList();
 
             var dataConfigSetter = new RealTimeControlDataConfigXmlSetter(logHandler);
             dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(timeSeriesElements, controlGroups);

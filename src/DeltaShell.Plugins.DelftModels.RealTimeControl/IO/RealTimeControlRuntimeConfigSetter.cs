@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// <remarks>The rtcModel and restartSettingsElement are expected to not be NULL.</remarks>
         public void SetRestartSettings(RealTimeControlModel rtcModel, UserDefinedStateExportComplexType restartSettingsElement)
         {
-            if (restartSettingsElement.stateTimeStep == -1)
+            if (restartSettingsElement == null || restartSettingsElement.stateTimeStep == -1)
             {
                 rtcModel.WriteRestart = false;
                 rtcModel.SaveStateStartTime = rtcModel.StopTime;

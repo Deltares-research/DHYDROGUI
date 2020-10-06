@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         private void SetDefaultValueIntervalRule(IEnumerable<EventComplexType> records, IntervalRule intervalRule)
         {
-            double? fixedValue = records.FirstOrDefault()?.value;
+            double? fixedValue = records?.FirstOrDefault()?.value;
             if (fixedValue != null)
             {
                 intervalRule.TimeSeries.Components[0].DefaultValue = fixedValue;

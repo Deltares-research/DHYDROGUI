@@ -58,8 +58,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             {
                 dataAccessObjects.Add(ConditionDataAccessObjectCreator.Create(conditionElement, logHandler));
 
-                IEnumerable<TriggerComplexType> outputItems = conditionElement.@true
-                                                                      .Concat(conditionElement.@false);
+                TriggerComplexType[] conditionElementTrue = conditionElement.@true ?? new TriggerComplexType[0];
+                TriggerComplexType[] conditionElementFalse = conditionElement.@false ?? new TriggerComplexType[0];
+
+                IEnumerable<TriggerComplexType> outputItems = conditionElementTrue.Concat(conditionElementFalse);
                 foreach (TriggerComplexType outputItem in outputItems)
                 {
                     dataAccessObjects.AddRange(ConvertToConditionDataAccessObjects(outputItem, logHandler));
@@ -73,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         private static IEnumerable<SignalDataAccessObject> ConvertToSignalDataAccessObjects(IEnumerable<RuleComplexType> signalElements)
         {
-            return signalElements.Select(e => SignalDataAccessObjectCreator.Create(e));
+            return signalElements.Select(SignalDataAccessObjectCreator.Create);
         }
 
         private static IEnumerable<ExpressionTree> ConvertToExpressionTrees(IEnumerable<TriggerComplexType> triggerElements)
@@ -84,6 +86,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         private static IEnumerable<ExpressionObjectGroup> GetExpressionGroupsRecursively(IEnumerable<TriggerComplexType> triggerElements)
         {
+            if (triggerElements == null)
+            {
+                return new List<ExpressionObjectGroup>();
+            }
+
             var expressionGroups = new List<ExpressionObjectGroup>();
             var expressionGroup = new ExpressionObjectGroup();
 
