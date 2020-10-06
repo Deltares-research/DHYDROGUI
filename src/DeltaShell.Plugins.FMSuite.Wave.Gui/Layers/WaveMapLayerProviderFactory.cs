@@ -49,6 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             yield return new WaveDomainDataLayerSubProvider(factory);
             yield return new WaveModelLayerSubProvider(factory);
             yield return new WavmFileFunctionStoreLayerSubProvider(factory, getWaveModelsFunc);
+            yield return new WaveOutputDataLayerSubProvider(factory);
         }
     }
 }

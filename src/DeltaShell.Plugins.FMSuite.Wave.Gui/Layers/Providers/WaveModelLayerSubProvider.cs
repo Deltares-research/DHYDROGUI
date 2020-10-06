@@ -64,13 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
                 yield return waveDomain;
             }
 
-            IEnumerable<WavmFileFunctionStore> relevantFunctionStores =
-                model.WavmFunctionStores.Where(fs => fs.Functions.Any() &&
-                                                     !string.IsNullOrEmpty(fs.Path));
-            foreach (WavmFileFunctionStore wavmFunctionStore in relevantFunctionStores)
-            {
-                yield return wavmFunctionStore;
-            }
+            yield return model.WaveOutputData;
         }
     }
 }
