@@ -347,6 +347,7 @@
     <Compile Include="Layers\WaveLayerFactory.cs" />
     <Compile Include="Layers\WaveMapLayerProviderFactory.cs" />
     <Compile Include="MapTools\GroupedLayerFeature2DLineTool.cs" />
+    <Compile Include="NodePresenters\OutputData\WaveOutputDataNodePresenter.cs" />
     <Compile Include="NodePresenters\SpatiallyVariantBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />

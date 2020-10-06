@@ -352,6 +352,7 @@
     <Compile Include="Gui\Layers\WaveLayerNamesTest.cs" />
     <Compile Include="Gui\Layers\WaveMapLayerProviderFactoryTest.cs" />
     <Compile Include="Gui\MapTools\GroupedLayerFeature2DLineToolTest.cs" />
+    <Compile Include="Gui\NodePresenters\OutputData\WaveOutputDataNodePresenterTest.cs" />
     <Compile Include="Gui\NodePresenters\SpatiallyVariantBoundaryNodePresenterTest.cs" />
     <Compile Include="Gui\WaveDomainNodePresenterTest.cs" />
     <Compile Include="Gui\WaveGuiPluginTest.cs" />
