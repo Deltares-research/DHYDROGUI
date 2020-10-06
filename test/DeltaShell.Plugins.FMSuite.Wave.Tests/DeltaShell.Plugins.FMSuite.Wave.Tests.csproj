@@ -405,6 +405,7 @@
     <Compile Include="DataAccess\SpectrumDataComponentVisitorTest.cs" />
     <Compile Include="DataAccess\SpectrumParametersVisitorTest.cs" />
     <Compile Include="DataAccess\WaveModelSchemaCsvFileTest.cs" />
+    <Compile Include="OutputData\WaveOutputDataTest.cs" />
     <Compile Include="OutputData\WavmFileFunctionStoreTest.cs" />
     <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviourTest.cs" />
     <Compile Include="Migrations\1.1.0.0\DelftIniMigratorTest.cs" />
