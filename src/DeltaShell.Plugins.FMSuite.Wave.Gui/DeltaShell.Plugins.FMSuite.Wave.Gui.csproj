@@ -339,6 +339,7 @@
     <Compile Include="Layers\Providers\ObservationCrossSectionLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObservationPointLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObstacleLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\OutputData\WaveOutputDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveModelLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\OutputData\WavmFileFunctionStoreLayerSubProvider.cs" />
