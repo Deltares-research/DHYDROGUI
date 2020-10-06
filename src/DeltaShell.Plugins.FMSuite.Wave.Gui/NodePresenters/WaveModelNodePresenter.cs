@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, model,
                                                    NumericalParametersName);
             yield return new WaveModelTreeShortcut(OutputParametersName, OutputParametersIcon, model, "Output");
-            yield return new TreeFolder(model, GetOutputItems(model), "Output", FolderImageType.Output);
+            yield return model.WaveOutputData;
         }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)

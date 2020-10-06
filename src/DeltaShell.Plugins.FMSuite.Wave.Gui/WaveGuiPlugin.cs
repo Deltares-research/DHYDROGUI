@@ -24,6 +24,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -306,6 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                           .FirstOrDefault(bc => bc.Boundaries.Contains(boundary));
 
             yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
+            yield return new WaveOutputDataNodePresenter { GuiPlugin = this};
         }
 
         public override void OnActiveViewChanged(IView view)
