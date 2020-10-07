@@ -1083,7 +1083,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.AreEqual("newPath", exception.ParamName);
         }
-
+        
         [Test]
         public void Path_ShouldReturnTheEarlierSetPath()
         {
@@ -1099,6 +1099,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        public void Path_ShouldReturnNullAsDefaultValue()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+            
+            // Act, Assert
+            Assert.IsNull(rtcModel.Path);
+        }
+
+        [Test]
+        public void Paths_ShouldReturnThePathProperty()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+            rtcModel.Path = "test";
+
+            // Act
+            IList<string> paths = rtcModel.Paths.ToList();
+            
+            // Assert
+            Assert.AreEqual(1, paths.Count);
+            Assert.AreEqual("test", paths.First());
+        }
+
+        [Test]
         public void IsFileCritical_ShouldReturnTrue()
         {
             // Arrange
@@ -1106,6 +1131,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             // Act, Assert
             Assert.IsTrue(rtcModel.IsFileCritical);
+        }
+
+        [Test]
+        public void IsOpen_ShouldReturnFalseAsDefaultValue()
+        {
+            // Arrange
+            IFileBased rtcModel = new RealTimeControlModel();
+
+            // Act, Assert
+            Assert.IsFalse(rtcModel.IsOpen);
         }
 
         [Test]
@@ -1162,10 +1197,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
                 string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
 
-                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
-                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
-                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
-                File.WriteAllText(workingDirectoryFile, "WD");
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName, 
+                                                  out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName, 
+                                                  out string workingDirectoryForRunning);
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
@@ -1173,15 +1207,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
 
                 // Then
-                string outputFolderAfterSave = Path.Combine(projectDirectoryAfterSave, rtcModel.Name, "output");
-                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "WorkingDirectoryOutputFile");
-                Assert.IsTrue(Directory.Exists(outputFolderAfterSave));
-                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
+                AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
 
                 Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
             }
         }
-
+        
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningAndSavingAgain_NewPersistentOutputDirectoryShouldExist()
@@ -1197,24 +1228,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
                 string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
-                
-                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
-                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
-                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
-                File.WriteAllText(workingDirectoryFile, "WD");
+
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
+                                                  out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                  out string workingDirectoryForRunning);
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
                 rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
                 frameworkSimulator.Save(pathAfterSave);
-                
-                // Then
-                string outputFolderAfterSave = Path.Combine(projectDirectoryAfterSave, rtcModel.Name, "output");
-                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "WorkingDirectoryOutputFile");
-                Assert.IsTrue(Directory.Exists(outputFolderAfterSave));
-                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
 
+                // Then
+                AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
+                
                 Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
             }
         }
@@ -1238,10 +1265,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 string projectDirectoryAfterSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSaveAs_data");
                 string pathAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, "RealTimeControlModelGUID");
 
-                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
-                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
-                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
-                File.WriteAllText(workingDirectoryFile, "WD");
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
+                                                  out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                  out string workingDirectoryForRunning);
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
@@ -1250,19 +1276,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.SaveAs(pathAfterSaveAs);
 
                 // Then
-                string outputFolderAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, rtcModel.Name, "output");
-                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSaveAs, "WorkingDirectoryOutputFile");
-                Assert.IsTrue(Directory.Exists(outputFolderAfterSaveAs));
+                AssertsPersistentFolderStructure(projectDirectoryAfterSaveAs, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
                 Assert.IsFalse(Directory.Exists(projectDirectoryAfterSave));
-                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
-
+                
                 Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
             }
         }
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAnOpenedProjectWithRTCAndOutput_ThenIsOpenPropertyShouldBeTrue()
+        public void GivenAnOpenedProjectWithRTC_ThenIsOpenPropertyShouldBeTrue()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1283,6 +1306,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAnOpenedProjectWithRTCAndOutput_WhenDeletingOutputFilesInFileExplorerAndSaving_ThenPersistentOutputDirectoryShouldNotExistAnymore()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryPersistentFolder = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, "RealTimeControlModelGUID");
+
+                string outputFolderPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, "output");
+                Directory.CreateDirectory(outputFolderPersistentFolder);
+                
+                // When
+                frameworkSimulator.OpenProject(pathPersistentFolder);
+                Directory.Delete(outputFolderPersistentFolder);
+                frameworkSimulator.Save(pathPersistentFolder);
+
+                // Then
+                Assert.IsFalse(Directory.Exists(outputFolderPersistentFolder));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAnOpenedProjectWithRTCAndOutput_WhenSaving_ThenPersistentOutputDirectoryShouldContainOriginalOutputFiles()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -1293,20 +1342,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 string projectDirectoryPersistentFolder = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
                 string pathPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, "RealTimeControlModelGUID");
-                string outputFolderPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, "output");
-                Directory.CreateDirectory(outputFolderPersistentFolder);
-                string originalOutputFile = Path.Combine(outputFolderPersistentFolder, "OriginalOutputFile");
-                File.WriteAllText(originalOutputFile, "Original");
 
+                BuildUpModelOutput(projectDirectoryPersistentFolder, rtcModel.Name, out string persistentOutputFileName, out string persistentOutputSubDirectoryName);
+                
                 // When
                 frameworkSimulator.OpenProject(pathPersistentFolder);
                 frameworkSimulator.Save(pathPersistentFolder);
 
                 // Then
-                string outputFolderAfterSave = Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, "output");
-                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "OriginalOutputFile");
-                Assert.IsTrue(Directory.Exists(outputFolderAfterSave));
-                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
+                AssertsPersistentFolderStructure(projectDirectoryPersistentFolder, rtcModel, persistentOutputFileName, persistentOutputSubDirectoryName); ;
             }
         }
 
@@ -1322,11 +1366,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 string projectDirectoryBeforeSaveAs = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
                 string pathBeforeSaveAs = Path.Combine(projectDirectoryBeforeSaveAs, "RealTimeControlModelGUID");
-                string outputFolderBeforeSaveAs = Path.Combine(projectDirectoryBeforeSaveAs, rtcModel.Name, "output");
-                Directory.CreateDirectory(outputFolderBeforeSaveAs);
-                string originalOutputFile = Path.Combine(outputFolderBeforeSaveAs, "OriginalOutputFile");
-                File.WriteAllText(originalOutputFile, "Original");
 
+                BuildUpModelOutput(projectDirectoryBeforeSaveAs, rtcModel.Name, out string persistentOutputFileName, out string persistentOutputSubDirectoryName);
+               
                 string projectDirectoryAfterSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
                 string pathAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, "RealTimeControlModelGUID");
                 
@@ -1335,10 +1377,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.SaveAs(pathAfterSaveAs);
 
                 // Then
-                string expectedOutputFolderAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, rtcModel.Name, "output");
-                string expectedOutputFileAfterSaveAs = Path.Combine(expectedOutputFolderAfterSaveAs, "OriginalOutputFile");
-                Assert.IsTrue(Directory.Exists(expectedOutputFolderAfterSaveAs));
-                Assert.IsTrue(File.Exists(expectedOutputFileAfterSaveAs));
+                AssertsPersistentFolderStructure(projectDirectoryAfterSaveAs, rtcModel, persistentOutputFileName, persistentOutputSubDirectoryName);
             }
         }
 
@@ -1354,15 +1393,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 string projectDirectoryPersistentFolder = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
                 string pathPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, "RealTimeControlModelGUID");
-                string outputFolderPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, "output");
-                Directory.CreateDirectory(outputFolderPersistentFolder);
-                string originalOutputFile = Path.Combine(outputFolderPersistentFolder, "OriginalOutputFile");
-                File.WriteAllText(originalOutputFile, "Original");
-
-                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
-                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
-                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
-                File.WriteAllText(workingDirectoryFile, "WD");
+                
+                BuildUpModelOutput(projectDirectoryPersistentFolder, rtcModel.Name, out string _, out string _);
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName, out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                  out string workingDirectoryForRunning);
 
                 // When
                 frameworkSimulator.OpenProject(pathPersistentFolder);
@@ -1370,12 +1404,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.Save(pathPersistentFolder);
 
                 // Then
-                string outputFolderAfterSave = Path.Combine(projectDirectoryPersistentFolder, rtcModel.Name, "output");
-                string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "WorkingDirectoryOutputFile");
-                string notExpectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, "OriginalOutputFile");
-                Assert.IsTrue(Directory.Exists(outputFolderAfterSave));
-                Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
-                Assert.IsFalse(File.Exists(notExpectedOutputFileAfterSave));
+                AssertsPersistentFolderStructure(projectDirectoryPersistentFolder, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
             }
         }
 
@@ -1391,37 +1420,109 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 string projectDirectoryBeforeSaveAs = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
                 string pathBeforeSaveAs = Path.Combine(projectDirectoryBeforeSaveAs, "RealTimeControlModelGUID");
-                string outputFolderBeforeSaveAs = Path.Combine(projectDirectoryBeforeSaveAs, rtcModel.Name, "output");
-                Directory.CreateDirectory(outputFolderBeforeSaveAs);
-                string originalOutputFile = Path.Combine(outputFolderBeforeSaveAs, "OriginalOutputFile");
-                File.WriteAllText(originalOutputFile, "Original");
 
+                BuildUpModelOutput(projectDirectoryBeforeSaveAs, rtcModel.Name, out string _, out string _);
+                
                 string projectDirectoryAfterSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
                 string pathAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, "RealTimeControlModelGUID");
 
-                string workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
-                Directory.CreateDirectory(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName));
-                string workingDirectoryFile = Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, "WorkingDirectoryOutputFile");
-                File.WriteAllText(workingDirectoryFile, "WD");
-                
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName, out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                  out string workingDirectoryForRunning);
+
                 // When
                 frameworkSimulator.OpenProject(pathBeforeSaveAs);
                 rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
                 frameworkSimulator.SaveAs(pathAfterSaveAs);
 
                 // Then
-                string expectedOutputFolderAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, rtcModel.Name, "output");
-                string expectedOutputFileAfterSaveAs = Path.Combine(expectedOutputFolderAfterSaveAs, "WorkingDirectoryOutputFile");
-                string notExpectedOutputFileAfterSaveAs = Path.Combine(expectedOutputFolderAfterSaveAs, "OriginalOutputFile");
-                Assert.IsTrue(Directory.Exists(expectedOutputFolderAfterSaveAs));
-                Assert.IsTrue(File.Exists(expectedOutputFileAfterSaveAs));
-                Assert.IsFalse(File.Exists(notExpectedOutputFileAfterSaveAs));
+                AssertsPersistentFolderStructure(projectDirectoryAfterSaveAs, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
+            }
+        }
+        
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAnOpenedProjectWithRTCAndOutput_WhenDeleteHasCalled_ThenPersistentOutputDirectoryShouldNotBeDeleted()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSaveAs = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSaveAs = Path.Combine(projectDirectoryBeforeSaveAs, "RealTimeControlModelGUID");
+
+                BuildUpModelOutput(projectDirectoryBeforeSaveAs, rtcModel.Name, out string persistentOutputFileName, out string persistentOutputSubDirectoryName);
+                
+                // When
+                frameworkSimulator.OpenProject(pathBeforeSaveAs);
+                ((IFileBased)rtcModel).Delete();
+                
+                // Then
+                AssertsPersistentFolderStructure(projectDirectoryBeforeSaveAs, rtcModel, persistentOutputFileName, persistentOutputSubDirectoryName);
             }
         }
 
-        # endregion
-        
-        # region Helper functions
+        #endregion
+
+        #region Helper functions
+
+        private static void BuildUpModelOutput(string projectDirectoryPersistentFolder, string rtcModelName, 
+                                               out string persistentOutputFileName, out string persistentOutputSubDirectoryName)
+        { 
+            persistentOutputFileName = "OriginalOutputFile";
+            persistentOutputSubDirectoryName = "OriginalOutputSubDirectory";
+            
+            string outputFolderPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, rtcModelName, "output");
+            Directory.CreateDirectory(outputFolderPersistentFolder);
+
+            string originalOutputFile = Path.Combine(outputFolderPersistentFolder, persistentOutputFileName);
+            File.WriteAllText(originalOutputFile, "Original");
+
+            string originalOutputSubDirectory = Path.Combine(outputFolderPersistentFolder, persistentOutputSubDirectoryName);
+            Directory.CreateDirectory(originalOutputSubDirectory);
+
+            string originalOutputSubDirectoryFile = Path.Combine(originalOutputSubDirectory, persistentOutputFileName);
+            File.WriteAllText(originalOutputSubDirectoryFile, "Original");
+        }
+
+        private static void BuildUpWorkingDirectoryWithOutput(TemporaryDirectory tempDirectory, string rtcModelDirectoryName,
+                                                              out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                              out string workingDirectoryForRunning)
+        {
+            workingDirectoryOutputFileName = "WorkingDirectoryOutputFile";
+            workingDirectoryOutputSubDirectoryName = "WorkingDirectoryOutputSubDirectory";
+            workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
+
+            string workingDirectoryOutputFolder = Path.Combine(workingDirectoryForRunning, rtcModelDirectoryName);
+            Directory.CreateDirectory(workingDirectoryOutputFolder);
+
+            string workingDirectoryFile = Path.Combine(workingDirectoryOutputFolder, workingDirectoryOutputFileName);
+            File.WriteAllText(workingDirectoryFile, "WD");
+
+            string workingDirectorySubDirectory = Path.Combine(workingDirectoryOutputFolder, workingDirectoryOutputSubDirectoryName);
+            Directory.CreateDirectory(workingDirectorySubDirectory);
+
+            string workingDirectorySubDirectoryFile = Path.Combine(workingDirectorySubDirectory, workingDirectoryOutputFileName);
+            File.WriteAllText(workingDirectorySubDirectoryFile, "WDSub");
+        }
+
+        private static void AssertsPersistentFolderStructure(string projectDirectoryAfterSave, RealTimeControlModel rtcModel, string outputFileName, string outputSubDirectoryName)
+        {
+            string outputFolderAfterSave = Path.Combine(projectDirectoryAfterSave, rtcModel.Name, "output");
+            string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, outputFileName);
+            string expectedOutputSubFolderAfterSave = Path.Combine(outputFolderAfterSave, outputSubDirectoryName);
+            string expectedOutputFileInSubFolderAfterSave = Path.Combine(expectedOutputSubFolderAfterSave, outputFileName);
+
+            Assert.IsTrue(Directory.Exists(outputFolderAfterSave));
+            Assert.IsTrue(File.Exists(expectedOutputFileAfterSave));
+            Assert.AreEqual(1,Directory.GetFiles(outputFolderAfterSave).Length);
+            Assert.AreEqual(1, Directory.GetDirectories(outputFolderAfterSave).Length);
+            Assert.IsTrue(Directory.Exists(expectedOutputSubFolderAfterSave));
+            Assert.IsTrue(File.Exists(expectedOutputFileInSubFolderAfterSave));
+            Assert.AreEqual(1, Directory.GetFiles(expectedOutputSubFolderAfterSave).Length);
+            Assert.AreEqual(0, Directory.GetDirectories(expectedOutputSubFolderAfterSave).Length);
+        }
 
         private static void CheckResetConnectionPoint(ConnectionPoint retrievedConnectionPointFromRtcModel)
         {

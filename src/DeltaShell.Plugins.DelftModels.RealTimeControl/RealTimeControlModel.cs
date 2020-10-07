@@ -1520,7 +1520,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             if (persistentOutputDirectory == null)
             {
                 isOpen = true;
-                currentOutputDirectoryPath = expectedOutputPath;
+                if (Directory.Exists(expectedOutputPath))
+                {
+                    currentOutputDirectoryPath = expectedOutputPath;
+                }
                 persistentOutputDirectory = expectedOutputPath;
                 return;
             }
@@ -1563,12 +1566,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
 
                 path = value;
-
-                if (path == null)
-                {
-                    return;
-                }
-
+                
                 // isOpen check needed for saving project,
                 // otherwise during opening an export will be done.
                 if (path.StartsWith("$") && isOpen)
@@ -1610,19 +1608,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
+            if (!Directory.Exists(currentOutputDirectoryPath))
+            {
+                return;
+            }
+
             DirectoryCopy(currentOutputDirectoryPath, targetDirectory);
         }
 
         private static void DirectoryCopy(string sourceDirName, string destDirName)
         {
             if (sourceDirName == destDirName) return;
-
             
-            if (!Directory.Exists(sourceDirName))
-            {
-                return;
-            }
-
             var dir = new DirectoryInfo(sourceDirName);
             
             DirectoryInfo[] subDirs = dir.GetDirectories();
