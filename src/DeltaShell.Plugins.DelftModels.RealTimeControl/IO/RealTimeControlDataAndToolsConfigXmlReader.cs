@@ -56,8 +56,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 return controlGroups;
             }
 
-            RuleComplexType[] ruleElements = toolsConfigObject.rules.ToArray();
-            TriggerComplexType[] triggerElements = toolsConfigObject.triggers.ToArray();
+            RuleComplexType[] ruleElements = toolsConfigObject.rules?.ToArray() ?? new RuleComplexType[0];
+            TriggerComplexType[] triggerElements = toolsConfigObject.triggers?.ToArray() ?? new TriggerComplexType[0];
 
             IEnumerable<IRtcDataAccessObject<RtcBaseObject>> dataAccessObjects = RealTimeControlToolsConfigXmlConverter.ConvertToDataAccessObjects(ruleElements, triggerElements, logHandler);
 
