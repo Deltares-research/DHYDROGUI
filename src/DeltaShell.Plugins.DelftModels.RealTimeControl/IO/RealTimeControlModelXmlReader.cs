@@ -7,10 +7,10 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
-    /// <summary>Responsible for reading the ComplexType files for RTC and building a RealTimeControlModel</summary>
+    /// <summary>Responsible for reading the XML files for RTC and building a RealTimeControlModel</summary>
     public static class RealTimeControlModelXmlReader
     {
-        /// <summary>Reads the ComplexType files in the specified directory path.</summary>
+        /// <summary>Reads the XML files in the specified directory path.</summary>
         /// <param name="directoryPath">The directory path of RTC</param>
         /// <returns>A RealTimeControl Model</returns>
         /// <remarks>If the path directory path does not exist, the method logs a message and returns null.</remarks>
@@ -31,10 +31,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 return null;
             }
 
-            string runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlComplexTypeFiles.XmlRuntime);
-            string dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlComplexTypeFiles.XmlData);
-            string toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlComplexTypeFiles.XmlTools);
-            string timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlComplexTypeFiles.XmlTimeSeries);
+            string runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXmlFiles.XmlRuntime);
+            string dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXmlFiles.XmlData);
+            string toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXmlFiles.XmlTools);
+            string timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXmlFiles.XmlTimeSeries);
 
             var rtcModel = new RealTimeControlModel();
 

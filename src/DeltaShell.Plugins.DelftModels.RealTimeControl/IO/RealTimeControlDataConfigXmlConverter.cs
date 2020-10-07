@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         }
 
         /// <summary>
-        /// Creates the connection points from ComplexType elements.
+        /// Creates the connection points from XML elements.
         /// </summary>
         /// <param name="elements">The elements.</param>
         /// <returns>A collection of connection points</returns>

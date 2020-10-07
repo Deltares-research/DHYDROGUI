@@ -79,26 +79,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         {
             RealTimeControlXmlWriter
                 .GetRuntimeConfigXml(path, model, model.LimitMemory, model.LogLevel)
-                .Save(Path.Combine(path, RealTimeControlComplexTypeFiles.XmlRuntime));
+                .Save(Path.Combine(path, RealTimeControlXmlFiles.XmlRuntime));
 
             RealTimeControlXmlWriter
                 .GetToolsConfigXml(path, model.ControlGroups, model.WriteRestart || model.UseRestart)
-                .Save(Path.Combine(path, RealTimeControlComplexTypeFiles.XmlTools));
+                .Save(Path.Combine(path, RealTimeControlXmlFiles.XmlTools));
 
             XDocument timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(path, model, model.ControlGroups);
-            timeSeriesDoc?.Save(Path.Combine(path, RealTimeControlComplexTypeFiles.XmlTimeSeries));
+            timeSeriesDoc?.Save(Path.Combine(path, RealTimeControlXmlFiles.XmlTimeSeries));
 
-            string timeSeriesPathFileName = timeSeriesDoc == null ? null : RealTimeControlComplexTypeFiles.XmlTimeSeries;
+            string timeSeriesPathFileName = timeSeriesDoc == null ? null : RealTimeControlXmlFiles.XmlTimeSeries;
             RealTimeControlXmlWriter
                 .GetDataConfigXml(path, model, model.ControlGroups, timeSeriesPathFileName)
-                .Save(Path.Combine(path, RealTimeControlComplexTypeFiles.XmlData));
+                .Save(Path.Combine(path, RealTimeControlXmlFiles.XmlData));
         }
 
         private static void WriteRestartFiles(string path, RealTimeControlModel realTimeControlModel, string directory)
         {
             if (realTimeControlModel.UseRestart)
             {
-                using (StreamWriter stream = File.CreateText(Path.Combine(directory, RealTimeControlComplexTypeFiles.XmlImportState)))
+                using (StreamWriter stream = File.CreateText(Path.Combine(directory, RealTimeControlXmlFiles.XmlImportState)))
                 {
                     stream.Write(realTimeControlModel.RestartInput.Content);
                 }
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             else
             {
                 RealTimeControlXmlWriter.GetStateVectorXml(directory, realTimeControlModel.ControlGroups)
-                                        .Save(Path.Combine(path, RealTimeControlComplexTypeFiles.XmlImportState));
+                                        .Save(Path.Combine(path, RealTimeControlXmlFiles.XmlImportState));
             }
         }
     }

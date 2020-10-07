@@ -59,11 +59,11 @@
       <FileName>ImportExport\RealTimeControlXmlWriter.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.RealTimeControlComplexTypeFiles">
+  <Class Name="DeltaShell.Plugins.DelftModels.RealTimeControl.RealTimeControlXmlFiles">
     <Position X="10.25" Y="10" Width="3" />
     <TypeIdentifier>
       <HashCode>AAACQAAAAAQgAAAAAAAAAAAAAAAAAAAAAAIAAAAQAAA=</HashCode>
-      <FileName>RealTimeControlComplexTypeFiles.cs</FileName>
+      <FileName>RealTimeControlXmlFiles.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="System.Xml.Schema.XmlSchemaSet">

@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             var id = $"[TimeRule]{missingControlGroupName}/time_rule_name";
 
             string expectedMessage = string.Format(Resources.RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___,
-                                                   missingControlGroupName, id, RealTimeControlComplexTypeFiles.XmlTools);
+                                                   missingControlGroupName, id, RealTimeControlXmlFiles.XmlTools);
 
             // When
             IControlGroup resultedControlGroup = new List<IControlGroup>().GetControlGroupByElementId(id, logHandler);
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             string expectedMessage = string.Format(
                 Resources.RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_output___0____The_input_output_needs_to_be_referenced_in_file___1___,
                 missingConnectionPointName,
-                RealTimeControlComplexTypeFiles.XmlData);
+                RealTimeControlXmlFiles.XmlData);
 
             // When
             var resultedControlGroup = new List<ConnectionPoint>().GetByName<Output>(missingConnectionPointName, logHandler);
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             string expectedMessage = string.Format(
                 Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___,
-                timeRuleName, timeRuleId, RealTimeControlComplexTypeFiles.XmlData);
+                timeRuleName, timeRuleId, RealTimeControlXmlFiles.XmlData);
 
             // When
             RuleBase rule = controlGroup.GetRuleByElementId<RelativeTimeRule>(timeRuleId, logHandler);
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             });
 
             string expectedMessage = string.Format(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___,
-                                                   missingRuleName, id, RealTimeControlComplexTypeFiles.XmlData);
+                                                   missingRuleName, id, RealTimeControlXmlFiles.XmlData);
 
             // When
             RuleBase resultedRule = controlGroup.GetRuleByElementId(id, logHandler);
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             string expectedMessage = string.Format(
                 Resources
                     .RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_find_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___,
-                missingConditionName, RealTimeControlComplexTypeFiles.XmlData);
+                missingConditionName, RealTimeControlXmlFiles.XmlData);
 
             // When
             var resultedCondition = controlGroup.GetConditionByElementId<TimeCondition>(id, logHandler);

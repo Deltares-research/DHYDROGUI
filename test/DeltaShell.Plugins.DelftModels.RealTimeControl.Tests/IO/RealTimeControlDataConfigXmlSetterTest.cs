@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             string expectedMessage = string.Format(
                 Resources.RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0___must_have_an_input__Please_check_file____1___,
-                hydraulicRule.Name, RealTimeControlComplexTypeFiles.XmlTools);
+                hydraulicRule.Name, RealTimeControlXmlFiles.XmlTools);
 
             // When
             dataConfigSetter.SetTimeLagOnHydraulicRules(

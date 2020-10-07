@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
     /// <summary>
     /// This class is responsible for building complete controlgroups from the data config and tools config
-    /// ComplexType files.
+    /// XML files.
     /// </summary>
     public class RealTimeControlDataAndToolsConfigXmlReader
     {

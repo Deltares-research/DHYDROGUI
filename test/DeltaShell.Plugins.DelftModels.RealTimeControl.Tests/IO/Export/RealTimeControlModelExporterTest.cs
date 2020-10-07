@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 new RealTimeControlModelExporter().Export(model, tempDirectory.Path);
 
                 // Then
-                Assert.That(File.ReadAllText(Path.Combine(tempDirectory.Path, RealTimeControlComplexTypeFiles.XmlImportState)), Is.EqualTo("file content here"));
+                Assert.That(File.ReadAllText(Path.Combine(tempDirectory.Path, RealTimeControlXmlFiles.XmlImportState)), Is.EqualTo("file content here"));
             }
         }
 
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
                 string expectedFileContentPath = Path.Combine(tempDirectory.Path, "expected_state_import.xml");
                 RealTimeControlXmlWriter.GetStateVectorXml(tempDirectory.Path, model.ControlGroups).Save(expectedFileContentPath);
-                string exportedRestartFile = Path.Combine(tempDirectory.Path, RealTimeControlComplexTypeFiles.XmlImportState);
+                string exportedRestartFile = Path.Combine(tempDirectory.Path, RealTimeControlXmlFiles.XmlImportState);
 
                 // Then
                 FileAssert.AreEqual(expectedFileContentPath, exportedRestartFile);

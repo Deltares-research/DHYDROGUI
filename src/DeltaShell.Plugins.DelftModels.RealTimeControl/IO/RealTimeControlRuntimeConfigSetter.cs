@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// Sets the run time settings on the RealTimeControl Model.
         /// </summary>
         /// <param name="rtcModel">The RealTimeControl Model.</param>
-        /// <param name="runTimeSettingsElement">The User Defined Runtime ComplexType element.</param>
+        /// <param name="runTimeSettingsElement">The User Defined Runtime XML element.</param>
         /// <remarks>The rtcModel and runTimeSettingsElement parameter are expected to not be NULL.</remarks>
         public void SetRunTimeSettings(RealTimeControlModel rtcModel, UserDefinedRuntimeComplexType runTimeSettingsElement)
         {
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// Sets the simulation mode settings on the RealTimeControl Model.
         /// </summary>
         /// <param name="rtcModel">The RealTimeControl Model.</param>
-        /// <param name="simulationModeSettingsElement">The simulation Mode ComplexType element.</param>
+        /// <param name="simulationModeSettingsElement">The simulation Mode XML element.</param>
         /// <remarks>The rtcModel is expected to not be NULL. If simulationModeSettingsElement is NULL, no settings are set.</remarks>
         public void SetSimulationModeSettings(RealTimeControlModel rtcModel, ModeComplexType simulationModeSettingsElement)
         {
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// Sets the restart settings on the RealTimeControl Model
         /// </summary>
         /// <param name="rtcModel">The RealTimeControl Model.</param>
-        /// <param name="restartSettingsElement">The User Defined State Export ComplexType element.</param>
+        /// <param name="restartSettingsElement">The User Defined State Export XML element.</param>
         /// <remarks>The rtcModel and restartSettingsElement are expected to not be NULL.</remarks>
         public void SetRestartSettings(RealTimeControlModel rtcModel, UserDefinedStateExportComplexType restartSettingsElement)
         {

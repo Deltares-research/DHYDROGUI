@@ -1,6 +1,6 @@
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
-    public static class RealTimeControlComplexTypeFiles
+    public static class RealTimeControlXmlFiles
     {
         public const string XmlExportState = @"state_export.xml";
         public const string XmlRuntime = @"rtcRuntimeConfig.xml";
