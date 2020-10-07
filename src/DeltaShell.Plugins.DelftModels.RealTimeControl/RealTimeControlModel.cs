@@ -1061,6 +1061,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.
             currentOutputDirectoryPath = Path.Combine(workingDirectoryPath, DirectoryName);
+
+            MarkDirty();
         }
 
         #endregion
@@ -1467,6 +1469,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private string persistentOutputDirectory;
         private bool isOpen;
 
+        private int dirtyCounter; // tells NHibernate we need to be saved
+
         // Used for Import model
         // Creating new model
         void IFileBased.CreateNew(string filePath)
@@ -1638,6 +1642,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 string destDirPath = Path.Combine(destDirName, subDir.Name);
                 DirectoryCopy(subDir.FullName, destDirPath);
             }
+        }
+
+        // Needed for NHibernate.
+        private void MarkDirty()
+        {
+            unchecked
+            {
+                dirtyCounter++;
+            } 
         }
         #endregion
 

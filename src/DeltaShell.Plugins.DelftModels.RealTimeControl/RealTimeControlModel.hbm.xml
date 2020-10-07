@@ -24,6 +24,9 @@
 
     <property name="Path" />
 
+    <!--This is required because otherwise NHibernate will not notice we need to be saved-->
+    <property name="dirtyCounter" access="field" />
+
     <many-to-one access="property" name="RestartInput" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart.RealTimeControlRestartFile, DeltaShell.Plugins.DelftModels.RealTimeControl" />
 
     <list name="RestartOutput"
