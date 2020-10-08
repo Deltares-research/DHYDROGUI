@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace DeltaShell.Dimr.xsd
 {
-    public partial class dimrXML : IXmlParsedObject
+    public partial class dimrXML
     {
         [XmlAttribute("schemaLocation", Namespace = XmlSchema.InstanceNamespace)]
         public string XsiSchemaLocation { get; set; } = "http://schemas.deltares.nl/dimr " +
