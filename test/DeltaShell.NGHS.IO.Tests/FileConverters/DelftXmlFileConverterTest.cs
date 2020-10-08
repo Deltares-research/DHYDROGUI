@@ -47,7 +47,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ValidateDimrFileWithNoAdditionalInformation()
+        public void ValidateDimrFileWithNoUnsupportedElementsAndAttributes()
         {
             string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReaders", "ConfigXmlReader", "dimr.xml"));
             using (StreamReader reader = File.OpenText(dimrPath))
@@ -56,10 +56,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
 
                 DelftXmlFileConverter.Convert<dimrXML>(reader, unsupportedFeatures);
 
-                Assert.That(unsupportedFeatures.Count, Is.EqualTo(2));
+                Assert.That(unsupportedFeatures.Count, Is.EqualTo(0));
             }
         }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ValidateDimrFileWithUnsupportedElementsAndAttribute()
@@ -70,12 +69,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
                 var unsupportedFeatures = new List<string>();
                 DelftXmlFileConverter.Convert<dimrXML>(reader, unsupportedFeatures);
 
-                Assert.That(unsupportedFeatures.Count, Is.EqualTo(5));
+                Assert.That(unsupportedFeatures.Count, Is.EqualTo(3));
                 Assert.That(unsupportedFeatures.ElementAt(0), Is.EqualTo("Element: \"test\" at line 45 position 4"));
                 Assert.That(unsupportedFeatures.ElementAt(1), Is.EqualTo("Attribute: \"abc\" at line 55 position 17"));
                 Assert.That(unsupportedFeatures.ElementAt(2), Is.EqualTo("Element: \"abcsourcename\" at line 60 position 8"));
-                Assert.That(unsupportedFeatures.ElementAt(3), Is.EqualTo("Element: \"logger\" at line 126 position 5"));
-                Assert.That(unsupportedFeatures.ElementAt(4), Is.EqualTo("Element: \"logger\" at line 194 position 5"));
             }
         }
     }
