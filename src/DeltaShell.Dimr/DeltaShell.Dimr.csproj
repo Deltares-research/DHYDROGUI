@@ -97,7 +97,6 @@
     <Compile Include="RemoteDimrApi.cs" />
     <Compile Include="xsd\dimr-1.0.custom.cs" />
     <Compile Include="xsd\dimr-1.0.serializers.cs" />
-    <Compile Include="xsd\dimr-1_0.cs" />
     <Compile Include="xsd\DimrModelExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -149,7 +148,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="UML\DimrOverview.cd" />
-    <None Include="xsd\dimr-1.0.xsd">
+    <None Include="xsd\dimr.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
