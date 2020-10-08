@@ -975,7 +975,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             ReconnectOutputFiles(outputFilePath);
 
             var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
-            SetRestartOutputFiles(Directory.GetFiles(Path.Combine(dirInfo.Parent.FullName, DirectoryName)).Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))));
+            SetRestartOutputFiles(Directory.GetFiles(outputPath).Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))));
         }
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
