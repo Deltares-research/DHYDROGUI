@@ -21,6 +21,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
@@ -504,7 +505,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             ExportModelInputTo(targetMdwFilePath, switchTo);
 
-            string targetOutputDir = Path.Combine(modelDir, FileConstants.OutputDirectoryName);
+            string targetOutputDir = Path.Combine(modelDir, DirectoryNameConstants.OutputDirectoryName);
             SaveOutput(targetOutputDir, switchTo);
         }
 
@@ -1369,7 +1370,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private string GetMdwPathFromDeltaShellPath(string dsPath)
         {
             // dsproj_data/<model name>/<model name>.mdw
-            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, FileConstants.InputDirectoryName, Name + ".mdw"));
+            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, DirectoryNameConstants.InputDirectoryName, Name + ".mdw"));
         }
 
         #endregion
@@ -1481,7 +1482,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             //wave doesnt run standalone via dimr but via kernels
         }
 
-        public virtual void OnFinishIntegratedModelRun(string workingDirectoryPath)
+        public virtual void OnFinishIntegratedModelRun(string hydromodelWorkingDirectoryPath)
         {
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.

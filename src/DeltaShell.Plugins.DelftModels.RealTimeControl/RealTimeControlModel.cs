@@ -24,6 +24,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
@@ -115,6 +116,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
             }
         }
+
+        public virtual string[] LastExportInputFilesAndDirectoriesPaths { get; set; } = new string[0];
 
         public virtual int LogLevel { get; set; }
 
@@ -1033,7 +1036,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;
 
-        public virtual string DimrModelRelativeOutputDirectory => DirectoryName;
+        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -1056,11 +1059,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual string MpiCommunicatorString => null;
 
-        public virtual void OnFinishIntegratedModelRun(string workingDirectoryPath)
+        public virtual void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath)
         {
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.
-            currentOutputDirectoryPath = Path.Combine(workingDirectoryPath, DirectoryName);
+            string runRtcDirectory = Path.Combine(hydroModelWorkingDirectoryPath, DirectoryName);
+            
+            IEnumerable<string> outputFilePaths = Directory.GetFiles(runRtcDirectory).Where(f => !LastExportInputFilesAndDirectoriesPaths.Contains(f));
+            IEnumerable<string> outputSubDirectoriesPaths = Directory.GetDirectories(runRtcDirectory).Where(f => !LastExportInputFilesAndDirectoriesPaths.Contains(f));
+
+            Directory.CreateDirectory(Path.Combine(runRtcDirectory, "output"));
+
+            IEnumerable<string> allOutputPaths = outputFilePaths.Concat(outputSubDirectoriesPaths);
+            
+            foreach (string outputPath in allOutputPaths)
+            {
+                string outputName = Path.GetFileName(outputPath);
+                string destinationOutputPath = Path.Combine(runRtcDirectory, "output", outputName);
+                Directory.Move(outputPath, destinationOutputPath);
+            }
+            
+            currentOutputDirectoryPath = Path.Combine(runRtcDirectory, "output");
 
             MarkDirty();
         }

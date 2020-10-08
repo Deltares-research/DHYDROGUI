@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
@@ -61,6 +62,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             }
 
             File.WriteAllText(Path.Combine(directory, "settings.json"), settingsString);
+
+            string[] files = System.IO.Directory.GetFiles(directory);
+            string[] directories = System.IO.Directory.GetDirectories(directory);
+
+            realTimeControlModel.LastExportInputFilesAndDirectoriesPaths = files.Concat(directories).ToArray();
 
             return true;
         }

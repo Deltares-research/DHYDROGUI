@@ -122,6 +122,7 @@
     <Compile Include="DelftIniObjects\DelftIniProperty.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
+    <Compile Include="DirectoryNameConstants.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileBasedUtils.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />

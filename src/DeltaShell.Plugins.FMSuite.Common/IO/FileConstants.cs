@@ -7,8 +7,7 @@
     {
         #region Directory names
 
-        public const string InputDirectoryName = "input";
-        public const string OutputDirectoryName = "output";
+        
         public const string PrefixDelwaqDirectoryName = "DFM_DELWAQ_";
         public const string SnappedFeaturesDirectoryName = "snapped";
 

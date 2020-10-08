@@ -144,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adaptors\UGridToUnstructuredGridAdaptorTest.cs" />
+    <Compile Include="DirectoryNameConstantsTest.cs" />
     <Compile Include="FileConverters\DelftXmlFileConverterTest.cs" />
     <Compile Include="FileBasedUtilsTest.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParserTest.cs" />

@@ -15,9 +15,11 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
@@ -1460,6 +1462,64 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryBeforeSaveAs, rtcModel, persistentOutputFileName, persistentOutputSubDirectoryName);
+            }
+        }
+
+        [Test]
+        public void OnFinishIntegratedModelRun_ShouldMoveOnlyOutputFilesAndDirectoriesToSeparateOutputFolder()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                var rtcModel = new RealTimeControlModel();
+                string workingDirectoryIntegratedModel = Path.Combine(tempDirectory.Path, "IntegratedModel");
+                string runRtcDirectory = Path.Combine(workingDirectoryIntegratedModel, rtcModel.DirectoryName);
+                
+                string outputSubDirectoryPath = Path.Combine(runRtcDirectory, "OutputSubFolder");
+                string outputFilePath = Path.Combine(runRtcDirectory, "output.txt");
+                string outputFileInSubFolderPath = Path.Combine(outputSubDirectoryPath, "output.txt");
+                Directory.CreateDirectory(outputSubDirectoryPath);
+                File.WriteAllText(outputFilePath, "test");
+                File.WriteAllText(outputFileInSubFolderPath, "test");
+
+                string inputSubDirectoryPath = Path.Combine(runRtcDirectory, "InputSubFolder");
+                string inputFilePath = Path.Combine(runRtcDirectory, "input.txt");
+                string inputFileInSubFolderPath = Path.Combine(inputSubDirectoryPath, "input.txt");
+                Directory.CreateDirectory(inputSubDirectoryPath);
+                File.WriteAllText(inputFilePath, "test");
+                File.WriteAllText(inputFileInSubFolderPath, "test");
+                
+                rtcModel.LastExportInputFilesAndDirectoriesPaths = new[]
+                {
+                    inputFilePath,
+                    inputSubDirectoryPath
+                }; 
+
+                // Act
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
+
+                // Assert
+                string outputFolderPathAfterOnFinish = Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName);
+                string outputFilePathAfterOnFinish = Path.Combine(outputFolderPathAfterOnFinish, "output.txt");
+                
+                string outputSubDirectoryPathAfterOnFinish = Path.Combine(outputFolderPathAfterOnFinish, "OutputSubFolder");
+                string outputFileInSubFolderPathAfterOnFinish = Path.Combine(outputSubDirectoryPathAfterOnFinish, "output.txt");
+
+                Assert.AreEqual(1, Directory.GetFiles(runRtcDirectory).Length);
+                Assert.IsTrue(File.Exists(inputFilePath));
+                Assert.AreEqual(2, Directory.GetDirectories(runRtcDirectory).Length);
+                Assert.IsTrue(Directory.Exists(inputSubDirectoryPath));
+                Assert.IsTrue(Directory.Exists(outputFolderPathAfterOnFinish));
+                
+                
+                Assert.AreEqual(1, Directory.GetFiles(outputFolderPathAfterOnFinish).Length);
+                Assert.IsTrue(File.Exists(outputFilePathAfterOnFinish));
+                Assert.AreEqual(1, Directory.GetDirectories(outputFolderPathAfterOnFinish).Length);
+                Assert.IsTrue(Directory.Exists(outputSubDirectoryPathAfterOnFinish));
+
+                Assert.AreEqual(1, Directory.GetFiles(outputSubDirectoryPathAfterOnFinish).Length);
+                Assert.IsTrue(File.Exists(outputFileInSubFolderPathAfterOnFinish));
+                Assert.AreEqual(0, Directory.GetDirectories(outputSubDirectoryPathAfterOnFinish).Length);
             }
         }
 

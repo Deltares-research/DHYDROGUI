@@ -4,6 +4,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -122,11 +123,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             WaterFlowFMProperty outputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.OutputDir);
 
             string existingOutputDir = outputDirProperty.GetValueAsString();
-            if (!existingOutputDir.StartsWith(FileConstants.OutputDirectoryName))
+            if (!existingOutputDir.StartsWith(DirectoryNameConstants.OutputDirectoryName))
             {
-                outputDirProperty.SetValueAsString(FileConstants.OutputDirectoryName);
+                outputDirProperty.SetValueAsString(DirectoryNameConstants.OutputDirectoryName);
                 Log.InfoFormat(Resources.WaterFlowFMModel_Running_this_model_requires_the_OutputDirectory_to_be_overwritten_to___0_,
-                               FileConstants.OutputDirectoryName);
+                               DirectoryNameConstants.OutputDirectoryName);
             }
 
             if (!SpecifyWaqOutputInterval)
@@ -134,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return;
             }
 
-            string relativeDWaqOutputDirectory = Path.Combine(FileConstants.OutputDirectoryName, DelwaqOutputDirectoryName);
+            string relativeDWaqOutputDirectory = Path.Combine(DirectoryNameConstants.OutputDirectoryName, DelwaqOutputDirectoryName);
             WaterFlowFMProperty waqOutputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir);
             waqOutputDirProperty.SetValueAsString(relativeDWaqOutputDirectory);
         }
