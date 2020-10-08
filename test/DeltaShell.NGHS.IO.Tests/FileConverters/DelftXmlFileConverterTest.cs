@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.Dimr.xsd;
+using DeltaShell.Dimr.Xsd;
 using DeltaShell.NGHS.IO.FileConverters;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -27,8 +27,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
                 Assert.IsNotNull(dimrXml.control);
                 Assert.IsNotNull(dimrXml.coupler);
                 Assert.IsNotNull(dimrXml.documentation);
-                Assert.IsNull(dimrXml.UnKnownAttributes);
-                Assert.IsNull(dimrXml.UnKnownElements);
             }
         }
 

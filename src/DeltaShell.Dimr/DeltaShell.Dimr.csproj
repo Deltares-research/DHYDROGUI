@@ -95,8 +95,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RemoteDimrApi.cs" />
-    <Compile Include="xsd\dimr-1.0.custom.cs" />
-    <Compile Include="xsd\dimr-1.0.serializers.cs" />
+    <Compile Include="xsd\dimr.custom.cs" />
+    <Compile Include="xsd\dimr.serializers.cs" />
     <Compile Include="xsd\dimr.cs">
       <DependentUpon>dimr.xsd</DependentUpon>
     </Compile>

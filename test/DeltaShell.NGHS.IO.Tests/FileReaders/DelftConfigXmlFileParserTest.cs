@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using DelftTools.TestUtils;
-using DeltaShell.Dimr.xsd;
+using DeltaShell.Dimr.Xsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using NUnit.Framework;
@@ -29,8 +29,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             Assert.IsNotNull(dimrXmlObject.control);
             Assert.IsNotNull(dimrXmlObject.coupler);
             Assert.IsNotNull(dimrXmlObject.documentation);
-            Assert.IsNull(dimrXmlObject.UnKnownAttributes);
-            Assert.IsNull(dimrXmlObject.UnKnownElements);
         }
 
         [Test]
