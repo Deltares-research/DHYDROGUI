@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using DeltaShell.Dimr.xsd;
 
 namespace DeltaShell.NGHS.IO.FileConverters
 {

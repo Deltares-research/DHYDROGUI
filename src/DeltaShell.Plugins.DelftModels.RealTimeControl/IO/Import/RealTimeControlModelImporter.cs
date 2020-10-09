@@ -57,8 +57,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
         /// <param name="path">The directory path of the directory of the RTC files.</param>
         /// <param name="target">target, currently unused</param>
         /// <returns>A RealTimeControlModel as object</returns>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="target"/>
-        /// is not <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="target"/>
+        /// is not <c>null</c>.
+        /// </exception>
         protected override object OnImportItem(string path, object target = null)
         {
             if (target != null)

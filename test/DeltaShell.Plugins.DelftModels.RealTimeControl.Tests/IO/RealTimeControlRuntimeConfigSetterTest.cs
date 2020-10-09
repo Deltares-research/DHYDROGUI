@@ -1,7 +1,7 @@
 ﻿using System;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -31,16 +31,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         [Test]
-        [TestCase("00:00:01", timeStepUnitEnumStringType.second)] // second
-        [TestCase("00:01:00", timeStepUnitEnumStringType.minute)] // minute
-        [TestCase("01:00:00", timeStepUnitEnumStringType.hour)]   // hour
-        [TestCase("1.00:00:00", timeStepUnitEnumStringType.day)]  // day
-        [TestCase("7.00:00:00", timeStepUnitEnumStringType.week)] // week
-        public void GivenAUserDefinedRuntimeXmlElement_WhenSetRunTimeSettingsIsCalled_ThenCorrectDataIsSetOnModel(string expectedTimeSpanString, timeStepUnitEnumStringType timeStepUnit)
+        [TestCase("00:00:01", timeStepUnitEnumStringType1.second)] // second
+        [TestCase("00:01:00", timeStepUnitEnumStringType1.minute)] // minute
+        [TestCase("01:00:00", timeStepUnitEnumStringType1.hour)]   // hour
+        [TestCase("1.00:00:00", timeStepUnitEnumStringType1.day)]  // day
+        [TestCase("7.00:00:00", timeStepUnitEnumStringType1.week)] // week
+        public void GivenAUserDefinedRuntimeXmlElement_WhenSetRunTimeSettingsIsCalled_ThenCorrectDataIsSetOnModel(string expectedTimeSpanString, timeStepUnitEnumStringType1 timeStepUnit)
         {
             // Given
             DateTime startDate = DateTime.Today;
-            UserDefinedRuntimeXML runTimeSettingsElement = CreateRunTimeSettings(timeStepUnit, startDate);
+            UserDefinedRuntimeComplexType runTimeSettingsElement = CreateRunTimeSettings(timeStepUnit, startDate);
 
             // When
             runtimeConfigSetter.SetRunTimeSettings(rtcModel, runTimeSettingsElement);
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void GivenModeXmlElement_WhenSetSimulationModeSettingsIsCalled_ThenCorrectDataIsSetOnModel(bool limitedMemory)
         {
             // Given
-            ModeXML simulationModeSettingsElement = CreateSimulationModeSettings(limitedMemory);
+            ModeComplexType simulationModeSettingsElement = CreateSimulationModeSettings(limitedMemory);
 
             // When
             runtimeConfigSetter.SetSimulationModeSettings(rtcModel, simulationModeSettingsElement);
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             AssertNotDefaultModelValues(restartStartDate, restartEndDate, restartTimeStep);
 
-            UserDefinedStateExportXML restartSettingsElement = CreateRestartSettings(restartTimeStep, restartStartDate, restartEndDate);
+            UserDefinedStateExportComplexType restartSettingsElement = CreateRestartSettings(restartTimeStep, restartStartDate, restartEndDate);
 
             // When
             runtimeConfigSetter.SetRestartSettings(rtcModel, restartSettingsElement);
@@ -99,21 +99,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             }
         }
 
-        private UserDefinedRuntimeXML CreateRunTimeSettings(timeStepUnitEnumStringType timeStepUnit, DateTime startDateTime)
+        private UserDefinedRuntimeComplexType CreateRunTimeSettings(timeStepUnitEnumStringType1 timeStepUnit, DateTime startDateTime)
         {
-            var settings = new UserDefinedRuntimeXML
+            var settings = new UserDefinedRuntimeComplexType
             {
-                startDate = new DateTimeXML
+                startDate = new DateTimeComplexType1
                 {
                     date = startDateTime,
                     time = startDateTime
                 },
-                endDate = new DateTimeXML
+                endDate = new DateTimeComplexType1
                 {
                     date = startDateTime.AddDays(1),
                     time = startDateTime.AddDays(1)
                 },
-                timeStep = new TimeStepXML
+                timeStep = new TimeStepComplexType1
                 {
                     unit = timeStepUnit,
                     multiplier = "1",
@@ -124,23 +124,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             return settings;
         }
 
-        private ModeXML CreateSimulationModeSettings(bool limitedMemory)
+        private ModeComplexType CreateSimulationModeSettings(bool limitedMemory)
         {
-            var mode = new ModeXML {Item = new ModeSimulationXML {limitedMemory = limitedMemory}};
+            var mode = new ModeComplexType {Item = new ModeSimulationComplexType {limitedMemory = limitedMemory}};
 
             return mode;
         }
 
-        private UserDefinedStateExportXML CreateRestartSettings(double timeStep, DateTime startDateTime, DateTime endDateTime)
+        private UserDefinedStateExportComplexType CreateRestartSettings(double timeStep, DateTime startDateTime, DateTime endDateTime)
         {
-            var settings = new UserDefinedStateExportXML
+            var settings = new UserDefinedStateExportComplexType
             {
-                startDate = new DateTimeXML
+                startDate = new DateTimeComplexType1
                 {
                     date = startDateTime,
                     time = startDateTime
                 },
-                endDate = new DateTimeXML
+                endDate = new DateTimeComplexType1
                 {
                     date = endDateTime,
                     time = endDateTime
