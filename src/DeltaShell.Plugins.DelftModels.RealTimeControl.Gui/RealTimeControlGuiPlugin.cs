@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         public override string DisplayName => "D-Real Time Control Plugin (UI)";
 
-        public override string Description => 
+        public override string Description =>
             RealTimeControl.Properties.Resources.RealTimeControlApplicationPlugin_Description;
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
@@ -332,7 +332,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private void Application_ProjectClosing(Project project)
         {
-            RealTimeControlModelCopyPasteHelper.CopiedShapes = null;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
+            helper.ClearData();
         }
 
         private void AddNewControlGroupToolStripMenuItemClick(object sender, EventArgs e)

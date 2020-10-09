@@ -879,7 +879,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     importer is IFeature2DImporterExporter)
                 {
                     Gui?.MainWindow?.ProjectExplorer?.TreeView?.Refresh();
-                } 
+                }
 
                 return;
             }
@@ -896,7 +896,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
             }
         }
-        
+
         [InvokeRequired]
         private void CloseViewDataForOutdatedStore(FMHisFileFunctionStore fmHisFileFunctionStore)
         {

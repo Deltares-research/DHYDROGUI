@@ -13,6 +13,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private RestartFile restartInput = new RestartFile();
 
         /// <summary>
+        /// Gets or sets the restart time step.
+        /// </summary>
+        public TimeSpan RestartTimeStep
+        {
+            get => (TimeSpan) ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value;
+            set => ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = value;
+        }
+
+        /// <summary>
+        /// Gets the restart start time.
+        /// </summary>
+        public DateTime RestartStartTime => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value;
+
+        /// <summary>
+        /// Gets the restart stop time.
+        /// </summary>
+        public DateTime RestartStopTime => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value;
+
+        /// <summary>
         /// Gets or sets the input restart file.
         /// </summary>
         public RestartFile RestartInput
@@ -29,25 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
 
         public bool UseRestart => !RestartInput.IsEmpty;
-
-        /// <summary>
-        /// Gets or sets the restart time step.
-        /// </summary>
-        public TimeSpan RestartTimeStep
-        {
-            get => (TimeSpan) ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value;
-            set => ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value = value;
-        }
-
-        /// <summary>
-        /// Gets the restart start time.
-        /// </summary>
-        public DateTime RestartStartTime => (DateTime)ModelDefinition.GetModelProperty(GuiProperties.RstOutputStartTime).Value;
-
-        /// <summary>
-        /// Gets the restart stop time.
-        /// </summary>
-        public DateTime RestartStopTime => (DateTime)ModelDefinition.GetModelProperty(GuiProperties.RstOutputStopTime).Value;
 
         public virtual bool WriteRestart
         {

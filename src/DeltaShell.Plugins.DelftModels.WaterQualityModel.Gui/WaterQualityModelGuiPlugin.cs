@@ -75,8 +75,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         private IGui gui;
         private WaterQualityRibbon ribbon;
 
-        private BloomInfo bloomInfo;
-
         [ExcludeFromCodeCoverage]
         public override string Name => "Water quality model (UI)";
 
@@ -157,27 +155,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
         public override IMapLayerProvider MapLayerProvider => new WaterQualityModelMapLayerProvider();
 
-        public override IRibbonCommandHandler RibbonCommandHandler
-        {
-            get
-            {
-                if (ribbon == null)
-                {
-                    ribbon = new WaterQualityRibbon();
-                }
+        public override IRibbonCommandHandler RibbonCommandHandler => ribbon ?? (ribbon = new WaterQualityRibbon());
 
-                return ribbon;
-            }
-        }
-
-        public BloomInfo BloomInfo => bloomInfo;
+        public BloomInfo BloomInfo { get; private set; }
 
         public override void Activate()
         {
             base.Activate();
 
             // read the spe file to exclude the algae parameters
-            bloomInfo = BloomSpeFileReader.Read(Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(),
+            BloomInfo = BloomSpeFileReader.Read(Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(),
                                                              "bloom.spe"));
         }
 
@@ -237,7 +224,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     AfterCreate = (v, o) =>
                     {
                         v.Gui = gui;
-                        v.BloomInfo = bloomInfo;
+                        v.BloomInfo = BloomInfo;
 
                         if (Gui.SelectedModel is WaterQualityModel)
                         {
@@ -284,6 +271,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     {
                         v.Data = GetMultipleFunctionViewData(o);
                         v.Text = o.Name;
+                        v.TableView.ReadOnly = true;
                     },
                     CloseForData = (v, o) =>
                         v.Data != null && o.TimeSeriesList.Any(ts => ((IEnumerable<IFunction>) v.Data).Contains(ts))
@@ -342,8 +330,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
         public override void OnViewAdded(IView view)
         {
-            var coverageView = view as CoverageView;
-            if (coverageView != null)
+            if (view is CoverageView coverageView)
             {
                 // Do not show locations when opening a coverageView for WaterQualityModel1D
                 MapView mapView = coverageView.ChildViews.OfType<MapView>().FirstOrDefault();
@@ -370,14 +357,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 }
             }
 
-            var textDocumentView = view as TextDocumentView;
-            if (textDocumentView != null)
+            if (view is TextDocumentView textDocumentView)
             {
                 textDocumentView.Font = new Font(FontFamily.GenericMonospace, 10);
             }
 
-            var centralMapView = view as ProjectItemMapView;
-            if (centralMapView != null)
+            if (view is ProjectItemMapView centralMapView)
             {
                 centralMapView.MapView.MapControl.Tools.AddRange(new IMapTool[]
                 {
@@ -513,31 +498,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
         private MapView GetActiveMapView()
         {
-            if (Gui == null)
-            {
-                return null;
-            }
-
-            IView activeView = Gui.DocumentViews.ActiveView;
+            IView activeView = Gui?.DocumentViews.ActiveView;
             if (activeView == null)
             {
                 return null;
             }
 
             MapView mapView = FindMapView(activeView);
-            if (mapView != null)
-            {
-                return mapView;
-            }
-
-            return null;
+            return mapView;
         }
 
         private static MapView FindMapView(IView activeView)
         {
-            var mapView = activeView as MapView;
-
-            if (mapView != null)
+            if (activeView is MapView mapView)
             {
                 return mapView;
             }
@@ -654,21 +627,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 model.HydroDataChanged += ModelOnHydroDataChanged;
             }
 
-            if (removedOrAddedItem is IDataItemSet &&
-                ((IDataItemSet) removedOrAddedItem).Value is IEventedList<WaterQualityObservationVariableOutput>)
+            if (!(removedOrAddedItem is IDataItemSet dataItemSet))
             {
-                // Close any opened view for observation points/areas data if the corresponding model output is removed
-                CloseMonitoringOutputViews((IDataItemSet) removedOrAddedItem);
                 return;
             }
 
-            if (removedOrAddedItem is IDataItem &&
-                ((IDataItem) removedOrAddedItem).Value is WaterQualityObservationVariableOutput)
+            if (dataItemSet.Value is IEventedList<WaterQualityObservationVariableOutput>)
             {
                 // Close any opened view for observation points/areas data if the corresponding model output is removed
-                CloseMonitoringOutputViews(
-                    (WaterQualityObservationVariableOutput) ((IDataItem) removedOrAddedItem).Value);
+                CloseMonitoringOutputViews(dataItemSet);
                 return;
+            }
+
+            if (dataItemSet.Value is WaterQualityObservationVariableOutput value)
+            {
+                // Close any opened view for observation points/areas data if the corresponding model output is removed
+                CloseMonitoringOutputViews(value);
             }
         }
 
@@ -762,27 +736,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         private void ActivityRunnerOnActivityCompleted(object sender, ActivityEventArgs e)
         {
             // Update the text of any opened/related substance process library view after a sub file import finished
-            var fileImportActivity = e.Activity as FileImportActivity;
-            if (fileImportActivity == null)
+            SubstanceProcessLibrary substanceProcessLibrary = GetSubstanceProcessLibraryFromActivity(e.Activity);
+            if (substanceProcessLibrary == null)
             {
                 return;
             }
 
-            var subFileImporter = fileImportActivity.FileImporter as SubFileImporter;
-            if (subFileImporter != null)
+            foreach (SubstanceProcessLibraryView view in GetViewsUsingSubstanceProcessLibrary(substanceProcessLibrary))
             {
-                SubstanceProcessLibrary substanceProcessLibrary =
-                    (fileImportActivity.ImportedItemOwner as IDataItem)?.Value as SubstanceProcessLibrary;
-                if (substanceProcessLibrary != null)
-                {
-                    gui.DocumentViews
-                       .OfType<SubstanceProcessLibraryView>()
-                       .Where(v => Equals(v.Data, substanceProcessLibrary))
-                       .ForEach(v => v.Text = string.Format("{0}:{1}", gui.SelectedModel.Name,
-                                                            substanceProcessLibrary.Name));
-                }
+                view.Text = $@"{gui.SelectedModel.Name}:{substanceProcessLibrary.Name}";
             }
         }
+
+        private static SubstanceProcessLibrary GetSubstanceProcessLibraryFromActivity(IActivity activity) =>
+            activity is FileImportActivity fileImportActivity &&
+            fileImportActivity.FileImporter is SubFileImporter &&
+            (fileImportActivity.ImportedItemOwner as IDataItem)?.Value is SubstanceProcessLibrary library
+                ? library
+                : null;
+
+        private IEnumerable<SubstanceProcessLibraryView> GetViewsUsingSubstanceProcessLibrary(SubstanceProcessLibrary library) =>
+            gui.DocumentViews
+               .OfType<SubstanceProcessLibraryView>()
+               .Where(v => Equals(v.Data, library));
 
         [InvokeRequired]
         private void CloseMonitoringOutputViews(WaterQualityObservationVariableOutput observationVariableOutput)
@@ -833,17 +809,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 variableOutput.Name,
                 TimeSeries = ts
             }).ToArray();
-            var dialog = new GridBasedDialog
+            using (var dialog = new GridBasedDialog
             {
                 Text = "Select time series",
                 MasterDataSource = dialogData,
                 SingleList = true,
                 MasterMultiSelect = true
-            };
-
-            return dialog.ShowDialog() == DialogResult.OK
-                       ? dialog.MasterSelectedIndices.Reverse().Select(i => dialogData[i].TimeSeries).ToArray()
-                       : null;
+            })
+            {
+                return dialog.ShowDialog() == DialogResult.OK
+                           ? dialog.MasterSelectedIndices.Reverse().Select(i => dialogData[i].TimeSeries).ToArray()
+                           : null;
+            }
         }
 
         private void FunctionListViewExtraActions(WaterQualityModel model, FunctionListView view)
@@ -893,7 +870,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         private void ExcludeBloomParametersFromFunctionListView(FunctionListView view)
         {
             view.ExcludeList.Clear();
-            foreach (string parameter in bloomInfo.AllParameters)
+            foreach (string parameter in BloomInfo.AllParameters)
             {
                 view.ExcludeList.Add(parameter);
             }
@@ -906,9 +883,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 Name = b.Name,
                 Active = true,
                 Description =
-                    string.Format(
-                        "Water from boundary type {0}",
-                        b.Name),
+                    $"Water from boundary type {b.Name}",
                 InitialValue = 0,
                 ConcentrationUnit = "g/m3",
                 WasteLoadUnit = "g"
@@ -974,8 +949,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             string message = Properties.Resources.WaterQualityModelGuiPlugin_RevertInputFileToTemplate;
             string caption = Properties.Resources.WaterQualityModelGuiPlugin_RevertInputFileToTemplate_Caption;
 
-            DialogResult result =
-                MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+            DialogResult result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
             if (result != DialogResult.Yes)
             {
                 return;

@@ -143,7 +143,13 @@ namespace DelftTools.Hydro.Tests
             };
 
             region.AllRegions
-                  .Should().Have.SameSequenceAs(new IHydroRegion[] {region, subRegion1, subRegion2, subRegion3});
+                  .Should().Have.SameSequenceAs(new IHydroRegion[]
+                  {
+                      region,
+                      subRegion1,
+                      subRegion2,
+                      subRegion3
+                  });
         }
 
         [Test]
@@ -258,7 +264,10 @@ namespace DelftTools.Hydro.Tests
                   .Should().Be.Empty();
 
             basin.Links
-                 .Should().Have.SameSequenceAs(new[] {link});
+                 .Should().Have.SameSequenceAs(new[]
+                 {
+                     link
+                 });
         }
 
         [TestFixture]

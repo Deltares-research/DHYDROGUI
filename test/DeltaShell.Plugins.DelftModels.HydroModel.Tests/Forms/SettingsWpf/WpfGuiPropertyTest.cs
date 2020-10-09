@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using NUnit.Framework;
 
@@ -20,10 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         public void Test_WpfGuiProperty()
         {
-            var dummyField = new FieldUIDescription(null, null)
-            {
-                Label = "dummyName"
-            };
+            var dummyField = new FieldUIDescription(null, null) {Label = "dummyName"};
 
             var property = new WpfGuiProperty(dummyField);
             Assert.IsNotNull(property);
@@ -147,6 +145,50 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         }
 
         [Test]
+        [TestCase("Captain | Tsubasha", MultipleUnits.Second, "[Tsubasha]")]
+        [TestCase("Default | NotDefault", MultipleUnits.Third, "[Default]")]
+        [TestCase("42 | 24 | 4.2", MultipleUnits.Third, "[4.2]")]
+        [Category(TestCategory.Integration)]
+        public void Test_WpfGuiProperty_WithMultipleSymbolUnit_When_BindedValueChanges_Then_GetsCorrectUnit(
+            string unitSymbols, MultipleUnits changeToValue, string expectedUnit)
+        {
+            const string somePropName = "someProp";
+            var subCategory = "dummyCat";
+            var bindingValue = MultipleUnits.First;
+            var bindingUIField = new FieldUIDescription((o) => bindingValue, (o, o1) => bindingValue = (MultipleUnits) o1, o => true)
+            {
+                Name = somePropName,
+                SubCategory = subCategory,
+                ValueType = typeof(MultipleUnits)
+            };
+
+            var bindingProperty = new WpfGuiProperty(bindingUIField);
+            var dummyField = new FieldUIDescription(null, null)
+            {
+                Name = "dummyName",
+                UnitSymbol = somePropName + ": " + unitSymbols,
+                SubCategory = subCategory
+            };
+            bindingProperty.Value = MultipleUnits.First;
+
+            const string subCategoryName = "dummyCategory";
+            var groupingCategory = new WpfGuiCategory(subCategoryName, new List<FieldUIDescription>() {dummyField});
+            groupingCategory.Properties.Add(bindingProperty);
+
+            Assert.That(groupingCategory.Properties.Count, Is.EqualTo(2));
+
+            WpfGuiProperty dummyWpfProperty = groupingCategory.Properties.Single(p => p.Name.Equals(dummyField.Name));
+            Assert.That(dummyWpfProperty, Is.Not.Null);
+
+            // When
+            TestDelegate testAction = () => bindingProperty.Value = changeToValue;
+
+            // Then
+            Assert.That(testAction, Throws.Nothing);
+            Assert.That(dummyWpfProperty.UnitSymbol, Is.EqualTo(expectedUnit));
+        }
+
+        [Test]
         [TestCase(true, true, false)]
         [TestCase(true, false, true)]
         [TestCase(false, true, true)]
@@ -158,6 +200,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var property = new WpfGuiProperty(dummyField) {CustomCommand = new CommandHelper(() => {}) {TextBoxEnabled = textBoxEnabled}};
 
             Assert.That(property.IsReadOnly, Is.EqualTo(expectedIsReadOnly));
+        }
+
+        public enum MultipleUnits
+        {
+            First,
+            Second,
+            Third
         }
     }
 }

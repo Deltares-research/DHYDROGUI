@@ -597,15 +597,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                         di =>
                         {
                             var controlGroup = di.Value as ControlGroup;
-                            if (controlGroup != null)
-                            {
-                                if (controlGroup.Inputs.Cast<ConnectionPoint>().Concat(controlGroup.Outputs).Contains(connectionPoint))
-                                {
-                                    return true;
-                                }
-                            }
-
-                            return false;
+                            return controlGroup != null && controlGroup.Inputs.Cast<ConnectionPoint>().Concat(controlGroup.Outputs).Contains(connectionPoint);
                         });
 
                     if (controlGroupDataItem != null)
@@ -760,11 +752,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 // this is another hack, fix the model state machine to handle lower level exception
                 MarkOutputOutOfSync();
-            }
-
-            if (RunsInIntegratedModel)
-            {
-                return;
             }
         }
 
@@ -989,8 +976,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
         {
-            IEnumerable<RealTimeControlRestartFile> outputRestartFiles = 
-                restartFileStrings.Select(rfs => new RealTimeControlRestartFile(Path.GetFileName(rfs), 
+            IEnumerable<RealTimeControlRestartFile> outputRestartFiles =
+                restartFileStrings.Select(rfs => new RealTimeControlRestartFile(Path.GetFileName(rfs),
                                                                                 File.ReadAllText(rfs)));
             RestartOutput = new EventedList<RealTimeControlRestartFile>(outputRestartFiles.ToList());
         }
@@ -1238,7 +1225,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             if (!CanMerge(sourceModel))
             {
-                return new ValidationReport(Name + " (Real Time Control)", new[] {new ValidationReport("Model", new[] {new ValidationIssue(sourceModel, ValidationSeverity.Error, $"sourceModel {sourceModel.Name} (of type {sourceModel.GetType()}) can't be merged with this model {Name} (of type {GetType()})")})});
+                return new ValidationReport(Name + " (Real Time Control)", new[]
+                {
+                    new ValidationReport("Model", new[]
+                    {
+                        new ValidationIssue(sourceModel, ValidationSeverity.Error, $"sourceModel {sourceModel.Name} (of type {sourceModel.GetType()}) can't be merged with this model {Name} (of type {GetType()})")
+                    })
+                });
             }
 
             return new RealTimeControlModelMergeValidator().Validate(this, (RealTimeControlModel) sourceModel);

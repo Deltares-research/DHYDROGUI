@@ -66,7 +66,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
             IMenuItem menuBase = base.GetContextMenu(sender, nodeData);
-            IMenuItem menu = 
+            IMenuItem menu =
                 NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, sender, nodeData);
 
             if (menuBase != null)
@@ -76,7 +76,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
 
             menu.Add(new RestartFileContextMenu((RestartFile) nodeData, sender));
 
-            ContextMenuStrip contextMenu = 
+            ContextMenuStrip contextMenu =
                 ContextMenuFactory.CreateMenuFor(nodeData, Gui, this, sender);
             menu.Add(new MenuItemContextMenuStripAdapter(contextMenu));
             return menu;

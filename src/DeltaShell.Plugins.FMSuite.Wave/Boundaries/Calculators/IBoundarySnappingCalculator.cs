@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 
@@ -39,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// The set of closest <see cref="GridBoundaryCoordinate"/> if the provided coordinate
         /// can be snapped, an empty list otherwise.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="coordinateToSnap"/> is <c>null</c>.
         /// </exception>
         /// <remarks>
@@ -52,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// Gets the coordinate that corresponds with the given <paramref name="supportPoint"/>.
         /// </summary>
         /// <param name="supportPoint">The support point.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
         /// </exception>
         /// <returns>
@@ -69,10 +68,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <returns>
         /// The distance between <paramref name="indexA"/> and <paramref name="indexB"/>.
         /// </returns>
-        /// <exception cref="InvalidEnumArgumentException">
+        /// <exception cref="System.ComponentModel.InvalidEnumArgumentException">
         /// Thrown when <paramref name="gridSide"/> is not defined.
         /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
+        /// <exception cref="System.ArgumentOutOfRangeException">
         /// Thrown when <paramref name="indexA"/> or <paramref name="indexB"/> are smaller than 0
         /// or when they are equal to or larger than the number of coordinates of the <see cref="IGridBoundary"/>
         /// at the specified

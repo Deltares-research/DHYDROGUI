@@ -29,56 +29,102 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     "timeseries", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.TimeSeries,
-                        ArgumentDefinitions = new[] {"time"},
-                        ComponentDefinitions = new[] {""}
+                        ArgumentDefinitions = new[]
+                        {
+                            "time"
+                        },
+                        ComponentDefinitions = new[]
+                        {
+                            ""
+                        }
                     }
                 },
                 {
                     "t3d", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.TimeSeries,
-                        ArgumentDefinitions = new[] {"time"},
-                        ComponentDefinitions = new[] {""}
+                        ArgumentDefinitions = new[]
+                        {
+                            "time"
+                        },
+                        ComponentDefinitions = new[]
+                        {
+                            ""
+                        }
                     }
                 },
                 {
                     "astronomic", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.AstroComponents,
-                        ArgumentDefinitions = new[] {"astronomic component"},
-                        ComponentDefinitions = new[] {"amplitude", "phase"}
+                        ArgumentDefinitions = new[]
+                        {
+                            "astronomic component"
+                        },
+                        ComponentDefinitions = new[]
+                        {
+                            "amplitude",
+                            "phase"
+                        }
                     }
                 },
                 {
                     "astronomic-correction", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.AstroCorrection,
-                        ArgumentDefinitions = new[] {"astronomic component"},
-                        ComponentDefinitions = new[] {"amplitude", "phase"}
+                        ArgumentDefinitions = new[]
+                        {
+                            "astronomic component"
+                        },
+                        ComponentDefinitions = new[]
+                        {
+                            "amplitude",
+                            "phase"
+                        }
                     }
                 },
                 {
                     "harmonic", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.Harmonics,
-                        ArgumentDefinitions = new[] {"harmonic component"},
-                        ComponentDefinitions = new[] {"amplitude", "phase"}
+                        ArgumentDefinitions = new[]
+                        {
+                            "harmonic component"
+                        },
+                        ComponentDefinitions = new[]
+                        {
+                            "amplitude",
+                            "phase"
+                        }
                     }
                 },
                 {
                     "harmonic-correction", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.HarmonicCorrection,
-                        ArgumentDefinitions = new[] {"harmonic component"},
-                        ComponentDefinitions = new[] {"amplitude", "phase"}
+                        ArgumentDefinitions = new[]
+                        {
+                            "harmonic component"
+                        },
+                        ComponentDefinitions = new[]
+                        {
+                            "amplitude",
+                            "phase"
+                        }
                     }
                 },
                 {
                     "qhtable", new ForcingTypeDefinition
                     {
                         ForcingType = BoundaryConditionDataType.Qh,
-                        ArgumentDefinitions = new[] {"qhbnd discharge"},
-                        ComponentDefinitions = new[] {"qhbnd waterlevel"}
+                        ArgumentDefinitions = new[]
+                        {
+                            "qhbnd discharge"
+                        },
+                        ComponentDefinitions = new[]
+                        {
+                            "qhbnd waterlevel"
+                        }
                     }
                 }
             };
@@ -804,13 +850,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
         private static DateTime TryParseDate(string dateString, string supportPointName)
         {
-            bool dateParsed = DateTime.TryParseExact(dateString, new[] {"yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss zzz"},
+            bool dateParsed = DateTime.TryParseExact(dateString, new[]
+                                                     {
+                                                         "yyyy-MM-dd",
+                                                         "yyyy-MM-dd HH:mm:ss",
+                                                         "yyyy-MM-dd HH:mm:ss zzz"
+                                                     },
                                                      CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal,
                                                      out DateTime startDate);
 
             if (!dateParsed)
             {
-                throw new FormatException("Time format '" + dateString + "' in support point '"+ supportPointName + "' is not supported by bc file parser");
+                throw new FormatException("Time format '" + dateString + "' in support point '" + supportPointName + "' is not supported by bc file parser");
             }
 
             CheckForTimezoneOffset(dateString, supportPointName);

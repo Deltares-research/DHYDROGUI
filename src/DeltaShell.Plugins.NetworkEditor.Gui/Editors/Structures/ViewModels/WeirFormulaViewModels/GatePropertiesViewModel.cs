@@ -15,6 +15,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     {
         private readonly IGatedWeirFormula formula;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Creates a new <see cref="GatePropertiesViewModel"/>.
         /// </summary>
@@ -134,7 +136,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {
                     return;
                 }
-                
+
                 formula.UseHorizontalDoorOpeningWidthTimeSeries = value;
                 OnPropertyChanged();
             }
@@ -158,7 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {
                     return;
                 }
-                
+
                 formula.HorizontalDoorOpeningDirection = value;
                 OnPropertyChanged();
             }
@@ -174,8 +176,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// chosen.
         /// </summary>
         public bool CanChooseGateOpeningDirection { get; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

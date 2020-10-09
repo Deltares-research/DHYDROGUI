@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     // Check model name
                     WaveModel targetModel = project.RootFolder.Models.OfType<WaveModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("Waves"));
+                    Assert.That(targetModel.Name, Does.Contain("Waves"));
 
                     // Import new water flow model
                     WaveModelFileImporter importer = app.FileImporters.OfType<WaveModelFileImporter>().FirstOrDefault();
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     // Check name of imported water flow model
                     targetModel = project.RootFolder.Models.OfType<WaveModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("tst"));
+                    Assert.That(targetModel.Name, Does.Contain("tst"));
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
@@ -115,14 +115,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     // Check folder name
                     Folder testFolder = project.RootFolder.Folders.FirstOrDefault();
                     Assert.IsNotNull(testFolder);
-                    Assert.That(testFolder.Name, Is.StringContaining("Test Folder"));
+                    Assert.That(testFolder.Name, Does.Contain("Test Folder"));
 
                     // Add new water flow model to the new folder and check its name
                     testFolder.Add(new WaveModel());
                     WaveModel targetModel =
                         testFolder.Models.OfType<WaveModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("Waves"));
+                    Assert.That(targetModel.Name, Does.Contain("Waves"));
 
                     // Import new water flow model
                     WaveModelFileImporter importer = app.FileImporters.OfType<WaveModelFileImporter>().FirstOrDefault();
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     // Check name of imported water flow model
                     targetModel = testFolder.Models.OfType<WaveModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("tst"));
+                    Assert.That(targetModel.Name, Does.Contain("tst"));
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }

@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 GetRegion = myObject => new HydroArea(),
                 ProgressChanged = (text, currentStep, totalAmountOfSteps) =>
                 {
-                    string progressText = $"{text} {currentStep}/{totalAmountOfSteps}";
+                    var progressText = $"{text} {currentStep}/{totalAmountOfSteps}";
                     progressMessages.Add(progressText);
                 }
             };

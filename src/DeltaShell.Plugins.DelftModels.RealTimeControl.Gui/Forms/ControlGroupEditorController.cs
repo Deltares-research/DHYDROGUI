@@ -495,8 +495,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     DisconnectFromSignal(to, fromSignal);
                     break;
             }
-            
+
             adjustingConnectionInDomain = false;
+        }
+
+        internal void PlaceShapeOnGraphControl(object obj, double x, double y)
+        {
+            ShapeBase shape = ObjectToShape(obj);
+            graphControl.AddShape(shape);
+            MoveShape(shape, x, y);
         }
 
         private static void DisconnectFromSignal(object to, SignalBase fromSignal)
@@ -557,13 +564,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     toMathematicalExpression.Inputs.Remove(fromInput);
                     break;
             }
-        }
-
-        internal void PlaceShapeOnGraphControl(object obj, double x, double y)
-        {
-            ShapeBase shape = ObjectToShape(obj);
-            graphControl.AddShape(shape);
-            MoveShape(shape, x, y);
         }
 
         private static bool ValidateTargetConnector(object target, ConnectorType targetConnector)
@@ -946,23 +946,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void ControlGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is ConditionBase && e.PropertyName == "Input")
+            switch (sender)
             {
-                RefreshConnections();
-            }
-
-            if (sender is ControlGroup && e.PropertyName == "IsEditing")
-            {
-                if (!controlGroup.IsEditing)
-                {
+                case ConditionBase _ when e.PropertyName == "Input":
+                case ControlGroup _ when e.PropertyName == "IsEditing" && !controlGroup.IsEditing:
                     RefreshConnections();
-                }
-            }
-
-            // force redrawing to fix rendering bug in netron (TOOLS-7748, point 5).
-            if (sender is ConnectionPoint && e.PropertyName == "Name")
-            {
-                graphControl.Invalidate();
+                    break;
+                case ConnectionPoint _ when e.PropertyName == "Name":
+                    graphControl.Invalidate();
+                    break;
             }
         }
 
@@ -1004,14 +996,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     SubscribeGraphControlEvents();
                 }
 
-                if (e.Action == NotifyCollectionChangedAction.Replace)
+                if (e.Action == NotifyCollectionChangedAction.Replace && replaceable != null)
                 {
-                    if (replaceable != null)
-                    {
-                        ShapeBase shape = FindShapeByObject(replaceable);
-                        shape.Tag = removedOrAddedItem;
-                        replaceable = null;
-                    }
+                    ShapeBase shape = FindShapeByObject(replaceable);
+                    shape.Tag = removedOrAddedItem;
+                    replaceable = null;
                 }
 
                 graphControl.Invalidate();

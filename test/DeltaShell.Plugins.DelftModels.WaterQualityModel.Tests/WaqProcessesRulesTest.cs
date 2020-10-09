@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var expectedColumns = 6;
             int readColumns = line.Split(',').Length;
             string filePath = testFilePath;
-            string expectedMssg = $"Skipped line {line} due to incorrect number of columns (expected {expectedColumns}, read {readColumns}) from {filePath}.";
+            var expectedMssg = $"Skipped line {line} due to incorrect number of columns (expected {expectedColumns}, read {readColumns}) from {filePath}.";
 
             TestHelper.AssertAtLeastOneLogMessagesContains(
                 () => validationCsv.ReadValidationCsv(Path.GetDirectoryName(testFilePath)),

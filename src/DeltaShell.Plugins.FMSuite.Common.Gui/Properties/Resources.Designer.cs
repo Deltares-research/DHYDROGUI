@@ -485,6 +485,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The model coordinates do not appear to be in &apos;{0}&apos;, as they fall outside the expected range of values for this system. Please verify the selected coordinate system is the system the coordinates were measured in. Continuing could lead to the map visualization failing and unexpected behaviour of spatial operations {1}{1}Are you sure you want to continue?.
+        /// </summary>
+        public static string SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system {
+            get {
+                return ResourceManager.GetString("SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: model coordinates do not appear to be in the selected system.
+        /// </summary>
+        public static string SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system_Caption {
+            get {
+                return ResourceManager.GetString("SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap settings {

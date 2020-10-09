@@ -136,27 +136,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             return item;
         }
 
-        private IDimrModel GetOwner(IActivity sourceActivity, IEnumerable<IActivity> ownerActivities)
+        private static IDimrModel GetOwner(IActivity sourceActivity, IEnumerable<IActivity> ownerActivities)
         {
             foreach (IActivity subActivity in ownerActivities)
             {
-                IActivity activity = subActivity is ActivityWrapper ? ((ActivityWrapper) subActivity).Activity : subActivity;
+                IActivity activity = subActivity is ActivityWrapper wrapper ? wrapper.Activity : subActivity;
                 if (activity == sourceActivity)
                 {
                     return sourceActivity as IDimrModel;
                 }
 
-                var compositeActivity = activity as ICompositeActivity;
-                if (compositeActivity != null)
+                if (activity is ICompositeActivity compositeActivity && compositeActivity.Activities.Any(compositeActivityActivity => GetActivity(compositeActivityActivity) == sourceActivity))
                 {
-                    if (compositeActivity.Activities.Any(compositeActivityActivity => (compositeActivityActivity is ActivityWrapper ? ((ActivityWrapper) compositeActivityActivity).Activity : compositeActivityActivity) == sourceActivity))
-                    {
-                        return compositeActivity as IDimrModel;
-                    }
+                    return compositeActivity as IDimrModel;
                 }
             }
 
             return sourceActivity as IDimrModel;
+        }
+
+        private static IActivity GetActivity(IActivity activity)
+        {
+            return activity is ActivityWrapper wrapper ? wrapper.Activity : activity;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace DeltaShell.Dimr.xsd
+﻿namespace DeltaShell.Dimr.Xsd
 {
     public static class DimrModelExtensions {}
 }

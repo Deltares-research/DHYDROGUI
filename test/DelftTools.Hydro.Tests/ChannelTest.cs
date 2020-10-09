@@ -40,7 +40,7 @@ namespace DelftTools.Hydro.Tests
             var channel = new Channel {Length = initialChannelLength};
 
             // When - Then
-            string expectedMessage = $"Channel length must be positive. Length of channel '{channel.Name}' remains {initialChannelLength}.";
+            var expectedMessage = $"Channel length must be positive. Length of channel '{channel.Name}' remains {initialChannelLength}.";
             TestHelper.AssertLogMessageIsGenerated(() => channel.Length = 0.0, expectedMessage, 1);
         }
 

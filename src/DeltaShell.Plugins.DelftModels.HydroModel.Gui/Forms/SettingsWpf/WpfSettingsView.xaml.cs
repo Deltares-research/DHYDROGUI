@@ -76,6 +76,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         public ViewInfo ViewInfo { get; set; }
 
         /// <summary>
+        /// Sets the collection of <see cref="WpfGuiProperty"/> properties to synchronize with state changes in <see cref="Data"/>.
+        /// </summary>
+        /// <param name="properties">The collection of <see cref="WpfGuiProperty"/> to synchronise.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="properties"/> is <c>null</c>.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the synchronizer is not set due to incompatible values of
+        /// <see cref="Data"/>.
+        /// </exception>
+        public void SetSynchronizedProperties(IEnumerable<WpfGuiProperty> properties)
+        {
+            if (properties == null)
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+
+            if (synchronizer == null)
+            {
+                throw new InvalidOperationException("Cannot synchronize properties when private field synchronizer is null.");
+            }
+
+            synchronizer.SynchronizeProperties(properties);
+        }
+
+        /// <summary>
         /// Makes object visible in the view if possible
         /// </summary>
         /// <param name="item"></param>
@@ -90,27 +114,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                                                                                                          .ToLowerInvariant().Equals(tabName)));
                 MainTabControl.SelectedIndex = selectedTab;
             }
-        }
-
-        /// <summary>
-        /// Sets the collection of <see cref="WpfGuiProperty"/> properties to synchronize with state changes in <see cref="Data"/>.
-        /// </summary>
-        /// <param name="properties">The collection of <see cref="WpfGuiProperty"/> to synchronise.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="properties"/> is <c>null</c>.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when the synchronizer is not set due to incompatible values of <see cref="Data"/>.</exception>
-        public void SetSynchronizedProperties(IEnumerable<WpfGuiProperty> properties)
-        {
-            if (properties == null)
-            {
-                throw new ArgumentNullException(nameof(properties));
-            }
-
-            if (synchronizer == null)
-            {
-                throw new InvalidOperationException("Cannot synchronize properties when private field synchronizer is null.");
-            }
-
-            synchronizer.SynchronizeProperties(properties);
         }
 
         public void Dispose()

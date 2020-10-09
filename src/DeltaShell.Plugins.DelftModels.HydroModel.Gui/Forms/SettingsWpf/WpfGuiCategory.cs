@@ -37,8 +37,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                           .Select(gp => new WpfGuiSubCategory(gp.Key, gp.ToList())));
 
             Properties = new ObservableCollection<WpfGuiProperty>(SubCategories.SelectMany(sc => sc.Properties));
-            Properties.ForEach(p => p.PropertyChanged += OnPropertyChanged);
-
+            Properties.ForEach(p =>
+            {
+                p.PropertyChanged += OnPropertyChanged;
+                if (p.IsEnumerableSymbol)
+                {
+                    p.GetBindedProperty = GetPropertyValueInCategory;
+                }
+            });
             UpdatingProperties = false; /*Flag to avoid overflow*/
         }
 
@@ -136,6 +142,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
 
             property.PropertyChanged += OnPropertyChanged;
+            property.GetBindedProperty = GetPropertyValueInCategory;
             subCategory.Properties.Add(property);
             Properties.Add(property);
         }
@@ -165,6 +172,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             UpdatingProperties = false;
         }
 
+        private WpfGuiProperty GetPropertyValueInCategory(string propertyName)
+        {
+            return Properties.FirstOrDefault(p => p.Name.Equals(propertyName));
+        }
+
         private void Dispose(bool disposing)
         {
             if (disposed)
@@ -178,7 +190,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 disposableCustomControl?.Dispose();
 
                 SubCategories.Clear();
-                Properties.ForEach(p => p.PropertyChanged -= OnPropertyChanged);
+                Properties.ForEach(p =>
+                {
+                    p.PropertyChanged -= OnPropertyChanged;
+                    p.GetBindedProperty = null;
+                });
                 Properties.Clear();
             }
 

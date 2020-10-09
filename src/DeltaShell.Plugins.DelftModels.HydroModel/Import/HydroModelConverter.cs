@@ -6,7 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Dimr;
-using DeltaShell.Dimr.xsd;
+using DeltaShell.Dimr.Xsd;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -181,11 +181,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     return null;
                 }
 
-                pathParts = new[] {rootFolder, workingDirectory, xmlDirectory};
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    xmlDirectory
+                };
             }
             else
             {
-                pathParts = new[] {rootFolder, workingDirectory, fileName};
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    fileName
+                };
             }
 
             return Path.Combine(pathParts);
@@ -204,7 +214,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         private void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel)
         {
-            if (subModel is IHydroModel hydroModelSubModel)
+            if (subModel is IHydroModel hydroModelSubModel && hydroModelSubModel.Region != null)
             {
                 hydroModel.Region.SubRegions.Add(hydroModelSubModel.Region);
             }

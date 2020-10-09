@@ -179,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // Setup
             var featureData = new SourceAndSink
             {
-                Feature = new Feature2D { Geometry = new Point(0.0, 0.0) },
+                Feature = new Feature2D {Geometry = new Point(0.0, 0.0)},
                 Data = null
             };
 

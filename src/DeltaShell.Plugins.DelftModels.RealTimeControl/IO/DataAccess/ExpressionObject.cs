@@ -1,11 +1,11 @@
 ﻿using System;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
+using DeltaShell.Dimr.RtcXsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 {
     /// <summary>
-    /// Serves as data access object for the object <see cref="ExpressionXML"/>
+    /// Serves as data access object for the object <see cref="ExpressionComplexType"/>
     /// that is retrieved from the rtc tools config xml file.
     /// </summary>
     public class ExpressionObject
@@ -44,8 +44,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionObject"/> class.
         /// </summary>
-        /// <param name="expressionXml">The expression XML.</param>
-        public ExpressionObject(ExpressionXML expressionXml) :
+        /// <param name="expressionXml">The expression type.</param>
+        public ExpressionObject(ExpressionComplexType expressionXml) :
             this(expressionXml.id,
                  ConvertToOperator(expressionXml.mathematicalOperator),
                  ConvertToExpressionInput(expressionXml.Item),
@@ -88,9 +88,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             {
                 case string constantValue:
                     return new ConstantLeafReference(constantValue);
-                case ExpressionXMLX1Series parameter1:
+                case ExpressionComplexTypeX1Series parameter1:
                     return CreateExpressionReference(parameter1.Value);
-                case ExpressionXMLX2Series parameter2:
+                case ExpressionComplexTypeX2Series parameter2:
                     return CreateExpressionReference(parameter2.Value);
             }
 

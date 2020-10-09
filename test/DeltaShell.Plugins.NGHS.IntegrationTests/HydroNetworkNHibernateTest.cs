@@ -21,9 +21,9 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
     [Category(TestCategory.Slow)]
     internal class HydroNetworkNHibernateTest : NHibernateIntegrationTestBase
     {
-        public override void TestFixtureSetUp()
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
         }
 
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             var dateTime = new DateTime(2000, 1, 1, 0, 0, 0);
             // create network
             INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
-            
+
             //IFeatureCoverage featureCoverage = new FeatureCoverage(); { HydroNetwork = network };
             var featureCoverage = new FeatureCoverage("Test");
             IVariable timeVariable = new Variable<DateTime>("time");

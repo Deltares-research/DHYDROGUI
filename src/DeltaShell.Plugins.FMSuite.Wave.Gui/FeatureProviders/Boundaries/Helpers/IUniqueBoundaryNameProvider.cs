@@ -1,6 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
-
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers
+﻿namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers
 {
     /// <summary>
     /// <see cref="IUniqueBoundaryNameProvider"/> defines a method to obtain a unique
@@ -9,10 +7,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
     public interface IUniqueBoundaryNameProvider
     {
         /// <summary>
-        /// Gets an unique <see cref="IWaveBoundary"/> name.
+        /// Gets an unique <see cref="Wave.Boundaries.IWaveBoundary"/> name.
         /// </summary>
         /// <returns>
-        /// A unique <see cref="IWaveBoundary"/> name.
+        /// A unique <see cref="Wave.Boundaries.IWaveBoundary"/> name.
         /// </returns>
         string GetUniqueName();
     }

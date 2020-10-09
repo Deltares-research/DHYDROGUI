@@ -8,7 +8,6 @@ using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
-using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
 
 namespace DeltaShell.NGHS.Common.Tests.IO
 {
@@ -225,7 +224,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
             }
         }
 
-        private IEnumerable<TestCaseData> CopyToArgumentNullCases()
+        private static IEnumerable<TestCaseData> CopyToArgumentNullCases()
         {
             yield return new TestCaseData(null, Substitute.For<ILogHandler>(), false, "targetPath");
             yield return new TestCaseData(null, Substitute.For<ILogHandler>(), true, "targetPath");

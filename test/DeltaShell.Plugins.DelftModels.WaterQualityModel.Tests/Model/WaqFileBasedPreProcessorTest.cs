@@ -123,15 +123,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 string loadsFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B6_loads_data.inc")));
 
                 //assert
-                Assert.That(volumeFilePath, Is.StringContaining(@"dir1/dir2/volumesfile.inc"));
-                Assert.That(attributesFilePath, Is.StringContaining(@"dir1/dir2/attributesfile.inc"));
-                Assert.That(areaFilePath, Is.StringContaining(@"dir1/dir2/areasfile.inc"));
-                Assert.That(flowsFilePath, Is.StringContaining(@"dir1/dir2/flowsfile.inc"));
-                Assert.That(lengthFilePath, Is.StringContaining(@"dir1/dir2/lengthsfile.inc"));
-                Assert.That(pointersFilePath, Is.StringContaining(@"dir1/dir2/pointersfile.inc"));
-                Assert.That(parametersFilePath, Is.StringContaining(@"dir1/dir2/parametersfile.inc"));
-                Assert.That(loadsFilePath, Is.StringContaining(@"INCLUDE '../../A/lol/O.tbl'"));
-                Assert.That(verticalDiffusionFilePath, Is.StringContaining(@"dir1/dir2/verticaldiffusionfile.inc"));
+                Assert.That(volumeFilePath, Does.Contain(@"dir1/dir2/volumesfile.inc"));
+                Assert.That(attributesFilePath, Does.Contain(@"dir1/dir2/attributesfile.inc"));
+                Assert.That(areaFilePath, Does.Contain(@"dir1/dir2/areasfile.inc"));
+                Assert.That(flowsFilePath, Does.Contain(@"dir1/dir2/flowsfile.inc"));
+                Assert.That(lengthFilePath, Does.Contain(@"dir1/dir2/lengthsfile.inc"));
+                Assert.That(pointersFilePath, Does.Contain(@"dir1/dir2/pointersfile.inc"));
+                Assert.That(parametersFilePath, Does.Contain(@"dir1/dir2/parametersfile.inc"));
+                Assert.That(loadsFilePath, Does.Contain(@"INCLUDE '../../A/lol/O.tbl'"));
+                Assert.That(verticalDiffusionFilePath, Does.Contain(@"dir1/dir2/verticaldiffusionfile.inc"));
             }
             finally
             {

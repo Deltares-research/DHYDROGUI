@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -32,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             bndExtSubFilesReferenceFilePath = bndExtForceSubFilesReferenceFilePath;
 
             IList<DelftIniCategory> categories;
-          
+
             using (var fileStream = new FileStream(bndExtForceFilePath, FileMode.Open, FileAccess.ReadWrite))
             {
                 categories = new MduDelftIniReader().ReadDelftIniFile(fileStream, bndExtForceFilePath);
@@ -41,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             ReadPolyLines(categories, modelDefinition);
-            
+
             ReadBoundaryConditions(categories, modelDefinition);
         }
 
@@ -70,10 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void ReadPolyLines(IEnumerable<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
         {
-            modelDefinition.Boundaries.ForEach(b =>
-            {
-                existingPolyLineFiles[b] = b.Name + FileConstants.PliFileExtension;
-            });
+            modelDefinition.Boundaries.ForEach(b => { existingPolyLineFiles[b] = b.Name + FileConstants.PliFileExtension; });
 
             foreach (DelftIniCategory delftIniCategory in bndBlocks)
             {
@@ -113,10 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 existingPolyLineFiles[feature] = locationFile;
                 modelDefinition.Boundaries.Add(feature);
-                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet
-                {
-                    Feature = feature
-                });
+                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet {Feature = feature});
             }
         }
 
@@ -233,10 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             WaterFlowFMModelDefinition modelDefinition)
         {
             return modelDefinition.BoundaryConditionSets
-                                  .Select(bcs => new BoundaryConditionSet
-                                  {
-                                      Feature = bcs.Feature
-                                  })
+                                  .Select(bcs => new BoundaryConditionSet {Feature = bcs.Feature})
                                   .ToList();
         }
 

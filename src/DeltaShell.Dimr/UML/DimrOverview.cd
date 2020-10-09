@@ -89,7 +89,7 @@
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DeltaShell.Dimr.xsd.dimrDocumentationXML">
+  <Class Name="DeltaShell.Dimr.Xsd.dimrDocumentationXML">
     <Position X="14.5" Y="0.5" Width="2.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />

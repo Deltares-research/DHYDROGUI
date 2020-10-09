@@ -94,7 +94,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             return ((double[]) Model.GetVar(featureCategory, nameable.Name, parameterName))[0];
         }
 
-
         private void SetValueToModelApi(IFeature feature, string parameterName, double value)
         {
             string featureCategory = Model.GetFeatureCategory(feature);

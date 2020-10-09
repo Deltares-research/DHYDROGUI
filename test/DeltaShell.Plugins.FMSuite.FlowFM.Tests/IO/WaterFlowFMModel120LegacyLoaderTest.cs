@@ -3,7 +3,6 @@ using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
@@ -57,18 +56,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string inputDir = Path.Combine(modelDir, "input");
                 string outputDir = Path.Combine(modelDir, "output");
 
-                Assert.That(projectDir, NGHS.TestUtils.AssertConstraints.Does.Exist);
-                Assert.That(explicitWorkingDir, DoesNotExist);
-                Assert.That(modelDir, NGHS.TestUtils.AssertConstraints.Does.Exist);
-                Assert.That(inputDir, NGHS.TestUtils.AssertConstraints.Does.Exist);
-                Assert.That(outputDir, NGHS.TestUtils.AssertConstraints.Does.Exist);
+                Assert.That(projectDir, Does.Exist);
+                Assert.That(explicitWorkingDir, Does.Not.Exist);
+                Assert.That(modelDir, Does.Exist);
+                Assert.That(inputDir, Does.Exist);
+                Assert.That(outputDir, Does.Exist);
                 Assert.That(Directory.EnumerateFiles(projectDir), Is.Empty);
-                Assert.That(Path.Combine(inputDir, "metadata.xml"), DoesNotExist);
-                Assert.That(Path.Combine(inputDir, "restart.meta"), DoesNotExist);
-                Assert.That(Path.Combine(outputDir, "metadata.xml"), DoesNotExist);
+                Assert.That(Path.Combine(inputDir, "metadata.xml"), Does.Not.Exist);
+                Assert.That(Path.Combine(inputDir, "restart.meta"), Does.Not.Exist);
+                Assert.That(Path.Combine(outputDir, "metadata.xml"), Does.Not.Exist);
             }
         }
-
-        private static ExistConstraint DoesNotExist => Does.Not.Exist();
     }
 }

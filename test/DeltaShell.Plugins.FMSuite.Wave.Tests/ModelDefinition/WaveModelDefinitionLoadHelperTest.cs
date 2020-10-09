@@ -45,7 +45,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             // Given
             var targetDefinition = new WaveModelDefinition();
 
-            var waveObstacles = new[] {new WaveObstacle(), new WaveObstacle()};
+            var waveObstacles = new[]
+            {
+                new WaveObstacle(),
+                new WaveObstacle()
+            };
             var loadedDefinition = new WaveModelDefinition();
             loadedDefinition.Obstacles.AddRange(waveObstacles);
 
@@ -65,7 +69,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             // Given
             var targetDefinition = new WaveModelDefinition();
 
-            var observationPoints = new[] {new Feature2DPoint(), new Feature2DPoint()};
+            var observationPoints = new[]
+            {
+                new Feature2DPoint(),
+                new Feature2DPoint()
+            };
             var loadedDefinition = new WaveModelDefinition();
             loadedDefinition.ObservationPoints.AddRange(observationPoints);
 
@@ -85,7 +93,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             // Given
             var targetDefinition = new WaveModelDefinition();
 
-            var crossSections = new[] {new Feature2D(), new Feature2D()};
+            var crossSections = new[]
+            {
+                new Feature2D(),
+                new Feature2D()
+            };
             var loadedDefinition = new WaveModelDefinition();
             loadedDefinition.ObservationCrossSections.AddRange(crossSections);
 
@@ -112,7 +124,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             loadedBoundaryContainer.DefinitionPerFileUsed = true;
             loadedBoundaryContainer.FilePathForBoundariesPerFile = "JustAFilePath";
             loadedBoundaryContainer.UpdateGridBoundary(grid);
-            loadedBoundaryContainer.Boundaries.AddRange(new[] {Substitute.For<IWaveBoundary>(), Substitute.For<IWaveBoundary>()});
+            loadedBoundaryContainer.Boundaries.AddRange(new[]
+            {
+                Substitute.For<IWaveBoundary>(),
+                Substitute.For<IWaveBoundary>()
+            });
 
             // Precondition
             IBoundaryContainer targetBoundaryContainer = targetDefinition.BoundaryContainer;
@@ -147,7 +163,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             loadedBoundaryContainer.DefinitionPerFileUsed = false;
             loadedBoundaryContainer.FilePathForBoundariesPerFile = "JustAFilePath";
             loadedBoundaryContainer.UpdateGridBoundary(grid);
-            loadedBoundaryContainer.Boundaries.AddRange(new[] {Substitute.For<IWaveBoundary>(), Substitute.For<IWaveBoundary>()});
+            loadedBoundaryContainer.Boundaries.AddRange(new[]
+            {
+                Substitute.For<IWaveBoundary>(),
+                Substitute.For<IWaveBoundary>()
+            });
 
             // Precondition
             IBoundaryContainer targetBoundaryContainer = targetDefinition.BoundaryContainer;
@@ -176,11 +196,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             var targetDefinition = new WaveModelDefinition();
 
             var outerDomain = Substitute.For<IWaveDomainData>();
-            var loadedDefinition = new WaveModelDefinition
-            {
-                OuterDomain =  outerDomain
-            };
-        
+            var loadedDefinition = new WaveModelDefinition {OuterDomain = outerDomain};
+
             // Precondition
             Assert.That(targetDefinition.OuterDomain, Is.Null);
 
@@ -211,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             var loadedInputFieldData = new WaveInputFieldData
             {
                 HydroDataType = InputFieldDataType.TimeVarying,
-                WindDataType= InputFieldDataType.TimeVarying,
+                WindDataType = InputFieldDataType.TimeVarying,
                 WaterLevelConstant = random.NextDouble(),
                 VelocityXConstant = random.NextDouble(),
                 VelocityYConstant = random.NextDouble(),
@@ -220,11 +237,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
                 InputFields = Substitute.For<IFunction>(),
                 MeteoData = loadedMeteoData
             };
-            
-            var loadedDefinition = new WaveModelDefinition
-            {
-                TimePointData = loadedInputFieldData
-            };
+
+            var loadedDefinition = new WaveModelDefinition {TimePointData = loadedInputFieldData};
 
             // Precondition
             WaveInputFieldData targetInputFieldData = targetDefinition.TimePointData;
@@ -273,12 +287,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             var targetDefinition = new WaveModelDefinition();
 
             var loadedDefinition = new WaveModelDefinition();
-            
+
             WaveModelProperty firstProperty = loadedDefinition.Properties.First();
             ModelPropertyDefinition existingPropertyDefinition = firstProperty.PropertyDefinition;
             var modifiedExistingProperty = new WaveModelProperty(existingPropertyDefinition, "NewValue");
-            loadedDefinition.SetModelProperty(existingPropertyDefinition.FileCategoryName, 
-                                              existingPropertyDefinition.FilePropertyName, 
+            loadedDefinition.SetModelProperty(existingPropertyDefinition.FileCategoryName,
+                                              existingPropertyDefinition.FilePropertyName,
                                               modifiedExistingProperty);
 
             var newPropertyDefinition = new WaveModelPropertyDefinition
@@ -288,8 +302,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
                 FilePropertyName = "NewFileProperty"
             };
             var newProperty = new WaveModelProperty(newPropertyDefinition, "JustAValue");
-            loadedDefinition.SetModelProperty(newPropertyDefinition.FileCategoryName, 
-                                              newPropertyDefinition.FilePropertyName, 
+            loadedDefinition.SetModelProperty(newPropertyDefinition.FileCategoryName,
+                                              newPropertyDefinition.FilePropertyName,
                                               newProperty);
 
             // When

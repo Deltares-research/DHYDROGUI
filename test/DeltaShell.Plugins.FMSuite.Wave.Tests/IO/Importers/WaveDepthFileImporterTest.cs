@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                         string depFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
                                                                 "*.dep",
                                                                 SearchOption.AllDirectories).FirstOrDefault();
-                        Assert.IsNotNullOrEmpty(depFilePath, "There was no .dep file created.");
+                        Assert.That(depFilePath, Is.Not.Null.And.Not.Empty, "There was no .dep file created.");
 
                         model.OuterDomain.Bathymetry = new CurvilinearCoverage();
                         Assert.AreEqual(0, model.OuterDomain.Bathymetry.Size1);

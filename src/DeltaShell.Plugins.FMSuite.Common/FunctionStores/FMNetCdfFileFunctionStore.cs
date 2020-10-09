@@ -40,6 +40,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
             Name = "Output (" + System.IO.Path.GetFileName(Path) + ")";
         }
 
+        /// <summary>
+        /// Read reference date and time from NetCDF file.
+        /// </summary>
+        /// <param name="timeVariableName">
+        /// The name of the time variable.
+        /// </param>
+        /// <returns> The reference date and time in UTC.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when string in NetCDF file does not start
+        /// with "seconds since".
+        /// </exception>
         protected override string ReadReferenceDateFromFile(string timeVariableName)
         {
             NetCdfVariable timeVariable = netCdfFile.GetVariableByName(timeVariableName);
@@ -50,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
 
             if (!timeReference.StartsWith(secondsSince))
             {
-                throw new ArgumentException("Could_not_parse_time_reference");
+                throw new ArgumentException("Could not parse time reference");
             }
 
             timeReference = timeReference.Substring(secondsSince.Length);
@@ -58,14 +69,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
             if (!DateTime.TryParseExact(timeReference,
                                         dateTimeFormatWithZone,
                                         CultureInfo.InvariantCulture,
-                                        DateTimeStyles.None,
+                                        DateTimeStyles.AdjustToUniversal,
                                         out DateTime dateTime))
             {
                 return base.ReadReferenceDateFromFile(timeVariableName);
             }
-
-            TimeSpan timeZoneOffset = TimeZoneInfo.Local.GetUtcOffset(dateTime);
-            dateTime = dateTime.Subtract(timeZoneOffset);
 
             return dateTime.ToString(DateTimeFormatInfo.InvariantInfo.FullDateTimePattern, CultureInfo.InvariantCulture);
         }

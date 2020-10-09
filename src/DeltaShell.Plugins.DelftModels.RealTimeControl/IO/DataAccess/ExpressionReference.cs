@@ -1,7 +1,7 @@
 ﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 {
     /// <summary>
-    /// Represents an expression parameter reference that references another <see cref="Xsd.ExpressionXML"/>
+    /// Represents an expression parameter reference that references another <see cref="Xsd.ExpressionComplexType"/>
     /// </summary>
     public class ExpressionReference : IExpressionReference
     {

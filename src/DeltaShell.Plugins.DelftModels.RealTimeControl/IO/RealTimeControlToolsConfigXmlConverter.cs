@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
+using ExpressionObjectGroup = System.Collections.Generic.List<DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess.ExpressionObject>;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
@@ -22,11 +23,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// <param name="triggerElements"> The trigger xml elements. </param>
         /// <param name="logHandler"> The log handler. </param>
         /// <returns> A collection of <see cref="IRtcDataAccessObject{T}"/>. </returns>
-        public static IEnumerable<IRtcDataAccessObject<RtcBaseObject>> ConvertToDataAccessObjects(RuleXML[] ruleElements,
-                                                                                                  TriggerXML[] triggerElements,
+        public static IEnumerable<IRtcDataAccessObject<RtcBaseObject>> ConvertToDataAccessObjects(RuleComplexType[] ruleElements,
+                                                                                                  TriggerComplexType[] triggerElements,
                                                                                                   ILogHandler logHandler = null)
         {
-            RuleXML[] signalElements = ruleElements.Where(IsSignal).ToArray();
+            RuleComplexType[] signalElements = ruleElements.Where(IsSignal).ToArray();
             ruleElements = ruleElements.Except(signalElements).ToArray();
 
             return ConvertToRuleDataAccessObjects(ruleElements, logHandler)
@@ -36,30 +37,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                    .Where(o => o != null);
         }
 
-        private static IEnumerable<RuleDataAccessObject> ConvertToRuleDataAccessObjects(IEnumerable<RuleXML> ruleElements,
+        private static IEnumerable<RuleDataAccessObject> ConvertToRuleDataAccessObjects(IEnumerable<RuleComplexType> ruleElements,
                                                                                         ILogHandler logHandler)
         {
             return ruleElements.Select(r => RuleDataAccessObjectCreator.Create(r, logHandler));
         }
 
-        private static IEnumerable<ConditionDataAccessObject> ConvertToConditionDataAccessObjects(IEnumerable<TriggerXML> triggerElements,
+        private static IEnumerable<ConditionDataAccessObject> ConvertToConditionDataAccessObjects(IEnumerable<TriggerComplexType> triggerElements,
                                                                                                   ILogHandler logHandler = null)
         {
             return triggerElements.SelectMany(e => ConvertToConditionDataAccessObjects(e, logHandler)).RemoveDuplicateIds();
         }
 
-        private static IEnumerable<ConditionDataAccessObject> ConvertToConditionDataAccessObjects(TriggerXML triggerXml,
+        private static IEnumerable<ConditionDataAccessObject> ConvertToConditionDataAccessObjects(TriggerComplexType triggerXml,
                                                                                                   ILogHandler logHandler = null)
         {
             IList<ConditionDataAccessObject> dataAccessObjects = new List<ConditionDataAccessObject>();
 
-            if (triggerXml.Item is StandardTriggerXML conditionElement)
+            if (triggerXml.Item is StandardTriggerComplexType conditionElement)
             {
                 dataAccessObjects.Add(ConditionDataAccessObjectCreator.Create(conditionElement, logHandler));
 
-                IEnumerable<TriggerXML> outputItems = conditionElement.@true
-                                                                      .Concat(conditionElement.@false);
-                foreach (TriggerXML outputItem in outputItems)
+                TriggerComplexType[] conditionElementTrue = conditionElement.@true ?? new TriggerComplexType[0];
+                TriggerComplexType[] conditionElementFalse = conditionElement.@false ?? new TriggerComplexType[0];
+
+                IEnumerable<TriggerComplexType> outputItems = conditionElementTrue.Concat(conditionElementFalse);
+                foreach (TriggerComplexType outputItem in outputItems)
                 {
                     dataAccessObjects.AddRange(ConvertToConditionDataAccessObjects(outputItem, logHandler));
                 }
@@ -70,37 +73,42 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             return dataAccessObjects;
         }
 
-        private static IEnumerable<SignalDataAccessObject> ConvertToSignalDataAccessObjects(IEnumerable<RuleXML> signalElements)
+        private static IEnumerable<SignalDataAccessObject> ConvertToSignalDataAccessObjects(IEnumerable<RuleComplexType> signalElements)
         {
-            return signalElements.Select(e => SignalDataAccessObjectCreator.Create(e));
+            return signalElements.Select(SignalDataAccessObjectCreator.Create);
         }
 
-        private static IEnumerable<ExpressionTree> ConvertToExpressionTrees(IEnumerable<TriggerXML> triggerElements)
+        private static IEnumerable<ExpressionTree> ConvertToExpressionTrees(IEnumerable<TriggerComplexType> triggerElements)
         {
             IEnumerable<ExpressionObjectGroup> expressionGroups = GetExpressionGroupsRecursively(triggerElements);
             return AssembleExpressionTrees(expressionGroups).RemoveDuplicateIds();
         }
 
-        private static IEnumerable<ExpressionObjectGroup> GetExpressionGroupsRecursively(IEnumerable<TriggerXML> triggerElements)
+        private static IEnumerable<ExpressionObjectGroup> GetExpressionGroupsRecursively(IEnumerable<TriggerComplexType> triggerElements)
         {
+            if (triggerElements == null)
+            {
+                return new List<ExpressionObjectGroup>();
+            }
+
             var expressionGroups = new List<ExpressionObjectGroup>();
             var expressionGroup = new ExpressionObjectGroup();
 
-            foreach (TriggerXML triggerElement in triggerElements)
+            foreach (TriggerComplexType triggerElement in triggerElements)
             {
                 switch (triggerElement.Item)
                 {
-                    case StandardTriggerXML conditionElement:
+                    case StandardTriggerComplexType conditionElement:
                         expressionGroups.AddRange(GetExpressionGroupsRecursively(conditionElement.@true));
                         expressionGroups.AddRange(GetExpressionGroupsRecursively(conditionElement.@false));
                         break;
-                    case ExpressionXML expressionElement:
+                    case ExpressionComplexType expressionElement:
                         expressionGroup.Add(new ExpressionObject(expressionElement));
                         break;
                 }
             }
 
-            if (expressionGroup.ExpressionObjects.Any())
+            if (expressionGroup.Any())
             {
                 expressionGroups.Add(expressionGroup);
             }
@@ -114,8 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
             foreach (ExpressionObjectGroup expressionGroup in expressionGroups)
             {
-                IEnumerable<IGrouping<string, ExpressionObject>> expressionsGroupedByControlGroup =
-                    expressionGroup.ExpressionObjects.GroupBy(e => e.ControlGroupName);
+                IEnumerable<IGrouping<string, ExpressionObject>> expressionsGroupedByControlGroup = expressionGroup.GroupBy(e => e.ControlGroupName);
 
                 foreach (IGrouping<string, ExpressionObject> group in expressionsGroupedByControlGroup)
                 {
@@ -132,10 +139,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             return expressionTrees;
         }
 
-        private static bool IsSignal(RuleXML ruleElement)
+        private static bool IsSignal(RuleComplexType ruleElement)
         {
             object item = ruleElement.Item;
-            if (item is LookupTableXML lookupTableElement)
+            if (item is LookupTableComplexType lookupTableElement)
             {
                 string id = lookupTableElement.id;
                 string tag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);

@@ -255,10 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         private static PIDRule CreatePidRule(PIDRule.PIDRuleSetpointType setPointType, bool hasEmptyTimeSeries,
                                              DateTime start, DateTime stop)
         {
-            var pidRule = new PIDRule
-            {
-                PidRuleSetpointType = setPointType
-            };
+            var pidRule = new PIDRule {PidRuleSetpointType = setPointType};
 
             if (hasEmptyTimeSeries)
             {

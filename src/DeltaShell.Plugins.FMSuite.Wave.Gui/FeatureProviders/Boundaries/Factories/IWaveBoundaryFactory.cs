@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories
@@ -19,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// geometry. If no <see cref="IWaveBoundary"/> cannot be constructed,
         /// then <c>null</c>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="geometry"/> is <c>null</c>.
         /// </exception>
         IWaveBoundary ConstructWaveBoundary(ILineString geometry);

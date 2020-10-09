@@ -218,10 +218,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     Folder folder = GetFolderContaining(hydroModel);
                     if (folder != null && !isChildModel)
                     {
-                        var topItem = new ClonableToolStripMenuItem
-                        {
-                            Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model
-                        };
+                        var topItem = new ClonableToolStripMenuItem {Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model};
 
                         var upgradeItem = new ClonableToolStripMenuItem {Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model};
                         upgradeItem.Click += (s, e) => hydroModel.UpgradeModelIntoIntegratedModel(folder);

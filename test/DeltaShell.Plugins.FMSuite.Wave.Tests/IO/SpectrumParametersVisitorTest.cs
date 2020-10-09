@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var visitor = new SpectrumParametersVisitor(category, filesManager);
 
             const string fileName = "file.txt";
-            string filePath = $"D:\\some_directory\\{fileName}";
+            var filePath = $"D:\\some_directory\\{fileName}";
             var parameters = new FileBasedParameters(filePath);
 
             // Call
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             filesManager.DidNotReceiveWithAnyArgs().Add(string.Empty, null);
         }
 
-        private IEnumerable<TestCaseData> ConstructorArgumentNullCases()
+        private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
         {
             yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "category");
             yield return new TestCaseData(new DelftIniCategory(""), null, "filesManager");

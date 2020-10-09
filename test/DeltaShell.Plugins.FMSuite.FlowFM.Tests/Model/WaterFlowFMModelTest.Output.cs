@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Call
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.ImportFromMdu(mduFilePath);
+                    model.LoadFromMdu(mduFilePath);
 
                     // Assert
                     Assert.That(model.OutputHisFileStore, Is.Not.Null, "Output files should be loaded.");
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Call
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.ImportFromMdu(mduFilePath);
+                    model.LoadFromMdu(mduFilePath);
 
                     // Assert
                     Assert.That(model.OutputHisFileStore, Is.Null, "Output files should not be loaded.");
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string mduFilePath = Path.Combine(tempDirectory.Path, "input", "FlowFM.mdu");
 
                 var waterFlowFmModel = new WaterFlowFMModel();
-                waterFlowFmModel.ImportFromMdu(mduFilePath);
+                waterFlowFmModel.LoadFromMdu(mduFilePath);
 
                 string hisFilePath = waterFlowFmModel.OutputHisFileStore.Path;
                 string mapFilePath = waterFlowFmModel.OutputMapFileStore.Path;
@@ -223,14 +223,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
-        private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir)
-        {
-            for (var i = 0; i < 5; i++)
-            {
-                yield return tempDir.CreateFile($"{i}_rst.nc");
-            }
-        }
-
         [Test]
         [Category(NghsTestCategory.PerformanceDotTrace)]
         public void ConnectOutput_Performance()
@@ -246,6 +238,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 // Call
                 model.ConnectOutput(outputDir);
+            }
+        }
+
+        private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir)
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                yield return tempDir.CreateFile($"{i}_rst.nc");
             }
         }
 

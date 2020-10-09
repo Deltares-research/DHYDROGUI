@@ -390,7 +390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 api.Initialize(mduFilePath);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 api.Dispose(); // cleanup remote instance on crash!
                 throw;

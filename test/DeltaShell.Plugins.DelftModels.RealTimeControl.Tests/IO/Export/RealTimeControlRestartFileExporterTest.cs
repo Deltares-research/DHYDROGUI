@@ -22,7 +22,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             Assert.That(exporter.Category, Is.EqualTo("XML"));
             Assert.That(exporter.Description, Is.Empty);
             Assert.That(exporter.FileFilter, Is.EqualTo("Real Time Control restart files|*.xml"));
-            Assert.That(exporter.SourceTypes(), Is.EqualTo(new[] {typeof(RealTimeControlRestartFile)}));
+            Assert.That(exporter.SourceTypes(), Is.EqualTo(new[]
+            {
+                typeof(RealTimeControlRestartFile)
+            }));
         }
 
         [Test]

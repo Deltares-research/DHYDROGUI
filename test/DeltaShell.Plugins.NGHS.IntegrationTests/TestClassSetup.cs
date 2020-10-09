@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
     [SetUpFixture]
     public class TestClassSetup
     {
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDownWPFGuiAndWorkerThread()
         {
             // Ensure shut down of background thread to ensure no COM erros are thrown.

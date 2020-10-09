@@ -48,10 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private const string NoBcText = "No boundary condition defined; to create one, click the '+' button.";
         private static readonly ILog log = LogManager.GetLogger(typeof(FlowBoundaryConditionDataView));
 
-        private readonly OpenFileDialog FileDialog = new OpenFileDialog()
-        {
-            AddExtension = true
-        };
+        private readonly OpenFileDialog FileDialog = new OpenFileDialog() {AddExtension = true};
 
         private readonly SaveFileDialog SaveFileDialog = new SaveFileDialog()
         {

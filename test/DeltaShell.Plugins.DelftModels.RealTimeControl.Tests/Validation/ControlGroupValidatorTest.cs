@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             List<ValidationIssue> foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, pidRule)).ToList();
             Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the PID rule");
 
-            string errorExpected =
+            var errorExpected =
                 $"Series '{pidRule.TimeSeries.Name}' in RTC control group '{controlGroup.Name}': the amount of time steps is not a multiple of the model time step {model.TimeStep}.";
             Assert.AreEqual(errorExpected, foundIssues[0].Message);
         }
@@ -203,7 +203,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             List<ValidationIssue> foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, timeRule)).ToList();
             Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the time rule");
 
-            string errorExpected =
+            var errorExpected =
                 $"Series '{timeRule.TimeSeries.Name}' in RTC control group '{controlGroup.Name}': the amount of time steps is not a multiple of the model time step {model.TimeStep}.";
             Assert.AreEqual(errorExpected, foundIssues[0].Message);
         }
@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             List<ValidationIssue> foundIssues = validationIssues.Where(i => ReferenceEquals(i.Subject, intervalRule)).ToList();
             Assert.AreEqual(1, foundIssues.Count, "The number of validation issues for the interval rule");
 
-            string errorExpected =
+            var errorExpected =
                 $"Series '{intervalRule.TimeSeries.Name}' in RTC control group '{controlGroup.Name}': the amount of time steps is not a multiple of the model time step {model.TimeStep}.";
             Assert.AreEqual(errorExpected, foundIssues[0].Message);
         }

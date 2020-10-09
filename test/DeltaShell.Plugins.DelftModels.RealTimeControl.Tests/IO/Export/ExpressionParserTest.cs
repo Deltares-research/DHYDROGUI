@@ -68,8 +68,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             Operator operator2 = GetRandomOperator();
 
             // extra braces to be able to validate the expression tree -> A + B + C = (A + B) + C = A + (B + C)
-            string subExpression1 = $"({GetExpressionString(leafValue1, leafValue2, operator1)})";
-            string subExpression2 = $"({GetExpressionString(leafValue3, leafValue4, operator2)})";
+            var subExpression1 = $"({GetExpressionString(leafValue1, leafValue2, operator1)})";
+            var subExpression2 = $"({GetExpressionString(leafValue3, leafValue4, operator2)})";
 
             string expression = GetExpressionString(subExpression1, subExpression2, @operator);
 

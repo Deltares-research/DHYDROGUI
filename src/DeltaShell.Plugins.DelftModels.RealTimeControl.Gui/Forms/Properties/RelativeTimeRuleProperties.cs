@@ -96,13 +96,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             {
                 Output output = data.Outputs[0];
 
-                if (!string.IsNullOrEmpty(output.ParameterName))
+                if (!string.IsNullOrEmpty(output.ParameterName) && data.Function.Components[0].Name != output.ParameterName)
                 {
-                    // Prevent unneeded property change event
-                    if (data.Function.Components[0].Name != output.ParameterName)
-                    {
-                        data.Function.Components[0].Name = output.ParameterName;
-                    }
+                    data.Function.Components[0].Name = output.ParameterName;
                 }
 
                 return;

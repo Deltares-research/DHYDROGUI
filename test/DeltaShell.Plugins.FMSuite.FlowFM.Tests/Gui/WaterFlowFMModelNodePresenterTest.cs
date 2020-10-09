@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
@@ -12,7 +11,6 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DeltaShell.Gui;
-using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
@@ -153,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
+            model.LoadFromMdu(mduPath);
 
             IFunction outputFunction = model.OutputHisFileStore.Functions.First();
 
@@ -191,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
+            model.LoadFromMdu(mduPath);
 
             IFunction outputFunction = model.OutputHisFileStore.Functions.FirstOrDefault();
 

@@ -1541,6 +1541,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} interval must be a multiple of the output timestep..
+        /// </summary>
+        public static string WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timestep {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timeste" +
+                        "p", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model start time precedes reference time.
+        /// </summary>
+        public static string WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input restart file does not exist; cannot restart..
         /// </summary>
         public static string WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart {

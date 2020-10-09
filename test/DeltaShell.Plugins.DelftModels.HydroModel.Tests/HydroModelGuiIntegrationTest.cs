@@ -15,7 +15,6 @@ using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.MainWindow;
-using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -192,7 +191,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     /* get the water flow fm model */
                     WaterFlowFMModel waterFlowFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.NotNull(waterFlowFmModel);
-                    Assert.That(waterFlowFmModel.Name, Is.StringContaining("FlowFM"));
+                    Assert.That(waterFlowFmModel.Name, Does.Contain("FlowFM"));
 
                     WaterFlowFMFileImporter fmImporter = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
                     Assert.IsNotNull(fmImporter);
@@ -200,7 +199,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     WaterFlowFMModel targetFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetFmModel);
-                    Assert.That(targetFmModel.Name, Is.StringContaining(modelName));
+                    Assert.That(targetFmModel.Name, Does.Contain(modelName));
                 }
 
                 WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
@@ -229,7 +228,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 /* get the wave model */
                 WaveModel waveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
                 Assert.NotNull(waveModel);
-                Assert.That(waveModel.Name, Is.StringContaining("Waves"));
+                Assert.That(waveModel.Name, Does.Contain("Waves"));
 
                 WaveModelFileImporter waveImporter = app.FileImporters.OfType<WaveModelFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(waveImporter);
@@ -237,7 +236,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 WaveModel targetWaveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
                 Assert.IsNotNull(targetWaveModel);
-                Assert.That(targetWaveModel.Name, Is.StringContaining("te0"));
+                Assert.That(targetWaveModel.Name, Does.Contain("te0"));
             }
 
             WpfTestHelper.ShowModal(mainWindow, MainWindowShown);

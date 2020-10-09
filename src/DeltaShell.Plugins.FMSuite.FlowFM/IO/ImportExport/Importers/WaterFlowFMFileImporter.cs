@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -14,11 +15,11 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
-    public class WaterFlowFMFileImporter : IDimrModelFileImporter
+    public class WaterFlowFMFileImporter : ModelFileImporterBase, IDimrModelFileImporter
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaterFlowFMFileImporter));
 
-        private readonly Func<string> StoreWorkingDirectoryPathFunc;
+        private readonly Func<string> storeWorkingDirectoryPathFunc;
 
         /// <summary>
         /// Constructor needed for connecting the Application.WorkingDirectory to the WaterFlowFMModel Working Directory.
@@ -26,18 +27,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         /// <param name="getWorkingDirectoryPathFunc"> </param>
         public WaterFlowFMFileImporter(Func<string> getWorkingDirectoryPathFunc)
         {
-            StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
+            storeWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
         }
 
-        public string Name => "Flow Flexible Mesh Model";
+        public override string Name => "Flow Flexible Mesh Model";
 
-        public string Category => Resources.FMImporters_Category_D_Flow_FM_2D_3D;
+        public override string Category => Resources.FMImporters_Category_D_Flow_FM_2D_3D;
 
-        public string Description => string.Empty;
+        public override string Description => string.Empty;
 
-        public Bitmap Image => Resources.unstrucModel;
+        public override Bitmap Image => Resources.unstrucModel;
 
-        public IEnumerable<Type> SupportedItemTypes
+        public override IEnumerable<Type> SupportedItemTypes
         {
             get
             {
@@ -45,32 +46,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
         }
 
-        public bool OpenViewAfterImport => true;
+        public override bool OpenViewAfterImport => true;
 
-        public bool CanImportOnRootLevel => true;
+        public override bool CanImportOnRootLevel => true;
 
-        public string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
+        public override string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
 
-        public string TargetDataDirectory { get; set; }
+        public override string TargetDataDirectory { get; set; }
 
-        public bool ShouldCancel { get; set; }
+        public override bool ShouldCancel { get; set; }
 
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public override ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         public string MasterFileExtension => "mdu";
 
-        public bool CanImportOn(object targetObject)
+        public override bool CanImportOn(object targetObject)
         {
             return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
         }
 
-        public object ImportItem(string path, object target = null)
+        protected override object OnImportItem(string path, object target = null)
         {
             try
             {
                 var importedFmModel = new WaterFlowFMModel
                 {
-                    WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc
+                    WorkingDirectoryPathFunc = storeWorkingDirectoryPathFunc
                 };
 
                 importedFmModel.ImportFromMdu(path, true, ProgressChanged);

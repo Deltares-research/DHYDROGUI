@@ -48,19 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             AssertDataItemIsGate(dataItems.Single(), gate);
         }
 
-        private static void AssertDataItemIsGate(IDataItem dataItem, Weir2D gate)
-        {
-            const string messageDifferentFeatureInDataItem = "The retrieved dataItem is not correct, since the features are not the same";
-            const string messageDifferentParameterInDataItem = "The retrieved dataItem is not correct, since the parameters are not the same";
-
-            var dataItemParameterConverter = ((ParameterValueConverter) dataItem.ValueConverter);
-
-            Assert.That(dataItemParameterConverter.Location, Is.EqualTo(gate), messageDifferentFeatureInDataItem);
-            Assert.That(dataItem.Name, Is.EqualTo(gate.Name), messageDifferentFeatureInDataItem);
-            Assert.That(dataItemParameterConverter.ParameterName, Is.EqualTo(KnownStructureProperties.CrestLevel), messageDifferentParameterInDataItem);
-            Assert.That(dataItem.Tag, Is.EqualTo(KnownStructureProperties.CrestLevel), messageDifferentParameterInDataItem);
-        }
-
         [Test]
         public void GetDataItemByItemString_ForItemStringContainingOnly2Elements_ThrowArgumentException()
         {
@@ -143,14 +130,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void OnFinishIntegratedModelRun_WhenUseCachingIsTrue_SetsCacheFileToTheCorrectWorkingDirectory()
         {
             string workingDirectoryIntegratedModel = Path.Combine(Path.GetTempPath(), "IntegratedModel");
-            
+
             // Setup
             using (var model = new WaterFlowFMModel())
             {
                 // Call
                 model.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
 
-                string expectedPath = Path.Combine(workingDirectoryIntegratedModel,model.DirectoryName,
+                string expectedPath = Path.Combine(workingDirectoryIntegratedModel, model.DirectoryName,
                                                    Path.ChangeExtension(model.Name,
                                                                         FileConstants.CachingFileExtension));
 
@@ -170,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("false");
                 // Call
                 model.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
-                
+
                 // Assert
                 Assert.IsNull(model.CacheFile.Path);
             }
@@ -214,6 +201,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
                 Assert.That(warnings, Is.Empty);
             }
+        }
+
+        private static void AssertDataItemIsGate(IDataItem dataItem, Weir2D gate)
+        {
+            const string messageDifferentFeatureInDataItem = "The retrieved dataItem is not correct, since the features are not the same";
+            const string messageDifferentParameterInDataItem = "The retrieved dataItem is not correct, since the parameters are not the same";
+
+            var dataItemParameterConverter = (ParameterValueConverter) dataItem.ValueConverter;
+
+            Assert.That(dataItemParameterConverter.Location, Is.EqualTo(gate), messageDifferentFeatureInDataItem);
+            Assert.That(dataItem.Name, Is.EqualTo(gate.Name), messageDifferentFeatureInDataItem);
+            Assert.That(dataItemParameterConverter.ParameterName, Is.EqualTo(KnownStructureProperties.CrestLevel), messageDifferentParameterInDataItem);
+            Assert.That(dataItem.Tag, Is.EqualTo(KnownStructureProperties.CrestLevel), messageDifferentParameterInDataItem);
         }
     }
 }

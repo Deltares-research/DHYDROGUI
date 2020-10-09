@@ -23,10 +23,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             set {}
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
-            Area2D = null;
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                Area2D = null;
+            }
         }
 
         private HydroArea Area2D

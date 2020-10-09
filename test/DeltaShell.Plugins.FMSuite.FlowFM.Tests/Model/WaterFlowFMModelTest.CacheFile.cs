@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                     // After running the .cache file should be generated in the working directory.
                     string fullPath = Path.GetFullPath(model.CacheFile.Path);
-                    Assert.That(fullPath, Is.StringStarting(model.WorkingDirectoryPath));
+                    Assert.That(fullPath, Does.StartWith(model.WorkingDirectoryPath));
                 }
             }
         }
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                     // After running and saving the .cache file should be in the save directory.
                     string fullPath = Path.GetFullPath(model.CacheFile.Path);
-                    Assert.That(fullPath, Is.StringStarting(model.WorkingDirectoryPath));
+                    Assert.That(fullPath, Does.StartWith(model.WorkingDirectoryPath));
                 }
             }
         }
@@ -284,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                     // After running and saving the .cache file should be in the save directory.
                     string fullPath = Path.GetFullPath(model.CacheFile.Path);
-                    Assert.That(fullPath, Is.StringStarting(model.WorkingDirectoryPath));
+                    Assert.That(fullPath, Does.StartWith(model.WorkingDirectoryPath));
                 }
             }
         }
@@ -303,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 CreateDummyInputCacheFileForMdu(inputMduFilePath);
 
                 // When
-                using (WaterFlowFMModel model = new WaterFlowFMModel())
+                using (var model = new WaterFlowFMModel())
                 {
                     model.ImportFromMdu(inputMduFilePath);
 
@@ -334,7 +334,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string testTempDirectory = tempDirectory.Path;
                 string saveFolderPath = Path.Combine(testTempDirectory, "SaveLocation");
                 Directory.CreateDirectory(saveFolderPath);
-                
+
                 string saveFolderCacheFilePath = Path.Combine(saveFolderPath, "test.cache");
                 string mduFilePath = Path.Combine(saveFolderPath, "test.mdu");
 
@@ -343,11 +343,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     byte[] info = new UTF8Encoding(true).GetBytes("test");
                     fs.Write(info, 0, info.Length);
                 }
-                
+
                 model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 model.WorkingDirectoryPathFunc = () => testTempDirectory;
                 model.CacheFile.UpdatePathToMduLocation(mduFilePath);
-                
+
                 // When 
                 model.Initialize();
 

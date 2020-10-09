@@ -30,10 +30,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             }
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
-            ((INotifyPropertyChange) model).PropertyChanged -= Model_PropertyChanged;
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                ((INotifyPropertyChange) model).PropertyChanged -= Model_PropertyChanged;
+            }
         }
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)

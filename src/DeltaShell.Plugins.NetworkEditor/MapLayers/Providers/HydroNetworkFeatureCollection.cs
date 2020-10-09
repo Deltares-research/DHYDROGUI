@@ -81,12 +81,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
 
         public virtual Func<object, bool> RefreshForChangedItem { get; set; }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            ClearNetworkFeatures();
+            base.Dispose(disposing);
 
-            Network = null;
-            base.Dispose();
+            if (disposing)
+            {
+                ClearNetworkFeatures();
+                Network = null;
+            }
         }
 
         public virtual void OnInsert(int index, object value)
