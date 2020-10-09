@@ -45,9 +45,24 @@ using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
+    /// <summary>
+    /// <see cref="WaveModel"/> implements the model interfaces for the Wave plugin.
+    /// </summary>
+    /// <seealso cref="TimeDependentModelBase" />
+    /// <seealso cref="IDisposable" />
+    /// <seealso cref="IGridOperationApi" />
+    /// <seealso cref="IWaveModel" />
+    /// <seealso cref="IFileBased" />
+    /// <seealso cref="IHydroModel" />
+    /// <seealso cref="IDimrModel" />
     [Entity]
-    public class WaveModel : TimeDependentModelBase, IDisposable, IGridOperationApi, IWaveModel, IFileBased,
-                             IHydroModel, IDimrModel
+    public class WaveModel : TimeDependentModelBase, 
+                             IDisposable, 
+                             IGridOperationApi, 
+                             IWaveModel, 
+                             IFileBased,
+                             IHydroModel, 
+                             IDimrModel
     {
         // Also add model specific data items to the exclude list in <see cref="BuildModel"/>
         private static readonly ILog log = LogManager.GetLogger(typeof(WaveModel));
@@ -635,6 +650,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         protected override void OnFinish()
         {
+            base.OnFinish();
             runner.OnFinish();
         }
 
@@ -658,8 +674,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             runner.OnProgressChanged();
             base.OnProgressChanged();
         }
-
-        protected override void OnClearOutput() {}
 
         internal void SyncModelTimesWithBase()
         {
@@ -1258,15 +1272,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        /// <summary>
+        /// Disconnects the output.
+        /// </summary>
+        /// <remarks>
+        /// Note that this does not clear the output, it merely severs
+        /// the connection.
+        /// </remarks>
         public virtual void DisconnectOutput()
         {
-            if (!OutputIsEmpty)
+            if (WaveOutputData.IsConnected)
             {
-                OnClearOutput();
+                WaveOutputData.Disconnect();
             }
         }
 
-        public virtual void ConnectOutput(string outputPath) {}
+        public virtual void ConnectOutput(string outputPath)
+        {
+            WaveOutputData.ConnectTo(outputPath);
+        }
+
+        protected override void OnClearOutput()
+        {
+            if (WaveOutputData.IsConnected)
+            {
+                WaveOutputData.Disconnect();
+            }
+        }
 
         public new virtual ActivityStatus Status
         {

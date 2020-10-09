@@ -787,5 +787,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 Assert.That(e.ParamName, Is.EqualTo("mdwFilePath"));
             }
         }
+
+        [Test]
+        public void DisconnectOutput_UpdatesWaveOutputDataCorrectly()
+        {
+            using (var model = new WaveModel())
+            {
+                // Setup
+                const string initialPath = "some/toad/to/a/directory";
+                model.WaveOutputData.ConnectTo(initialPath);
+
+                // Call
+                model.DisconnectOutput();
+
+                // Assert
+                Assert.That(model.WaveOutputData.IsConnected, Is.False);
+                Assert.That(model.WaveOutputData.DataSourcePath, Is.Null);
+            }
+        }
+
+        [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ConnectOutput_UpdatesWaveOutputDataCorrectly(bool withInitialPath)
+        {
+            using (var model = new WaveModel())
+            {
+                // Setup
+                if (withInitialPath)
+                {
+                    const string initialPath = "some/toad/to/a/directory";
+                    model.WaveOutputData.ConnectTo(initialPath);
+                }
+
+                const string newPath = "a/different/output/path";
+
+                // Call
+                model.ConnectOutput(newPath);
+
+                // Assert
+                Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(newPath));
+            }
+        }
     }
 }
