@@ -6,12 +6,31 @@ using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
 using NUnit.Framework;
+using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewModels
 {
     [TestFixture]
     public class StructureViewModelTest
     {
+        public static IEnumerable<TestCaseData> GetConstructorData()
+        {
+            var simpleWeirFormula = new SimpleWeirFormula();
+            var simpleWeir = new Weir2D {WeirFormula = simpleWeirFormula};
+
+            yield return new TestCaseData(simpleWeir, typeof(SimpleWeirViewModel));
+
+            var gatedWeirFormula = new GatedWeirFormula();
+            var gatedWeir = new Weir2D {WeirFormula = gatedWeirFormula};
+
+            yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel));
+
+            var generalStructureFormula = new GeneralStructureWeirFormula();
+            var generalStructure = new Weir2D {WeirFormula = generalStructureFormula};
+
+            yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel));
+        }
+
         [Test]
         [TestCaseSource(nameof(GetConstructorData))]
         public void Constructor_ExpectedValuesSet(Weir2D weir, Type expectedViewModelType)
@@ -30,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void Constructor_WeirNull_ThrowsArgumentNullException()
         {
             void Call() => new StructureViewModel(null);
-            var exception = Assert.Throws<ArgumentNullException>(Call);
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("weir"));
         }
 
@@ -48,17 +67,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 // Assert
                 Type[] expectedTypes =
                 {
-                    typeof(SimpleWeirViewModel),
-                    typeof(GatedWeirViewModel),
+                    typeof(SimpleWeirViewModel), 
+                    typeof(GatedWeirViewModel), 
                     typeof(GeneralStructureViewModel)
                 };
                 Assert.That(formulaTypes, Is.EqualTo(expectedTypes));
             }
         }
 
+        public static IEnumerable<TestCaseData> GetFormulaTypeData()
+        {
+            var simpleWeir = new Weir2D {WeirFormula = new SimpleWeirFormula()};
+            var gatedWeir = new Weir2D {WeirFormula = new GatedWeirFormula(true)};
+
+            yield return new TestCaseData(gatedWeir,  typeof(SimpleWeirViewModel),       typeof(SimpleWeirFormula));
+            yield return new TestCaseData(simpleWeir, typeof(GatedWeirViewModel),        typeof(GatedWeirFormula));
+            yield return new TestCaseData(simpleWeir, typeof(GeneralStructureViewModel), typeof(GeneralStructureWeirFormula));
+        }
+
         [Test]
         [TestCaseSource(nameof(GetFormulaTypeData))]
-        public void FormulaType_SetDifferent_SetsValueCorrectly(Weir2D weir,
+        public void FormulaType_SetDifferent_SetsValueCorrectly(Weir2D weir, 
                                                                 Type newWeirViewModelType,
                                                                 Type newFormulaType)
         {
@@ -89,10 +118,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             }
         }
 
+        public static IEnumerable<TestCaseData> GetFormulaTypeNoChangeData()
+        {
+            var simpleWeir = new Weir2D {WeirFormula = new SimpleWeirFormula()};
+            yield return new TestCaseData(simpleWeir,  typeof(SimpleWeirViewModel), typeof(SimpleWeirFormula));
+
+            var gatedWeir = new Weir2D {WeirFormula = new GatedWeirFormula(true)};
+            yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel), typeof(GatedWeirFormula));
+
+            var generalStructure = new Weir2D {WeirFormula = new GeneralStructureWeirFormula()};
+            yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel), typeof(GeneralStructureWeirFormula));
+        }
+
         [Test]
         [TestCaseSource(nameof(GetFormulaTypeNoChangeData))]
-        public void FormulaType_SetSame_DoesNotSetValue(Weir2D weir,
-                                                        Type newWeirViewModelType,
+        public void FormulaType_SetSame_DoesNotSetValue(Weir2D weir, 
+                                                        Type newWeirViewModelType, 
                                                         Type expectedWeirFormulaType)
         {
             // Setup
@@ -129,46 +170,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 void Call() => viewModel.FormulaType = typeof(object);
                 Assert.Throws<ArgumentException>(Call);
             }
-        }
-
-        public IEnumerable<TestCaseData> GetConstructorData()
-        {
-            var simpleWeirFormula = new SimpleWeirFormula();
-            var simpleWeir = new Weir2D {WeirFormula = simpleWeirFormula};
-
-            yield return new TestCaseData(simpleWeir, typeof(SimpleWeirViewModel));
-
-            var gatedWeirFormula = new GatedWeirFormula();
-            var gatedWeir = new Weir2D {WeirFormula = gatedWeirFormula};
-
-            yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel));
-
-            var generalStructureFormula = new GeneralStructureWeirFormula();
-            var generalStructure = new Weir2D {WeirFormula = generalStructureFormula};
-
-            yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel));
-        }
-
-        public IEnumerable<TestCaseData> GetFormulaTypeData()
-        {
-            var simpleWeir = new Weir2D() {WeirFormula = new SimpleWeirFormula()};
-            var gatedWeir = new Weir2D() {WeirFormula = new GatedWeirFormula(true)};
-
-            yield return new TestCaseData(gatedWeir, typeof(SimpleWeirViewModel), typeof(SimpleWeirFormula));
-            yield return new TestCaseData(simpleWeir, typeof(GatedWeirViewModel), typeof(GatedWeirFormula));
-            yield return new TestCaseData(simpleWeir, typeof(GeneralStructureViewModel), typeof(GeneralStructureWeirFormula));
-        }
-
-        public IEnumerable<TestCaseData> GetFormulaTypeNoChangeData()
-        {
-            var simpleWeir = new Weir2D() {WeirFormula = new SimpleWeirFormula()};
-            yield return new TestCaseData(simpleWeir, typeof(SimpleWeirViewModel), typeof(SimpleWeirFormula));
-
-            var gatedWeir = new Weir2D() {WeirFormula = new GatedWeirFormula(true)};
-            yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel), typeof(GatedWeirFormula));
-
-            var generalStructure = new Weir2D() {WeirFormula = new GeneralStructureWeirFormula()};
-            yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel), typeof(GeneralStructureWeirFormula));
         }
     }
 }

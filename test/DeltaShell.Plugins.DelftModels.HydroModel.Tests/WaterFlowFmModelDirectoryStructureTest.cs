@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static List<string> filtersOutputWAQ;
         private static List<string> filtersSnapped;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             // Get TestData Directory

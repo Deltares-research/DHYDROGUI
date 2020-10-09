@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -28,7 +30,9 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap.Converters.WellKnownText;
+using SharpTestsEx;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 {
@@ -52,8 +56,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             projectRepository.Dispose();
         }
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             LogHelper.SetLoggingLevel(Level.Off);
 
@@ -64,9 +68,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
             factory.AddPlugin(new CommonToolsApplicationPlugin());
         }
-
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown() {}
 
         [Test]
         public void SaveAndRetrieveFunctionWithNetCdfFunctionValueStore()
@@ -292,6 +293,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             //we should get here without exception
         }
 
+       
         [Test]
         public void SaveAndRetrieveBranchFeatureCoverageWithNetCdf()
         {

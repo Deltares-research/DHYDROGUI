@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(importer.Category, Is.EqualTo("NetCdf"));
             Assert.That(importer.Description, Is.EqualTo(string.Empty));
             Assert.That(importer.Image, Is.Not.Null);
-            Assert.That(importer.SupportedItemTypes, Collection.OnlyContains(typeof(RestartFile)));
+            CollectionContainsOnlyAssert.AssertContainsOnly(importer.SupportedItemTypes, typeof(RestartFile));
             Assert.That(importer.CanImportOnRootLevel, Is.False);
             Assert.That(importer.FileFilter, Is.EqualTo($"FM restart files|*_rst.nc"));
             Assert.That(importer.TargetDataDirectory, Is.Null);

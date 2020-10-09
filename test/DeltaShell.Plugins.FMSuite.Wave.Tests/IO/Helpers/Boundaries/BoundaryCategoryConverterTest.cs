@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("boundaryCategory"));
-            Assert.That(exception.Message, Is.StringStarting("Category is not an mdw boundary category."));
+            Assert.That(exception.Message, Does.StartWith("Category is not an mdw boundary category."));
         }
 
         [Test]

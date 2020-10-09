@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
@@ -56,10 +56,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(input.Name, Is.EqualTo(inputName));
 
             Assert.That(controlGroup.Name, Is.EqualTo(controlGroupName));
-            Assert.That(controlGroup.Inputs, Collection.OnlyContains(input));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Inputs, input);
             Assert.That(controlGroup.MathematicalExpressions, Is.Empty);
             Assert.That(controlGroup.Conditions, Is.Empty);
-            Assert.That(controlGroup.Signals, Collection.OnlyContains(signal));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Signals, signal);
             Assert.That(controlGroup.Rules, Is.Empty);
             Assert.That(controlGroup.Outputs, Is.Empty);
         }
@@ -96,15 +96,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             var input = (Input) inputs[0];
             Assert.That(input.Name, Is.EqualTo(inputName));
 
-            Assert.That(signal.RuleBases, Collection.OnlyContains(rule));
+            CollectionContainsOnlyAssert.AssertContainsOnly(signal.RuleBases, rule);
 
             Assert.That(controlGroup.Name, Is.EqualTo(controlGroupName));
-            Assert.That(controlGroup.Inputs, Collection.OnlyContains(input));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Inputs, input);
             Assert.That(controlGroup.MathematicalExpressions, Is.Empty);
             Assert.That(controlGroup.Conditions, Is.Empty);
-            Assert.That(controlGroup.Signals, Collection.OnlyContains(signal));
-            Assert.That(controlGroup.Rules, Collection.OnlyContains(rule));
-            Assert.That(controlGroup.Outputs, Collection.OnlyContains(output));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Signals, signal);
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Rules, rule);
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Outputs, output);
         }
 
         [Test]
@@ -134,15 +134,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Output output = outputs[0];
             Assert.That(output.Name, Is.EqualTo(outputName));
 
-            Assert.That(rule.Inputs, Collection.OnlyContains(mathematicalExpression));
+            CollectionContainsOnlyAssert.AssertContainsOnly(rule.Inputs, mathematicalExpression);
 
             Assert.That(controlGroup.Name, Is.EqualTo(controlGroupName));
             Assert.That(controlGroup.Inputs, Is.Empty);
-            Assert.That(controlGroup.MathematicalExpressions, Collection.OnlyContains(mathematicalExpression));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.MathematicalExpressions, mathematicalExpression);
             Assert.That(controlGroup.Conditions, Is.Empty);
             Assert.That(controlGroup.Signals, Is.Empty);
-            Assert.That(controlGroup.Rules, Collection.OnlyContains(rule));
-            Assert.That(controlGroup.Outputs, Collection.OnlyContains(output));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Rules, rule);
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Outputs, output);
         }
 
         [Test]
@@ -168,13 +168,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             var input = (Input) condition.Input;
             Assert.That(input.Name, Is.EqualTo(inputName));
 
-            Assert.That(condition.TrueOutputs, Collection.OnlyContains(trueOutputDaObject.Object));
-            Assert.That(condition.FalseOutputs, Collection.OnlyContains(falseOutputDaObject.Object));
+            CollectionContainsOnlyAssert.AssertContainsOnly(condition.TrueOutputs, trueOutputDaObject.Object);
+            CollectionContainsOnlyAssert.AssertContainsOnly(condition.FalseOutputs, falseOutputDaObject.Object);
 
             Assert.That(controlGroup.Name, Is.EqualTo(controlGroupName));
-            Assert.That(controlGroup.Inputs, Collection.OnlyContains(input));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Inputs, input);
             Assert.That(controlGroup.MathematicalExpressions, Is.Empty);
-            Assert.That(controlGroup.Conditions, Collection.OnlyContains(condition));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Conditions, condition);
             Assert.That(controlGroup.Signals, Is.Empty);
             Assert.That(controlGroup.Rules, Is.Empty);
             Assert.That(controlGroup.Outputs, Is.Empty);
@@ -208,8 +208,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             Assert.That(controlGroup.Name, Is.EqualTo(controlGroupName));
             Assert.That(controlGroup.Inputs, Is.Empty);
-            Assert.That(controlGroup.MathematicalExpressions, Collection.OnlyContains(mathematicalExpression));
-            Assert.That(controlGroup.Conditions, Collection.OnlyContains(condition));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.MathematicalExpressions, mathematicalExpression);
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Conditions, condition);
             Assert.That(controlGroup.Signals, Is.Empty);
             Assert.That(controlGroup.Rules, Is.Empty);
             Assert.That(controlGroup.Outputs, Is.Empty);
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(inputInput, Is.Not.Null);
 
             Assert.That(controlGroup.Name, Is.EqualTo(controlGroupName));
-            Assert.That(controlGroup.Inputs, Collection.OnlyContains(inputInput));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Inputs, inputInput);
             Assert.That(controlGroup.MathematicalExpressions, Is.EquivalentTo(new[]
             {
                 mathematicalExpression,
@@ -288,26 +288,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Output output = rule1.Outputs[0];
 
             Assert.That(input.Name, Is.EqualTo(inputName));
-            Assert.That(condition.TrueOutputs, Collection.OnlyContains(rule2));
-            Assert.That(condition.FalseOutputs, Collection.OnlyContains(expression));
-            Assert.That(expression.Inputs, Collection.OnlyContains(input));
-            Assert.That(rule1.Inputs, Collection.OnlyContains(expression));
-            Assert.That(rule1.Outputs, Collection.OnlyContains(output));
-            Assert.That(signal.Inputs, Collection.OnlyContains(input));
-            Assert.That(signal.RuleBases, Collection.OnlyContains(rule1));
-            Assert.That(rule2.Inputs, Collection.OnlyContains(expression));
-            Assert.That(rule2.Outputs, Collection.OnlyContains(output));
+            CollectionContainsOnlyAssert.AssertContainsOnly(condition.TrueOutputs, rule2);
+            CollectionContainsOnlyAssert.AssertContainsOnly(condition.FalseOutputs, expression);
+            CollectionContainsOnlyAssert.AssertContainsOnly(expression.Inputs, input);
+            CollectionContainsOnlyAssert.AssertContainsOnly(rule1.Inputs, expression);
+            CollectionContainsOnlyAssert.AssertContainsOnly(rule1.Outputs, output);
+            CollectionContainsOnlyAssert.AssertContainsOnly(signal.Inputs, input);
+            CollectionContainsOnlyAssert.AssertContainsOnly(signal.RuleBases, rule1);
+            CollectionContainsOnlyAssert.AssertContainsOnly(rule2.Inputs, expression);
+            CollectionContainsOnlyAssert.AssertContainsOnly(rule2.Outputs, output);
 
-            Assert.That(controlGroup.Inputs, Collection.OnlyContains(input));
-            Assert.That(controlGroup.MathematicalExpressions, Collection.OnlyContains(expression));
-            Assert.That(controlGroup.Conditions, Collection.OnlyContains(condition));
-            Assert.That(controlGroup.Signals, Collection.OnlyContains(signal));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Inputs, input);
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.MathematicalExpressions, expression);
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Conditions, condition);
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Signals, signal);
             Assert.That(controlGroup.Rules, Is.EquivalentTo(new[]
             {
                 rule1,
                 rule2
             }));
-            Assert.That(controlGroup.Outputs, Collection.OnlyContains(output));
+            CollectionContainsOnlyAssert.AssertContainsOnly(controlGroup.Outputs, output);
         }
 
         private static IRtcDataAccessObject<RtcBaseObject>[] CreateExampleSet(out MathematicalExpression expression,

@@ -1,7 +1,7 @@
 ﻿using System.IO;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
@@ -35,10 +35,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
             var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
 
-            RtcRuntimeConfigXML runtimeConfigObject;
+            RtcRuntimeConfigComplexType runtimeConfigObject;
             try
             {
-                runtimeConfigObject = delftConfigXmlParser.Read<RtcRuntimeConfigXML>(runtimeConfigFilePath);
+                runtimeConfigObject = delftConfigXmlParser.Read<RtcRuntimeConfigComplexType>(runtimeConfigFilePath);
             }
             catch (FileNotFoundException e)
             {
@@ -46,9 +46,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 return;
             }
 
-            var runTimeSettings = runtimeConfigObject.period.Item as UserDefinedRuntimeXML;
-            UserDefinedStateExportXML restartSettings = runtimeConfigObject.stateFiles;
-            var simulationModeSettings = runtimeConfigObject.Item as ModeXML;
+            var runTimeSettings = runtimeConfigObject.period.Item as UserDefinedRuntimeComplexType;
+            UserDefinedStateExportComplexType restartSettings = runtimeConfigObject.stateFiles;
+            var simulationModeSettings = runtimeConfigObject.Item as ModeComplexType;
 
             var runtimeConfigSetter = new RealTimeControlRuntimeConfigSetter(logHandler);
             runtimeConfigSetter.SetRunTimeSettings(rtcModel, runTimeSettings);
