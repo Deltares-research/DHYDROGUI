@@ -504,6 +504,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             ExportModelInputTo(targetMdwFilePath, switchTo);
+
+            if (switchTo)
+            {
+                string outputDir = Path.Combine(modelDir, "output");
+                WaveOutputData.ConnectTo(outputDir);
+            }
         }
 
         /// <summary>

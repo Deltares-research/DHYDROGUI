@@ -830,5 +830,70 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(newPath));
             }
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ModelSaveTo_SwitchToTrue_ConnectsWaveOutputData()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                tempDir.CreateDirectory("project_data");
+                tempDir.CreateDirectory($"project_data\\{model.Name}");
+                string inputFolder = tempDir.CreateDirectory($"project_data\\{model.Name}\\input");
+                string outputFolder = tempDir.CreateDirectory($"project_data\\{model.Name}\\output");
+
+                string mdwPath = Path.Combine(inputFolder, $"{model.Name}.mdw");
+
+                // Call
+                model.ModelSaveTo(mdwPath, true);
+
+                // Assert
+                Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputFolder));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ModelSaveTo_SwitchToFalse_NotConnected_DoesNotChangeTheWaveOutputData()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string mdwPath = Path.Combine(tempDir.Path, $"{model.Name}.mdw");
+
+                // Call
+                model.ModelSaveTo(mdwPath, false);
+
+                // Assert
+                Assert.That(model.WaveOutputData.IsConnected, Is.False);
+                Assert.That(model.WaveOutputData.DataSourcePath, Is.Null);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ModelSaveTo_SwitchToFalse_Connected_DoesNotChangeTheWaveOutputData()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string outputFolder = tempDir.CreateDirectory("someUnrelatedFolder");
+                model.WaveOutputData.ConnectTo(outputFolder);
+
+                string mdwPath = Path.Combine(tempDir.Path, $"{model.Name}.mdw");
+
+                // Call
+                model.ModelSaveTo(mdwPath, false);
+
+                // Assert
+                Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputFolder));
+            }
+        }
     }
 }
