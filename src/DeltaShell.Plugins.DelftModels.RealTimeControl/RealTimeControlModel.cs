@@ -1068,18 +1068,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             IEnumerable<string> outputFilePaths = Directory.GetFiles(runRtcDirectory).Where(f => !LastExportInputFilesAndDirectoriesPaths.Contains(f));
             IEnumerable<string> outputSubDirectoriesPaths = Directory.GetDirectories(runRtcDirectory).Where(f => !LastExportInputFilesAndDirectoriesPaths.Contains(f));
 
-            Directory.CreateDirectory(Path.Combine(runRtcDirectory, "output"));
+            Directory.CreateDirectory(Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName));
 
             IEnumerable<string> allOutputPaths = outputFilePaths.Concat(outputSubDirectoriesPaths);
             
             foreach (string outputPath in allOutputPaths)
             {
                 string outputName = Path.GetFileName(outputPath);
-                string destinationOutputPath = Path.Combine(runRtcDirectory, "output", outputName);
+                string destinationOutputPath = Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName, outputName);
                 Directory.Move(outputPath, destinationOutputPath);
             }
             
-            currentOutputDirectoryPath = Path.Combine(runRtcDirectory, "output");
+            currentOutputDirectoryPath = Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName);
 
             MarkDirty();
         }

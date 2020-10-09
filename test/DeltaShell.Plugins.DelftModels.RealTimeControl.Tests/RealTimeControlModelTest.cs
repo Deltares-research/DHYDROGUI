@@ -1532,7 +1532,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             persistentOutputFileName = "OriginalOutputFile";
             persistentOutputSubDirectoryName = "OriginalOutputSubDirectory";
             
-            string outputFolderPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, rtcModelName, "output");
+            string outputFolderPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, rtcModelName, DirectoryNameConstants.OutputDirectoryName);
             Directory.CreateDirectory(outputFolderPersistentFolder);
 
             string originalOutputFile = Path.Combine(outputFolderPersistentFolder, persistentOutputFileName);
@@ -1568,7 +1568,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         private static void AssertsPersistentFolderStructure(string projectDirectoryAfterSave, RealTimeControlModel rtcModel, string outputFileName, string outputSubDirectoryName)
         {
-            string outputFolderAfterSave = Path.Combine(projectDirectoryAfterSave, rtcModel.Name, "output");
+            string outputFolderAfterSave = Path.Combine(projectDirectoryAfterSave, rtcModel.Name, DirectoryNameConstants.OutputDirectoryName);
             string expectedOutputFileAfterSave = Path.Combine(outputFolderAfterSave, outputFileName);
             string expectedOutputSubFolderAfterSave = Path.Combine(outputFolderAfterSave, outputSubDirectoryName);
             string expectedOutputFileInSubFolderAfterSave = Path.Combine(expectedOutputSubFolderAfterSave, outputFileName);
