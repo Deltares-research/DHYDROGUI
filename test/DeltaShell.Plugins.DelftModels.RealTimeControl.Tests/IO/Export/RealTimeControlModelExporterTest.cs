@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -50,6 +51,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
                 // Then
                 FileAssert.AreEqual(expectedFileContentPath, exportedRestartFile);
+            }
+        }
+
+        [Test]
+        public void Export_ShouldSetLastExportInputFilesAndDirectoriesPathsPropertyOfModel()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                var rtcModelExporter = new RealTimeControlModelExporter();
+                var rtcModel = new RealTimeControlModel();
+
+                // Act
+                string exportDirectory = tempDirectory.Path;
+                bool result = rtcModelExporter.Export(rtcModel, exportDirectory);
+
+                // Assert
+                string[] files = Directory.GetFiles(exportDirectory);
+                string[] directories = Directory.GetDirectories(exportDirectory);
+
+                string[] allInputPaths = files.Concat(directories).ToArray();
+
+                Assert.AreEqual(allInputPaths.Length, rtcModel.LastExportInputFilesAndDirectoriesPaths.Length);
+                Assert.IsTrue(allInputPaths.Any(i=>rtcModel.LastExportInputFilesAndDirectoriesPaths.Contains(i)));
+                Assert.IsTrue(result);
             }
         }
 
