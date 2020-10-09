@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.Dimr;
-using DeltaShell.Dimr.xsd;
+using DeltaShell.Dimr.Xsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 
