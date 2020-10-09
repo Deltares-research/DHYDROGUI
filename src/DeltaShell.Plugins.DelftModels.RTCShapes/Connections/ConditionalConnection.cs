@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Linq;
 using Netron.GraphLib;
 using Netron.GraphLib.Attributes;
 
@@ -12,6 +13,12 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
                            "DeltaShell.Plugins.DelftModels.RTCShapes.Connections.ConditionalConnection")]
     public class ConditionalConnection : DefaultPainter
     {
+        private readonly string[] LabelNeedsCorrection =
+        {
+            "Right",
+            "Bottom"
+        };
+
         public ConditionalConnection(Connection connection) : base(connection) {}
 
         public override void Paint(Graphics g)
@@ -20,21 +27,19 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
             PaintLabel(g);
         }
 
-        protected void PaintLabel(Graphics g)
+        private void PaintLabel(Graphics g)
         {
             RectangleF startPosition = Connection.From.ConnectionGrip();
             var size = g.MeasureString(Connection.Text, Connection.Font).ToSize();
             // simplied labelpainting; not in center but at start connection
-            if (Connection.From.Name == "Right")
-            {
-                startPosition.X += size.Height;
-                startPosition.Y -= size.Height;
-            }
 
-            if (Connection.From.Name == "Bottom")
+            if (LabelNeedsCorrection.Contains(Connection.From.Name))
             {
-                startPosition.X += size.Height;
-                startPosition.Y += size.Height;
+                RectangleF endPosition = Connection.To.ConnectionGrip();
+                float xCorrection = (endPosition.X - startPosition.X) / 8;
+                float yCorrection = (endPosition.Y - startPosition.Y) / 8;
+                startPosition.X += xCorrection;
+                startPosition.Y += yCorrection;
             }
 
             var labelRect = new RectangleF(startPosition.X, startPosition.Y, size.Width, size.Height + 1);
