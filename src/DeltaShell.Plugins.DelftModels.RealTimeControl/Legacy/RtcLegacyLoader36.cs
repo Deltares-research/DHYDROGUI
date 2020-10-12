@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
     /// </summary>
     public class RtcLegacyLoader36 : LegacyLoader
     {
+        private readonly LegacyLoader nextLegacyLoader = new RtcLegacyLoader37();
         private const string restartFileName = "state_import.xml";
         private const string metaDataFileName = "metadata.xml";
         private static readonly ILogHandler logHandler = new LogHandler("the migration of the D-RTC model", typeof(RtcLegacyLoader36));
@@ -42,8 +43,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             GetModels(project).ForEach(MigrateModel);
 
             logHandler.LogReport();
-
-            base.OnAfterProjectMigrated(project);
+            
+            nextLegacyLoader.OnAfterProjectMigrated(project);
         }
 
         private void MigrateModel(RealTimeControlModel model)
