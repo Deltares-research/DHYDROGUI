@@ -96,7 +96,7 @@
     </Compile>
     <Compile Include="RemoteDimrApi.cs" />
     <Compile Include="xsd\dimr.custom.cs" />
-    <Compile Include="xsd\dimr.serializers.cs" />
+    <Compile Include="xsd\DimrXMLSerializer.cs"/>
     <Compile Include="xsd\dimr.cs">
       <DependentUpon>dimr.xsd</DependentUpon>
     </Compile>
