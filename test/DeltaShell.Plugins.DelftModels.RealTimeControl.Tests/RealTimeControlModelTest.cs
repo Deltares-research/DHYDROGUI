@@ -976,7 +976,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.AreEqual("filePath", exception.ParamName);
+            Assert.AreEqual("path", exception.ParamName);
         }
 
         [Test]
@@ -1032,7 +1032,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.AreEqual("filePath", exception.ParamName);
+            Assert.AreEqual("path", exception.ParamName);
         }
         
         [Test]
