@@ -435,7 +435,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 return;
             }
 
-            Link(graphControl.GetSelectedShapes<ShapeBase>().First(), dialog.SelectedDataItem, null);
+            Link(graphControl.GetSelectedShapes<ShapeBase>().First(), dialog.SelectedDataItem, inquiryHelper);
             graphControl.Refresh();
         }
 
@@ -802,7 +802,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
 
             IDataItem dataItem = dataItems.FirstOrDefault(e => e.GetParameterName() == answer);
-            Link((Shape) entity, dataItem, null);
+            Link((Shape) entity, dataItem, inquiryHelper);
         }
 
         private bool CanLinkFeatureToShape(DragEventArgs dragEventArgs, IFeature feature, Entity entity, Type t,
