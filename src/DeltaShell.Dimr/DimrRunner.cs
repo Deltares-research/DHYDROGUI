@@ -178,7 +178,7 @@ namespace DeltaShell.Dimr
             {
                 component
             };
-            new DimrXMLSerializers().SaveToFile(dimrFile, dimrConfig);
+            new DimrXMLSerializer().SaveToFile(dimrFile, dimrConfig);
             return dimrFile;
         }
 
