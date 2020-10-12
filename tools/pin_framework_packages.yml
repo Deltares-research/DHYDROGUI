@@ -1,4 +1,0 @@
-name: pin_framework_packages
-dependencies:
-  - python=3.5
-  - requests
