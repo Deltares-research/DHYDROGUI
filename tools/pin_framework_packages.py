@@ -185,7 +185,7 @@ def tag_build(user: str, password: str, build_info, tag: str) -> None:
                  'tag': new_tag_values
     }
 
-    tag_url = f"{BUILDS_ROOT}id:{build_info["id"]}/tags/"
+    tag_url = f"{BUILDS_ROOT}id:{build_info['id']}/tags/"
     requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags)
 
 
