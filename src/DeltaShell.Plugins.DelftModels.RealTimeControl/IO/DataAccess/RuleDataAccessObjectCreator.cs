@@ -113,8 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                 dataAccessObject.InputReferences.Add(pidRuleElement.input.x);
             }
 
-            dataAccessObject.InputReferences.Add(pidRuleElement.input.x);
-            if (pidRuleElement.input.Item is string signalId && signalId.Contains(RtcXmlTag.Signal))
+            if (pidRuleElement.input?.Item is string signalId && signalId.Contains(RtcXmlTag.Signal))
             {
                 dataAccessObject.SignalReferences.Add(GetCorrectSignalReference(signalId));
             }
@@ -177,7 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                 dataAccessObject.InputReferences.Add(intervalRuleElement.input.x.Value);
             }
 
-            string signalId = intervalRuleElement.input.setpoint;
+            string signalId = intervalRuleElement.input?.setpoint;
             if (signalId != null && signalId.Contains(RtcXmlTag.Signal))
             {
                 dataAccessObject.SignalReferences.Add(GetCorrectSignalReference(signalId));
