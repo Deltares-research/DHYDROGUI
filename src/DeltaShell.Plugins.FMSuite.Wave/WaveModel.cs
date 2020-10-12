@@ -22,7 +22,6 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
@@ -1482,7 +1481,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             //wave doesnt run standalone via dimr but via kernels
         }
 
-        public virtual void OnFinishIntegratedModelRun(string hydromodelWorkingDirectoryPath)
+        public virtual void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath)
         {
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.

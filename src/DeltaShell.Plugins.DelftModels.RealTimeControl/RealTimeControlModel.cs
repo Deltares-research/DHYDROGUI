@@ -1492,12 +1492,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         // Used for Import model
         // Creating new model
-        void IFileBased.CreateNew(string filePath)
+        void IFileBased.CreateNew(string path)
         {
-            Ensure.NotNull(filePath, nameof(filePath));
+            Ensure.NotNull(path, nameof(path));
 
-            persistentOutputDirectory = GetOutputFolderFromDeltaShellPath(filePath);
-            path = filePath;
+            persistentOutputDirectory = GetOutputFolderFromDeltaShellPath(path);
+            this.path = path;
             isOpen = true;
         }
         
@@ -1507,9 +1507,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         // Never called by DeltaShell Framework
-        void IFileBased.Open(string filePath)
+        void IFileBased.Open(string path)
         {
-            Ensure.NotNull(filePath, nameof(filePath));
+            Ensure.NotNull(path, nameof(path));
             isOpen = true;
         }
 
@@ -1566,7 +1566,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         void IFileBased.Delete()
         {
-            
+            // Can be used in the future for deleting
+            // files when model has been deleted by user.
         }
 
         // Used for Open Project, called by FileBasedDataAccessListener.
