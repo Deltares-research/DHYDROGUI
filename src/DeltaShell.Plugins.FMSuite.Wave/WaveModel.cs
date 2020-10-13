@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -690,6 +690,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private string InputDirPath => Path.GetDirectoryName(MdwFilePath);
 
+        private string OutputDirPath 
+        {
+            get
+            {
+                string outputDir = Path.Combine(InputDirPath, "..", "output");
+                return Path.GetFullPath(outputDir);
+            }
+        } 
+
         [EditAction]
         private void RemoveDataItemsForDomain(IWaveDomainData domain)
         {
@@ -863,6 +872,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(model.ModelDefinition.OuterDomain);
 
             model.BuildWaveDomains(allDomains, model.InputDirPath, model);
+
+            model.WaveOutputData.ConnectTo(model.OutputDirPath);
         }
 
         private static void BuildEmptyModel(WaveModel model)
