@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -498,6 +498,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             string targetDir = Path.GetDirectoryName(targetMdwFilePath);
             string modelDir = Path.GetDirectoryName(targetDir);
+
             if (modelDir == null)
             {
                 throw new InvalidOperationException("Model cannot be directly saved under the root.");
@@ -508,7 +509,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             if (switchTo)
             {
                 string outputDir = Path.Combine(modelDir, "output");
-                WaveOutputData.ConnectTo(outputDir);
+                SaveModelOutputStateTo(outputDir);
             }
         }
 
@@ -532,6 +533,57 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             // write spatial data:
             SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
         }
+
+        private void SaveModelOutputStateTo(string outputTargetDirectory)
+        {
+            Ensure.NotNullOrEmpty(outputTargetDirectory, nameof(outputTargetDirectory));
+
+            var targetDirectoryInfo = new DirectoryInfo(outputTargetDirectory);
+            FileUtils.CreateDirectoryIfNotExists(targetDirectoryInfo.FullName);
+
+            if (!WaveOutputData.IsConnected)
+            {
+                if (IsSavedToCurrentOutputDirectory(targetDirectoryInfo))
+                {
+                    ClearDirectory(targetDirectoryInfo);
+                }
+            }
+            else if (HasRunData())
+            {
+                CopyRunDataTo(targetDirectoryInfo);
+                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName);
+            }
+            else if (!IsSavedToCurrentOutputDirectory(targetDirectoryInfo))
+            {
+                CopyOutputDataTo(targetDirectoryInfo);
+                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName);
+            }
+        }
+
+        private void CopyRunDataTo(DirectoryInfo targetDirectoryInfo)
+        {
+            // TODO: ensure this only copies output data
+            var dataSourcePathInfo = new DirectoryInfo(WaveOutputData.DataSourcePath);
+            ClearDirectory(targetDirectoryInfo);
+            FileUtils.CopyAll(dataSourcePathInfo, targetDirectoryInfo, null);
+        }
+
+        private void CopyOutputDataTo(DirectoryInfo targetDirectoryInfo)
+        {
+            var dataSourcePathInfo = new DirectoryInfo(WaveOutputData.DataSourcePath);
+            FileUtils.CopyAll(dataSourcePathInfo, targetDirectoryInfo, null);
+        }
+
+        private bool IsSavedToCurrentOutputDirectory(FileSystemInfo targetDirectoryInfo) =>
+            Path.GetFullPath(OutputDirPath) == targetDirectoryInfo.FullName;
+
+        private bool HasRunData() =>
+            WaveOutputData.IsConnected && 
+            Path.GetFullPath(OutputDirPath) != Path.GetFullPath(WaveOutputData.DataSourcePath);
+
+        private static void ClearDirectory(DirectoryInfo directoryInfo) => 
+            FileUtils.CreateDirectoryIfNotExists(directoryInfo.FullName, true);
+            
 
         /// <summary>
         /// Reloads all grids associated with each domain.
