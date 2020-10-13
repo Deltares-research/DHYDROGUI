@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -893,6 +893,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 // Assert
                 Assert.That(model.WaveOutputData.IsConnected, Is.True);
                 Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputFolder));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Constructor_FromMdwPath_ConnectsToOutputDir()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string testDataPath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves\");
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(testDataPath);
+
+                string mdwPath = Path.Combine(modelPath, "input", "Waves.mdw");
+                string outputDir = Path.Combine(modelPath, "output");
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputDir));
+                }
+            }
+        }
+
+        [Test]
+        public void Constructor_Empty_DoesNotConnectToOutputDir()
+        {
+            using (var model = new WaveModel())
+            {
+                Assert.That(model.WaveOutputData.IsConnected, Is.False);
             }
         }
     }
