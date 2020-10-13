@@ -643,4 +643,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time" xml:space="preserve">
     <value>Model start time precedes reference time</value>
   </data>
+  <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_" xml:space="preserve">
+    <value>Error while importing a {0} from {1}</value>
+  </data>
 </root>
