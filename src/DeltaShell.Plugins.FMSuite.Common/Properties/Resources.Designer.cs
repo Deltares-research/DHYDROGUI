@@ -100,6 +100,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trying to generate Time series for 2D Structure: {0}, property: {1} mapped as {2}, type: {3} which is not yet supported..
+        /// </summary>
+        public static string StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_supported_ {
+            get {
+                return ResourceManager.GetString("StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_" +
+                        "for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_s" +
+                        "upported_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An invalid value{0} was encountered (expected {1}) for property &apos;{2}&apos; on line {3}.
         /// </summary>
         public static string StructureFile_An_invalid_value__0__was_encountered_expected__1__for_property__2__on_line__3__ {
@@ -165,6 +176,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
             get {
                 return ResourceManager.GetString("StructureFile_Structure_time_series__0__will_be_written_to_the_time_series_folder" +
                         "__1__Line__2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to convert .ini structure definition &apos;{0}&apos; to actual structure..
+        /// </summary>
+        public static string StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_ {
+            get {
+                return ResourceManager.GetString("StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0__" +
+                        "_to_actual_structure_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while reading and converting 2D Structures from {0}.
+        /// </summary>
+        public static string StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_converting_2D_Structures_from__0_ {
+            get {
+                return ResourceManager.GetString("StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_" +
+                        "converting_2D_Structures_from__0_", resourceCulture);
             }
         }
     }
