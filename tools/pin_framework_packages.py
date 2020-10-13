@@ -31,7 +31,8 @@ def get_previous_build(user: str, password: str, build_config: str, tag: str) ->
 
     previous_build_response = requests.get(build_url, 
                                            auth=(user, password),
-                                           headers=JSON_RESPONSE_HEADER)
+                                           headers=JSON_RESPONSE_HEADER,
+                                           verify=False)
 
     if previous_build_response.status_code != 200:
         return None
@@ -74,8 +75,12 @@ def untag_build(user: str, password: str, build_info: str, tag: str) -> None:
                , 'tag': new_tag_values
                }
 
-    tag_url = f"{BUILDS_ROOT}id:{build_info["id"]}/tags/"
-    requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags)
+    tag_url = f"{BUILDS_ROOT}id:{build_info['id']}/tags/"
+    requests.put(tag_url, 
+                 auth=(user, password), 
+                 headers=JSON_RESPONSE_HEADER, 
+                 json=new_tags,
+                 verify=False)
     
 
 def unpin_build(user: str, password: str, build_id: str) -> None:
@@ -92,7 +97,10 @@ def unpin_build(user: str, password: str, build_id: str) -> None:
         The id of the build to be unpinned.
     """
     pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
-    requests.delete(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER)
+    requests.delete(pin_url, 
+                    auth=(user, password), 
+                    headers=JSON_RESPONSE_HEADER, 
+                    verify=False)
     
 
 def clean_up_build(user: str, password: str, build_info: dict, tag: str) -> None:
@@ -135,7 +143,8 @@ def get_new_build(user: str, password: str, build_config: str, git_hash: str) ->
     build_url = f"{BUILDS_ROOT}buildType:{build_config},number:{git_hash},count:1"
     new_build_response = requests.get(build_url, 
                                       auth=(user, password), 
-                                      headers=JSON_RESPONSE_HEADER)
+                                      headers=JSON_RESPONSE_HEADER,
+                                      verify=False)
     if new_build_response.status_code != 200:
         return None
 
@@ -156,7 +165,7 @@ def pin_build(user: str, password: str, build_id: str) -> None:
         The id of the build to be pinned.
     """
     pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
-    requests.put(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER)
+    requests.put(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, verify=False)
 
 
 def tag_build(user: str, password: str, build_info, tag: str) -> None:
@@ -185,8 +194,8 @@ def tag_build(user: str, password: str, build_info, tag: str) -> None:
                  'tag': new_tag_values
     }
 
-    tag_url = f"{BUILDS_ROOT}id:{build_info["id"]}/tags/"
-    requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags)
+    tag_url = f"{BUILDS_ROOT}id:{build_info['id']}/tags/"
+    requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags, verify=False)
 
 
 def bag_new_build(user: str, password: str, build_info: dict, tag: str) -> None:
