@@ -30,13 +30,11 @@ def get_args():
 
 def get_framework_version_regex_string() -> str:
     integer_regex = r'(0|([1-9]\d*))'
-    counter_regex = r'(?:(\.|-)\b[0-9]*)?'
-    git_hash_regex = r'(?:(\.|-)\b[0-9a-f]{7})?'
 
-    known_prefixes = ['beta', 'SIGNED']
+    known_prefixes = ['beta']
     prefix_regex = ''.join(f'(?:-{prefix})?' for prefix in known_prefixes)
 
-    return f'{integer_regex}\\.{integer_regex}\\.{integer_regex}{prefix_regex}{counter_regex}{git_hash_regex}'
+    return f'{integer_regex}\\.{integer_regex}\\.{integer_regex}\\.{integer_regex}{prefix_regex}'
 
 
 if __name__ == "__main__":
