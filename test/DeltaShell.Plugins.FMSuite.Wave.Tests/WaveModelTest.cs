@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -833,71 +833,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ModelSaveTo_SwitchToTrue_ConnectsWaveOutputData()
-        {
-            // Setup
-            using (var tempDir = new TemporaryDirectory())
-            using (var model = new WaveModel())
-            {
-                tempDir.CreateDirectory("project_data");
-                tempDir.CreateDirectory($"project_data\\{model.Name}");
-                string inputFolder = tempDir.CreateDirectory($"project_data\\{model.Name}\\input");
-                string outputFolder = tempDir.CreateDirectory($"project_data\\{model.Name}\\output");
-
-                string mdwPath = Path.Combine(inputFolder, $"{model.Name}.mdw");
-
-                // Call
-                model.ModelSaveTo(mdwPath, true);
-
-                // Assert
-                Assert.That(model.WaveOutputData.IsConnected, Is.True);
-                Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputFolder));
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ModelSaveTo_SwitchToFalse_NotConnected_DoesNotChangeTheWaveOutputData()
-        {
-            // Setup
-            using (var tempDir = new TemporaryDirectory())
-            using (var model = new WaveModel())
-            {
-                string mdwPath = Path.Combine(tempDir.Path, $"{model.Name}.mdw");
-
-                // Call
-                model.ModelSaveTo(mdwPath, false);
-
-                // Assert
-                Assert.That(model.WaveOutputData.IsConnected, Is.False);
-                Assert.That(model.WaveOutputData.DataSourcePath, Is.Null);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ModelSaveTo_SwitchToFalse_Connected_DoesNotChangeTheWaveOutputData()
-        {
-            // Setup
-            using (var tempDir = new TemporaryDirectory())
-            using (var model = new WaveModel())
-            {
-                string outputFolder = tempDir.CreateDirectory("someUnrelatedFolder");
-                model.WaveOutputData.ConnectTo(outputFolder);
-
-                string mdwPath = Path.Combine(tempDir.Path, $"{model.Name}.mdw");
-
-                // Call
-                model.ModelSaveTo(mdwPath, false);
-
-                // Assert
-                Assert.That(model.WaveOutputData.IsConnected, Is.True);
-                Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputFolder));
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void Constructor_FromMdwPath_ConnectsToOutputDir()
         {
             using (var tempDir = new TemporaryDirectory())
@@ -924,5 +859,265 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 Assert.That(model.WaveOutputData.IsConnected, Is.False);
             }
         }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAValidModelWithNoDataAvailable_WhenTheModelIsSavedAtTheSameLocation_ThenTheOutputFolderIsCleared()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string testDataPath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves\");
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(testDataPath);
+
+                string mdwPath = Path.Combine(modelPath, "input", "Waves.mdw");
+                string outputDir = Path.Combine(modelPath, "output");
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // Disconnect data
+                    model.WaveOutputData.Disconnect();
+
+                    // When 
+                    model.ModelSaveTo(mdwPath, true);
+
+                    // Then
+                    var outputDirInfo = new DirectoryInfo(outputDir);
+                    Assert.That(outputDirInfo.EnumerateFiles(), Is.Empty);
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.False);
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAValidModelWithNoDataAvailable_WhenTheModelIsSavedAtADifferentLocation_ThenTheOutputFolderIsEmpty()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string testDataPath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves\");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(testDataPath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+
+                tempDir.CreateDirectory("AnotherWaves");
+                string goalInputDir = tempDir.CreateDirectory("AnotherWaves\\input");
+                string goalOutputDir = tempDir.CreateDirectory("AnotherWaves\\output");
+
+                string goalMdwPath = Path.Combine(goalInputDir, mdwFileName);
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // Disconnect data
+                    model.WaveOutputData.Disconnect();
+
+                    // When 
+                    model.ModelSaveTo(goalMdwPath, true);
+
+                    // Then
+                    var outputDirInfo = new DirectoryInfo(goalOutputDir);
+                    Assert.That(outputDirInfo.EnumerateFiles(), Is.Empty);
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.False);
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAValidModelWithDataAvailableInADifferentPath_WhenTheModelIsSavedAtTheSameLocation_ThenTheOutputFolderContainsTheDataFromTheOtherLocation()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string modelSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves\");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(modelSourcePath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+                string outputDir = Path.Combine(modelPath, "output");
+
+                string alternativeOutputSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output");
+                string alternativeOutputPath = tempDir.CopyDirectoryToTempDirectory(alternativeOutputSourcePath);
+
+                FileCompareInfo[] origFileData = CollectFileInformation(new DirectoryInfo(alternativeOutputPath)).ToArray();
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // Connect to different data source
+                    model.WaveOutputData.ConnectTo(alternativeOutputPath);
+
+                    // When 
+                    model.ModelSaveTo(mdwPath, true);
+
+                    // Then
+                    var outputDirInfo = new DirectoryInfo(outputDir);
+                    FileCompareInfo[] saveFileData = CollectFileInformation(outputDirInfo).ToArray();
+
+                    AssertContainsSameFiles(origFileData, saveFileData);
+
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputDirInfo.FullName));
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAValidModelWithDataAvailableInADifferentPath_WhenTheModelIsSavedAtADifferentLocation_ThenTheOutputFolderContainsTheDataFromTheOtherLocation()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string testDataPath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves\");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(testDataPath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+
+                tempDir.CreateDirectory("AnotherWaves");
+                string goalInputDir = tempDir.CreateDirectory("AnotherWaves\\input");
+                string goalOutputDir = tempDir.CreateDirectory("AnotherWaves\\output");
+
+                string goalMdwPath = Path.Combine(goalInputDir, mdwFileName);
+
+                string alternativeOutputSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output");
+                string alternativeOutputPath = tempDir.CopyDirectoryToTempDirectory(alternativeOutputSourcePath);
+
+                FileCompareInfo[] origFileData = CollectFileInformation(new DirectoryInfo(alternativeOutputPath)).ToArray();
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // Connect to different data source
+                    model.WaveOutputData.ConnectTo(alternativeOutputPath);
+
+                    // When 
+                    model.ModelSaveTo(goalMdwPath, true);
+
+                    // Then
+                    var outputDirInfo = new DirectoryInfo(goalOutputDir);
+                    FileCompareInfo[] saveFileData = CollectFileInformation(outputDirInfo).ToArray();
+
+                    AssertContainsSameFiles(origFileData, saveFileData);
+
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputDirInfo.FullName));
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAValidModelWithDataAvailableInTheModelOutputPath_WhenTheModelIsSavedAtInADifferentLocation_ThenTheOutputFolderContainsTheSameData()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string modelSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves\");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(modelSourcePath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+                string outputDir = Path.Combine(modelPath, "output");
+                var outputDirInfo = new DirectoryInfo(outputDir);
+
+                FileCompareInfo[] origFileData = CollectFileInformation(outputDirInfo).ToArray();
+
+                tempDir.CreateDirectory("AnotherWaves");
+                string goalInputDir = tempDir.CreateDirectory("AnotherWaves\\input");
+                string goalOutputDir = tempDir.CreateDirectory("AnotherWaves\\output");
+
+                string goalMdwPath = Path.Combine(goalInputDir, mdwFileName);
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // When 
+                    model.ModelSaveTo(goalMdwPath, true);
+
+                    // Then
+                    var goalOutputDirInfo = new DirectoryInfo(goalOutputDir);
+                    FileCompareInfo[] saveFileData = CollectFileInformation(goalOutputDirInfo).ToArray();
+
+                    AssertContainsSameFiles(origFileData, saveFileData);
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(goalOutputDirInfo.FullName));
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAValidModelWithDataAvailableInTheModelOutputPath_WhenTheModelIsSavedAtTheSameLocation_ThenTheOutputFolderContainsTheSameData()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string modelSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves\");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(modelSourcePath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+                string outputDir = Path.Combine(modelPath, "output");
+                var outputDirInfo = new DirectoryInfo(outputDir);
+
+                FileCompareInfo[] origFileData = CollectFileInformation(outputDirInfo).ToArray();
+
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    string originalDataSourcePath = model.WaveOutputData.DataSourcePath;
+
+                    // When 
+                    model.ModelSaveTo(mdwPath, true);
+
+                    // Then
+                    FileCompareInfo[] saveFileData = CollectFileInformation(outputDirInfo).ToArray();
+
+                    AssertContainsSameFiles(origFileData, saveFileData);
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(originalDataSourcePath));
+                }
+            }
+        }
+
+        private static void AssertContainsSameFiles(IReadOnlyList<FileCompareInfo> originalFileData,
+                                                    IReadOnlyList<FileCompareInfo> savedFileData)
+        {
+            Assert.That(savedFileData.Count, Is.EqualTo(originalFileData.Count));
+
+            for (var i = 0; i < savedFileData.Count; i++)
+            {
+                Assert.That(savedFileData[i].Name, Is.EqualTo(originalFileData[i].Name));
+                Assert.That(savedFileData[i].Hash, Is.EqualTo(originalFileData[i].Hash));
+            }
+        }
+
+        private class FileCompareInfo
+        {
+            public FileCompareInfo(string name, string hash)
+            {
+                Name = name;
+                Hash = hash;
+            }
+
+            public string Name { get; }
+            public string Hash { get; }
+        }
+
+        private static IEnumerable<FileCompareInfo> CollectFileInformation(DirectoryInfo directoryInfo) =>
+            directoryInfo.EnumerateFiles().Select(fi => new FileCompareInfo(fi.Name, FileUtils.GetChecksum(fi.FullName)));
     }
 }
