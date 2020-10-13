@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             string testFilePath = TestHelper.GetTestFilePath(relativeFilePath);
             Assert.That(File.Exists(testFilePath));
             const string propertyName = "Horizontal opening width: REALTIME (generalstructure)";
-            string structureFactoryException = $"Trying to generate Time series for 2D Structure: Maeslantkering, property: {propertyName}, mapped as GateOpeningWidth mapped as type: External which is not yet supported.";
+            string structureFactoryException = $"Trying to generate Time series for 2D Structure: Maeslantkering, property: {propertyName} mapped as GateOpeningWidth, type: External which is not yet supported.";
 
             // When
             var importer = new WaterFlowFMFileImporter(() => null);
