@@ -72,7 +72,7 @@
     </Compile>
     <Compile Include="SystemEnvironment.cs" />
     <Compile Include="IEnvironment.cs" />
-    <Compile Include="ILinkedDataItemsModel.cs" />
+    <Compile Include="IControllingModel.cs" />
     <Compile Include="IO\FileBasedFolder.cs" />
     <Compile Include="IO\IFileBasedFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
