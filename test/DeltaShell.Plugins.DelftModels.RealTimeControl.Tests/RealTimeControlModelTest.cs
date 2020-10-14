@@ -1465,6 +1465,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void OnFinishIntegratedModelRun_ShouldMoveOnlyOutputFilesAndDirectoriesToSeparateOutputFolder()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -1488,7 +1489,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 File.WriteAllText(inputFilePath, "test");
                 File.WriteAllText(inputFileInSubFolderPath, "test");
                 
-                rtcModel.LastExportInputFilesAndDirectoriesPaths = new[]
+                rtcModel.LastExportedPaths = new[]
                 {
                     inputFilePath,
                     inputSubDirectoryPath

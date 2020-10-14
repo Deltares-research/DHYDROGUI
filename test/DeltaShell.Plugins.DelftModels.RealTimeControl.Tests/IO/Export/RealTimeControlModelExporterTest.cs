@@ -55,6 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void Export_ShouldSetLastExportInputFilesAndDirectoriesPathsPropertyOfModel()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -73,8 +74,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
                 string[] allInputPaths = files.Concat(directories).ToArray();
 
-                Assert.AreEqual(allInputPaths.Length, rtcModel.LastExportInputFilesAndDirectoriesPaths.Length);
-                Assert.IsTrue(allInputPaths.Any(i=>rtcModel.LastExportInputFilesAndDirectoriesPaths.Contains(i)));
+                Assert.AreEqual(allInputPaths.Length, rtcModel.LastExportedPaths.Length);
+                Assert.IsTrue(allInputPaths.Any(i=>rtcModel.LastExportedPaths.Contains(i)));
                 Assert.IsTrue(result);
             }
         }

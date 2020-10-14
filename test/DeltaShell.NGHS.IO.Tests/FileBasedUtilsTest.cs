@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.TestUtils;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 
@@ -17,6 +18,31 @@ namespace DeltaShell.NGHS.IO.Tests
     [TestFixture]
     public class FileBasedUtilsTest
     {
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void CollectNonRecursivePaths_ShouldReturnNonRecursivePathsInsideADirectory()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string filePath = Path.Combine(tempDirectory.Path, "file.txt");
+                string subFolderPath = Path.Combine(tempDirectory.Path, "subfolder");
+                string subFolderFilePath = Path.Combine(subFolderPath, "subfolderfile.txt");
+
+                File.WriteAllText(filePath, "file");
+                Directory.CreateDirectory(subFolderPath);
+                File.WriteAllText(subFolderFilePath, "subfolderfile");
+
+                // Act
+                string[] nonRecursivePaths = FileBasedUtils.CollectNonRecursivePaths(tempDirectory.Path);
+
+                // Assert
+                Assert.AreEqual(2, nonRecursivePaths.Length);
+                Assert.IsTrue(nonRecursivePaths.Contains(filePath));
+                Assert.IsTrue(nonRecursivePaths.Contains(subFolderPath));
+            }
+        }
+
         [Test]
         public void TestCleanPersistentDirectories_CompositeModel()
         {

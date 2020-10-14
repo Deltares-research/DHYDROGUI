@@ -117,7 +117,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public virtual string[] LastExportInputFilesAndDirectoriesPaths { get; set; } = new string[0];
+        /// <summary>
+        /// Property for storing the last exported paths.
+        /// This will be used for determining which files
+        /// are input (created by the exporter) and which
+        /// files are output during the Finish step of a
+        /// run <see cref="OnFinishIntegratedModelRun"/>.
+        /// </summary>
+        public virtual string[] LastExportedPaths { get; set; } = new string[0];
 
         public virtual int LogLevel { get; set; }
 
@@ -1064,13 +1071,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.
             string runRtcDirectory = Path.Combine(hydroModelWorkingDirectoryPath, DirectoryName);
+
+            string[] allNonRecursivePaths = FileBasedUtils.CollectNonRecursivePaths(runRtcDirectory);
+            IEnumerable<string> allOutputPaths = allNonRecursivePaths.Where(p => !LastExportedPaths.Contains(p));
             
-            IEnumerable<string> outputFilePaths = Directory.GetFiles(runRtcDirectory).Where(f => !LastExportInputFilesAndDirectoriesPaths.Contains(f));
-            IEnumerable<string> outputSubDirectoriesPaths = Directory.GetDirectories(runRtcDirectory).Where(f => !LastExportInputFilesAndDirectoriesPaths.Contains(f));
-
             Directory.CreateDirectory(Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName));
-
-            IEnumerable<string> allOutputPaths = outputFilePaths.Concat(outputSubDirectoriesPaths);
             
             foreach (string outputPath in allOutputPaths)
             {
