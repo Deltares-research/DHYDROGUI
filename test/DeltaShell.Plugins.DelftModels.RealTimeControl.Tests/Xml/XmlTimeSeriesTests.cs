@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xml
         }
 
         [Test]
-        public void TimeSeriesBooleanToXML()
+        public void TimeSeriesBooleanToComplexType()
         {
             TimeSeries timeSeries = xmlTimeSeries.TimeSeries;
             timeSeries.Components.Clear();

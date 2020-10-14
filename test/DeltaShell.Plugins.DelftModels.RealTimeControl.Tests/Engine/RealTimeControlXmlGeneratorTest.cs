@@ -940,7 +940,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         }
 
         /// <summary>
-        /// Check if duplicate input items are handled well in the xml for dataconfig
+        /// Check if duplicate input items are handled well in the xml for data config
         /// note timeseries.xml will be empty
         /// </summary>
         [Test]
@@ -949,25 +949,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             IList<ControlGroup> controlGroups = CreateModelWithDuplicateInputOutputItems();
 
-            var dataconfig = RealTimeControlXmlWriter
+            var dataConfig = RealTimeControlXmlWriter
                              .GetDataConfigXml(XsdPath, realTimeControlModel, controlGroups, null).ToString();
-            // generate the xml for dataconfig
-            XElement dataconfigXML = XElement.Parse(dataconfig);
+            // generate the xml for data config
+            XElement dataConfigComplexType = XElement.Parse(dataConfig);
             // parse the generated xml and check the number of input and output items
-            IEnumerable<XElement> descendants = dataconfigXML.Descendants();
-            Assert.AreEqual(2,
-                            descendants.Where(
-                                d => d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
-            Assert.AreEqual(1,
-                            descendants.Where(
-                                d =>
-                                    d.Value.ToUpper().StartsWith("locationWater level".ToUpper()) &&
-                                    d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
-            Assert.AreEqual(1,
-                            descendants.Where(
-                                d =>
-                                    d.Value.ToUpper().StartsWith("locationCrest level".ToUpper()) &&
-                                    d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
+            IEnumerable<XElement> descendants = dataConfigComplexType.Descendants();
+            Assert.AreEqual(2, descendants.Count(d => d.Name.ToString().Contains("OpenMIExchangeItem")));
+            Assert.AreEqual(1, descendants.Count(d => d.Value.ToUpper().StartsWith("locationWater level".ToUpper()) &&
+                                                      d.Name.ToString().Contains("OpenMIExchangeItem")));
+            Assert.AreEqual(1, descendants.Count(d => d.Value.ToUpper().StartsWith("locationCrest level".ToUpper()) &&
+                                                      d.Name.ToString().Contains("OpenMIExchangeItem")));
         }
 
         [Test]

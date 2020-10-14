@@ -9,6 +9,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
@@ -110,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                     reader.Read(filePath, timeSeries, refDate);
                     break;
                 default:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException(GetNotSupportedTimeSeriesMessage(structure2D.Name, property, steerable));
             }
         }
 
@@ -141,9 +142,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                         reader.Read(filePath, timeSeries, refDate);
                         break;
                     default:
-                        throw new NotImplementedException();
+
+                        throw new NotImplementedException(GetNotSupportedTimeSeriesMessage(structure2D.Name, property, steerable));
                 }
             }
+        }
+
+        private static string GetNotSupportedTimeSeriesMessage(string structureName, ModelProperty modelProperty, Steerable steerableProperty)
+        {
+           return string.Format(Resources.StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_supported_, structureName, modelProperty, modelProperty.PropertyDefinition.FilePropertyName, steerableProperty.Mode);
         }
 
         #region Pump
@@ -200,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                         timFile.Read(filePath, pump.CapacityTimeSeries, refDate);
                         break;
                     default:
-                        throw new NotImplementedException();
+                        throw new NotImplementedException(GetNotSupportedTimeSeriesMessage(structure.Name, property, steerable));
                 }
             }
 

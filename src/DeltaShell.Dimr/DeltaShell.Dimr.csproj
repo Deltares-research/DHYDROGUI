@@ -37,16 +37,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BasicModelInterface">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.9725633\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.118-beta\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.9725633\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.118-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.9725633\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.118-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -62,7 +62,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ProtoBufRemote">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0-beta.9725633\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.118-beta\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -81,6 +81,9 @@
     <Compile Include="DimrErrorCodeException.cs" />
     <Compile Include="DimrRunHelper.cs" />
     <Compile Include="DimrRunner.cs" />
+    <Compile Include="drtc_xsd\rtcRuntimeConfig.cs">
+      <DependentUpon>rtcRuntimeConfig.xsd</DependentUpon>
+    </Compile>
     <Compile Include="IDimrApi.cs" />
     <Compile Include="IDimrModel.cs" />
     <Compile Include="IDimrModelFileImporter.cs" />
@@ -92,11 +95,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RemoteDimrApi.cs" />
-    <Compile Include="xsd\dimr-1.0.custom.cs" />
-    <Compile Include="xsd\dimr-1.0.serializers.cs" />
-    <Compile Include="xsd\dimr-1_0.cs" />
+    <Compile Include="xsd\dimr.custom.cs" />
+    <Compile Include="xsd\DimrXMLSerializer.cs"/>
+    <Compile Include="xsd\dimr.cs">
+      <DependentUpon>dimr.xsd</DependentUpon>
+    </Compile>
     <Compile Include="xsd\DimrModelExtensions.cs" />
-    <Compile Include="xsd\IXmlParsedObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -106,9 +110,48 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="drtc_xsd\pi_diag.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\pi_modelparameters.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\pi_run.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\pi_sharedtypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\pi_state.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\pi_timeseries.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\rtcDataConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\rtcObjectiveConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\rtcRuntimeConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\rtcSharedTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\rtcStateConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\rtcToolsConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="drtc_xsd\treeVector.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="UML\DimrOverview.cd" />
-    <None Include="xsd\dimr-1.0.xsd">
+    <None Include="xsd\dimr.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -126,17 +169,19 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0-beta.9725633\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0-beta.9725633\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Dimr.Libs.2.13.7\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.2.13.7\build\net40\Dimr.Libs.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.118-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.118-beta\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets'))" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>cd "$(ProjectDir)\drtc_xsd"
+..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd
+cd "$(ProjectDir)\xsd"
+..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.Xsd</PreBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0-beta.9725633\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0-beta.9725633\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\Dimr.Libs.2.13.7\build\net40\Dimr.Libs.targets" Condition="Exists('..\..\packages\Dimr.Libs.2.13.7\build\net40\Dimr.Libs.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.118-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.118-beta\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets" Condition="Exists('..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

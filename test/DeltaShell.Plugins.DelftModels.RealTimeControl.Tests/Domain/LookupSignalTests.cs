@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;

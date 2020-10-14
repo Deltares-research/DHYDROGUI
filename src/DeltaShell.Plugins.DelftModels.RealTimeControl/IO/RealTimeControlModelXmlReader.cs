@@ -31,10 +31,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 return null;
             }
 
-            string runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
-            string dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);
-            string toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTools);
-            string timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTimeSeries);
+            string runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXmlFiles.XmlRuntime);
+            string dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXmlFiles.XmlData);
+            string toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXmlFiles.XmlTools);
+            string timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXmlFiles.XmlTimeSeries);
 
             var rtcModel = new RealTimeControlModel();
 
