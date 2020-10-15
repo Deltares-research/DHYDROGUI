@@ -4,6 +4,7 @@ using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
 using NSubstitute;
 using NUnit.Framework;
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var behaviour = new NoDependentsFileMigrateBehaviour("someKey", ".", ".");
 
             // Assert
-            Assert.That(behaviour, Is.InstanceOf<IMigrationBehaviour>());
+            Assert.That(behaviour, Is.InstanceOf<IDelftIniPropertyBehaviour>());
         }
 
         [Test]
@@ -51,18 +52,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         }
 
         [Test]
-        public void MigrateProperty_PropertyNull_ThrowsArgumentNullException()
+        public void Invoke_PropertyNull_ThrowsArgumentNullException()
         {
             var behaviour = new NoDependentsFileMigrateBehaviour("someKey", ".", ".");
 
-            void Call() => behaviour.MigrateProperty(null, null);
+            void Call() => behaviour.Invoke(null, null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("property"));
         }
 
         [Test]
-        public void MigrateProperty_NotAffected_ReturnsUnchangedProperty()
+        public void Invoke_NotAffected_ReturnsUnchangedProperty()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var behaviour = new NoDependentsFileMigrateBehaviour("notKey", ".", "toad/to/elsewhere/");
 
             // Call
-            behaviour.MigrateProperty(property, logHandler);
+            behaviour.Invoke(property, logHandler);
 
             // Assert
             Assert.That(property.Name, Is.EqualTo(key));
@@ -88,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void MigrateProperty_Affected_PropertyRelativePath_ExpectedResults()
+        public void Invoke_Affected_PropertyRelativePath_ExpectedResults()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
@@ -119,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                                      goalDir);
 
                 // Call 
-                behaviour.MigrateProperty(property, logHandler);
+                behaviour.Invoke(property, logHandler);
 
                 // Assert
                 Assert.That(property.Name, Is.EqualTo(propertyName));
@@ -138,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void MigrateProperty_Affected_PropertyAbsolutePathSameRelativeDirectory_ExpectedResults()
+        public void Invoke_Affected_PropertyAbsolutePathSameRelativeDirectory_ExpectedResults()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
@@ -170,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                                      goalDir);
 
                 // Call 
-                behaviour.MigrateProperty(property, logHandler);
+                behaviour.Invoke(property, logHandler);
 
                 // Assert
                 Assert.That(property.Name, Is.EqualTo(propertyName));
@@ -189,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void MigrateProperty_Affected_PropertyAbsolutePathDifferentRelativeDirectory_ExpectedResults()
+        public void Invoke_Affected_PropertyAbsolutePathDifferentRelativeDirectory_ExpectedResults()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
@@ -223,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                                      goalDir);
 
                 // Call 
-                behaviour.MigrateProperty(property, logHandler);
+                behaviour.Invoke(property, logHandler);
 
                 // Assert
                 Assert.That(property.Name, Is.EqualTo(propertyName));
@@ -242,7 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void MigrateProperty_Affected_FileNotFound_LogsWarning()
+        public void Invoke_Affected_FileNotFound_LogsWarning()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
@@ -264,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                                      goalDir);
 
                 // Call 
-                behaviour.MigrateProperty(property, logHandler);
+                behaviour.Invoke(property, logHandler);
 
                 // Assert
                 Assert.That(property.Name, Is.EqualTo(propertyName));
@@ -277,7 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         }
 
         [Test]
-        public void MigrateProperty_Affected_PathEmpty_Skipped()
+        public void Invoke_Affected_PathEmpty_Skipped()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
@@ -291,7 +292,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var behaviour = new NoDependentsFileMigrateBehaviour("key", ".", ".");
 
             // Call
-            behaviour.MigrateProperty(property, logHandler);
+            behaviour.Invoke(property, logHandler);
 
             // Assert
             Assert.That(property.Name, Is.EqualTo(key));

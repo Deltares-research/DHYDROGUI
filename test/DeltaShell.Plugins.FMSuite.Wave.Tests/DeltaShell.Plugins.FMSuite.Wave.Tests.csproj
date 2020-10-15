@@ -268,6 +268,10 @@
     <Compile Include="Common\IO\Delft3DGridFileWriterTest.cs" />
     <Compile Include="Common\IO\DelftIniReaderTest.cs" />
     <Compile Include="Common\IO\Delft3DGridFileReaderTest.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\DelftIniFileOperatorTest.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DeleteSourcePostOperationBehaviourTest.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DelftIniPostOperationBehaviourTestFixture.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\WriteCategoriesPostOperationBehaviourTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\NotNullToBooleanConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\TypeToVisibilityConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\DirectionalSpreadingViewTypeTest.cs" />
@@ -410,7 +414,6 @@
     <Compile Include="OutputData\WaveOutputDataTest.cs" />
     <Compile Include="OutputData\WavmFileFunctionStoreTest.cs" />
     <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviourTest.cs" />
-    <Compile Include="Migrations\1.1.0.0\DelftIniMigratorTest.cs" />
     <Compile Include="Migrations\1.1.0.0\MigratorFactoryTest.cs" />
     <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviourTest.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelperTest.cs" />

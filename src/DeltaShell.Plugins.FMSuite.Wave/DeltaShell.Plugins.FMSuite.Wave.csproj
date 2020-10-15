@@ -191,6 +191,13 @@
     <Compile Include="Boundaries\WaveBoundary.cs" />
     <Compile Include="DataAccess\BcwFile.cs" />
     <Compile Include="DataAccess\BcwTimeSeriesOfBoundaryCollector.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\DelftIniFileOperator.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\IDelftIniFileOperator.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DeleteSourcePostOperationBehaviour.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DelftIniPostOperationBehaviour.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\IDelftIniPostOperationBehaviour.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\WriteCategoriesPostOperationBehaviour.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\IDelftIniPropertyBehaviour.cs" />
     <Compile Include="DataAccess\Helpers\Boundaries\BoundaryOrientationType.cs" />
     <Compile Include="DataAccess\Helpers\Boundaries\DistanceDirType.cs" />
     <Compile Include="DataAccess\Helpers\Boundaries\DomainWideBoundaryCategoryConverter.cs" />
@@ -237,10 +244,7 @@
     <Compile Include="IWaveDomainData.cs" />
     <Compile Include="IWaveModel.cs" />
     <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\DelftIniMigrator.cs" />
     <Compile Include="Migrations\1.1.0.0\FileMigrateBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\IMigrationBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\IDelftIniMigrator.cs" />
     <Compile Include="Migrations\1.1.0.0\MigratorFactory.cs" />
     <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviour.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelper.cs" />
