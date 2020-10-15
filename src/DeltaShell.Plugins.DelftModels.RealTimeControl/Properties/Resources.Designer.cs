@@ -546,6 +546,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output RTC rule already assigned to a different output. Are you sure you want to assign it?.
+        /// </summary>
+        public static string RealTimeControlModelNodePresenter_OutputLocationWarningMessage {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_OutputLocationWarningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run parameters.
         /// </summary>
         public static string RealTimeControlModelProperties_Category_RunParameters {
