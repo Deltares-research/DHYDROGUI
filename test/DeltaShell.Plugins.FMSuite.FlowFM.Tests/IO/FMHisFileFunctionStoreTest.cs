@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         }
         [Test]
-        public void GivenNewCreatedFMModelWith2dGridAndPumpAndWeirAndStationsAndGateAndGeneralStructureAndCrossSection2DWhenModelRunnedThenFunctionsCorrectlyInitialized()
+        public void GivenNewCreatedFMModelWith2dGridAndPumpAndWeirAndStationsAndGateAndGeneralStructureAndCrossSection2DWhenModelRanThenFunctionsCorrectlyInitialized()
         {
             using (var model = new WaterFlowFMModel() { })
             {
