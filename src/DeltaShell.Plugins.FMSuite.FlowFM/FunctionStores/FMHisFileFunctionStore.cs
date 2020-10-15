@@ -341,7 +341,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    log.Error(e);
                 }
             }
         }
