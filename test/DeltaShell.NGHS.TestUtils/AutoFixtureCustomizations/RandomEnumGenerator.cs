@@ -36,7 +36,8 @@ namespace DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations
                 return type.IsEnum;
             }
 
-            type = (request as PropertyInfo)?.PropertyType;
+            type = (request as PropertyInfo)?.PropertyType ??
+                   (request as FieldInfo)?.FieldType;
             if (type != null)
             {
                 return type.IsEnum;

@@ -45,28 +45,28 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BasicModelInterface">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+    <Reference Include="DelftTools.Shell.Core">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="FParsec, Version=1.0.0.0, Culture=neutral, PublicKeyToken=40ccfc0a09edbb5d, processorArchitecture=MSIL">
@@ -82,15 +82,15 @@
       <HintPath>..\..\packages\FSharp.Core.4.7.0\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -105,27 +105,28 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\NetTopologySuite.CoordinateSystems.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\NetTopologySuite.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -133,7 +134,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -165,73 +166,77 @@
     <Compile Include="Domain\IntervalRuleTimeSeriesCreator.cs" />
     <Compile Include="Domain\ITimeDependentRtcObject.cs" />
     <Compile Include="Domain\LookupSignal.cs" />
-    <Compile Include="ImportExport\DataAccess\BranchNode.cs" />
-    <Compile Include="ImportExport\DataAccess\ConditionDataAccessObject.cs" />
-    <Compile Include="ImportExport\DataAccess\ConditionDataAccessObjectCreator.cs" />
-    <Compile Include="ImportExport\DataAccess\ConstantLeafReference.cs" />
-    <Compile Include="ImportExport\DataAccess\IBranchNode.cs" />
-    <Compile Include="ImportExport\DataAccess\IExpressionNode.cs" />
-    <Compile Include="ImportExport\DataAccess\ILeafNode.cs" />
-    <Compile Include="ImportExport\DataAccess\ConstantValueLeafNode.cs" />
-    <Compile Include="ImportExport\DataAccess\ParameterLeafNode.cs" />
+    <Compile Include="Domain\Restart\RealTimeControlRestartFile.cs" />
+    <Compile Include="IInquiryHelper.cs" />
+    <Compile Include="InquiryHelper.cs" />
+    <Compile Include="IO\DataAccess\BranchNode.cs" />
+    <Compile Include="IO\DataAccess\ConditionDataAccessObject.cs" />
+    <Compile Include="IO\DataAccess\ConditionDataAccessObjectCreator.cs" />
+    <Compile Include="IO\DataAccess\ConstantLeafReference.cs" />
+    <Compile Include="IO\DataAccess\IBranchNode.cs" />
+    <Compile Include="IO\DataAccess\IExpressionNode.cs" />
+    <Compile Include="IO\DataAccess\ILeafNode.cs" />
+    <Compile Include="IO\DataAccess\ConstantValueLeafNode.cs" />
+    <Compile Include="IO\DataAccess\ParameterLeafNode.cs" />
     <Compile Include="Domain\MathematicalExpression.cs" />
-    <Compile Include="ImportExport\DataAccess\NodeReference.cs" />
-    <Compile Include="ImportExport\DataAccess\Operator.cs" />
+    <Compile Include="IO\DataAccess\NodeReference.cs" />
+    <Compile Include="IO\DataAccess\Operator.cs" />
     <Compile Include="Domain\SignalBase.cs" />
     <Compile Include="Domain\TimeCondition.cs" />
     <Compile Include="Domain\ConnectionPoint.cs" />
     <Compile Include="Domain\FactorRule.cs" />
     <Compile Include="Converters\OperationConverter.cs" />
-    <Compile Include="ImportExport\DataAccess\ExpressionObject.cs" />
-    <Compile Include="ImportExport\DataAccess\ExpressionObjectGroup.cs" />
-    <Compile Include="ImportExport\DataAccess\ExpressionReference.cs" />
-    <Compile Include="ImportExport\DataAccess\ExpressionTree.cs" />
-    <Compile Include="ImportExport\DataAccess\ExpressionTreeAssembler.cs" />
-    <Compile Include="ImportExport\DataAccess\IExpressionReference.cs" />
-    <Compile Include="ImportExport\DataAccess\OperatorConverter.cs" />
-    <Compile Include="ImportExport\DataAccess\IRtcDataAccesObject.cs" />
-    <Compile Include="ImportExport\DataAccess\ParameterLeafReference.cs" />
-    <Compile Include="ImportExport\DataAccess\RuleDataAccessObject.cs" />
-    <Compile Include="ImportExport\DataAccess\RuleDataAccessObjectCreator.cs" />
-    <Compile Include="ImportExport\DataAccess\SignalDataAccessObject.cs" />
-    <Compile Include="ImportExport\DataAccess\SignalDataAccessObjectCreator.cs" />
-    <Compile Include="ImportExport\Export\ConditionSerializerBase.cs" />
-    <Compile Include="ImportExport\Export\DirectionalConditionSerializer.cs" />
-    <Compile Include="ImportExport\Export\ExpressionParser.cs" />
-    <Compile Include="ImportExport\Export\FactorRuleSerializer.cs" />
-    <Compile Include="ImportExport\Export\HydraulicRuleSerializer.cs" />
-    <Compile Include="ImportExport\Export\InputSerializerBase.cs" />
-    <Compile Include="ImportExport\Export\InputSerializer.cs" />
-    <Compile Include="ImportExport\Export\IntervalRuleSerializer.cs" />
-    <Compile Include="ImportExport\Export\LookupSignalSerializer.cs" />
-    <Compile Include="ImportExport\Export\MathematicalExpressionSerializer.cs" />
-    <Compile Include="ImportExport\Export\OutputSerializer.cs" />
-    <Compile Include="ImportExport\Export\PidRuleSerializer.cs" />
-    <Compile Include="ImportExport\Export\RelativeTimeRuleSerializer.cs" />
-    <Compile Include="ImportExport\Export\SerializerCreator.cs" />
-    <Compile Include="ImportExport\Export\RtcSerializerBase.cs" />
-    <Compile Include="ImportExport\Export\RuleSerializerBase.cs" />
-    <Compile Include="ImportExport\Export\SignalSerializerBase.cs" />
-    <Compile Include="ImportExport\Export\StandardConditionSerializer.cs" />
-    <Compile Include="ImportExport\Export\TimeConditionSerializer.cs" />
-    <Compile Include="ImportExport\Export\TimeRuleSerializer.cs" />
-    <Compile Include="ImportExport\RealTimeControlDataAndToolsConfigXmlReader.cs" />
-    <Compile Include="ImportExport\RealTimeControlDataConfigXmlSetter.cs" />
-    <Compile Include="ImportExport\RealTimeControlModelExporter.cs" />
-    <Compile Include="ImportExport\RealTimeControlModelImporter.cs" />
-    <Compile Include="ImportExport\RealTimeControlRuntimeConfigSetter.cs" />
-    <Compile Include="ImportExport\RealTimeControlRuntimeConfigXmlReader.cs" />
-    <Compile Include="ImportExport\RealTimeControlTimeSeriesSetter.cs" />
-    <Compile Include="ImportExport\RealTimeControlTimeSeriesXmlReader.cs" />
-    <Compile Include="ImportExport\RealTimeControlToolsConfigComponentConnector.cs" />
-    <Compile Include="ImportExport\RealTimeControlToolsConfigXmlConverter.cs" />
-    <Compile Include="ImportExport\RealTimeControlModelXmlReader.cs" />
-    <Compile Include="ImportExport\RealTimeControlDataConfigXmlConverter.cs" />
-    <Compile Include="ImportExport\RealTimeControlXmlReaderHelper.cs" />
-    <Compile Include="ImportExport\RealTimeControlXmlWriter.cs" />
-    <Compile Include="ImportExport\RealTimeControlDimrConfigModelCouplerProvider.cs" />
-    <Compile Include="ImportExport\RealTimeControlOutputFileFunctionStore.cs" />
-    <Compile Include="ImportExport\RtcXmlTag.cs" />
+    <Compile Include="IO\DataAccess\ExpressionObject.cs" />
+    <Compile Include="IO\DataAccess\ExpressionReference.cs" />
+    <Compile Include="IO\DataAccess\ExpressionTree.cs" />
+    <Compile Include="IO\DataAccess\ExpressionTreeAssembler.cs" />
+    <Compile Include="IO\DataAccess\IExpressionReference.cs" />
+    <Compile Include="IO\DataAccess\OperatorConverter.cs" />
+    <Compile Include="IO\DataAccess\IRtcDataAccesObject.cs" />
+    <Compile Include="IO\DataAccess\ParameterLeafReference.cs" />
+    <Compile Include="IO\DataAccess\RuleDataAccessObject.cs" />
+    <Compile Include="IO\DataAccess\RuleDataAccessObjectCreator.cs" />
+    <Compile Include="IO\DataAccess\SignalDataAccessObject.cs" />
+    <Compile Include="IO\DataAccess\SignalDataAccessObjectCreator.cs" />
+    <Compile Include="IO\Export\ConditionSerializerBase.cs" />
+    <Compile Include="IO\Export\DirectionalConditionSerializer.cs" />
+    <Compile Include="IO\Export\ExpressionParser.cs" />
+    <Compile Include="IO\Export\FactorRuleSerializer.cs" />
+    <Compile Include="IO\Export\HydraulicRuleSerializer.cs" />
+    <Compile Include="IO\Export\InputSerializerBase.cs" />
+    <Compile Include="IO\Export\InputSerializer.cs" />
+    <Compile Include="IO\Export\IntervalRuleSerializer.cs" />
+    <Compile Include="IO\Export\LookupSignalSerializer.cs" />
+    <Compile Include="IO\Export\MathematicalExpressionSerializer.cs" />
+    <Compile Include="IO\Export\OutputSerializer.cs" />
+    <Compile Include="IO\Export\PidRuleSerializer.cs" />
+    <Compile Include="IO\Export\RealTimeControlRestartFileExporter.cs" />
+    <Compile Include="IO\Export\RelativeTimeRuleSerializer.cs" />
+    <Compile Include="IO\Export\SerializerCreator.cs" />
+    <Compile Include="IO\Export\RtcSerializerBase.cs" />
+    <Compile Include="IO\Export\RuleSerializerBase.cs" />
+    <Compile Include="IO\Export\SignalSerializerBase.cs" />
+    <Compile Include="IO\Export\StandardConditionSerializer.cs" />
+    <Compile Include="IO\Export\TimeConditionSerializer.cs" />
+    <Compile Include="IO\Export\TimeRuleSerializer.cs" />
+    <Compile Include="IO\Import\RealTimeControlRestartFileImporter.cs" />
+    <Compile Include="IO\RealTimeControlDataAndToolsConfigXmlReader.cs" />
+    <Compile Include="IO\RealTimeControlDataConfigXmlSetter.cs" />
+    <Compile Include="IO\Export\RealTimeControlModelExporter.cs" />
+    <Compile Include="IO\Import\RealTimeControlModelImporter.cs" />
+    <Compile Include="IO\RealTimeControlRuntimeConfigSetter.cs" />
+    <Compile Include="IO\RealTimeControlRuntimeConfigXmlReader.cs" />
+    <Compile Include="IO\RealTimeControlTimeSeriesSetter.cs" />
+    <Compile Include="IO\RealTimeControlTimeSeriesXmlReader.cs" />
+    <Compile Include="IO\RealTimeControlToolsConfigComponentConnector.cs" />
+    <Compile Include="IO\RealTimeControlToolsConfigXmlConverter.cs" />
+    <Compile Include="IO\RealTimeControlModelXmlReader.cs" />
+    <Compile Include="IO\RealTimeControlDataConfigXmlConverter.cs" />
+    <Compile Include="IO\RealTimeControlXmlReaderHelper.cs" />
+    <Compile Include="IO\RealTimeControlXmlWriter.cs" />
+    <Compile Include="IO\RealTimeControlDimrConfigModelCouplerProvider.cs" />
+    <Compile Include="IO\RealTimeControlOutputFileFunctionStore.cs" />
+    <Compile Include="IO\RtcXmlTag.cs" />
     <Compile Include="IRealTimeControlModel.cs" />
     <Compile Include="Legacy\RtcLegacyLoader30.cs" />
     <Compile Include="Domain\Periodicity.cs" />
@@ -252,6 +257,7 @@
     <Compile Include="Domain\PIDRule.cs" />
     <Compile Include="Domain\Record.cs" />
     <Compile Include="Domain\Setting.cs" />
+    <Compile Include="Legacy\RtcLegacyLoader36.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -266,11 +272,6 @@
     <Compile Include="RealTimeControlModelMergeValidator.cs" />
     <Compile Include="RealTimeControlApplicationPlugin.cs" />
     <Compile Include="RealTimeControlXMLFiles.cs" />
-    <Compile Include="Xsd\pi_timeseries.Designer.cs" />
-    <Compile Include="Xsd\rtcDataConfig.Designer.cs" />
-    <Compile Include="Xsd\rtcRuntimeConfig.Designer.cs" />
-    <Compile Include="Xsd\rtcToolsConfig.Designer.cs" />
-    <Compile Include="Xsd\treeVector.Designer.cs" />
     <Compile Include="RtcDataAccessListener.cs" />
     <Compile Include="rtc_kernel\RealTimeControlModelDll.cs" />
     <Compile Include="Validation\ControlGroupValidator.cs" />
@@ -317,21 +318,6 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Xsd\pi_timeseries.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xsd\rtcDataConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xsd\rtcRuntimeConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xsd\rtcToolsConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xsd\treeVector.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Uml\RealTimeControl.cd" />
     <None Include="Uml\RealTimeControlXmlReaderWriter.cd" />
   </ItemGroup>
@@ -382,12 +368,14 @@
     <EmbeddedResource Include="Domain\PIDRule.3.1.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImportExport\RealTimeControlOutputFileFunctionStore.hbm.xml" />
+    <EmbeddedResource Include="IO\RealTimeControlOutputFileFunctionStore.hbm.xml" />
     <EmbeddedResource Include="Domain\MathematicalExpression.hbm.xml" />
     <EmbeddedResource Include="Domain\IInput.hbm.xml" />
     <EmbeddedResource Include="Domain\ControlGroup.3.5.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Restart\RealTimeControlRestartFile.hbm.xml" />
+    <EmbeddedResource Include="RealTimeControlModel.3.6.hbm.xml" />
     <Content Include="Resources\cog_active.png" />
     <Content Include="Resources\cog1.png" />
     <Content Include="Resources\condition.png" />
@@ -429,8 +417,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.120-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.120-beta\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.6.0-beta-SIGNED.da98c21\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.120-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.120-beta\build\net461\DeltaShell.Framework.targets')" />
 </Project>

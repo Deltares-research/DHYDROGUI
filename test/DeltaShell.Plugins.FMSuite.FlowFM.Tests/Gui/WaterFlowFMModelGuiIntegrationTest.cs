@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check model name
                     WaterFlowFMModel targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
+                    Assert.That(targetModel.Name, Does.Contain("FlowFM"));
 
                     // Import new water flow model
                     WaterFlowFMFileImporter importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check name of imported water flow model
                     targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("har"));
+                    Assert.That(targetModel.Name, Does.Contain("har"));
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
@@ -181,14 +181,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check folder name
                     Folder testFolder = project.RootFolder.Folders.FirstOrDefault();
                     Assert.IsNotNull(testFolder);
-                    Assert.That(testFolder.Name, Is.StringContaining("Test Folder"));
+                    Assert.That(testFolder.Name, Does.Contain("Test Folder"));
 
                     // Add new water flow model to the new folder and check its name
                     testFolder.Add(new WaterFlowFMModel());
                     WaterFlowFMModel targetModel =
                         testFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
+                    Assert.That(targetModel.Name, Does.Contain("FlowFM"));
 
                     // Import new water flow model
                     WaterFlowFMFileImporter importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check name of imported water flow model
                     targetModel = testFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("har"));
+                    Assert.That(targetModel.Name, Does.Contain("har"));
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
@@ -307,7 +307,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel { ShowModelRunConsole = true };
             model.ImportFromMdu(mduPath);
 
-            model.ExplicitWorkingDirectory = model.WorkingDirectoryPath;
             using (var gui = new DeltaShellGui())
             {
                 IApplication app = gui.Application;
@@ -541,7 +540,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Wpf)]
         [Category(TestCategory.WorkInProgress)]
-        [Ignore]
+        [Ignore("Ignored.")]
         public void TOOLS_22977Test()
         {
             using (var gui = new DeltaShellGui())
@@ -692,7 +691,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_CloseProject_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
-            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\FlowFM");
 
             // 2. Set up test action
             Action<IGui> testAction = gui => gui.CommandHandler.CloseProject();
@@ -706,7 +705,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_DeleteModel_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
-            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\Project1.dsproj");
+            string fileLocation = TestHelper.GetTestFilePath(@"DELFT3DFM-1178\FlowFM");
 
             // 2. Set up test action
             Action<IGui> testAction = gui =>
@@ -961,30 +960,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static void AssertMultipleFunctionViewClosedAsExpected(string filePath, Action<IGui> guiAction)
+        private static void AssertMultipleFunctionViewClosedAsExpected(string testDataPath, Action<IGui> guiAction)
         {
-            using (var dsProjLocation = new TemporaryDirectory())
+            using (var tempDir = new TemporaryDirectory())
             {
                 // 1. Load test data
-                string fileLocation = TestHelper.GetTestFilePath(filePath);
-                string tempFileLocation = dsProjLocation.CopyTestDataFileAndDirectoryToTempDirectory(fileLocation);
+                string modelDir = tempDir.CopyDirectoryToTempDirectory(testDataPath);
+                string mduFilePath = Path.Combine(modelDir, "input", "FlowFM.mdu");
 
+                Assert.That(File.Exists(mduFilePath));
                 // 2. Prepare Test Project
                 using (var gui = new DeltaShellGui())
+                using(var fmModel = new WaterFlowFMModel())
                 {
                     IApplication app = gui.Application;
                     // Load app plugins
                     RunConfiguredFmSuiteGui(gui);
 
-                    bool projectOpened = app.OpenProject(tempFileLocation);
+                    fmModel.LoadFromMdu(mduFilePath);
+                    app.Project.RootFolder.Add(fmModel);
 
                     // 3. Verify initial expectations
-                    Assert.That(projectOpened, Is.True, "It was not possible to open the project");
-                    Project project = app.Project;
-                    Assert.That(project, Is.Not.Null);
+                    Assert.That(app.Project, Is.Not.Null);
 
                     // 3.1. Verify data loaded correctly.
-                    WaterFlowFMModel fmModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
 
                     TimeSeries hisTimeSerie = fmModel.OutputHisFileStore.Functions
@@ -1139,7 +1138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             // [D3DFMIQ-1276]
             // Disabling following testcase as this causes an GDI+ exception on the build agent which cannot be easily solved. 
             // According to sources on the internet, the exception is caused by MultiThreading access to a certain source.
-            // However, setting the test with the STAThread or RequiresSTA attribute does not resolve this issue on the agent.
+            // However, setting the test with the STAThread or Apartment(ApartmentState.STA) attribute does not resolve this issue on the agent.
             // Locally this test runs fine.
 
             //            var boundaryConditionSetWithoutMatchingBoundaryCondition = new BoundaryConditionSet

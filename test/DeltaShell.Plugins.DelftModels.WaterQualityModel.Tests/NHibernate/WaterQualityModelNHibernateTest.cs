@@ -45,9 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
         #region SetUp / TearDown
 
-        public override void TestFixtureSetUp()
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
 
             var waterQualityModelApplicationPlugin = new WaterQualityModelApplicationPlugin();
             factory.AddPlugin(waterQualityModelApplicationPlugin);
@@ -366,95 +366,85 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             entity.Loads.Add(CreateLoad());
 
-            string explicitWorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Test", "Bla");
-            FileUtils.DeleteIfExists(explicitWorkingDirectory);
-            try
-            {
-                entity.ExplicitWorkingDirectory = explicitWorkingDirectory;
-                entity.BoundaryDataManager.CreateNewDataTable("A", "test", "A.usefors", "bla");
-                entity.LoadsDataManager.CreateNewDataTable("B", "test", "B.usefors", "bla");
+            entity.BoundaryDataManager.CreateNewDataTable("A", "test", "A.usefors", "bla");
+            entity.LoadsDataManager.CreateNewDataTable("B", "test", "B.usefors", "bla");
 
-                // settings
-                entity.ModelSettings.NrOfThreads = 6;
-                entity.ModelSettings.ClosureErrorCorrection = false;
-                entity.ModelSettings.DryCellThreshold = 0.2;
-                entity.ModelSettings.IterationMaximum = 10;
-                entity.ModelSettings.Tolerance = 1;
-                entity.ModelSettings.WriteIterationReport = true;
+            // settings
+            entity.ModelSettings.NrOfThreads = 6;
+            entity.ModelSettings.ClosureErrorCorrection = false;
+            entity.ModelSettings.DryCellThreshold = 0.2;
+            entity.ModelSettings.IterationMaximum = 10;
+            entity.ModelSettings.Tolerance = 1;
+            entity.ModelSettings.WriteIterationReport = true;
 
-                // call
-                WaterQualityModel retrievedEntity = SaveAndRetrieveObject(entity);
+            // call
+            WaterQualityModel retrievedEntity = SaveAndRetrieveObject(entity);
 
-                // assert
-                Assert.IsNotNull(retrievedEntity);
-                Assert.AreEqual("Test", retrievedEntity.Name);
-                Assert.AreEqual(1.1, retrievedEntity.VerticalDispersion);
-                Assert.IsTrue(retrievedEntity.UseAdditionalHydrodynamicVerticalDiffusion);
-                Assert.AreEqual(5.5, retrievedEntity.HorizontalDispersion);
+            // assert
+            Assert.IsNotNull(retrievedEntity);
+            Assert.AreEqual("Test", retrievedEntity.Name);
+            Assert.AreEqual(1.1, retrievedEntity.VerticalDispersion);
+            Assert.IsTrue(retrievedEntity.UseAdditionalHydrodynamicVerticalDiffusion);
+            Assert.AreEqual(5.5, retrievedEntity.HorizontalDispersion);
 
-                Assert.AreEqual(LayerType.ZLayer, retrievedEntity.LayerType);
+            Assert.AreEqual(LayerType.ZLayer, retrievedEntity.LayerType);
 
-                Assert.IsTrue(retrievedEntity.Grid.IsEmpty);
-                Assert.IsNull(retrievedEntity.HydroData);
-                Assert.AreEqual(LayerType.ZLayer, retrievedEntity.LayerType);
+            Assert.IsTrue(retrievedEntity.Grid.IsEmpty);
+            Assert.IsNull(retrievedEntity.HydroData);
+            Assert.AreEqual(LayerType.ZLayer, retrievedEntity.LayerType);
 
-                Assert.IsTrue(retrievedEntity.UseSaveStateTimeRange);
-                Assert.AreEqual(new DateTime(2015, 3, 17, 7, 16, 05), retrievedEntity.SaveStateStartTime);
-                Assert.AreEqual(new TimeSpan(0, 1, 0, 0), retrievedEntity.SaveStateTimeStep);
-                Assert.AreEqual(new DateTime(2015, 3, 18, 7, 16, 05), retrievedEntity.SaveStateStopTime);
-                Assert.AreEqual(new DateTime(2015, 3, 17, 7, 16, 05), retrievedEntity.ReferenceTime);
+            Assert.IsTrue(retrievedEntity.UseSaveStateTimeRange);
+            Assert.AreEqual(new DateTime(2015, 3, 17, 7, 16, 05), retrievedEntity.SaveStateStartTime);
+            Assert.AreEqual(new TimeSpan(0, 1, 0, 0), retrievedEntity.SaveStateTimeStep);
+            Assert.AreEqual(new DateTime(2015, 3, 18, 7, 16, 05), retrievedEntity.SaveStateStopTime);
+            Assert.AreEqual(new DateTime(2015, 3, 17, 7, 16, 05), retrievedEntity.ReferenceTime);
 
-                Assert.AreEqual("<Content for command line input file>", entity.InputFileCommandLine.Content);
-                Assert.AreEqual("<Content for hybrid model input file>", entity.InputFileHybrid.Content);
+            Assert.AreEqual("<Content for command line input file>", entity.InputFileCommandLine.Content);
+            Assert.AreEqual("<Content for hybrid model input file>", entity.InputFileHybrid.Content);
 
-                Assert.AreEqual(1, retrievedEntity.ObservationPoints.Count);
-                Assert.AreEqual("obs1", retrievedEntity.ObservationPoints[0].Name);
+            Assert.AreEqual(1, retrievedEntity.ObservationPoints.Count);
+            Assert.AreEqual("obs1", retrievedEntity.ObservationPoints[0].Name);
 
-                Assert.AreEqual("03d_Tewor2003", retrievedEntity.SubstanceProcessLibrary.Name);
-                Assert.AreEqual(entity.SubstanceProcessLibrary.Substances.Count, entity.SubstanceProcessLibrary.Substances.Count);
-                Assert.AreEqual(entity.SubstanceProcessLibrary.Processes.Count, entity.SubstanceProcessLibrary.Processes.Count);
-                Assert.AreEqual(entity.SubstanceProcessLibrary.Parameters.Count, entity.SubstanceProcessLibrary.Parameters.Count);
-                Assert.AreEqual(entity.SubstanceProcessLibrary.OutputParameters.Count, entity.SubstanceProcessLibrary.OutputParameters.Count);
-                Assert.AreEqual(entity.SubstanceProcessLibrary.InActiveSubstances.Count(), entity.SubstanceProcessLibrary.InActiveSubstances.Count());
+            Assert.AreEqual("03d_Tewor2003", retrievedEntity.SubstanceProcessLibrary.Name);
+            Assert.AreEqual(entity.SubstanceProcessLibrary.Substances.Count, entity.SubstanceProcessLibrary.Substances.Count);
+            Assert.AreEqual(entity.SubstanceProcessLibrary.Processes.Count, entity.SubstanceProcessLibrary.Processes.Count);
+            Assert.AreEqual(entity.SubstanceProcessLibrary.Parameters.Count, entity.SubstanceProcessLibrary.Parameters.Count);
+            Assert.AreEqual(entity.SubstanceProcessLibrary.OutputParameters.Count, entity.SubstanceProcessLibrary.OutputParameters.Count);
+            Assert.AreEqual(entity.SubstanceProcessLibrary.InActiveSubstances.Count(), entity.SubstanceProcessLibrary.InActiveSubstances.Count());
 
-                Assert.AreEqual(5, retrievedEntity.InitialConditions.Count);
+            Assert.AreEqual(5, retrievedEntity.InitialConditions.Count);
 
-                Assert.AreEqual(entity.DataItems.Count, retrievedEntity.DataItems.Count);
-                Assert.AreEqual(entity.Dispersion.Count, retrievedEntity.Dispersion.Count);
+            Assert.AreEqual(entity.DataItems.Count, retrievedEntity.DataItems.Count);
+            Assert.AreEqual(entity.Dispersion.Count, retrievedEntity.Dispersion.Count);
 
-                Assert.AreEqual(1, retrievedEntity.Loads.Count);
-                Assert.AreEqual(retrievedEntity.Loads[0].LoadType, LOADTYPE);
+            Assert.AreEqual(1, retrievedEntity.Loads.Count);
+            Assert.AreEqual(retrievedEntity.Loads[0].LoadType, LOADTYPE);
 
-                DataTable[] dataTables = retrievedEntity.BoundaryDataManager.DataTables.ToArray();
-                Assert.AreEqual(1, dataTables.Length);
-                Assert.AreEqual("A", dataTables[0].Name);
-                Assert.IsTrue(dataTables[0].DataFile.IsOpen);
-                Assert.AreEqual("test", dataTables[0].DataFile.Content);
-                Assert.IsTrue(dataTables[0].SubstanceUseforFile.IsOpen);
-                Assert.AreEqual("bla", dataTables[0].SubstanceUseforFile.Content);
+            DataTable[] dataTables = retrievedEntity.BoundaryDataManager.DataTables.ToArray();
+            Assert.AreEqual(1, dataTables.Length);
+            Assert.AreEqual("A", dataTables[0].Name);
+            Assert.IsTrue(dataTables[0].DataFile.IsOpen);
+            Assert.AreEqual("test", dataTables[0].DataFile.Content);
+            Assert.IsTrue(dataTables[0].SubstanceUseforFile.IsOpen);
+            Assert.AreEqual("bla", dataTables[0].SubstanceUseforFile.Content);
 
-                DataTable[] loadsTables = retrievedEntity.LoadsDataManager.DataTables.ToArray();
-                Assert.AreEqual(1, loadsTables.Length);
-                Assert.AreEqual("B", loadsTables[0].Name);
-                Assert.IsTrue(loadsTables[0].DataFile.IsOpen);
-                Assert.AreEqual("test", loadsTables[0].DataFile.Content);
-                Assert.IsTrue(loadsTables[0].SubstanceUseforFile.IsOpen);
-                Assert.AreEqual("bla", loadsTables[0].SubstanceUseforFile.Content);
+            DataTable[] loadsTables = retrievedEntity.LoadsDataManager.DataTables.ToArray();
+            Assert.AreEqual(1, loadsTables.Length);
+            Assert.AreEqual("B", loadsTables[0].Name);
+            Assert.IsTrue(loadsTables[0].DataFile.IsOpen);
+            Assert.AreEqual("test", loadsTables[0].DataFile.Content);
+            Assert.IsTrue(loadsTables[0].SubstanceUseforFile.IsOpen);
+            Assert.AreEqual("bla", loadsTables[0].SubstanceUseforFile.Content);
 
-                // assert settings
-                Assert.IsNotNull(retrievedEntity.ModelSettings);
-                Assert.AreEqual(false, retrievedEntity.ModelSettings.ClosureErrorCorrection);
-                Assert.AreEqual(6, retrievedEntity.ModelSettings.NrOfThreads);
-                Assert.AreEqual(false, retrievedEntity.ModelSettings.ClosureErrorCorrection);
-                Assert.AreEqual(0.2, retrievedEntity.ModelSettings.DryCellThreshold);
-                Assert.AreEqual(10, retrievedEntity.ModelSettings.IterationMaximum);
-                Assert.AreEqual(1, retrievedEntity.ModelSettings.Tolerance);
-                Assert.AreEqual(true, retrievedEntity.ModelSettings.WriteIterationReport);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(explicitWorkingDirectory);
-            }
+            // assert settings
+            Assert.IsNotNull(retrievedEntity.ModelSettings);
+            Assert.AreEqual(false, retrievedEntity.ModelSettings.ClosureErrorCorrection);
+            Assert.AreEqual(6, retrievedEntity.ModelSettings.NrOfThreads);
+            Assert.AreEqual(false, retrievedEntity.ModelSettings.ClosureErrorCorrection);
+            Assert.AreEqual(0.2, retrievedEntity.ModelSettings.DryCellThreshold);
+            Assert.AreEqual(10, retrievedEntity.ModelSettings.IterationMaximum);
+            Assert.AreEqual(1, retrievedEntity.ModelSettings.Tolerance);
+            Assert.AreEqual(true, retrievedEntity.ModelSettings.WriteIterationReport);
         }
 
         [Test]

@@ -44,7 +44,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                 issues.AddRange(ValidateSupportPointNames(boundaryConditionSet));
                 issues.AddRange(ValidateMorphologyBoundaryHaveHydroBoundaries(boundaryConditionSet));
-                issues.AddRange(ValidateSedimentConcentrationBoundaryHaveHydroBoundaries(boundaryConditionSet));
 
                 IEnumerable<FlowBoundaryQuantityType> quantities =
                     flowBoundaryConditions.Select(fbc => fbc.FlowQuantity);
@@ -78,22 +77,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 yield return new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
                                                  Resources
                                                      .WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_);
-            }
-        }
-
-        private static IEnumerable<ValidationIssue> ValidateSedimentConcentrationBoundaryHaveHydroBoundaries(
-            BoundaryConditionSet boundaryConditionSet)
-        {
-            //Check if any other snapped boundary at this location have a flow boundary condition in it.
-            yield break;
-            List<FlowBoundaryCondition> flowBoundaryConditions =
-                boundaryConditionSet.BoundaryConditions.Cast<FlowBoundaryCondition>().ToList();
-            if (flowBoundaryConditions.Count == boundaryConditionSet.BoundaryConditions.Count &&
-                flowBoundaryConditions.All(bc => bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration))
-            {
-                yield return new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
-                                                 Resources
-                                                     .WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_);
             }
         }
 

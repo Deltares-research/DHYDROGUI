@@ -27,10 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             // null-check of current workflow
             if (rootObject.CurrentWorkflow == null)
             {
-                return new ValidationReport(validationReportName, new List<ValidationIssue>
-                {
-                    new ValidationIssue(rootObject, ValidationSeverity.Error, Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty)
-                });
+                return new ValidationReport(validationReportName, new List<ValidationIssue> {new ValidationIssue(rootObject, ValidationSeverity.Error, Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty)});
             }
 
             var hydroModelReports = new List<ValidationReport>
@@ -132,6 +129,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
         }
 
         #endregion
-
     }
 }

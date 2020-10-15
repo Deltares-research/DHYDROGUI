@@ -11,7 +11,8 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using log4net;
 using Mono.Addins;
 
@@ -58,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return "3.6.0.0";
+                return "3.7.0.0";
             }
         }
 
@@ -114,11 +115,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new RealTimeControlModelExporter();
+            yield return new RealTimeControlRestartFileExporter();
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new RealTimeControlModelImporter();
+            yield return new RealTimeControlRestartFileImporter(GetRealTimeControlModels);
         }
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
@@ -126,11 +129,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             yield return new RtcDataAccessListener();
         }
 
+        private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+
         private void HybridProjectRepositoryOnProjectOpening(object sender, ProjectOpeningEventArgs e)
         {
             Ensure.NotNull(e, nameof(e), "Empty project path is not allowed");
 
-            var projectFilePath = e.ProjectPath;
+            string projectFilePath = e.ProjectPath;
 
             if (string.IsNullOrEmpty(projectFilePath) || !File.Exists(projectFilePath))
             {

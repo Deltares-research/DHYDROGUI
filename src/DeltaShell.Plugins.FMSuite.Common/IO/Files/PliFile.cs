@@ -261,18 +261,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                         for (var i = 0; i < feature2D.Geometry.Coordinates.Length; i++)
                         {
                             Coordinate coordinate = feature2D.Geometry.Coordinates[i];
-                            string line = $"{coordinate.X:E15}  {coordinate.Y:E15}";
+                            var line = $"{coordinate.X:E15}  {coordinate.Y:E15}";
                             ConstructLineContent(i, numericColumnValues, 0.0, NumericColumnAttributesKeys, ref line,
                                                  feature2D.Name);
                             ConstructLineContent(i, stringColumnValues, "T", StringColumnAttributesKeys, ref line,
                                                  feature2D.Name);
 
-                            if (locationNames != null)
+                            if (locationNames != null && i < locationNames.Count)
                             {
-                                if (i < locationNames.Count)
-                                {
-                                    line += $" {locationNames[i]}";
-                                }
+                                line += $" {locationNames[i]}";
                             }
 
                             WriteLine(line);

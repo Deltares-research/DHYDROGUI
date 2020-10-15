@@ -1284,6 +1284,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while importing a {0} from {1}.
+        /// </summary>
+        public static string WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_ {
+            get {
+                return ResourceManager.GetString("WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grid is empty.
         /// </summary>
         public static string WaterFlowFMGridValidator_Validate_Grid_is_empty {
@@ -1367,6 +1376,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModel_Running_this_model_requires_the_OutputDirectory_to_be_overwritte" +
                         "n_to___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please save the project after a model run with &apos;write restart&apos; on..
+        /// </summary>
+        public static string WaterFlowFMModel_Save_project_after_model_run_with_write_restart {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_Save_project_after_model_run_with_write_restart", resourceCulture);
             }
         }
         
@@ -1519,6 +1537,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_" +
                         "defined__all_channels_will_be_using_the_default_values_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} interval must be a multiple of the output timestep..
+        /// </summary>
+        public static string WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timestep {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timeste" +
+                        "p", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model start time precedes reference time.
+        /// </summary>
+        public static string WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input restart file does not exist; cannot restart..
+        /// </summary>
+        public static string WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does_not_exist_cannot_restart {
+            get {
+                return ResourceManager.GetString("WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_file_does" +
+                        "_not_exist_cannot_restart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input restart state.
+        /// </summary>
+        public static string WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state {
+            get {
+                return ResourceManager.GetString("WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state", resourceCulture);
             }
         }
         

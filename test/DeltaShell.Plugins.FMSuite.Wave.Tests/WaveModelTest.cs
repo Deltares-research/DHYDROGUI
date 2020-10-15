@@ -140,26 +140,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void SetDimrExportDirectoryPath_ThrowsNotSupportedException()
-        {
-            // Setup
-            using (var model = new WaveModel())
-            {
-                // Call
-                void Call() => model.DimrExportDirectoryPath = "some_path";
-
-                // Assert
-                Assert.That(Call, Throws.TypeOf<NotSupportedException>()
-                                        .With.Message.EqualTo("Cannot set dimr export directory."));
-            }
-        }
-
-        private sealed class PathProvider
-        {
-            public string Path { get; set; }
-        }
-
-        [Test]
         [Category(TestCategory.Integration)]
         public void DimrExportDirectoryPath_ShouldAlwaysBeUpToDate()
         {
@@ -590,7 +570,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "NotExisting");
 
                 // Act and Assert
-                string expectedMssg =
+                var expectedMssg =
                     $"Could not find output (WAVM) file: {Path.Combine(outputDirectory, "wavm-Waves.nc")}";
                 TestHelper.AssertAtLeastOneLogMessagesContains(() => waveModel.ConnectOutput(outputDirectory),
                                                                expectedMssg);
@@ -648,9 +628,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                                                .ToList();
 
                 // Assert
-                string expectedMssg =
+                var expectedMssg =
                     $"Could not find output (WAVM) file: {Path.Combine(outputDirectory, "wavm-Waves-Outer.nc")}";
-                string expectedMssg2 =
+                var expectedMssg2 =
                     $"Could not find output (WAVM) file: {Path.Combine(outputDirectory, "wavm-Waves-Inner.nc")}";
 
                 Assert.IsTrue(messages.Contains(expectedMssg));
@@ -686,7 +666,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                                         .ToList();
 
                 // Assert
-                string expectedMssg =
+                var expectedMssg =
                     $"Could not find output (WAVM) file: {Path.Combine(outputDirectoryInTemp, "wavm-Waves-Inner.nc")}";
 
                 Assert.AreEqual(1, messages.Count());
@@ -707,7 +687,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
 
                 // Act and Assert
-                string expectedMssg =
+                var expectedMssg =
                     $"Could not find log file: {Path.Combine(outputDirectoryInTemp, "swn-diag.wave")}";
                 TestHelper.AssertLogMessageIsGenerated(() => waveModel.ConnectOutput(outputDirectoryInTemp), expectedMssg);
                 Assert.IsFalse(waveModel.OutputIsEmpty);
@@ -742,6 +722,47 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             foreach (IWaveBoundary waveBoundary in boundaries)
             {
                 Assert.That(result, Has.Member(waveBoundary));
+            }
+        }
+
+        private sealed class PathProvider
+        {
+            public string Path { get; set; }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ExportModelInputTo_ExportsToPath(bool switchTo)
+        {
+            using (var temp = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                const string currentPath = "current.mdw";
+                model.MdwFile.MdwFilePath = currentPath;
+
+                string exportPath = Path.Combine(temp.Path, "model.mdw");
+
+                // Call
+                model.ExportModelInputTo(exportPath, switchTo);
+
+                // Assert
+                Assert.That(exportPath, Does.Exist);
+                Assert.That(model.MdwFilePath, Is.EqualTo(switchTo ? exportPath : currentPath));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ExportModelInputTo_PathNull_ThrowsArgumentException(bool switchTo)
+        {
+            using (var model = new WaveModel())
+            {
+                // Call
+                void Call() => model.ExportModelInputTo(null, switchTo);
+
+                // Assert
+                var e = Assert.Throws<ArgumentException>(Call);
+                Assert.That(e.ParamName, Is.EqualTo("mdwFilePath"));
             }
         }
     }

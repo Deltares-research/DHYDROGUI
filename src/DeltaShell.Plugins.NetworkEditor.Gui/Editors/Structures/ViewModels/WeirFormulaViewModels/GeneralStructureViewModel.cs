@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// <see cref="GeneralStructureViewModel"/> provides the view model for the
     /// <see cref="Views.WeirFormulaViews.GeneralStructureView"/>.
     /// </summary>
-    /// <seealso cref="WeirViewModel" />
+    /// <seealso cref="WeirViewModel"/>
     [Description("General Structure")]
     public sealed class GeneralStructureViewModel : WeirViewModel
     {
@@ -31,9 +31,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
             this.formula = formula;
             GatePropertiesViewModel = new GatePropertiesViewModel(formula, weirPropertiesViewModel, false);
         }
-
-        private static double? ToNullableValue(double value) =>
-            double.IsNaN(value) ? null : (double?) value;
 
         /// <summary>
         /// Gets or sets the Upstream1 width.
@@ -176,7 +173,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {
                     return;
                 }
-                
+
                 formula.BedLevelRightSideOfStructure = value;
                 OnPropertyChanged();
             }
@@ -271,7 +268,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {
                     return;
                 }
-                
+
                 formula.PositiveFreeWeirFlow = value;
                 OnPropertyChanged();
             }
@@ -289,7 +286,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {
                     return;
                 }
-                
+
                 formula.NegativeFreeWeirFlow = value;
                 OnPropertyChanged();
             }
@@ -361,7 +358,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {
                     return;
                 }
-                
+
                 formula.NegativeContractionCoefficient = value;
                 OnPropertyChanged();
             }
@@ -384,5 +381,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 OnPropertyChanged();
             }
         }
+
+        private static double? ToNullableValue(double value) =>
+            double.IsNaN(value) ? null : (double?) value;
     }
 }

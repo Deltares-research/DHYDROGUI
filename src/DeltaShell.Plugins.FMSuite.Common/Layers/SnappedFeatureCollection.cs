@@ -129,12 +129,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 
         public ILayer Layer { get; set; }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            Layer = null;
-            OriginalFeatures = null;
+            if (disposing)
+            {
+                Layer = null;
+                OriginalFeatures = null;
+            }
 
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         private VectorStyle OriginalFeaturesLayerStyle { get; set; }

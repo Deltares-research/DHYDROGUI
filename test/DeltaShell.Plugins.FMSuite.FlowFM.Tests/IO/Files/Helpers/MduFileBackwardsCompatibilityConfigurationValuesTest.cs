@@ -21,14 +21,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
                 {"mduformatversion", "FileVersion"},
                 {"locationfile", "locationFile"},
                 {"forcingfile", "forcingFile"},
-                { "return_time", "returnTime" }
+                {"return_time", "returnTime"}
             };
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping =>
-            new Dictionary<string, string>
-            {
-                {"model", "General"}
-            };
+            new Dictionary<string, string> {{"model", "General"}};
 
         protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
             new MduFileBackwardsCompatibilityConfigurationValues();

@@ -1,29 +1,23 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Schema;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
-using DeltaShell.Dimr.xsd;
+using DeltaShell.Dimr.Properties;
+using DeltaShell.Dimr.Xsd;
 using log4net;
 
 namespace DeltaShell.Dimr
 {
-    public class DimrRunner
+    public class DimrRunner : IDisposable
     {
-        public const string DimrRunLogfileDataItemTag = "DimrRunLog";
         private const decimal fileVersion = 1;
         private const string createdBy = "Deltares, Coupling Team";
-        private const string DIMR_RUN_LOGFILE_NAME = "dimr_redirected.log";
-
         private static readonly ILog log = LogManager.GetLogger(typeof(DimrRunner));
 
         private static readonly dimrDocumentationXML documentation = new dimrDocumentationXML
@@ -34,8 +28,8 @@ namespace DeltaShell.Dimr
 
         private readonly IDimrModel model;
         protected bool runLocal;
+        private bool disposed;
         private string dimrFile;
-        private IDimrApi dimrApi;
 
         private double timeStep;
         private DateTime stopTime;
@@ -45,34 +39,11 @@ namespace DeltaShell.Dimr
             this.model = model;
         }
 
-        public bool CanCommunicateWithDimrApi
-        {
-            get
-            {
-                return model != null &&
-                       (model.Status == ActivityStatus.Initialized ||
-                        model.Status == ActivityStatus.Executing ||
-                        model.Status == ActivityStatus.Executed ||
-                        model.Status == ActivityStatus.Done)
-                       && dimrApi != null;
-            }
-        }
-
-        public IDimrApi Api
-        {
-            get
-            {
-                return dimrApi;
-            }
-            set
-            {
-                dimrApi = value;
-            }
-        }
+        public IDimrApi Api { get; private set; }
 
         public void OnInitialize()
         {
-            model.DataItems.RemoveAllWhere(di => di.Tag == DimrRunLogfileDataItemTag);
+            model.DataItems.RemoveAllWhere(di => di.Tag == DimrRunHelper.dimrRunLogfileDataItemTag);
             if (model.RunsInIntegratedModel)
             {
                 return;
@@ -90,23 +61,18 @@ namespace DeltaShell.Dimr
                 Console.WriteLine(e.Message);
                 log.ErrorFormat(e.Message);
                 model.Status = ActivityStatus.Failed;
-                if (dimrApi != null)
+                if (Api != null)
                 {
-                    dimrApi.ProcessMessages();
-                    dimrApi.Dispose();
-                    dimrApi = null;
+                    Api.ProcessMessages();
+                    Api.Dispose();
+                    Api = null;
                 }
             }
         }
 
         public void OnProgressChanged()
         {
-            if (dimrApi != null)
-            {
-                dimrApi.ProcessMessages();
-            }
-
-            //base.OnProgressChanged();
+            Api?.ProcessMessages();
         }
 
         public void OnExecute()
@@ -118,19 +84,19 @@ namespace DeltaShell.Dimr
 
             try
             {
-                if (dimrApi == null)
+                if (Api == null)
                 {
                     return;
                 }
-                
-                int returnCode = dimrApi.Update(timeStep);
+
+                int returnCode = Api.Update(timeStep);
 
                 if (returnCode != 0)
                 {
                     throw new DimrErrorCodeException(model.Status, returnCode);
                 }
 
-                model.CurrentTime = dimrApi.CurrentTime;
+                model.CurrentTime = Api.CurrentTime;
                 OnProgressChanged();
                 if (stopTime.Subtract(model.CurrentTime).TotalSeconds <= 0)
                 {
@@ -142,11 +108,11 @@ namespace DeltaShell.Dimr
                 Console.WriteLine(e.Message);
                 log.ErrorFormat(e.Message);
                 model.Status = ActivityStatus.Failed;
-                if (dimrApi != null)
+                if (Api != null)
                 {
-                    dimrApi.ProcessMessages();
-                    dimrApi.Dispose();
-                    dimrApi = null;
+                    Api.ProcessMessages();
+                    Api.Dispose();
+                    Api = null;
                 }
             }
         }
@@ -158,18 +124,15 @@ namespace DeltaShell.Dimr
                 return;
             }
 
-            if (dimrApi != null)
-            {
-                dimrApi.Finish();
-            }
+            Api?.Finish();
         }
 
         public void OnCleanup()
         {
-            if (dimrApi != null)
+            if (Api != null)
             {
-                dimrApi.Dispose();
-                dimrApi = null;
+                Api.Dispose();
+                Api = null;
             }
 
             string validPath = model.DimrExportDirectoryPath ?? Path.GetDirectoryName(dimrFile);
@@ -185,19 +148,20 @@ namespace DeltaShell.Dimr
             }
 
             model.ConnectOutput(outputDirectory);
-            ConnectDimrRunLogFile(model);
+
+            DimrRunHelper.ConnectDimrRunLogFile(model, model.DimrExportDirectoryPath);
         }
 
         public static string GenerateDimrXML(IDimrModel dimrModel, string workDirectory)
         {
-            // generate dimconfig
+            // generate dimr config
             string dimrFile = Path.Combine(workDirectory, "dimr.xml");
             FileUtils.DeleteIfExists(dimrFile);
-            var dimrConfig = new dimrXML() {documentation = documentation};
+            var dimrConfig = new dimrXML {documentation = documentation};
 
             // control section
-            var element = new dimrComponentOrCouplerRefXML() {name = dimrModel.Name};
-            dimrConfig.control = new[]
+            var element = new dimrComponentOrCouplerRefXML {name = dimrModel.Name};
+            dimrConfig.control = new object[]
             {
                 element
             };
@@ -214,20 +178,19 @@ namespace DeltaShell.Dimr
             {
                 component
             };
-            //XmlValidate(dimrConfig.Serialize());
-            dimrConfig.SaveToFile(dimrFile);
+            new DimrXMLSerializer().SaveToFile(dimrFile, dimrConfig);
             return dimrFile;
         }
 
         public Array GetVar(string key)
         {
-            double[] value = new[]
+            double[] value =
             {
                 double.NaN
             };
             if (CanCommunicateWithDimrApi)
             {
-                value = (double[]) dimrApi.GetValues(key);
+                value = (double[]) Api.GetValues(key);
             }
 
             return value;
@@ -237,65 +200,37 @@ namespace DeltaShell.Dimr
         {
             if (CanCommunicateWithDimrApi)
             {
-                dimrApi.SetValues(key, values);
+                Api.SetValues(key, values);
             }
         }
 
-        public static void ConnectDimrRunLogFile(IModel model)
+        public void Dispose()
         {
-            var dimrModel = model as IDimrModel;
-            var dimrLogDirectory = "";
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            dimrLogDirectory = dimrModel != null ? dimrModel.DimrExportDirectoryPath : model.ExplicitWorkingDirectory;
-
-            string completeDimrLogFilename = Path.Combine(dimrLogDirectory, DIMR_RUN_LOGFILE_NAME);
-            if (!File.Exists(completeDimrLogFilename))
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
             {
                 return;
             }
 
-            //add an dimr run log output dataitem with the log...
-            IDataItem logDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunLogfileDataItemTag);
-            if (logDataItem == null)
+            if (disposing)
             {
-                var textDocument = new TextDocument(true) {Name = "Dimr Run Log"};
-
-                logDataItem = new DataItem(textDocument, DataItemRole.Output, DimrRunLogfileDataItemTag);
-                model.DataItems.Add(logDataItem);
+                Api?.Dispose();
             }
 
-            using (Stream objStream = File.OpenRead(completeDimrLogFilename))
-            {
-                // Read data from file
-                byte[] arrData =
-                    {};
-                var stringBuilder = new StringBuilder();
-                // Read data from file until read position is not equals to length of file
-                while (objStream.Position != objStream.Length)
-                {
-                    // Read number of remaining bytes to read
-                    long lRemainingBytes = objStream.Length - objStream.Position;
-
-                    // If bytes to read greater than 2 mega bytes size create array of 2 mega bytes
-                    // Else create array of remaining bytes
-                    if (lRemainingBytes > 262144)
-                    {
-                        arrData = new byte[262144];
-                    }
-                    else
-                    {
-                        arrData = new byte[lRemainingBytes];
-                    }
-
-                    // Read data from file
-                    objStream.Read(arrData, 0, arrData.Length);
-
-                    stringBuilder.Append(Encoding.UTF8.GetString(arrData, 0, arrData.Length));
-                }
-
-                ((TextDocument) logDataItem.Value).Content = stringBuilder.ToString();
-            }
+            disposed = true;
         }
+
+        private bool CanCommunicateWithDimrApi => model != null &&
+                                                  (model.Status == ActivityStatus.Initialized ||
+                                                   model.Status == ActivityStatus.Executing ||
+                                                   model.Status == ActivityStatus.Executed ||
+                                                   model.Status == ActivityStatus.Done)
+                                                  && Api != null;
 
         private void ValidateExportAndInitialize(bool disconnectOutput)
         {
@@ -315,17 +250,7 @@ namespace DeltaShell.Dimr
             // export this model
             var exporter = (IFileExporter) Activator.CreateInstance(model.ExporterType);
 
-            var exportPath = string.Empty;
-
-            if (model.DimrExportDirectoryPath == null)
-            {
-                exportPath = FileUtils.CreateTempDirectory();
-                model.DimrExportDirectoryPath = exportPath;
-            }
-            else
-            {
-                exportPath = model.DimrExportDirectoryPath;
-            }
+            string exportPath = model.DimrExportDirectoryPath;
 
             ExportDimrModel(exportPath, model, exporter);
 
@@ -333,26 +258,25 @@ namespace DeltaShell.Dimr
             dimrFile = GenerateDimrXML(model, exportPath);
 
             // initialize dimr
-            log.Info(model.KernelVersions);
-            dimrApi = DimrApiFactory.CreateNew(!runLocal);
+            Api = DimrApiFactory.CreateNew(!runLocal);
 
-            if (dimrApi == null)
+            if (Api == null)
             {
-                throw new ArgumentNullException("Could not load the Dimr api.");
+                throw new ArgumentNullException(Resources.DimrRunner_Could_not_load_dimr_api);
             }
 
-            dimrApi.DimrRefDate = model.StartTime;
-            dimrApi.KernelDirs = model.KernelDirectoryLocation;
+            Api.DimrRefDate = model.StartTime;
+            Api.KernelDirs = model.KernelDirectoryLocation;
 
-            int returnCode = dimrApi.Initialize(dimrFile);
+            int returnCode = Api.Initialize(dimrFile);
 
             if (returnCode != 0)
             {
                 throw new DimrErrorCodeException(model.Status, returnCode);
             }
 
-            timeStep = dimrApi.TimeStep.TotalSeconds;
-            stopTime = dimrApi.StopTime;
+            timeStep = Api.TimeStep.TotalSeconds;
+            stopTime = Api.StopTime;
         }
 
         private void ExportDimrModel(string workDirectory, object modelObject, IFileExporter exporter)
@@ -368,9 +292,9 @@ namespace DeltaShell.Dimr
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
         }
 
-        private void ClearFolder(string FolderName)
+        private static void ClearFolder(string folderName)
         {
-            var dir = new DirectoryInfo(FolderName);
+            var dir = new DirectoryInfo(folderName);
 
             foreach (FileInfo fi in dir.GetFiles())
             {
@@ -381,26 +305,6 @@ namespace DeltaShell.Dimr
             {
                 ClearFolder(di.FullName);
                 FileUtils.DeleteIfExists(di.FullName);
-            }
-        }
-
-        private static void XmlValidate(string xmlString)
-        {
-            var stringReader = new StringReader(xmlString);
-            // Set the validation settings.
-            var settings = new XmlReaderSettings {ValidationType = ValidationType.Schema};
-            settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
-            settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
-            settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
-            settings.ValidationEventHandler += ValidationCallBack;
-
-            // Create the XmlReader object.
-            var reader = XmlReader.Create(stringReader, settings);
-
-            // Parse the file. 
-            while (reader.Read())
-            {
-                ;
             }
         }
 
@@ -424,15 +328,12 @@ namespace DeltaShell.Dimr
         {
             bool orgSuspendClearOutputOnInputChange = model.SuspendClearOutputOnInputChange;
             model.SuspendClearOutputOnInputChange = true;
-            //log.Info(KernelVersions);
 
             ValidationReport validationReport = model.Validate();
             if (validationReport != null && validationReport.Severity() == ValidationSeverity.Error)
             {
-                string errorMessage = string.Format("Validation errors: {0}",
-                                                    string.Join("\n", validationReport.GetAllIssuesRecursive()
-                                                                                      .Where(i => i.Severity == ValidationSeverity.Error)
-                                                                                      .Select(i => string.Format("\t{0}: {1}", i.Subject, i.Message)).ToArray()));
+                string errorMessage = "Validation errors: " +
+                                      $"{string.Join("\n", validationReport.GetAllIssuesRecursive().Where(i => i.Severity == ValidationSeverity.Error).Select(i => $"\t{i.Subject}: {i.Message}").ToArray())}";
 
                 model.Status = ActivityStatus.Failed;
                 log.Error(model.Name + " model validation failed; please review the validation report.\n\r" + errorMessage);

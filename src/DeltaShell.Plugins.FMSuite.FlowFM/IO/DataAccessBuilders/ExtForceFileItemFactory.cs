@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                                              IDictionary<ExtForceFileItem, object> existingForceFileItems)
         {
             var items = new List<ExtForceFileItem>();
-            
+
             ExtForceFileHelper.StartWritingSubFiles();
 
             if (writeBoundaryConditions)
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             items.AddRange(GetSpatialDataItems(ExtForceQuantNames.HorEddyDiffCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName), existingForceFileItems, path).Values);
 
             items.AddRange(GetWindFieldItems(modelDefinition, existingForceFileItems).Values);
-            
+
             ExtForceFileItem heatFluxModelItem = GetHeatFluxModelItem(modelDefinition.HeatFluxModel, modelDefinition.ModelName, existingForceFileItems);
             if (heatFluxModelItem != null)
             {
@@ -280,6 +280,77 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return dictionary;
         }
 
+        /// <summary>
+        /// Creates an <see cref="ExtForceFileItem"/> for the specified <paramref name="heatFluxModel"/>.
+        /// </summary>
+        /// <param name="heatFluxModel">The heat flux model.</param>
+        /// <param name="modelName">Name of the water flow fm model.</param>
+        /// <param name="existingForceFileItems">The existing force file items.</param>
+        /// <returns>
+        /// An <see cref="ExtForceFileItem"/> created for the specified <paramref name="heatFluxModel"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="heatFluxModel"/> or <paramref name="existingForceFileItems"/> is <c>null</c>.
+        /// </exception>
+        public static ExtForceFileItem GetHeatFluxModelItem(HeatFluxModel heatFluxModel, string modelName,
+                                                            IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        {
+            if (heatFluxModel == null)
+            {
+                throw new ArgumentNullException(nameof(heatFluxModel));
+            }
+
+            if (existingForceFileItems == null)
+            {
+                throw new ArgumentNullException(nameof(existingForceFileItems));
+            }
+
+            HeatFluxModelType heatFluxModelType = heatFluxModel.Type;
+            if (heatFluxModelType != HeatFluxModelType.Composite)
+            {
+                return null;
+            }
+
+            ExtForceFileItem item;
+            if (heatFluxModel.GriddedHeatFluxFilePath != null)
+            {
+                item = GetExistingItem(heatFluxModelType, existingForceFileItems);
+            }
+            else
+            {
+                item = GetExistingItem(heatFluxModel.MeteoData, existingForceFileItems) ??
+                       new ExtForceFileItem(
+                           heatFluxModel.ContainsSolarRadiation
+                               ? ExtForceQuantNames.MeteoDataWithRadiation
+                               : ExtForceQuantNames.MeteoData)
+                       {
+                           FileName = modelName + FileConstants.MeteoFileExtension,
+                           FileType = ExtForceQuantNames.FileTypes.Uniform,
+                           Method = 1,
+                           Operand = ExtForceQuantNames.OperatorToStringMapping[
+                               Operator.Overwrite]
+                       };
+            }
+
+            return item;
+        }
+
+        /// <summary>
+        /// Creates the mapping with each <see cref="IUnsupportedFileBasedExtForceFileItem"/> from the specified
+        /// <paramref name="modelDefinition"/>
+        /// and their corresponding created <see cref="ExtForceFileItem"/>.
+        /// </summary>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <returns>
+        /// A dictionary with each <see cref="IUnsupportedFileBasedExtForceFileItem"/> and their corresponding
+        /// <see cref="ExtForceFileItem"/>.
+        /// </returns>
+        public static IDictionary<IUnsupportedFileBasedExtForceFileItem, ExtForceFileItem> GetUnknownQuantitiesItems(WaterFlowFMModelDefinition modelDefinition)
+        {
+            return modelDefinition.UnsupportedFileBasedExtForceFileItems
+                                  .ToDictionary(i => i, i => i.UnsupportedExtForceFileItem);
+        }
+
         private static ExtForceFileItem GetInitialConditionsSamplesItem(
             ImportSamplesSpatialOperation spatialOperation, string extForceFileQuantityName, string prefix,
             IDictionary<ExtForceFileItem, object> existingForceFileItems, string targetDirectory)
@@ -362,7 +433,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             {
                 throw new ArgumentNullException(nameof(spatialOperation));
             }
-            
+
             string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
 
             return new ExtForceFileItem(quantityName)
@@ -391,75 +462,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                        Method = GetMethod(windField),
                        Operand = "+"
                    };
-        }
-
-        /// <summary>
-        /// Creates an <see cref="ExtForceFileItem"/> for the specified <paramref name="heatFluxModel"/>.
-        /// </summary>
-        /// <param name="heatFluxModel">The heat flux model.</param>
-        /// <param name="modelName">Name of the water flow fm model.</param>
-        /// <param name="existingForceFileItems">The existing force file items.</param>
-        /// <returns>
-        /// An <see cref="ExtForceFileItem"/> created for the specified <paramref name="heatFluxModel"/>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="heatFluxModel"/> or <paramref name="existingForceFileItems"/> is <c>null</c>.
-        /// </exception>
-        public static ExtForceFileItem GetHeatFluxModelItem(HeatFluxModel heatFluxModel, string modelName,
-                                                            IDictionary<ExtForceFileItem, object> existingForceFileItems)
-        {
-            if (heatFluxModel == null)
-            {
-                throw new ArgumentNullException(nameof(heatFluxModel));
-            }
-
-            if (existingForceFileItems == null)
-            {
-                throw new ArgumentNullException(nameof(existingForceFileItems));
-            }
-
-            HeatFluxModelType heatFluxModelType = heatFluxModel.Type;
-            if (heatFluxModelType != HeatFluxModelType.Composite)
-            {
-                return null;
-            }
-
-            ExtForceFileItem item;
-            if (heatFluxModel.GriddedHeatFluxFilePath != null)
-            {
-                item = GetExistingItem(heatFluxModelType, existingForceFileItems);
-            }
-            else
-            {
-                item = GetExistingItem(heatFluxModel.MeteoData, existingForceFileItems) ??
-                       new ExtForceFileItem(
-                           heatFluxModel.ContainsSolarRadiation
-                               ? ExtForceQuantNames.MeteoDataWithRadiation
-                               : ExtForceQuantNames.MeteoData)
-                       {
-                           FileName = modelName + FileConstants.MeteoFileExtension,
-                           FileType = ExtForceQuantNames.FileTypes.Uniform,
-                           Method = 1,
-                           Operand = ExtForceQuantNames.OperatorToStringMapping[
-                               Operator.Overwrite]
-                       };
-            }
-
-            return item;
-        }
-
-        /// <summary>
-        /// Creates the mapping with each <see cref="IUnsupportedFileBasedExtForceFileItem"/> from the specified <paramref name="modelDefinition"/>
-        /// and their corresponding created <see cref="ExtForceFileItem"/>.
-        /// </summary>
-        /// <param name="modelDefinition">The model definition.</param>
-        /// <returns>
-        /// A dictionary with each <see cref="IUnsupportedFileBasedExtForceFileItem"/> and their corresponding <see cref="ExtForceFileItem"/>.
-        /// </returns>
-        public static IDictionary<IUnsupportedFileBasedExtForceFileItem, ExtForceFileItem> GetUnknownQuantitiesItems(WaterFlowFMModelDefinition modelDefinition)
-        {
-            return modelDefinition.UnsupportedFileBasedExtForceFileItems
-                                  .ToDictionary(i => i, i => i.UnsupportedExtForceFileItem);
         }
 
         private static ExtForceFileItem GetSourceAndSinkItem(SourceAndSink sourceAndSink,

@@ -522,10 +522,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                     var newOperation = new AddSamplesOperation(false) {Name = spatialOperationValueConverter.SpatialOperationSet.Name};
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
-                                              new PointCloudFeatureProvider
-                                              {
-                                                  PointCloud = coverage.ToPointCloud(0, true)
-                                              });
+                                              new PointCloudFeatureProvider {PointCloud = coverage.ToPointCloud(0, true)});
 
                     if (SpatialOperations.ContainsKey(dataItem.Name))
                     {

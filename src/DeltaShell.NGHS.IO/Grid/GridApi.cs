@@ -476,8 +476,8 @@ namespace DeltaShell.NGHS.IO.Grid
             return !Initialized ? double.NaN : convversion;
         }
 
-        public int CreateFile(string filePath, 
-                              UGridGlobalMetaData uGridGlobalMetaData, 
+        public int CreateFile(string filePath,
+                              UGridGlobalMetaData uGridGlobalMetaData,
                               GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
             var imode = (int) mode;

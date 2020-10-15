@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using NUnit.Framework;
@@ -24,12 +25,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
             var mocks = new MockRepository();
             object importers = mocks.DynamicMock(typeof(Func<List<IDimrModelFileImporter>>));
-            var importer = mocks.DynamicMock<DHydroConfigXmlImporter>(importers);
+            object workingDirectory = mocks.DynamicMock(typeof(Func<string>));
+            var importer = mocks.DynamicMock<DHydroConfigXmlImporter>(importers, workingDirectory);
 
             object model = importer.ImportItem(dimrXmlPath);
 
             Assert.IsNotNull(model);
             Assert.That(model, Is.TypeOf<HydroModel>());
+        }
+
+        [Test]
+        public void Constructor_WhenGetWorkingDirectoryPathFuncIsNull_ShouldThrownArgumentNullException()
+        {
+            void Call() => new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>(), null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("getWorkingDirectoryPathFunc"));
         }
 
         /// <summary>
@@ -41,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         {
             // Given
             var importers = new List<IDimrModelFileImporter>();
-            var importer = new DHydroConfigXmlImporter(() => importers);
+            var importer = new DHydroConfigXmlImporter(() => importers, () => null);
 
             // When
             List<Type> result = importer.SupportedItemTypes.ToList();
@@ -62,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         {
             // Given
             var importers = new List<IDimrModelFileImporter>();
-            var importer = new DHydroConfigXmlImporter(() => importers);
+            var importer = new DHydroConfigXmlImporter(() => importers, () => null);
 
             // When
             bool result = importer.CanImportOnRootLevel;
@@ -85,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             cannotImportRootLevelImporter.Expect(imp => imp.CanImportOnRootLevel).Return(false).Repeat.Any();
 
             var importers = new List<IDimrModelFileImporter>() {cannotImportRootLevelImporter};
-            var importer = new DHydroConfigXmlImporter(() => importers);
+            var importer = new DHydroConfigXmlImporter(() => importers, () => null);
 
             // When
             bool result = importer.CanImportOnRootLevel;
@@ -109,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             canImportRootLevelImporter.Expect(imp => imp.CanImportOnRootLevel).Return(true).Repeat.Any();
 
             var importers = new List<IDimrModelFileImporter>() {canImportRootLevelImporter};
-            var importer = new DHydroConfigXmlImporter(() => importers);
+            var importer = new DHydroConfigXmlImporter(() => importers, () => null);
 
             // When
             bool result = importer.CanImportOnRootLevel;
@@ -147,7 +157,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 cannotImportRootLevelImporter2
             };
 
-            var importer = new DHydroConfigXmlImporter(() => importers);
+            var importer = new DHydroConfigXmlImporter(() => importers, () => null);
 
             // When
             bool result = importer.CanImportOnRootLevel;
@@ -173,7 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var project = new Project();
 
             var importers = new List<IDimrModelFileImporter>();
-            var importer = new DHydroConfigXmlImporter(() => importers);
+            var importer = new DHydroConfigXmlImporter(() => importers, () => null);
 
             // When
             bool result = importer.CanImportOn(project);
@@ -199,7 +209,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             canImportOnImporter.Expect(imp => imp.CanImportOn(Arg<Project>.Is.Equal(project))).Return(true).Repeat.AtLeastOnce();
 
             var importers = new List<IDimrModelFileImporter>() {canImportOnImporter};
-            var importer = new DHydroConfigXmlImporter(() => importers);
+            var importer = new DHydroConfigXmlImporter(() => importers, () => null);
 
             // When
             bool result = importer.CanImportOn(project);
@@ -226,7 +236,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             cannotImportOnImporter.Expect(imp => imp.CanImportOn(Arg<Project>.Is.Equal(project))).Return(false).Repeat.AtLeastOnce();
 
             var importers = new List<IDimrModelFileImporter>() {cannotImportOnImporter};
-            var importer = new DHydroConfigXmlImporter(() => importers);
+            var importer = new DHydroConfigXmlImporter(() => importers, () => null);
 
             // When
             bool result = importer.CanImportOn(project);
@@ -268,7 +278,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 cannotImportImporter2
             };
 
-            var importer = new DHydroConfigXmlImporter(() => importers);
+            var importer = new DHydroConfigXmlImporter(() => importers, () => null);
 
             // When
             bool result = importer.CanImportOn(project);
@@ -291,7 +301,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         {
             // Given
             const string expectedValue = "xml|*.xml";
-            var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>());
+            var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>(), () => null);
 
             // When
             string result = importer.FileFilter;
@@ -308,7 +318,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         public void WhenOpenViewAfterImportIsRetrieved_ThenTrueShouldBeReturned()
         {
             // Given
-            var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>());
+            var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>(), () => null);
 
             // When
             bool result = importer.OpenViewAfterImport;
@@ -344,7 +354,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Any();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             // When | Then
 
@@ -375,7 +385,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Any();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             Assert.Throws<Exception>(() => importer.ImportItem(path), errorMsg);
             readFunc.VerifyAllExpectations();
@@ -406,7 +416,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Once();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             // When
             object result = importer.ImportItem(path, null);
@@ -444,7 +454,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Once();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             // When
             var result = (HydroModel) importer.ImportItem(path, folder);
@@ -487,7 +497,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Once();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>());
+                                                       () => new List<IDimrModelFileImporter>(), () => null);
 
             // When
             var result = (HydroModel) importer.ImportItem(path, prevModel);
@@ -525,7 +535,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Once();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>()) {ShouldCancel = true};
+                                                       () => new List<IDimrModelFileImporter>(), () => null) {ShouldCancel = true};
 
             // When
             object result = importer.ImportItem(path, null);
@@ -534,6 +544,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             readFunc.VerifyAllExpectations();
 
             Assert.That(result, Is.EqualTo(null), "Expected returned model to be null:");
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportItem_ShouldSetWorkingDirectoryPathFunInImportedHydroModel()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string dimrFilePathInTemp = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(Path.Combine("FileReader", "dimr.xml"));
+                const string applicationWorkingDirectory = "TestWorkingDirectory";
+
+                var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>(),
+                                                           () => applicationWorkingDirectory);
+
+                // Act
+                object importedModel = importer.ImportItem(dimrFilePathInTemp, null);
+
+                // Assert
+                Assert.AreEqual(applicationWorkingDirectory, ((HydroModel) importedModel).WorkingDirectoryPathFunc());
+            }
         }
 
         #endregion

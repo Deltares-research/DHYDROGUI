@@ -54,10 +54,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Substance process library is not set")]
         public void ImporterShouldThrowOnSubstanceProcessLibraryIsNull()
         {
-            new SubFileImporter().Import(null, Path.Combine(TestHelper.GetTestDataDirectory(), "ValidWaqModels", "Eutrof_simple_sobek.sub"));
+            Assert.That(() => new SubFileImporter().Import(null, Path.Combine(TestHelper.GetTestDataDirectory(), "ValidWaqModels", "Eutrof_simple_sobek.sub")),
+                Throws.InvalidOperationException.With.Message.EqualTo("Substance process library is not set"));
         }
 
         [Test]
@@ -233,8 +233,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             string expectedMessage = string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, testFilePath);
 
-            Action action = () => { subFileImporter.Import(library, testFilePath); };
+            Action action = () => { subFileImporter.ImportItem(testFilePath, library); };
             TestHelper.AssertAtLeastOneLogMessagesContains(action, expectedMessage);
+        }
+
+        [Test]
+        public void CheckWhenImportingASubFileAndSetImportedSubstanceIsImportedFileFlagEqualsTrue()
+        {
+            var library = new SubstanceProcessLibrary();
+            var subFileImporter = new SubFileImporter();
+
+            string testFilePath = TestHelper.GetTestFilePath(@"IO\SubstateWithPercentageSign.sub");
+            testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+            subFileImporter.ImportItem(testFilePath, library);
+
+            Assert.IsTrue(subFileImporter.IsSubFileSuccessfullyImported);
         }
 
         [Test]
@@ -306,8 +320,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
         private CultureInfo originalCulture;
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             originalCulture = Thread.CurrentThread.CurrentCulture;
 
@@ -317,8 +331,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             LogHelper.ConfigureLogging(Level.Warn);
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             LogHelper.ResetLogging();
 

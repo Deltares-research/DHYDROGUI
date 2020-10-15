@@ -421,4 +421,19 @@
   <data name="MathematicalExpressionSerializer_ParseMathematicalExpressionToRootBranchNode_Mathematical_expression__0__contains_invalid_expression__1__" xml:space="preserve">
     <value>Mathematical expression {0} contains invalid expression "{1}".</value>
   </data>
+  <data name="RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings" xml:space="preserve">
+    <value>The D-Real Time Control model '{0}' was migrated to the newest version. If applicable, please verify the restart file settings.</value>
+  </data>
+  <data name="RtcLegacyLoader36_an_error_occurred_while_deleting_file" xml:space="preserve">
+    <value>An error occurred while deleting {0}: {1}</value>
+  </data>
+  <data name="RealTimeControlModelImporter_OnImportItem_Target_null_expected" xml:space="preserve">
+    <value>Null is expected, because target argument is unused.</value>
+  </data>
+  <data name="RealTimeControlModelNodePresenter_OutputLocationWarningMessage" xml:space="preserve">
+    <value>Output RTC rule already assigned to a different output. Are you sure you want to assign it?</value>
+  </data>
+  <data name="RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
 </root>

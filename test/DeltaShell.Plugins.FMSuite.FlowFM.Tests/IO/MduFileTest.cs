@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -11,6 +12,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -42,13 +44,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// <summary>
         /// The test case data for the GivenAMduFileWithMoreColumnsThanNeeded_WhenReadIsCalled_ThenASingleErrorMessageIsLogged.
         /// </summary>
-        private IEnumerable<TestCaseData> WeirWarningMessageTestCaseData
+        private static IEnumerable<TestCaseData> WeirWarningMessageTestCaseData
         {
             get
             {
                 //                             mduName     |  fixedWeirPlizFileName   | weirScheme | columnDifference | expectedSubMsgFormat
                 yield return new TestCaseData("FlowFM3.mdu", "TwoFixedWeirs_fxw.pliz", 6, 5, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_too_many_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_ignored);
                 yield return new TestCaseData("FlowFM2.mdu", "TwoFixedWeirs_fxw2.pliz", 9, 7, Resources.MduFile_Read_Based_on_the_Fixed_Weir_Scheme__0___there_are_not_enough_column_s__defined_for__1__in_the_imported_fixed_weir_file__The_last__2__column_s__have_been_generated_using_default_values);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_Always_WritesExpectedMetaDataInformation()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            var config = MockRepository.GenerateStub<IMduFileWriteConfig>();
+
+            using (IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew())
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string writeFilePath = Path.Combine(tempDirectory.Path, "FlowFM.mdu");
+
+                // Call
+                mduFile.Write(writeFilePath,
+                              modelDefinition,
+                              null,
+                              new List<ModelFeatureCoordinateData<FixedWeir>>(),
+                              config);
+
+                // Assert
+                string[] lines = File.ReadAllLines(writeFilePath);
+                Assembly waterFlowFMAssembly = typeof(WaterFlowFMModel).Assembly;
+
+                string expectedMetaDataString = $"# Deltares, Plugin D-FLOW FM Version {waterFlowFMAssembly.GetName().Version}, " +
+                                                $"D-Flow FM Version {api.GetVersionString()}";
+
+                Assert.That(lines[1], Is.EqualTo(expectedMetaDataString));
             }
         }
 
@@ -274,17 +308,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 FileUtils.DeleteIfExists(testFilePath);
             }
-        }
-
-        /// <summary>
-        /// Method to test by dot Trace. Should be public for setting thresholds.
-        /// </summary>
-        /// <param name="mduFile"> The Mdu file. </param>
-        /// <param name="testFilePath">The Mdu file path. </param>
-        /// <param name="area"> The area of the model. </param>
-        public static void TimerMethod_ReadMduFileWithBridgePillars(MduFile mduFile, string testFilePath, HydroArea area)
-        {
-            mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
         }
 
         [Test]
@@ -869,7 +892,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string msg = msgs.First();
 
                 const string expectedMsgHeader = "During reading the Fixed Weirs the following warnings were reported:";
-                Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
+                Assert.That(msg, Does.StartWith(expectedMsgHeader), "Expected the header of the message to be different:");
 
                 List<string> subMsgs = msg.Split(new[]
                 {
@@ -1043,6 +1066,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 int importedDryAreas = originalArea.DryAreas.Count;
                 Assert.That(importedDryAreas, Is.EqualTo(expectedAreas), $"Imported number of areas {importedDryAreas} does not match the expected amount ({expectedAreas}");
             }
+        }
+
+        [Test]
+        [Category(NghsTestCategory.PerformanceDotTrace)]
+        public void Write_ManyFixedWeirs()
+        {
+            // Setup
+            var mduFile = new MduFile();
+            HydroArea hydroArea = GetHydroAreaWithManyFixedWeirs();
+            IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirData = GetFixedWeirData(hydroArea);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string filePath = Path.Combine(tempDir.Path, "model.mdu");
+
+                // Call
+                mduFile.Write(filePath, new WaterFlowFMModelDefinition(), hydroArea, fixedWeirData);
+            }
+        }
+
+        /// <summary>
+        /// Method to test by dot Trace. Should be public for setting thresholds.
+        /// </summary>
+        /// <param name="mduFile"> The Mdu file. </param>
+        /// <param name="testFilePath">The Mdu file path. </param>
+        /// <param name="area"> The area of the model. </param>
+        public static void TimerMethod_ReadMduFileWithBridgePillars(MduFile mduFile, string testFilePath, HydroArea area)
+        {
+            mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
         }
 
         private static void CheckAttributeCollection(DictionaryFeatureAttributeCollection attributes, string columnName, List<double> valueList)
@@ -1242,24 +1294,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(result, Is.EqualTo(expected));
         }
 
-        [Test]
-        [Category(NghsTestCategory.PerformanceDotTrace)]
-        public void Write_ManyFixedWeirs()
-        {
-            // Setup
-            var mduFile = new MduFile();
-            HydroArea hydroArea = GetHydroAreaWithManyFixedWeirs();
-            IEnumerable<ModelFeatureCoordinateData<FixedWeir>> fixedWeirData = GetFixedWeirData(hydroArea);
-
-            using (var tempDir = new TemporaryDirectory())
-            {
-                string filePath = Path.Combine(tempDir.Path, "model.mdu");
-
-                // Call
-                mduFile.Write(filePath, new WaterFlowFMModelDefinition(), hydroArea, fixedWeirData);
-            }
-        }
-
         private static HydroArea GetHydroAreaWithManyFixedWeirs()
         {
             var hydroArea = new HydroArea();
@@ -1269,7 +1303,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var fixedWeir = new FixedWeir
                 {
                     GroupName = "fixed_weirs.pliz",
-                    Geometry = new LineString(new[] {new Coordinate(i, i + 1), new Coordinate(i, i)})
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(i, i + 1),
+                        new Coordinate(i, i)
+                    })
                 };
                 hydroArea.FixedWeirs.Add(fixedWeir);
             }

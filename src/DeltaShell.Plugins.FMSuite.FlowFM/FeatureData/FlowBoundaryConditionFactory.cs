@@ -25,12 +25,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                                            BoundaryConditionDataType.TimeSeries, null, null);
         }
 
-        public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D, 
+        public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D,
                                                                    string quantity,
                                                                    BoundaryConditionDataType dataType,
                                                                    string quantityType = null)
         {
-            FlowBoundaryQuantityType flowBoundaryQuantityType;
             var fractionList = new List<string>();
             if (Model != null)
             {
@@ -40,17 +39,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
             // try to parse the sediment concentration name and the quantity type of the boundary condition (special case)
             if (quantityType != null &&
-                FlowBoundaryQuantityType.SedimentConcentration.GetDescription().Equals(quantityType))
+                FlowBoundaryQuantityType.SedimentConcentration.GetDescription().Equals(quantityType) &&
+                fractionList.Count > 0 &&
+                fractionList.Contains(quantity))
             {
-                if (fractionList.Count > 0 && fractionList.Contains(quantity))
-                {
-                    string fractionName = quantity;
-                    return CreateBoundaryCondition(feature2D, 
-                                                   FlowBoundaryQuantityType.SedimentConcentration, 
-                                                   dataType,
-                                                   fractionName, 
-                                                   fractionList);
-                }
+                string fractionName = quantity;
+                return CreateBoundaryCondition(feature2D,
+                                               FlowBoundaryQuantityType.SedimentConcentration,
+                                               dataType,
+                                               fractionName,
+                                               fractionList);
             }
 
             // try to parse the tracer name and the quantity type of the boundary condition (special case)
@@ -69,12 +67,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             // try to parse regular boundary condition
             if (quantity != FlowBoundaryQuantityType.Tracer.ToString()
                 && quantity != FlowBoundaryQuantityType.SedimentConcentration.ToString()
-                && Enum.TryParse(quantity, out flowBoundaryQuantityType))
+                && Enum.TryParse(quantity, out FlowBoundaryQuantityType flowBoundaryQuantityType))
             {
-                return CreateBoundaryCondition(feature2D, 
-                                               flowBoundaryQuantityType, 
-                                               dataType, 
-                                               null, 
+                return CreateBoundaryCondition(feature2D,
+                                               flowBoundaryQuantityType,
+                                               dataType,
+                                               null,
                                                fractionList);
             }
 

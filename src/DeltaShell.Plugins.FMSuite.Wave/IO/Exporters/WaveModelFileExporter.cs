@@ -34,11 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
                 if (Directory.Exists(path))
                 {
                     string fullPath = Path.Combine(path, wm.Name + ".mdw");
-                    wm.ModelSaveTo(fullPath, false);
+                    wm.ExportModelInputTo(fullPath);
                 }
                 else
                 {
-                    wm.ModelSaveTo(path, false);
+                    wm.ExportModelInputTo(path);
                 }
 
                 return true;

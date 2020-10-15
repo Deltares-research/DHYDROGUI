@@ -21,14 +21,10 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
-using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -650,77 +646,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 gui.Run();
 
                 app.OpenProject(dsprojName);
-            }
-        }
-
-        // <summary>
-        /// Test if an FM model can be saved in an environment with FM and Wave plugins.
-        /// Then read it in an environment that contains FM, Wave and RTC.
-        /// TOOLS-22951 - Work in progress & postponed
-        /// </summary>
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
-        [Category(TestCategory.WorkInProgress)]
-        public void ReadFlowFMModelandWaveWithDifferentPluginConfigurationsGui()
-        {
-            var dsprojName = "FM_Wave.dsproj";
-            using (var gui = new DeltaShellGui())
-            {
-                IApplication app = gui.Application;
-                //apps : FM+Wave
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
-
-                //guis : FM+Wave
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new WaveGuiPlugin());
-
-                gui.Run();
-
-                WaterFlowFMModel model = WaterFlowFMModelDefinitionValidatorTest.CreateValidModel();
-                gui.Application.Project.RootFolder.Add(model);
-                NetFile.Write(model.NetFilePath, model.Grid);
-
-                app.SaveProjectAs(dsprojName); // save to initialize file repository..
-            }
-
-            using (var gui = new DeltaShellGui())
-            {
-                IApplication app = gui.Application;
-                //apps : FM+Wave+RTC
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-
-                //guis : FM+Wave+RTC
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new WaveGuiPlugin());
-                gui.Plugins.Add(new RealTimeControlGuiPlugin());
-
-                gui.Run();
-
-                app.OpenProject(dsprojName);
-                app.CloseProject();
             }
         }
 

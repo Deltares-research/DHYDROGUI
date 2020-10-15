@@ -10,10 +10,10 @@ using Rhino.Mocks;
 
 namespace DeltaShell.Dimr.Tests
 {
-    [TestFixture()]
+    [TestFixture]
     public class DimrGuiPluginTests
     {
-        [Test()]
+        [Test]
         public void TestDimrGuiPlugin()
         {
             using (var gui = new DeltaShellGui())
@@ -24,13 +24,13 @@ namespace DeltaShell.Dimr.Tests
                 Assert.AreEqual(dimrGuiPlugin, DimrGuiPlugin.Instance);
                 Assert.AreEqual("Dimr (UI)", DimrGuiPlugin.Instance.Name);
                 Assert.AreEqual(Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
-                Assert.That(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace, Is.StringStarting("DeltaShell.Dimr.Gui"));
+                Assert.That(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace, Does.StartWith("DeltaShell.Dimr.Gui"));
             }
 
             Assert.IsNull(DimrGuiPlugin.Instance);
         }
 
-        [Test()]
+        [Test]
         public void TestIsOnlyDimrModelSelected()
         {
             var mocks = new MockRepository();
@@ -74,7 +74,7 @@ namespace DeltaShell.Dimr.Tests
             mocks.VerifyAll();
         }
 
-        [Test()]
+        [Test]
         public void TestGetPersistentAssemblies()
         {
             using (var dimrGuiPlugin = new DimrGuiPlugin())

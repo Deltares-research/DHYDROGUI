@@ -682,61 +682,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.WorkInProgress)]
-        public void MduFileWritesDefaultValuesForDryPointFeature()
-        {
-            string mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryPointsMdu.mdu");
-            mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
-            string mduDir = Path.GetDirectoryName(mduFilePath);
-            Assert.NotNull(mduDir);
-            string modelName = Path.GetFileName(mduFilePath);
-
-            string saveDirectory = Path.Combine(mduDir, "MduFileReadsAndWritesTest");
-            Directory.CreateDirectory(saveDirectory);
-            string savePath = Path.Combine(saveDirectory, "SaveDryPoint.mdu");
-            string newMduDir = Path.GetDirectoryName(savePath);
-            string newMduName = Path.GetFileName(savePath);
-            try
-            {
-                var mduFile = new MduFile();
-
-                var originalArea = new HydroArea();
-                var originalMd = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
-                mduFile.Read(mduFilePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
-
-                RemoveGroupNameFromGroupableFeature(originalArea.DryPoints);
-
-                var mduFileWriteConfig = new MduFileWriteConfig {WriteExtForcings = false};
-
-                mduFile.Write(savePath,
-                              originalMd,
-                              originalArea,
-                              allFixedWeirsAndCorrespondingProperties.Values,
-                              mduFileWriteConfig,
-                              false);
-
-                var savedArea = new HydroArea();
-                var savedMd = new WaterFlowFMModelDefinition(newMduDir, newMduName);
-                mduFile.Read(savePath, savedMd, savedArea, allFixedWeirsAndCorrespondingProperties);
-
-                //Check MDU property.
-                CompareHydroAreaModelProperties("DryPointsFile", savePath, originalMd, savedMd);
-                //Check feature
-                CheckDryPointsFeature(originalArea, savedArea);
-                //Check default group was created.
-                string mduPathName = Path.GetFileNameWithoutExtension(savePath);
-                CheckDefaultGroupIsInFeature("DryPoints", originalArea.DryPoints, mduPathName, "_dry.xyz");
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(mduFilePath);
-                FileUtils.DeleteIfExists(savePath);
-                FileUtils.DeleteIfExists(saveDirectory);
-            }
-        }
-
-        [Test]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-1462. Only slashSeparated is failing for now.
         [TestCase("HydroAreaCollection\\FlowFM.mdu", 2)]
         [TestCase("HydroAreaCollection\\repeatedProperty.mdu", 1)]
@@ -1265,7 +1210,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var fixedWeir = new FixedWeir
                 {
                     GroupName = fixedWeirGroupName,
-                    Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 100)})
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(0, 100)
+                    })
                 };
                 area.FixedWeirs.Add(fixedWeir);
                 area.ThinDams.Add(new ThinDam2D
@@ -1324,7 +1273,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var fixedWeir = new FixedWeir
                 {
                     GroupName = fixedWeirGroupName,
-                    Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 100)})
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(0, 100)
+                    })
                 };
                 area.FixedWeirs.Add(fixedWeir);
                 area.ThinDams.Add(new ThinDam2D

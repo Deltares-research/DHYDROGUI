@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         // TODO: tried to un-mute these tests, still having trouble when running on build server (better luck next time)
 
         [Test]
-        [RequiresMTA]
+        [Apartment(ApartmentState.MTA)]
         [Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         }
 
         [Test]
-        [RequiresMTA]
+        [Apartment(ApartmentState.MTA)]
         [Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         }
 
         [Test]
-        [RequiresMTA]
+        [Apartment(ApartmentState.MTA)]
         [Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         }
 
         [Test]
-        [RequiresMTA]
+        [Apartment(ApartmentState.MTA)]
         [Category(TestCategory.Slow)]
         public void GeneratePolygonsForEmbankments()
         {
@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         }
 
         [Test]
-        [RequiresMTA]
+        [Apartment(ApartmentState.MTA)]
         [Category(TestCategory.Slow)]
         public void GenerateAnExtraGrid()
         {

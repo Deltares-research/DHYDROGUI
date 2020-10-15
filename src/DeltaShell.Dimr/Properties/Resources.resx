@@ -120,4 +120,7 @@
   <data name="DimrErrorCodeException_During__0__the_model_something_went_wrong_Error_Code__1__has_been_detected_Please_inspect_your_diagnostic_files" xml:space="preserve">
     <value>During {0} the model something went wrong. Error code {1} has been detected. Please inspect your diagnostic files.</value>
   </data>
+  <data name="DimrRunner_Could_not_load_dimr_api" xml:space="preserve">
+    <value>Could not load the Dimr api.</value>
+  </data>
 </root>

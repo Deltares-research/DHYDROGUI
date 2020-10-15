@@ -6,8 +6,8 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
 using ValidationAspects;
@@ -190,7 +190,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             newRule.CopyFrom(source);
 
             Assert.AreEqual(source.Name, newRule.Name);
-            //Assert.AreEqual(source.Function, newRule.Function);
             for (var i = 0; i < source.Function.Arguments[0].Values.Count; i++)
             {
                 Assert.AreEqual(source.Function.Arguments[0].Values[i], newRule.Function.Arguments[0].Values[i]);
@@ -205,14 +204,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void DoNotSupportNoneInterpolation()
         {
-            new HydraulicRule()
+            Assert.That(() => new HydraulicRule
             {
                 Name = "test",
                 Interpolation = InterpolationType.None
-            };
+            }, Throws.ArgumentException);
         }
 
         private string OriginXml()

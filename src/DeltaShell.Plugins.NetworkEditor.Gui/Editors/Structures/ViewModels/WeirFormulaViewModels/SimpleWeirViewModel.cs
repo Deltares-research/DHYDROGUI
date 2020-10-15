@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// <see cref="SimpleWeirViewModel"/> defines the view model for the
     /// <see cref="Views.WeirFormulaViews.SimpleWeirView"/>.
     /// </summary>
-    /// <seealso cref="WeirViewModel" />
+    /// <seealso cref="WeirViewModel"/>
     [Description("Simple Weir")]
     public sealed class SimpleWeirViewModel : WeirViewModel
     {
@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public SimpleWeirViewModel(SimpleWeirFormula formula, 
-                                   WeirPropertiesViewModel weirPropertiesViewModel) : 
+        public SimpleWeirViewModel(SimpleWeirFormula formula,
+                                   WeirPropertiesViewModel weirPropertiesViewModel) :
             base(weirPropertiesViewModel)
         {
             Ensure.NotNull(formula, nameof(formula));
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {
                     return;
                 }
-                
+
                 formula.LateralContraction = value;
                 OnPropertyChanged();
             }

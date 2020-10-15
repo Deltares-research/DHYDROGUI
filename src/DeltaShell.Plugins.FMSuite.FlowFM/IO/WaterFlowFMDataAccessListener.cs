@@ -125,25 +125,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return false;
             }
 
-            var spatialOperationSetValueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
-            if (spatialOperationSetValueConverter != null)
+            if (dataItem.ValueConverter is SpatialOperationSetValueConverter spatialOperationSetValueConverter)
             {
                 var coverage = (ICoverage) spatialOperationSetValueConverter.OriginalValue;
-                IMultiDimensionalArray<double> originalValues =
-                    coverage.Components[0].GetValues<double>();
+                IMultiDimensionalArray<double> originalValues = coverage.Components[0].GetValues<double>();
 
                 spatialOperationSetValueConverter.ConvertedValue = value;
                 coverage.Clear();
 
                 // only do this when there are values or you will get an ArgumentException.
                 // This happens when only a point cloud is loaded and there was no grid (TOOLS-21425)
-                if (originalValues.Any(v => !Equals(v, coverage.Components[0].NoDataValue)))
+                if (originalValues.Any(v => !Equals(v, coverage.Components[0].NoDataValue)) && model.Grid.FlowLinks.Count == originalValues.Count)
                 {
-                    // TODO: remove this check, whenever we fix the flow link loading definitively...
-                    if (model.Grid.FlowLinks.Count == originalValues.Count)
-                    {
-                        coverage.SetValues(originalValues);
-                    }
+                    coverage.SetValues(originalValues);
                 }
 
                 spatialOperationSetValueConverter.SpatialOperationSet.SetDirty();
@@ -164,10 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return SynchronizeDataItemValue(model, baseName, coverageDepthLayersList.Coverages.First());
             }
 
-            return
-                !coverageDepthLayersList.Coverages.Where(
-                                            (t, i) => !SynchronizeDataItemValue(model, baseName + "_" + (i + 1), t))
-                                        .Any();
+            return !coverageDepthLayersList.Coverages.Where((t, i) => !SynchronizeDataItemValue(model, baseName + "_" + (i + 1), t)).Any();
         }
 
         private static void LoadSpatialData(WaterFlowFMModel waterFlowFMModel)

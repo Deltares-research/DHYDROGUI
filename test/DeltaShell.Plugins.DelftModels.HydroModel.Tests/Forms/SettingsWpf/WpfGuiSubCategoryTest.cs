@@ -22,10 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         public void Test_WpfGuiSubCategory_WithProperties()
         {
             var fieldUiDescriptions = new List<FieldUIDescription>();
-            var fieldUiDescription = new FieldUIDescription(null, null)
-            {
-                Label = "dummyName"
-            };
+            var fieldUiDescription = new FieldUIDescription(null, null) {Label = "dummyName"};
             fieldUiDescriptions.Add(fieldUiDescription);
             var subCategory = new WpfGuiSubCategory("dummySubCateogry", fieldUiDescriptions);
             Assert.IsNotNull(subCategory);

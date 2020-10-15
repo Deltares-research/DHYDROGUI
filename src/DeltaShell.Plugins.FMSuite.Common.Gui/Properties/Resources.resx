@@ -208,12 +208,6 @@
   <data name="DeleteHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DeleteHS.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="import" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\import.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="properties" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\properties.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="document_tree" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\document-tree.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -273,5 +267,11 @@
   </data>
   <data name="FMMenuItemHelper_CreateResetCoordinateSystemItem_Reset_Coordinate_System___" xml:space="preserve">
     <value>Reset Coordinate System...</value>
+  </data>
+  <data name="SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system" xml:space="preserve">
+    <value>The model coordinates do not appear to be in '{0}', as they fall outside the expected range of values for this system. Please verify the selected coordinate system is the system the coordinates were measured in. Continuing could lead to the map visualization failing and unexpected behaviour of spatial operations {1}{1}Are you sure you want to continue?</value>
+  </data>
+  <data name="SetCoordinateSystemButton_Coordinates_are_not_in_coordinate_system_Caption" xml:space="preserve">
+    <value>Warning: model coordinates do not appear to be in the selected system</value>
   </data>
 </root>

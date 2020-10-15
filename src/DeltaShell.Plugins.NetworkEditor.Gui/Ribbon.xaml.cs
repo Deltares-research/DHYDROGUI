@@ -1,19 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using DelftTools.Controls;
-using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Fluent;
-using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
@@ -32,28 +28,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
     /// </summary>
     public partial class Ribbon : IRibbonCommandHandler
     {
-        private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
-        private ICommand addNewBranchCommand = new AddNewBranchCommand();
-        private ICommand addNewBranchScribbleCommand = new AddNewBranchUsingScribbleModeCommand();
-        private ICommand addNewPumpCommand = new AddNewPumpCommand();
-        private ICommand addNewWeirCommand = new AddNewWeirCommand();
-        private ICommand addNewExtraResistanceCommand = new AddNewExtraResistanceCommand();
-        private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
-        private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
-        private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
-        private ICommand addNewCatchmentPolderCommand = new AddNewCatchmentCommand.AddNewPolderCommand();
-        private ICommand addNewCatchmentPavedCommand = new AddNewCatchmentCommand.AddNewPavedCommand();
-        private ICommand addNewCatchmentUnpavedCommand = new AddNewCatchmentCommand.AddNewUnpavedCommand();
-        private ICommand addNewCatchmentOpenWaterCommand = new AddNewCatchmentCommand.AddNewOpenWaterCommand();
-        private ICommand addNewCatchmentGreenHouseCommand = new AddNewCatchmentCommand.AddNewGreenHouseCommand();
-        private ICommand addNewCatchmentSacramentoCommand = new AddNewCatchmentCommand.AddNewSacramentoCommand();
-        private ICommand addNewCatchmentHbvCommand = new AddNewCatchmentCommand.AddNewHbvCommand();
-        private ICommand addNewWasteWaterTreatmentPlantCommand = new AddNewDrainageBasinFeatureCommand(HydroRegionEditorMapTool.AddWasteWaterTreatmentPlantToolName);
-        private ICommand addNewRunoffBoundaryCommand = new AddNewDrainageBasinFeatureCommand(HydroRegionEditorMapTool.AddRunoffBoundaryToolName);
-        private ICommand addNewLinkCommand = new AddNewLinkCommand();
-        private ICommand addNewNetworkLocationCommand = new AddNewNetworkLocationCommand();
-        private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
-
         private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
         private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) {LayerType = typeof(HydroAreaLayer)};
         private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) {LayerType = typeof(HydroAreaLayer)};
@@ -73,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             tabRegion.Group = geospatialContextualGroup;
         }
 
-        public Ribbon(IGui gui): this()
+        public Ribbon(IGui gui) : this()
         {
             Ensure.NotNull(gui, nameof(gui));
             gui.MainWindow.SetActiveRibbonTab("Home");
@@ -83,24 +57,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             get
             {
-                yield return showHydroRegionContentsCommand;
-                yield return addNewBranchCommand;
-                yield return addNewBranchScribbleCommand;
-                yield return addNewPumpCommand;
-                yield return addNewWeirCommand;
-                yield return addNewExtraResistanceCommand;
-                yield return addNewLateralSourceCommand;
-                yield return addNewRetentionCommand;
-                yield return addNewObservationPointCommand;
-                yield return addNewCatchmentPolderCommand;
-                yield return addNewCatchmentPavedCommand;
-                yield return addNewCatchmentUnpavedCommand;
-                yield return addNewCatchmentOpenWaterCommand;
-                yield return addNewCatchmentGreenHouseCommand;
-                yield return addNewCatchmentSacramentoCommand;
-                yield return addNewCatchmentHbvCommand;
-                yield return addNewWasteWaterTreatmentPlantCommand;
-                yield return addNewRunoffBoundaryCommand;
                 yield return addThinDam2dCommand;
                 yield return addFixedWeir2dCommand;
                 yield return addObs2dCommand;
@@ -110,9 +66,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addLandBoundary2dCommand;
                 yield return addDryPoint2dCommand;
                 yield return addDryArea2dCommand;
-                yield return addNewLinkCommand;
-                yield return addNewNetworkLocationCommand;
-                yield return openCaseAnalysisCommand;
                 yield return addNewEmbankmentCommand;
                 yield return addEnclosure2dCommand;
                 yield return addBridgePillarCommand;
@@ -121,40 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public void ValidateItems()
         {
-            MapView mapview = NetworkEditorGuiPlugin.GetFocusedMapView();
-            List<IHydroRegion> regions = (mapview != null && mapview.Map != null
-                                              ? mapview.Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region)
-                                              : Enumerable.Empty<IHydroRegion>()).ToList();
-
-            bool showNetworkTools = regions.OfType<IHydroNetwork>().Any();
-            bool showBasinTools = regions.OfType<DrainageBasin>().Any();
-            var showArea2DTools = true; // regions.OfType<Area>().Any();  TODO. 
-
-            ButtonShowHydroRegionContents.SetState(showHydroRegionContentsCommand);
-
-            // branch tools
-            ButtonAddNewBranch.SetState(addNewBranchCommand, showNetworkTools);
-            ButtonAddNewBranchScribble.SetState(addNewBranchScribbleCommand, showNetworkTools);
-
-            // structure tools
-            ButtonAddNewPump.SetState(addNewPumpCommand, showNetworkTools);
-            ButtonAddNewWeir.SetState(addNewWeirCommand, showNetworkTools);
-            ButtonAddNewExtraResistance.SetState(addNewExtraResistanceCommand, showNetworkTools);
-            ButtonAddNewLateralSource.SetState(addNewLateralSourceCommand, showNetworkTools);
-            ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
-            ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
-            
-            // catchment tools
-            ButtonAddNewCatchmentPolder.SetState(addNewCatchmentPolderCommand, showBasinTools);
-            ButtonAddNewCatchmentPaved.SetState(addNewCatchmentPavedCommand, showBasinTools);
-            ButtonAddNewCatchmentUnpaved.SetState(addNewCatchmentUnpavedCommand, showBasinTools);
-            ButtonAddNewCatchmentOpenWater.SetState(addNewCatchmentOpenWaterCommand, showBasinTools);
-            ButtonAddNewCatchmentGreenHouse.SetState(addNewCatchmentGreenHouseCommand, showBasinTools);
-            ButtonAddNewCatchmentSacramento.SetState(addNewCatchmentSacramentoCommand, showBasinTools);
-            ButtonAddNewCatchmentHbv.SetState(addNewCatchmentHbvCommand, showBasinTools);
-
-            ButtonAddNewWasteWaterTreatmentPlant.SetState(addNewWasteWaterTreatmentPlantCommand, showBasinTools);
-            ButtonAddNewRunoffBoundary.SetState(addNewRunoffBoundaryCommand, showBasinTools);
+            var showArea2DTools = true; // regions.OfType<Area>().Any();  TODO.
 
             // Area2d tools
             ButtonAddNewThinDam2D.SetState(addThinDam2dCommand, showArea2DTools);
@@ -169,16 +89,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewEmbankment2D.SetState(addNewEmbankmentCommand, showArea2DTools);
             ButtonAddNewEnclosure2D.SetState(addEnclosure2dCommand, showArea2DTools);
             ButtonAddBridgePillar.SetState(addBridgePillarCommand, showArea2DTools);
-
-            ButtonAddNewLink.SetState(addNewLinkCommand, regions.Count > 0);
-            
-            ButtonOpenCaseAnalysis.IsEnabled = openCaseAnalysisCommand.Enabled;
-            
-            SetCoverageComboBox();
-
-            // Depends on SetCoverageComboBox
-            ButtonAddNewNetworkLocation.SetState(addNewNetworkLocationCommand);
-            NetworkCoverageEditPanel.Visibility = showNetworkTools ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public bool IsContextualTabVisible(string tabGroupName, string tabName)
@@ -196,54 +106,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             return RibbonControl;
         }
 
-        private void SetCoverageComboBox()
-        {
-            MapView mapview = NetworkEditorGuiPlugin.GetFocusedMapView();
-            if (mapview == null || mapview.Map == null)
-            {
-                ComboBoxSelectNetworkCoverage.SelectionChanged -= ComboBoxSelectNetworkCoverageSelectionChanged;
-                ComboBoxSelectNetworkCoverage.Items.Clear();
-                ComboBoxSelectNetworkCoverage.SelectionChanged += ComboBoxSelectNetworkCoverageSelectionChanged;
-                return;
-            }
-
-            List<INetworkCoverageGroupLayer> coverageLayers = mapview.Map.GetAllVisibleLayers(true).OfType<INetworkCoverageGroupLayer>().Where(c => c.Coverage.IsEditable).ToList();
-            List<INetworkCoverageGroupLayer> oldCoverageGroupLayers = ComboBoxSelectNetworkCoverage.Items.Cast<INetworkCoverageGroupLayer>().ToList();
-
-            var tool = mapview.MapControl.GetToolByType<HydroRegionEditorMapTool>();
-            INetworkCoverageGroupLayer currentSelection = tool == null
-                                                              ? ComboBoxSelectNetworkCoverage.SelectedItem as INetworkCoverageGroupLayer
-                                                              : tool.ActiveNetworkCoverageGroupLayer;
-
-            if (oldCoverageGroupLayers.Count == coverageLayers.Count &&
-                oldCoverageGroupLayers.Union(coverageLayers).Count() == ComboBoxSelectNetworkCoverage.Items.Count &&
-                ComboBoxSelectNetworkCoverage.SelectedItem as INetworkCoverageGroupLayer == currentSelection)
-            {
-                return;
-            }
-
-            ComboBoxSelectNetworkCoverage.SelectionChanged -= ComboBoxSelectNetworkCoverageSelectionChanged;
-
-            ComboBoxSelectNetworkCoverage.Items.Clear();
-            foreach (INetworkCoverageGroupLayer layer in coverageLayers)
-            {
-                ComboBoxSelectNetworkCoverage.Items.Add(layer);
-            }
-
-            if (ComboBoxSelectNetworkCoverage.Items.Contains(currentSelection))
-            {
-                ComboBoxSelectNetworkCoverage.SelectedItem = currentSelection;
-            }
-            else if (ComboBoxSelectNetworkCoverage.Items.Count != 0)
-            {
-                ComboBoxSelectNetworkCoverage.SelectedIndex = ComboBoxSelectNetworkCoverage.Items.Count - 1;
-            }
-
-            UpdateAddNetworkLocationHeaderTooltip();
-
-            ComboBoxSelectNetworkCoverage.SelectionChanged += ComboBoxSelectNetworkCoverageSelectionChanged;
-        }
-
         private bool IsActiveViewMapViewWithRegion()
         {
             MapView mapView = NetworkEditorGuiPlugin.GetFocusedMapView();
@@ -259,114 +121,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             return false;
-        }
-
-        private void ButtonShowHydroRegionContents_Click(object sender, RoutedEventArgs e)
-        {
-            showHydroRegionContentsCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewBranch_Click(object sender, RoutedEventArgs e)
-        {
-            addNewBranchCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewBranchScribble_Click(object sender, RoutedEventArgs e)
-        {
-            addNewBranchScribbleCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewPump_Click(object sender, RoutedEventArgs e)
-        {
-            addNewPumpCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewWeir_Click(object sender, RoutedEventArgs e)
-        {
-            addNewWeirCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewExtraResistance_Click(object sender, RoutedEventArgs e)
-        {
-            addNewExtraResistanceCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewLateralSource_Click(object sender, RoutedEventArgs e)
-        {
-            addNewLateralSourceCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewRetention_Click(object sender, RoutedEventArgs e)
-        {
-            addNewRetentionCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewObservationPoint_Click(object sender, RoutedEventArgs e)
-        {
-            addNewObservationPointCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCatchmentPolder_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCatchmentPolderCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCatchmentPaved_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCatchmentPavedCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCatchmentUnpaved_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCatchmentUnpavedCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCatchmentOpenWater_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCatchmentOpenWaterCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCatchmentGreenHouse_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCatchmentGreenHouseCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCatchmentSacramento_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCatchmentSacramentoCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCatchmentHbv_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCatchmentHbvCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewWasteWaterTreatmentPlant_Click(object sender, RoutedEventArgs e)
-        {
-            addNewWasteWaterTreatmentPlantCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewRunoffBoundary_Click(object sender, RoutedEventArgs e)
-        {
-            addNewRunoffBoundaryCommand.Execute();
-            ValidateItems();
         }
 
         private void ButtonAddNewThinDam_Click(object sender, RoutedEventArgs e)
@@ -423,24 +177,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ValidateItems();
         }
 
-        private void ButtonAddNewLink_Click(object sender, RoutedEventArgs e)
-        {
-            addNewLinkCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewNetworkLocation_Click(object sender, RoutedEventArgs e)
-        {
-            addNewNetworkLocationCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonOpenCaseAnalysis_Click(object sender, RoutedEventArgs e)
-        {
-            openCaseAnalysisCommand.Execute();
-            ValidateItems();
-        }
-
         private void ButtonAddNewEmbankment_Click(object sender, RoutedEventArgs e)
         {
             addNewEmbankmentCommand.Execute();
@@ -456,44 +192,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddBridgePillar_Click(object sender, RoutedEventArgs e)
         {
             addBridgePillarCommand.Execute();
-            ValidateItems();
-        }
-
-        private void UpdateAddNetworkLocationHeaderTooltip()
-        {
-            MapView mapView = NetworkEditorGuiPlugin.GetFocusedMapView();
-            if (mapView == null)
-            {
-                return;
-            }
-
-            var tool = mapView.MapControl.GetToolByType<HydroRegionEditorMapTool>();
-            if (tool == null)
-            {
-                return;
-            }
-
-            var activeNetworkCoverageGroupLayer = ComboBoxSelectNetworkCoverage.SelectedItem as INetworkCoverageGroupLayer;
-            tool.ActiveNetworkCoverageGroupLayer = activeNetworkCoverageGroupLayer;
-
-            ButtonAddNewNetworkLocation.Header = activeNetworkCoverageGroupLayer != null
-                                                     ? string.Format("Add {0} location", activeNetworkCoverageGroupLayer.Name)
-                                                     : "Add Network Location";
-            ButtonAddNewNetworkLocation.ToolTip = activeNetworkCoverageGroupLayer != null
-                                                      ? string.Format("Add location to {0} data", activeNetworkCoverageGroupLayer.Name)
-                                                      : "Add location to network data";
-        }
-
-        private void ComboBoxSelectNetworkCoverageSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            UpdateAddNetworkLocationHeaderTooltip();
-
-            // activate addNewNetworkLocation tool
-            if (!addNewNetworkLocationCommand.Enabled)
-            {
-                addNewNetworkLocationCommand.Execute();
-            }
-
             ValidateItems();
         }
     }

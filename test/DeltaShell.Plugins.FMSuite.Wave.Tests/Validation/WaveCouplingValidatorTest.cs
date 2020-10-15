@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
 
                 // Assert
-                string expectedErrorMessage = $"Communications file '{nonExistingFilePath}' does not exist.";
+                var expectedErrorMessage = $"Communications file '{nonExistingFilePath}' does not exist.";
                 ContainsCouplingValidationErrorWithMessage(validationReport, expectedErrorMessage);
             }
         }

@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             propertyName = Regex.Escape(propertyName);
             propertyValue = Regex.Escape(propertyValue);
 
-            string searchPattern = $@"{propertyName}\s*=\s*{propertyValue}";
+            var searchPattern = $@"{propertyName}\s*=\s*{propertyValue}";
             if (propertyComment != null)
             {
                 propertyComment = Regex.Escape(propertyComment);

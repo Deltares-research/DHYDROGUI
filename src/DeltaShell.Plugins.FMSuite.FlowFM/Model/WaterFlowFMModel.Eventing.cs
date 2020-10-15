@@ -11,6 +11,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -71,10 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (flowBoundaryCondition != null &&
                     flowBoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
                 {
-                    tracerBoundaryConditions = new List<FlowBoundaryCondition>
-                    {
-                        flowBoundaryCondition
-                    };
+                    tracerBoundaryConditions = new List<FlowBoundaryCondition> {flowBoundaryCondition};
                 }
             }
             else
@@ -97,7 +95,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         break;
                     case NotifyCollectionChangedAction.Replace:
                         throw new NotImplementedException("Renaming of Tracers is not yet supported");
-                        break;
                     case NotifyCollectionChangedAction.Reset:
                         SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
                         return;
@@ -142,7 +139,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 case NotifyCollectionChangedAction.Replace:
                     // can't rename yet
                     throw new NotImplementedException("Renaming of tracer definitions is not yet supported");
-                    break;
                 case NotifyCollectionChangedAction.Reset:
                     // sync the initial tracers
                     InitialTracers.Clear();
@@ -263,7 +259,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
-                    break;
                 case NotifyCollectionChangedAction.Reset:
                     // sync the initial fractions
                     InitialFractions.Clear();
@@ -717,8 +712,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
 
-            var groupableFeature = removedOrAddedItem as IGroupableFeature;
-            if (groupableFeature != null && e.Action != NotifyCollectionChangedAction.Remove && !Area.IsEditing)
+            if (removedOrAddedItem is IGroupableFeature groupableFeature && e.Action != NotifyCollectionChangedAction.Remove && !Area.IsEditing)
             {
                 groupableFeature.UpdateGroupName(this);
             }
@@ -752,27 +746,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         AddAreaItem(feature, inputSender);
                         break;
                     default:
-                        throw new NotImplementedException(
-                            string.Format("Action {0} on feature collection not supported", e.Action));
+                        throw new NotImplementedException($"Action {e.Action} on feature collection not supported");
                 }
             }
         }
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var weir = sender as IWeir;
-            if (weir != null)
+            if (sender is IWeir weir && e.PropertyName == nameof(Weir.WeirFormula))
             {
-                if (e.PropertyName == nameof(Weir.WeirFormula))
-                {
-                    bool isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
-                    UpdateAreaDataItems(weir, isInputSender);
-                }
+                bool isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
+                UpdateAreaDataItems(weir, isInputSender);
             }
 
-            var groupableFeature = sender as IGroupableFeature;
-            if (updatingGroupName || Area.IsEditing || groupableFeature == null ||
-                e.PropertyName != nameof(IGroupableFeature.GroupName))
+            if (updatingGroupName || Area.IsEditing || !(sender is IGroupableFeature groupableFeature) || e.PropertyName != nameof(IGroupableFeature.GroupName))
             {
                 return;
             }
@@ -791,8 +778,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void RemoveAreaFeature(IFeature feature)
         {
-            List<IDataItem> dataItemsToBeRemoved;
-            if (areaDataItems.TryGetValue(feature, out dataItemsToBeRemoved))
+            if (areaDataItems.TryGetValue(feature, out List<IDataItem> dataItemsToBeRemoved))
             {
                 foreach (IDataItem dataItem in dataItemsToBeRemoved)
                 {
@@ -927,6 +913,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 OutputClassMapFileStore = null;
             }
 
+            RestartOutput = Enumerable.Empty<RestartFile>();
             RemoveOutputTextDocumentDataItem();
         }
 
@@ -953,17 +940,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             syncers.Add(new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(
                             Boundaries,
                             BoundaryConditionSets,
-                            feature => new BoundaryConditionSet
-                            {
-                                Feature = feature
-                            }));
+                            feature => new BoundaryConditionSet {Feature = feature}));
             syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(
                             Pipes,
                             SourcesAndSinks,
-                            feature => new SourceAndSink
-                            {
-                                Feature = feature
-                            }));
+                            feature => new SourceAndSink {Feature = feature}));
         }
 
         private void ClearSyncers()

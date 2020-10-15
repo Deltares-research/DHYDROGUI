@@ -127,6 +127,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual(1e-7, model.VerticalDispersion);
             Assert.IsFalse(model.UseAdditionalHydrodynamicVerticalDiffusion);
 
+            Assert.That(model.UseRestart, Is.False);
+            Assert.That(model.WriteRestart, Is.False);
+            Assert.That(model.UseSaveStateTimeRange, Is.False);
+
             #region Default Dispersion Function
 
             Assert.AreEqual(1, model.Dispersion.Count);
@@ -1355,22 +1359,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             switch (functionName)
             {
                 case "Salinity":
-                    hydroData = new TestHydroDataStub(new HydFileData()
-                    {
-                        SalinityRelativePath = dataFile
-                    });
+                    hydroData = new TestHydroDataStub(new HydFileData() {SalinityRelativePath = dataFile});
                     break;
                 case "Tau":
-                    hydroData = new TestHydroDataStub(new HydFileData()
-                    {
-                        ShearStressesRelativePath = dataFile
-                    });
+                    hydroData = new TestHydroDataStub(new HydFileData() {ShearStressesRelativePath = dataFile});
                     break;
                 case "Temp":
-                    hydroData = new TestHydroDataStub(new HydFileData()
-                    {
-                        TemperatureRelativePath = dataFile
-                    });
+                    hydroData = new TestHydroDataStub(new HydFileData() {TemperatureRelativePath = dataFile});
                     break;
                 default:
                     throw new InvalidOperationException("The test case is not supported by the model. " + functionName);
@@ -1842,8 +1837,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void
-            Test_When_HydFile_IsImported_OverExisting_HydFile_WithSame_CoordinateSystem_NoInfoMessageIsThrown()
+        public void Test_When_HydFile_IsImported_OverExisting_HydFile_WithSame_CoordinateSystem_NoInfoMessageIsThrown()
         {
             ICoordinateSystem epsgAmersfoort = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
 
@@ -1855,6 +1849,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 //Import hyd file
                 string hydPath = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\ImportHydFileForCoordSystem\DefaultCoordSystem\westernscheldt01.hyd");
                 Assert.IsTrue(File.Exists(hydPath));
+
                 var importer = new HydFileImporter();
                 importer.ImportItem(hydPath, model);
 
@@ -1862,8 +1857,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.AreEqual(model.CoordinateSystem, epsgAmersfoort);
 
                 //Import a hyd file with the same coordinate system, assert that there is only 1 message thrown which is from the output timers.
-                TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(hydPath, model), "Output timers");
-                TestHelper.AssertLogMessagesCount(() => importer.ImportItem(hydPath, model), 1);
+                Action call = () => importer.ImportItem(hydPath, model);
+
+                string[] messages = TestHelper.GetAllRenderedMessages(call).ToArray();
+                IEnumerable<string> outputTimerMessages = messages.Where(m => m.Contains("Output timers"));
+                Assert.That(outputTimerMessages.Count(), Is.EqualTo(1));
             }
         }
 

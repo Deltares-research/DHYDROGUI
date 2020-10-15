@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Utils.Guards;
+﻿using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
@@ -26,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
         /// <param name="observedBoundary"> The observed boundary. </param>
         /// <param name="previewMapConfigurator"> The configurator for the geometry preview. </param>
         /// <param name="referenceDateTimeProvider">Reference date time provider.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public WaveBoundaryConditionEditorViewModel(IWaveBoundary observedBoundary,

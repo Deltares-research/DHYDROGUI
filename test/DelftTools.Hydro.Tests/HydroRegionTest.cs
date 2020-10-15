@@ -1,7 +1,6 @@
 ﻿using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.UndoRedo;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.IO;
 using NUnit.Framework;
@@ -269,53 +268,6 @@ namespace DelftTools.Hydro.Tests
                  {
                      link
                  });
-        }
-
-        [Test]
-        [Category(TestCategory.UndoRedo)]
-        public void UndoRemoveLink()
-        {
-            var lateralSource = new LateralSource();
-            var node1 = new HydroNode {Name = "node1"};
-            var branch1 = new Channel
-            {
-                Name = "channel1",
-                Source = node1,
-                Target = node1,
-                BranchFeatures = {lateralSource}
-            };
-            var network = new HydroNetwork
-            {
-                Nodes = {node1},
-                Branches = {branch1}
-            };
-
-            var catchment = new Catchment();
-            var basin = new DrainageBasin {Catchments = {catchment}};
-
-            IHydroRegion region = new HydroRegion
-            {
-                SubRegions =
-                {
-                    network,
-                    basin
-                }
-            };
-
-            HydroLink link = catchment.LinkTo(lateralSource); // external link between basin and network
-
-            using (var undoRedo = new UndoRedoManager(region))
-            {
-                region.RemoveLink(link.Source, link.Target);
-
-                undoRedo.Undo();
-
-                region.Links.Should().Contain(link);
-
-                catchment.Links.Should().Contain(link);
-
-                lateralSource.Links.Should().Contain(link);
-            }
         }
 
         [TestFixture]

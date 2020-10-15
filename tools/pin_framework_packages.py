@@ -4,13 +4,11 @@ import json
 
 
 # Production Server
-TEAMCITY_URL = "https://build.deltares.nl"             
+TEAMCITY_URL = "https://dpcbuild.deltares.nl"             
 # Test Server
 #TEAMCITY_URL = "http://tl-ts001.xtr.deltares.nl:8080" 
 
-BUILDS_ROOT = "{}/httpAuth/app/rest/builds/".format(TEAMCITY_URL)
-
-
+BUILDS_ROOT = f"{TEAMCITY_URL}/httpAuth/app/rest/builds/"
 JSON_RESPONSE_HEADER = {'Accept': 'application/json'}
 
 
@@ -29,13 +27,12 @@ def get_previous_build(user: str, password: str, build_config: str, tag: str) ->
     tag : str
         The tag with which the build should be retrieved.
     """
-    build_url = "{}buildType:{},tag:{},pinned:true,count:1".format(BUILDS_ROOT, 
-                                                                   build_config, 
-                                                                   tag)
+    build_url = f"{BUILDS_ROOT}buildType:{build_config},tag:{tag},pinned:true,count:1"
 
     previous_build_response = requests.get(build_url, 
                                            auth=(user, password),
-                                           headers=JSON_RESPONSE_HEADER)
+                                           headers=JSON_RESPONSE_HEADER,
+                                           verify=False)
 
     if previous_build_response.status_code != 200:
         return None
@@ -78,8 +75,12 @@ def untag_build(user: str, password: str, build_info: str, tag: str) -> None:
                , 'tag': new_tag_values
                }
 
-    tag_url = "{}id:{}/tags/".format(BUILDS_ROOT, build_info["id"])
-    requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags)
+    tag_url = f"{BUILDS_ROOT}id:{build_info['id']}/tags/"
+    requests.put(tag_url, 
+                 auth=(user, password), 
+                 headers=JSON_RESPONSE_HEADER, 
+                 json=new_tags,
+                 verify=False)
     
 
 def unpin_build(user: str, password: str, build_id: str) -> None:
@@ -95,8 +96,11 @@ def unpin_build(user: str, password: str, build_id: str) -> None:
     build_id : str
         The id of the build to be unpinned.
     """
-    pin_url = "{}id:{}/pin/".format(BUILDS_ROOT, build_id)
-    requests.delete(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER)
+    pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
+    requests.delete(pin_url, 
+                    auth=(user, password), 
+                    headers=JSON_RESPONSE_HEADER, 
+                    verify=False)
     
 
 def clean_up_build(user: str, password: str, build_info: dict, tag: str) -> None:
@@ -121,9 +125,9 @@ def clean_up_build(user: str, password: str, build_info: dict, tag: str) -> None
         unpin_build(user, password, build_id)
 
 
-def get_new_build(user: str, password: str, build_config: str, revision_number: str) -> None:
+def get_new_build(user: str, password: str, build_config: str, git_hash: str) -> None:
     """
-    Get the build from build_config with the specified revision number.
+    Get the build from build_config with the specified git hash number.
 
     Parameters
     ----------
@@ -133,16 +137,14 @@ def get_new_build(user: str, password: str, build_config: str, revision_number: 
         The password to authenticate with.
     build_config : str
         The name of the build configuration of which the build is part.
-    revision_number : str
-        The revision number of the build to be retrieved.
+    git_hash : str
+        The git hash of the build to be retrieved.
     """
-    build_url = "{}buildType:{},revision:{},count:1".format(BUILDS_ROOT, 
-                                                            build_config, 
-                                                            revision_number)
-
+    build_url = f"{BUILDS_ROOT}buildType:{build_config},number:{git_hash},count:1"
     new_build_response = requests.get(build_url, 
                                       auth=(user, password), 
-                                      headers=JSON_RESPONSE_HEADER)
+                                      headers=JSON_RESPONSE_HEADER,
+                                      verify=False)
     if new_build_response.status_code != 200:
         return None
 
@@ -162,8 +164,8 @@ def pin_build(user: str, password: str, build_id: str) -> None:
     build_id : str
         The id of the build to be pinned.
     """
-    pin_url = "{}id:{}/pin/".format(BUILDS_ROOT, build_id)
-    requests.put(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER)
+    pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
+    requests.put(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, verify=False)
 
 
 def tag_build(user: str, password: str, build_info, tag: str) -> None:
@@ -192,8 +194,8 @@ def tag_build(user: str, password: str, build_info, tag: str) -> None:
                  'tag': new_tag_values
     }
 
-    tag_url = "{}id:{}/tags/".format(BUILDS_ROOT, build_info["id"])
-    requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags)
+    tag_url = f"{BUILDS_ROOT}id:{build_info['id']}/tags/"
+    requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags, verify=False)
 
 
 def bag_new_build(user: str, password: str, build_info: dict, tag: str) -> None:
@@ -226,7 +228,7 @@ def parse_arguments():
     parser.add_argument("user", help="User to authenticate with.")
     parser.add_argument("password", help="Password to authenticate with.")
     parser.add_argument("tag_string", help="The string that is used to tag the build.")
-    parser.add_argument("revision_number", help="The revision number of the build to be pinned and tagged.")
+    parser.add_argument("git_hash", help="The short git hash of the build to be pinned and tagged.")
 
     return parser.parse_args()
 
@@ -239,7 +241,7 @@ if __name__ == "__main__":
     if old_build_info:
         clean_up_build(args.user, args.password, old_build_info, args.tag_string)
 
-    new_build_info = get_new_build(args.user, args.password, args.build_configuration_id, args.revision_number)
+    new_build_info = get_new_build(args.user, args.password, args.build_configuration_id, args.git_hash)
 
     if new_build_info:
         bag_new_build(args.user, args.password, new_build_info, args.tag_string)

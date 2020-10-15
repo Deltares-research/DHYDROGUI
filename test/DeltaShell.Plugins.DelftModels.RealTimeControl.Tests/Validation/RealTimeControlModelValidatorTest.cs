@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Validation;
@@ -121,135 +120,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         }
 
         [Test]
-        public void ValidRealTimeControlModelWithConsistentRestartInputState()
-        {
-            string validRestartFilePath = TestHelper.GetTestFilePath("valid_state_RTC.zip");
-
-            RealTimeControlModel model = CreateValidFilledRealTimeControlModel();
-
-            model.RestartInput = new FileBasedRestartState("test", validRestartFilePath);
-            model.UseRestart = true;
-
-            ValidationReport validationResult = new RealTimeControlModelValidator().Validate(model);
-            Assert.AreEqual(0, validationResult.ErrorCount);
-            Assert.AreEqual(0, validationResult.WarningCount);
-            Assert.AreEqual(0, validationResult.InfoCount);
-        }
-
-        [Test]
-        public void ValidRealTimeControlModelWithConsistentRestartInputStateWithoutMetadata()
-        {
-            string validRestartFilePath =
-                TestHelper.GetTestFilePath("valid_state_without_metadata_RTC.zip");
-
-            RealTimeControlModel model = CreateValidFilledRealTimeControlModel();
-
-            model.RestartInput = new FileBasedRestartState("test", validRestartFilePath);
-            model.UseRestart = true;
-
-            ValidationReport validationResult = new RealTimeControlModelValidator().Validate(model);
-            Assert.AreEqual(0, validationResult.ErrorCount);
-            Assert.AreEqual(0, validationResult.WarningCount);
-            Assert.AreEqual(0, validationResult.InfoCount);
-        }
-
-        [Test]
-        public void ValidRealTimeControlModelWithInconsistentRestartInputState()
-        {
-            string validRestartFilePath =
-                TestHelper.GetTestFilePath("invalid_state_RTC.zip");
-
-            RealTimeControlModel model = CreateValidFilledRealTimeControlModel();
-
-            model.RestartInput = new FileBasedRestartState("test", validRestartFilePath);
-            model.UseRestart = true;
-
-            ValidationReport validationResult = new RealTimeControlModelValidator().Validate(model);
-            Assert.AreEqual(4, validationResult.ErrorCount);
-            IEnumerable<ValidationIssue> validationIssues = validationResult.AllErrors;
-            Assert.IsTrue(validationIssues.All(vi => vi.Subject == "Input restart state"));
-            Assert.IsNotNull(validationIssues.Single(vi => vi.Message == "NrOfControlGroups: Value of '4' in restart state not matching expected value of '2' of current situation"));
-            Assert.IsNotNull(validationIssues.Single(vi => vi.Message == "NrOfRulesPerControlGroups: Value of '2,7,' in restart state not matching expected value of '2,1,' of current situation"));
-            Assert.IsNotNull(validationIssues.Single(vi => vi.Message == "NrOfConditionsPerControlGroups: Value of '2,9,' in restart state not matching expected value of '2,1,' of current situation"));
-            Assert.IsNotNull(validationIssues.Single(vi => vi.Message == "ConditionTypesPerControlGroup: Missing"));
-            Assert.AreEqual(0, validationResult.WarningCount);
-            Assert.AreEqual(0, validationResult.InfoCount);
-        }
-
-        [Test]
-        public void ValidRealTimeControlModelWithInvalidModelTypeRestartInputState()
-        {
-            string validRestartFilePath =
-                TestHelper.GetTestFilePath("invalid_ModelType_state_RTC.zip");
-
-            RealTimeControlModel model = CreateValidFilledRealTimeControlModel();
-
-            model.RestartInput = new FileBasedRestartState("test", validRestartFilePath);
-            model.UseRestart = true;
-
-            ValidationReport validationResult = new RealTimeControlModelValidator().Validate(model);
-            Assert.AreEqual(1, validationResult.ErrorCount);
-            Assert.AreEqual("Model type of 'test' is not compatible.", validationResult.AllErrors.First().Message);
-            Assert.AreEqual(0, validationResult.WarningCount);
-            Assert.AreEqual(0, validationResult.InfoCount);
-        }
-
-        [Test]
-        public void ValidRealTimeControlModelWithInvalidVersionRestartInputState()
-        {
-            string validRestartFilePath =
-                TestHelper.GetTestFilePath("invalid_Version_state_RTC.zip");
-
-            RealTimeControlModel model = CreateValidFilledRealTimeControlModel();
-
-            model.RestartInput = new FileBasedRestartState("test", validRestartFilePath);
-            model.UseRestart = true;
-
-            ValidationReport validationResult = new RealTimeControlModelValidator().Validate(model);
-            Assert.AreEqual(1, validationResult.ErrorCount);
-            Assert.AreEqual("Version 2 is not supported.", validationResult.AllErrors.First().Message);
-            Assert.AreEqual(0, validationResult.WarningCount);
-            Assert.AreEqual(0, validationResult.InfoCount);
-        }
-
-        [Test]
-        public void ValidateRealTimeControlModelInputRestartStatePathIncorect()
-        {
-            RealTimeControlModel model = CreateValidFilledRealTimeControlModel();
-
-            const string invalidPath = "invalidPath";
-            var fileBasedRestartState = new FileBasedRestartState("test", invalidPath);
-            ((IFileBased) fileBasedRestartState).Path = invalidPath;
-            model.RestartInput = fileBasedRestartState;
-            model.UseRestart = true;
-
-            ValidationReport validationResult = new RealTimeControlModelValidator().Validate(model);
-            Assert.AreEqual(1, validationResult.ErrorCount);
-            Assert.AreEqual("Model state file does not exist: " + invalidPath, validationResult.AllErrors.First().Message);
-            Assert.AreEqual(0, validationResult.WarningCount);
-            Assert.AreEqual(0, validationResult.InfoCount);
-        }
-
-        [Test]
-        public void ValidateRealTimeControlModelInputRestartStatePathToNonZip()
-        {
-            string filePathToNonZipFile =
-                TestHelper.GetTestFilePath("NotAZipFile.txt");
-            RealTimeControlModel model = CreateValidFilledRealTimeControlModel();
-
-            var fileBasedRestartState = new FileBasedRestartState("test", filePathToNonZipFile);
-            ((IFileBased) fileBasedRestartState).Path = filePathToNonZipFile;
-            model.RestartInput = fileBasedRestartState;
-            model.UseRestart = true;
-
-            ValidationReport validationResult = new RealTimeControlModelValidator().Validate(model);
-            Assert.AreEqual(1, validationResult.ErrorCount);
-            Assert.AreEqual("Model state file should be zip file and have the extension .zip", validationResult.AllErrors.First().Message);
-            Assert.AreEqual(0, validationResult.WarningCount);
-            Assert.AreEqual(0, validationResult.InfoCount);
-        }
-
-        [Test]
         public void ValidateRealTimeControlModelRestartStateWithIntermediateRestartFiles()
         {
             RealTimeControlModel model = CreateValidFilledRealTimeControlModel();
@@ -263,6 +133,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             Assert.AreEqual(0, validationResult.ErrorCount);
             Assert.AreEqual(0, validationResult.WarningCount);
             Assert.AreEqual(0, validationResult.InfoCount);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Validate_WhenSaveStateTimeStepIsNotCorrect_ShouldGiveWriteRestartSubReportWithError()
+        {
+            var rtcModel = new RealTimeControlModel
+            {
+                WriteRestart = true,
+                TimeStep = new TimeSpan(0, 2, 0, 0),
+                SaveStateTimeStep = new TimeSpan(0, 3, 0, 0)
+            };
+
+            rtcModel.SaveStateStartTime = rtcModel.StartTime;
+            rtcModel.SaveStateStopTime = rtcModel.StopTime;
+
+            ValidationReport validationResult = new RealTimeControlModelValidator().Validate(rtcModel);
+            ValidationReport writeRestartSubValidationReport = validationResult.SubReports.FirstOrDefault(sr =>
+                                                                                                              sr.Category == Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_range_settings);
+
+            Assert.IsNotNull(writeRestartSubValidationReport);
+
+            ValidationIssue restartValidationIssue = writeRestartSubValidationReport.GetAllIssuesRecursive().FirstOrDefault(i =>
+                                                                                                                                i.Message == Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_The_restart_time_step_must_be_an_integer_multiple_of_the_output_time_step_);
+            Assert.IsNotNull(restartValidationIssue);
+            Assert.AreEqual(Resources.RestartTimeRangeValidator_ValidateRestartTimeRangeSettings_Restart_time_step,
+                            restartValidationIssue.ViewData);
         }
 
         private RealTimeControlModel CreateValidRealTimeControlModel()

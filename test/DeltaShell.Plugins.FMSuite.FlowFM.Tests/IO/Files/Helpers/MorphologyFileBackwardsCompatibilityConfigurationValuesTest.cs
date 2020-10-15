@@ -17,10 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
         };
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyPropertyMapping =>
-            new Dictionary<string, string>
-            {
-                {"bslhd", "Bshld"}
-            };
+            new Dictionary<string, string> {{"bslhd", "Bshld"}};
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping =>
             new Dictionary<string, string>();

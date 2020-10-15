@@ -164,8 +164,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private AcceptanceModelExportResultConfig exportConfig;
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             TestFixtureDirectory = FileUtils.CreateTempDirectory();
 
@@ -175,8 +175,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Directory.CreateDirectory(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory);
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             FileUtils.DeleteIfExists(TestFixtureDirectory);
         }
@@ -252,8 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       DirectoryInfo modelDirectory,
                                                                       bool hasMultipleZipFiles)
         {
-            IList<string> filesInZip = ZipFileUtils.GetFilePathsInZip(candidateZipFile.FullName,
-                                                                      null);
+            IList<string> filesInZip = ZipFileUtils.GetFilePathsInZip(candidateZipFile.FullName);
 
             string[] relevantMduFilesInZip =
                 filesInZip.Where(p => p.EndsWith(".mdu") && !IsIgnored(p))
@@ -288,7 +287,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                           string candidateZipFileName,
                                           string candidateMduFileName)
         {
-            string testName = $"{testModel.Parent.Name}.{testModel.Name}";
+            var testName = $"{testModel.Parent.Name}.{testModel.Name}";
 
             if (hasMultipleZipFiles && hasMultipleMduFiles)
             {

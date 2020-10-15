@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                                                    "CsvFiles",
                                                                    "dflowfm-properties.csv");
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             // trigger creation here, to make sure it's not triggered after these tests have ran.
             new WaterFlowFMModelDefinition();

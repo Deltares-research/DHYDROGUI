@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             //Then
             int totalOfBackGroundFunctions = factory.BackgroundFunctions.Count;
-            string errorMssgWrongFunctionNumber = $"Expected number of functions ({expectedBackgroundFunctions}) does not match retrieved ({totalOfBackGroundFunctions}) ";
+            var errorMssgWrongFunctionNumber = $"Expected number of functions ({expectedBackgroundFunctions}) does not match retrieved ({totalOfBackGroundFunctions}) ";
             Assert.That(totalOfBackGroundFunctions, Is.EqualTo(expectedBackgroundFunctions), errorMssgWrongFunctionNumber);
 
             FlowBoundaryCondition flowBoundaryCondition1 = GetBackgroundFunctionFlowQuantityType(factory, 0);

@@ -90,7 +90,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [ExpectedException(typeof(Exception), ExpectedMessage = "Couldn't open grid nc file: ", MatchType = MessageMatch.StartsWith)]
         public void InitializeCouldNotOpenExceptionTest()
         {
             var gridApi = mocks.DynamicMock<IGridApi>();
@@ -103,7 +102,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            grid.Initialize();
+            Assert.That(() => grid.Initialize(), Throws.Exception.With.Message.StartsWith("Couldn't open grid nc file: "));
 
             mocks.VerifyAll();
         }

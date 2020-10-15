@@ -13,6 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// </summary>
     public abstract class TimeDependentParametersViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Creates a new <see cref="TimeDependentParametersViewModel"/>.
         /// </summary>
@@ -36,8 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Generates the time series for the contained time dependent functions.
         /// </summary>
         protected abstract void GenerateSeries();
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

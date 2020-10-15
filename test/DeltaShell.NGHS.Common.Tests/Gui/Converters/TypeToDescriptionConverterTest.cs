@@ -74,11 +74,11 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Converters
         }
 
         [System.ComponentModel.Description("Description")]
-        private class DescriptionTestClass { }
+        private class DescriptionTestClass {}
 
         [System.ComponentModel.Description("Description description")]
-        private class DescriptionWithSpacesTestClass { }
+        private class DescriptionWithSpacesTestClass {}
 
-        private class WithoutDescriptionTestClass { }
+        private class WithoutDescriptionTestClass {}
     }
 }

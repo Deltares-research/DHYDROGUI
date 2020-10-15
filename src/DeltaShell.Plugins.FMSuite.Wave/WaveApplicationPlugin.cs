@@ -29,7 +29,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion => "1.1.0.0";
+        public override string FileFormatVersion => "1.2.0.0";
+
+        public override IApplication Application
+        {
+            get => application;
+            set
+            {
+                if (application != null)
+                {
+                    application.ProjectOpened -= Application_ProjectOpened;
+                }
+
+                application = value;
+
+                if (application != null)
+                {
+                    application.ProjectOpened += Application_ProjectOpened;
+                }
+            }
+        }
 
         public IEnumerable<WaveModel> GetModels()
         {
@@ -80,25 +99,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             yield return new WaveDataAccessListener();
-        }
-
-        public override IApplication Application
-        {
-            get => application;
-            set
-            {
-                if (application != null)
-                {
-                    application.ProjectOpened -= Application_ProjectOpened;
-                }
-
-                application = value;
-
-                if (application != null)
-                {
-                    application.ProjectOpened += Application_ProjectOpened;
-                }
-            }
         }
 
         private void Application_ProjectOpened(Project project)

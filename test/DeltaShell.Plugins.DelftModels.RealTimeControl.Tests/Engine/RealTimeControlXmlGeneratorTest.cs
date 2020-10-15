@@ -7,8 +7,8 @@ using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
@@ -537,7 +537,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
 
-            string expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidrule02TestName}";
+            var expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidrule02TestName}";
             Assert.AreEqual(expectedLocalName, descendantsWithLocalName[0].Value); // only the PidRule from the second control group
 
             /*Set both to time series, there should be two nodes now*/
@@ -567,7 +567,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             Assert.AreEqual(1, descendantsWithLocalName.Count);
             Assert.AreNotEqual(pidRule.Name, descendantsWithLocalName[0].Value);
 
-            string expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{controlGroup.Rules[1].Name}";
+            var expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{controlGroup.Rules[1].Name}";
             Assert.AreEqual(expectedLocalName, descendantsWithLocalName[0].Value);
 
             /*Set both to time series, there should be two nodes now*/
@@ -598,7 +598,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
 
-            string expectedLocalNameValue = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidRule.Name}";
+            var expectedLocalNameValue = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidRule.Name}";
             Assert.AreEqual(expectedLocalNameValue, descendantsWithLocalName[0].Value);
         }
 
@@ -940,7 +940,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         }
 
         /// <summary>
-        /// Check if duplicate input items are handled well in the xml for dataconfig
+        /// Check if duplicate input items are handled well in the xml for data config
         /// note timeseries.xml will be empty
         /// </summary>
         [Test]
@@ -949,25 +949,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             IList<ControlGroup> controlGroups = CreateModelWithDuplicateInputOutputItems();
 
-            var dataconfig = RealTimeControlXmlWriter
+            var dataConfig = RealTimeControlXmlWriter
                              .GetDataConfigXml(XsdPath, realTimeControlModel, controlGroups, null).ToString();
-            // generate the xml for dataconfig
-            XElement dataconfigXML = XElement.Parse(dataconfig);
+            // generate the xml for data config
+            XElement dataConfigComplexType = XElement.Parse(dataConfig);
             // parse the generated xml and check the number of input and output items
-            IEnumerable<XElement> descendants = dataconfigXML.Descendants();
-            Assert.AreEqual(2,
-                            descendants.Where(
-                                d => d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
-            Assert.AreEqual(1,
-                            descendants.Where(
-                                d =>
-                                    d.Value.ToUpper().StartsWith("locationWater level".ToUpper()) &&
-                                    d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
-            Assert.AreEqual(1,
-                            descendants.Where(
-                                d =>
-                                    d.Value.ToUpper().StartsWith("locationCrest level".ToUpper()) &&
-                                    d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
+            IEnumerable<XElement> descendants = dataConfigComplexType.Descendants();
+            Assert.AreEqual(2, descendants.Count(d => d.Name.ToString().Contains("OpenMIExchangeItem")));
+            Assert.AreEqual(1, descendants.Count(d => d.Value.ToUpper().StartsWith("locationWater level".ToUpper()) &&
+                                                      d.Name.ToString().Contains("OpenMIExchangeItem")));
+            Assert.AreEqual(1, descendants.Count(d => d.Value.ToUpper().StartsWith("locationCrest level".ToUpper()) &&
+                                                      d.Name.ToString().Contains("OpenMIExchangeItem")));
         }
 
         [Test]

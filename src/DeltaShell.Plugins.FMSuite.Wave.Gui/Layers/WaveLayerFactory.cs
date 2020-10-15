@@ -112,10 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                                    ? domainName
                                    : WaveLayerNames.GetOutputLayerName(domainName);
 
-            return new GroupLayer(layerName)
-            {
-                LayersReadOnly = true
-            };
+            return new GroupLayer(layerName) {LayersReadOnly = true};
         }
 
         public ILayer CreateGridLayer(IDiscreteGridPointCoverage discreteGrid,
@@ -132,10 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         {
             Ensure.NotNull(featuresProviderContainer, nameof(featuresProviderContainer));
 
-            var groupLayer = new GroupLayer(WaveLayerNames.BoundaryLayerName)
-            {
-                LayersReadOnly = false
-            };
+            var groupLayer = new GroupLayer(WaveLayerNames.BoundaryLayerName) {LayersReadOnly = false};
 
             groupLayer.Layers.AddRange(CreateBoundaryLayers(featuresProviderContainer));
 

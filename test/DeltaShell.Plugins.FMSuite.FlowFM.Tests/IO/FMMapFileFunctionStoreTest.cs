@@ -9,8 +9,10 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
@@ -70,6 +72,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 Assert.AreEqual(12, store.Functions.Count);
             });
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(@"output_mapfiles\FlowFMWithTimeZones_map.nc", "Wednesday, 09 August 1950 00:00:00")]
+        [TestCase(@"output_mapfiles\FlowFMWithoutTimeZones_map.nc", "Monday, 31 August 1992 00:00:00")]
+        public void OpenMapFileWithOrWithoutTimeZones_ShouldSetReferenceDateInFunctionsCorrectly(string mapFilePath, string expectedReferenceDate)
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string mapFilePathTemp = tempDirectory.CopyTestDataFileToTempDirectory(TestHelper.GetTestFilePath(mapFilePath));
+
+                // Act
+                var store = new FMMapFileFunctionStore {Path = mapFilePathTemp};
+
+                // Assert
+                Assert.IsInstanceOf<FMNetCdfFileFunctionStore>(store);
+
+                string retrievedReferenceDate = ((ICoverage) store.Functions.First()).Time.Attributes["ncRefDate"];
+                Assert.AreEqual(expectedReferenceDate, retrievedReferenceDate);
+            }
         }
 
         [Test]
@@ -402,7 +426,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string expectedMsg = string.Format(Resources.FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_file__1__an_error_was_encountered___2_,
                                                    compName, mapFileName, ""); // we ignore the actual error message, and just test for the beginning of the message.
-                Assert.That(msgs[0], Is.StringStarting(expectedMsg), "Expected a different msg:");
+                Assert.That(msgs[0], Does.StartWith(expectedMsg), "Expected a different msg:");
             }
         }
 

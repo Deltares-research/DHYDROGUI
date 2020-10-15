@@ -14,7 +14,9 @@ using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Core;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -400,6 +402,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 FileUtils.DeleteIfExists(tempDirPath);
             }
         }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ExportTo_ModelUsesRestart_SetsCorrectPropertyAndCopiesFile(bool switchTo)
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                var model = new WaterFlowFMModel();
+                string restartFilePath = tempDir.CreateFile("restart.file");
+                string exportDir = tempDir.CreateDirectory("export_dir");
+
+                model.RestartInput = new RestartFile(restartFilePath);
+
+                // Precondition
+                Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo(string.Empty));
+
+                // Call
+                model.ExportTo(Path.Combine(exportDir, "model.mdu"), switchTo, false, false);
+
+                // Assert
+                string exportRestartFilePath = Path.Combine(exportDir, "restart.file");
+                Assert.That(restartFilePath, Does.Exist);
+                Assert.That(exportRestartFilePath, Does.Exist);
+                Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo("restart.file"));
+                Assert.That(model.RestartInput.Path, Is.EqualTo(switchTo ? exportRestartFilePath : restartFilePath));
+            }
+        }
+
+        private static string GetRestartFilePropertyValue(WaterFlowFMModel model) => model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
 
         [TestCase(false)]
         [TestCase(true)]

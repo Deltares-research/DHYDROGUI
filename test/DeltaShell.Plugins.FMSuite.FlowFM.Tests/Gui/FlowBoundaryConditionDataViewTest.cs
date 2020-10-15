@@ -13,7 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     public class FlowBoundaryConditionDataViewTest
     {
         [Test]
-        [ExpectedException(typeof(NotSupportedException), ExpectedMessage = "Function has no arguments")]
         public void HarmonicNoArgumentsTest()
         {
             var function = new Function {Name = "HarmonicTestFunction"};
@@ -21,28 +20,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             var expectedA1 = 30.0;
 
-            try
+            void Test()
             {
-                var result = (bool) TypeUtils.CallPrivateStaticMethod(typeof(FlowBoundaryConditionDataView),
-                                                                      "ApplyHarmonicComponentValues", new object[]
-                                                                      {
-                                                                          new[]
-                                                                          {
-                                                                              expectedA1
-                                                                          },
-                                                                          function
-                                                                      });
+                TypeUtils.CallPrivateStaticMethod(typeof(FlowBoundaryConditionDataView),
+                                                  "ApplyHarmonicComponentValues", new[] {expectedA1}, function);
             }
 
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null)
-                {
-                    throw ex.InnerException;
-                }
-
-                Assert.Fail(ex.Message);
-            }
+            Exception exception = Assert.Throws<TargetInvocationException>(Test).InnerException;
+            Assert.That(exception, Is.InstanceOf<NotSupportedException>());
+            Assert.That(exception.Message, Is.EqualTo("Function has no arguments"));
         }
 
         [Test]
@@ -160,7 +146,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException), ExpectedMessage = "Incorrect number of components")]
         public void ApplyIncorrectFourHarmonicValuesTest()
         {
             var function = new Function {Name = "HarmonicTestFunction"};
@@ -191,31 +176,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var expectedC1 = 20.0;
             var expectedC2 = 10.0;
             var expectedC3 = 5.0;
-            try
-            {
-                var result = (bool) TypeUtils.CallPrivateStaticMethod(typeof(FlowBoundaryConditionDataView),
-                                                                      "ApplyHarmonicComponentValues",
-                                                                      new object[]
-                                                                      {
-                                                                          new[]
-                                                                          {
-                                                                              expectedA1,
-                                                                              expectedC1,
-                                                                              expectedC2,
-                                                                              expectedC3
-                                                                          },
-                                                                          function
-                                                                      });
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null)
-                {
-                    throw ex.InnerException;
-                }
 
-                Assert.Fail(ex.Message);
+            void Test()
+            {
+                TypeUtils.CallPrivateStaticMethod(typeof(FlowBoundaryConditionDataView),
+                                                  "ApplyHarmonicComponentValues",
+                                                  new object[] {new[] {expectedA1, expectedC1, expectedC2, expectedC3}, function});
             }
+
+            Exception exception = Assert.Throws<TargetInvocationException>(Test).InnerException;
+            Assert.That(exception, Is.InstanceOf<NotSupportedException>());
+            Assert.That(exception.Message, Is.EqualTo("Incorrect number of components"));
         }
 
         [Test]

@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -245,6 +248,81 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.That(childModel.Name, Is.EqualTo("child"),
                             "When model with a child model is added to the project, then the child model name should also be trimmed.");
             }
+        }
+
+        [Test]
+        public void GetModelInfos_ShouldReturnModelInfoWithFuncCreateModelWhichSetWorkingDirectoryPathFuncInHydroModel()
+        {
+            // Arrange
+            var appPlugin = new HydroModelApplicationPlugin();
+            var application = Substitute.For<IApplication>();
+            const string applicationWorkingDirectory = "WorkingDirectory";
+            application.WorkDirectory.Returns(applicationWorkingDirectory);
+            appPlugin.Application = application;
+
+            // Act
+            ModelInfo modelInfos = appPlugin.GetModelInfos().First();
+
+            // Assert
+            var hydroModel = modelInfos.CreateModel(Substitute.For<IProjectItem>()) as HydroModel;
+            Assert.IsNotNull(hydroModel);
+            Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
+
+            const string applicationWorkingDirectory2 = "WorkingDirectory2";
+            application.WorkDirectory.Returns(applicationWorkingDirectory2);
+            Assert.AreEqual(applicationWorkingDirectory2, hydroModel.WorkingDirectoryPathFunc());
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetFileImporters_ShouldReturnDimrXmlImporterWhichCreatesAHydroModelUsingApplicationWorkingDirectory()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string dimrFilePathInTemp = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(Path.Combine("FileReader", "dimr.xml"));
+
+                var appPlugin = new HydroModelApplicationPlugin();
+                var application = Substitute.For<IApplication>();
+                const string applicationWorkingDirectory = "TestWorkingDirectory";
+                application.WorkDirectory.Returns(applicationWorkingDirectory);
+                appPlugin.Application = application;
+
+                // Act
+                IFileImporter importer = appPlugin.GetFileImporters().Single();
+
+                // Assert
+
+                // Check type of importer
+                Assert.IsInstanceOf(typeof(DHydroConfigXmlImporter), importer);
+
+                // Check if the correct constructor argument was provided in the HydroModelApplicationPlugin
+                object importedModel = importer.ImportItem(dimrFilePathInTemp);
+                Assert.AreEqual(applicationWorkingDirectory, ((HydroModel) importedModel).WorkingDirectoryPathFunc());
+            }
+        }
+
+        [Test]
+        public void ProjectOpened_ShouldSetWorkingDirectoryPathFuncInHydroModel()
+        {
+            // Arrange
+            var appPlugin = new HydroModelApplicationPlugin();
+            var application = Substitute.For<IApplication>();
+            const string applicationWorkingDirectory = "TestWorkingDirectory";
+            application.WorkDirectory.Returns(applicationWorkingDirectory);
+            appPlugin.Application = application;
+
+            var project = new Project();
+            var hydroModel = new HydroModel();
+
+            application.Project.Returns(project);
+            application.GetAllModelsInProject().Returns(new List<IModel> {hydroModel});
+
+            // Act
+            application.ProjectOpened += Raise.Event<Action<Project>>(project);
+
+            // Assert
+            Assert.AreEqual(applicationWorkingDirectory, hydroModel.WorkingDirectoryPathFunc());
         }
 
         private static void SetUpApplication(DeltaShellApplication app, ApplicationPlugin appPlugin)

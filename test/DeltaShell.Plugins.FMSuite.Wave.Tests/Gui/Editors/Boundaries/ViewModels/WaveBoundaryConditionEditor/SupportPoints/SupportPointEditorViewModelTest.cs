@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     {
         private const double maxDistance = 10;
         private const double doublePrecision = 1E-7;
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
 
         private SupportPointEditorViewModel viewModel;
         private IWaveBoundary waveBoundary;
@@ -719,7 +719,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             return new SupportPoint(distance, geometricDefinition);
         }
 
-        private IEnumerable<double[]> GetEqualDistances()
+        private static IEnumerable<double[]> GetEqualDistances()
         {
             double value = random.NextDouble();
             yield return new[]

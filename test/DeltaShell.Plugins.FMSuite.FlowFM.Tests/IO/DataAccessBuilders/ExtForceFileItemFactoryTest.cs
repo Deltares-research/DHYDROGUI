@@ -65,30 +65,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                     })
             };
 
-            var bc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroComponents)
-            {
-                Feature = feature
-            };
+            var bc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroComponents) {Feature = feature};
             AddBoundaryCondition(modelDefinition, bc1);
 
-            var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.NormalVelocity, BoundaryConditionDataType.AstroComponents)
-            {
-                Feature = feature
-            };
+            var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.NormalVelocity, BoundaryConditionDataType.AstroComponents) {Feature = feature};
             AddBoundaryCondition(modelDefinition, bc2);
 
             var polyLineForceFileItems = new Dictionary<IFeatureData, ExtForceFileItem>
             {
-                {
-                    bc1, new ExtForceFileItem(ExtForceQuantNames.GetQuantityString(bc1))
-                },
-                {
-                    bc2, new ExtForceFileItem(ExtForceQuantNames.GetQuantityString(bc2))
-                }
+                {bc1, new ExtForceFileItem(ExtForceQuantNames.GetQuantityString(bc1))},
+                {bc2, new ExtForceFileItem(ExtForceQuantNames.GetQuantityString(bc2))}
             };
 
             // Call
-            IDictionary<FlowBoundaryCondition, ExtForceFileItem> boundariesExtForceFileItems = 
+            IDictionary<FlowBoundaryCondition, ExtForceFileItem> boundariesExtForceFileItems =
                 ExtForceFileItemFactory.GetBoundaryConditionsItems(modelDefinition, polyLineForceFileItems);
 
             // Assert
@@ -105,8 +95,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
         private static void AddBoundaryCondition(WaterFlowFMModelDefinition modelDefinition, FlowBoundaryCondition bc)
         {
-            BoundaryConditionSet set = modelDefinition.BoundaryConditionSets.FirstOrDefault(bcs => bcs.Feature == ((IBoundaryCondition)bc).Feature);
-            
+            BoundaryConditionSet set = modelDefinition.BoundaryConditionSets.FirstOrDefault(bcs => bcs.Feature == ((IBoundaryCondition) bc).Feature);
+
             if (set != null)
             {
                 set.BoundaryConditions.Add(bc);
@@ -115,11 +105,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             {
                 modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet
                 {
-                    Feature = ((IBoundaryCondition)bc).Feature as Feature2D,
-                    BoundaryConditions = new EventedList<IBoundaryCondition>
-                    {
-                        bc
-                    }
+                    Feature = ((IBoundaryCondition) bc).Feature as Feature2D,
+                    BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
                 });
             }
         }

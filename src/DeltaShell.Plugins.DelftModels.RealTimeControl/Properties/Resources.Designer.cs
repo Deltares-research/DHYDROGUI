@@ -509,6 +509,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Null is expected, because target argument is unused..
+        /// </summary>
+        public static string RealTimeControlModelImporter_OnImportItem_Target_null_expected {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelImporter_OnImportItem_Target_null_expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import time series for signals are not existing, export failed..
         /// </summary>
         public static string RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_export_failed {
@@ -533,6 +542,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         public static string RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input {
             get {
                 return ResourceManager.GetString("RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output RTC rule already assigned to a different output. Are you sure you want to assign it?.
+        /// </summary>
+        public static string RealTimeControlModelNodePresenter_OutputLocationWarningMessage {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_OutputLocationWarningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" +
+                        "", resourceCulture);
             }
         }
         
@@ -976,6 +1004,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
             get {
                 return ResourceManager.GetString("RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_serie" +
                         "s_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_not_TimeSeries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while deleting {0}: {1}.
+        /// </summary>
+        public static string RtcLegacyLoader36_an_error_occurred_while_deleting_file {
+            get {
+                return ResourceManager.GetString("RtcLegacyLoader36_an_error_occurred_while_deleting_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The D-Real Time Control model &apos;{0}&apos; was migrated to the newest version. If applicable, please verify the restart file settings..
+        /// </summary>
+        public static string RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings {
+            get {
+                return ResourceManager.GetString("RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_rest" +
+                        "art_file_settings", resourceCulture);
             }
         }
         

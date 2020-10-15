@@ -78,15 +78,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             string structuresFilePath, string structuresSubFilesReferenceFilePath)
         {
             var logHandler = new LogHandler($"reading the structures file ({structuresFilePath}),", Log);
+            try
+            {
+                var structures = ReadStructures2D(structuresFilePath, logHandler)
+                             .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
+                             .Where(s => s != null)
+                             .ToList();
 
-            List<IStructure> structures = ReadStructures2D(structuresFilePath, logHandler)
-                                          .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
-                                          .Where(s => s != null)
-                                          .ToList();
 
-            logHandler.LogReport();
+                logHandler.LogReport();
+                return structures;
 
-            return structures;
+            }
+            catch (Exception)
+            {
+                Log.ErrorFormat(Resources.StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_converting_2D_Structures_from__0_, structuresFilePath);
+                throw;
+            }
         }
 
         /// <summary>
@@ -197,18 +205,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             {
                 return StructureFactory.CreateStructure(structure, structuresSubFilesReferenceFilePath, ReferenceDate);
             }
-            catch (Exception e)
+            catch (Exception e) 
             {
+                Log.ErrorFormat(Resources.StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_, structure.Name);
+
                 if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
                     e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
                     e is FormatException)
                 {
-                    Log.ErrorFormat("Failed to convert .ini structure definition '{0}' to actual structure: {1}.",
-                                    structure.Name, e.Message);
+                    // Let the parent caller go ahead with further conversions.
                     return null;
                 }
 
-                // Unexpected Exception, don't handle:
                 throw;
             }
         }
@@ -660,12 +668,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 properties.Add(ConstructProperty(KnownStructureProperties.Capacity, pump.Capacity, structureType));
             }
 
-            if (false)
-            {
-                AddControlDirectionRelatedProperties(pump, properties, structureType);
-                AddReductionTableRelatedProperties(pump, properties, structureType);
-            }
-
             return properties;
         }
 
@@ -911,64 +913,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath),
                           timeSeries,
                           refDate);
-        }
-
-        private void AddReductionTableRelatedProperties(IPump pump, List<DelftIniProperty> properties,
-                                                        string structureType)
-        {
-            if (pump.ReductionTable.Arguments[0].Values.Count == 0)
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.NrOfReductionFactors, 0, structureType));
-            }
-            else if (pump.ReductionTable.Arguments[0].Values.Count == 1)
-            {
-                properties.Add(ConstructProperty(KnownStructureProperties.NrOfReductionFactors, 1, structureType));
-                properties.Add(ConstructProperty(KnownStructureProperties.ReductionFactor,
-                                                 (double) pump.ReductionTable.Components[0].DefaultValue,
-                                                 structureType));
-            }
-            else
-            {
-                int count = pump.ReductionTable.Arguments[0].Values.Count;
-                properties.Add(ConstructProperty(KnownStructureProperties.NrOfReductionFactors, count, structureType));
-                double[] headValues = pump.ReductionTable.Arguments[0].Values.OfType<double>().ToArray();
-                double[] reductionValues = pump.ReductionTable.Components[0].Values.OfType<double>().ToArray();
-
-                properties.Add(ConstructProperty(KnownStructureProperties.Head, headValues, structureType));
-                properties.Add(ConstructProperty(KnownStructureProperties.ReductionFactor, reductionValues,
-                                                 structureType));
-            }
-        }
-
-        private void AddControlDirectionRelatedProperties(IPump pump, ICollection<DelftIniProperty> properties,
-                                                          string structureType)
-        {
-            switch (pump.ControlDirection)
-            {
-                case PumpControlDirection.DeliverySideControl:
-                    properties.Add(ConstructProperty(KnownStructureProperties.StartDeliverySide, pump.StartDelivery,
-                                                     structureType));
-                    properties.Add(ConstructProperty(KnownStructureProperties.StopDeliverySide, pump.StopDelivery,
-                                                     structureType));
-                    break;
-                case PumpControlDirection.SuctionAndDeliverySideControl:
-                    properties.Add(ConstructProperty(KnownStructureProperties.StartDeliverySide, pump.StartDelivery,
-                                                     structureType));
-                    properties.Add(ConstructProperty(KnownStructureProperties.StopDeliverySide, pump.StopDelivery,
-                                                     structureType));
-
-                    properties.Add(ConstructProperty(KnownStructureProperties.StartSuctionSide, pump.StartSuction,
-                                                     structureType));
-                    properties.Add(ConstructProperty(KnownStructureProperties.StopSuctionSide, pump.StopSuction,
-                                                     structureType));
-                    break;
-                case PumpControlDirection.SuctionSideControl:
-                    properties.Add(ConstructProperty(KnownStructureProperties.StartSuctionSide, pump.StartSuction,
-                                                     structureType));
-                    properties.Add(ConstructProperty(KnownStructureProperties.StopSuctionSide, pump.StopSuction,
-                                                     structureType));
-                    break;
-            }
         }
 
         private DelftIniProperty ConstructProperty(string propertyName, object value, string structureType)

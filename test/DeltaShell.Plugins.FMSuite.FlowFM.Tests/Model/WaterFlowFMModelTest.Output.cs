@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
@@ -7,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -32,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Call
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.ImportFromMdu(mduFilePath);
+                    model.LoadFromMdu(mduFilePath);
 
                     // Assert
                     Assert.That(model.OutputHisFileStore, Is.Not.Null, "Output files should be loaded.");
@@ -56,13 +58,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Call
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.ImportFromMdu(mduFilePath);
+                    model.LoadFromMdu(mduFilePath);
 
                     // Assert
                     Assert.That(model.OutputHisFileStore, Is.Null, "Output files should not be loaded.");
                     Assert.That(model.OutputMapFileStore, Is.Null, "Output files should not be loaded.");
                     Assert.That(model.OutputClassMapFileStore, Is.Null, "Output files should not be loaded.");
                 }
+            }
+        }
+
+        [Test]
+        public void ClearOutput_WithRestartOutput_ThenRestartOutputIsRemovedFromModel()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string[] restartFiles = CreateRestartFiles(tempDir).ToArray();
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDir.Path);
+
+                TypeUtils.SetField(model, "outputIsEmpty", false);
+
+                // Precondition
+                Assert.That(model.RestartOutput.Count(), Is.EqualTo(restartFiles.Length));
+
+                // Call
+                model.ClearOutput();
+
+                // Assert
+                Assert.That(model.RestartOutput, Is.Empty);
             }
         }
 
@@ -98,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string mduFilePath = Path.Combine(tempDirectory.Path, "input", "FlowFM.mdu");
 
                 var waterFlowFmModel = new WaterFlowFMModel();
-                waterFlowFmModel.ImportFromMdu(mduFilePath);
+                waterFlowFmModel.LoadFromMdu(mduFilePath);
 
                 string hisFilePath = waterFlowFmModel.OutputHisFileStore.Path;
                 string mapFilePath = waterFlowFmModel.OutputMapFileStore.Path;
@@ -176,6 +201,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        public void ConnectOutput_RestartFiles_ReconnectsTheRestartFiles()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string[] restartFiles = CreateRestartFiles(tempDir).ToArray();
+
+                var model = new WaterFlowFMModel();
+
+                // Call
+                model.ConnectOutput(tempDir.Path);
+
+                // Assert
+                RestartFile[] restartOutput = model.RestartOutput.ToArray();
+                Assert.That(restartOutput, Has.Length.EqualTo(5));
+
+                for (var i = 0; i < 5; i++)
+                {
+                    Assert.That(restartOutput[i].Path, Is.EqualTo(restartFiles[i]));
+                }
+            }
+        }
+
+        [Test]
         [Category(NghsTestCategory.PerformanceDotTrace)]
         public void ConnectOutput_Performance()
         {
@@ -190,6 +238,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 // Call
                 model.ConnectOutput(outputDir);
+            }
+        }
+
+        private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir)
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                yield return tempDir.CreateFile($"{i}_rst.nc");
             }
         }
 

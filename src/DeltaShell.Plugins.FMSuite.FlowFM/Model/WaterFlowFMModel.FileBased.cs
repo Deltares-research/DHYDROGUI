@@ -27,12 +27,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     return;
                 }
 
-                if (filePath.StartsWith("$"))
+                if (filePath.StartsWith("$") && MduFilePath != null)
                 {
-                    if (MduFilePath != null)
-                    {
-                        OnSave();
-                    }
+                    OnSave();
                 }
             }
         }

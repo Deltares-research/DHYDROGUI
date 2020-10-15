@@ -889,9 +889,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             string msg = messages.First();
 
-            string expectedMsgHeader =
+            var expectedMsgHeader =
                 $"During reading the structures file ({copyOfIniInTempFilePath}), the following warnings were reported";
-            Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
+            Assert.That(msg, Does.StartWith(expectedMsgHeader), "Expected the header of the message to be different:");
 
             List<string> subMsgs = msg.Split(new[]
             {

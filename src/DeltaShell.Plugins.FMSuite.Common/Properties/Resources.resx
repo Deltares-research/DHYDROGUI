@@ -150,4 +150,13 @@
   <data name="DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__" xml:space="preserve">
     <value>Backwards Compatibility: '{0}' has been updated to '{1}'</value>
   </data>
+  <data name="StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_supported_" xml:space="preserve">
+    <value>Trying to generate Time series for 2D Structure: {0}, property: {1} mapped as {2}, type: {3} which is not yet supported.</value>
+  </data>
+  <data name="StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_converting_2D_Structures_from__0_" xml:space="preserve">
+    <value>Error while reading and converting 2D Structures from {0}</value>
+  </data>
+  <data name="StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_" xml:space="preserve">
+    <value>Failed to convert .ini structure definition '{0}' to actual structure.</value>
+  </data>
 </root>

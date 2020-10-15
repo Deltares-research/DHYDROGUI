@@ -16,10 +16,12 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
@@ -288,6 +290,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         [Category("Run mode")]
         public bool ShowModelRunConsole { get; set; }
 
+        /// <summary>
+        /// Gets or sets the function to retrieve the working directory path.
+        /// </summary>
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
+
         public IHydroRegion Region => null;
 
         /// <summary>
@@ -360,11 +367,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override IBasicModelInterface BMIEngine => runner.Api;
 
-        /// <summary>
-        /// Gets or sets the function to retrieve the working directory path.
-        /// </summary>
-        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => DefaultModelSettings.DefaultDeltaShellWorkingDirectory;
-
         public void AddSubDomain(IWaveDomainData domain, IWaveDomainData subDomain)
         {
             domain.SubDomains.Add(subDomain);
@@ -381,7 +383,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public string ImportIntoModelDirectory(string filePath)
         {
-            return WaveModelFileHelper.ImportIntoModelDirectory(Path.GetDirectoryName(MdwFilePath), filePath);
+            return WaveModelFileHelper.ImportIntoModelDirectory(InputDirPath, filePath);
         }
 
         public void SyncWithModelDefaults(IWaveDomainData domain)
@@ -494,16 +496,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public void ModelSaveTo(string targetMdwFilePath, bool switchTo)
         {
             string targetDir = Path.GetDirectoryName(targetMdwFilePath);
-            if (!Directory.Exists(targetDir))
+            string modelDir = Path.GetDirectoryName(targetDir);
+            if (modelDir == null)
             {
-                Directory.CreateDirectory(targetDir);
+                throw new InvalidOperationException("Model cannot be directly saved under the root.");
             }
 
-            MdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
+            ExportModelInputTo(targetMdwFilePath, switchTo);
+
+            string targetOutputDir = Path.Combine(modelDir, FileConstants.OutputDirectoryName);
+            SaveOutput(targetOutputDir, switchTo);
+        }
+
+        /// <summary>
+        /// Exports the model input to the specified <paramref name="mdwFilePath"/>.
+        /// </summary>
+        /// <param name="mdwFilePath">The target mdw file path.</param>
+        /// <param name="switchTo">Whether or not the model and the data should be switched to the new location.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="mdwFilePath"/> is <c>null</c>.
+        /// </exception>
+        public void ExportModelInputTo(string mdwFilePath, bool switchTo = false)
+        {
+            Ensure.NotNullOrEmpty(mdwFilePath, nameof(mdwFilePath));
+
+            string targetDir = Path.GetDirectoryName(mdwFilePath);
+            FileUtils.CreateDirectoryIfNotExists(targetDir);
+
+            MdwFile.SaveTo(mdwFilePath, ModelDefinition, switchTo);
 
             // write spatial data:
             SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
-
             SaveOutput(targetDir, switchTo);
         }
 
@@ -538,6 +561,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public void Dispose()
         {
             RestoreEnvironment();
+            runner?.Dispose();
         }
 
         public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
@@ -575,10 +599,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             EndEdit();
 
             // grid(s) transformed, sync data to disk:
-            string modelDir = Path.GetDirectoryName(MdwFile.MdwFilePath);
             foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(OuterDomain))
             {
-                string targetGridFileName = Path.Combine(modelDir, domain.GridFileName);
+                string targetGridFileName = Path.Combine(InputDirPath, domain.GridFileName);
                 Delft3DGridFileWriter.Write(domain.Grid, targetGridFileName);
             }
         }
@@ -694,6 +717,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             base.StopTime = StopTime;
             base.TimeStep = TimeStep;
         }
+
+        private string InputDirPath => Path.GetDirectoryName(MdwFilePath);
 
         [EditAction]
         private void RemoveDataItemsForDomain(IWaveDomainData domain)
@@ -895,10 +920,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             model.SyncModelTimesWithBase();
 
-            string mdwDir = Path.GetDirectoryName(mdwFilePath);
             IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(model.ModelDefinition.OuterDomain);
 
-            model.BuildWaveDomains(allDomains, mdwDir, model);
+            model.BuildWaveDomains(allDomains, model.InputDirPath, model);
         }
 
         private static void BuildEmptyModel(WaveModel model)
@@ -1061,6 +1085,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void SaveOutput(string targetDirectory, bool switchTo)
         {
+            FileUtils.CreateDirectoryIfNotExists(targetDirectory);
+
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
             {
                 string oldOutputFilePath = wavmFileFunctionStore.Path;
@@ -1152,7 +1178,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void LoadWaveDomain(IWaveDomainData domain)
         {
-            LoadGrid(Path.GetDirectoryName(MdwFilePath), domain);
+            LoadGrid(InputDirPath, domain);
 
             UpdateBathymetry(domain);
             UpdateBathymetryOperations(domain);
@@ -1343,7 +1369,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private string GetMdwPathFromDeltaShellPath(string dsPath)
         {
             // dsproj_data/<model name>/<model name>.mdw
-            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, Name + ".mdw"));
+            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, FileConstants.InputDirectoryName, Name + ".mdw"));
         }
 
         #endregion
@@ -1428,11 +1454,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// <exception cref="NotSupportedException">
         /// Thrown when this property is set, because the model should use the application's working directory.
         /// </exception>
-        public virtual string DimrExportDirectoryPath
-        {
-            get => Path.Combine(WorkingDirectoryPathFunc(), Name);
-            set => throw new NotSupportedException("Cannot set dimr export directory.");
-        }
+        public virtual string DimrExportDirectoryPath => Path.Combine(WorkingDirectoryPathFunc(), Name);
 
         public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;
 
@@ -1459,10 +1481,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             //wave doesnt run standalone via dimr but via kernels
         }
 
-        public virtual void PrepareForIntegratedModelRun()
+        public virtual void OnFinishIntegratedModelRun(string workingDirectoryPath)
         {
-            // Initialization logic which should be executed as part of an
-            // integrated model HydroModel initialization.
+            // Actions, which should be done in the IDimrModel after a successful integrated model
+            // run.
         }
 
         #endregion
