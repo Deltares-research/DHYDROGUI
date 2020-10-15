@@ -56,7 +56,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private readonly IList<IDataItem> linkedDataItemsOriginalValues;
 
-        private string outputFileName = "rtcOutput.nc";
+        private string communicationRtcToFmFileName = "rtc_to_flow.nc";
+        private string communicationFmToRtcFileName = "flow_to_rtc.nc";
         private ICoordinateSystem coordinateSystem;
         private RealTimeControlOutputFileFunctionStore outputFileFunctionStore;
         private bool disposed;
@@ -978,7 +979,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            string outputFilePath = Path.Combine(dirInfo.Parent.FullName, OutputFileName);
+            string outputFilePath = Path.Combine(dirInfo.Parent.FullName, CommunicationRtcToFmFileName);
             ReconnectOutputFiles(outputFilePath);
 
             var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
@@ -1073,8 +1074,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             string runRtcDirectory = Path.Combine(hydroModelWorkingDirectoryPath, DirectoryName);
 
             string[] allNonRecursivePaths = FileBasedUtils.CollectNonRecursivePaths(runRtcDirectory);
-            IEnumerable<string> allOutputPaths = allNonRecursivePaths.Where(p => !LastExportedPaths.Contains(p));
-            
+            IList<string> allOutputPaths = allNonRecursivePaths.Where(p => !LastExportedPaths.Contains(p)).ToList();
+
+            string rtcToFlowNc = Path.Combine(hydroModelWorkingDirectoryPath, CommunicationRtcToFmFileName);
+            string fmToRtcNc = Path.Combine(hydroModelWorkingDirectoryPath, CommunicationFmToRtcFileName);
+
+            if (File.Exists(rtcToFlowNc))
+            {
+                allOutputPaths.Add(rtcToFlowNc);
+            }
+
+            if (File.Exists(fmToRtcNc))
+            {
+                allOutputPaths.Add(fmToRtcNc);
+            }
+
             Directory.CreateDirectory(Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName));
             
             foreach (string outputPath in allOutputPaths)
@@ -1404,14 +1418,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual IEnumerable<IModelMerge> DependentModels => ControlledModels.OfType<IModelMerge>();
 
-        public virtual string OutputFileName
+        public virtual string CommunicationRtcToFmFileName
         {
-            get => outputFileName;
+            get => communicationRtcToFmFileName;
             set
             {
+                Ensure.NotNull(value, nameof(value));
+                
                 if (!string.IsNullOrEmpty(value))
                 {
-                    outputFileName = value + ".nc";
+                    communicationRtcToFmFileName = value + ".nc";
+                }
+            }
+        }
+
+        public virtual string CommunicationFmToRtcFileName
+        {
+            get => communicationFmToRtcFileName;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+
+                if (!string.IsNullOrEmpty(value))
+                {
+                    communicationFmToRtcFileName = value + ".nc";
                 }
             }
         }

@@ -1466,7 +1466,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
-        public void OnFinishIntegratedModelRun_ShouldMoveOnlyOutputFilesAndDirectoriesToSeparateOutputFolder()
+        public void OnFinishIntegratedModelRun_ShouldOnlyMoveOutputFilesAndDirectoriesInRtcFolderToSeparateOutputFolder()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1521,6 +1521,104 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.IsTrue(File.Exists(outputFileInSubFolderPathAfterOnFinish));
                 Assert.AreEqual(0, Directory.GetDirectories(outputSubDirectoryPathAfterOnFinish).Length);
             }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void OnFinishIntegratedModelRun_WhenCommunicationFilesAreExisting_ShouldAlsoMoveTheseFilesToRtcOutputFolder()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                var rtcModel = new RealTimeControlModel();
+                string workingDirectoryIntegratedModel = Path.Combine(tempDirectory.Path, "IntegratedModel");
+                string runRtcDirectory = Path.Combine(workingDirectoryIntegratedModel, rtcModel.DirectoryName);
+
+                Directory.CreateDirectory(runRtcDirectory);
+
+                File.WriteAllText(Path.Combine(workingDirectoryIntegratedModel, rtcModel.CommunicationRtcToFmFileName), "test");
+                File.WriteAllText(Path.Combine(workingDirectoryIntegratedModel, rtcModel.CommunicationFmToRtcFileName), "test");
+
+                // Act
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
+
+                // Assert
+                string outputFolderPathAfterOnFinish = Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName);
+                string[] filePaths = Directory.GetFiles(outputFolderPathAfterOnFinish);
+                Assert.AreEqual(2, filePaths.Length);
+                Assert.IsTrue(filePaths.Any(f => f.Contains(rtcModel.CommunicationRtcToFmFileName)));
+                Assert.IsTrue(filePaths.Any(f => f.Contains(rtcModel.CommunicationFmToRtcFileName)));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void OnFinishIntegratedModelRun_WhenCommunicationFilesAreNotExisting_ShouldDoNothing()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                var rtcModel = new RealTimeControlModel();
+                string workingDirectoryIntegratedModel = Path.Combine(tempDirectory.Path, "IntegratedModel");
+                string runRtcDirectory = Path.Combine(workingDirectoryIntegratedModel, rtcModel.DirectoryName);
+
+                Directory.CreateDirectory(runRtcDirectory);
+                
+                // Act
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
+
+                // Assert
+                string outputFolderPathAfterOnFinish = Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName);
+                string[] filePaths = Directory.GetFiles(outputFolderPathAfterOnFinish);
+                CollectionAssert.IsEmpty(filePaths);
+            }
+        }
+
+
+        [Test]
+        public void CommunicationRtcToFmFileName_ShouldReturnCorrectDefaultValue()
+        {
+            // Arrange
+            var rtcModel = new RealTimeControlModel();
+            
+            // Act, Assert
+            Assert.AreEqual("rtc_to_flow.nc", rtcModel.CommunicationRtcToFmFileName); 
+        }
+
+        [Test]
+        public void CommunicationRtcToFmFileName_WhenSet_ShouldAddNcExtensionToValue()
+        {
+            // Arrange
+            var rtcModel = new RealTimeControlModel();
+            
+            // Act
+            rtcModel.CommunicationRtcToFmFileName = "test";
+
+            // Assert
+            Assert.AreEqual("test.nc", rtcModel.CommunicationRtcToFmFileName);
+        }
+        
+        [Test]
+        public void CommunicationFmToRtcFileName_ShouldReturnCorrectDefaultValue()
+        {
+            // Arrange
+            var rtcModel = new RealTimeControlModel();
+
+            // Act, Assert
+            Assert.AreEqual("flow_to_rtc.nc", rtcModel.CommunicationFmToRtcFileName);
+        }
+
+        [Test]
+        public void CommunicationFmToRtcFileName_WhenSet_ShouldAddNcExtensionToValue()
+        {
+            // Arrange
+            var rtcModel = new RealTimeControlModel();
+
+            // Act
+            rtcModel.CommunicationFmToRtcFileName = "test";
+
+            // Assert
+            Assert.AreEqual("test.nc", rtcModel.CommunicationFmToRtcFileName);
         }
 
         #endregion

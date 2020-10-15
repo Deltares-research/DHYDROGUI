@@ -8,18 +8,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         public IDimrConfigModelCoupler CreateCoupler(IModel source, IModel target, ICompositeActivity sourceCoupler,
                                                      ICompositeActivity targetCoupler)
         {
-            var sourceRtcModel = source as IRealTimeControlModel;
-            var targetRtcModel = target as IRealTimeControlModel;
-            if (sourceRtcModel != null || targetRtcModel != null)
+            if (source is RealTimeControlModel sourceRtcModel)
             {
                 var coupler = new DimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler) {AddCouplerLoggerInfo = true};
-
-                var rtcModel = sourceRtcModel as RealTimeControlModel;
-                if (rtcModel != null)
-                {
-                    rtcModel.OutputFileName = coupler.Name;
-                }
-
+                sourceRtcModel.CommunicationRtcToFmFileName = coupler.Name;
+                return coupler;
+            }
+            
+            if (target is RealTimeControlModel targetRtcModel)
+            {
+                var coupler = new DimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler) { AddCouplerLoggerInfo = true };
+                targetRtcModel.CommunicationFmToRtcFileName = coupler.Name;
                 return coupler;
             }
 
