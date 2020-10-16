@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
@@ -275,6 +275,7 @@
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectIniFileNamePostOperationBehaviourTest.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueBehaviourTest.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueWithDependentsBehaviourTest.cs" />
+    <Compile Include="DataAccess\Helpers\WaveOutputData\WaveOutputFileHelperTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\NotNullToBooleanConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\TypeToVisibilityConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\DirectionalSpreadingViewTypeTest.cs" />
