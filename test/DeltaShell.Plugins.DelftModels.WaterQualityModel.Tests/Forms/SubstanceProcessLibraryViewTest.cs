@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms
     {
         private SubstanceProcessLibrary substanceProcessLibrary;
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             substanceProcessLibrary = SubstanceProcessLibraryTestHelper.CreateDemoSubstanceProcessLibrary();
         }

@@ -635,7 +635,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(exception.ParamName, Is.EqualTo("powerDefinedSpreading"));
         }
 
-        private IEnumerable<ISpatiallyDefinedDataComponent> GetFileBasedDataComponent()
+        private static IEnumerable<ISpatiallyDefinedDataComponent> GetFileBasedDataComponent()
         {
             yield return new UniformDataComponent<FileBasedParameters>(new FileBasedParameters(""));
 

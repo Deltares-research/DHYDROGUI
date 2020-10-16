@@ -102,10 +102,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), UserMessage = "Value must be a ICompositeActivity")]
         public void ThrowWhenAssigningIncompatibleActivity()
         {
-            var shape = new CompositeActivityShape(null) {Activity = ActivityShapeTestHelper.CreateSimpleActivity()};
+            Assert.That(() => new CompositeActivityShape(null) {Activity = ActivityShapeTestHelper.CreateSimpleActivity()},
+                Throws.ArgumentException.With.Message.StartWith("Value must be a ICompositeActivity"));
         }
     }
 }

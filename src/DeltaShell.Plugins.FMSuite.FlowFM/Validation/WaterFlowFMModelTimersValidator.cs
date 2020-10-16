@@ -5,7 +5,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public class WaterFlowFMModelTimersValidator : ModelTimersValidator
@@ -59,19 +59,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     TabName = "Time Frame"
                 };
                 yield return new ValidationIssue(timerCategory, ValidationSeverity.Error,
-                                                 "Model start time precedes reference time", validationShortcut);
+                                                 Resources.WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time, validationShortcut);
             }
 
-            ValidationIssue[] issues = new[]
+            var issues = new List<ValidationIssue>();
+            if (waterFlowFmModel.WriteHisFile)
             {
-                CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.HisOutputDeltaT, "His output"),
-                CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.MapOutputDeltaT, "Map output"),
-                CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.WaqOutputDeltaT, "Waq output")
-            };
+                ValidationIssue issue = CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.HisOutputDeltaT, "His output");
+                issues.Add(issue);
+            }
 
-            foreach (ValidationIssue issue in issues.Where(i => i != null))
+            if (waterFlowFmModel.WriteMapFile)
             {
-                yield return issue;
+                ValidationIssue issue = CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.MapOutputDeltaT, "Map output");
+                issues.Add(issue);
+            }
+
+            if (waterFlowFmModel.SpecifyWaqOutputInterval)
+            {
+                ValidationIssue issue = CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.WaqOutputDeltaT, "Waq output");
+                issues.Add(issue);
+            }
+
+            foreach (ValidationIssue issue in issues)
+            {
+                if (issue != null)
+                {
+                    yield return issue;
+                }
             }
         }
 
@@ -89,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
 
             string category = waterFlowFmProperty.PropertyDefinition.Category;
-            string errorMessage = string.Format("{0} interval must be a multiple of the output timestep.", outputName);
+            string errorMessage = string.Format(Resources.WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timestep, outputName);
 
             return new ValidationIssue(category, ValidationSeverity.Error, errorMessage, waterFlowFmModel);
         }

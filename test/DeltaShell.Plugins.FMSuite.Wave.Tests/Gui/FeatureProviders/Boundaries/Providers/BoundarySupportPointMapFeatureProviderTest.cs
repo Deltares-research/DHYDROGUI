@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             }
         }
 
-        private IEnumerable<Action<IBoundaryProvider>> RemoveBoundaryCalls()
+        private static IEnumerable<Action<IBoundaryProvider>> RemoveBoundaryCalls()
         {
             yield return bc => bc.Boundaries.Clear();
             yield return bc => bc.Boundaries.RemoveAt(0);

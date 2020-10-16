@@ -430,4 +430,10 @@
   <data name="RealTimeControlModelImporter_OnImportItem_Target_null_expected" xml:space="preserve">
     <value>Null is expected, because target argument is unused.</value>
   </data>
+  <data name="RealTimeControlModelNodePresenter_OutputLocationWarningMessage" xml:space="preserve">
+    <value>Output RTC rule already assigned to a different output. Are you sure you want to assign it?</value>
+  </data>
+  <data name="RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
 </root>

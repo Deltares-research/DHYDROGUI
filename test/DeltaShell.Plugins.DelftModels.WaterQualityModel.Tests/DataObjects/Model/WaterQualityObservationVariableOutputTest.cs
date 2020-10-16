@@ -60,10 +60,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException), ExpectedMessage = "Value cannot be null.\r\nParameter name: outputVariableTuples")]
         public void TestCreateWaterQualityObservationVariableOutputThrowsWhenOutputVariableTuplesParameterIsNull()
         {
-            new WaterQualityObservationVariableOutput(null);
+            Assert.That(() => new WaterQualityObservationVariableOutput(null),
+                        Throws.ArgumentNullException.With.Property(nameof(ArgumentNullException.ParamName)).EqualTo("outputVariableTuples"));
         }
 
         [Test]

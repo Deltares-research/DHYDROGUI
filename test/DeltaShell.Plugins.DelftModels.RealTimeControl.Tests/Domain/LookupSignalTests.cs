@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -147,14 +146,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void DoNotSupportNoneInterpolation()
         {
-            new LookupSignal()
+            Assert.That(() => new LookupSignal
             {
                 Name = "test",
                 Interpolation = InterpolationType.None
-            };
+            }, Throws.ArgumentException);
         }
     }
 }

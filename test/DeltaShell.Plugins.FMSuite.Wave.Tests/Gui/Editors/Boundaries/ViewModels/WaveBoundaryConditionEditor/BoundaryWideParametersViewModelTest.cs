@@ -408,7 +408,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(testConfig.ViewModel.IsVisible, Is.EqualTo(isVisible));
         }
 
-        public IEnumerable<TestCaseData> GetConstructorNullData()
+        public static IEnumerable<TestCaseData> GetConstructorNullData()
         {
             var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
             var shapeFactory = Substitute.For<IViewShapeFactory>();

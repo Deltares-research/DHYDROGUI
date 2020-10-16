@@ -5,11 +5,11 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -19,20 +19,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
     {
         private const string ControlGroupName = "control_group_name";
         private const string ComponentName = "component_name";
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
         private readonly ExpressionNodeEqualityComparer nodeComparer = new ExpressionNodeEqualityComparer();
 
         [Test]
         public void ConvertToDataAccessObjects_TimeRule_CorrectResultIsReturned()
         {
             // Setup
-            RuleXML ruleElement = CreateTimeRuleElement(ControlGroupName);
+            RuleComplexType ruleElement = CreateTimeRuleElement(ControlGroupName);
 
-            RuleXML[] ruleElements =
+            RuleComplexType[] ruleElements =
             {
                 ruleElement
             };
-            var triggerElements = new TriggerXML[]
+            var triggerElements = new TriggerComplexType[]
                 {};
 
             // Call
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             const string controlGroup1Name = "control_group1";
             const string controlGroup2Name = "control_group2";
 
-            var ruleElements = new RuleXML[]
+            RuleComplexType[] ruleElements = new[]
             {
                 CreateTimeRuleElement(controlGroup1Name),
                 CreateIntervalRuleElement(controlGroup2Name, false),
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 CreateRelativeTimeRuleElement(controlGroup1Name)
             };
 
-            var triggerElements = new TriggerXML[]
+            var triggerElements = new TriggerComplexType[]
                 {};
 
             // Call
@@ -92,15 +92,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             var idB = $"{ControlGroupName}/{nameB}";
             var operatorB = Operator.Add; // TODO random
 
-            ExpressionXML expressionA = ExpressionXMLBuilder.Create(idA, operatorA, nameA)
-                                                            .WithInputAsFirstReference(nameB)
-                                                            .AndInputAsSecondReference(leafInput);
-            ExpressionXML expressionB = ExpressionXMLBuilder.Create(idB, operatorB, nameB)
-                                                            .WithInputAsFirstReference(leafInput)
-                                                            .AndInputAsSecondReference(leafInput);
+            ExpressionComplexType expressionA = ExpressionComplexTypeBuilder.Create(idA, operatorA, nameA)
+                                                                            .WithInputAsFirstReference(nameB)
+                                                                            .AndInputAsSecondReference(leafInput);
+            ExpressionComplexType expressionB = ExpressionComplexTypeBuilder.Create(idB, operatorB, nameB)
+                                                                            .WithInputAsFirstReference(leafInput)
+                                                                            .AndInputAsSecondReference(leafInput);
 
-            TriggerXML[] triggers = WrapTriggers(expressionB, expressionA);
-            RuleXML[] ruleElements =
+            TriggerComplexType[] triggers = WrapTriggers(expressionB, expressionA);
+            RuleComplexType[] ruleElements =
                 {};
 
             IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
@@ -137,20 +137,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             var idA2 = $"{controlGroup2}/{expressionNameA}";
             var idB2 = $"{controlGroup2}/{expressionNameB}";
 
-            TriggerXML[] triggers = WrapTriggers(
-                ExpressionXMLBuilder.Create(idA1, operatorA, expressionNameA)
-                                    .WithInputAsFirstReference(expressionNameB)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idB1, operatorB, expressionNameB)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idA2, operatorA, expressionNameA)
-                                    .WithInputAsFirstReference(expressionNameB)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idB2, operatorB, expressionNameB)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput));
-            RuleXML[] rules =
+            TriggerComplexType[] triggers = WrapTriggers(
+                ExpressionComplexTypeBuilder.Create(idA1, operatorA, expressionNameA)
+                                            .WithInputAsFirstReference(expressionNameB)
+                                            .AndInputAsSecondReference(leafInput),
+                ExpressionComplexTypeBuilder.Create(idB1, operatorB, expressionNameB)
+                                            .WithInputAsFirstReference(leafInput)
+                                            .AndInputAsSecondReference(leafInput),
+                ExpressionComplexTypeBuilder.Create(idA2, operatorA, expressionNameA)
+                                            .WithInputAsFirstReference(expressionNameB)
+                                            .AndInputAsSecondReference(leafInput),
+                ExpressionComplexTypeBuilder.Create(idB2, operatorB, expressionNameB)
+                                            .WithInputAsFirstReference(leafInput)
+                                            .AndInputAsSecondReference(leafInput));
+            RuleComplexType[] rules =
                 {};
 
             // Call
@@ -209,48 +209,48 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             var idH = $"{ControlGroupName}/{nameH}";
 
             var condition2 =
-                (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition, ControlGroupName,
-                                                                    "condition2").Item;
+                (StandardTriggerComplexType) CreateStandardConditionElement(RtcXmlTag.StandardCondition, ControlGroupName,
+                                                                            "condition2").Item;
 
             ConditionXmlBuilder.Start(condition2)
-                               .WithTrueOutput(ExpressionXMLBuilder.Create(idF1, @operator, nameF)
-                                                                   .WithInputAsFirstReference(nameD)
-                                                                   .AndInputAsSecondReference(nameG))
-                               .WithTrueOutput(ExpressionXMLBuilder.Create(idG, @operator, nameG)
-                                                                   .WithInputAsFirstReference(leafInput)
-                                                                   .AndInputAsSecondReference(leafInput))
-                               .WithFalseOutput(ExpressionXMLBuilder.Create(idF2, @operator, nameF)
-                                                                    .WithInputAsFirstReference(nameD)
-                                                                    .AndInputAsSecondReference(leafInput));
+                               .WithTrueOutput(ExpressionComplexTypeBuilder.Create(idF1, @operator, nameF)
+                                                                           .WithInputAsFirstReference(nameD)
+                                                                           .AndInputAsSecondReference(nameG))
+                               .WithTrueOutput(ExpressionComplexTypeBuilder.Create(idG, @operator, nameG)
+                                                                           .WithInputAsFirstReference(leafInput)
+                                                                           .AndInputAsSecondReference(leafInput))
+                               .WithFalseOutput(ExpressionComplexTypeBuilder.Create(idF2, @operator, nameF)
+                                                                            .WithInputAsFirstReference(nameD)
+                                                                            .AndInputAsSecondReference(leafInput));
 
             var condition1 =
-                (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition, ControlGroupName,
-                                                                    "condition1").Item;
+                (StandardTriggerComplexType) CreateStandardConditionElement(RtcXmlTag.StandardCondition, ControlGroupName,
+                                                                            "condition1").Item;
             ConditionXmlBuilder.Start(condition1)
                                .WithTrueOutput(condition2)
-                               .WithFalseOutput(ExpressionXMLBuilder.Create(idH, @operator, nameH)
-                                                                    .WithInputAsFirstReference(leafInput)
-                                                                    .AndInputAsSecondReference(leafInput));
+                               .WithFalseOutput(ExpressionComplexTypeBuilder.Create(idH, @operator, nameH)
+                                                                            .WithInputAsFirstReference(leafInput)
+                                                                            .AndInputAsSecondReference(leafInput));
 
-            TriggerXML[] triggers = WrapTriggers(
-                ExpressionXMLBuilder.Create(idA, @operator, nameA)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idB, @operator, nameB)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idC, @operator, nameC)
-                                    .WithInputAsFirstReference(nameA)
-                                    .AndInputAsSecondReference(nameB),
-                ExpressionXMLBuilder.Create(idD, @operator, nameD)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idE, @operator, nameE)
-                                    .WithInputAsFirstReference(nameF)
-                                    .AndInputAsSecondReference(leafInput),
+            TriggerComplexType[] triggers = WrapTriggers(
+                ExpressionComplexTypeBuilder.Create(idA, @operator, nameA)
+                                            .WithInputAsFirstReference(leafInput)
+                                            .AndInputAsSecondReference(leafInput),
+                ExpressionComplexTypeBuilder.Create(idB, @operator, nameB)
+                                            .WithInputAsFirstReference(leafInput)
+                                            .AndInputAsSecondReference(leafInput),
+                ExpressionComplexTypeBuilder.Create(idC, @operator, nameC)
+                                            .WithInputAsFirstReference(nameA)
+                                            .AndInputAsSecondReference(nameB),
+                ExpressionComplexTypeBuilder.Create(idD, @operator, nameD)
+                                            .WithInputAsFirstReference(leafInput)
+                                            .AndInputAsSecondReference(leafInput),
+                ExpressionComplexTypeBuilder.Create(idE, @operator, nameE)
+                                            .WithInputAsFirstReference(nameF)
+                                            .AndInputAsSecondReference(leafInput),
                 condition1);
 
-            RuleXML[] rules =
+            RuleComplexType[] rules =
                 {};
 
             // Call
@@ -294,13 +294,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             interpolationOptionEnumStringType interpolationOption, InterpolationType expectedInterpolation)
         {
             // Setup
-            RuleXML ruleElement = CreateRelativeTimeRuleElement(ControlGroupName, interpolationOption, reference);
+            RuleComplexType ruleElement = CreateRelativeTimeRuleElement(ControlGroupName, interpolationOption, reference);
 
-            RuleXML[] ruleElements =
+            RuleComplexType[] ruleElements =
             {
                 ruleElement
             };
-            var triggerElements = new TriggerXML[]
+            var triggerElements = new TriggerComplexType[]
                 {};
 
             // Call
@@ -324,13 +324,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             object expectedConstantValue)
         {
             // Setup
-            RuleXML ruleElement = CreatePidRuleElement(ControlGroupName, expectedSetpointType);
+            RuleComplexType ruleElement = CreatePidRuleElement(ControlGroupName, expectedSetpointType);
 
-            RuleXML[] ruleElements =
+            RuleComplexType[] ruleElements =
             {
                 ruleElement
             };
-            var triggerElements = new TriggerXML[]
+            var triggerElements = new TriggerComplexType[]
                 {};
 
             // Call
@@ -345,29 +345,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             AssertPidRuleValidity(ruleObj.Object, expectedSetpointType, expectedConstantValue);
         }
 
-        [TestCase(ItemChoiceType5.settingMaxStep, Item1ChoiceType3.deadbandSetpointAbsolute,
+        [TestCase(ItemChoiceType6.settingMaxStep, Item1ChoiceType3.deadbandSetpointAbsolute,
                   IntervalRule.IntervalRuleIntervalType.Fixed, IntervalRule.IntervalRuleDeadBandType.Fixed, false)]
-        [TestCase(ItemChoiceType5.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
+        [TestCase(ItemChoiceType6.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
                   IntervalRule.IntervalRuleIntervalType.Variable, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
                   false)]
-        [TestCase(ItemChoiceType5.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
+        [TestCase(ItemChoiceType6.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
                   IntervalRule.IntervalRuleIntervalType.Signal, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
                   true)]
         public void ConvertToDataAccessObjects_IntervalRule_CorrectResultIsReturned(
-            ItemChoiceType5 intervalType,
+            ItemChoiceType6 intervalType,
             Item1ChoiceType3 deadBandType,
             IntervalRule.IntervalRuleIntervalType expectedIntervalType,
             IntervalRule.IntervalRuleDeadBandType expectedDeadBandType,
             bool signalAsSetpoint)
         {
             // Setup
-            RuleXML ruleElement =
+            RuleComplexType ruleElement =
                 CreateIntervalRuleElement(ControlGroupName, signalAsSetpoint, intervalType, deadBandType);
-            RuleXML[] ruleElements =
+            RuleComplexType[] ruleElements =
             {
                 ruleElement
             };
-            var triggerElements = new TriggerXML[]
+            var triggerElements = new TriggerComplexType[]
                 {};
 
             // Call
@@ -393,14 +393,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             ExtrapolationHydraulicType expectedExtrapolation)
         {
             // Setup
-            RuleXML ruleElement = CreateLookupTableRuleElement(RtcXmlTag.HydraulicRule, ControlGroupName, interpolation,
-                                                               extrapolation);
+            RuleComplexType ruleElement = CreateLookupTableRuleElement(RtcXmlTag.HydraulicRule, ControlGroupName, interpolation,
+                                                                       extrapolation);
 
-            RuleXML[] ruleElements =
+            RuleComplexType[] ruleElements =
             {
                 ruleElement
             };
-            var triggerElements = new TriggerXML[]
+            var triggerElements = new TriggerComplexType[]
                 {};
 
             // Call
@@ -426,14 +426,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             ExtrapolationHydraulicType expectedExtrapolation)
         {
             // Setup
-            RuleXML ruleElement = CreateLookupTableRuleElement(
+            RuleComplexType ruleElement = CreateLookupTableRuleElement(
                 RtcXmlTag.FactorRule, ControlGroupName, interpolation, extrapolation);
 
-            RuleXML[] ruleElements =
+            RuleComplexType[] ruleElements =
             {
                 ruleElement
             };
-            var triggerElements = new TriggerXML[]
+            var triggerElements = new TriggerComplexType[]
                 {};
 
             // Call
@@ -470,12 +470,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             double expectedValue)
         {
             // Setup
-            TriggerXML conditionElement = CreateStandardConditionElement(
+            TriggerComplexType conditionElement = CreateStandardConditionElement(
                 tag, ControlGroupName, ComponentName, reference, operatorType);
 
-            var ruleElements = new RuleXML[]
+            var ruleElements = new RuleComplexType[]
                 {};
-            TriggerXML[] triggerElements =
+            TriggerComplexType[] triggerElements =
             {
                 conditionElement
             };
@@ -499,12 +499,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             bool hasOutput, int expectedNumberOfConditions)
         {
             // Setup
-            TriggerXML conditionElement = CreateStandardConditionElement(
+            TriggerComplexType conditionElement = CreateStandardConditionElement(
                 RtcXmlTag.StandardCondition, ControlGroupName, ComponentName, hasOutput: hasOutput);
 
-            var ruleElements = new RuleXML[]
+            var ruleElements = new RuleComplexType[]
                 {};
-            TriggerXML[] triggerElements =
+            TriggerComplexType[] triggerElements =
             {
                 conditionElement
             };
@@ -530,14 +530,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 ExtrapolationHydraulicType expectedExtrapolation)
         {
             // Setup
-            RuleXML signalElement = CreateLookupTableRuleElement(RtcXmlTag.LookupSignal, ControlGroupName,
-                                                                 interpolation,
-                                                                 extrapolation);
-            RuleXML[] ruleElements =
+            RuleComplexType signalElement = CreateLookupTableRuleElement(RtcXmlTag.LookupSignal, ControlGroupName,
+                                                                         interpolation,
+                                                                         extrapolation);
+            RuleComplexType[] ruleElements =
             {
                 signalElement
             };
-            var triggerElements = new TriggerXML[]
+            var triggerElements = new TriggerComplexType[]
                 {};
 
             // Call
@@ -552,36 +552,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             AssertSignalValidity(signalObj.Object, expectedInterpolation, expectedExtrapolation);
         }
 
-        private static RuleXML CreateTimeRuleElement(string controlGroupName)
+        private static RuleComplexType CreateTimeRuleElement(string controlGroupName)
         {
-            var timeRuleElement = new TimeAbsoluteXML {id = RtcXmlTag.TimeRule + controlGroupName + "/" + ComponentName};
+            var timeRuleElement = new TimeAbsoluteComplexType {id = RtcXmlTag.TimeRule + controlGroupName + "/" + ComponentName};
 
-            var ruleElement = new RuleXML {Item = timeRuleElement};
+            var ruleElement = new RuleComplexType {Item = timeRuleElement};
 
             return ruleElement;
         }
 
-        private static RuleXML CreateRelativeTimeRuleElement(string controlGroupName,
-                                                             interpolationOptionEnumStringType interpolationOption =
-                                                                 interpolationOptionEnumStringType.BLOCK,
-                                                             timeRelativeEnumStringType reference =
-                                                                 timeRelativeEnumStringType.ABSOLUTE)
+        private static RuleComplexType CreateRelativeTimeRuleElement(string controlGroupName,
+                                                                     interpolationOptionEnumStringType interpolationOption =
+                                                                         interpolationOptionEnumStringType.BLOCK,
+                                                                     timeRelativeEnumStringType reference =
+                                                                         timeRelativeEnumStringType.ABSOLUTE)
         {
-            var timeRelativeRuleElement = new TimeRelativeXML
+            var timeRelativeRuleElement = new TimeRelativeComplexType
             {
                 id = RtcXmlTag.RelativeTimeRule + controlGroupName + "/" + ComponentName,
-                mode = TimeRelativeXMLMode.RETAINVALUEWHENINACTIVE,
+                mode = TimeRelativeComplexTypeMode.RETAINVALUEWHENINACTIVE,
                 valueOption = reference,
                 maximumPeriod = 1,
                 interpolationOption = interpolationOption,
-                controlTable = new List<TimeRelativeControlTableRecordXML>
+                controlTable = new[]
                 {
-                    new TimeRelativeControlTableRecordXML
+                    new TimeRelativeControlTableRecordComplexType
                     {
                         time = 60,
                         value = 10
                     },
-                    new TimeRelativeControlTableRecordXML
+                    new TimeRelativeControlTableRecordComplexType
                     {
                         time = 600,
                         value = 100
@@ -589,25 +589,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 }
             };
 
-            var ruleElement = new RuleXML {Item = timeRelativeRuleElement};
+            var ruleElement = new RuleComplexType {Item = timeRelativeRuleElement};
 
             return ruleElement;
         }
 
-        private static RuleXML CreatePidRuleElement(string controlGroupName,
-                                                    PIDRule.PIDRuleSetpointType expectedSetpointType =
-                                                        PIDRule.PIDRuleSetpointType.Constant)
+        private static RuleComplexType CreatePidRuleElement(string controlGroupName,
+                                                            PIDRule.PIDRuleSetpointType expectedSetpointType =
+                                                                PIDRule.PIDRuleSetpointType.Constant)
         {
-            var pidRuleElement = new PidXML
+            var pidRuleElement = new PidComplexType
             {
                 id = RtcXmlTag.PIDRule + controlGroupName + "/" + ComponentName,
-                mode = PidXMLMode.PIDVEL,
+                mode = PidComplexTypeMode.PIDVEL,
                 settingMin = 1,
                 settingMax = 2,
                 settingMaxSpeed = 3,
                 kp = 4,
                 ki = 5,
-                kd = 6
+                kd = 6,
+                input = new InputPidComplexType()
             };
 
             if (expectedSetpointType == PIDRule.PIDRuleSetpointType.Constant)
@@ -623,17 +624,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 pidRuleElement.input.Item = RtcXmlTag.Signal + "something";
             }
 
-            var ruleElement = new RuleXML {Item = pidRuleElement};
+            var ruleElement = new RuleComplexType {Item = pidRuleElement};
 
             return ruleElement;
         }
 
-        private static RuleXML CreateIntervalRuleElement(string controlGroupName, bool signalAsSetpoint,
-                                                         ItemChoiceType5 intervalType = ItemChoiceType5.settingMaxSpeed,
-                                                         Item1ChoiceType3 deadBandType =
-                                                             Item1ChoiceType3.deadbandSetpointAbsolute)
+        private static RuleComplexType CreateIntervalRuleElement(string controlGroupName, bool signalAsSetpoint,
+                                                                 ItemChoiceType6 intervalType = ItemChoiceType6.settingMaxSpeed,
+                                                                 Item1ChoiceType3 deadBandType =
+                                                                     Item1ChoiceType3.deadbandSetpointAbsolute)
         {
-            var intervalRuleElement = new IntervalXML
+            var intervalRuleElement = new IntervalComplexType
             {
                 id = RtcXmlTag.IntervalRule + controlGroupName + "/" + ComponentName,
                 settingBelow = 1,
@@ -642,7 +643,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 ItemElementName = intervalType,
                 Item1 = 4,
                 Item1ElementName = deadBandType,
-                input = new IntervalInputXML() {setpoint = RtcXmlTag.SP + controlGroupName + ComponentName}
+                input = new IntervalInputComplexType() {setpoint = RtcXmlTag.SP + controlGroupName + ComponentName}
             };
 
             if (signalAsSetpoint)
@@ -650,30 +651,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 intervalRuleElement.input.setpoint = RtcXmlTag.Signal + controlGroupName + "signal1";
             }
 
-            var ruleElement = new RuleXML {Item = intervalRuleElement};
+            var ruleElement = new RuleComplexType {Item = intervalRuleElement};
 
             return ruleElement;
         }
 
-        private static RuleXML CreateLookupTableRuleElement(string tag, string controlGroupName,
-                                                            interpolationOptionEnumStringType interpolation =
-                                                                interpolationOptionEnumStringType.BLOCK,
-                                                            interpolationOptionEnumStringType extrapolation =
-                                                                interpolationOptionEnumStringType.BLOCK)
+        private static RuleComplexType CreateLookupTableRuleElement(string tag, string controlGroupName,
+                                                                    interpolationOptionEnumStringType interpolation =
+                                                                        interpolationOptionEnumStringType.BLOCK,
+                                                                    interpolationOptionEnumStringType extrapolation =
+                                                                        interpolationOptionEnumStringType.BLOCK)
         {
-            var lookupTableRuleElement = new LookupTableXML
+            var lookupTableRuleElement = new LookupTableComplexType
             {
                 id = tag + controlGroupName + "/" + ComponentName,
-                Item = new TableLookupTableXML
+                Item = new TableLookupTableComplexType
                 {
-                    record = new List<DateRecord2DataXML>
+                    record = new[]
                     {
-                        new DateRecord2DataXML
+                        new DateRecord2DataComplexType
                         {
                             x = 1,
                             y = 5
                         },
-                        new DateRecord2DataXML
+                        new DateRecord2DataComplexType
                         {
                             x = 2,
                             y = 4
@@ -684,22 +685,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 extrapolationOption = extrapolation
             };
 
-            var ruleElement = new RuleXML {Item = lookupTableRuleElement};
+            var ruleElement = new RuleComplexType {Item = lookupTableRuleElement};
 
             return ruleElement;
         }
 
-        private static TriggerXML CreateStandardConditionElement(string tag, string controlGroupName,
-                                                                 string conditionName,
-                                                                 inputReferenceEnumStringType referenceType = inputReferenceEnumStringType.EXPLICIT,
-                                                                 relationalOperatorEnumStringType operatorType = relationalOperatorEnumStringType.Equal,
-                                                                 bool hasOutput = false)
+        private static TriggerComplexType CreateStandardConditionElement(string tag, string controlGroupName,
+                                                                         string conditionName,
+                                                                         inputReferenceEnumStringType referenceType = inputReferenceEnumStringType.EXPLICIT,
+                                                                         relationalOperatorEnumStringType operatorType = relationalOperatorEnumStringType.Equal,
+                                                                         bool hasOutput = false)
         {
             object item1;
 
             if (tag == RtcXmlTag.DirectionalCondition)
             {
-                item1 = new RelationalConditionXMLX2Series {@ref = inputReferenceEnumStringType.EXPLICIT};
+                item1 = new RelationalConditionComplexTypeX2Series {@ref = inputReferenceEnumStringType.EXPLICIT};
             }
 
             else
@@ -707,12 +708,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 item1 = "3.3";
             }
 
-            var standardConditionElement = new StandardTriggerXML
+            var standardConditionElement = new StandardTriggerComplexType
             {
                 id = tag + controlGroupName + "/" + conditionName,
-                condition = new RelationalConditionXML
+                condition = new RelationalConditionComplexType
                 {
-                    Item = new RelationalConditionXMLX1Series {@ref = referenceType},
+                    Item = new RelationalConditionComplexTypeX1Series {@ref = referenceType},
                     relationalOperator = operatorType,
                     Item1 = item1
                 }
@@ -720,10 +721,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             if (hasOutput)
             {
-                standardConditionElement.@true = new List<TriggerXML> {CreateStandardConditionElement(tag, controlGroupName, conditionName + ":true_output")};
+                standardConditionElement.@true = new[]
+                {
+                    CreateStandardConditionElement(tag, controlGroupName, conditionName + ":true_output")
+                };
             }
 
-            var conditionElement = new TriggerXML {Item = standardConditionElement};
+            var conditionElement = new TriggerComplexType {Item = standardConditionElement};
 
             return conditionElement;
         }
@@ -873,14 +877,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         [TestCaseSource(nameof(ExpressionTestCases))]
-        public void ConvertToExpressionTrees_SingleExpression_ReturnsCorrectTree(ExpressionXML expressionXml,
+        public void ConvertToExpressionTrees_SingleExpression_ReturnsCorrectTree(ExpressionComplexType expressionXml,
                                                                                  ILeafNode expectedFirstInput,
                                                                                  ILeafNode expectedSecondInput,
                                                                                  Operator expectedOperator)
         {
             // Setup
-            TriggerXML[] triggers = WrapTriggers(expressionXml);
-            var ruleElements = new RuleXML[]
+            TriggerComplexType[] triggers = WrapTriggers(expressionXml);
+            var ruleElements = new RuleComplexType[]
                 {};
             IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
                                                                       .ConvertToDataAccessObjects(ruleElements, triggers)
@@ -911,10 +915,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
         [TestCaseSource(nameof(ExpressionGroupsTestCases))]
         public void ConvertToExpressionTrees_TriggerXmlsFromDifferentExpressionGroups_ReturnsExpectedTrees(
-            TriggerXML[] triggers, int expectedCount, string[] expectedIds)
+            TriggerComplexType[] triggers, int expectedCount, string[] expectedIds)
         {
             // Setup
-            RuleXML[] rules =
+            RuleComplexType[] rules =
                 {};
 
             // Call
@@ -932,13 +936,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void ConvertToDataAccessObjects_TriggerReferencedTwice_ReturnsCorrectResult(object trigger)
         {
             // Setup
-            var conditionA = (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
-                                                                                 ControlGroupName,
-                                                                                 "condition_A").Item;
+            var conditionA = (StandardTriggerComplexType) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
+                                                                                         ControlGroupName,
+                                                                                         "condition_A").Item;
 
-            var conditionB = (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
-                                                                                 ControlGroupName,
-                                                                                 "condition_B").Item;
+            var conditionB = (StandardTriggerComplexType) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
+                                                                                         ControlGroupName,
+                                                                                         "condition_B").Item;
 
             ConditionXmlBuilder.Start(conditionA)
                                .WithTrueOutput(conditionB)
@@ -947,11 +951,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             ConditionXmlBuilder.Start(conditionB)
                                .WithFalseOutput(trigger);
 
-            TriggerXML[] triggers = WrapTriggers(conditionA);
+            TriggerComplexType[] triggers = WrapTriggers(conditionA);
 
             // Call
             IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(new RuleXML[0], triggers)
+                                                                      .ConvertToDataAccessObjects(new RuleComplexType[0], triggers)
                                                                       .ToArray();
 
             // Assert
@@ -964,11 +968,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void ConvertToDataAccessObjects_TriggerElementsWithDuplicateIds_ReturnsCorrectResult(object obj)
         {
             // Setup
-            TriggerXML[] triggers = WrapTriggers(obj, obj);
+            TriggerComplexType[] triggers = WrapTriggers(obj, obj);
 
             // Call
             IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(new RuleXML[0], triggers)
+                                                                      .ConvertToDataAccessObjects(new RuleComplexType[0], triggers)
                                                                       .ToArray();
 
             // Assert
@@ -977,16 +981,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
         private static IEnumerable<object> GetTriggerObjects()
         {
-            yield return (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
-                                                                             ControlGroupName,
-                                                                             "condition").Item;
+            yield return (StandardTriggerComplexType) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
+                                                                                     ControlGroupName,
+                                                                                     "condition").Item;
 
-            yield return ExpressionXMLBuilder.Create("expression_id", Operator.Add, "y")
-                                             .WithConstantAsFirstReference("1")
-                                             .AndConstantAsSecondReference("2");
+            yield return ExpressionComplexTypeBuilder.Create("expression_id", Operator.Add, "y")
+                                                     .WithConstantAsFirstReference("1")
+                                                     .AndConstantAsSecondReference("2");
         }
 
-        private IEnumerable<TestCaseData> ExpressionTestCases()
+        private static IEnumerable<TestCaseData> ExpressionTestCases()
         {
             const string yName = "expression_name";
             var id = $"{ControlGroupName}/{yName}";
@@ -1002,57 +1006,57 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             foreach (Operator @operator in Enum.GetValues(typeof(Operator)))
             {
-                ExpressionXML expressionXml1 = ExpressionXMLBuilder.Create(id, @operator, yName)
-                                                                   .WithConstantAsFirstReference(constantValue)
-                                                                   .AndConstantAsSecondReference(constantValue);
+                ExpressionComplexType expressionXml1 = ExpressionComplexTypeBuilder.Create(id, @operator, yName)
+                                                                                   .WithConstantAsFirstReference(constantValue)
+                                                                                   .AndConstantAsSecondReference(constantValue);
 
                 yield return new TestCaseData(expressionXml1, constantLeafNode, constantLeafNode, @operator);
 
-                ExpressionXML expressionXml2 = ExpressionXMLBuilder.Create(id, @operator, yName)
-                                                                   .WithConstantAsFirstReference(constantValue)
-                                                                   .AndInputAsSecondReference(inputReference);
+                ExpressionComplexType expressionXml2 = ExpressionComplexTypeBuilder.Create(id, @operator, yName)
+                                                                                   .WithConstantAsFirstReference(constantValue)
+                                                                                   .AndInputAsSecondReference(inputReference);
 
                 yield return new TestCaseData(expressionXml2, constantLeafNode, inputLeafNode, @operator);
 
-                ExpressionXML expressionXml3 = ExpressionXMLBuilder.Create(id, @operator, yName)
-                                                                   .WithConstantAsFirstReference(constantValue)
-                                                                   .AndInputAsSecondReference(expressionReference);
+                ExpressionComplexType expressionXml3 = ExpressionComplexTypeBuilder.Create(id, @operator, yName)
+                                                                                   .WithConstantAsFirstReference(constantValue)
+                                                                                   .AndInputAsSecondReference(expressionReference);
 
                 yield return new TestCaseData(expressionXml3, constantLeafNode, expressionLeafNode, @operator);
 
-                ExpressionXML expressionXml4 = ExpressionXMLBuilder.Create(id, @operator, yName)
-                                                                   .WithInputAsFirstReference(inputReference)
-                                                                   .AndConstantAsSecondReference(constantValue);
+                ExpressionComplexType expressionXml4 = ExpressionComplexTypeBuilder.Create(id, @operator, yName)
+                                                                                   .WithInputAsFirstReference(inputReference)
+                                                                                   .AndConstantAsSecondReference(constantValue);
 
                 yield return new TestCaseData(expressionXml4, inputLeafNode, constantLeafNode, @operator);
 
-                ExpressionXML expressionXml5 = ExpressionXMLBuilder.Create(id, @operator, yName)
-                                                                   .WithInputAsFirstReference(inputReference)
-                                                                   .AndInputAsSecondReference(inputReference);
+                ExpressionComplexType expressionXml5 = ExpressionComplexTypeBuilder.Create(id, @operator, yName)
+                                                                                   .WithInputAsFirstReference(inputReference)
+                                                                                   .AndInputAsSecondReference(inputReference);
 
                 yield return new TestCaseData(expressionXml5, inputLeafNode, inputLeafNode, @operator);
 
-                ExpressionXML expressionXml6 = ExpressionXMLBuilder.Create(id, @operator, yName)
-                                                                   .WithInputAsFirstReference(inputReference)
-                                                                   .AndInputAsSecondReference(expressionReference);
+                ExpressionComplexType expressionXml6 = ExpressionComplexTypeBuilder.Create(id, @operator, yName)
+                                                                                   .WithInputAsFirstReference(inputReference)
+                                                                                   .AndInputAsSecondReference(expressionReference);
 
                 yield return new TestCaseData(expressionXml6, inputLeafNode, expressionLeafNode, @operator);
 
-                ExpressionXML expressionXml7 = ExpressionXMLBuilder.Create(id, @operator, yName)
-                                                                   .WithInputAsFirstReference(expressionReference)
-                                                                   .AndConstantAsSecondReference(constantValue);
+                ExpressionComplexType expressionXml7 = ExpressionComplexTypeBuilder.Create(id, @operator, yName)
+                                                                                   .WithInputAsFirstReference(expressionReference)
+                                                                                   .AndConstantAsSecondReference(constantValue);
 
                 yield return new TestCaseData(expressionXml7, expressionLeafNode, constantLeafNode, @operator);
 
-                ExpressionXML expressionXml8 = ExpressionXMLBuilder.Create(id, @operator, yName)
-                                                                   .WithInputAsFirstReference(expressionReference)
-                                                                   .AndInputAsSecondReference(inputReference);
+                ExpressionComplexType expressionXml8 = ExpressionComplexTypeBuilder.Create(id, @operator, yName)
+                                                                                   .WithInputAsFirstReference(expressionReference)
+                                                                                   .AndInputAsSecondReference(inputReference);
 
                 yield return new TestCaseData(expressionXml8, expressionLeafNode, inputLeafNode, @operator);
 
-                ExpressionXML expressionXml9 = ExpressionXMLBuilder.Create(id, @operator, yName)
-                                                                   .WithInputAsFirstReference(expressionReference)
-                                                                   .AndInputAsSecondReference(expressionReference);
+                ExpressionComplexType expressionXml9 = ExpressionComplexTypeBuilder.Create(id, @operator, yName)
+                                                                                   .WithInputAsFirstReference(expressionReference)
+                                                                                   .AndInputAsSecondReference(expressionReference);
 
                 yield return new TestCaseData(expressionXml9, expressionLeafNode, expressionLeafNode, @operator);
             }
@@ -1070,9 +1074,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             var idC = $"{ControlGroupName}/{nameC}";
             var idD = $"{ControlGroupName}/{nameD}";
 
-            IList<ExpressionXML> expressions =
+            IList<ExpressionComplexType> expressions =
                 RetrieveExampleSetExpressionElements(idA, nameA, idB, nameB, idC, nameC, idD, nameD);
-            TriggerXML[] triggers = WrapTriggers(expressions);
+            TriggerComplexType[] triggers = WrapTriggers(expressions);
             string[] expectedIds =
             {
                 idA
@@ -1080,9 +1084,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             yield return new TestCaseData(triggers, 1, expectedIds).SetName("Same control group, same level.");
 
-            var condition = (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
-                                                                                ControlGroupName,
-                                                                                "condition1").Item;
+            var condition = (StandardTriggerComplexType) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
+                                                                                        ControlGroupName,
+                                                                                        "condition1").Item;
             ConditionXmlBuilder.Start(condition)
                                .WithTrueOutput(expressions[1])
                                .WithFalseOutput(expressions[2]);
@@ -1116,28 +1120,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             yield return new TestCaseData(triggers, 4, expectedIds).SetName("Different control groups, same level.");
         }
 
-        private static IList<ExpressionXML> RetrieveExampleSetExpressionElements(string idA, string nameA,
-                                                                                 string idB, string nameB,
-                                                                                 string idC, string nameC,
-                                                                                 string idD, string nameD)
+        private static IList<ExpressionComplexType> RetrieveExampleSetExpressionElements(string idA, string nameA,
+                                                                                         string idB, string nameB,
+                                                                                         string idC, string nameC,
+                                                                                         string idD, string nameD)
         {
             var leafInput = $"{RtcXmlTag.Input}some_input";
             var @operator = Operator.Add; // TODO random
 
-            return new List<ExpressionXML>
+            return new List<ExpressionComplexType>
             {
-                ExpressionXMLBuilder.Create(idA, @operator, nameA)
-                                    .WithInputAsFirstReference(nameB)
-                                    .AndInputAsSecondReference(nameC),
-                ExpressionXMLBuilder.Create(idB, @operator, nameB)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(nameD),
-                ExpressionXMLBuilder.Create(idC, @operator, nameC)
-                                    .WithInputAsFirstReference(nameD)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idD, @operator, nameD)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput)
+                ExpressionComplexTypeBuilder.Create(idA, @operator, nameA)
+                                            .WithInputAsFirstReference(nameB)
+                                            .AndInputAsSecondReference(nameC),
+                ExpressionComplexTypeBuilder.Create(idB, @operator, nameB)
+                                            .WithInputAsFirstReference(leafInput)
+                                            .AndInputAsSecondReference(nameD),
+                ExpressionComplexTypeBuilder.Create(idC, @operator, nameC)
+                                            .WithInputAsFirstReference(nameD)
+                                            .AndInputAsSecondReference(leafInput),
+                ExpressionComplexTypeBuilder.Create(idD, @operator, nameD)
+                                            .WithInputAsFirstReference(leafInput)
+                                            .AndInputAsSecondReference(leafInput)
             };
         }
 
@@ -1178,44 +1182,50 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(leafNode.Value, Is.EqualTo(leafValue));
         }
 
-        private static TriggerXML WrapTrigger(object obj)
+        private static TriggerComplexType WrapTrigger(object obj)
         {
-            return new TriggerXML {Item = obj};
+            return new TriggerComplexType {Item = obj};
         }
 
-        private static TriggerXML[] WrapTriggers(params object[] objects)
+        private static TriggerComplexType[] WrapTriggers(params object[] objects)
         {
             return objects.Select(WrapTrigger).ToArray();
         }
 
-        private static TriggerXML[] WrapTriggers(IEnumerable<object> objects)
+        private static TriggerComplexType[] WrapTriggers(IEnumerable<object> objects)
         {
             return objects.Select(WrapTrigger).ToArray();
         }
 
         private class ConditionXmlBuilder
         {
-            private readonly StandardTriggerXML standardTriggerXml;
+            private readonly StandardTriggerComplexType standardTriggerXml;
 
-            private ConditionXmlBuilder(StandardTriggerXML standardTriggerXml)
+            private ConditionXmlBuilder(StandardTriggerComplexType standardTriggerXml)
             {
                 this.standardTriggerXml = standardTriggerXml;
             }
 
-            public static ConditionXmlBuilder Start(StandardTriggerXML standardTriggerXml)
+            public static ConditionXmlBuilder Start(StandardTriggerComplexType standardTriggerXml)
             {
                 return new ConditionXmlBuilder(standardTriggerXml);
             }
 
             public ConditionXmlBuilder WithTrueOutput(object trueOutput)
             {
-                standardTriggerXml.@true.Add(WrapTrigger(trueOutput));
+                standardTriggerXml.@true = (standardTriggerXml.@true ?? new TriggerComplexType[0]).Concat(new[]
+                {
+                    WrapTrigger(trueOutput)
+                }).ToArray();
                 return this;
             }
 
             public ConditionXmlBuilder WithFalseOutput(object falseOutput)
             {
-                standardTriggerXml.@false.Add(WrapTrigger(falseOutput));
+                standardTriggerXml.@false = (standardTriggerXml.@false ?? new TriggerComplexType[0]).Concat(new[]
+                {
+                    WrapTrigger(falseOutput)
+                }).ToArray();
                 return this;
             }
         }

@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Converters
 
         private EmptyDoubleValueConverter converter;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUpFixture()
         {
             converter = new EmptyDoubleValueConverter();

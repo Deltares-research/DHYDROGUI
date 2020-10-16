@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using DelftTools.TestUtils;
-using DeltaShell.Dimr.xsd;
+using DeltaShell.Dimr.Xsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using NUnit.Framework;
@@ -29,8 +29,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             Assert.IsNotNull(dimrXmlObject.control);
             Assert.IsNotNull(dimrXmlObject.coupler);
             Assert.IsNotNull(dimrXmlObject.documentation);
-            Assert.IsNull(dimrXmlObject.UnKnownAttributes);
-            Assert.IsNull(dimrXmlObject.UnKnownElements);
         }
 
         [Test]
@@ -82,7 +80,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 "test",
                 "abc",
                 "abcsourcename",
-                "logger",
                 "dimrwithextrainfo.xml",
                 "Attribute"
             });
@@ -114,17 +111,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void ConfigurationPathDoesNotExist()
         {
-            delftConfigXmlParser.Read<dimrXML>(null);
+            Assert.That(() => delftConfigXmlParser.Read<dimrXML>(null), Throws.InstanceOf<FileNotFoundException>());
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void ConfigurationFilePathIsEmpty()
         {
-            delftConfigXmlParser.Read<dimrXML>("");
+            Assert.That(() => delftConfigXmlParser.Read<dimrXML>(""), Throws.InstanceOf<FileNotFoundException>());
         }
 
         [Test]

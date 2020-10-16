@@ -1,19 +1,19 @@
 ﻿using System;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Helpers
 {
     /// <summary>
-    /// Helper for building a <see cref="ExpressionXML"/>
+    /// Helper for building a <see cref="ExpressionComplexType"/>
     /// </summary>
-    public class ExpressionXMLBuilder
+    public class ExpressionComplexTypeBuilder
     {
-        private readonly ExpressionXML expressionXml;
+        private readonly ExpressionComplexType expressionXml;
 
-        private ExpressionXMLBuilder(string id, Operator @operator, string yValue)
+        private ExpressionComplexTypeBuilder(string id, Operator @operator, string yValue)
         {
-            expressionXml = new ExpressionXML
+            expressionXml = new ExpressionComplexType
             {
                 id = id,
                 mathematicalOperator = ConvertToXmlOperationType(@operator),
@@ -28,9 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Helpers
         /// <param name="operator"> The operator. </param>
         /// <param name="yValue"> The y-value name. </param>
         /// <returns> A new expression xml builder. </returns>
-        public static ExpressionXMLBuilder Create(string id, Operator @operator, string yValue)
+        public static ExpressionComplexTypeBuilder Create(string id, Operator @operator, string yValue)
         {
-            return new ExpressionXMLBuilder(id, @operator, yValue);
+            return new ExpressionComplexTypeBuilder(id, @operator, yValue);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Helpers
         /// </summary>
         /// <param name="value"> The constant value. </param>
         /// <returns> This expression xml builder. </returns>
-        public ExpressionXMLBuilder WithConstantAsFirstReference(string value)
+        public ExpressionComplexTypeBuilder WithConstantAsFirstReference(string value)
         {
             expressionXml.Item = value;
             return this;
@@ -49,9 +49,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Helpers
         /// </summary>
         /// <param name="reference"> The referenced input name. </param>
         /// <returns> This expression xml builder. </returns>
-        public ExpressionXMLBuilder WithInputAsFirstReference(string reference)
+        public ExpressionComplexTypeBuilder WithInputAsFirstReference(string reference)
         {
-            expressionXml.Item = new ExpressionXMLX1Series {Value = reference};
+            expressionXml.Item = new ExpressionComplexTypeX1Series {Value = reference};
             return this;
         }
 
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Helpers
         /// </summary>
         /// <param name="value"> The value. </param>
         /// <returns> The built expression xml. </returns>
-        public ExpressionXML AndConstantAsSecondReference(string value)
+        public ExpressionComplexType AndConstantAsSecondReference(string value)
         {
             expressionXml.Item1 = value;
             return expressionXml;
@@ -71,9 +71,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Helpers
         /// </summary>
         /// <param name="reference"> The referenced input name. </param>
         /// <returns> The built expression xml. </returns>
-        public ExpressionXML AndInputAsSecondReference(string reference)
+        public ExpressionComplexType AndInputAsSecondReference(string reference)
         {
-            expressionXml.Item1 = new ExpressionXMLX2Series {Value = reference};
+            expressionXml.Item1 = new ExpressionComplexTypeX2Series {Value = reference};
             return expressionXml;
         }
 

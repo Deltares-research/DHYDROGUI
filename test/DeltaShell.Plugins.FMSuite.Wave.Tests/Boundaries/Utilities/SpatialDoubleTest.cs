@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Utilities
     [TestFixture]
     public class SpatialDoubleTest
     {
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
 
         [TestCaseSource(nameof(GetRoundTestCases))]
         public void Round_ReturnsCorrectResult(double value, double expected)
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Utilities
             Assert.That(result, Is.EqualTo(expected));
         }
 
-        private IEnumerable<TestCaseData> GetRoundTestCases()
+        private static IEnumerable<TestCaseData> GetRoundTestCases()
         {
             double value = random.NextDouble();
             double expected = Math.Round(value, 7, MidpointRounding.AwayFromZero);
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Utilities
             Assert.That(result, Is.EqualTo(expectedResult));
         }
 
-        private IEnumerable<TestCaseData> GetAreEqualTestCases()
+        private static IEnumerable<TestCaseData> GetAreEqualTestCases()
         {
             const double value1 = 7E-7;
             const double value2 = 8E-7;

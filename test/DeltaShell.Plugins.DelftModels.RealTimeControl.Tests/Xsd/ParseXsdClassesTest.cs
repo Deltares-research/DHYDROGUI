@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using DelftTools.TestUtils;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
             SetExpectationReportedInfoMessageLogHandler(fileName);
 
             // When
-            var dataAccessModel = delftConfigXmlParser.Read<RtcToolsConfigXML>(path);
+            var dataAccessModel = delftConfigXmlParser.Read<RtcToolsConfigComplexType>(path);
 
             // Then
             Assert.NotNull(dataAccessModel);
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
             SetExpectationReportedInfoMessageLogHandler(fileName);
 
             // When
-            var dataAccessModel = delftConfigXmlParser.Read<RtcRuntimeConfigXML>(path);
+            var dataAccessModel = delftConfigXmlParser.Read<RtcRuntimeConfigComplexType>(path);
 
             // Then
             Assert.NotNull(dataAccessModel);
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
             SetExpectationReportedInfoMessageLogHandler(fileName);
 
             // When
-            var dataAccessModel = delftConfigXmlParser.Read<RTCDataConfigXML>(path);
+            var dataAccessModel = delftConfigXmlParser.Read<RTCDataConfigComplexType>(path);
 
             // Then
             Assert.NotNull(dataAccessModel);

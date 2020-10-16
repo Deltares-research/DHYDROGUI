@@ -637,4 +637,13 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel_Save_project_after_model_run_with_write_restart" xml:space="preserve">
     <value>Please save the project after a model run with 'write restart' on.</value>
   </data>
+  <data name="WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timestep" xml:space="preserve">
+    <value>{0} interval must be a multiple of the output timestep.</value>
+  </data>
+  <data name="WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time" xml:space="preserve">
+    <value>Model start time precedes reference time</value>
+  </data>
+  <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_" xml:space="preserve">
+    <value>Error while importing a {0} from {1}</value>
+  </data>
 </root>

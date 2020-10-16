@@ -4,13 +4,11 @@ import json
 
 
 # Production Server
-TEAMCITY_URL = "https://build.deltares.nl"             
+TEAMCITY_URL = "https://dpcbuild.deltares.nl"             
 # Test Server
 #TEAMCITY_URL = "http://tl-ts001.xtr.deltares.nl:8080" 
 
-BUILDS_ROOT = "{}/httpAuth/app/rest/builds/".format(TEAMCITY_URL)
-
-
+BUILDS_ROOT = f"{TEAMCITY_URL}/httpAuth/app/rest/builds/"
 JSON_RESPONSE_HEADER = {'Accept': 'application/json'}
 
 
@@ -29,13 +27,12 @@ def get_previous_build(user: str, password: str, build_config: str, tag: str) ->
     tag : str
         The tag with which the build should be retrieved.
     """
-    build_url = "{}buildType:{},tag:{},pinned:true,count:1".format(BUILDS_ROOT, 
-                                                                   build_config, 
-                                                                   tag)
+    build_url = f"{BUILDS_ROOT}buildType:{build_config},tag:{tag},pinned:true,count:1"
 
     previous_build_response = requests.get(build_url, 
                                            auth=(user, password),
-                                           headers=JSON_RESPONSE_HEADER)
+                                           headers=JSON_RESPONSE_HEADER,
+                                           verify=False)
 
     if previous_build_response.status_code != 200:
         return None
@@ -78,8 +75,12 @@ def untag_build(user: str, password: str, build_info: str, tag: str) -> None:
                , 'tag': new_tag_values
                }
 
-    tag_url = "{}id:{}/tags/".format(BUILDS_ROOT, build_info["id"])
-    requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags)
+    tag_url = f"{BUILDS_ROOT}id:{build_info['id']}/tags/"
+    requests.put(tag_url, 
+                 auth=(user, password), 
+                 headers=JSON_RESPONSE_HEADER, 
+                 json=new_tags,
+                 verify=False)
     
 
 def unpin_build(user: str, password: str, build_id: str) -> None:
@@ -95,8 +96,11 @@ def unpin_build(user: str, password: str, build_id: str) -> None:
     build_id : str
         The id of the build to be unpinned.
     """
-    pin_url = "{}id:{}/pin/".format(BUILDS_ROOT, build_id)
-    requests.delete(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER)
+    pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
+    requests.delete(pin_url, 
+                    auth=(user, password), 
+                    headers=JSON_RESPONSE_HEADER, 
+                    verify=False)
     
 
 def clean_up_build(user: str, password: str, build_info: dict, tag: str) -> None:
@@ -136,13 +140,11 @@ def get_new_build(user: str, password: str, build_config: str, git_hash: str) ->
     git_hash : str
         The git hash of the build to be retrieved.
     """
-    build_url = "{}buildType:{},number:{},count:1".format(BUILDS_ROOT,
-                                                            build_config, 
-                                                            git_hash)
-
+    build_url = f"{BUILDS_ROOT}buildType:{build_config},number:{git_hash},count:1"
     new_build_response = requests.get(build_url, 
                                       auth=(user, password), 
-                                      headers=JSON_RESPONSE_HEADER)
+                                      headers=JSON_RESPONSE_HEADER,
+                                      verify=False)
     if new_build_response.status_code != 200:
         return None
 
@@ -162,8 +164,8 @@ def pin_build(user: str, password: str, build_id: str) -> None:
     build_id : str
         The id of the build to be pinned.
     """
-    pin_url = "{}id:{}/pin/".format(BUILDS_ROOT, build_id)
-    requests.put(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER)
+    pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
+    requests.put(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, verify=False)
 
 
 def tag_build(user: str, password: str, build_info, tag: str) -> None:
@@ -192,8 +194,8 @@ def tag_build(user: str, password: str, build_info, tag: str) -> None:
                  'tag': new_tag_values
     }
 
-    tag_url = "{}id:{}/tags/".format(BUILDS_ROOT, build_info["id"])
-    requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags)
+    tag_url = f"{BUILDS_ROOT}id:{build_info['id']}/tags/"
+    requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags, verify=False)
 
 
 def bag_new_build(user: str, password: str, build_info: dict, tag: str) -> None:

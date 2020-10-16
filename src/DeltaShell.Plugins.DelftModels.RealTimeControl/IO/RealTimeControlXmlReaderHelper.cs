@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             IControlGroup controlGroup = controlGroups.FirstOrDefault(g => g.Name == groupName);
             if (controlGroup == null)
             {
-                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___, groupName, id, RealTimeControlXMLFiles.XmlTools);
+                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___, groupName, id, RealTimeControlXmlFiles.XmlTools);
                 return null;
             }
 
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             T correspondingConnectionPoint = connectionPoints.OfType<T>().FirstOrDefault(o => o.Name == name);
             if (correspondingConnectionPoint == null)
             {
-                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_output___0____The_input_output_needs_to_be_referenced_in_file___1___, name, RealTimeControlXMLFiles.XmlData);
+                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_output___0____The_input_output_needs_to_be_referenced_in_file___1___, name, RealTimeControlXmlFiles.XmlData);
             }
 
             return correspondingConnectionPoint;
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             T correspondingRule = controlGroup.Rules.OfType<T>().FirstOrDefault(r => r.Name == ruleName);
             if (correspondingRule == null)
             {
-                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXMLFiles.XmlData);
+                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXmlFiles.XmlData);
             }
 
             return correspondingRule;
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 logHandler?.ReportWarningFormat(
                     Resources
                         .RealTimeControlXmlReaderHelper_GetSignalByElementIdInControlGroup_Could_not_find_the_signal___0___that_is_referenced_in_id___1___The_signal_needs_to_be_referenced_in_file___2___,
-                    signalName, id, RealTimeControlXMLFiles.XmlData);
+                    signalName, id, RealTimeControlXmlFiles.XmlData);
             }
 
             return correspondingSignal;
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             RuleBase correspondingRule = controlGroup.Rules.FirstOrDefault(r => r.Name == ruleName);
             if (correspondingRule == null)
             {
-                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXMLFiles.XmlData);
+                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXmlFiles.XmlData);
             }
 
             return correspondingRule;
@@ -211,7 +211,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
             if (condition == null)
             {
-                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_find_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___, conditionName, RealTimeControlXMLFiles.XmlData);
+                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_find_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___, conditionName, RealTimeControlXmlFiles.XmlData);
             }
 
             return (T) condition;
