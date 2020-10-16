@@ -23,15 +23,22 @@
         bool IsConnected { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the data of this <see cref="IWaveOutputData"/>
+        /// is stored in working directory.
+        /// </summary>
+        bool IsStoredInWorkingDirectory { get; }
+
+        /// <summary>
         /// Connects this <see cref="IWaveOutputData"/> to the specified path,
         /// this will read all supported files from the specified folder.
         /// </summary>
         /// <param name="dataSourcePath">The new path for the data source.</param>
+        /// <param name="isStoredInWorkingDirectory">Whether the provided dataSourcePath is in the working directory.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataSourcePath"/> is <c>null</c>.
         /// </exception>
         // TODO: add relevant exceptions
-        void ConnectTo(string dataSourcePath);
+        void ConnectTo(string dataSourcePath, bool isStoredInWorkingDirectory);
 
         /// <summary>
         /// Disconnects the output data from the current <see cref="DataSourcePath"/>.

@@ -11,16 +11,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     {
         public string DataSourcePath { get; private set; } = null;
         public bool IsConnected => DataSourcePath != null;
+        public bool IsStoredInWorkingDirectory { get; private set; } = false;
 
-        public void ConnectTo(string dataSourcePath)
+        public void ConnectTo(string dataSourcePath, bool isStoredInWorkingDirectory)
         {
             Ensure.NotNull(dataSourcePath, nameof(dataSourcePath));
+
             DataSourcePath = dataSourcePath;
+            IsStoredInWorkingDirectory = isStoredInWorkingDirectory;
         }
 
         public void Disconnect()
         {
             DataSourcePath = null;
+            IsStoredInWorkingDirectory = false;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             var outputData = new WaveOutputData();
 
             // Call | Assert
-            void Call() => outputData.ConnectTo(null);
+            void Call() => outputData.ConnectTo(null, false);
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dataSourcePath"));
@@ -37,18 +37,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ConnectTo_ValidPath_ChangesDataSourcePath()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ConnectTo_ValidPath_ChangesDataSourcePath(bool isStoredInWorkingDirectory)
         {
             using (var tempDir = new TemporaryDirectory())
             {
                 var outputData = new WaveOutputData();
 
                 // Call
-                outputData.ConnectTo(tempDir.Path);
+                outputData.ConnectTo(tempDir.Path, isStoredInWorkingDirectory);
 
                 // Assert
                 Assert.That(outputData.DataSourcePath, Is.EqualTo(tempDir.Path));
                 Assert.That(outputData.IsConnected, Is.True);
+                Assert.That(outputData.IsStoredInWorkingDirectory, Is.EqualTo(isStoredInWorkingDirectory));
             }
         }
 
@@ -59,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 var outputData = new WaveOutputData();
-                outputData.ConnectTo(tempDir.Path);
+                outputData.ConnectTo(tempDir.Path, true);
 
                 // Call
                 outputData.Disconnect();
@@ -67,6 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 // Assert
                 Assert.That(outputData.DataSourcePath, Is.Null);
                 Assert.That(outputData.IsConnected, Is.False);
+                Assert.That(outputData.IsStoredInWorkingDirectory, Is.False);
             }
         }
 
