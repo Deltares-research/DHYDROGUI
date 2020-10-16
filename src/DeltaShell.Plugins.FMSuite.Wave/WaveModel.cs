@@ -28,6 +28,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Api;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -504,13 +505,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 throw new InvalidOperationException("Model cannot be directly saved under the root.");
             }
 
-            ExportModelInputTo(targetMdwFilePath, switchTo);
-
             if (switchTo)
             {
                 string outputDir = Path.Combine(modelDir, "output");
                 SaveModelOutputStateTo(outputDir);
             }
+
+            ExportModelInputTo(targetMdwFilePath, switchTo);
         }
 
         /// <summary>
@@ -548,24 +549,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     ClearDirectory(targetDirectoryInfo);
                 }
             }
-            else if (HasRunData())
+            else if (WaveOutputData.IsStoredInWorkingDirectory)
             {
                 CopyRunDataTo(targetDirectoryInfo);
-                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName);
+                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName, false);
             }
             else if (!IsSavedToCurrentOutputDirectory(targetDirectoryInfo))
             {
                 CopyOutputDataTo(targetDirectoryInfo);
-                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName);
+                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName, false);
             }
         }
 
         private void CopyRunDataTo(DirectoryInfo targetDirectoryInfo)
         {
-            // TODO: ensure this only copies output data
             var dataSourcePathInfo = new DirectoryInfo(WaveOutputData.DataSourcePath);
+
+            // The exported model to run is always called Waves.mdw, as such we cannot use the name of 
+            // the mdw path of the wave model.
+            string mdwRunPath = Path.Combine(dataSourcePathInfo.FullName, "Waves.mdw");
+            HashSet<string> inputFilePaths = WaveOutputFileHelper.CollectInputFileNamesFromWorkingDirectoryMdw(mdwRunPath);
+
             ClearDirectory(targetDirectoryInfo);
-            FileUtils.CopyAll(dataSourcePathInfo, targetDirectoryInfo, null);
+
+            foreach (FileInfo file in dataSourcePathInfo.EnumerateFiles())
+            {
+                if (!inputFilePaths.Contains(file.FullName))
+                {
+                    file.CopyTo(Path.Combine(targetDirectoryInfo.FullName, file.Name));
+                }
+            }
         }
 
         private void CopyOutputDataTo(DirectoryInfo targetDirectoryInfo)
@@ -575,11 +588,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         private bool IsSavedToCurrentOutputDirectory(FileSystemInfo targetDirectoryInfo) =>
-            Path.GetFullPath(OutputDirPath) == targetDirectoryInfo.FullName;
-
-        private bool HasRunData() =>
-            WaveOutputData.IsConnected && 
-            Path.GetFullPath(OutputDirPath) != Path.GetFullPath(WaveOutputData.DataSourcePath);
+            GetPreviousOutputDirPath() == targetDirectoryInfo.FullName;
 
         private static void ClearDirectory(DirectoryInfo directoryInfo) => 
             FileUtils.CreateDirectoryIfNotExists(directoryInfo.FullName, true);
@@ -749,6 +758,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 string outputDir = Path.Combine(InputDirPath, "..", "output");
                 return Path.GetFullPath(outputDir);
             }
+        } 
+
+        private string GetPreviousOutputDirPath()
+        {
+            if (PreviousMdwPath == null)
+            {
+                return null;
+            }
+
+            string outputDir = Path.Combine(PreviousMdwPath, "..", "..", "output");
+            return Path.GetFullPath(outputDir);
         } 
 
         [EditAction]
@@ -925,7 +945,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             model.BuildWaveDomains(allDomains, model.InputDirPath, model);
 
-            model.WaveOutputData.ConnectTo(model.OutputDirPath);
+            model.WaveOutputData.ConnectTo(model.OutputDirPath, false);
         }
 
         private static void BuildEmptyModel(WaveModel model)
@@ -1169,6 +1189,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ModelSaveTo(targetMdwFilePath, false);
         }
 
+        private string PreviousMdwPath { get; set; }
+
         private void OnSwitchTo(string newMdwFilePath)
         {
             if (MdwFile.MdwFilePath == null)
@@ -1177,6 +1199,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
             else
             {
+                PreviousMdwPath = MdwFile.MdwFilePath;
                 MdwFile.MdwFilePath = newMdwFilePath;
             }
         }
@@ -1358,7 +1381,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual void ConnectOutput(string outputPath)
         {
-            WaveOutputData.ConnectTo(outputPath);
+            bool isInWorkingDir = outputPath.StartsWith(WorkingDirectoryPathFunc());
+            WaveOutputData.ConnectTo(outputPath, isInWorkingDir);
         }
 
         protected override void OnClearOutput()
