@@ -274,6 +274,7 @@
     <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\WriteCategoriesPostOperationBehaviourTest.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectIniFileNamePostOperationBehaviourTest.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueBehaviourTest.cs" />
+    <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueWithDependentsBehaviourTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\NotNullToBooleanConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\TypeToVisibilityConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\DirectionalSpreadingViewTypeTest.cs" />

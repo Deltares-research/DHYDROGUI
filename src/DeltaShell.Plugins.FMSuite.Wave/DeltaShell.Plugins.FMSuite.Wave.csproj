@@ -222,6 +222,7 @@
     <Compile Include="DataAccess\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactory.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectIniFileNamePostOperationBehaviour.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueBehaviour.cs" />
+    <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueWithDependentsBehaviour.cs" />
     <Compile Include="DataAccess\Importers\WaveBoundaryFileImporter.cs" />
     <Compile Include="DataAccess\Importers\WaveDepthFileImporter.cs" />
     <Compile Include="DataAccess\Importers\WaveGridFileImporter.cs" />
