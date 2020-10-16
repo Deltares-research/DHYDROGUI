@@ -1119,7 +1119,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 FileCompareInfo[] origFileData = CollectFileInformation(outputDirInfo).ToArray();
 
-
                 using (var model = new WaveModel(mdwPath))
                 {
                     // Mimic DeltaShell behaviour to first switch to the model before saving.
@@ -1145,6 +1144,187 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 }
             }
         }
+
+        [Test]
+        public void GivenAValidModelWithOutputDataConnectedToTheWorkingDirectoryButFilesRemoved_WhenTheModelIsSavedToTheSameLocation_ThenNothingIsCopied()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string modelSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(modelSourcePath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+                string outputDir = Path.Combine(modelPath, "output");
+
+                string alternativeOutputSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output");
+                string alternativeOutputPath = tempDir.CopyDirectoryToTempDirectory(alternativeOutputSourcePath);
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // Mimic DeltaShell behaviour to first switch to the model before saving.
+                    // This is necessary because the save to logic relies on having the correct
+                    // previous save directory set, which is set as part of Switch to. 
+                    // This is far from ideal, however changing this would require significant 
+                    // changes to DeltaShell's save logic.
+                    ((IFileBased) model).SwitchTo(modelPath);
+
+                    // Connect to different data source
+                    model.WaveOutputData.ConnectTo(alternativeOutputPath, true);
+                    // Remove the files on disk
+                    FileUtils.DeleteIfExists(alternativeOutputPath);
+
+                    // When 
+                    model.ModelSaveTo(mdwPath, true);
+
+                    // Then
+                    var outputDirInfo = new DirectoryInfo(outputDir);
+                    Assert.That(outputDirInfo.EnumerateFiles(), Is.Empty);
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputDirInfo.FullName));
+                }
+            }
+        }
+
+        [Test]
+        public void GivenAValidModelWithOutputDataConnectedToTheWorkingDirectoryButFilesRemoved_WhenTheModelIsSavedToADifferentLocation_ThenNothingIsCopied()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string testDataPath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(testDataPath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+
+                tempDir.CreateDirectory("AnotherWaves");
+                string goalInputDir = tempDir.CreateDirectory("AnotherWaves\\input");
+                string goalOutputDir = tempDir.CreateDirectory("AnotherWaves\\output");
+
+                string goalMdwPath = Path.Combine(goalInputDir, mdwFileName);
+
+                string alternativeOutputSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output");
+                string alternativeOutputPath = tempDir.CopyDirectoryToTempDirectory(alternativeOutputSourcePath);
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // Mimic DeltaShell behaviour to first switch to the model before saving.
+                    // This is necessary because the save to logic relies on having the correct
+                    // previous save directory set, which is set as part of Switch to. 
+                    // This is far from ideal, however changing this would require significant 
+                    // changes to DeltaShell's save logic.
+                    ((IFileBased) model).SwitchTo(modelPath);
+                    // Remove the files on disk
+                    FileUtils.DeleteIfExists(alternativeOutputPath);
+
+                    // Connect to different data source
+                    model.WaveOutputData.ConnectTo(alternativeOutputPath, true);
+
+                    // When 
+                    model.ModelSaveTo(goalMdwPath, true);
+
+                    // Then
+                    var outputDirInfo = new DirectoryInfo(goalOutputDir);
+                    Assert.That(outputDirInfo.EnumerateFiles(), Is.Empty);
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputDirInfo.FullName));
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAValidModelWithDataAvailableInTheModelOutputPathButTheFolderIsRemoved_WhenTheModelIsSavedAtInADifferentLocation_ThenTheOutputFolderContainsTheSameData()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string modelSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(modelSourcePath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+                string outputDir = Path.Combine(modelPath, "output");
+                var outputDirInfo = new DirectoryInfo(outputDir);
+
+                tempDir.CreateDirectory("AnotherWaves");
+                string goalInputDir = tempDir.CreateDirectory("AnotherWaves\\input");
+                string goalOutputDir = tempDir.CreateDirectory("AnotherWaves\\output");
+
+                string goalMdwPath = Path.Combine(goalInputDir, mdwFileName);
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // Mimic DeltaShell behaviour to first switch to the model before saving.
+                    // This is necessary because the save to logic relies on having the correct
+                    // previous save directory set, which is set as part of Switch to. 
+                    // This is far from ideal, however changing this would require significant 
+                    // changes to DeltaShell's save logic.
+                    ((IFileBased) model).SwitchTo(modelPath);
+                    // Remove the files on disk
+                    FileUtils.DeleteIfExists(outputDir);
+
+                    // When 
+                    model.ModelSaveTo(goalMdwPath, true);
+
+                    // Then
+                    var goalOutputDirInfo = new DirectoryInfo(goalOutputDir);
+                    Assert.That(goalOutputDirInfo.EnumerateFiles(), Is.Empty);
+                    Assert.That(goalOutputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(goalOutputDirInfo.FullName));
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAValidModelWithDataAvailableInTheModelOutputPathButTheFolderIsRemoved_WhenTheModelIsSavedAtTheSameLocation_ThenTheOutputFolderContainsTheSameData()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string modelSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(modelSourcePath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+                string outputDir = Path.Combine(modelPath, "output");
+                var outputDirInfo = new DirectoryInfo(outputDir);
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // Mimic DeltaShell behaviour to first switch to the model before saving.
+                    // This is necessary because the save to logic relies on having the correct
+                    // previous save directory set, which is set as part of Switch to. 
+                    // This is far from ideal, however changing this would require significant 
+                    // changes to DeltaShell's save logic.
+                    ((IFileBased) model).SwitchTo(modelPath);
+                    // Remove the files on disk
+                    FileUtils.DeleteIfExists(outputDir);
+
+                    string originalDataSourcePath = model.WaveOutputData.DataSourcePath;
+
+                    // When 
+                    model.ModelSaveTo(mdwPath, true);
+
+                    // Then
+                    Assert.That(outputDirInfo.EnumerateFiles(), Is.Empty);
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(originalDataSourcePath));
+                }
+            }
+        }
+
 
         private static void AssertContainsSameFiles(IReadOnlyList<FileCompareInfo> originalFileData,
                                                     IReadOnlyList<FileCompareInfo> savedFileData)

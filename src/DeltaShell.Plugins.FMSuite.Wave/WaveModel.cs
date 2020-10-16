@@ -565,12 +565,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             var dataSourcePathInfo = new DirectoryInfo(WaveOutputData.DataSourcePath);
 
+            ClearDirectory(targetDirectoryInfo);
+
+            if (!dataSourcePathInfo.Exists)
+            {
+                return;
+            }
+
             // The exported model to run is always called Waves.mdw, as such we cannot use the name of 
             // the mdw path of the wave model.
             string mdwRunPath = Path.Combine(dataSourcePathInfo.FullName, "Waves.mdw");
             HashSet<string> inputFilePaths = WaveOutputFileHelper.CollectInputFileNamesFromWorkingDirectoryMdw(mdwRunPath);
-
-            ClearDirectory(targetDirectoryInfo);
 
             foreach (FileInfo file in dataSourcePathInfo.EnumerateFiles())
             {
@@ -584,7 +589,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private void CopyOutputDataTo(DirectoryInfo targetDirectoryInfo)
         {
             var dataSourcePathInfo = new DirectoryInfo(WaveOutputData.DataSourcePath);
-            FileUtils.CopyAll(dataSourcePathInfo, targetDirectoryInfo, null);
+
+            if (dataSourcePathInfo.Exists)
+            {
+                FileUtils.CopyAll(dataSourcePathInfo, targetDirectoryInfo, null);
+            }
         }
 
         private bool IsSavedToCurrentOutputDirectory(FileSystemInfo targetDirectoryInfo) =>
