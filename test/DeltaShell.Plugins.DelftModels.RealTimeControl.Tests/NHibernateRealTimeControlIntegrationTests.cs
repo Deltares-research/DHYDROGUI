@@ -26,25 +26,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     public class NHibernateRealTimeControlIntegrationTests : NHibernateIntegrationTestBase
     {
         [Test]
-        public void TestRtcOutputFileFunctionStoreIsPersisted()
-        {
-            var rtcModel = new RealTimeControlModel()
-            {
-                OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore
-                {
-                    Features = new List<IFeature>(),
-                    Path = @"C:\SomeDirectory\SomeFile.nc"
-                }
-            };
-
-            RealTimeControlModel retrievedEntity = SaveAndRetrieveObject(rtcModel);
-
-            Assert.IsNotNull(retrievedEntity);
-            Assert.NotNull(retrievedEntity.OutputFileFunctionStore);
-            Assert.AreEqual(rtcModel.OutputFileFunctionStore.Path, retrievedEntity.OutputFileFunctionStore.Path);
-        }
-
-        [Test]
         public void SaveAndLoadProjectWithRtcModel()
         {
             var rtcModel = new RealTimeControlModel("testingRTCModel")
