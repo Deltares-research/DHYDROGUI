@@ -1581,8 +1581,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (Directory.Exists(expectedOutputPath))
                 {
                     currentOutputDirectoryPath = expectedOutputPath;
+                    ConnectOutput(expectedOutputPath);
                 }
                 persistentOutputDirectory = expectedOutputPath;
+                
                 return;
             }
 
