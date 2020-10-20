@@ -220,6 +220,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return new ControlGroupCollectionNodePresenter {GuiPlugin = this};
             yield return new ControlGroupNodePresenter(this);
             yield return new RealTimeControlRestartFileNodePresenter(this);
+            yield return new ReadOnlyOutputTextDocumentNodePresenter();
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
