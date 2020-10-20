@@ -10,6 +10,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
@@ -58,27 +59,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             logHandler.ReportWarning(string.Format(Resources.RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings, model.Name));
         }
 
-        private EventedList<RealTimeControlRestartFile> RetrieveRestartOutput(string rootPath, string modelName)
+        private EventedList<RestartFile> RetrieveRestartOutput(string rootPath, string modelName)
         {
-            IList<RealTimeControlRestartFile> restartFiles = new List<RealTimeControlRestartFile>();
+            IList<RestartFile> restartFiles = new List<RestartFile>();
 
             foreach (string stateFilePath in SearchStateFiles(rootPath, modelName))
             {
                 ZipFileUtils.Extract(stateFilePath, rootPath);
 
-                string restartFilePath = Path.Combine(rootPath, restartFileName);
-                string newFileName = GetNewFileName(stateFilePath);
-
-                var restartFile = new RealTimeControlRestartFile(newFileName, File.ReadAllText(restartFilePath));
+                string restartFilePath = RenameRestartFile(rootPath, stateFilePath);
+                var restartFile = new RestartFile(restartFilePath);
 
                 TryDeleteFile(Path.Combine(rootPath, metaDataFileName));
                 TryDeleteFile(stateFilePath);
-                TryDeleteFile(restartFilePath);
 
                 restartFiles.Add(restartFile);
             }
 
-            return new EventedList<RealTimeControlRestartFile>(restartFiles);
+            return new EventedList<RestartFile>(restartFiles);
+        }
+
+        private string RenameRestartFile(string rootPath, string stateFilePath)
+        {
+            string restartFilePath = Path.Combine(rootPath, restartFileName);
+            string newFileName = GetNewFileName(stateFilePath);
+            string newFilePath = Path.Combine(rootPath, newFileName);
+
+            File.Move(restartFilePath, newFilePath);
+
+            return newFilePath;
         }
 
         private static void RemoveExplicitWorkingDir(string rootPath, string modelName)

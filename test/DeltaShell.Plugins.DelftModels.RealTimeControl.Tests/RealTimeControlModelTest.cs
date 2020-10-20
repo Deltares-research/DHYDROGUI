@@ -18,6 +18,7 @@ using DelftTools.Units.Generics;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
@@ -208,13 +209,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 model.ConnectOutput(rtcDirectory);
 
                 // Assert
-                RealTimeControlRestartFile[] restartOutput = model.RestartOutput.ToArray();
+                RestartFile[] restartOutput = model.RestartOutput.ToArray();
                 Assert.That(restartOutput, Has.Length.EqualTo(5));
 
                 for (var i = 0; i < 5; i++)
                 {
-                    Assert.That(restartOutput[i].Name, Is.EqualTo(Path.GetFileName(restartFiles[i])));
-                    Assert.That(restartOutput[i].Content, Is.EqualTo($"file {i}"));
+                    Assert.That(restartOutput[i].Path, Is.EqualTo(restartFiles[i]));
                 }
             }
         }

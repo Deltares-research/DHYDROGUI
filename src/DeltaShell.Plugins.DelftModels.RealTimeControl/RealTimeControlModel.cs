@@ -24,6 +24,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -93,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             SaveStateStopTime = StopTime;
             SaveStateTimeStep = TimeStep;
 
-            RestartOutput = new EventedList<RealTimeControlRestartFile>();
+            RestartOutput = new EventedList<RestartFile>();
 
             runner = new DimrRunner(this);
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
@@ -176,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public virtual IEventedList<RealTimeControlRestartFile> RestartOutput { get; set; }
+        public virtual IEventedList<RestartFile> RestartOutput { get; set; }
 
         //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
@@ -986,12 +987,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             SetRestartOutputFiles(Directory.GetFiles(outputPath).Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))));
         }
 
-        private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
+        private void SetRestartOutputFiles(IEnumerable<string> restartFilePaths)
         {
-            IEnumerable<RealTimeControlRestartFile> outputRestartFiles =
-                restartFileStrings.Select(rfs => new RealTimeControlRestartFile(Path.GetFileName(rfs),
-                                                                                File.ReadAllText(rfs)));
-            RestartOutput = new EventedList<RealTimeControlRestartFile>(outputRestartFiles.ToList());
+            List<RestartFile> outputRestartFiles = restartFilePaths.Select(p => new RestartFile(p)).ToList();
+            RestartOutput = new EventedList<RestartFile>(outputRestartFiles);
         }
 
         private void ReconnectOutputFiles(string outputFilePath)

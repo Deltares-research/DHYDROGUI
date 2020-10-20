@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Properties;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
@@ -54,14 +56,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
                 Enabled = false
             };
 
-            RealTimeControlRestartFile outputRealTimeControlRestartFile = model.RestartOutput.LastOrDefault();
+            RestartFile outputRealTimeControlRestartFile = model.RestartOutput.LastOrDefault();
             if (outputRealTimeControlRestartFile == null)
             {
                 return menuItem;
             }
 
             menuItem.Enabled = true;
-            menuItem.Click += (s, e) => model.RestartInput = outputRealTimeControlRestartFile.Clone();
+            menuItem.Click += (s, e) => model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(outputRealTimeControlRestartFile.Path),
+                                                                                            File.ReadAllText(outputRealTimeControlRestartFile.Path));
 
             return menuItem;
         }

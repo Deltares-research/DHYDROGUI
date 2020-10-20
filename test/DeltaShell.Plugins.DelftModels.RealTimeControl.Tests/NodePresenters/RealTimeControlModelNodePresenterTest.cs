@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using NUnit.Framework;
@@ -27,9 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             RealTimeControlModelNodePresenter nodePresenter = GetRealTimeControlModelNodePresenter();
             var model = new RealTimeControlModel()
             {
-                RestartOutput = new EventedList<RealTimeControlRestartFile>(new[]
+                RestartOutput = new EventedList<RestartFile>(new[]
                 {
-                    new RealTimeControlRestartFile()
+                    new RestartFile()
                 })
             };
 
