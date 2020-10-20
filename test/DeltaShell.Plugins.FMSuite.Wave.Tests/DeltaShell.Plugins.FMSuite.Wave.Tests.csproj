@@ -357,7 +357,7 @@
     <Compile Include="Gui\Layers\Providers\WaveLayerSubProviderTestFixture.cs" />
     <Compile Include="Gui\Layers\Providers\WaveModelLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\OutputData\WavmFileFunctionStoreLayerSubProviderTest.cs" />
-    <Compile Include="Gui\Layers\WaveLayerFactoryTest.cs" />
+    <Compile Include="Gui\Layers\WaveLayerInstanceCreatorTest.cs" />
     <Compile Include="Gui\Layers\WaveLayerNamesTest.cs" />
     <Compile Include="Gui\Layers\WaveMapLayerProviderFactoryTest.cs" />
     <Compile Include="Gui\MapTools\GroupedLayerFeature2DLineToolTest.cs" />

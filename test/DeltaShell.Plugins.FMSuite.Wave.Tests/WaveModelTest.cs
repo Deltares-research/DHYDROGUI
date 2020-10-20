@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 var counter = 0;
 
-                ((INotifyCollectionChanged) model).CollectionChanged += delegate { counter = 1; };
+                ((INotifyCollectionChanged) model).CollectionChanged += delegate { counter += 1; };
 
                 model.BoundaryContainer.Boundaries.Add(waveBoundary);
 

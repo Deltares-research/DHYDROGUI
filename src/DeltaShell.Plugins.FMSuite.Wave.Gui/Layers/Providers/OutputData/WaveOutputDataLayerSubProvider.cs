@@ -14,20 +14,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     /// <seealso cref="ILayerSubProvider" />
     public class WaveOutputDataLayerSubProvider : ILayerSubProvider
     {
-        private readonly IWaveLayerFactory factory;
+        private readonly IWaveLayerInstanceCreator instanceCreator;
 
         /// <summary>
         /// Creates a new <see cref="WaveOutputDataLayerSubProvider"/>.
         /// </summary>
-        /// <param name="factory">The factory to build the layers with.</param>
+        /// <param name="instanceCreator">The factory to build the layers with.</param>
         /// <exception cref="ArgumentNullException">
-        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// Throw when <paramref name="instanceCreator"/> is <c>null</c>.
         /// </exception>
-        public WaveOutputDataLayerSubProvider(IWaveLayerFactory factory)
+        public WaveOutputDataLayerSubProvider(IWaveLayerInstanceCreator instanceCreator)
         {
-            Ensure.NotNull(factory, nameof(factory));
+            Ensure.NotNull(instanceCreator, nameof(instanceCreator));
 
-            this.factory = factory;
+            this.instanceCreator = instanceCreator;
         }
 
         public bool CanCreateLayerFor(object sourceData, object parentData) =>
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
 
         public ILayer CreateLayer(object sourceData, object parentData) =>
             sourceData is IWaveOutputData outputData && outputData.IsConnected
-                ? factory.CreateWaveOutputDataLayer(outputData)
+                ? instanceCreator.CreateWaveOutputDataLayer(outputData)
                 : null;
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData;
@@ -17,10 +16,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         public void Constructor_ValidFactory_ExpectedResults()
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
 
             // Call 
-            var provider = new WaveOutputDataLayerSubProvider(factory);
+            var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
 
             // Assert
             Assert.That(provider, Is.InstanceOf<ILayerSubProvider>());
@@ -33,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             void Call() => new WaveOutputDataLayerSubProvider(null);
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("factory"));
+            Assert.That(exception.ParamName, Is.EqualTo("instanceCreator"));
         }
 
         private static IEnumerable<TestCaseData> CanCreateLayerForData()
@@ -64,8 +63,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
                                                       bool expectedValue)
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var provider = new WaveOutputDataLayerSubProvider(factory);
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
+            var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
 
             // Call 
             bool result = provider.CanCreateLayerFor(sourceData, parentData);
@@ -88,19 +87,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             var outputData = Substitute.For<IWaveOutputData>();
             outputData.IsConnected.Returns(true);
 
-            var factory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var layer = Substitute.For<ILayer>();
 
-            factory.CreateWaveOutputDataLayer(outputData).Returns(layer);
+            instanceCreator.CreateWaveOutputDataLayer(outputData).Returns(layer);
 
-            var provider = new WaveOutputDataLayerSubProvider(factory);
+            var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
 
             // Call
             ILayer result = provider.CreateLayer(outputData, parentData);
 
             // Assert
             Assert.That(result, Is.SameAs(layer));
-            factory.Received(1).CreateWaveOutputDataLayer(outputData);
+            instanceCreator.Received(1).CreateWaveOutputDataLayer(outputData);
         }
 
         private static IEnumerable<TestCaseData> CreateLayerData_InvalidInput()
@@ -124,23 +123,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         public void CreateLayer_InvalidInput_ReturnsNull(object sourceData, object parentData)
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var provider = new WaveOutputDataLayerSubProvider(factory);
+            var instanceCreator= Substitute.For<IWaveLayerInstanceCreator>();
+            var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
 
             // Call
             ILayer result = provider.CreateLayer(sourceData, parentData);
 
             // Assert
             Assert.That(result, Is.Null);
-            factory.DidNotReceiveWithAnyArgs().CreateWaveOutputDataLayer(null);
+            instanceCreator.DidNotReceiveWithAnyArgs().CreateWaveOutputDataLayer(null);
         }
 
         [Test]
         public void GenerateChildLayerObjects_ReturnsWaveOutputChildObjects()
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var provider = new WaveOutputDataLayerSubProvider(factory);
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
+            var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
             var outputData = Substitute.For<IWaveOutputData>();
 
             // Call | Assert

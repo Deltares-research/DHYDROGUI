@@ -39,17 +39,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         internal static IEnumerable<ILayerSubProvider> GetSubProviders(Func<IEnumerable<WaveModel>> getWaveModelsFunc)
         {
             Ensure.NotNull(getWaveModelsFunc, nameof(getWaveModelsFunc));
-            var factory = new WaveLayerFactory();
+            var instanceCreator = new WaveLayerInstanceCreator();
 
-            yield return new BoundaryMapFeaturesContainerLayerSubProvider(factory);
-            yield return new DiscreteGridPointCoverageLayerSubProvider(factory, getWaveModelsFunc);
-            yield return new ObservationCrossSectionLayerSubProvider(factory);
-            yield return new ObservationPointLayerSubProvider(factory);
-            yield return new ObstacleLayerSubProvider(factory);
-            yield return new WaveDomainDataLayerSubProvider(factory);
-            yield return new WaveModelLayerSubProvider(factory);
-            yield return new WavmFileFunctionStoreLayerSubProvider(factory, getWaveModelsFunc);
-            yield return new WaveOutputDataLayerSubProvider(factory);
+            yield return new BoundaryMapFeaturesContainerLayerSubProvider(instanceCreator);
+            yield return new DiscreteGridPointCoverageLayerSubProvider(instanceCreator, getWaveModelsFunc);
+            yield return new ObservationCrossSectionLayerSubProvider(instanceCreator);
+            yield return new ObservationPointLayerSubProvider(instanceCreator);
+            yield return new ObstacleLayerSubProvider(instanceCreator);
+            yield return new WaveDomainDataLayerSubProvider(instanceCreator);
+            yield return new WaveModelLayerSubProvider(instanceCreator);
+            yield return new WavmFileFunctionStoreLayerSubProvider(instanceCreator, getWaveModelsFunc);
+            yield return new WaveOutputDataLayerSubProvider(instanceCreator);
         }
     }
 }

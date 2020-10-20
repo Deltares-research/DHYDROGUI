@@ -16,15 +16,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
     {
         private readonly WaveModel waveModel = new WaveModel {OuterDomain = new WaveDomainData("Domain")};
 
-        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
+        protected override Func<IWaveLayerInstanceCreator, ILayerSubProvider> ConstructorCall { get; } =
             factory => new WaveModelLayerSubProvider(factory);
 
         [Test]
         public void GenerateChildLayerObjects_NotModelAsData_ReturnsEmptyEnumerable()
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveModelLayerSubProvider(factory);
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
+            var subProvider = new WaveModelLayerSubProvider(instanceCreator);
 
             var obj = new object();
 
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 
         protected override object GetInvalidParentData() => null;
 
-        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
-            FactoryMock.CreateModelGroupLayer(waveModel);
+        protected override ILayer ExpectedCall(IWaveLayerInstanceCreator instanceCreatorMock) =>
+            instanceCreatorMock.CreateModelGroupLayer(waveModel);
     }
 }

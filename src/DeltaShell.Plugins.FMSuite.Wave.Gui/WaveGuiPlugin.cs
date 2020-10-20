@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     var referenceDateTimeProvider = new ModelDefinitionReferenceDateTimeProvider(model.ModelDefinition);
 
                     var geometryPreviewConfigurator = new GeometryPreviewMapConfigurator(geometryFactory,
-                                                                                         new WaveLayerFactory(),
+                                                                                         new WaveLayerInstanceCreator(),
                                                                                          model.CoordinateSystem);
 
                     view.DataContext = new WaveBoundaryConditionEditorViewModel(data,

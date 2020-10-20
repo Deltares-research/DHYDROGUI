@@ -15,25 +15,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     /// <seealso cref="ILayerSubProvider"/>
     public class WavmFileFunctionStoreLayerSubProvider : ILayerSubProvider
     {
-        private readonly IWaveLayerFactory factory;
+        private readonly IWaveLayerInstanceCreator instanceCreator;
         private readonly Func<IEnumerable<WaveModel>> getWaveModelsFunc;
 
         /// <summary>
         /// Creates a new <see cref="WavmFileFunctionStoreLayerSubProvider"/>.
         /// </summary>
-        /// <param name="factory">The factory to build the layers with.</param>
+        /// <param name="instanceCreator">The factory to build the layers with.</param>
         /// <param name="getWaveModelsFunc"> Function to retrieve the WaveModels. </param>
         /// <exception cref="ArgumentNullException">
-        /// Throw when <paramref name="factory"/> or
+        /// Throw when <paramref name="instanceCreator"/> or
         /// <paramref name="getWaveModelsFunc"/> is <c>null</c>.
         /// </exception>
-        public WavmFileFunctionStoreLayerSubProvider(IWaveLayerFactory factory,
+        public WavmFileFunctionStoreLayerSubProvider(IWaveLayerInstanceCreator instanceCreator,
                                                      Func<IEnumerable<WaveModel>> getWaveModelsFunc)
         {
-            Ensure.NotNull(factory, nameof(factory));
+            Ensure.NotNull(instanceCreator, nameof(instanceCreator));
             Ensure.NotNull(getWaveModelsFunc, nameof(getWaveModelsFunc));
 
-            this.factory = factory;
+            this.instanceCreator = instanceCreator;
             this.getWaveModelsFunc = getWaveModelsFunc;
         }
 

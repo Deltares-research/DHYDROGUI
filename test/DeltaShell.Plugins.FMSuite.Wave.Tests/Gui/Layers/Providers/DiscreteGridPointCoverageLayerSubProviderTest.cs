@@ -20,14 +20,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         private readonly IDiscreteGridPointCoverage gridCoverage = Substitute.For<IDiscreteGridPointCoverage>();
         private readonly IWaveModel model = GetModelWithCoordinateSystem();
 
-        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
+        protected override Func<IWaveLayerInstanceCreator, ILayerSubProvider> ConstructorCall { get; } =
             (factory) => new DiscreteGridPointCoverageLayerSubProvider(factory, getModelsFunc);
 
         [Test]
         public void Constructor_GetWaveModelsFuncNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new DiscreteGridPointCoverageLayerSubProvider(FactoryMock, null);
+            void Call() => new DiscreteGridPointCoverageLayerSubProvider(InstanceCreatorMock, null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             Assert.That(exception.ParamName, Is.EqualTo("getWaveModelsFunc"));
@@ -54,14 +54,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             ILayerSubProvider subProvider = ConstructSubProvider();
             var parent = new WavmFileFunctionStore("dummy.nc");
 
-            FactoryMock.CreateGridLayer(gridCoverage, null).Returns(LayerMock);
+            InstanceCreatorMock.CreateGridLayer(gridCoverage, null).Returns(LayerMock);
 
             // Call
             ILayer layer = subProvider.CreateLayer(gridCoverage, parent);
 
             // Assert
             Assert.That(layer, Is.SameAs(LayerMock));
-            FactoryMock.Received(1).CreateGridLayer(gridCoverage, null);
+            InstanceCreatorMock.Received(1).CreateGridLayer(gridCoverage, null);
         }
 
         private static IWaveModel GetModelWithCoordinateSystem()
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         protected override object GetInvalidParentData() =>
             null;
 
-        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
-            FactoryMock.CreateGridLayer(gridCoverage, model.CoordinateSystem);
+        protected override ILayer ExpectedCall(IWaveLayerInstanceCreator instanceCreatorMock) =>
+            instanceCreatorMock.CreateGridLayer(gridCoverage, model.CoordinateSystem);
     }
 }

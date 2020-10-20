@@ -17,11 +17,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         public void Constructor_ReturnsExpectedResult()
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             IEnumerable<WaveModel> GetModels() => Enumerable.Empty<WaveModel>();
 
             // Call
-            var subProvider = new WavmFileFunctionStoreLayerSubProvider(factory, GetModels);
+            var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
 
             // Assert
             Assert.That(subProvider, Is.InstanceOf<ILayerSubProvider>());
@@ -37,17 +37,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             void Call() => new WavmFileFunctionStoreLayerSubProvider(null, GetModels);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
-            Assert.That(exception.ParamName, Is.EqualTo("factory"));
+            Assert.That(exception.ParamName, Is.EqualTo("instanceCreator"));
         }
 
         [Test]
         public void Constructor_GetModelsNull_ThrowsArgumentNullException()
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
 
             // Call | Assert
-            void Call() => new WavmFileFunctionStoreLayerSubProvider(factory, null);
+            void Call() => new WavmFileFunctionStoreLayerSubProvider(instanceCreator, null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             Assert.That(exception.ParamName, Is.EqualTo("getWaveModelsFunc"));
@@ -57,10 +57,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         public void CreateLayer_InvalidSourceAndParentData_ReturnsNull()
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             IEnumerable<WaveModel> GetModels() => Enumerable.Empty<WaveModel>();
 
-            var subProvider = new WavmFileFunctionStoreLayerSubProvider(factory, GetModels);
+            var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
 
             // Call
             ILayer result = subProvider.CreateLayer(new object(), new object());
@@ -73,10 +73,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         public void GenerateChildLayerObjects_InvalidData_ReturnsEmptyEnumerable()
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             IEnumerable<WaveModel> GetModels() => Enumerable.Empty<WaveModel>();
 
-            var subProvider = new WavmFileFunctionStoreLayerSubProvider(factory, GetModels);
+            var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
 
             // Call
             IEnumerable<object> result = subProvider.GenerateChildLayerObjects(new object());
@@ -90,10 +90,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         public void CanCreateLayerFor_InvalidSourceAndParentData_ReturnsFalse()
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             IEnumerable<WaveModel> GetModels() => Enumerable.Empty<WaveModel>();
 
-            var subProvider = new WavmFileFunctionStoreLayerSubProvider(factory, GetModels);
+            var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
 
             // Call
             bool result = subProvider.CanCreateLayerFor(new object(), new object());
