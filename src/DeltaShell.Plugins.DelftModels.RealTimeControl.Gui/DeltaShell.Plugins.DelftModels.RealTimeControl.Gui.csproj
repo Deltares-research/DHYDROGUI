@@ -119,6 +119,7 @@
     <Compile Include="Restart\RealTimeControlInputRestartFileContextMenu.cs" />
     <Compile Include="Restart\RealTimeControlInputRestartFileNodePresenter.cs" />
     <Compile Include="Restart\RealTimeControlOutputRestartFileContextMenu.cs" />
+    <Compile Include="Restart\RealTimeControlOutputRestartFileNodePresenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Controls">
