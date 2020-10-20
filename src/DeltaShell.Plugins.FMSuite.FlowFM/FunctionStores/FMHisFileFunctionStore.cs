@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 IFunction function;
                 IVariable<DateTime> functionTimeVariable;
 
-                if (timeVariable.NumDimensions >= 2)
+                if (timeVariable.NumDimensions == 2)
                 {
                     string secondDimensionName = netCdfFile.GetDimensionName(dimensions[1]);
                     string nodeCoordinatesVariableNames = netCdfFile.GetAttributeValue(netCdfVariable, coordinatesAttribute);
