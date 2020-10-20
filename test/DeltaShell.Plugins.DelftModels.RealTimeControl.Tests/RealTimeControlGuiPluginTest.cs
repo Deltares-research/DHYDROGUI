@@ -124,8 +124,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             ITreeNodePresenter[] nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
 
             // Then
-            var restartFileNodePresenter = Contains<RealTimeControlInputRestartFileNodePresenter>(nodePresenters);
-            Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+            var restartInputNodePresenter = Contains<RealTimeControlInputRestartFileNodePresenter>(nodePresenters);
+            Assert.That(restartInputNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+            var restartOutputNodePresenter = Contains<RealTimeControlOutputRestartFileNodePresenter>(nodePresenters);
+            Assert.That(restartOutputNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
         }
 
         private static T Contains<T>(IEnumerable<ITreeNodePresenter> source)
