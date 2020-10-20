@@ -29,15 +29,6 @@
 
     <many-to-one access="property" name="RestartInput" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart.RealTimeControlRestartFile, DeltaShell.Plugins.DelftModels.RealTimeControl" />
 
-    <list name="RestartOutput"
-          lazy="false"
-          cascade="all"
-          collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart.RealTimeControlRestartFile]], DeltaShell.Plugins.Data.NHibernate">
-      <key column="rtc_restart_output_id" />
-      <index column="rtc_restart_output_list_index" />
-      <one-to-many class="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart.RealTimeControlRestartFile" />
-    </list>
-
     <property name="CoordinateSystem" column="coordinate_system" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis" />
    
   </joined-subclass>
