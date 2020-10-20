@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -161,6 +162,75 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                 .Any(
                                     i =>
                                         i.Severity == ValidationSeverity.Error && i.Message == expectedMessage1));
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void Validate_WaveModelWithBoundaryDefinitionPerFileUsedButFilePathNullOrWhitespace_ThenAnErrorShouldBeGiven(string filePath)
+        {
+            // Arrange
+            using (var model = new WaveModel())
+            {
+                model.BoundaryContainer.DefinitionPerFileUsed = true;
+                model.BoundaryContainer.FilePathForBoundariesPerFile = filePath;
+
+                // Act
+                ValidationReport validationReport = WavePropertiesValidator.Validate(model);
+
+                // Assert
+                const string expectedMessage = "No spectrum file has been selected.";
+                IEnumerable<ValidationIssue> validationIssues = validationReport.GetAllIssuesRecursive();
+                Assert.IsTrue(validationIssues.Any(
+                                  i => i.Severity == ValidationSeverity.Error && i.Message == expectedMessage));
+            }
+        }
+
+        [Test]
+        public void Validate_ValidWaveModelWithBoundaryDefinitionPerFileUsedAndNonEmptyFilePath_ThenNoErrorShouldBeGiven()
+        {
+            // Arrange
+            using (var model = new WaveModel())
+            {
+                const string filePath = "NonEmptyFilePath";
+
+                model.BoundaryContainer.DefinitionPerFileUsed = true;
+                model.BoundaryContainer.FilePathForBoundariesPerFile = filePath;
+
+                // Act
+                ValidationReport validationReport = WavePropertiesValidator.Validate(model);
+
+                // Assert
+                ValidationReport generalReport = validationReport.SubReports.Single(r => r.Category == KnownWaveCategories.GeneralCategory);
+                IEnumerable<ValidationIssue> validationIssues = generalReport.GetAllIssuesRecursive();
+
+                Assert.That(validationIssues, Has.Count.EqualTo(0));
+            }
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        [TestCase("NonEmptyFilePath")]
+        public void Validate_ValidWaveModelWithoutBoundaryDefinitionPerFileUsed_ThenNoErrorShouldBeGiven(string filePath)
+        {
+            // Arrange
+            using (var model = new WaveModel())
+            {
+                model.BoundaryContainer.DefinitionPerFileUsed = false;
+                model.BoundaryContainer.FilePathForBoundariesPerFile = filePath;
+
+                // Act
+                ValidationReport validationReport = WavePropertiesValidator.Validate(model);
+
+                // Assert
+                ValidationReport generalReport = validationReport.SubReports.Single(r => r.Category == KnownWaveCategories.GeneralCategory);
+                IEnumerable<ValidationIssue> validationIssues = generalReport.GetAllIssuesRecursive();
+
+                Assert.That(validationIssues, Has.Count.EqualTo(0));
+            }
         }
 
         [TestCase(new[]

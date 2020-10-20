@@ -241,4 +241,13 @@
   <data name="WaveGuiPlugin_Boundary_Editor____0___" xml:space="preserve">
     <value>Boundary Editor ( {0} )</value>
   </data>
+  <data name="ForcingViewType_Constant_Description" xml:space="preserve">
+    <value>Parametrized (Constant)</value>
+  </data>
+  <data name="ForcingViewType_FileBased_Description" xml:space="preserve">
+    <value>Spectrum based (From file)</value>
+  </data>
+  <data name="ForcingViewType_TimeSeries_Description" xml:space="preserve">
+    <value>Parametrized (Time Series)</value>
+  </data>
 </root>
