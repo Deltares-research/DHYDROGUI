@@ -268,7 +268,7 @@
     <Compile Include="Forms\Properties\StandardConditionPropertiesTest.cs" />
     <Compile Include="Forms\Properties\TimeConditionPropertiesTest.cs" />
     <Compile Include="Forms\TimeConditionPropertiesTest.cs" />
-    <Compile Include="Gui\Restart\RealTimeControlRestartFileContextMenuTest.cs" />
+    <Compile Include="Gui\Restart\RealTimeControlInputRestartFileContextMenuTest.cs" />
     <Compile Include="IO\DataAccess\BranchNodeTest.cs" />
     <Compile Include="IO\DataAccess\ConditionDataAccessObjectCreatorTest.cs" />
     <Compile Include="IO\DataAccess\ConditionDataAccessObjectTest.cs" />
@@ -331,7 +331,7 @@
     <Compile Include="RealTimeControlGuiPluginTest.cs" />
     <Compile Include="RealTimeControlTestHelperTest.cs" />
     <Compile Include="RealTimeControlUserInterfaceIntegrationTests.cs" />
-    <Compile Include="Gui\Restart\RealTimeControlRestartFileNodePresenterTest.cs" />
+    <Compile Include="Gui\Restart\RealTimeControlInputRestartFileNodePresenterTest.cs" />
     <Compile Include="RtcDataAccessListenerTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="TimeConditionTest.cs" />

@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
 {
     [TestFixture]
-    public class RealTimeControlRestartFileContextMenuTest
+    public class RealTimeControlInputRestartFileContextMenuTest
     {
         [Test]
         public void Constructor_RealTimeControlRestartFileNull_ThrowsArgumentNullException()
@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             var node = Substitute.For<ITreeNode>();
 
             // Call
-            void Call() => new RealTimeControlRestartFileContextMenu(null, node);
+            void Call() => new RealTimeControlInputRestartFileContextMenu(null, node);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             var restartFile = new RealTimeControlRestartFile();
 
             // Call
-            void Call() => new RealTimeControlRestartFileContextMenu(restartFile, null);
+            void Call() => new RealTimeControlInputRestartFileContextMenu(restartFile, null);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             node.Parent.Parent.Returns((ITreeNode) null);
 
             // Call
-            var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);
+            var menu = new RealTimeControlInputRestartFileContextMenu(restartFile, node);
 
             // Assert
             Assert.That(menu.ContextMenuStrip.Items, Is.Empty);
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             model.RestartInput = restartFile;
 
             // Call
-            var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);
+            var menu = new RealTimeControlInputRestartFileContextMenu(restartFile, node);
 
             // Assert
             ToolStripItemCollection toolStripItems = menu.ContextMenuStrip.Items;
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             model.RestartOutput = new EventedList<RealTimeControlRestartFile> {restartFile};
 
             // Call
-            var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);
+            var menu = new RealTimeControlInputRestartFileContextMenu(restartFile, node);
 
             // Assert
             ToolStripItemCollection toolStripItems = menu.ContextMenuStrip.Items;
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             model.RestartInput = restartFile;
 
             // Call
-            var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);
+            var menu = new RealTimeControlInputRestartFileContextMenu(restartFile, node);
 
             // Assert
             ToolStripItem removeRestartItem = menu.ContextMenuStrip.Items[0];
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             model.RestartInput = restartFile;
 
             // Call
-            var menu = new RealTimeControlRestartFileContextMenu(restartFile, node);
+            var menu = new RealTimeControlInputRestartFileContextMenu(restartFile, node);
 
             // Assert
             ToolStripItem removeRestartItem = menu.ContextMenuStrip.Items[0];

@@ -15,19 +15,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
     /// Node presenter for the project tree for a <seealso cref="TreeViewNodePresenterBaseForPluginGui{T}"/>
     /// </summary>
     /// <seealso cref="RealTimeControlRestartFile"/>
-    public sealed class RealTimeControlRestartFileNodePresenter : TreeViewNodePresenterBaseForPluginGui<RealTimeControlRestartFile>
+    public sealed class RealTimeControlInputRestartFileNodePresenter : TreeViewNodePresenterBaseForPluginGui<RealTimeControlRestartFile>
     {
         private static readonly Image restartIcon = Resources.restart;
         private static readonly Image emptyRestartIcon = Resources.restart_empty;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RealTimeControlRestartFileNodePresenter"/> class.
+        /// Initializes a new instance of the <see cref="RealTimeControlInputRestartFileNodePresenter"/> class.
         /// </summary>
         /// <param name="guiPlugin">The GUI plugin.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="guiPlugin"/> is <c>null</c>.
         /// </exception>
-        public RealTimeControlRestartFileNodePresenter(GuiPlugin guiPlugin)
+        public RealTimeControlInputRestartFileNodePresenter(GuiPlugin guiPlugin)
             : base(guiPlugin)
         {
             Ensure.NotNull(guiPlugin, nameof(guiPlugin));
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
                 menu.Add(menuBase);
             }
 
-            menu.Add(new RealTimeControlRestartFileContextMenu((RealTimeControlRestartFile) nodeData, sender));
+            menu.Add(new RealTimeControlInputRestartFileContextMenu((RealTimeControlRestartFile) nodeData, sender));
 
             ContextMenuStrip contextMenu = ContextMenuFactory.CreateMenuFor(nodeData, Gui, this, sender);
             menu.Add(new MenuItemContextMenuStripAdapter(contextMenu));

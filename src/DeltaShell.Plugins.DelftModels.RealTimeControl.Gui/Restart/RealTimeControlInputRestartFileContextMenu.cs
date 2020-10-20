@@ -12,17 +12,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
     /// Context menu for a <see cref="RealTimeControlRestartFile"/>.
     /// </summary>
     /// <seealso cref="MenuItemContextMenuStripAdapter"/>
-    public class RealTimeControlRestartFileContextMenu : MenuItemContextMenuStripAdapter
+    public class RealTimeControlInputRestartFileContextMenu : MenuItemContextMenuStripAdapter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RealTimeControlRestartFileContextMenu"/> class.
+        /// Initializes a new instance of the <see cref="RealTimeControlInputRestartFileContextMenu"/> class.
         /// </summary>
         /// <param name="restartFile">The restart file.</param>
         /// <param name="node">The corresponding node.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="restartFile"/> or <paramref name="node"/> is <c>null</c>.
         /// </exception>
-        public RealTimeControlRestartFileContextMenu(RealTimeControlRestartFile restartFile, ITreeNode node) : base(new ContextMenuStrip())
+        public RealTimeControlInputRestartFileContextMenu(RealTimeControlRestartFile restartFile, ITreeNode node) : base(new ContextMenuStrip())
         {
             Ensure.NotNull(restartFile, nameof(restartFile));
             Ensure.NotNull(node, nameof(node));
