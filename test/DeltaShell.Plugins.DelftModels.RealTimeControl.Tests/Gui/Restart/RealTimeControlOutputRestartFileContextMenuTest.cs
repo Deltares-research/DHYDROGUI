@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using NSubstitute;
 using NUnit.Framework;
@@ -51,6 +55,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
 
             // Assert
             Assert.That(menu.ContextMenuStrip.Items, Is.Empty);
+        }
+
+        [Test]
+        public void ClickingUseAsRestart_RestartInputIsSetWithSelectedOutputRestart()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                var model = new RealTimeControlModel();
+                var restartOutputFile = new RestartFile(temp.CreateFile("restart.file", "content restart file"));
+                model.RestartOutput = new EventedList<RestartFile> {restartOutputFile};
+
+                var node = Substitute.For<ITreeNode>();
+                node.Parent.Parent.Tag.Returns(model);
+
+                var menu = new RealTimeControlOutputRestartFileContextMenu(restartOutputFile, node);
+
+                ToolStripItem useAsRestart = menu.ContextMenuStrip.Items[0];
+
+                // Preconditions
+                Assert.That(useAsRestart.Text, Is.EqualTo("Use as restart"));
+
+                // Call
+                useAsRestart.PerformClick();
+
+                // Assert
+                Assert.That(model.RestartInput.IsEmpty, Is.False);
+                Assert.That(model.RestartInput, Is.Not.SameAs(restartOutputFile));
+                Assert.That(model.RestartInput.Name, Is.EqualTo(restartOutputFile.Name));
+                Assert.That(model.RestartInput.Content, Is.EqualTo("content restart file"));
+            }
         }
     }
 }

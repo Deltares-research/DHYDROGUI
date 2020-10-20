@@ -33,6 +33,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             {
                 return;
             }
+
+            if (model.RestartOutput.Contains(restartFile))
+            {
+                AddItemsForOutputRestartFile(model, restartFile);
+            }
         }
 
         private void AddItemsForOutputRestartFile(RealTimeControlModel model, RestartFile restartFile)
