@@ -36,10 +36,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             {
                 AddItemsForInputRealTimeControlRestartFile(model);
             }
-            else if (model.RestartOutput.Contains(restartFile))
-            {
-                AddItemsForOutputRealTimeControlRestartFile(model, restartFile);
-            }
         }
 
         private void AddItemsForInputRealTimeControlRestartFile(RealTimeControlModel model)
@@ -48,19 +44,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             ContextMenuStrip.Items.Add(GetUseLastValidRestartMenuItem(model));
 
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
-        }
-
-        private void AddItemsForOutputRealTimeControlRestartFile(RealTimeControlModel model, RealTimeControlRestartFile restartFile)
-        {
-            ContextMenuStrip.Items.Add(GetUseAsRestartMenuItem(model, restartFile));
-        }
-
-        private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(RealTimeControlModel model, RealTimeControlRestartFile restartFile)
-        {
-            var menuItem = new ClonableToolStripMenuItem {Text = Resources.UseAsRestart};
-            menuItem.Click += (s, e) => model.RestartInput = restartFile.Clone();
-
-            return menuItem;
         }
 
         private static ClonableToolStripMenuItem GetUseLastValidRestartMenuItem(RealTimeControlModel model)

@@ -77,25 +77,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
         }
 
         [Test]
-        public void Constructor_OutputRealTimeControlRestartFile_InitializesInstanceCorrectly()
-        {
-            // Setup
-            var restartFile = new RealTimeControlRestartFile();
-            var node = Substitute.For<ITreeNode>();
-            var model = new RealTimeControlModel();
-            node.Parent.Parent.Tag.Returns(model);
-            model.RestartOutput = new EventedList<RealTimeControlRestartFile> {restartFile};
-
-            // Call
-            var menu = new RealTimeControlInputRestartFileContextMenu(restartFile, node);
-
-            // Assert
-            ToolStripItemCollection toolStripItems = menu.ContextMenuStrip.Items;
-            Assert.That(toolStripItems, Has.Count.EqualTo(1));
-            Assert.That(toolStripItems[0].Text, Is.EqualTo("Use as restart"));
-        }
-
-        [Test]
         public void GivenRealTimeControlModel_WhenRestartInputEmpty_ThenRemoveRestartOptionDisabled()
         {
             // Setup
