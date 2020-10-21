@@ -91,14 +91,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     //check if this variable can be mapped to an input or created feature
                     if (!CanBeMappedToFeatureName(dimensions, nodeCoordinatesVariableNames))
                     {
-                        log.Warn($"Cannot map dimension {secondDimensionName} to input or generated features, this maybe an old formatted his file. Using backward compatibility to read file");
+                        log.Warn($"Old his output found, please run the model again. (cannot map {secondDimensionName} to input or generated features)");
                         LoadHisFileVariableNamesByDimensionToMapUsingBackWardsCompatibility(secondDimensionName, netCdfVariable);
                     }
 
                     //check if this variable can be mapped to an input or created feature geometry
                     if (!CanBeMappedToFeatureGeometry(dimensions))
                     {
-                        log.Warn($"Cannot map dimension {secondDimensionName} to input or generated feature geometry, this maybe an old formatted his file. Using backward compatibility to read file");
+                        log.Warn($"Old his output found, please run the model again. (cannot map {secondDimensionName} to input or generated feature geometry)");
                         LoadHisFileVariableGeometriesByDimensionToMapUsingBackWardsCompatibility(secondDimensionName, netCdfVariable);
                     }
 
@@ -208,15 +208,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 (string xCoordinateValuesName, string yCoordinateValuesName) = mapDimensionToFeatureGeometriesForBackWardsCompatibilityFunctionsDictionary[dimensionNameForThisTimeSeries](netCdfVariable, netCdfFile);
                 Array xs = GetNetCdfVariableArray(xCoordinateValuesName);
                 Array ys = GetNetCdfVariableArray(yCoordinateValuesName);
-                var geometries = new List<IGeometry>();
-                for (var i = 0; i < timeSeriesIdsByDimensionNameDictionary[dimensionNameForThisTimeSeries].Count(); i++)
+                if (xs != null && ys != null)
                 {
-                    geometries.Add(xs.Rank == 1
-                                       ? CreatePoint(i, xs, ys)
-                                       : CreateLineString(i, xs, ys));
-                }
+                    var geometries = new List<IGeometry>();
+                    for (var i = 0; i < timeSeriesIdsByDimensionNameDictionary[dimensionNameForThisTimeSeries].Count(); i++)
+                    {
+                        geometries.Add(xs.Rank == 1
+                                           ? CreatePoint(i, xs, ys)
+                                           : CreateLineString(i, xs, ys));
+                    }
 
-                geometryByDimensionNameDictionary[dimensionNameForThisTimeSeries] = geometries;
+                    geometryByDimensionNameDictionary[dimensionNameForThisTimeSeries] = geometries;
+                }
             }
         }
 
@@ -228,15 +231,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 (string xCoordinateValuesName, string yCoordinateValuesName) = mapDimensionToFeatureGeometriesForBackWardsCompatibilityFunctionsDictionary[dimensionNameForThisTimeSeries](netCdfVariable, netCdfFile);
                 Array xs = GetNetCdfVariableArray(xCoordinateValuesName);
                 Array ys = GetNetCdfVariableArray(yCoordinateValuesName);
-                var geometries = new List<IGeometry>();
-                for (var i = 0; i < timeSeriesIdsByDimensionNameDictionary[dimensionNameForThisTimeSeries].Count(); i++)
+                if (xs != null && ys != null)
                 {
-                    geometries.Add(xs.Rank == 1
-                                       ? CreatePoint(i, xs, ys)
-                                       : CreateLineString(i, xs, ys));
-                }
+                    var geometries = new List<IGeometry>();
+                    for (var i = 0; i < timeSeriesIdsByDimensionNameDictionary[dimensionNameForThisTimeSeries].Count(); i++)
+                    {
+                        geometries.Add(xs.Rank == 1
+                                           ? CreatePoint(i, xs, ys)
+                                           : CreateLineString(i, xs, ys));
+                    }
 
-                geometryByDimensionNameDictionary[dimensionNameForThisTimeSeries] = geometries;
+                    geometryByDimensionNameDictionary[dimensionNameForThisTimeSeries] = geometries;
+                }
             }
         }
 
