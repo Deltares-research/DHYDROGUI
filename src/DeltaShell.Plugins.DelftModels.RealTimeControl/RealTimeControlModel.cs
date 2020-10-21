@@ -96,12 +96,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             RestartOutput = new EventedList<RestartFile>();
 
+            OutputXmlOrCsvDocuments = new EventedList<ReadOnlyOutputTextDocument>();
+
             runner = new DimrRunner(this);
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
 
             if (outputFileFunctionStore != null)
             {
-                ReconnectOutputFiles(outputFileFunctionStore.Path);
+                ReconnectRtcToFmOutputFile(outputFileFunctionStore.Path);
             }
         }
 
@@ -178,6 +180,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         public virtual IEventedList<RestartFile> RestartOutput { get; set; }
+
+        public virtual IEventedList<ReadOnlyOutputTextDocument> OutputXmlOrCsvDocuments { get; set; }
 
         //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
@@ -750,7 +754,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            ReconnectOutputFiles(outputFileFunctionStore.Path);
+            ReconnectRtcToFmOutputFile(outputFileFunctionStore.Path);
         }
 
         private void ModelsPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -980,11 +984,49 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
+            ReconnectXmlAndCsvFiles(outputPath);
+
             string outputFilePath = Path.Combine(dirInfo.Parent.FullName, CommunicationRtcToFmFileName);
-            ReconnectOutputFiles(outputFilePath);
+            ReconnectRtcToFmOutputFile(outputFilePath);
 
             var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
             SetRestartOutputFiles(Directory.GetFiles(outputPath).Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))));
+        }
+
+        private void ReconnectXmlAndCsvFiles(string outputDirectory)
+        {
+            string[] filePaths = Directory.GetFiles(outputDirectory);
+
+            IEnumerable<string> newXmlAndCsvFilePaths = filePaths.Where(f => f.EndsWith(".xml") || f.EndsWith(".csv"));
+
+            OutputXmlOrCsvDocuments.RemoveAllWhere(d => !newXmlAndCsvFilePaths.Any(fp => fp.EndsWith(d.Name)));
+
+            foreach (string filePath in newXmlAndCsvFilePaths)
+            {
+                string fileName = Path.GetFileName(filePath);
+
+                ReadOnlyOutputTextDocument existingTextDocument = OutputXmlOrCsvDocuments.FirstOrDefault(d => d.Name == fileName);
+
+                try
+                {
+                    string log = File.ReadAllText(filePath);
+
+                    if (existingTextDocument != null)
+                    {
+                        existingTextDocument.Content = log;
+                    }
+                    else
+                    {
+                        var textDocument = new ReadOnlyOutputTextDocument(fileName, log, this);
+                        
+                        OutputXmlOrCsvDocuments.Add(textDocument);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.ErrorFormat("Error reading file");
+                }
+            }
         }
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFilePaths)
@@ -993,7 +1035,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             RestartOutput = new EventedList<RestartFile>(outputRestartFiles);
         }
 
-        private void ReconnectOutputFiles(string outputFilePath)
+        private void ReconnectRtcToFmOutputFile(string outputFilePath)
         {
             DisconnectOutput();
 
@@ -1706,15 +1748,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             unchecked
             {
                 dirtyCounter++;
-            } 
+            }
         }
+
         #endregion
 
         #endregion
 
         IEnumerable<IDataItem> ICoupledModel.GetDataItemsUsedForCouplingModel(DataItemRole role)
         {
-            return AllDataItems.Where(di => di.Role  == role);
+            return AllDataItems.Where(di => di.Role == role);
         }
+    }
+
+   
+        public class ReadOnlyOutputTextDocument : TextDocumentBase
+    {
+        public ReadOnlyOutputTextDocument(string documentName, string content, IModel owner) : base(true)
+            {
+                Ensure.NotNull(documentName, nameof(documentName));
+                Ensure.NotNull(content, nameof(content));
+
+                Name = documentName;
+                Content = content;
+                Owner = owner;
+            }
+
+            public IModel Owner { get; set; }
     }
 }

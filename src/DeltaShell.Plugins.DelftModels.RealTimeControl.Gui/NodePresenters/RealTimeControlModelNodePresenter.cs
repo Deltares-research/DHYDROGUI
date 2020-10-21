@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
@@ -155,11 +154,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
                 yield return outputFeatureCoverage;
             }
 
-            //find a better way :(
-            IDataItem logItem = model.DataItems.FirstOrDefault(di => di.Tag == "lastRunLogFileDataItem");
-            if (logItem != null)
+            foreach (ReadOnlyOutputTextDocument textDocument in model.OutputXmlOrCsvDocuments)
             {
-                yield return logItem;
+                yield return textDocument;
             }
         }
 
