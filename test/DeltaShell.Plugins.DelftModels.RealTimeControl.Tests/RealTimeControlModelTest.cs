@@ -1286,12 +1286,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAnOpenedProjectWithRTC_ThenIsOpenPropertyShouldBeTrue()
+        public void GivenAnOpenedProjectWithRTC_ThenIsOpenPropertyShouldBeTrueAndThePathPropertyShouldBeAbsolute()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Given
-                var rtcModel = new RealTimeControlModel();
+                IFileBased rtcModel = new RealTimeControlModel();
                 var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
 
                 string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
@@ -1301,7 +1301,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.OpenProject(pathBeforeSave);
                 
                 // Then
-                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.IsTrue(rtcModel.IsOpen);
+                Assert.AreEqual(pathBeforeSave, rtcModel.Path);
             }
         }
 
