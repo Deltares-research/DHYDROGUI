@@ -1206,7 +1206,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public override IEnumerable<object> GetDirectChildren()
         {
-            return base.GetDirectChildren().Concat(OutputFeatureCoverages);
+            return base.GetDirectChildren().Concat(OutputFeatureCoverages).Concat(OutputXmlOrCsvDocuments);
         }
 
         /// <summary>
