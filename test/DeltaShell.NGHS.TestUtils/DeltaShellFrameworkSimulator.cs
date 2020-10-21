@@ -1,4 +1,5 @@
-﻿using DelftTools.Utils.IO;
+﻿using System.IO;
+using DelftTools.Utils.IO;
 
 namespace DeltaShell.NGHS.TestUtils
 {
@@ -38,7 +39,8 @@ namespace DeltaShell.NGHS.TestUtils
 
         public void OpenProject(string filePath)
         {
-            model.Path = filePath;
+            string relativePath = Path.GetFileName(filePath);
+            model.Path = relativePath;
             model.SwitchTo(filePath);
         }
     }

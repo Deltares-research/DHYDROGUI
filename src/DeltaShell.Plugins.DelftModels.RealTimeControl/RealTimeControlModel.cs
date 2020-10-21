@@ -984,21 +984,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            ReconnectXmlAndCsvFiles(outputPath);
-
-            string outputFilePath = Path.Combine(dirInfo.Parent.FullName, CommunicationRtcToFmFileName);
-            ReconnectRtcToFmOutputFile(outputFilePath);
-
+            string[] newOutputFiles = Directory.GetFiles(outputPath);
+            
             var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
-            SetRestartOutputFiles(Directory.GetFiles(outputPath).Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))));
+            IList<string> restartFiles = newOutputFiles.Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))).ToList();
+            SetRestartOutputFiles(restartFiles);
+
+            IEnumerable<string> newXmlAndCsvFilePaths = newOutputFiles.Where(f => f.EndsWith(".xml") || f.EndsWith(".csv")).Except(restartFiles);
+            ReconnectXmlAndCsvFiles(newXmlAndCsvFilePaths);
+
+            string rtcToFlowFilePath = Path.Combine(dirInfo.FullName, CommunicationRtcToFmFileName);
+            ReconnectRtcToFmOutputFile(rtcToFlowFilePath);
         }
 
-        private void ReconnectXmlAndCsvFiles(string outputDirectory)
+        private void ReconnectXmlAndCsvFiles(IEnumerable<string> newXmlAndCsvFilePaths)
         {
-            string[] filePaths = Directory.GetFiles(outputDirectory);
-
-            IEnumerable<string> newXmlAndCsvFilePaths = filePaths.Where(f => f.EndsWith(".xml") || f.EndsWith(".csv"));
-
             OutputXmlOrCsvDocuments.RemoveAllWhere(d => !newXmlAndCsvFilePaths.Any(fp => fp.EndsWith(d.Name)));
 
             foreach (string filePath in newXmlAndCsvFilePaths)
@@ -1618,6 +1618,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             // Open project
             if (persistentOutputDirectory == null)
             {
+                path = newPath;
                 isOpen = true;
                 if (Directory.Exists(expectedOutputPath))
                 {
