@@ -14,6 +14,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
     /// Context menu for a <see cref="RestartFile"/>.
     /// </summary>
     /// <seealso cref="MenuItemContextMenuStripAdapter"/>
+    /// <remarks>
+    /// This class can be removed once the input restart file of the <see cref="RealTimeControlModel"/> is FileBased;
+    /// instead, the <see cref="RestartFileContextMenu"/> should be used.
+    /// </remarks>
     public class RealTimeControlOutputRestartFileContextMenu : MenuItemContextMenuStripAdapter
     {
         /// <summary>

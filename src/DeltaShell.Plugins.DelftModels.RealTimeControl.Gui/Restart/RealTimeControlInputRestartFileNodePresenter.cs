@@ -15,6 +15,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
     /// Node presenter for the project tree for a <seealso cref="TreeViewNodePresenterBaseForPluginGui{T}"/>
     /// </summary>
     /// <seealso cref="RealTimeControlRestartFile"/>
+    /// <remarks>
+    /// This class can be removed once the input restart file of the <see cref="RealTimeControlModel"/> is FileBased;
+    /// instead, the <see cref="NGHS.Common.Gui.Restart.RestartFileNodePresenter"/> should be used.
+    /// </remarks>
     public sealed class RealTimeControlInputRestartFileNodePresenter : TreeViewNodePresenterBaseForPluginGui<RealTimeControlRestartFile>
     {
         private static readonly Image restartIcon = Resources.restart;
