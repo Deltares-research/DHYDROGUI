@@ -81,6 +81,9 @@
     <Compile Include="DimrErrorCodeException.cs" />
     <Compile Include="DimrRunHelper.cs" />
     <Compile Include="DimrRunner.cs" />
+    <Compile Include="dimr_xsd\dimr.cs">
+      <DependentUpon>dimr.xsd</DependentUpon>
+    </Compile>
     <Compile Include="drtc_xsd\rtcRuntimeConfig.cs">
       <DependentUpon>rtcRuntimeConfig.xsd</DependentUpon>
     </Compile>
@@ -96,10 +99,7 @@
     </Compile>
     <Compile Include="RemoteDimrApi.cs" />
     <Compile Include="xsd\dimr.custom.cs" />
-    <Compile Include="xsd\DimrXMLSerializer.cs"/>
-    <Compile Include="xsd\dimr.cs">
-      <DependentUpon>dimr.xsd</DependentUpon>
-    </Compile>
+    <Compile Include="xsd\DimrXMLSerializer.cs" />
     <Compile Include="xsd\DimrModelExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,50 +110,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="drtc_xsd\pi_diag.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\pi_modelparameters.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\pi_run.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\pi_sharedtypes.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\pi_state.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\pi_timeseries.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\rtcDataConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\rtcObjectiveConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\rtcRuntimeConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\rtcSharedTypes.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\rtcStateConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\rtcToolsConfig.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="drtc_xsd\treeVector.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
     <None Include="UML\DimrOverview.cd" />
-    <None Include="xsd\dimr.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
@@ -161,6 +119,22 @@
       <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="dimr_xsd\dimr.xsd" />
+    <Content Include="drtc_xsd\pi_diag.xsd" />
+    <Content Include="drtc_xsd\pi_modelparameters.xsd" />
+    <Content Include="drtc_xsd\pi_run.xsd" />
+    <Content Include="drtc_xsd\pi_sharedtypes.xsd" />
+    <Content Include="drtc_xsd\pi_state.xsd" />
+    <Content Include="drtc_xsd\pi_timeseries.xsd" />
+    <Content Include="drtc_xsd\rtcDataConfig.xsd" />
+    <Content Include="drtc_xsd\rtcObjectiveConfig.xsd" />
+    <Content Include="drtc_xsd\rtcRuntimeConfig.xsd" />
+    <Content Include="drtc_xsd\rtcSharedTypes.xsd" />
+    <Content Include="drtc_xsd\rtcStateConfig.xsd" />
+    <Content Include="drtc_xsd\rtcToolsConfig.xsd" />
+    <Content Include="drtc_xsd\treeVector.xsd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -170,18 +144,18 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.125-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.125-beta\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Dimr.Libs.2.0.0.69046\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.2.0.0.69046\build\net40\Dimr.Libs.targets'))" />
   </Target>
   <PropertyGroup>
     <PreBuildEvent>cd "$(ProjectDir)\drtc_xsd"
 ..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd
-cd "$(ProjectDir)\xsd"
+cd "$(ProjectDir)\dimr_xsd"
 ..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.Xsd</PreBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.125-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.125-beta\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets" Condition="Exists('..\..\packages\Dimr.Libs.2.0.0.68874\build\net40\Dimr.Libs.targets')" />
+  <Import Project="..\..\packages\Dimr.Libs.2.0.0.69046\build\net40\Dimr.Libs.targets" Condition="Exists('..\..\packages\Dimr.Libs.2.0.0.69046\build\net40\Dimr.Libs.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
