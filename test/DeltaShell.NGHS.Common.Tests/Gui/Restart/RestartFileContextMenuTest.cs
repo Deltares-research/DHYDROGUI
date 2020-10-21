@@ -127,6 +127,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
         {
             // Setup
             var model = Substitute.For<IRestartModel>();
+            model.RestartInput = new RestartFile();
             model.RestartOutput.Returns(new List<RestartFile>
             {
                 new RestartFile("path/to/restart1.file"),

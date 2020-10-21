@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             TreeFolder outputTreeFolder = childObjects.OfType<TreeFolder>().Single(f => f.Text == "Output");
             TreeFolder restartFileOutputTreeFolder = outputTreeFolder.ChildItems.OfType<TreeFolder>().Single(f => f.Text == "Restart");
             Assert.That(restartFileOutputTreeFolder.Text, Is.EqualTo("Restart"));
-            Assert.That(restartFileOutputTreeFolder.ChildItems.OfType<RealTimeControlRestartFile>().Count(), Is.EqualTo(1));
+            Assert.That(restartFileOutputTreeFolder.ChildItems.OfType<RestartFile>().Count(), Is.EqualTo(1));
         }
 
         [Test]
