@@ -984,6 +984,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             string[] newOutputFiles = Directory.GetFiles(outputPath);
+
+            if (newOutputFiles.Length == 0) return;
             
             var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
             IList<string> restartFiles = newOutputFiles.Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))).ToList();
@@ -1617,31 +1619,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             string expectedOutputPath = GetOutputFolderFromDeltaShellPath(newPath);
             
             // Open project
-            if (persistentOutputDirectory == null)
+            if (!isOpen)
             {
-                path = newPath;
                 isOpen = true;
-                if (Directory.Exists(expectedOutputPath))
-                {
-                    currentOutputDirectoryPath = expectedOutputPath;
-                    ConnectOutput(expectedOutputPath);
-                }
-                persistentOutputDirectory = expectedOutputPath;
-                
-                return;
             }
-
-            // Save
-            if (path == newPath)
-            {
-                currentOutputDirectoryPath = expectedOutputPath;
-                return;
-            }
-
-            // Save As
+            
+            // Open project, Save  As, Save
             path = newPath;
-            currentOutputDirectoryPath = expectedOutputPath;
             persistentOutputDirectory = expectedOutputPath;
+
+            currentOutputDirectoryPath = expectedOutputPath;
+            if (Directory.Exists(expectedOutputPath))
+            {
+                ConnectOutput(expectedOutputPath);
+            }
         }
 
         void IFileBased.Delete()
