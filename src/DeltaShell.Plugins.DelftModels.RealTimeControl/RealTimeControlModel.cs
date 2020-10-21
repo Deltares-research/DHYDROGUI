@@ -1619,6 +1619,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             // Open project
             if (persistentOutputDirectory == null)
             {
+                path = newPath;
                 isOpen = true;
                 if (Directory.Exists(expectedOutputPath))
                 {
