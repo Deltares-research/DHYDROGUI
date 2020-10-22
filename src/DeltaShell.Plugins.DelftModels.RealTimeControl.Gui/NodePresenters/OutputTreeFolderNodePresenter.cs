@@ -15,22 +15,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
     public class OutputTreeFolderNodePresenter : TreeViewNodePresenterBaseForPluginGui<OutputTreeFolder>
     {
         /// <summary>
-        /// Updates the specified <paramref name="node"/> node for the corresponding <paramref name="data"/>.
+        /// Updates the specified <paramref name="node"/> node for the corresponding <paramref name="nodeData"/>.
         /// </summary>
         /// <param name="parentNode"> This parameter is not used. </param>
         /// <param name="node"> The node.</param>
-        /// <param name="data"> The OutputTreeFolder.</param>
+        /// <param name="nodeData"> The OutputTreeFolder.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="node"/> or <paramref name="data"/> is <c>null</c>.
+        /// Thrown when <paramref name="node"/> or <paramref name="nodeData"/> is <c>null</c>.
         /// </exception>
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, OutputTreeFolder data)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, OutputTreeFolder nodeData)
         {
             Ensure.NotNull(node, nameof(node));
-            Ensure.NotNull(data, nameof(data));
+            Ensure.NotNull(nodeData, nameof(nodeData));
 
-            node.Text = data.Text;
-            node.Tag = data;
-            node.Image = GetImage(data);
+            node.Text = nodeData.Text;
+            node.Tag = nodeData;
+            node.Image = GetImage(nodeData);
         }
 
         /// <summary>

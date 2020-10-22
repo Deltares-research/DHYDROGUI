@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
@@ -63,6 +64,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
                 initialConditionsFolder.ChildItems.OfType<RealTimeControlRestartFile>().Single();
 
             Assert.That(inputRestartFile, Is.Not.Null);
+        }
+
+        [Test]
+        public void GetChildNodeObjects_ContainsOutputXmlOrCsvDocuments()
+        {
+            // Setup
+            RealTimeControlModelNodePresenter nodePresenter = GetRealTimeControlModelNodePresenter();
+            var model = new RealTimeControlModel();
+            model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument("test.xml", "test"));
+
+            // Call
+            IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
+
+            // Assert
+            OutputTreeFolder outputTreeFolder =
+                childObjects.OfType<OutputTreeFolder>().Single(f => f.Text == "Output");
+            IEnumerable<ReadOnlyOutputTextDocument> outputTextDocuments = outputTreeFolder.ChildItems.OfType<ReadOnlyOutputTextDocument>();
+
+            Assert.AreEqual(1, outputTextDocuments.Count());
         }
 
         private static RealTimeControlModelNodePresenter GetRealTimeControlModelNodePresenter()

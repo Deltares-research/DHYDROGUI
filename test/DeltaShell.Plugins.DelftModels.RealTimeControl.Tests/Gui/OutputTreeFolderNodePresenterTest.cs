@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("data"));
+            Assert.That(e.ParamName, Is.EqualTo("nodeData"));
         }
 
         [Test]
