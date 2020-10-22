@@ -649,6 +649,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified {0} at {1} does not exist..
+        /// </summary>
+        public static string WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__0__at__1__does_not_exist_ {
+            get {
+                return ResourceManager.GetString("WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__" +
+                        "0__at__1__does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Option &quot;Write Tables&quot; is selected but there are no Observation Points in your model..
         /// </summary>
         public static string WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_ {

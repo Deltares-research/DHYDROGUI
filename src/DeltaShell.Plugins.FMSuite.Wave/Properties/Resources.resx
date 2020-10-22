@@ -334,4 +334,7 @@
   <data name="BcwFile_Write_While_saving_the_following_error_was_thrown___0___validate_the_model_for_more_information_" xml:space="preserve">
     <value>While saving the following error was thrown: {0}, validate the model for more information.</value>
   </data>
+  <data name="WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__0__at__1__does_not_exist_" xml:space="preserve">
+    <value>The specified {0} at {1} does not exist.</value>
+  </data>
 </root>

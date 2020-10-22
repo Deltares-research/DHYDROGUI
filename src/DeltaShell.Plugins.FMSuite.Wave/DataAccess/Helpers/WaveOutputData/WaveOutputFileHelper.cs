@@ -5,6 +5,8 @@ using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
 {
@@ -34,7 +36,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
 
             if (!mdwPathInfo.Exists)
             {
-                throw new ArgumentException($"The specified {nameof(mdwPath)} at {mdwPath} does not exist.");
+                throw new ArgumentException(string.Format(Resources.WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__0__at__1__does_not_exist_, 
+                                                          nameof(mdwPath), mdwPath));
             }
 
             var hashSet = new HashSet<string>();
@@ -52,13 +55,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
             var obstacleFileInformationMapping =
                 new Dictionary<string, IDelftIniPropertyBehaviour>()
                 {
-                    {"PolylineFile", new CollectPropertyValueBehaviour("PolylineFile", hashSet, relativeDirectory)},
+                    {KnownWaveObsProperties.PolylineFile, new CollectPropertyValueBehaviour(KnownWaveObsProperties.PolylineFile, hashSet, relativeDirectory)},
                 };
 
             var mapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>()
                 {
-                    {"ObstacleFileInformation", obstacleFileInformationMapping},
+                    {KnownWaveObsCategories.ObstacleFileInformation, obstacleFileInformationMapping},
                 };
 
             IDelftIniPostOperationBehaviour[] postBehaviours =
@@ -74,10 +77,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
             var mapping =
                 new Dictionary<string, IReadOnlyDictionary<string, IDelftIniPropertyBehaviour>>()
                 {
-                    {"General", CreateGeneralCategoryMigrations(hashSet, relativeDirectory)},
-                    {"Domain", CreateDomainCategoryMigrations(hashSet, relativeDirectory)},
-                    {"Boundary", CreateBoundaryCategoryMigrations(hashSet, relativeDirectory)},
-                    {"Output", CreateOutputCategoryMigrations(hashSet, relativeDirectory)},
+                    {KnownWaveCategories.GeneralCategory, CreateGeneralCategoryMigrations(hashSet, relativeDirectory)},
+                    {KnownWaveCategories.DomainCategory, CreateDomainCategoryMigrations(hashSet, relativeDirectory)},
+                    {KnownWaveCategories.BoundaryCategory, CreateBoundaryCategoryMigrations(hashSet, relativeDirectory)},
+                    {KnownWaveCategories.OutputCategory, CreateOutputCategoryMigrations(hashSet, relativeDirectory)},
                 };
 
             IDelftIniPostOperationBehaviour[] postBehaviours =
@@ -92,13 +95,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
         {
             return new Dictionary<string, IDelftIniPropertyBehaviour>
             {
-                {"FlowFile", new CollectPropertyValueBehaviour("FlowFile", hashSet, relativeDirectory)},
-                {"FlowMudFile", new CollectPropertyValueBehaviour("FlowMudFile", hashSet, relativeDirectory)},
-                {"ObstacleFile", new CollectPropertyValueWithDependentsBehaviour("ObstacleFile",
+                {KnownWaveProperties.FlowFile, new CollectPropertyValueBehaviour(KnownWaveProperties.FlowFile, hashSet, relativeDirectory)},
+                {KnownWaveProperties.FlowMudFile, new CollectPropertyValueBehaviour(KnownWaveProperties.FlowMudFile, hashSet, relativeDirectory)},
+                {KnownWaveProperties.ObstacleFile, new CollectPropertyValueWithDependentsBehaviour(KnownWaveProperties.ObstacleFile,
                                                                         relativeDirectory,
                                                                         CreateObsCollector(hashSet, relativeDirectory))},
-                {"TSeriesFile", new CollectPropertyValueBehaviour("TSeriesFile", hashSet, relativeDirectory)},
-                {"MeteoFile", new CollectPropertyValueBehaviour("MeteoFile", hashSet, relativeDirectory)},
+                {KnownWaveProperties.TimeSeriesFile, new CollectPropertyValueBehaviour(KnownWaveProperties.TimeSeriesFile, hashSet, relativeDirectory)},
+                {KnownWaveProperties.MeteoFile, new CollectPropertyValueBehaviour(KnownWaveProperties.MeteoFile, hashSet, relativeDirectory)},
             };
         }
 
@@ -106,10 +109,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
         {
             return new Dictionary<string, IDelftIniPropertyBehaviour>
             {
-                {"Grid", new CollectPropertyValueBehaviour("Grid", hashSet, relativeDirectory)},
-                {"BedLevelGrid", new CollectPropertyValueBehaviour("BedLevelGrid", hashSet, relativeDirectory)},
-                {"BedLevel", new CollectPropertyValueBehaviour("BedLevel", hashSet, relativeDirectory)},
-                {"MeteoFile", new CollectPropertyValueBehaviour("MeteoFile", hashSet, relativeDirectory)},
+                {KnownWaveProperties.Grid, new CollectPropertyValueBehaviour(KnownWaveProperties.Grid, hashSet, relativeDirectory)},
+                {KnownWaveProperties.BedLevelGrid, new CollectPropertyValueBehaviour(KnownWaveProperties.BedLevelGrid, hashSet, relativeDirectory)},
+                {KnownWaveProperties.BedLevel, new CollectPropertyValueBehaviour(KnownWaveProperties.BedLevel, hashSet, relativeDirectory)},
+                {KnownWaveProperties.MeteoFile, new CollectPropertyValueBehaviour(KnownWaveProperties.MeteoFile, hashSet, relativeDirectory)},
             };
         }
 
@@ -117,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
         {
             return new Dictionary<string, IDelftIniPropertyBehaviour>
             {
-                {"Spectrum", new CollectPropertyValueBehaviour("Spectrum", hashSet, relativeDirectory)},
+                {KnownWaveProperties.Spectrum, new CollectPropertyValueBehaviour(KnownWaveProperties.Spectrum, hashSet, relativeDirectory)},
             };
         }
 
@@ -125,9 +128,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData
         {
             return new Dictionary<string, IDelftIniPropertyBehaviour>
             {
-                {"LocationFile", new CollectPropertyValueBehaviour("LocationFile", hashSet, relativeDirectory)},
-                {"CurveFile", new CollectPropertyValueBehaviour("CurveFile", hashSet, relativeDirectory)},
-                {"COMFile", new CollectPropertyValueBehaviour("COMFile", hashSet, relativeDirectory)},
+                {KnownWaveProperties.LocationFile, new CollectPropertyValueBehaviour(KnownWaveProperties.LocationFile, hashSet, relativeDirectory)},
+                {KnownWaveProperties.CurveFile, new CollectPropertyValueBehaviour(KnownWaveProperties.CurveFile, hashSet, relativeDirectory)},
+                {KnownWaveProperties.COMFile, new CollectPropertyValueBehaviour(KnownWaveProperties.COMFile, hashSet, relativeDirectory)},
             };
         }
     }
