@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(property.Value, Is.EqualTo(value));
             Assert.That(property.Comment, Is.EqualTo(comment));
 
-            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 string resultContent = File.ReadAllText(expectedPathInfo.FullName);
                 Assert.That(resultContent, Is.EqualTo(fileContent));
 
-                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+                Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
 
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 string resultContent = File.ReadAllText(expectedPathInfo.FullName);
                 Assert.That(resultContent, Is.EqualTo(fileContent));
 
-                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+                Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
 
@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 string resultContent = File.ReadAllText(expectedPathInfo.FullName);
                 Assert.That(resultContent, Is.EqualTo(fileContent));
 
-                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+                Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
 
@@ -299,17 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(property.Value, Is.EqualTo(value));
             Assert.That(property.Comment, Is.EqualTo(comment));
 
-            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
-        }
-
-        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
-        {
-            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
+            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
         }
     }
 }

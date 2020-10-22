@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
 
             // Assert
             iniReader.Received(1).ReadDelftIniFile(sourceFile, sourcePath);
-            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
 
             for (var i = 0; i < 5; i++)
             {
@@ -215,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
 
             // Assert
             iniReader.Received(1).ReadDelftIniFile(sourceFile, sourcePath);
-            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
 
             propertyBehaviour.DidNotReceiveWithAnyArgs().Invoke(null, null);
             Assert.That(property.Name, Is.EqualTo(propertyName));
@@ -233,16 +233,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.DelftIniOperations
             yield return new TestCaseData(null, iniReader, postOperations, "categoryPropertyBehaviourMapping");
             yield return new TestCaseData(migrationBehaviourMapping, null, postOperations, "iniReader");
             yield return new TestCaseData(migrationBehaviourMapping, iniReader, null, "postOperations");
-        }
-
-        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
-        {
-            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
         }
     }
 }

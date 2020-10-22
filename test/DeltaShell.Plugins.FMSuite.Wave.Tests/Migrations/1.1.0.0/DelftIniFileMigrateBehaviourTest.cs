@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(property.Value, Is.EqualTo(value));
             Assert.That(property.Comment, Is.EqualTo(comment));
 
-            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                  oldPath,
                                                  Arg.Any<ILogHandler>());
 
-                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+                Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
 
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                  absolutePath,
                                                  Arg.Any<ILogHandler>());
 
-                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+                Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
 
@@ -251,17 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             Assert.That(property.Value, Is.EqualTo(value));
             Assert.That(property.Comment, Is.EqualTo(comment));
 
-            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
-        }
-
-        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
-        {
-            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
+            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
         }
 
         private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
