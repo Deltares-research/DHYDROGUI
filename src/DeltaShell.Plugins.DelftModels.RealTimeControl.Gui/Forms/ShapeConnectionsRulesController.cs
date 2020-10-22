@@ -43,7 +43,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     new ConnectionRule(typeof(MathematicalExpressionShape), new HashSet<ConnectorType>(new[]
                     {
                         ConnectorType.Left
-                    }))
+                    })),
+                    new ConnectionRule(typeof(ConditionShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Left
+                    })), 
                 }
             },
             {

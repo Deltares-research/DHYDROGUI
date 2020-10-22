@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             yield return new TestCaseData(new ConditionShape(), new ConditionShape(), ConnectorType.Bottom, false);
             yield return new TestCaseData(new ConditionShape(), new ConditionShape(), ConnectorType.Top, false);
-            yield return new TestCaseData(new ConditionShape(), new ConditionShape(), ConnectorType.Left, false);
+            yield return new TestCaseData(new ConditionShape(), new ConditionShape(), ConnectorType.Left, true);
             yield return new TestCaseData(new ConditionShape(), new ConditionShape(), ConnectorType.Right, false);
 
             yield return new TestCaseData(new ConditionShape(), new OutputItemShape(), ConnectorType.Bottom, false);
