@@ -61,17 +61,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
 
                 string projectDir = Path.Combine(dir, "Project1.dsproj_data");
                 string explicitWorkingDir = Path.Combine(projectDir, "Real-Time_Control_output");
+                string outputDir = Path.Combine(projectDir, "Real-Time Control", "output");
 
                 Assert.That(projectDir, Does.Exist);
                 Assert.That(explicitWorkingDir, Does.Not.Exist);
                 Assert.That(Directory.EnumerateFiles(projectDir), Is.Empty);
+                Assert.That(outputDir, Does.Exist);
+
+                string[] restartFiles = Directory.EnumerateFiles(outputDir).ToArray();
+                for (var i = 1; i < 10; i++)
+                {
+                    Assert.That(restartFiles.Any(f => Path.GetFileName(f) == $"rtc_20200908_0{i}0000.xml"));
+                }
 
                 Assert.That(model.RestartOutput, Is.Not.Empty);
                 Assert.That(model.RestartOutput, Has.Count.EqualTo(9));
-                for (var i = 1; i < 10; i++)
-                {
-                    Assert.That(model.RestartOutput.Any(f => f.Name == $"rtc_20200908_0{i}0000.xml"));
-                }
+                Assert.That(model.RestartOutput.Select(r => r.Path), Is.EquivalentTo(restartFiles));
             }
         }
     }
