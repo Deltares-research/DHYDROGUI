@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         [Description("Parameterized (Timeseries)")]
         ParameterizedSpectrumTimeseries,
 
-        [Description("Filebased Spectrum")]
+        [Description("Spectrum based (From file)")]
         SpectrumFromFile
     }
 }

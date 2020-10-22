@@ -109,6 +109,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parametrized (Constant).
+        /// </summary>
+        public static string ForcingViewType_Constant_Description {
+            get {
+                return ResourceManager.GetString("ForcingViewType_Constant_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spectrum based (From file).
+        /// </summary>
+        public static string ForcingViewType_FileBased_Description {
+            get {
+                return ResourceManager.GetString("ForcingViewType_FileBased_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parametrized (Time Series).
+        /// </summary>
+        public static string ForcingViewType_TimeSeries_Description {
+            get {
+                return ResourceManager.GetString("ForcingViewType_TimeSeries_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Grid2D {
