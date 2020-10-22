@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
@@ -47,103 +47,103 @@
       <HintPath>..\..\packages\AutoFixture.NUnit3.4.13.0\lib\net452\AutoFixture.NUnit3.dll</HintPath>
     </Reference>
     <Reference Include="BasicModelInterface">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="DelftTools.Controls">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Wpf">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.TestUtils">
-      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.120-beta\lib\net40\DelftTools.TestUtils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.125-beta\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Data.NHibernate">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.NetCDF">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.ProjectExplorer">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -156,11 +156,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NSubstitute, Version=4.2.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
@@ -170,7 +170,7 @@
       <HintPath>..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="osr_csharp">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\osr_csharp.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\osr_csharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
@@ -183,24 +183,24 @@
       <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.UI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMapTestUtils">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.120-beta\lib\net40\SharpMapTestUtils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.125-beta\lib\net40\SharpMapTestUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -272,10 +272,52 @@
     <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DeleteSourcePostOperationBehaviourTest.cs" />
     <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DelftIniPostOperationBehaviourTestFixture.cs" />
     <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\WriteCategoriesPostOperationBehaviourTest.cs" />
+	  <Compile Include="DataAccess\BcwFileTest.cs" />
+    <Compile Include="DataAccess\BcwTimeSeriesOfBoundaryCollectorTest.cs" />
+    <Compile Include="DataAccess\Exporters\WaveModelFileExporterTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryOrientationTypeDescriptionTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryOrientationTypeTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DistanceDirTypeDescriptionTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DistanceDirTypeTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DomainWideBoundaryCategoryConverterTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryCategoryConverterTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DomainWideBoundaryMdwBlockTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryMdwBlockTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DefinitionImportTypeDescriptionTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DefinitionImportTypeTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactoryTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\KnownWaveBoundariesFileConstantsTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\ParametersBlockTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\PeriodImportExportTypeDescriptionTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\PeriodImportExportTypeTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\ShapeImportTypeDescriptionTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\ShapeImportTypeTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\SpectrumImportExportTypeDescriptionTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\SpectrumImportExportTypeTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\SpreadingImportTypeDescriptionTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\SpreadingImportTypeTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\WaveBoundaryConverterTest.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactoryTest.cs" />
+    <Compile Include="DataAccess\Helpers\DelftIniCategoryExtensionsTest.cs" />
+    <Compile Include="DataAccess\Helpers\Domain\WaveDomainDataConverterTest.cs" />
+    <Compile Include="DataAccess\Helpers\MdwFileBackwardsCompatibilityConfigurationValuesTest.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectIniFileNamePostOperationBehaviourTest.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueBehaviourTest.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueWithDependentsBehaviourTest.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\WaveOutputFileHelperTest.cs" />
+    <Compile Include="DataAccess\Importers\WaveBoundaryFileImporterTest.cs" />
+    <Compile Include="DataAccess\Importers\WaveDepthFileImporterTest.cs" />
+    <Compile Include="DataAccess\Importers\WaveGridFileImporterTests.cs" />
+    <Compile Include="DataAccess\Importers\WaveModelFileImporterTest.cs" />
+    <Compile Include="DataAccess\MdwBoundaryCategoriesCreatorTest.cs" />
+    <Compile Include="DataAccess\MdwBoundaryCategoryConditionsExtenderTest.cs" />
+    <Compile Include="DataAccess\MdwBoundaryCategoryGeometryExtenderTest.cs" />
+    <Compile Include="DataAccess\MdwFileTest.cs" />
+    <Compile Include="DataAccess\MeteoFilePropertyTest.cs" />
+    <Compile Include="DataAccess\MeteoFileReaderTest.cs" />
+    <Compile Include="DataAccess\SpectrumDataComponentVisitorTest.cs" />
+    <Compile Include="DataAccess\SpectrumParametersVisitorTest.cs" />
+    <Compile Include="DataAccess\WaveModelSchemaCsvFileTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\NotNullToBooleanConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\TypeToVisibilityConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\DirectionalSpreadingViewTypeTest.cs" />
@@ -361,7 +403,7 @@
     <Compile Include="Gui\Layers\WaveLayerNamesTest.cs" />
     <Compile Include="Gui\Layers\WaveMapLayerProviderFactoryTest.cs" />
     <Compile Include="Gui\MapTools\GroupedLayerFeature2DLineToolTest.cs" />
-    <Compile Include="Gui\NodePresenters\OutputData\WaveOutputDataNodePresenterTest.cs" />
+    <Compile Include="Gui\NodePresenters\OutputData\WaveOutputDataNodePresenterTest.cs" />    
     <Compile Include="Gui\NodePresenters\SpatiallyVariantBoundaryNodePresenterTest.cs" />
     <Compile Include="Gui\WaveDomainNodePresenterTest.cs" />
     <Compile Include="Gui\WaveGuiPluginTest.cs" />
@@ -373,48 +415,6 @@
     <Compile Include="Gui\WaveTimePointEditorTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\WindInputTypeTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\WindSettingsViewModelTest.cs" />
-    <Compile Include="DataAccess\BcwFileTest.cs" />
-    <Compile Include="DataAccess\BcwTimeSeriesOfBoundaryCollectorTest.cs" />
-    <Compile Include="DataAccess\Exporters\WaveModelFileExporterTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryOrientationTypeDescriptionTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryOrientationTypeTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DistanceDirTypeDescriptionTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DistanceDirTypeTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DomainWideBoundaryCategoryConverterTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryCategoryConverterTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DomainWideBoundaryMdwBlockTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryMdwBlockTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DefinitionImportTypeDescriptionTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DefinitionImportTypeTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactoryTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\KnownWaveBoundariesFileConstantsTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\ParametersBlockTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\PeriodImportExportTypeDescriptionTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\PeriodImportExportTypeTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\ShapeImportTypeDescriptionTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\ShapeImportTypeTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\SpectrumImportExportTypeDescriptionTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\SpectrumImportExportTypeTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\SpreadingImportTypeDescriptionTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\SpreadingImportTypeTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\WaveBoundaryConverterTest.cs" />
-    <Compile Include="DataAccess\Helpers\DelftIniCategoryExtensionsTest.cs" />
-    <Compile Include="DataAccess\Helpers\Domain\WaveDomainDataConverterTest.cs" />
-    <Compile Include="DataAccess\Helpers\MdwFileBackwardsCompatibilityConfigurationValuesTest.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactoryTest.cs" />
-    <Compile Include="DataAccess\Importers\WaveBoundaryFileImporterTest.cs" />
-    <Compile Include="DataAccess\Importers\WaveDepthFileImporterTest.cs" />
-    <Compile Include="DataAccess\Importers\WaveGridFileImporterTests.cs" />
-    <Compile Include="DataAccess\Importers\WaveModelFileImporterTest.cs" />
-    <Compile Include="DataAccess\MdwBoundaryCategoriesCreatorTest.cs" />
-    <Compile Include="DataAccess\MdwBoundaryCategoryConditionsExtenderTest.cs" />
-    <Compile Include="DataAccess\MdwBoundaryCategoryGeometryExtenderTest.cs" />
-    <Compile Include="DataAccess\MdwFileTest.cs" />
-    <Compile Include="DataAccess\MeteoFilePropertyTest.cs" />
-    <Compile Include="DataAccess\MeteoFileReaderTest.cs" />
-    <Compile Include="DataAccess\SpectrumDataComponentVisitorTest.cs" />
-    <Compile Include="DataAccess\SpectrumParametersVisitorTest.cs" />
-    <Compile Include="DataAccess\WaveModelSchemaCsvFileTest.cs" />
     <Compile Include="OutputData\WaveOutputDataTest.cs" />
     <Compile Include="OutputData\WavmFileFunctionStoreTest.cs" />
     <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviourTest.cs" />
@@ -537,9 +537,9 @@ IF EXIST "%25VS110COMNTOOLS%25vsvars32.bat" CALL “%25VS110COMNTOOLS%25vsvars32
 :endvsvars
 editbin /LARGEADDRESSAWARE $(TargetFileName)
 
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.120-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.2.0.0.120-beta\test-data\DelftTools.TestUtils
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.125-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.2.0.0.125-beta\test-data\DelftTools.TestUtils
 
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.120-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.125-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
 </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
@@ -549,11 +549,11 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.120-beta\tools\mklin
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.120-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.120-beta\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.2.0.0.120-beta\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.2.0.0.120-beta\build\net40\DeltaShell.TestProject.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.125-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.125-beta\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.2.0.0.125-beta\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.2.0.0.125-beta\build\net40\DeltaShell.TestProject.targets'))" />
     <Error Condition="!Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.120-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.120-beta\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\DeltaShell.TestProject.2.0.0.120-beta\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.2.0.0.120-beta\build\net40\DeltaShell.TestProject.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.125-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.125-beta\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.TestProject.2.0.0.125-beta\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.2.0.0.125-beta\build\net40\DeltaShell.TestProject.targets')" />
 </Project>

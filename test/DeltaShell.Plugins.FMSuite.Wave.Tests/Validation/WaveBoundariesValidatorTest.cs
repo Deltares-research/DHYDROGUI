@@ -826,12 +826,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        public void Visit_FileBasedParameters_ShouldDoNothing()
+        public void Visit_FileBasedParameters_ShouldDoNothingIfFilePathIsNotNullAndNotEmpty()
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
-            var fileBasedParameters = new FileBasedParameters("test");
+            const string filePath = "NotNullAndNotEmpty";
+            var fileBasedParameters = new FileBasedParameters(filePath);
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                          .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(fileBasedParameters));
@@ -846,7 +847,64 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        public void Visit_FileBasedParametersNull_DoesNotThrowArgumentNullException()
+        [TestCase("")]
+        [TestCase("     ")]
+        public void Visit_FileBasedParameters_ShouldReturnValidationErrorIfFilePathIsEmptyOrWhitespace(string filePath)
+        {
+            // Setup
+            EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
+
+            var fileBasedParameters = new FileBasedParameters(filePath);
+
+            boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(fileBasedParameters));
+
+            // Call
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
+
+            // Assert
+            Assert.AreEqual("Waves Model Boundaries", report.Category);
+
+            IList<ValidationIssue> allIssues = report.GetAllIssuesRecursive();
+            Assert.AreEqual(1, allIssues.Count);
+            Assert.IsTrue(allIssues.Any(i =>
+                                            i.Severity == ValidationSeverity.Error &&
+                                            i.Message == string.Format(
+                                                Resources.WaveBoundariesValidator_Validate_FilePath_cannot_be_empty,
+                                                boundaries[0].Name)));
+            Assert.AreEqual(1, report.SubReports.Count());
+        }
+
+        [Test]
+        public void Visit_FileBasedParameters_ShouldReturnValidationErrorIfFilePathIsNull()
+        {
+            // Setup
+            EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
+
+            var fileBasedParameters = new FileBasedParameters(string.Empty);
+            fileBasedParameters.FilePath = null;
+
+            boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(fileBasedParameters));
+
+            // Call
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
+
+            // Assert
+            Assert.AreEqual("Waves Model Boundaries", report.Category);
+
+            IList<ValidationIssue> allIssues = report.GetAllIssuesRecursive();
+            Assert.AreEqual(1, allIssues.Count);
+            Assert.IsTrue(allIssues.Any(i =>
+                                            i.Severity == ValidationSeverity.Error &&
+                                            i.Message == string.Format(
+                                                Resources.WaveBoundariesValidator_Validate_FilePath_cannot_be_empty,
+                                                boundaries[0].Name)));
+            Assert.AreEqual(1, report.SubReports.Count());
+        }
+
+        [Test]
+        public void Visit_FileBasedParametersNull_ThrowsArgumentNullException()
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
@@ -858,7 +916,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
-            Assert.DoesNotThrow(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("fileBasedParameters"));
         }
 
         [Test]

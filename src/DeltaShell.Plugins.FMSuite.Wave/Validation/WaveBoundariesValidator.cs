@@ -289,13 +289,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
 
             /// <summary>
-            /// Visit method for doing nothing, since there are not validation rules for <see cref="FileBasedParameters"/>.
-            /// Must be defined for visitor pattern.
+            /// Visit method for validating <see cref="FileBasedParameters"/>.
             /// </summary>
             /// <param name="fileBasedParameters"> The visited <see cref="FileBasedParameters"/>. </param>
+            /// <exception cref="ArgumentNullException">
+            /// Thrown when <paramref name="fileBasedParameters"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit(FileBasedParameters fileBasedParameters)
             {
-                // No validation rules.
+                Ensure.NotNull(fileBasedParameters, nameof(fileBasedParameters));
+
+                if (string.IsNullOrWhiteSpace(fileBasedParameters.FilePath))
+                {
+                    ValidationIssues.Add(new ValidationIssue(VariableDescription, ValidationSeverity.Error,
+                                                             Resources.WaveBoundariesValidator_Validate_FilePath_cannot_be_empty,
+                                                             Boundary));
+                }
             }
 
             /// <summary>
