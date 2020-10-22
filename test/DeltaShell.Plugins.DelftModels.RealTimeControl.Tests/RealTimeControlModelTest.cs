@@ -236,8 +236,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 
                 for (var i = 0; i < 5; i++)
                 {
-                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument($"test{i}.csv", "", model));
-                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument( $"test{i}.xml", "", model ));
+                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument($"test{i}.csv", ""));
+                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument( $"test{i}.xml", ""));
                 }
 
                 // Act

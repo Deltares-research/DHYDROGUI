@@ -1,6 +1,8 @@
-﻿using DelftTools.Controls;
+﻿using System.Drawing;
+using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
-using DelftTools.Utils.Drawing;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 {
@@ -9,12 +11,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, ReadOnlyOutputTextDocument nodeData)
         {
             node.Text = nodeData.Name;
-            node.Image = CommonTools.Properties.Resources.textdocument;
+            node.Image = GetImage(nodeData.Name);
+        }
 
-            if (nodeData.Owner.OutputOutOfSync)
+        private static Image GetImage(string fileNameWithExtension)
+        {
+            string[] parts = fileNameWithExtension.Split('.');
+            string extension = parts.Last();
+
+            if (string.IsNullOrEmpty(extension)) return Resources.textdocument;
+            
+            switch (extension)
             {
-                node.Image = node.Image.AddOverlayImage(Properties.Resources.ExclamationOverlay, 5, 1, 10, 10);
+                case "xml":
+                    return Resources.textdocument;
+                case "csv":
+                    return Resources.table;
+                default:
+                    return Resources.textdocument;
             }
         }
+
     }
 }

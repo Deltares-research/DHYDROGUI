@@ -1018,7 +1018,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     }
                     else
                     {
-                        var textDocument = new ReadOnlyOutputTextDocument(fileName, log, this);
+                        var textDocument = new ReadOnlyOutputTextDocument(fileName, log);
                         
                         OutputXmlOrCsvDocuments.Add(textDocument);
                     }
@@ -1754,19 +1754,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
     }
 
-   
-        public class ReadOnlyOutputTextDocument : TextDocumentBase
-    {
-        public ReadOnlyOutputTextDocument(string documentName, string content, IModel owner) : base(true)
-            {
-                Ensure.NotNull(documentName, nameof(documentName));
-                Ensure.NotNull(content, nameof(content));
-
-                Name = documentName;
-                Content = content;
-                Owner = owner;
-            }
-
-            public IModel Owner { get; set; }
-    }
+    
 }

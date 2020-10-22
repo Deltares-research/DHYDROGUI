@@ -100,12 +100,14 @@
     <Compile Include="Helpers\RTCModelCoordinateConvertor.cs" />
     <Compile Include="NodePresenters\ControlGroupCollectionNodePresenter.cs" />
     <Compile Include="NodePresenters\ControlGroupNodePresenter.cs" />
+    <Compile Include="NodePresenters\OutputTreeFolderNodePresenter.cs" />
     <Compile Include="NodePresenters\RealTimeControlModelNodePresenter.cs" />
     <Compile Include="NodePresenters\RtcObjectNodePresenter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodePresenters\RtcOutputFileFunctionStoreNodePresenter.cs" />
     <Compile Include="NodePresenters\ReadOnlyOutputTextDocumentNodePresenter.cs" />
+    <Compile Include="OutputTreeFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -342,8 +344,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\textdocument.png" />
+    <None Include="Resources\table.png" />
     <None Include="Resources\region.png" />
     <None Include="Resources\mathexpression.png" />
+    <None Include="Resources\folder_output.png" />
     <Content Include="Resources\signal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
