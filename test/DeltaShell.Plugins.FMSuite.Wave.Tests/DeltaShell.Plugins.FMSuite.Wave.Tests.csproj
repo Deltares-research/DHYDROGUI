@@ -418,7 +418,7 @@
     <Compile Include="OutputData\WaveOutputDataTest.cs" />
     <Compile Include="OutputData\WavmFileFunctionStoreTest.cs" />
     <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviourTest.cs" />
-    <Compile Include="Migrations\1.1.0.0\MigratorFactoryTest.cs" />
+    <Compile Include="Migrations\1.1.0.0\MigratorInstanceCreatorTest.cs" />
     <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviourTest.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelperTest.cs" />
     <Compile Include="Migrations\1.1.0.0\WavmFunctionStoreMigrationHelperTest.cs" />

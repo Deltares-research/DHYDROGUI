@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             string mdwFileName = Path.GetFileName(mdwPath);
 
             IDelftIniFileOperator migrator =
-                MigratorFactory.CreateMdwMigrator(origModelDirectoryInfo.FullName, newInputDirectory);
+                MigratorInstanceCreator.CreateMdwMigrator(origModelDirectoryInfo.FullName, newInputDirectory);
 
             var fileStream = new FileStream(mdwPath, FileMode.Open);
 

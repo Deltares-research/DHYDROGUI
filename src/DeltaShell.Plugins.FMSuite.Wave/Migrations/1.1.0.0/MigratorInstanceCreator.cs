@@ -7,10 +7,10 @@ using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviou
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
     /// <summary>
-    /// <see cref="MigratorFactory"/> provides the methods to create configured
+    /// <see cref="MigratorInstanceCreator"/> provides the methods to create configured
     /// <see cref="DelftIniFileOperator"/> objects to be used during migration.
     /// </summary>
-    public static class MigratorFactory
+    public static class MigratorInstanceCreator
     {
         /// <summary>
         /// Creates the <see cref="IDelftIniFileOperator"/> to migrate .obs files.

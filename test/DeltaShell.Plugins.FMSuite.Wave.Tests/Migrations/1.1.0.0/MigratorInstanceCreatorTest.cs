@@ -16,7 +16,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 {
     [TestFixture]
-    public class MigratorFactoryTest
+    public class MigratorInstanceCreatorTest
     {
         [Test]
         [TestCase(null, "somePath", "relativeDirectory")]
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                                                  string goalDirectory,
                                                                                  string expectedParameterName)
         {
-            void Call() => MigratorFactory.CreateObsMigrator(relativeDirectory, goalDirectory);
+            void Call() => MigratorInstanceCreator.CreateObsMigrator(relativeDirectory, goalDirectory);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                                                                                  string goalDirectory,
                                                                                  string expectedParameterName)
         {
-            void Call() => MigratorFactory.CreateMdwMigrator(relativeDirectory, goalDirectory);
+            void Call() => MigratorInstanceCreator.CreateMdwMigrator(relativeDirectory, goalDirectory);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var delftIniWriter = new DelftIniWriter();
                 delftIniWriter.WriteDelftIniFile(oldCategories, inputPath, false);
 
-                IDelftIniFileOperator migrator = MigratorFactory.CreateObsMigrator(relativePath, absoluteGoalDir);
+                IDelftIniFileOperator migrator = MigratorInstanceCreator.CreateObsMigrator(relativePath, absoluteGoalDir);
 
                 var fileStream = new FileStream(inputPath, FileMode.Open);
 
@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var delftIniWriter = new DelftIniWriter();
                 delftIniWriter.WriteDelftIniFile(oldCategories, inputPath, false);
 
-                IDelftIniFileOperator migrator = MigratorFactory.CreateObsMigrator(relativePath, absoluteGoalDir);
+                IDelftIniFileOperator migrator = MigratorInstanceCreator.CreateObsMigrator(relativePath, absoluteGoalDir);
 
                 var fileStream = new FileStream(inputPath, FileMode.Open);
 
@@ -311,7 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 var delftIniWriter = new DelftIniWriter();
                 delftIniWriter.WriteDelftIniFile(oldCategories, inputPath, false);
 
-                IDelftIniFileOperator migrator = MigratorFactory.CreateObsMigrator(relativePath, absoluteGoalDir);
+                IDelftIniFileOperator migrator = MigratorInstanceCreator.CreateObsMigrator(relativePath, absoluteGoalDir);
 
                 var fileStream = new FileStream(inputPath, FileMode.Open);
 
@@ -392,7 +392,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 string referenceModelFolder = Path.Combine(tempDir.Path, "reference_model_folder", "input");
                 string referenceMdwPath = Path.Combine(referenceModelFolder, "waves.mdw");
 
-                IDelftIniFileOperator migrator = MigratorFactory.CreateMdwMigrator(sourceModelFolder, resultPath);
+                IDelftIniFileOperator migrator = MigratorInstanceCreator.CreateMdwMigrator(sourceModelFolder, resultPath);
 
                 var fileStream = new FileStream(sourceMdwPath, FileMode.Open);
                 var logHandler = Substitute.For<ILogHandler>();
