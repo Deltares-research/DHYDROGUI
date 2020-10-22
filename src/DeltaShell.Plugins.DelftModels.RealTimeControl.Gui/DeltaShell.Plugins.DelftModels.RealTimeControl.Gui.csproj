@@ -156,6 +156,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.ProjectExplorer">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
+    </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
       <Private>False</Private>
@@ -208,7 +211,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	<Reference Include="DeltaShell.Plugins.CommonTools">
+    <Reference Include="DeltaShell.Plugins.CommonTools">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.120-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
