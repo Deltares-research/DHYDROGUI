@@ -1012,6 +1012,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     string log = File.ReadAllText(filePath);
 
+                    // Replace content in the existing output documents, so that open views will be updated after a run.
+                    // Don't create always new ones, because the open views of the old ones will not be closed during a run.
                     if (existingTextDocument != null)
                     {
                         existingTextDocument.Content = log;
