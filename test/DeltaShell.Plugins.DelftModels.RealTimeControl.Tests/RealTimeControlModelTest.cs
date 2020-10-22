@@ -194,6 +194,109 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ConnectOutput_ForEmptyOutputDirectory_ShouldNotThrowExceptions()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Arrange
+                var model = new RealTimeControlModel();
+
+                string rtcDirectory = Path.Combine(tempDir.Path, "rtc");
+                Directory.CreateDirectory(rtcDirectory);
+
+                // Act
+                model.ConnectOutput(rtcDirectory);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ConnectOutput_ForXmlAndCsvFiles_ShouldCreateNewOutputXmlOrCsvDocumentsElements()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Arrange
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string _, out string rtcDirectory, out string[] relevantFiles);
+
+                // Act
+                model.ConnectOutput(rtcDirectory);
+
+                // Assert
+                ChecksForOutputXmlOrCsvDocuments(model, relevantFiles);
+            }
+        }
+        
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ConnectOutput_ForXmlAndCsvFiles_ShouldUseExistingOutputXmlOrCsvDocumentsElements()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Arrange
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string _, out string rtcDirectory, out string[] relevantFiles);
+                
+                for (var i = 0; i < 5; i++)
+                {
+                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument($"test{i}.csv", "", model));
+                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument( $"test{i}.xml", "", model ));
+                }
+
+                // Act
+                model.ConnectOutput(rtcDirectory);
+
+                // Assert
+                ChecksForOutputXmlOrCsvDocuments(model, relevantFiles);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ConnectOutput_ForXmlCsvAndRestartFiles_ShouldIgnoreRestartFilesInOutputXmlOrCsvDocuments()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Arrange
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] relevantFiles);
+
+                CreateRestartFiles(tempDir, rtcFolderName);
+                
+                // Act
+                model.ConnectOutput(rtcDirectory);
+
+                // Assert
+                ChecksForOutputXmlOrCsvDocuments(model, relevantFiles);
+            }
+        }
+
+        private static RealTimeControlModel CreateRtcModelAndFiles(TemporaryDirectory tempDir, out string rtcFolderName, out string rtcDirectory, out string[] relevantFiles)
+        {
+            var model = new RealTimeControlModel();
+
+            rtcFolderName = "rtc";
+            rtcDirectory = Path.Combine(tempDir.Path, rtcFolderName);
+            Directory.CreateDirectory(rtcDirectory);
+            string[] xmlFiles = CreateXmlFiles(tempDir, rtcFolderName).ToArray();
+            string[] csvFiles = CreateCsvFiles(tempDir, rtcFolderName).ToArray();
+
+            relevantFiles = xmlFiles.Concat(csvFiles).ToArray();
+            Array.Sort(relevantFiles);
+            return model;
+        }
+
+        private static void ChecksForOutputXmlOrCsvDocuments(RealTimeControlModel model, string[] relevantFiles)
+        {
+            ReadOnlyOutputTextDocument[] textDocuments = model.OutputXmlOrCsvDocuments.ToArray();
+            Assert.That(textDocuments, Has.Length.EqualTo(10));
+
+            for (var i = 0; i < relevantFiles.Length; i++)
+            {
+                Assert.That(textDocuments[i].Name, Is.EqualTo(Path.GetFileName(relevantFiles[i])));
+                Assert.That(textDocuments[i].Content, Is.EqualTo($"file {i}"));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ConnectOutput_RestartFiles_ReconnectsTheRestartFiles()
         {
             using (var tempDir = new TemporaryDirectory())
@@ -231,6 +334,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             // Then
             Assert.That(model.RestartInput, Is.SameAs(originalRestartFile));
+        }
+
+        private static IEnumerable<string> CreateXmlFiles(TemporaryDirectory tempDir, string rtcFolderName)
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                yield return tempDir.CreateFile(Path.Combine(rtcFolderName, $"test{i}.xml"), $"file {i*2+1}");
+            }
+        }
+
+        private static IEnumerable<string> CreateCsvFiles(TemporaryDirectory tempDir, string rtcFolderName)
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                yield return tempDir.CreateFile(Path.Combine(rtcFolderName, $"test{i}.csv"), $"file {i*2}");
+            }
         }
 
         private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir, string rtcFolderName)
