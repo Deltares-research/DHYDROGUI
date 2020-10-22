@@ -17,7 +17,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string OutputCategory = "Output";
         public const string DomainCategory = "Domain";
         public const string ObstacleCategory = "Obstacle";
-        public const string ObstacleFileInfoCategory = "ObstacleFileInformation";
         public const string NumericsCategory = "Numerics";
 
         public const string GuiOnlyCategory = "GUIOnly";

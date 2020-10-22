@@ -33,8 +33,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 {
     public class MdwFile : NGHSFileBase
     {
-        private const string PolyfileName = "PolylineFile";
-
         private const string WaveObstaclePropertyName = "Name";
         private const string WaveObstaclePropertyType = "Type";
         private const string WaveObstaclePropertyTransmissionCoefficient = "TransmCoef";
@@ -472,9 +470,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 IEventedList<WaveObstacle> features = modelDefinition.Obstacles;
                 new PliFile<Feature2D>().Write(Path.Combine(targetDir, geometryFile), features);
 
-                var fileInfo = new DelftIniCategory(KnownWaveCategories.ObstacleFileInfoCategory);
+                var fileInfo = new DelftIniCategory(KnownWaveObsCategories.ObstacleFileInformation);
                 fileInfo.AddProperty("FileVersion", "02.00");
-                fileInfo.AddProperty(PolyfileName, geometryFile);
+                fileInfo.AddProperty(KnownWaveObsProperties.PolylineFile, geometryFile);
                 obtCategories.Add(fileInfo);
 
                 foreach (WaveObstacle obstacle in modelDefinition.Obstacles.OfType<WaveObstacle>())
@@ -519,25 +517,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             foreach (IWaveDomainData domain in allDomains)
             {
                 var domainCategory = new DelftIniCategory(KnownWaveCategories.DomainCategory);
-                domainCategory.AddProperty("Grid", domain.GridFileName);
-                domainCategory.AddProperty("BedLevelGrid", domain.BedLevelGridFileName);
-                domainCategory.AddProperty("BedLevel", domain.BedLevelFileName);
+                domainCategory.AddProperty(KnownWaveProperties.Grid, domain.GridFileName);
+                domainCategory.AddProperty(KnownWaveProperties.BedLevelGrid, domain.BedLevelGridFileName);
+                domainCategory.AddProperty(KnownWaveProperties.BedLevel, domain.BedLevelFileName);
 
                 if (!domain.SpectralDomainData.UseDefaultDirectionalSpace)
                 {
-                    domainCategory.AddProperty("DirSpace",
+                    domainCategory.AddProperty(KnownWaveProperties.DirectionalSpaceType,
                                                domain.SpectralDomainData.DirectionalSpaceType.GetDescription()
                                                      .ToLower());
-                    domainCategory.AddProperty("NDir", domain.SpectralDomainData.NDir);
-                    domainCategory.AddProperty("StartDir", domain.SpectralDomainData.StartDir);
-                    domainCategory.AddProperty("EndDir", domain.SpectralDomainData.EndDir);
+                    domainCategory.AddProperty(KnownWaveProperties.NumberOfDirections, domain.SpectralDomainData.NDir);
+                    domainCategory.AddProperty(KnownWaveProperties.StartDirection, domain.SpectralDomainData.StartDir);
+                    domainCategory.AddProperty(KnownWaveProperties.EndDirection, domain.SpectralDomainData.EndDir);
                 }
 
                 if (!domain.SpectralDomainData.UseDefaultFrequencySpace)
                 {
-                    domainCategory.AddProperty("NFreq", domain.SpectralDomainData.NFreq);
-                    domainCategory.AddProperty("FreqMin", domain.SpectralDomainData.FreqMin);
-                    domainCategory.AddProperty("FreqMax", domain.SpectralDomainData.FreqMax);
+                    domainCategory.AddProperty(KnownWaveProperties.NumberOfFrequencies, domain.SpectralDomainData.NFreq);
+                    domainCategory.AddProperty(KnownWaveProperties.StartFrequency, domain.SpectralDomainData.FreqMin);
+                    domainCategory.AddProperty(KnownWaveProperties.EndFrequency, domain.SpectralDomainData.FreqMax);
                 }
 
                 if (!domain.UseGlobalMeteoData)
@@ -548,11 +546,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
                 if (!domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings)
                 {
-                    domainCategory.AddProperty("FlowBedLevel", (int) domain.HydroFromFlowData.BedLevelUsage);
-                    domainCategory.AddProperty("FlowWaterLevel", (int) domain.HydroFromFlowData.WaterLevelUsage);
-                    domainCategory.AddProperty("FlowVelocity", (int) domain.HydroFromFlowData.VelocityUsage);
-                    domainCategory.AddProperty("FlowVelocityType", domain.HydroFromFlowData.VelocityUsageType.GetDescription());
-                    domainCategory.AddProperty("FlowWind", (int) domain.HydroFromFlowData.WindUsage);
+                    domainCategory.AddProperty(KnownWaveProperties.FlowBedLevelUsage, (int) domain.HydroFromFlowData.BedLevelUsage);
+                    domainCategory.AddProperty(KnownWaveProperties.FlowWaterLevelUsage, (int) domain.HydroFromFlowData.WaterLevelUsage);
+                    domainCategory.AddProperty(KnownWaveProperties.FlowVelocityUsage, (int) domain.HydroFromFlowData.VelocityUsage);
+                    domainCategory.AddProperty(KnownWaveProperties.FlowVelocityUsageType, domain.HydroFromFlowData.VelocityUsageType.GetDescription());
+                    domainCategory.AddProperty(KnownWaveProperties.FlowWindUsage, (int) domain.HydroFromFlowData.WindUsage);
                 }
 
                 if (domain.SuperDomain != null)
@@ -991,8 +989,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 obtCategories = delftIniReader.ReadDelftIniFile(fileStream, obstacleFilePath);
             }
 
-            DelftIniCategory fileInfo = obtCategories.First(c => c.Name == KnownWaveCategories.ObstacleFileInfoCategory);
-            string polylineFileName = fileInfo.GetPropertyValue(PolyfileName);
+            DelftIniCategory fileInfo = obtCategories.First(c => c.Name == KnownWaveObsCategories.ObstacleFileInformation);
+            string polylineFileName = fileInfo.GetPropertyValue(KnownWaveObsProperties.PolylineFile);
             string geometryFilePath = Path.Combine(mdwDirectory, polylineFileName);
             if (!File.Exists(geometryFilePath))
             {
