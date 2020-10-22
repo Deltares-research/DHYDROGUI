@@ -5,7 +5,10 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 {
-    public class ShapeConnectionsRulesController
+    /// <summary>
+    /// Helper class to determine the connection rules between shapes.
+    /// </summary>
+    public static class ShapeConnectionsRulesController
     {
         private static readonly Dictionary<Type, IEnumerable<ConnectionRule>> connectionMapping = new Dictionary<Type, IEnumerable<ConnectionRule>>
         {

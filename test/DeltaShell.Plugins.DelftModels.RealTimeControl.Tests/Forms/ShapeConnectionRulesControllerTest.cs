@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
@@ -10,24 +11,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
     public class ShapeConnectionRulesControllerTest
     {
         private static ConnectorType targetBottomConnectorType;
-        private static ConnectorType targetTopConnectorType;
-        private static ConnectorType targetLeftConnectorType;
-        private static ConnectorType targetRightConnectorType;
 
         [SetUp]
         public static void SetupConnectorsTypes()
         {
             targetBottomConnectorType = ConnectorType.Bottom;
-            targetTopConnectorType = ConnectorType.Top;
-            targetLeftConnectorType = ConnectorType.Left;
-            targetRightConnectorType = ConnectorType.Right;
         }
 
         [Test]
         public static void GivenNullSourceShapeExceptionIsThrown()
         {
             InputItemShape sourceShape = null;
-            var targetShape = new ConditionShape();
+            var targetShape = Substitute.For<ShapeBase>();
             Assert.Throws<ArgumentNullException>(
                 () => ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
                                                                                                           targetShape,
@@ -38,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         public static void GivenNullTargetShapeExceptionIsThrown()
         {
             InputItemShape targetShape = null;
-            var sourceShape = new ConditionShape();
+            var sourceShape = Substitute.For<ShapeBase>();
             Assert.Throws<ArgumentNullException>(
                 () => ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
                                                                                                           targetShape,
