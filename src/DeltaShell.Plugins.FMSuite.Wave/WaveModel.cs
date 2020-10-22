@@ -111,6 +111,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 #pragma warning disable 618
             BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
 #pragma warning restore 618
+
+            WaveOutputData = new WaveOutputData();
         }
 
         /// <summary>
@@ -302,7 +304,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public IWaveOutputData WaveOutputData { get; } = new WaveOutputData();
+        // Note that the private set here and the assignment in the 
+        // constructor are required for PostSharp to properly propagate the 
+        // changes in the WaveOutputData.
+        public IWaveOutputData WaveOutputData { get; private set; }
 
         public MdwFile MdwFile { get; } = new MdwFile();
 

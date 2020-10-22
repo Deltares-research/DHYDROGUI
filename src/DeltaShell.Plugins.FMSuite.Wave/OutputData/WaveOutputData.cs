@@ -1,4 +1,5 @@
-﻿using DelftTools.Utils.Guards;
+﻿using DelftTools.Utils.Aop;
+using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {
@@ -7,6 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// output data component. This component is responsible for managing all
     /// Wave output domain concepts.
     /// </summary>
+    [Entity]
     public class WaveOutputData : IWaveOutputData
     {
         public string DataSourcePath { get; private set; } = null;

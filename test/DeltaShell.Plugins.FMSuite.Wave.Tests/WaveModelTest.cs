@@ -11,6 +11,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -1322,6 +1323,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     Assert.That(model.WaveOutputData.IsConnected, Is.True);
                     Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(originalDataSourcePath));
                 }
+            }
+        }
+
+        [Test]
+        public void WaveOutputData_EventsAreProperlyPropagated()
+        {
+            // Setup
+            using (var model = new WaveModel())
+            {
+                var observer = new NotifyPropertyChangedTestObserver();
+                ((INotifyPropertyChange) model).PropertyChanged += observer.OnPropertyChanged;
+
+                // Call
+                model.WaveOutputData.ConnectTo("some/not/existing/path", true);
+
+                // Assert
+                Assert.That(observer.NCalls, Is.EqualTo(2));
+                Assert.That(observer.Senders, Has.All.EqualTo(model.WaveOutputData));
             }
         }
 

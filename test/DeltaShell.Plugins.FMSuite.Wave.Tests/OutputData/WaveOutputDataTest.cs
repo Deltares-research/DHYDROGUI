@@ -1,5 +1,5 @@
-﻿using System.IO;
-using DelftTools.TestUtils;
+﻿using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NUnit.Framework;
@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
             // Assert
             Assert.That(outputData, Is.InstanceOf<IWaveOutputData>());
+            Assert.That(outputData, Is.InstanceOf<INotifyPropertyChange>());
             Assert.That(outputData.DataSourcePath, Is.Null);
             Assert.That(outputData.IsConnected, Is.False);
         }
