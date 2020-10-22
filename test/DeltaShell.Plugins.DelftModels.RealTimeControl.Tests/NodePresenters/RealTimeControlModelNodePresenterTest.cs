@@ -4,6 +4,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -37,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
 
             // Assert
-            TreeFolder outputTreeFolder = childObjects.OfType<TreeFolder>().Single(f => f.Text == "Output");
+            OutputTreeFolder outputTreeFolder = childObjects.OfType<OutputTreeFolder>().Single(f => f.Text == "Output");
             TreeFolder restartFileOutputTreeFolder = outputTreeFolder.ChildItems.OfType<TreeFolder>().Single(f => f.Text == "Restart");
             Assert.That(restartFileOutputTreeFolder.Text, Is.EqualTo("Restart"));
             Assert.That(restartFileOutputTreeFolder.ChildItems.OfType<RealTimeControlRestartFile>().Count(), Is.EqualTo(1));
