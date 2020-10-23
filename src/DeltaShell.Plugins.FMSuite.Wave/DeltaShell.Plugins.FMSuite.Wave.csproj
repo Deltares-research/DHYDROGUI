@@ -244,6 +244,7 @@
     <Compile Include="DataAccess\SpectrumParametersVisitor.cs" />
     <Compile Include="OutputData\IWaveOutputData.cs" />
     <Compile Include="OutputData\WaveOutputData.cs" />
+    <Compile Include="OutputData\ReadOnlyTextFileData.cs" />
     <Compile Include="OutputData\WavmFileFunctionStore.cs" />
     <Compile Include="IWaveDomainData.cs" />
     <Compile Include="IWaveModel.cs" />
