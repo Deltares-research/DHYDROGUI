@@ -21,6 +21,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
@@ -112,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
 #pragma warning restore 618
 
-            WaveOutputData = new WaveOutputData();
+            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester());
         }
 
         /// <summary>
@@ -544,6 +545,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             Ensure.NotNullOrEmpty(outputTargetDirectory, nameof(outputTargetDirectory));
 
+            var logHandler = new LogHandler("Saving model output", log);
+
             var targetDirectoryInfo = new DirectoryInfo(outputTargetDirectory);
             FileUtils.CreateDirectoryIfNotExists(targetDirectoryInfo.FullName);
 
@@ -557,13 +560,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             else if (WaveOutputData.IsStoredInWorkingDirectory)
             {
                 CopyRunDataTo(targetDirectoryInfo);
-                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName, false);
+                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName, false, logHandler);
             }
             else if (!IsSavedToCurrentOutputDirectory(targetDirectoryInfo))
             {
                 CopyOutputDataTo(targetDirectoryInfo);
-                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName, false);
+                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName, false, logHandler);
             }
+
+            logHandler.LogReport();
         }
 
         private void CopyRunDataTo(DirectoryInfo targetDirectoryInfo)
@@ -704,6 +709,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 yield return boundary;
             }
+
+            yield return WaveOutputData;
         }
 
         protected override void OnInitialize()
@@ -959,7 +966,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             model.BuildWaveDomains(allDomains, model.InputDirPath, model);
 
-            model.WaveOutputData.ConnectTo(model.OutputDirPath, false);
+            var logHandler = new LogHandler("Connecting to model output", log);
+            model.WaveOutputData.ConnectTo(model.OutputDirPath, false, logHandler);
+            logHandler.LogReport();
         }
 
         private static void BuildEmptyModel(WaveModel model)
@@ -1395,8 +1404,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual void ConnectOutput(string outputPath)
         {
+            var logHandler = new LogHandler("Connecting to output", log);
+
             bool isInWorkingDir = outputPath.StartsWith(WorkingDirectoryPathFunc());
-            WaveOutputData.ConnectTo(outputPath, isInWorkingDir);
+            WaveOutputData.ConnectTo(outputPath, isInWorkingDir, logHandler);
+
+            logHandler.LogReport();
         }
 
         protected override void OnClearOutput()
