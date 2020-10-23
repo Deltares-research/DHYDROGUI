@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -541,6 +541,7 @@
     <None Include="Resources\folder.png" />
     <Resource Include="Resources\add.png" />
     <Resource Include="Resources\delete.png" />
+    <None Include="Resources\DocumentHS.png" />
     <Content Include="Resources\folder_domain.png" />
     <Content Include="Resources\domain.png" />
   </ItemGroup>

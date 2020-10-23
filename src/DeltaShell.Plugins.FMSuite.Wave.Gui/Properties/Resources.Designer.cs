@@ -82,6 +82,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap DocumentHS {
+            get {
+                object obj = ResourceManager.GetObject("DocumentHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap domain {
             get {
                 object obj = ResourceManager.GetObject("domain", resourceCulture);
