@@ -137,7 +137,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         private void WorkflowsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             SetWorkflowSelectionListBoxItems();
-            
         }
 
         private void WorkflowSelectionListBoxSelectedIndexChanged(object sender, EventArgs e)
