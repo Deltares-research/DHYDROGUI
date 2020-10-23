@@ -74,6 +74,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         #endregion
 
         [Test]
+        public void DimrModelRelativeOutputDirectory_ShouldReturnDirectoryNamePlusOutputDirectoryName()
+        {
+            var model = new RealTimeControlModel();
+            Assert.AreEqual(Path.Combine(model.DirectoryName, DirectoryNameConstants.OutputDirectoryName),
+                            model.DimrModelRelativeOutputDirectory);
+        }
+
+        [Test]
         public void CleanUpModelAfterModelCoupling_ShouldResetInputIfUnlinked()
         {
             // Given
@@ -237,8 +245,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 
                 for (var i = 0; i < 5; i++)
                 {
-                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument($"test{i}.csv", "", model));
-                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument( $"test{i}.xml", "", model ));
+                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument($"test{i}.csv", ""));
+                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument( $"test{i}.xml", ""));
                 }
 
                 // Act
@@ -1303,7 +1311,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenNewProjectWithRTC_WhenRunningAndSavingForFirstTime_NewPersistentOutputDirectoryShouldExist()
+        public void GivenNewProjectWithRTC_WhenRunningAndSavingForFirstTime_NewPersistentOutputDirectoryShouldExistAndConnected()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1330,12 +1338,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
 
                 Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.AreEqual(1, rtcModel.OutputXmlOrCsvDocuments.Count);
             }
         }
         
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningAndSavingAgain_NewPersistentOutputDirectoryShouldExist()
+        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningAndSavingAgain_NewPersistentOutputDirectoryShouldExistAndConnected()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1363,12 +1372,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
                 
                 Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.AreEqual(1, rtcModel.OutputXmlOrCsvDocuments.Count);
             }
         }
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningAndSavingAs_NewPersistentOutputDirectoryShouldExist()
+        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningAndSavingAs_NewPersistentOutputDirectoryShouldExistAndConnected()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1400,6 +1410,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.IsFalse(Directory.Exists(projectDirectoryAfterSave));
                 
                 Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.AreEqual(1, rtcModel.OutputXmlOrCsvDocuments.Count);
             }
         }
 
@@ -1422,6 +1433,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // Then
                 Assert.IsTrue(rtcModel.IsOpen);
                 Assert.AreEqual(pathBeforeSave, rtcModel.Path);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAProjectWithRTCAndOutput_WhenOpened_ThenOutputShouldBeConnected()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryPersistentFolder = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, "RealTimeControlModelGUID");
+                
+                BuildUpModelOutput(projectDirectoryPersistentFolder, rtcModel.Name, out string _, out string _);
+
+                // When
+                frameworkSimulator.OpenProject(pathPersistentFolder);
+
+                // Then
+                Assert.AreEqual(1, rtcModel.OutputXmlOrCsvDocuments.Count);
             }
         }
 
@@ -1748,7 +1782,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         private static void BuildUpModelOutput(string projectDirectoryPersistentFolder, string rtcModelName, 
                                                out string persistentOutputFileName, out string persistentOutputSubDirectoryName)
         { 
-            persistentOutputFileName = "OriginalOutputFile";
+            persistentOutputFileName = "OriginalOutputFile.xml";
             persistentOutputSubDirectoryName = "OriginalOutputSubDirectory";
             
             string outputFolderPersistentFolder = Path.Combine(projectDirectoryPersistentFolder, rtcModelName, DirectoryNameConstants.OutputDirectoryName);
@@ -1768,7 +1802,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                                                               out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
                                                               out string workingDirectoryForRunning)
         {
-            workingDirectoryOutputFileName = "WorkingDirectoryOutputFile";
+            workingDirectoryOutputFileName = "WorkingDirectoryOutputFile.xml";
             workingDirectoryOutputSubDirectoryName = "WorkingDirectoryOutputSubDirectory";
             workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
 

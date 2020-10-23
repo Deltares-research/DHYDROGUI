@@ -280,6 +280,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Forcing Type &quot;Spectrum based (From file)&quot; has been selected but no file has been added..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_FilePath_cannot_be_empty {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_FilePath_cannot_be_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Model start time does not precede any of the time points of &apos;{0}&apos;.
         /// </summary>
         public static string WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_of__0__ {
@@ -655,6 +664,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_ther" +
                         "e_are_no_Observation_Points_in_your_model_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No spectrum file has been selected..
+        /// </summary>
+        public static string WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected", resourceCulture);
             }
         }
         
