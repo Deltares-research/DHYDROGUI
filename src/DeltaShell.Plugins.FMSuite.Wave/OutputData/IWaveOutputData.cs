@@ -1,4 +1,7 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
+﻿using System.Collections.Generic;
+using DeltaShell.NGHS.Common.Logging;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {
     /// <summary>
     /// <see cref="IWaveOutputData"/> defines the interface for the wave
@@ -29,16 +32,26 @@
         bool IsStoredInWorkingDirectory { get; }
 
         /// <summary>
+        /// Gets the diagnostic files.
+        /// </summary>
+        /// <remarks>
+        /// This is guaranteed to never be null. If no diagnostic files
+        /// currently exist, or the <see cref="IWaveOutputData"/> is
+        /// disconnected, then an empty list is returned.
+        /// </remarks>
+        IReadOnlyList<ReadOnlyTextFileData> DiagnosticFiles { get; }
+
+        /// <summary>
         /// Connects this <see cref="IWaveOutputData"/> to the specified path,
         /// this will read all supported files from the specified folder.
         /// </summary>
         /// <param name="dataSourcePath">The new path for the data source.</param>
         /// <param name="isStoredInWorkingDirectory">Whether the provided dataSourcePath is in the working directory.</param>
+        /// <param name="logHandler">optional log handler to report any problems with.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataSourcePath"/> is <c>null</c>.
         /// </exception>
-        // TODO: add relevant exceptions
-        void ConnectTo(string dataSourcePath, bool isStoredInWorkingDirectory);
+        void ConnectTo(string dataSourcePath, bool isStoredInWorkingDirectory, ILogHandler logHandler = null);
 
         /// <summary>
         /// Disconnects the output data from the current <see cref="DataSourcePath"/>.
