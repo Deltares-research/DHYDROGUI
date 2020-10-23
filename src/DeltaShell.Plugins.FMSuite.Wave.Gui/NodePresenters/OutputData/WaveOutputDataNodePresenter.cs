@@ -26,7 +26,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
             // TODO: Child objects should go in here
             // note that the creation of sub folders should be dependent on
             // whether there exists actual data in these folders.
-            yield break;
+            foreach (ReadOnlyTextFileData readOnlyTextFileData in parentNodeData.DiagnosticFiles)
+            {
+                yield return readOnlyTextFileData;
+            }
         }
     }
 }

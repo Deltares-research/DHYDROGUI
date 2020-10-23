@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
@@ -47,12 +48,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
 
+
+            var readOnlyData = new List<ReadOnlyTextFileData>
+            {
+                new ReadOnlyTextFileData("1.txt", "1"),
+                new ReadOnlyTextFileData("2.txt", "2"),
+
+            };
+
+            nodeData.DiagnosticFiles.Returns(readOnlyData);
+
             // Call
-            IEnumerable result = nodePresenter.GetChildNodeObjects(nodeData, node);
+            List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
+                                               .Cast<object>().ToList();
 
             // Assert
             // TODO: this should be updated once more child objects are added
-            Assert.That(result, Is.Empty);
+            int expectedNElements = readOnlyData.Count;
+            Assert.That(result.Count, Is.EqualTo(expectedNElements));
+
+            foreach (ReadOnlyTextFileData readOnlyTextFileData in readOnlyData)
+            {
+                Assert.That(result, Has.Member(readOnlyTextFileData));
+            }
         }
     }
 }
