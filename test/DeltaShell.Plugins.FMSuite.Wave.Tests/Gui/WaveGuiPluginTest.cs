@@ -12,7 +12,6 @@ using DelftTools.TestUtils;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -193,6 +192,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             Assert.NotNull(otherLayers);
 
             Assert.IsTrue(coverageLayer.Visible);
+        }
+
+        [Test]
+        public void Constructor_ExpectedProperties()
+        {
+            using (var plugin = new WaveGuiPlugin())
+            {
+                Assert.That(plugin.Name, Is.EqualTo("Delft3D Wave (Gui)"));
+                Assert.That(plugin.DisplayName, Is.EqualTo("D-Waves Plugin (UI)"));
+                Assert.That(plugin.Description, Is.EqualTo("A 2D/3D Waves module"));
+                Assert.That(plugin.FileFormatVersion, Is.EqualTo("1.1.0.0"));
+            }
+        }
+
+        [Test]
+        public void GetViewInfoObjects_ContainsTextFileViewInfo()
+        {
+            // Setup
+            using (var plugin = new WaveGuiPlugin())
+            {
+                // Call
+                IEnumerable<ViewInfo> viewInfos = plugin.GetViewInfoObjects();
+
+                // Assert
+                ViewInfo relevantViewInfo = viewInfos.FirstOrDefault(x => x.Description == "Text File");
+                Assert.That(relevantViewInfo, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public void GetProjectTreeViewNodePresenters_ContainsReadOnlyTextFileDataNodePresenter()
+        {
+            // Setup
+            using (var plugin = new WaveGuiPlugin())
+            {
+                // Call
+                IEnumerable<ITreeNodePresenter> nodePresenters = plugin.GetProjectTreeViewNodePresenters();
+
+                // Assert
+                ITreeNodePresenter nodePresenter = nodePresenters.FirstOrDefault(x => x is ReadOnlyTextFileDataNodePresenter);
+                Assert.That(nodePresenter, Is.Not.Null);
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Shell.Core;
@@ -12,6 +13,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.CommonTools.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -26,6 +28,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -54,6 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         public override string Description => "A 2D/3D Waves module";
 
+        [ExcludeFromCodeCoverage]
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         public override string FileFormatVersion => "1.1.0.0";
@@ -286,6 +290,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     v.OnValidate = d => new WaveModelValidator().Validate(d as WaveModel, d as WaveModel);
                 }
             };
+
+            yield return new ViewInfo<ReadOnlyTextFileData, ReadOnlyTextFileViewModel, TextDocumentView>
+            {
+                Description = "Text File",
+                GetViewName = (v, o) => o.Name,
+                GetViewData = o => new ReadOnlyTextFileViewModel(o),
+                ViewDataContainsData = (v, o) =>
+                    v.Data is ReadOnlyTextFileViewModel viewModel && viewModel.Data.Equals(o),
+                CloseForData = (v, o) =>
+                    v.Data is ReadOnlyTextFileViewModel viewModel && viewModel.Data.Equals(o),
+            };
+
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
@@ -308,6 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
             yield return new WaveOutputDataNodePresenter { GuiPlugin = this};
+            yield return new ReadOnlyTextFileDataNodePresenter {GuiPlugin = this};
         }
 
         public override void OnActiveViewChanged(IView view)
@@ -406,12 +423,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
             }
 
+            if (sender is IWaveModel model && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
+            {
+                CloseOutputFileViews(model.WaveOutputData);
+            }
+
             if (!(sender is WaveModel) || activityStatusChangedEventArgs.NewStatus != ActivityStatus.Failed)
             {
                 return;
             }
 
+
             Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        }
+
+        private void CloseOutputFileViews(IWaveOutputData outputData)
+        {
+            foreach (ReadOnlyTextFileData outputDataDiagnosticFile in outputData.DiagnosticFiles)
+            {
+                Gui.CommandHandler.RemoveAllViewsForItem(outputDataDiagnosticFile);
+            }
         }
 
         private void ConfigureWpfSettingsView(WpfSettingsView view, WaveModel waveModel)
