@@ -4,7 +4,8 @@
                    namespace="DeltaShell.Plugins.DelftModels.RealTimeControl"
                    assembly="DeltaShell.Plugins.DelftModels.RealTimeControl">
   <!-- map as subclass -->
-  <joined-subclass name="RealTimeControlModel" extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" table="rtc_models">
+  <joined-subclass name="RealTimeControlModel" extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" table="rtc_models"
+                   persister="DeltaShell.Plugins.Data.NHibernate.LegacyLoaderInjector`1[[DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy.RtcLegacyLoader37, DeltaShell.Plugins.DelftModels.RealTimeControl]], DeltaShell.Plugins.Data.NHibernate">
     <key column="project_item_id" />
     <list name="ControlGroups"
           lazy="false"
