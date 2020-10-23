@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
@@ -272,7 +272,7 @@
     <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DeleteSourcePostOperationBehaviourTest.cs" />
     <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DelftIniPostOperationBehaviourTestFixture.cs" />
     <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\WriteCategoriesPostOperationBehaviourTest.cs" />
-	  <Compile Include="DataAccess\BcwFileTest.cs" />
+    <Compile Include="DataAccess\BcwFileTest.cs" />
     <Compile Include="DataAccess\BcwTimeSeriesOfBoundaryCollectorTest.cs" />
     <Compile Include="DataAccess\Exporters\WaveModelFileExporterTest.cs" />
     <Compile Include="DataAccess\Helpers\Boundaries\BoundaryOrientationTypeDescriptionTest.cs" />
@@ -403,8 +403,9 @@
     <Compile Include="Gui\Layers\WaveLayerNamesTest.cs" />
     <Compile Include="Gui\Layers\WaveMapLayerProviderFactoryTest.cs" />
     <Compile Include="Gui\MapTools\GroupedLayerFeature2DLineToolTest.cs" />
-    <Compile Include="Gui\NodePresenters\OutputData\WaveOutputDataNodePresenterTest.cs" />    
+    <Compile Include="Gui\NodePresenters\OutputData\WaveOutputDataNodePresenterTest.cs" />
     <Compile Include="Gui\NodePresenters\SpatiallyVariantBoundaryNodePresenterTest.cs" />
+    <Compile Include="Gui\ReadOnlyTextFileViewModelTest.cs" />
     <Compile Include="Gui\WaveDomainNodePresenterTest.cs" />
     <Compile Include="Gui\WaveGuiPluginTest.cs" />
     <Compile Include="Gui\WaveModelGroupLayerTest.cs" />
