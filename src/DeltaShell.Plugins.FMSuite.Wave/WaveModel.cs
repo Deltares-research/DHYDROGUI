@@ -95,6 +95,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
             runner = new DimrRunner(this);
+            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester());
+
             BuildModel(creationCode, false);
 
             ShowModelRunConsole = false;
@@ -112,8 +114,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 #pragma warning disable 618
             BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
 #pragma warning restore 618
-
-            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester());
         }
 
         /// <summary>
@@ -545,7 +545,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             Ensure.NotNullOrEmpty(outputTargetDirectory, nameof(outputTargetDirectory));
 
-            var logHandler = new LogHandler("Saving model output", log);
+            var logHandler = new LogHandler(Resources.WaveModel_Saving_of_the_model_output, log);
 
             var targetDirectoryInfo = new DirectoryInfo(outputTargetDirectory);
             FileUtils.CreateDirectoryIfNotExists(targetDirectoryInfo.FullName);
@@ -966,7 +966,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             model.BuildWaveDomains(allDomains, model.InputDirPath, model);
 
-            var logHandler = new LogHandler("Connecting to model output", log);
+            var logHandler = new LogHandler(Resources.WaveModel_Connect_model_output, log);
             model.WaveOutputData.ConnectTo(model.OutputDirPath, false, logHandler);
             logHandler.LogReport();
         }
@@ -1404,7 +1404,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual void ConnectOutput(string outputPath)
         {
-            var logHandler = new LogHandler("Connecting to output", log);
+            var logHandler = new LogHandler(Resources.WaveModel_Connect_model_output, log);
 
             bool isInWorkingDir = outputPath.StartsWith(WorkingDirectoryPathFunc());
             WaveOutputData.ConnectTo(outputPath, isInWorkingDir, logHandler);

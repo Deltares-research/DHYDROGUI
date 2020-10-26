@@ -78,28 +78,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ConnectTo_ValidPath_Retrieves()
         {
             // Setup
-            string dataSourcePath = Path.GetFullPath("somePath");
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string dataSourcePath = tempDir.Path;
 
-            var harvester = Substitute.For<IWaveOutputDataHarvester>();
-            var logHandler = Substitute.For<ILogHandler>();
+                var harvester = Substitute.For<IWaveOutputDataHarvester>();
+                var logHandler = Substitute.For<ILogHandler>();
 
-            var diagFiles = new List<ReadOnlyTextFileData>();
+                var diagFiles = new List<ReadOnlyTextFileData>();
 
-            harvester.HarvestDiagnosticFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
-                                             logHandler)
-                     .Returns(diagFiles);
+                harvester.HarvestDiagnosticFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
+                                                 logHandler)
+                         .Returns(diagFiles);
 
-            var outputData = new WaveOutputData(harvester);
+                var outputData = new WaveOutputData(harvester);
 
-            // Call
-            outputData.ConnectTo(dataSourcePath, true, logHandler);
+                // Call
+                outputData.ConnectTo(dataSourcePath, true, logHandler);
 
-            // Assert
-            Assert.That(outputData.DiagnosticFiles, Is.SameAs(diagFiles));
-            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
+                // Assert
+                Assert.That(outputData.DiagnosticFiles, Is.SameAs(diagFiles));
+                Assert.That(logHandler.ReceivedCalls(), Is.Empty);
+            }
         }
 
         [Test]

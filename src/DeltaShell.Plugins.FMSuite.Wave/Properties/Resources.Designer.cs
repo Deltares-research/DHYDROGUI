@@ -561,6 +561,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connecting of the model output.
+        /// </summary>
+        public static string WaveModel_Connect_model_output {
+            get {
+                return ResourceManager.GetString("WaveModel_Connect_model_output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grid is set in project but doesn&apos;t contain a coordinate system. The model has co-ordinate system {0}, setting grid to this co-oordinate system type..
         /// </summary>
         public static string WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_ {
@@ -619,6 +628,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saving of the model output.
+        /// </summary>
+        public static string WaveModel_Saving_of_the_model_output {
+            get {
+                return ResourceManager.GetString("WaveModel_Saving_of_the_model_output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to With WaveSetup set to True parallel runs will fail, normal runs with lakes will produce unreliable values..
         /// </summary>
         public static string WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_ {
@@ -654,6 +672,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WaveModel110LegacyLoader_OnAfterProjectMigrated_Unlinking_existing_wavm_nc_files_" +
                         "in__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The directory at {0} does not exist, disconnecting output instead..
+        /// </summary>
+        public static string WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_output_instead_ {
+            get {
+                return ResourceManager.GetString("WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_outpu" +
+                        "t_instead_", resourceCulture);
             }
         }
         

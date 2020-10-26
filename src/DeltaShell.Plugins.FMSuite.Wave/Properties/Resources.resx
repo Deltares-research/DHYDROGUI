@@ -343,4 +343,13 @@
   <data name="WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__0__at__1__does_not_exist_" xml:space="preserve">
     <value>The specified {0} at {1} does not exist.</value>
   </data>
+  <data name="WaveModel_Connect_model_output" xml:space="preserve">
+    <value>Connecting of the model output</value>
+  </data>
+  <data name="WaveModel_Saving_of_the_model_output" xml:space="preserve">
+    <value>Saving of the model output</value>
+  </data>
+  <data name="WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_output_instead_" xml:space="preserve">
+    <value>The directory at {0} does not exist, disconnecting output instead.</value>
+  </data>
 </root>

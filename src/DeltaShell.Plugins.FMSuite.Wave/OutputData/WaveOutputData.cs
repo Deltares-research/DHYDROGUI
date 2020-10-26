@@ -3,6 +3,7 @@ using System.IO;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {
@@ -35,6 +36,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             Ensure.NotNull(dataSourcePath, nameof(dataSourcePath));
 
             var dataSourceInfo = new DirectoryInfo(dataSourcePath);
+
+            if (!dataSourceInfo.Exists)
+            {
+                logHandler?.ReportErrorFormat(Resources.WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_output_instead_, 
+                                              dataSourceInfo.FullName);
+                Disconnect();
+                return;
+            }
 
             DataSourcePath = dataSourcePath;
             IsStoredInWorkingDirectory = isStoredInWorkingDirectory;

@@ -809,6 +809,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [TestCase(false, false)]
         [TestCase(true, false)]
         [TestCase(false, true)]
@@ -816,18 +817,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void ConnectOutput_UpdatesWaveOutputDataCorrectly(bool withInitialPath, 
                                                                  bool inWorkingDirectory)
         {
+            using (var tempDir = new TemporaryDirectory())
             using (var model = new WaveModel())
             {
-                const string newPath = @"C:\a\different\output\path";
+                string newPath = tempDir.CreateDirectory("newPath");
 
                 // Setup
                 if (withInitialPath)
                 {
-                    const string initialPath = "some/toad/to/a/directory";
+                    string initialPath = tempDir.CreateDirectory("initialPath");
                     model.WaveOutputData.ConnectTo(initialPath, true);
                 }
 
-                model.WorkingDirectoryPathFunc = () => inWorkingDirectory ? @"C:\a\different\output\" : @"D:\nope\"; 
+                model.WorkingDirectoryPathFunc = () => inWorkingDirectory ? newPath : @"D:\nope\"; 
 
                 // Call
                 model.ConnectOutput(newPath);
@@ -1219,11 +1221,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
                     ((IFileBased) model).SwitchTo(modelPath);
-                    // Remove the files on disk
-                    FileUtils.DeleteIfExists(alternativeOutputPath);
 
                     // Connect to different data source
                     model.WaveOutputData.ConnectTo(alternativeOutputPath, true);
+
+                    // Remove the files on disk
+                    FileUtils.DeleteIfExists(alternativeOutputPath);
 
                     // When 
                     model.ModelSaveTo(goalMdwPath, true);
@@ -1327,19 +1330,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void WaveOutputData_EventsAreProperlyPropagated()
         {
             // Setup
+            using (var tempDir = new TemporaryDirectory())
             using (var model = new WaveModel())
             {
                 var observer = new NotifyPropertyChangedTestObserver();
                 ((INotifyPropertyChange) model).PropertyChanged += observer.OnPropertyChanged;
 
                 // Call
-                model.WaveOutputData.ConnectTo("some/not/existing/path", true);
+                model.WaveOutputData.ConnectTo(tempDir.Path, true);
 
                 // Assert
-                Assert.That(observer.NCalls, Is.EqualTo(2));
+                Assert.That(observer.NCalls, Is.EqualTo(3));
                 Assert.That(observer.Senders, Has.All.EqualTo(model.WaveOutputData));
             }
         }
