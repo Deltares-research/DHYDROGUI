@@ -927,12 +927,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private static ConnectorType GetActiveConnectionType(ShapeBase owner, Connector activeConnector)
-        {
-            ConnectorType activeConnectionType = owner is MathematicalExpressionShape ? ConvertConnectorNameToType(activeConnector.Name) : ConvertTo(activeConnector.ConnectorLocation);
-            return activeConnectionType;
-        }
-
         private static IEnumerable<Connector> FilterAllowableConnectors(ShapeBase sourceShape,
                                                                         ConnectorType sourceConnection,
                                                                         IEnumerable<Connector> availableConnectors)
@@ -948,9 +942,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 var targetShape = availableConnector.BelongsTo as ShapeBase;
 
-                ConnectorType targetConnectionType = targetShape is MathematicalExpressionShape 
-                                                         ? ConvertConnectorNameToType(availableConnector.Name)
-                                                         : ConvertTo(availableConnector.ConnectorLocation);
+                ConnectorType targetConnectionType = GetActiveConnectionType(targetShape, availableConnector);
                 if (ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
                 {
                     allowedConnectors.Add(availableConnector);
@@ -958,6 +950,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
 
             return allowedConnectors;
+        }
+
+        private static ConnectorType GetActiveConnectionType(ShapeBase owner, Connector activeConnector)
+        {
+            ConnectorType activeConnectionType = owner is MathematicalExpressionShape
+                                                     ? ConvertConnectorNameToType(activeConnector.Name)
+                                                     : ConvertTo(activeConnector.ConnectorLocation);
+            return activeConnectionType;
         }
 
         private static ConnectorType ConvertConnectorNameToType(string connectorName)
