@@ -59,3 +59,4 @@ AcceptanceModels
 src/DeltaShell.Dimr/drtc_xsd/rtcRuntimeConfig.cs
 src/DeltaShell.Dimr/xsd/dimr.cs
 .idea/
+src/DeltaShell.Dimr/dimr_xsd/dimr.cs
