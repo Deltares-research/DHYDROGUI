@@ -436,4 +436,7 @@
   <data name="RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" xml:space="preserve">
     <value>Warning</value>
   </data>
+  <data name="RtcLegacyLoader37_An_error_occurred_while_writing_file" xml:space="preserve">
+    <value>An error occurred while writing file {0}: {1}</value>
+  </data>
 </root>

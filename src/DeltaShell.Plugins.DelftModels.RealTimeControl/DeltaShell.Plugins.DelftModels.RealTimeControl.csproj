@@ -133,6 +133,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.SQLite">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\System.Data.SQLite.dll</HintPath>
     </Reference>
