@@ -108,6 +108,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        public void ConnectTo_PathDoesNotExist_DisconnectsInstead()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string dataSourcePath = tempDir.Path;
+
+                var harvester = Substitute.For<IWaveOutputDataHarvester>();
+                var logHandler = Substitute.For<ILogHandler>();
+
+                var diagFiles = new List<ReadOnlyTextFileData>();
+
+                harvester.HarvestDiagnosticFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
+                                                 logHandler)
+                         .Returns(diagFiles);
+
+                var outputData = new WaveOutputData(harvester);
+                outputData.ConnectTo(dataSourcePath, true, null);
+
+                string nonExistingPath = Path.GetFullPath("some/non/existing/toad/");
+
+                // Call
+                outputData.ConnectTo(nonExistingPath, true, logHandler);
+
+                // Assert
+                Assert.That(outputData.DiagnosticFiles, Is.Not.SameAs(diagFiles));
+                Assert.That(outputData.DiagnosticFiles, Is.Empty);
+
+                Assert.That(outputData.IsConnected, Is.False);
+                Assert.That(outputData.DataSourcePath, Is.Null);
+
+                logHandler.Received(1).ReportErrorFormat("The directory at {0} does not exist, disconnecting output instead.", 
+                                                         nonExistingPath);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void Disconnect_WithConnection_ChangesDataSourcePathToNull()
         {
             // Setup
@@ -156,5 +194,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             Assert.That(outputData.DiagnosticFiles, Is.Not.Null);
             Assert.That(outputData.DiagnosticFiles, Is.Empty);
         }
+
     }
 }
