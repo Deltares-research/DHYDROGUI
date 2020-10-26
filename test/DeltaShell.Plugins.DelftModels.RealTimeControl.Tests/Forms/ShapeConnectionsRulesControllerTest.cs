@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public static void GivenNullSourceShapeExceptionIsThrown()
         {
-            InputItemShape sourceShape = null;
+            ShapeBase sourceShape = null;
             var targetShape = Substitute.For<ShapeBase>();
             Assert.Throws<ArgumentNullException>(
                 () => ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
@@ -32,12 +32,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public static void GivenNullTargetShapeExceptionIsThrown()
         {
-            InputItemShape targetShape = null;
+            ShapeBase targetShape = null;
             var sourceShape = Substitute.For<ShapeBase>();
             Assert.Throws<ArgumentNullException>(
                 () => ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
                                                                                                           targetShape,
                                                                                                           targetBottomConnectorType));
+        }
+
+        [Test]
+        public void IsConnectorSourceCompatibleWithConnectorDestination_SourceShapeSameAsTargetShape_ReturnsFalse()
+        {
+            // Setup
+            var targetShape = Substitute.For<ShapeBase>();
+            ShapeBase sourceShape = targetShape;
+
+            // Call
+            bool result = ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape,
+                                                                                                              targetShape,
+                                                                                                              targetBottomConnectorType);
+
+            // Assert
+            Assert.That(result, Is.False);
         }
 
         [Test]

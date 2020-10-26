@@ -100,6 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         /// <param name="target">The target object.</param>
         /// <param name="targetConnector">The connector type of the target.</param>
         /// <returns><c>true</c> if the connection is valid, <c>false</c> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> or <paramref name="target"/> is <c>null</c>.</exception>
         public static bool IsConnectorSourceCompatibleWithConnectorDestination(ShapeBase source,
                                                                                ShapeBase target,
                                                                                ConnectorType targetConnector)
@@ -107,6 +108,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             if (source == null || target == null)
             {
                 throw new ArgumentNullException("Could not check if source shape is connectable with target shape.");
+            }
+
+            if (ReferenceEquals(source, target))
+            {
+                return false;
             }
 
             IEnumerable<ConnectionRule> connectionRules = connectionMapping[source.GetType()];
