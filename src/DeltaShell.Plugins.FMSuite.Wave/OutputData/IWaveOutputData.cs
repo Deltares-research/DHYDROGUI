@@ -42,6 +42,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         IReadOnlyList<ReadOnlyTextFileData> DiagnosticFiles { get; }
 
         /// <summary>
+        /// Gets the spectra files.
+        /// </summary>
+        /// <remarks>
+        /// This is guaranteed to never be null. If no diagnostic files
+        /// currently exist, or the <see cref="IWaveOutputData"/> is
+        /// disconnected, then an empty list is returned.
+        /// </remarks>
+        IReadOnlyList<ReadOnlyTextFileData> SpectraFiles { get; }
+
+        /// <summary>
         /// Connects this <see cref="IWaveOutputData"/> to the specified path,
         /// this will read all supported files from the specified folder.
         /// </summary>

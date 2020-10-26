@@ -25,10 +25,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             // Assert
             Assert.That(outputData, Is.InstanceOf<IWaveOutputData>());
             Assert.That(outputData, Is.InstanceOf<INotifyPropertyChange>());
+
             Assert.That(outputData.DataSourcePath, Is.Null);
             Assert.That(outputData.IsConnected, Is.False);
+
             Assert.That(outputData.DiagnosticFiles, Is.Not.Null);
             Assert.That(outputData.DiagnosticFiles, Is.Empty);
+
+            Assert.That(outputData.SpectraFiles, Is.Not.Null);
+            Assert.That(outputData.SpectraFiles, Is.Empty);
         }
 
         [Test]
@@ -95,6 +100,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                                  logHandler)
                          .Returns(diagFiles);
 
+                var spectraFiles = new List<ReadOnlyTextFileData>();
+                harvester.HarvestSpectraFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
+                                              logHandler)
+                         .Returns(spectraFiles);
+
                 var outputData = new WaveOutputData(harvester);
 
                 // Call
@@ -102,6 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 // Assert
                 Assert.That(outputData.DiagnosticFiles, Is.SameAs(diagFiles));
+                Assert.That(outputData.SpectraFiles, Is.SameAs(spectraFiles));
                 Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
@@ -124,6 +135,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                                  logHandler)
                          .Returns(diagFiles);
 
+                var spectraFiles = new List<ReadOnlyTextFileData>();
+                harvester.HarvestSpectraFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
+                                              logHandler)
+                         .Returns(spectraFiles);
+
                 var outputData = new WaveOutputData(harvester);
                 outputData.ConnectTo(dataSourcePath, true, null);
 
@@ -135,6 +151,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 // Assert
                 Assert.That(outputData.DiagnosticFiles, Is.Not.SameAs(diagFiles));
                 Assert.That(outputData.DiagnosticFiles, Is.Empty);
+
+                Assert.That(outputData.SpectraFiles, Is.Not.SameAs(spectraFiles));
+                Assert.That(outputData.SpectraFiles, Is.Empty);
 
                 Assert.That(outputData.IsConnected, Is.False);
                 Assert.That(outputData.DataSourcePath, Is.Null);
@@ -195,5 +214,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             Assert.That(outputData.DiagnosticFiles, Is.Empty);
         }
 
+        [Test]
+        public void Disconnect_ResetsSpectraFilesToNewEmptyList()
+        {
+            var harvester = Substitute.For<IWaveOutputDataHarvester>();
+            var outputData = new WaveOutputData(harvester);
+            IReadOnlyList<ReadOnlyTextFileData> prevSpectraFiles = outputData.SpectraFiles;
+
+            // Call
+            outputData.Disconnect();
+
+            // Assert
+            Assert.That(outputData.SpectraFiles, Is.Not.SameAs(prevSpectraFiles));
+            Assert.That(outputData.SpectraFiles, Is.Not.Null);
+            Assert.That(outputData.SpectraFiles, Is.Empty);
+        }
     }
 }
