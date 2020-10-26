@@ -30,6 +30,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
             {
                 yield return readOnlyTextFileData;
             }
+
+            if (parentNodeData.SpectraFiles.Count > 0)
+            {
+                yield return new TreeFolder(parentNodeData,
+                                            parentNodeData.SpectraFiles,
+                                            "Spectra",
+                                            FolderImageType.None);
+            }
         }
     }
 }
