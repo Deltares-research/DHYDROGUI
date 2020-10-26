@@ -267,7 +267,7 @@
     <Compile Include="Forms\Properties\RelativeTimeRulePropertiesTest.cs" />
     <Compile Include="Forms\Properties\StandardConditionPropertiesTest.cs" />
     <Compile Include="Forms\Properties\TimeConditionPropertiesTest.cs" />
-    <Compile Include="Forms\ShapeConnectionRulesControllerTest.cs" />
+    <Compile Include="Forms\ShapeConnectionsRulesControllerTest.cs" />
     <Compile Include="Forms\TimeConditionPropertiesTest.cs" />
     <Compile Include="Gui\Restart\RealTimeControlRestartFileContextMenuTest.cs" />
     <Compile Include="IO\DataAccess\BranchNodeTest.cs" />

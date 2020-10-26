@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         /// <param name="source">The source object.</param>
         /// <param name="target">The target object.</param>
         /// <param name="targetConnector">The connector type of the target.</param>
-        /// <returns> </returns>
+        /// <returns><c>true</c> if the connection is valid, <c>false</c> otherwise.</returns>
         public static bool IsConnectorSourceCompatibleWithConnectorDestination(ShapeBase source,
                                                                                ShapeBase target,
                                                                                ConnectorType targetConnector)

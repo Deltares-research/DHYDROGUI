@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 {
     [TestFixture]
-    public class ShapeConnectionRulesControllerTest
+    public class ShapeConnectionsRulesControllerTest
     {
         private static ConnectorType targetBottomConnectorType;
 
