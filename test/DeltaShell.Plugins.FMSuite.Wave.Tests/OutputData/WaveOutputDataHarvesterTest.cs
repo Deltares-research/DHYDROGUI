@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
@@ -126,6 +127,74 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 // Call
                 IReadOnlyList<ReadOnlyTextFileData> result = harvester.HarvestDiagnosticFiles(outputDir);
+
+                // Assert
+                Assert.That(result, Is.EquivalentTo(expectedDiagnosticFiles).Using(new ReadOnlyTextFileDataEqualityComparer()));
+            }
+        }
+
+        [Test]
+        public void HarvestSpectraFiles_DirectoryInfoNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var harvester = new WaveOutputDataHarvester();
+
+            // Call | Assert
+            void Call() => harvester.HarvestSpectraFiles(null);
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("outputDataDirectory"));
+        }
+
+        public static IEnumerable<TestCaseData> GetHarvestSpectraFilesValidData()
+        {
+            List<ReadOnlyTextFileData> sp1Files =
+                Enumerable.Range(0, 3)
+                          .Select(i => new ReadOnlyTextFileData($"spectra{i}.sp1", $"some content {i}"))
+                          .ToList();
+            List<ReadOnlyTextFileData> sp2Files =
+                Enumerable.Range(0, 3)
+                          .Select(i => new ReadOnlyTextFileData($"spectra{i}.sp2", $"some content {i}"))
+                          .ToList();
+
+            ReadOnlyTextFileData[] otherFiles = new[]
+            {
+                new ReadOnlyTextFileData("swan_bat.log", "Some log data."),
+                new ReadOnlyTextFileData("swn-diag.Waves", "Some diagnostic data"),
+                new ReadOnlyTextFileData("waves.mdw", "Swoosh swash"),
+            };
+            
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>(), 
+                                          new List<ReadOnlyTextFileData>());
+            yield return new TestCaseData(otherFiles, 
+                                          new List<ReadOnlyTextFileData>());
+            yield return new TestCaseData(sp1Files,
+                                          sp1Files);
+            yield return new TestCaseData(sp2Files,
+                                          sp2Files);
+            yield return new TestCaseData(sp1Files.Concat(sp2Files).ToList(),
+                                          sp1Files.Concat(sp2Files).ToList());
+            yield return new TestCaseData(sp1Files.Concat(sp2Files)
+                                                  .Concat(otherFiles)
+                                                  .ToList(),
+                                          sp1Files.Concat(sp2Files).ToList());
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(GetHarvestSpectraFilesValidData))]
+        public void HarvestSpectraFiles_ExpectedResults(IList<ReadOnlyTextFileData> inputFiles, 
+                                                        IList<ReadOnlyTextFileData> expectedDiagnosticFiles)
+        {
+            // Setup
+            var harvester = new WaveOutputDataHarvester();
+            using (var tempDir = new TemporaryDirectory())
+            {
+                BuildFiles(tempDir, inputFiles);
+                var outputDir = new DirectoryInfo(tempDir.Path);
+
+                // Call
+                IReadOnlyList<ReadOnlyTextFileData> result = harvester.HarvestSpectraFiles(outputDir);
 
                 // Assert
                 Assert.That(result, Is.EquivalentTo(expectedDiagnosticFiles).Using(new ReadOnlyTextFileDataEqualityComparer()));

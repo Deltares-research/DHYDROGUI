@@ -16,22 +16,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// <seealso cref="IWaveOutputDataHarvester" />
     public class WaveOutputDataHarvester : IWaveOutputDataHarvester
     {
-        private static bool IsDiagnosticFile(string fileName) =>
-            fileName == "swan_bat.log" ||
-            fileName == "swn-diag.Waves";
-
         private static ReadOnlyTextFileData ReadTextFile(FileInfo fileInfo) =>
             new ReadOnlyTextFileData(fileInfo.Name, File.ReadAllText(fileInfo.FullName));
 
-        public IReadOnlyList<ReadOnlyTextFileData> HarvestDiagnosticFiles(DirectoryInfo outputDataDirectory, 
-                                                                          ILogHandler logHandler = null)
+        public IReadOnlyList<ReadOnlyTextFileData> HarvestDiagnosticFiles(DirectoryInfo outputDataDirectory,
+                                                                          ILogHandler logHandler = null) =>
+            HarvestTextFiles(IsDiagnosticFile, outputDataDirectory, logHandler);
+
+        public IReadOnlyList<ReadOnlyTextFileData> HarvestSpectraFiles(DirectoryInfo outputDataDirectory,
+                                                                       ILogHandler logHandler = null) =>
+            HarvestTextFiles(IsSpectraFile, outputDataDirectory, logHandler);
+        
+        private static IReadOnlyList<ReadOnlyTextFileData> HarvestTextFiles(Func<FileInfo, bool> isRelevantFilePredicate,
+                                                                            DirectoryInfo outputDataDirectory,
+                                                                            ILogHandler logHandler)
         {
             Ensure.NotNull(outputDataDirectory, nameof(outputDataDirectory));
 
             var result = new List<ReadOnlyTextFileData>();
 
             foreach (FileInfo fileInfo in outputDataDirectory.EnumerateFiles()
-                                                             .Where(x => IsDiagnosticFile(x.Name)))
+                                                             .Where(isRelevantFilePredicate))
             {
                 try
                 {
@@ -48,5 +53,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
             return result;
         }
+
+        private static bool IsDiagnosticFile(FileInfo fileInfo) =>
+            fileInfo.Name == "swan_bat.log" ||
+            fileInfo.Name == "swn-diag.Waves";
+
+
+        private static bool IsSpectraFile(FileInfo fileInfo) =>
+            fileInfo.Extension == ".sp1" ||
+            fileInfo.Extension == ".sp2";
+
     }
 }
