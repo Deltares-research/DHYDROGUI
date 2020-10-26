@@ -51,6 +51,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataSourcePath"/> is <c>null</c>.
         /// </exception>
+        /// <remarks>
+        /// If the path at <paramref name="dataSourcePath"/> does not exist, an error is logged
+        /// and the output data is disconnected instead.
+        /// </remarks>
         void ConnectTo(string dataSourcePath, bool isStoredInWorkingDirectory, ILogHandler logHandler = null);
 
         /// <summary>
