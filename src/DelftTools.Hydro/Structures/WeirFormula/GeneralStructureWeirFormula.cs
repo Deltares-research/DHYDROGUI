@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils.Aop;
@@ -50,7 +49,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         private bool useHorizontalDoorOpeningWidthTimeSeries;
 
         private bool useLowerEdgeLevelTimeSeries;
-        private Action<object, PropertyChangedEventArgs> propertyChanged;
 
         public GeneralStructureWeirFormula()
         {
