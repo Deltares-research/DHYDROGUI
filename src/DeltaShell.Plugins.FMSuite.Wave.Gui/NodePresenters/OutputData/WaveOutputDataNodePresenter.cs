@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IWaveOutputData nodeData)
         {
-            node.Text = "Output";
+            node.Text = Properties.Resources.WaveOutputDataNodePresenter_Output;
             node.Image = outputFolderImage;
         }
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
             {
                 yield return new TreeFolder(parentNodeData,
                                             parentNodeData.SpectraFiles,
-                                            "Spectra",
+                                            Properties.Resources.WaveOutputDataNodePresenter_Spectra,
                                             FolderImageType.None);
             }
         }

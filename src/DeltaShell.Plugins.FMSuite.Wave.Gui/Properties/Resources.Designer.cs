@@ -339,6 +339,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output.
+        /// </summary>
+        public static string WaveOutputDataNodePresenter_Output {
+            get {
+                return ResourceManager.GetString("WaveOutputDataNodePresenter_Output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spectra.
+        /// </summary>
+        public static string WaveOutputDataNodePresenter_Spectra {
+            get {
+                return ResourceManager.GetString("WaveOutputDataNodePresenter_Spectra", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boundaries.
         /// </summary>
         public static string WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name {
