@@ -948,13 +948,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 var targetShape = availableConnector.BelongsTo as ShapeBase;
 
-                ConnectorType targetConnectionType = targetShape is MathematicalExpressionShape ? ConvertConnectorNameToType(availableConnector.Name) : ConvertTo(availableConnector.ConnectorLocation);
-
-                if (sourceShape == targetShape)
-                {
-                    continue;
-                }
-
+                ConnectorType targetConnectionType = targetShape is MathematicalExpressionShape 
+                                                         ? ConvertConnectorNameToType(availableConnector.Name)
+                                                         : ConvertTo(availableConnector.ConnectorLocation);
                 if (ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
                 {
                     allowedConnectors.Add(availableConnector);
