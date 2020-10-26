@@ -93,17 +93,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         };
 
         /// <summary>
-        /// Check if a connector of a specific shape is compatible with a target connector
-        /// according to a specific connectionMapping
+        /// Check if a connector of a specific shape is compatible with a target connector.
         /// </summary>
         /// <param name="source">The source object.</param>
         /// <param name="target">The target object.</param>
         /// <param name="targetConnector">The connector type of the target.</param>
         /// <returns><c>true</c> if the connection is valid, <c>false</c> otherwise.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> or <paramref name="target"/> is <c>null</c>.</exception>
-        public static bool IsConnectorSourceCompatibleWithConnectorDestination(ShapeBase source,
-                                                                               ShapeBase target,
-                                                                               ConnectorType targetConnector)
+        public static bool IsShapeCompatibleWithTarget(ShapeBase source, ShapeBase target, ConnectorType targetConnector)
         {
             if (source == null || target == null)
             {

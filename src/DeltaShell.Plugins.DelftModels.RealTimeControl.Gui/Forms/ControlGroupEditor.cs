@@ -908,11 +908,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             Connector[] allConnectors = shapeBases.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
             var owner = activeConnector.BelongsTo as ShapeBase;
 
-            if (owner is OutputItemShape)
-            {
-                return;
-            }
-
             ConnectorType activeConnectionType = GetActiveConnectionType(owner, activeConnector);
             IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors).ToList();
 
@@ -931,19 +926,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                                                                         ConnectorType sourceConnection,
                                                                         IEnumerable<Connector> availableConnectors)
         {
-            var allowedConnectors = new List<Connector>();
 
-            if (sourceShape is MathematicalExpressionShape && (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top))
+            if (sourceShape is OutputItemShape
+                || sourceShape is MathematicalExpressionShape && (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top))
             {
-                return allowedConnectors;
+                return Enumerable.Empty<Connector>();
             }
 
+            var allowedConnectors = new List<Connector>();
             foreach (Connector availableConnector in availableConnectors)
             {
                 var targetShape = availableConnector.BelongsTo as ShapeBase;
 
                 ConnectorType targetConnectionType = GetActiveConnectionType(targetShape, availableConnector);
-                if (ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
+                if (ShapeConnectionsRulesController.IsShapeCompatibleWithTarget(sourceShape, targetShape, targetConnectionType))
                 {
                     allowedConnectors.Add(availableConnector);
                 }
