@@ -106,6 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
             }
 
             weirPropertiesViewModel.Dispose();
+            (weirViewModel as IDisposable)?.Dispose();
             hasDisposed = true;
         }
 

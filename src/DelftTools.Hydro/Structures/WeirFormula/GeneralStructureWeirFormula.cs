@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils.Aop;
@@ -49,6 +50,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         private bool useHorizontalDoorOpeningWidthTimeSeries;
 
         private bool useLowerEdgeLevelTimeSeries;
+        private Action<object, PropertyChangedEventArgs> propertyChanged;
 
         public GeneralStructureWeirFormula()
         {
@@ -182,6 +184,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             set
             {
                 useHorizontalDoorOpeningWidthTimeSeries = value;
+                
                 if (useHorizontalDoorOpeningWidthTimeSeries && HorizontalDoorOpeningWidthTimeSeries == null)
                 {
                     HorizontalDoorOpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
@@ -203,13 +206,12 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             set
             {
                 useLowerEdgeLevelTimeSeries = value;
+                
                 if (useLowerEdgeLevelTimeSeries && LowerEdgeLevelTimeSeries == null)
                 {
                     LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries(
                         GuiParameterNames.GateLowerEdgeLevel, GuiParameterNames.GateLowerEdgeLevel, "m AD");
                 }
-
-                ;
             }
         }
 
