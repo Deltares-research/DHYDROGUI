@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.IO;
@@ -11,6 +12,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
     [TestFixture]
     public class RtcLegacyLoader37Test
     {
+        [Test]
+        [TestCaseSource(nameof(OnAfterInitializeArgumentNullCases))]
+        public void OnAfterInitialize_ArgumentNull_ThrowsArgumentNullException(object entity, IDbConnection dbConnection, string expParamName)
+        {
+            var legacyLoader = new RtcLegacyLoader37();
+
+            // Call
+            void Call() => legacyLoader.OnAfterInitialize(entity, dbConnection);
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo(expParamName));
+        }
+
         [Test]
         public void OnAfterProjectMigrated_ShouldSetPathPropertyOfModel()
         {
@@ -28,8 +43,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
             legacyLoader37.OnAfterProjectMigrated(project);
 
             // Assert
-            string rootPath = Path.GetDirectoryName(((IFileBased)rtcModel.Owner).Path);
-            Assert.IsTrue(((IFileBased)rtcModel).Path.StartsWith(Path.Combine(rootPath, Path.GetFileName(rtcModel.GetType().Name))));
+            string rootPath = Path.GetDirectoryName(((IFileBased) rtcModel.Owner).Path);
+            Assert.IsTrue(((IFileBased) rtcModel).Path.StartsWith(Path.Combine(rootPath, Path.GetFileName(rtcModel.GetType().Name))));
         }
 
         [Test]
@@ -37,10 +52,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
         {
             // Arrange
             var legacyLoader37 = new RtcLegacyLoader37();
-            
+
             // Act
             void Call() => legacyLoader37.OnAfterProjectMigrated(null);
-            
+
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(e.ParamName, Is.EqualTo("project"));
@@ -65,6 +80,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(e.ParamName, Is.EqualTo("rootPath"));
+        }
+
+        private static IEnumerable<TestCaseData> OnAfterInitializeArgumentNullCases()
+        {
+            yield return new TestCaseData(new object(), null, "dbConnection");
+            yield return new TestCaseData(null, Substitute.For<IDbConnection>(), "entity");
         }
     }
 }
