@@ -298,7 +298,6 @@
     <Compile Include="Readers\DHydroConfigXmlImporterTest.cs" />
     <Compile Include="Readers\HydroModelConverterTest.cs" />
     <Compile Include="Readers\HydroModelReaderTest.cs" />
-    <Compile Include="RealTimeControlDirectoryStructureTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Validation\HydroModelValidatorTest.cs" />
     <Compile Include="ViewModels\HydroModelTimeSettingsViewModelTest.cs" />
