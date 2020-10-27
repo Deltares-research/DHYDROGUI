@@ -6,16 +6,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// <summary>
     /// Class for connecting the output files of RTC.
     /// </summary>
-    public class ReadOnlyOutputTextDocument : TextDocumentBase
+    public sealed class ReadOnlyOutputTextDocument : TextDocumentBase
     {
         /// <summary>
-        /// Constructor for creating <see cref="ReadOnlyOutputTextDocument"/>.
+        /// Constructor for creating a <see cref="ReadOnlyOutputTextDocument"/>.
         /// </summary>
         /// <param name="fileName">
         /// The fileName name with extension. Extension used by node presenter
         /// for selecting correct icon.
         /// </param>
-        /// <param name="content"> The content of the file.s </param>
+        /// <param name="content"> The content of the file </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when any argument is <c>null</c>.
+        /// </exception>
         public ReadOnlyOutputTextDocument(string fileName, string content) : base(true)
         {
             Ensure.NotNull(fileName, nameof(fileName));

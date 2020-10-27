@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     public class ReadOnlyOutputTextDocumentTest
     {
         [Test]
-        public void Constructor_fileNameNull_ThrowsArgumentNullException()
+        public void Constructor_FileNameNull_ThrowsArgumentNullException()
         {
             // Act
             void Call() => new ReadOnlyOutputTextDocument(null, "");
@@ -37,8 +37,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Arrange
             Assert.AreEqual("test1", document.Name);
             Assert.AreEqual("test2", document.Content);
-
-
         }
     }
 }

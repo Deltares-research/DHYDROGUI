@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             RestartOutput = new EventedList<RestartFile>();
 
-            OutputXmlOrCsvDocuments = new EventedList<ReadOnlyOutputTextDocument>();
+            OutputDocuments = new EventedList<ReadOnlyOutputTextDocument>();
 
             runner = new DimrRunner(this);
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
@@ -179,9 +179,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
+        /// <summary>
+        /// Gets or sets the restart output files.
+        /// </summary>
         public virtual IEventedList<RestartFile> RestartOutput { get; set; }
 
-        public virtual IEventedList<ReadOnlyOutputTextDocument> OutputXmlOrCsvDocuments { get; set; }
+        /// <summary>
+        /// Gets or sets the output text documents.
+        /// </summary>
+        public virtual IEventedList<ReadOnlyOutputTextDocument> OutputDocuments { get; }
 
         //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
@@ -992,22 +998,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             IList<string> restartFiles = newOutputFiles.Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))).ToList();
             SetRestartOutputFiles(restartFiles);
 
-            IEnumerable<string> newXmlAndCsvFilePaths = newOutputFiles.Where(f => f.EndsWith(".xml") || f.EndsWith(".csv")).Except(restartFiles);
-            ReconnectXmlAndCsvFiles(newXmlAndCsvFilePaths);
+            IEnumerable<string> outputDocumentFilePaths = newOutputFiles.Where(f => f.EndsWith(".xml") || f.EndsWith(".csv")).Except(restartFiles);
+            ReconnectOutputDocuments(outputDocumentFilePaths);
 
             string rtcToFlowFilePath = Path.Combine(dirInfo.FullName, CommunicationRtcToFmFileName);
             ReconnectRtcToFmOutputFile(rtcToFlowFilePath);
         }
 
-        private void ReconnectXmlAndCsvFiles(IEnumerable<string> newXmlAndCsvFilePaths)
+        private void ReconnectOutputDocuments(IEnumerable<string> outputDocumentFilePaths)
         {
-            OutputXmlOrCsvDocuments.RemoveAllWhere(d => !newXmlAndCsvFilePaths.Any(fp => fp.EndsWith(d.Name)));
+            OutputDocuments.RemoveAllWhere(d => !outputDocumentFilePaths.Any(fp => fp.EndsWith(d.Name)));
 
-            foreach (string filePath in newXmlAndCsvFilePaths)
+            foreach (string filePath in outputDocumentFilePaths)
             {
                 string fileName = Path.GetFileName(filePath);
 
-                ReadOnlyOutputTextDocument existingTextDocument = OutputXmlOrCsvDocuments.FirstOrDefault(d => d.Name == fileName);
+                ReadOnlyOutputTextDocument existingTextDocument = OutputDocuments.FirstOrDefault(d => d.Name == fileName);
 
                 try
                 {
@@ -1023,7 +1029,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     {
                         var textDocument = new ReadOnlyOutputTextDocument(fileName, log);
                         
-                        OutputXmlOrCsvDocuments.Add(textDocument);
+                        OutputDocuments.Add(textDocument);
                     }
                 }
                 catch (Exception ex)
@@ -1207,7 +1213,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public override IEnumerable<object> GetDirectChildren()
         {
-            return base.GetDirectChildren().Concat(OutputFeatureCoverages).Concat(OutputXmlOrCsvDocuments);
+            return base.GetDirectChildren().Concat(OutputFeatureCoverages).Concat(OutputDocuments);
         }
 
         /// <summary>

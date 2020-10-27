@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             // Setup
             RealTimeControlModelNodePresenter nodePresenter = GetRealTimeControlModelNodePresenter();
             var model = new RealTimeControlModel();
-            model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument("test.xml", "test"));
+            model.OutputDocuments.Add(new ReadOnlyOutputTextDocument("test.xml", "test"));
 
             // Call
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
