@@ -158,6 +158,7 @@
     </Reference>
     <Reference Include="DeltaShell.Plugins.ProjectExplorer">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>

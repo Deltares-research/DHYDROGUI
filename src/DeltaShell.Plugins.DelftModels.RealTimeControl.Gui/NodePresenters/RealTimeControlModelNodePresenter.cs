@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
                 yield return outputFeatureCoverage;
             }
 
-            foreach (ReadOnlyOutputTextDocument textDocument in model.OutputXmlOrCsvDocuments)
+            foreach (ReadOnlyOutputTextDocument textDocument in model.OutputDocuments)
             {
                 yield return textDocument;
             }

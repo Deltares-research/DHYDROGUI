@@ -244,8 +244,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 
                 for (var i = 0; i < 5; i++)
                 {
-                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument($"test{i}.csv", ""));
-                    model.OutputXmlOrCsvDocuments.Add(new ReadOnlyOutputTextDocument( $"test{i}.xml", ""));
+                    model.OutputDocuments.Add(new ReadOnlyOutputTextDocument($"test{i}.csv", ""));
+                    model.OutputDocuments.Add(new ReadOnlyOutputTextDocument( $"test{i}.xml", ""));
                 }
 
                 // Act
@@ -292,7 +292,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         private static void ChecksForOutputXmlOrCsvDocuments(RealTimeControlModel model, string[] relevantFiles)
         {
-            ReadOnlyOutputTextDocument[] textDocuments = model.OutputXmlOrCsvDocuments.ToArray();
+            ReadOnlyOutputTextDocument[] textDocuments = model.OutputDocuments.ToArray();
             Assert.That(textDocuments, Has.Length.EqualTo(10));
 
             for (var i = 0; i < relevantFiles.Length; i++)
@@ -1338,7 +1338,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
 
                 Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
-                Assert.AreEqual(1, rtcModel.OutputXmlOrCsvDocuments.Count);
+                Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
         
@@ -1372,7 +1372,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
                 
                 Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
-                Assert.AreEqual(1, rtcModel.OutputXmlOrCsvDocuments.Count);
+                Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
 
@@ -1410,7 +1410,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.IsFalse(Directory.Exists(projectDirectoryAfterSave));
                 
                 Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
-                Assert.AreEqual(1, rtcModel.OutputXmlOrCsvDocuments.Count);
+                Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
 
@@ -1455,7 +1455,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.OpenProject(pathPersistentFolder);
 
                 // Then
-                Assert.AreEqual(1, rtcModel.OutputXmlOrCsvDocuments.Count);
+                Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
 
