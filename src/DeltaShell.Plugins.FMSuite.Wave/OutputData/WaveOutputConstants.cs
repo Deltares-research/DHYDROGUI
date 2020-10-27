@@ -15,5 +15,15 @@
         /// The name of the diagnostic file produced by the SWAN kernel.
         /// </summary>
         public const string SwanDiagnosticFileName = "swn-diag.Waves";
+
+        /// <summary>
+        /// The .sp1 extension, used by spectra files produced by the SWAN kernel.
+        /// </summary>
+        public const string sp1Extension = ".sp1";
+
+        /// <summary>
+        /// The .sp2 extension, used by spectra files produced by the SWAN kernel.
+        /// </summary>
+        public const string sp2Extension = ".sp2";
     }
 }

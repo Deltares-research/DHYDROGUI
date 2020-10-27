@@ -62,8 +62,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
 
         private static bool IsSpectraFile(FileInfo fileInfo) =>
-            fileInfo.Extension == ".sp1" ||
-            fileInfo.Extension == ".sp2";
+            fileInfo.Extension == WaveOutputConstants.sp1Extension ||
+            fileInfo.Extension == WaveOutputConstants.sp2Extension;
 
     }
 }
