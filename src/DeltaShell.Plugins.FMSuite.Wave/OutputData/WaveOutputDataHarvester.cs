@@ -57,8 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         }
 
         private static bool IsDiagnosticFile(FileInfo fileInfo) =>
-            fileInfo.Name == "swan_bat.log" ||
-            fileInfo.Name == "swn-diag.Waves";
+            fileInfo.Name == WaveOutputConstants.SwanLogFileName ||
+            fileInfo.Name == WaveOutputConstants.SwanDiagnosticFileName;
 
 
         private static bool IsSpectraFile(FileInfo fileInfo) =>
