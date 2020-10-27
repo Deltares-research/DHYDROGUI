@@ -64,6 +64,15 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.Data.NHibernate, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.125-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+    </Reference>
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
     </Reference>
@@ -109,6 +118,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
+      <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
+      <Name>DeltaShell.Plugins.NetworkEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

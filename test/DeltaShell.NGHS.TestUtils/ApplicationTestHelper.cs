@@ -1,9 +1,17 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
+using DelftTools.Shell.Core;
+using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.Core;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.SharpMapGis;
 using NSubstitute;
 
 namespace DeltaShell.NGHS.TestUtils
 {
-    public class ApplicationTestHelper
+    public static class ApplicationTestHelper
     {
         /// <summary>
         /// Get a substitute for Application Setting for the Working Directory, which can be set as one of user settings.
@@ -21,6 +29,30 @@ namespace DeltaShell.NGHS.TestUtils
             applicationSettings["WorkDirectory"] = workDirectory;
 
             return applicationSettings;
+        }
+
+        public static DeltaShellApplication GetApplication(string workDir, params ApplicationPlugin[] plugins)
+        {
+            var app = new DeltaShellApplication
+            {
+                UserSettings = GetMockedApplicationSettingsBase(workDir),
+                IsProjectCreatedInTemporaryDirectory = true
+            };
+
+            app.Plugins.AddRange(GetStandardPlugins());
+            app.Plugins.AddRange(plugins);
+
+            app.Run();
+
+            return app;
+        }
+
+        private static IEnumerable<ApplicationPlugin> GetStandardPlugins()
+        {
+            yield return new NHibernateDaoApplicationPlugin();
+            yield return new CommonToolsApplicationPlugin();
+            yield return new SharpMapGisApplicationPlugin();
+            yield return new NetworkEditorApplicationPlugin();
         }
     }
 }
