@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.IO;
+﻿using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -9,9 +8,6 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
-    [ExcludeFromCodeCoverage]
-    [Category(TestCategory.Integration)]
-    [Category(TestCategory.VerySlow)]
     [TestFixture]
     public class RealTimeControlDirectoryStructureTest
     {
