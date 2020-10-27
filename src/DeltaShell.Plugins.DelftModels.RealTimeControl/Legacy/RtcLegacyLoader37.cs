@@ -102,14 +102,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
         private void RestoreRestartFiles(string rootPath, RealTimeControlModel model)
         {
-            string targetDirPath = Path.Combine(rootPath, model.Name, DirectoryNameConstants.OutputDirectoryName);
-
-            DbFile[] restartFiles = restoreRestartData[model];
-            if (!restartFiles.Any())
+            if (!restoreRestartData.TryGetValue(model, out DbFile[] restartFiles) ||
+                !restartFiles.Any())
             {
                 return;
             }
 
+            string targetDirPath = Path.Combine(rootPath, model.Name, DirectoryNameConstants.OutputDirectoryName);
             Directory.CreateDirectory(targetDirPath);
 
             restartFiles.ForEach(f => f.WriteTo(targetDirPath));
