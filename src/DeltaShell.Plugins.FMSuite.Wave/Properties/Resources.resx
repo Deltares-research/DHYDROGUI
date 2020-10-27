@@ -352,4 +352,7 @@
   <data name="WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_output_instead_" xml:space="preserve">
     <value>The directory at {0} does not exist, disconnecting output instead.</value>
   </data>
+  <data name="WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__" xml:space="preserve">
+    <value>Could not read file: {0} due to {1}.</value>
+  </data>
 </root>

@@ -686,6 +686,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not read file: {0} due to {1}..
+        /// </summary>
+        public static string WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__ {
+            get {
+                return ResourceManager.GetString("WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified {0} at {1} does not exist..
         /// </summary>
         public static string WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__0__at__1__does_not_exist_ {

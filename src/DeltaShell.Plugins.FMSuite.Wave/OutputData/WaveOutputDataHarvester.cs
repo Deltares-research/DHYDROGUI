@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {
@@ -47,7 +48,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
                                           e is UnauthorizedAccessException ||
                                           e is SecurityException)
                 {
-                    logHandler?.ReportWarning($"Could not read file: {fileInfo.Name} due to {e.Message}.");
+                    logHandler?.ReportWarningFormat(Resources.WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__, 
+                                                    fileInfo.Name, e.Message);
                 }
             }
 
