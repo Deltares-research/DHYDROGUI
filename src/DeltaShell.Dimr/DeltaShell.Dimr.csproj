@@ -84,6 +84,8 @@
     <Compile Include="dimr_xsd\dimr.cs">
       <DependentUpon>dimr.xsd</DependentUpon>
     </Compile>
+    <Compile Include="dimr_xsd\dimr.custom.cs" />
+    <Compile Include="dimr_xsd\DimrXMLSerializer.cs" />
     <Compile Include="drtc_xsd\rtcRuntimeConfig.cs">
       <DependentUpon>rtcRuntimeConfig.xsd</DependentUpon>
     </Compile>
@@ -98,8 +100,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RemoteDimrApi.cs" />
-    <Compile Include="xsd\dimr.custom.cs" />
-    <Compile Include="xsd\DimrXMLSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

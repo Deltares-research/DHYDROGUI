@@ -9,7 +9,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.Properties;
-using DeltaShell.Dimr.Xsd;
+using DeltaShell.Dimr.DimrXsd;
 using log4net;
 
 namespace DeltaShell.Dimr
