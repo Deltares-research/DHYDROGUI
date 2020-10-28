@@ -371,12 +371,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="Uml\HydroAreaCollection.cd" />
-    <None Include="Uml\FlowBoundaryConditions.cd" />
     <Compile Include="Model\WaterFlowFMModel.Spatial.cs" />
     <Compile Include="IO\WaterFlowFMModel110LegacyLoader.cs" />
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />
-    <None Include="Uml\FlowFMOverview.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

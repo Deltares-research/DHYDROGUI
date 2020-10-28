@@ -100,7 +100,6 @@
     <Compile Include="RemoteDimrApi.cs" />
     <Compile Include="xsd\dimr.custom.cs" />
     <Compile Include="xsd\DimrXMLSerializer.cs" />
-    <Compile Include="xsd\DimrModelExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -111,7 +110,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="UML\DimrOverview.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">

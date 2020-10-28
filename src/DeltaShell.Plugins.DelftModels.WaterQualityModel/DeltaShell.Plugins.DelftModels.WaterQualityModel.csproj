@@ -178,7 +178,6 @@
     <None Include="plct\plct_eco.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="UML\WaterQualityOverview.cd" />
     <None Include="waq_kernel\Data\Default\coefedit_duflow.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
