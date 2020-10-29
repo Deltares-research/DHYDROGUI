@@ -13,6 +13,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private static readonly Dictionary<Type, IEnumerable<ConnectionRule>> connectionMapping = new Dictionary<Type, IEnumerable<ConnectionRule>>
         {
             {
+                typeof(OutputItemShape), Enumerable.Empty<ConnectionRule>()
+            },
+            {
                 typeof(InputItemShape), new[]
                 {
                     new ConnectionRule(typeof(ConditionShape), new HashSet<ConnectorType>(new[]

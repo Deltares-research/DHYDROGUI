@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Shapes;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using NSubstitute;
@@ -57,6 +58,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         }
 
         [Test]
+        [TestCaseSource(nameof(GetOutputCompatibleConnectionsTestCaseData))]
+        public static void GivenOutputShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
+        {
+            bool result = ShapeConnectionsRulesController.IsShapeCompatibleWithTarget(sourceShape, targetShape, connectorType);
+            Assert.That(result, Is.EqualTo(isCompatible));
+        }
+
+        [Test]
         [TestCaseSource(nameof(GetInputCompatibleConnectionsTestCaseData))]
         public static void GivenInputShapeToTargetShapeCorrectConnectorsAreSelected(ShapeBase sourceShape, ShapeBase targetShape, ConnectorType connectorType, bool isCompatible)
         {
@@ -94,6 +103,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             bool result = ShapeConnectionsRulesController.IsShapeCompatibleWithTarget(sourceShape, targetShape, connectorType);
             Assert.That(result, Is.EqualTo(isCompatible));
+        }
+
+        private class TestShape : ShapeBase
+        {
+            protected override void Initialize()
+            {
+                // Test object and thus nothing should happen
+            }
+        }
+
+        private static IEnumerable<TestCaseData> GetOutputCompatibleConnectionsTestCaseData()
+        {
+            yield return new TestCaseData(new OutputItemShape(), new TestShape(), ConnectorType.Bottom, false);
+            yield return new TestCaseData(new OutputItemShape(), new TestShape(), ConnectorType.Top, false);
+            yield return new TestCaseData(new OutputItemShape(), new TestShape(), ConnectorType.Left, false);
+            yield return new TestCaseData(new OutputItemShape(), new TestShape(), ConnectorType.Right, false);
         }
 
         private static IEnumerable<TestCaseData> GetInputCompatibleConnectionsTestCaseData()
