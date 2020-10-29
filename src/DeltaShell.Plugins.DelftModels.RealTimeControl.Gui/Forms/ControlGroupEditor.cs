@@ -904,12 +904,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 return;
             }
 
-            ShapeBase[] shapeBases = shapesOnGraph as ShapeBase[] ?? shapesOnGraph.ToArray();
+            ShapeBase[] shapeBases = shapesOnGraph.ToArray();
             Connector[] allConnectors = shapeBases.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
             var owner = activeConnector.BelongsTo as ShapeBase;
 
             ConnectorType activeConnectionType = GetActiveConnectionType(owner, activeConnector);
-            IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors).ToList();
+            IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors);
 
             if (!allowedConnectors.Any())
             {
