@@ -62,7 +62,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
                 yield return waveDomain;
             }
 
-            yield return model.WaveOutputData;
+            if (model.WaveOutputData.IsConnected)
+            {
+                yield return model.WaveOutputData;
+            }
         }
     }
 }
