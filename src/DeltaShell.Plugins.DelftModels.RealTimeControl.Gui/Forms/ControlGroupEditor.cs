@@ -927,8 +927,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                                                                         IEnumerable<Connector> availableConnectors)
         {
 
-            if (sourceShape is OutputItemShape
-                || sourceShape is MathematicalExpressionShape && (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top))
+            if (sourceShape is MathematicalExpressionShape && (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top))
             {
                 return Enumerable.Empty<Connector>();
             }
