@@ -211,7 +211,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Uml\BoundaryConditions.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">

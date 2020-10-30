@@ -192,9 +192,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Uml\dimrExporter.cd" />
-    <None Include="Uml\HydroModel.cd" />
-    <None Include="Uml\HydroModelWithWorkFlows.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HydroModel.hbm.xml">
@@ -227,9 +224,6 @@
     <EmbeddedResource Include="HydroModel.1.0.0.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HydroModel.1.1.1.hbm.xml" />

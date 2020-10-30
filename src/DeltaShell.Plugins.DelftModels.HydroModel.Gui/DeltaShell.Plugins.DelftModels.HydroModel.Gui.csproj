@@ -141,9 +141,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Forms\SettingsWpf\FMSettingsView.cd" />
     <None Include="packages.config" />
-    <None Include="Uml\HydroModelGui.cd" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
@@ -280,9 +278,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PropertyClasses\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

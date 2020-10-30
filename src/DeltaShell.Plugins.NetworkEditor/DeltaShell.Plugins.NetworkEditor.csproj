@@ -228,10 +228,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Uml\NetworkEditor.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="NetworkEditor.cd" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
