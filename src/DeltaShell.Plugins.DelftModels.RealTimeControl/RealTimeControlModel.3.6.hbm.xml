@@ -20,10 +20,6 @@
     <property name="SaveStateStartTime" />
     <property name="SaveStateStopTime" />
     <property name="SaveStateTimeStep" />
-
-    <!--<property name="WriteRestart" />
-
-    <many-to-one access="property" name="RestartInput" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart.RealTimeControlRestartFile, DeltaShell.Plugins.DelftModels.RealTimeControl" />-->
     
     <property name="CoordinateSystem" column="coordinate_system" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis" />
     <many-to-one name="OutputFileFunctionStore" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.IO.RealTimeControlOutputFileFunctionStore, DeltaShell.Plugins.DelftModels.RealTimeControl" />
