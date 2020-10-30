@@ -135,39 +135,42 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
         private static IEnumerable<RealTimeControlModel> GetModels(Project project) => project.RootFolder.GetAllItemsRecursive().OfType<RealTimeControlModel>();
 
+        /// <summary>
+        /// The <see cref="DbFile"/> represents a row of the resulted table from the query in the
+        /// <see cref="RetrieveRestartFileDataQueryForModel"/> method.
+        /// </summary>
         private class DbFile
         {
+            /// <summary>
+            /// The value of the "name" column, which contains the name of the restart file.
+            /// </summary>
             private string name;
+
+            /// <summary>
+            /// The value of the "content" column, which contains the content of the restart file.
+            /// </summary>
             private string content;
 
+            /// <summary>
+            /// Writes the current instance to the specified <see cref="targetDirPath"/>.
+            /// </summary>
+            /// <param name="targetDirPath"> The path of the directory to write the file to. </param>
             public void WriteTo(string targetDirPath)
             {
-                TryWriteFile(Path.Combine(targetDirPath, name), content);
-            }
+                string filePath = Path.Combine(targetDirPath, name);
 
-            private static void TryWriteFile(string filePath, string fileContent)
-            {
                 try
                 {
-                    File.WriteAllText(filePath, fileContent);
+                    File.WriteAllText(filePath, content);
                 }
-                catch (IOException e)
+                catch (Exception e) when (e is IOException ||
+                                          e is UnauthorizedAccessException ||
+                                          e is SecurityException)
                 {
-                    LogException(filePath, e.Message);
+                    logHandler.ReportErrorFormat(Resources.RtcLegacyLoader37_An_error_occurred_while_writing_file,
+                                                 filePath,
+                                                 e.Message);
                 }
-                catch (UnauthorizedAccessException e)
-                {
-                    LogException(filePath, e.Message);
-                }
-                catch (SecurityException e)
-                {
-                    LogException(filePath, e.Message);
-                }
-            }
-
-            private static void LogException(string filePath, string exceptionMessage)
-            {
-                logHandler.ReportError(string.Format(Resources.RtcLegacyLoader37_An_error_occurred_while_writing_file, filePath, exceptionMessage));
             }
         }
     }
