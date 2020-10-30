@@ -8,7 +8,6 @@ using System.Security;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
@@ -63,14 +62,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
         /// of each <see cref="RealTimeControlModel"/> in the specified <paramref name="project"/>.
         /// </summary>
         /// <param name="project">The project.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="project"/> is <c>null</c>.
         /// </exception>
         public override void OnAfterProjectMigrated(Project project)
         {
             Ensure.NotNull(project, nameof(project));
 
-            GetModels(project).ForEach(MigrateModel);
+            foreach (RealTimeControlModel model in GetModels(project))
+            {
+                MigrateModel(model);
+            }
 
             logHandler.LogReport();
 
@@ -114,7 +116,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             string targetDirPath = Path.Combine(rootPath, model.Name, DirectoryNameConstants.OutputDirectoryName);
             Directory.CreateDirectory(targetDirPath);
 
-            restartFiles.ForEach(f => f.WriteTo(targetDirPath));
+            foreach (DbFile file in restartFiles)
+            {
+                file.WriteTo(targetDirPath);
+            }
         }
 
         private static IEnumerable<RealTimeControlModel> GetModels(Project project) => project.RootFolder.GetAllItemsRecursive().OfType<RealTimeControlModel>();
