@@ -26,9 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             DisableCaching = true;
         }
 
-        //nhib
-        protected WavmFileFunctionStore() : base() {}
-
         /// <summary>
         /// Gets the grid of this <see cref="WavmFileFunctionStore"/>.
         /// </summary>
