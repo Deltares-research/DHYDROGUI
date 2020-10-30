@@ -312,8 +312,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Boundaries\BoundaryModel.cd" />
-    <None Include="Boundaries\ConditionDefinitions\ConditionDefinition.cd" />
     <None Include="dwave-properties.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -322,7 +320,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\wave.png" />
-    <None Include="Uml\WaveOverview.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="WaveModel.hbm.xml" />

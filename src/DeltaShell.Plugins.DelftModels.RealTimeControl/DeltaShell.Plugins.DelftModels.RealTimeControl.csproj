@@ -321,8 +321,6 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Uml\RealTimeControl.cd" />
-    <None Include="Uml\RealTimeControlXmlReaderWriter.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
