@@ -9,12 +9,17 @@ using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {
+    /// <summary>
+    /// <see cref="WavmFileFunctionStore"/> extends the <see cref="FMNetCdfFileFunctionStore"/>
+    /// in order to support wave map files.
+    /// </summary>
+    /// <seealso cref="FMNetCdfFileFunctionStore" />
     public class WavmFileFunctionStore : FMNetCdfFileFunctionStore
     {
-        private const string NSizeDimensionName = "nmax";
-        private const string MSizeDimensionName = "mmax";
-        private const string XCoordinateVariableName = "x";
-        private const string YCoordinateVariableName = "y";
+        private const string nSizeDimensionName = "nmax";
+        private const string mSizeDimensionName = "mmax";
+        private const string xCoordinateVariableName = "x";
+        private const string yCoordinateVariableName = "y";
 
         public WavmFileFunctionStore(string ncPath) : base(ncPath)
         {
@@ -24,6 +29,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         //nhib
         protected WavmFileFunctionStore() : base() {}
 
+        /// <summary>
+        /// Gets the grid of this <see cref="WavmFileFunctionStore"/>.
+        /// </summary>
         public CurvilinearGrid Grid { get; private set; }
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
@@ -34,8 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             if (dimNames.Intersect(new[]
             {
                 TimeDimensionNames[0],
-                NSizeDimensionName,
-                MSizeDimensionName
+                nSizeDimensionName,
+                mSizeDimensionName
             }).Count() != 3)
             {
                 yield break;
@@ -85,13 +93,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         {
             var grid = CurvilinearGrid.CreateDefault();
 
-            int sizeN = netCdfFile.GetDimensionLength(NSizeDimensionName);
-            int sizeM = netCdfFile.GetDimensionLength(MSizeDimensionName);
+            int sizeN = netCdfFile.GetDimensionLength(nSizeDimensionName);
+            int sizeM = netCdfFile.GetDimensionLength(mSizeDimensionName);
 
             using (var nc = new NetCdfFileWrapper(netCdfFile.Path))
             {
-                IList<double> x = nc.GetValues1D<double>(XCoordinateVariableName);
-                IList<double> y = nc.GetValues1D<double>(YCoordinateVariableName);
+                IList<double> x = nc.GetValues1D<double>(xCoordinateVariableName);
+                IList<double> y = nc.GetValues1D<double>(yCoordinateVariableName);
                 grid.Resize(sizeN, sizeM, x, y);
             }
 
