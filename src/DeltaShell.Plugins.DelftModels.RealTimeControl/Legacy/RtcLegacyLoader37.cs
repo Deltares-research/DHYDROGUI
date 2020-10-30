@@ -19,6 +19,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 {
     /// <summary>
     /// Legacy loader for <see cref="RealTimeControlApplicationPlugin"/> version 3.7.0.
+    /// Upon opening the project, the Path property of the <see cref="RealTimeControlModel"/> will be set,
+    /// and the output restart files of the <see cref="RealTimeControlModel"/> will be retrieved from the
+    /// database to be written to the output folder of the model.
     /// </summary>
     public sealed class RtcLegacyLoader37 : LegacyLoader
     {
