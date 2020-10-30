@@ -439,4 +439,7 @@
   <data name="RtcLegacyLoader37_An_error_occurred_while_writing_file" xml:space="preserve">
     <value>An error occurred while writing file {0}: {1}</value>
   </data>
+  <data name="RtcLegacyLoader37_migration_of_the_rtc_model" xml:space="preserve">
+    <value>the migration of the D-RTC model</value>
+  </data>
 </root>

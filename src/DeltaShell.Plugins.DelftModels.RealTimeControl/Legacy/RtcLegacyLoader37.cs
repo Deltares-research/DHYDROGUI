@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
     /// </summary>
     public sealed class RtcLegacyLoader37 : LegacyLoader
     {
-        private static readonly ILogHandler logHandler = new LogHandler("the migration of the D-RTC model", typeof(RtcLegacyLoader37));
+        private static readonly ILogHandler logHandler = new LogHandler(Resources.RtcLegacyLoader37_migration_of_the_rtc_model, typeof(RtcLegacyLoader37));
         private readonly IDictionary<RealTimeControlModel, DbFile[]> restoreRestartData = new Dictionary<RealTimeControlModel, DbFile[]>();
 
         /// <summary>

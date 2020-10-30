@@ -1036,6 +1036,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to the migration of the D-RTC model.
+        /// </summary>
+        public static string RtcLegacyLoader37_migration_of_the_rtc_model {
+            get {
+                return ResourceManager.GetString("RtcLegacyLoader37_migration_of_the_rtc_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap rtcmodel {
