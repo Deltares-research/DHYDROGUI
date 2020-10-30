@@ -104,7 +104,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             Ensure.NotNull(rootPath, nameof(rootPath));
 
             RestoreRestartFiles(rootPath, model);
+            SwitchModelPath(model, rootPath);
+        }
 
+        private static void SwitchModelPath(RealTimeControlModel model, string rootPath)
+        {
             string className = Path.GetFileName(model.GetType().Name);
             string newPath = Path.Combine(rootPath, className + "-" + Guid.NewGuid());
 
