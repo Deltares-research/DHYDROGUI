@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// <see cref="WavmFileFunctionStore"/> extends the <see cref="FMNetCdfFileFunctionStore"/>
     /// in order to support wave map files.
     /// </summary>
-    /// <seealso cref="FMNetCdfFileFunctionStore" />
+    /// <seealso cref="FMNetCdfFileFunctionStore"/>
     public class WavmFileFunctionStore : FMNetCdfFileFunctionStore
     {
         private const string nSizeDimensionName = "nmax";
@@ -21,6 +21,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         private const string xCoordinateVariableName = "x";
         private const string yCoordinateVariableName = "y";
 
+        private const string timeArgumentName = "Time";
+        private const string columnArgumentName = "N";
+        private const string rowArgumentName = "M";
+
+        /// <summary>
+        /// Creates a new <see cref="WavmFileFunctionStore"/>.
+        /// </summary>
+        /// <param name="ncPath">The nc path.</param>
         public WavmFileFunctionStore(string ncPath) : base(ncPath)
         {
             DisableCaching = true;
@@ -34,56 +42,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             Grid = ReadGridFromFile();
+            return HasValidNetCdfDimensions() ? ConstructCoveragesFromVariables(dataVariables) : Enumerable.Empty<IFunction>();
+        }
 
-            IEnumerable<string> dimNames = netCdfFile.GetAllDimensions().Select(d => netCdfFile.GetDimensionName(d));
-            if (dimNames.Intersect(new[]
+        private bool HasValidNetCdfDimensions()
+        {
+            var dimensionNames =
+                new HashSet<string>(netCdfFile.GetAllDimensions()
+                                              .Select(d => netCdfFile.GetDimensionName(d)));
+
+            return dimensionNames.Contains(TimeDimensionNames[0]) &&
+                   dimensionNames.Contains(nSizeDimensionName) &&
+                   dimensionNames.Contains(mSizeDimensionName);
+        }
+
+        private IEnumerable<CurvilinearCoverage> ConstructCoveragesFromVariables(IEnumerable<NetCdfVariableInfo> variables) =>
+            variables.Where(IsValidVariable)
+                     .Select(ConstructCoverage);
+
+        private static bool IsValidVariable(NetCdfVariableInfo variableInfo) =>
+            variableInfo.IsTimeDependent && variableInfo.NumDimensions == 3;
+
+        private CurvilinearCoverage ConstructCoverage(NetCdfVariableInfo variableInfo)
+        {
+            var coverage = new CurvilinearCoverage(Grid)
             {
-                TimeDimensionNames[0],
-                nSizeDimensionName,
-                mSizeDimensionName
-            }).Count() != 3)
-            {
-                yield break;
-            }
+                IsTimeDependent = true,
+                Store = this,
+                Name = netCdfFile.GetVariableName(variableInfo.NetCdfDataVariable),
+                IsEditable = false
+            };
 
-            foreach (NetCdfVariableInfo varInfo in dataVariables)
-            {
-                if (!varInfo.IsTimeDependent || varInfo.NumDimensions != 3)
-                {
-                    continue;
-                }
+            coverage.Arguments[0].Name = timeArgumentName;
+            coverage.Arguments[0].Attributes[NcNameAttribute] = TimeVariableNames[0];
+            coverage.Arguments[0].Attributes[NcUseVariableSizeAttribute] = "true";
+            coverage.Arguments[0].Attributes[NcRefDateAttribute] = variableInfo.ReferenceDate;
+            coverage.Arguments[0].IsEditable = false;
 
-                var coverage = new CurvilinearCoverage(Grid) {IsTimeDependent = true};
-                coverage.Store = this;
+            List<NetCdfDimension> variableDims = netCdfFile.GetDimensions(variableInfo.NetCdfDataVariable).ToList();
+            coverage.Arguments[1].Name = columnArgumentName;
+            coverage.Arguments[1].Attributes[NcNameAttribute] = netCdfFile.GetDimensionName(variableDims[1]);
+            coverage.Arguments[1].Attributes[NcUseVariableSizeAttribute] = "false";
+            coverage.Arguments[1].IsEditable = false;
 
-                coverage.Arguments[0].Name = "Time";
-                coverage.Arguments[0].Attributes[NcNameAttribute] = TimeVariableNames[0];
-                coverage.Arguments[0].Attributes[NcUseVariableSizeAttribute] = "true";
-                coverage.Arguments[0].Attributes[NcRefDateAttribute] = varInfo.ReferenceDate;
-                coverage.Arguments[0].IsEditable = false;
+            coverage.Arguments[2].Name = rowArgumentName;
+            coverage.Arguments[2].Attributes[NcNameAttribute] = netCdfFile.GetDimensionName(variableDims[2]);
+            coverage.Arguments[2].Attributes[NcUseVariableSizeAttribute] = "false";
+            coverage.Arguments[2].IsEditable = false;
 
-                List<NetCdfDimension> variableDims = netCdfFile.GetDimensions(varInfo.NetCdfDataVariable).ToList();
-                coverage.Arguments[1].Name = "N";
-                coverage.Arguments[1].Attributes[NcNameAttribute] = netCdfFile.GetDimensionName(variableDims[1]);
-                coverage.Arguments[1].Attributes[NcUseVariableSizeAttribute] = "false";
-                coverage.Arguments[1].IsEditable = false;
+            string variableName = netCdfFile.GetVariableName(variableInfo.NetCdfDataVariable);
+            coverage.Components[0].Name = variableName;
+            coverage.Components[0].Attributes[NcNameAttribute] = variableName;
+            coverage.Components[0].Attributes[NcUseVariableSizeAttribute] = "true";
+            coverage.Components[0].IsEditable = false;
 
-                coverage.Arguments[2].Name = "M";
-                coverage.Arguments[2].Attributes[NcNameAttribute] = netCdfFile.GetDimensionName(variableDims[2]);
-                coverage.Arguments[2].Attributes[NcUseVariableSizeAttribute] = "false";
-                coverage.Arguments[2].IsEditable = false;
-
-                string variableName = netCdfFile.GetVariableName(varInfo.NetCdfDataVariable);
-                coverage.Components[0].Name = variableName;
-                coverage.Components[0].Attributes[NcNameAttribute] = variableName;
-                coverage.Components[0].Attributes[NcUseVariableSizeAttribute] = "true";
-                coverage.Components[0].IsEditable = false;
-
-                coverage.Name = netCdfFile.GetVariableName(varInfo.NetCdfDataVariable);
-                coverage.IsEditable = false;
-
-                yield return coverage;
-            }
+            return coverage;
         }
 
         private CurvilinearGrid ReadGridFromFile()
