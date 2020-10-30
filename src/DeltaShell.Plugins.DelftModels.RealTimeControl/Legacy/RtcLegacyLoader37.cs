@@ -82,13 +82,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
         private void Execute(IDbConnection dbConnection, RealTimeControlModel model)
         {
             restoreRestartData[model] = new DataContext(dbConnection)
-                                        .ExecuteQuery<DbFile>("SELECT RealTimeControlRestartFile.name, RealTimeControlRestartFile.content " +
-                                                              "FROM ((RealTimeControlRestartFile " +
-                                                              "INNER JOIN activities ON RealTimeControlRestartFile.rtc_restart_output_id = activities.project_item_id) " +
-                                                              "INNER JOIN rtc_models ON RealTimeControlRestartFile.rtc_restart_output_id = rtc_models.project_item_id) " +
-                                                              $"WHERE activities.name = '{model.Name}';")
+                                        .ExecuteQuery<DbFile>(RetrieveRestartFileDataQueryForModel(model.Name))
                                         .ToArray();
         }
+
+        /// <summary>
+        /// Retrieves the names and content of the output restart files
+        /// for the model with the specified <paramref name="modelName"/>.
+        /// </summary>
+        private static string RetrieveRestartFileDataQueryForModel(string modelName) =>
+            "SELECT RealTimeControlRestartFile.name, RealTimeControlRestartFile.content " +
+            "FROM ((RealTimeControlRestartFile " +
+            "INNER JOIN activities ON RealTimeControlRestartFile.rtc_restart_output_id = activities.project_item_id) " +
+            "INNER JOIN rtc_models ON RealTimeControlRestartFile.rtc_restart_output_id = rtc_models.project_item_id) " +
+            $"WHERE activities.name = '{modelName}';";
 
         private void MigrateModel(RealTimeControlModel model)
         {
