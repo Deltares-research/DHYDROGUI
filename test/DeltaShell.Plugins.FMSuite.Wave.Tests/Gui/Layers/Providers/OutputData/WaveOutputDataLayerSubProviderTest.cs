@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Gui.Layers;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
@@ -135,16 +138,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GenerateChildLayerObjects_ReturnsWaveOutputChildObjects()
+        {
+            // Setup
+            const string filePath = "./WaveOutputDataHarvesterTest/wavm-Waves.nc";
+
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
+            var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string ncPath = tempDir.CopyTestDataFileToTempDirectory(filePath);
+                WavmFileFunctionStore[] mapStores = { new WavmFileFunctionStore(ncPath) };
+
+                var outputData = Substitute.For<IWaveOutputData>();
+                outputData.WavmFileFunctionStores.Returns(mapStores);
+
+                // Call
+                IList<object> result = provider.GenerateChildLayerObjects(outputData).ToList();
+
+                // Assert
+                // TODO: this needs to be extended
+                Assert.That(result, Has.Member(mapStores));
+            }
+        }
+
+        [Test]
+        public void GenerateChildLayerObjects_InvalidData_ReturnsEmptyCollection()
         {
             // Setup
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
-            var outputData = Substitute.For<IWaveOutputData>();
 
-            // Call | Assert
-            // TODO: this needs to be extended
-            Assert.That(provider.GenerateChildLayerObjects(outputData), Is.Empty);
+            // Call
+            IEnumerable<object> result = provider.GenerateChildLayerObjects(new object());
+
+            // Assert
+            Assert.That(result, Is.Empty);
         }
     }
 }

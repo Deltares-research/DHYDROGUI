@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
@@ -40,7 +41,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)
         {
-            yield break;
+            if (!(data is IWaveOutputData outputData))
+            {
+                yield break;
+            }
+
+            if (outputData.WavmFileFunctionStores.Any(x => x.Functions.Any()))
+            {
+                yield return outputData.WavmFileFunctionStores;
+            }
         }
     }
 }
