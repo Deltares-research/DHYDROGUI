@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
@@ -16,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     public class WavmFileFunctionStoreLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerInstanceCreator instanceCreator;
-        private readonly Func<IEnumerable<WaveModel>> getWaveModelsFunc;
+        private readonly Func<IEnumerable<IWaveModel>> getWaveModelsFunc;
 
         /// <summary>
         /// Creates a new <see cref="WavmFileFunctionStoreLayerSubProvider"/>.
@@ -28,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
         /// <paramref name="getWaveModelsFunc"/> is <c>null</c>.
         /// </exception>
         public WavmFileFunctionStoreLayerSubProvider(IWaveLayerInstanceCreator instanceCreator,
-                                                     Func<IEnumerable<WaveModel>> getWaveModelsFunc)
+                                                     Func<IEnumerable<IWaveModel>> getWaveModelsFunc)
         {
             Ensure.NotNull(instanceCreator, nameof(instanceCreator));
             Ensure.NotNull(getWaveModelsFunc, nameof(getWaveModelsFunc));
@@ -43,55 +45,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
                    store.Functions.Any();
         }
 
-        public ILayer CreateLayer(object sourceData, object parentData)
-        {
-            // TODO: D3DFMIQ-2283
-            return null;
-            //if (!(sourceData is WavmFileFunctionStore store &&
-            //      store.Functions.Any()))
-            //{
-            //    return null;
-            //}
+        public ILayer CreateLayer(object sourceData, object parentData) =>
+            sourceData is WavmFileFunctionStore funcStore ? instanceCreator.CreateWaveOutputGroupLayer(Path.GetFileName(funcStore.Path)) : null;
 
-            //string domainName = store.Path;
-            //var overrideDomainName = true;
-
-            //if (parentData is IWaveModel model)
-            //{
-            //    IDataItem dataItem = model.GetDataItemByValue(store);
-            //    string dataItemTag = dataItem.Tag;
-
-            //    if (dataItemTag.StartsWith(WaveModel.WavmStoreDataItemTag))
-            //    {
-            //        var paramsValue = new string(dataItemTag.Skip(WaveModel.WavmStoreDataItemTag.Length).ToArray());
-            //        domainName = string.Join(" ", paramsValue, "WAVM");
-            //        overrideDomainName = false;
-            //    }
-            //}
-
-            //return factory.CreateOutputLayer(domainName, overrideDomainName);
-        }
+        protected bool IsStandAloneFunctionStore(WavmFileFunctionStore store) =>
+            !getWaveModelsFunc.Invoke().Any(m => m.WaveOutputData.WavmFileFunctionStores.Contains(store));
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)
         {
-            // TODO: D3DFMIQ-2283
-            yield break;
+            if (!(data is WavmFileFunctionStore store))
+            {
+                yield break;
+            }
 
-            //if (!(data is WavmFileFunctionStore store))
-            //{
-            //    yield break;
-            //}
+            if (IsStandAloneFunctionStore(store))
+            {
+                yield return store.Grid;
+            }
 
-            //WaveModel waveModel = getWaveModelsFunc?.Invoke().FirstOrDefault(m => m.WavmFunctionStores.Contains(store));
-            //if (waveModel == null)
-            //{
-            //    yield return store.Grid;
-            //}
-
-            //foreach (IFunction coverage in store.Functions)
-            //{
-            //    yield return coverage;
-            //}
+            foreach (IFunction coverage in store.Functions)
+            {
+                yield return coverage;
+            }
         }
     }
 }
