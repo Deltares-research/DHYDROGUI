@@ -1,4 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -209,5 +209,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateWaveOutputDataLayer(IWaveOutputData outputData);
+
+        /// <summary>
+        /// Creates a new output group layer with the given <paramref name="layerName"/>.
+        /// </summary>
+        /// <param name="layerName">Name of the domain.</param>
+        /// <returns>
+        /// A new output <see cref="ILayer"/>.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="layerName"/> is <c>null</c>.
+        /// </exception>
+        ILayer CreateWaveOutputGroupLayer(string layerName);
     }
 }

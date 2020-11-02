@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using DelftTools.Utils.Guards;
@@ -235,7 +235,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         {
             Ensure.NotNull(outputData, nameof(outputData));
 
-            return new GroupLayer(WaveLayerNames.WaveOutputDataLayerName) {LayersReadOnly = true};
+            return CreateWaveOutputGroupLayer(WaveLayerNames.WaveOutputDataLayerName);
+        }
+
+        public ILayer CreateWaveOutputGroupLayer(string layerName)
+        {
+            Ensure.NotNull(layerName, nameof(layerName));
+            return new GroupLayer(layerName) {LayersReadOnly = true};
         }
 
         public ILayer CreateSelectedSupportPointLayer(IFeatureProvider featureProvider)

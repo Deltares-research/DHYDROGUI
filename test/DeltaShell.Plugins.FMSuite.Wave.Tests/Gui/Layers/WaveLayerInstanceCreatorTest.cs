@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -552,6 +552,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Assert
             Assert.That(layer, Is.InstanceOf<GroupLayer>());
             Assert.That(layer.Name, Is.EqualTo(WaveLayerNames.WaveOutputDataLayerName));
+            Assert.That(((GroupLayer) layer).LayersReadOnly, Is.True);
+        }
+
+        [Test]
+        public void CreateWaveOutputGroupLayer_LayerNameNull_ThrowsArgumentNullException()
+        {
+            var instanceCreator = new WaveLayerInstanceCreator();
+
+            void Call() => instanceCreator.CreateWaveOutputGroupLayer(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("layerName"));
+        }
+
+        [Test]
+        public void CreateWaveOutputGroupLayer_LayerNameNotNull_ExpectedResults()
+        {
+            // Setup
+            const string outputName = "Map Files";
+            var instanceCreator = new WaveLayerInstanceCreator();
+
+            // Call
+            ILayer layer = instanceCreator.CreateWaveOutputGroupLayer(outputName);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<GroupLayer>());
+            Assert.That(layer.Name, Is.EqualTo(outputName));
             Assert.That(((GroupLayer) layer).LayersReadOnly, Is.True);
         }
 
