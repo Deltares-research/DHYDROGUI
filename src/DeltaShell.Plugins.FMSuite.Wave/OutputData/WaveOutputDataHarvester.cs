@@ -27,7 +27,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         public IReadOnlyList<ReadOnlyTextFileData> HarvestSpectraFiles(DirectoryInfo outputDataDirectory,
                                                                        ILogHandler logHandler = null) =>
             HarvestTextFiles(IsSpectraFile, outputDataDirectory, logHandler);
-        
+
+        public IReadOnlyList<WavmFileFunctionStore> HarvestWavmFileFunctionStores(DirectoryInfo outputDataDirectory, ILogHandler logHandler = null)
+        {
+            Ensure.NotNull(outputDataDirectory, nameof(outputDataDirectory));
+
+            var result = new List<WavmFileFunctionStore>();
+
+            foreach (FileInfo fileInfo in outputDataDirectory.EnumerateFiles()
+                                                             .Where(IsWavmFileFunctionStore))
+            {
+                // TODO: see if we can cache this somehow.
+                // could consider calculating a hash value here, and use that to determine whether we 
+                // can reuse the existing nc file or create a new one.
+                try
+                {
+                    result.Add(new WavmFileFunctionStore(fileInfo.FullName));
+                }
+                catch (Exception e) when (e is PathTooLongException ||
+                                          e is IOException ||
+                                          e is UnauthorizedAccessException ||
+                                          e is SecurityException)
+                {
+                    logHandler?.ReportWarningFormat(Resources.WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__, 
+                                                    fileInfo.Name, e.Message);
+                }
+            }
+
+            return result;
+        }
+
         private static IReadOnlyList<ReadOnlyTextFileData> HarvestTextFiles(Func<FileInfo, bool> isRelevantFilePredicate,
                                                                             DirectoryInfo outputDataDirectory,
                                                                             ILogHandler logHandler)
@@ -65,5 +94,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             fileInfo.Extension == WaveOutputConstants.sp1Extension ||
             fileInfo.Extension == WaveOutputConstants.sp2Extension;
 
+        private static bool IsWavmFileFunctionStore(FileInfo fileInfo) =>
+            fileInfo.Name.StartsWith(WaveOutputConstants.MapFilePrefix) &&
+            fileInfo.Extension == WaveOutputConstants.ncExtension;
     }
 }

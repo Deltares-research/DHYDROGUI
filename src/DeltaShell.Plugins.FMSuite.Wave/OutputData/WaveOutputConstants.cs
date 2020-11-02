@@ -25,5 +25,20 @@
         /// The .sp2 extension, used by spectra files produced by the SWAN kernel.
         /// </summary>
         public const string sp2Extension = ".sp2";
+
+        /// <summary>
+        /// The map file prefix
+        /// </summary>
+        public const string MapFilePrefix = "wavm-";
+
+        /// <summary>
+        /// The history file prefix
+        /// </summary>
+        public const string HisFilePrefix = "wavh-";
+
+        /// <summary>
+        /// The .nc extension, used by Wave map and history files.
+        /// </summary>
+        public const string ncExtension = ".nc";
     }
 }

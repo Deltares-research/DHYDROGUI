@@ -209,6 +209,105 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             }
         }
 
+        [Test]
+        public void HarvestWavmFileFunctionStores_DirectoryInfoNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var harvester = new WaveOutputDataHarvester();
+
+            // Call | Assert
+            void Call() => harvester.HarvestWavmFileFunctionStores(null);
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("outputDataDirectory"));
+        }
+
+        public static IEnumerable<TestCaseData> GetHarvestWavmFileFunctionStoresValidData()
+        {
+            IList<string> sp1Files =
+                Enumerable.Range(0, 3)
+                          .Select(i => $"spectra{i}.sp1")
+                          .ToList();
+            IList<string> sp2Files =
+                Enumerable.Range(0, 3)
+                          .Select(i => $"spectra{i}.sp2")
+                          .ToList();
+
+            IList<string> wavhFiles =
+                Enumerable.Range(0, 3)
+                          .Select(i => $"wavh-Waves{i}.nc")
+                          .ToList();
+
+            IList<string> otherFiles =
+                new [] {
+                        "swan_bat.log",
+                        "swn-diag.Waves",
+                        "waves.mdw",}
+                    .Concat(sp1Files)
+                    .Concat(sp2Files)
+                    .ToList();
+
+            IList<string> wavmFiles =
+                Enumerable.Range(0, 3)
+                          .Select(i => $"wavm-Waves{i}.nc")
+                          .ToList();
+            
+            yield return new TestCaseData(new List<string>(), 
+                                          new List<string>());
+            yield return new TestCaseData(otherFiles, 
+                                          new List<string>());
+            yield return new TestCaseData(wavhFiles, 
+                                          new List<string>());
+            yield return new TestCaseData(otherFiles.Concat(wavhFiles).ToList(), 
+                                          new List<string>());
+            yield return new TestCaseData(new List<string>(),
+                                          wavmFiles);
+            yield return new TestCaseData(otherFiles,
+                                          wavmFiles);
+            yield return new TestCaseData(wavhFiles,
+                                          wavmFiles);
+            yield return new TestCaseData(otherFiles.Concat(wavhFiles).ToList(),
+                                          wavmFiles);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(GetHarvestWavmFileFunctionStoresValidData))]
+        public void HarvestWavmFileFunctionStores_ExpectedResults(IList<string> inputTextFiles, 
+                                                                  IList<string> wavmFiles)
+        {
+            // Setup
+            var harvester = new WaveOutputDataHarvester();
+            using (var tempDir = new TemporaryDirectory())
+            {
+                foreach (string inputFileName in inputTextFiles)
+                {
+                    tempDir.CreateFile(inputFileName);
+                }
+
+                var expectedPaths = new List<string>();
+                foreach (string wavmFileName in wavmFiles)
+                {
+                    string testPath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavm-Waves.nc");
+                    string storePath = Path.Combine(Path.GetDirectoryName(testPath), wavmFileName);
+                    File.Move(testPath, storePath);
+
+                    expectedPaths.Add(storePath);
+                }
+
+                var outputDir = new DirectoryInfo(tempDir.Path);
+
+                // Call
+                IReadOnlyList<WavmFileFunctionStore> result = 
+                    harvester.HarvestWavmFileFunctionStores(outputDir);
+
+                // Assert
+                Assert.That(result.Count, Is.EqualTo(expectedPaths.Count));
+                List<string> resultPaths = result.Select(x => x.Path).ToList();
+                Assert.That(resultPaths, Is.EquivalentTo(expectedPaths));
+            }
+        }
+
         private class ReadOnlyTextFileDataEqualityComparer : IEqualityComparer<ReadOnlyTextFileData>
         {
             public bool Equals(ReadOnlyTextFileData x, ReadOnlyTextFileData y)
