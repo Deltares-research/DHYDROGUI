@@ -3,6 +3,8 @@ using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Shell.Gui.Swf;
+using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NSubstitute;
@@ -117,6 +119,59 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
 
             IEnumerable<ReadOnlyTextFileData> children = outputFolder.ChildItems.Cast<ReadOnlyTextFileData>();
             Assert.That(children, Is.EquivalentTo(spectraFiles));
+        }
+
+        [Test]
+        public void GetChildNodeObjects_WavmFileFunctionStoresEmpty_ReturnsNoMapFilesOutputFolder()
+        {
+            // Setup
+            var nodePresenter = new WaveOutputDataNodePresenter();
+            var node = Substitute.For<ITreeNode>();
+            var nodeData = Substitute.For<IWaveOutputData>();
+
+            nodeData.WavmFileFunctionStores.Returns(new List<WavmFileFunctionStore>());
+
+            // Call
+            List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
+                                               .Cast<object>().ToList();
+
+            // Assert
+            object outputFolder = result.FirstOrDefault(x => x is TreeFolder tf && tf.Text == "Map Files");
+            Assert.That(outputFolder, Is.Null);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetChildNodeObjects_WavmFileFunctionStoresNotEmpty_ReturnsNoMapFilesOutputFolder()
+        {
+            // Setup
+            var nodePresenter = new WaveOutputDataNodePresenter();
+            var node = Substitute.For<ITreeNode>();
+            var nodeData = Substitute.For<IWaveOutputData>();
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string functionStorePath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavm-Waves.nc");
+                var wavmFileFunctionStores = new[]
+                {
+                    new WavmFileFunctionStore(functionStorePath), 
+                    new WavmFileFunctionStore(functionStorePath), 
+                    new WavmFileFunctionStore(functionStorePath), 
+                };
+                
+                nodeData.WavmFileFunctionStores.Returns(wavmFileFunctionStores);
+
+                // Call
+                List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
+                                                   .Cast<object>().ToList();
+
+                // Assert
+                var outputFolder = result.FirstOrDefault(x => x is TreeFolder tf && tf.Text == "Map Files") as TreeFolder;
+                Assert.That(outputFolder, Is.Not.Null);
+
+                IEnumerable<WavmFileFunctionStore> children = outputFolder.ChildItems.Cast<WavmFileFunctionStore>();
+                Assert.That(children, Is.EquivalentTo(wavmFileFunctionStores));
+            }
         }
     }
 }

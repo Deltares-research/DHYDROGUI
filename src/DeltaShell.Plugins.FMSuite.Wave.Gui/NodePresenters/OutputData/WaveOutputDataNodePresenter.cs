@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Drawing;
+using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
@@ -36,6 +37,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
                 yield return new TreeFolder(parentNodeData,
                                             parentNodeData.SpectraFiles,
                                             Properties.Resources.WaveOutputDataNodePresenter_Spectra,
+                                            FolderImageType.None);
+            }
+
+            if (parentNodeData.WavmFileFunctionStores.Any(x => x.Functions.Any()))
+            {
+                yield return new TreeFolder(parentNodeData, 
+                                            parentNodeData.WavmFileFunctionStores.Where(x => x.Functions.Any()),
+                                            Properties.Resources.WaveOutputDataNodePresenter_Map_Files,
                                             FolderImageType.None);
             }
         }
