@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         public bool IsStoredInWorkingDirectory { get; private set; } = false;
         public IReadOnlyList<ReadOnlyTextFileData> DiagnosticFiles { get; private set; } = new List<ReadOnlyTextFileData>();
         public IReadOnlyList<ReadOnlyTextFileData> SpectraFiles { get; private set; } = new List<ReadOnlyTextFileData>();
-
+        public IReadOnlyList<WavmFileFunctionStore> WavmFileFunctionStores { get; private set; } = new List<WavmFileFunctionStore>();
 
         public void ConnectTo(string dataSourcePath, 
                               bool isStoredInWorkingDirectory,
@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
            
             ConnectDiagnosticFiles(dataSourceInfo, logHandler);
             ConnectSpectraFiles(dataSourceInfo, logHandler);
+            ConnectWavmFileFunctionStores(dataSourceInfo, logHandler);
         }
 
         private void ConnectDiagnosticFiles(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
@@ -60,6 +61,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         private void ConnectSpectraFiles(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
             SpectraFiles = harvester.HarvestSpectraFiles(dataSourceInfo, logHandler);
 
+        private void ConnectWavmFileFunctionStores(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
+            WavmFileFunctionStores = harvester.HarvestWavmFileFunctionStores(dataSourceInfo, logHandler);
+
         public void Disconnect()
         {
             DataSourcePath = null;
@@ -67,6 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
             DiagnosticFiles = new List<ReadOnlyTextFileData>();
             SpectraFiles = new List<ReadOnlyTextFileData>();
+            WavmFileFunctionStores = new List<WavmFileFunctionStore>();
         }
     }
 }

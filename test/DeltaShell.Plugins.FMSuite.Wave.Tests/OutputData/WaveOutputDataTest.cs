@@ -34,6 +34,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
             Assert.That(outputData.SpectraFiles, Is.Not.Null);
             Assert.That(outputData.SpectraFiles, Is.Empty);
+
+            Assert.That(outputData.WavmFileFunctionStores, Is.Not.Null);
+            Assert.That(outputData.WavmFileFunctionStores, Is.Empty);
         }
 
         [Test]
@@ -105,6 +108,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                               logHandler)
                          .Returns(spectraFiles);
 
+                var wavmFileFunctionStores = new List<WavmFileFunctionStore>();
+                harvester.HarvestWavmFileFunctionStores(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
+                                                        logHandler)
+                         .Returns(wavmFileFunctionStores);
+
                 var outputData = new WaveOutputData(harvester);
 
                 // Call
@@ -113,6 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 // Assert
                 Assert.That(outputData.DiagnosticFiles, Is.SameAs(diagFiles));
                 Assert.That(outputData.SpectraFiles, Is.SameAs(spectraFiles));
+                Assert.That(outputData.WavmFileFunctionStores, Is.SameAs(wavmFileFunctionStores));
                 Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
@@ -140,6 +149,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                               logHandler)
                          .Returns(spectraFiles);
 
+                var wavmFileFunctionStores = new List<WavmFileFunctionStore>();
+                harvester.HarvestWavmFileFunctionStores(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
+                                                        logHandler)
+                         .Returns(wavmFileFunctionStores);
+
                 var outputData = new WaveOutputData(harvester);
                 outputData.ConnectTo(dataSourcePath, true, null);
 
@@ -154,6 +168,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 Assert.That(outputData.SpectraFiles, Is.Not.SameAs(spectraFiles));
                 Assert.That(outputData.SpectraFiles, Is.Empty);
+
+                Assert.That(outputData.WavmFileFunctionStores, Is.Not.SameAs(wavmFileFunctionStores));
+                Assert.That(outputData.WavmFileFunctionStores, Is.Empty);
 
                 Assert.That(outputData.IsConnected, Is.False);
                 Assert.That(outputData.DataSourcePath, Is.Null);
@@ -228,6 +245,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             Assert.That(outputData.SpectraFiles, Is.Not.SameAs(prevSpectraFiles));
             Assert.That(outputData.SpectraFiles, Is.Not.Null);
             Assert.That(outputData.SpectraFiles, Is.Empty);
+        }
+
+        [Test]
+        public void Disconnect_ResetsWavmFileFunctionStoreToNewEmptyList()
+        {
+            var harvester = Substitute.For<IWaveOutputDataHarvester>();
+            var outputData = new WaveOutputData(harvester);
+            IReadOnlyList<WavmFileFunctionStore> prevWavmFiles = outputData.WavmFileFunctionStores;
+
+            // Call
+            outputData.Disconnect();
+
+            // Assert
+            Assert.That(outputData.WavmFileFunctionStores, Is.Not.SameAs(prevWavmFiles));
+            Assert.That(outputData.WavmFileFunctionStores, Is.Not.Null);
+            Assert.That(outputData.WavmFileFunctionStores, Is.Empty);
         }
     }
 }
