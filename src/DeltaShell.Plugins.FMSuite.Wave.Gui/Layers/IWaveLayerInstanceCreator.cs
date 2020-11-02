@@ -1,4 +1,4 @@
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -34,19 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Thrown when <paramref name="domain"/> is <c>null</c>.
         /// </exception>
         ILayer CreateWaveDomainDataLayer(WaveDomainData domain);
-
-        /// <summary>
-        /// Creates a new output layer with the given <paramref name="domainName"/>.
-        /// </summary>
-        /// <param name="domainName">Name of the domain.</param>
-        /// <param name="overrideLayerName">if set to <c>true</c> use the <paramref name="domainName"/> verbatim.</param>
-        /// <returns>
-        /// A new output <see cref="ILayer"/>.
-        /// </returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="domainName"/> is <c>null</c>.
-        /// </exception>
-        ILayer CreateOutputLayer(string domainName, bool overrideLayerName = false);
 
         /// <summary>
         /// Creates a new grid layer from the given <paramref name="discreteGrid"/>

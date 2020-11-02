@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using DelftTools.Utils.Guards;
@@ -103,17 +103,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 },
                 NameIsReadOnly = true
             };
-        }
-
-        public ILayer CreateOutputLayer(string domainName, bool overrideLayerName = false)
-        {
-            Ensure.NotNull(domainName, nameof(domainName));
-
-            string layerName = overrideLayerName
-                                   ? domainName
-                                   : WaveLayerNames.GetOutputLayerName(domainName);
-
-            return new GroupLayer(layerName) {LayersReadOnly = true};
         }
 
         public ILayer CreateGridLayer(IDiscreteGridPointCoverage discreteGrid,

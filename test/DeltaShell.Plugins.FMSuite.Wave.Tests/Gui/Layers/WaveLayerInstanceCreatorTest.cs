@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -190,41 +190,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("waveModel"));
-        }
-
-        [Test]
-        [TestCase(true, "domainName", "domainName")]
-        [TestCase(false, "domainName", "Output (domainName)")]
-        public void CreateOutputLayer_ValidDomainName_ReturnsCorrectResults(bool overrideLayerName,
-                                                                            string domainName,
-                                                                            string expectedName)
-        {
-            // Setup
-            var instanceCreator = new WaveLayerInstanceCreator();
-
-            // Call
-            ILayer layer = instanceCreator.CreateOutputLayer(domainName, overrideLayerName);
-
-            // Assert
-            Assert.That(layer, Is.InstanceOf<GroupLayer>());
-            Assert.That(layer.Name, Is.EqualTo(expectedName));
-
-            var groupLayer = (GroupLayer) layer;
-            Assert.That(groupLayer.LayersReadOnly, Is.True);
-        }
-
-        [Test]
-        public void CreateOutputLayer_DomainNameNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            var instanceCreator = new WaveLayerInstanceCreator();
-
-            // Call
-            void Call() => instanceCreator.CreateOutputLayer(null);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception, Has.Property("ParamName").EqualTo("domainName"));
         }
 
         [Test]
