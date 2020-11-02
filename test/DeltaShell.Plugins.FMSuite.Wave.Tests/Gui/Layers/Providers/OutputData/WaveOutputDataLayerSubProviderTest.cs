@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             Assert.That(exception.ParamName, Is.EqualTo("instanceCreator"));
         }
 
-        private static IEnumerable<TestCaseData> CanCreateLayerForData()
+        public static IEnumerable<TestCaseData> CanCreateLayerForData()
         {
             var notOutputData = new object();
             var notConnectedOutputData = Substitute.For<IWaveOutputData>();
