@@ -12,6 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
     /// <see cref="WaveOutputDataNodePresenter"/> implements the node presenter
     /// for the <see cref="IWaveOutputData"/>.
     /// </summary>
+    /// <seealso cref="TreeViewNodePresenterBaseForPluginGui{IWaveOutputData}" />
     public class WaveOutputDataNodePresenter : TreeViewNodePresenterBaseForPluginGui<IWaveOutputData>
     {
         private static readonly Bitmap outputFolderImage = Resources.folder_output;
