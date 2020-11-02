@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -339,7 +339,9 @@
     <Compile Include="Layers\Providers\ObservationCrossSectionLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObservationPointLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObstacleLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\OutputData\WaveMapFileFunctionStoreGroupLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\OutputData\WaveOutputDataLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\OutputData\WaveFileFunctionStoreGroupLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveModelLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\OutputData\WavmFileFunctionStoreLayerSubProvider.cs" />
