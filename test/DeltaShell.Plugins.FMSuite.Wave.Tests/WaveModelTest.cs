@@ -1344,7 +1344,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 model.WaveOutputData.ConnectTo(tempDir.Path, true);
 
                 // Assert
-                Assert.That(observer.NCalls, Is.EqualTo(3));
+                Assert.That(observer.NCalls, Is.EqualTo(5));
                 Assert.That(observer.Senders, Has.All.EqualTo(model.WaveOutputData));
             }
         }
