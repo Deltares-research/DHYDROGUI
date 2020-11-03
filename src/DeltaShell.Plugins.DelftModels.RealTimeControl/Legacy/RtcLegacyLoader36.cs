@@ -7,10 +7,8 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
@@ -22,11 +20,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
     /// </summary>
     public class RtcLegacyLoader36 : LegacyLoader
     {
-        private readonly LegacyLoader nextLegacyLoader = new RtcLegacyLoader37();
         private const string restartFileName = "state_import.xml";
         private const string metaDataFileName = "metadata.xml";
         private static readonly ILogHandler logHandler = new LogHandler("the migration of the D-RTC model", typeof(RtcLegacyLoader36));
-        private readonly Regex timeRegex = new Regex(@"\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}");
+        private static readonly Regex timeRegex = new Regex(@"\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}");
+        private readonly LegacyLoader nextLegacyLoader = new RtcLegacyLoader37();
 
         /// <summary>
         /// Called after the project migrated.
@@ -48,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             nextLegacyLoader.OnAfterProjectMigrated(project);
         }
 
-        private void MigrateModel(RealTimeControlModel model)
+        private static void MigrateModel(RealTimeControlModel model)
         {
             string rootPath = Path.GetDirectoryName(((IFileBased) model.Owner).Path);
 
@@ -59,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             logHandler.ReportWarning(string.Format(Resources.RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_restart_file_settings, model.Name));
         }
 
-        private void ReorganizeRestartOutput(string rootPath, string modelName)
+        private static void ReorganizeRestartOutput(string rootPath, string modelName)
         {
             foreach (string stateFilePath in SearchStateFiles(rootPath, modelName))
             {
@@ -90,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             FileUtils.DeleteIfExists(rtcExplicitWorkingDir);
         }
 
-        private string GetNewFileName(string stateFile)
+        private static string GetNewFileName(string stateFile)
         {
             string timeStr = timeRegex.Match(stateFile).Value.Replace("-", "");
 
