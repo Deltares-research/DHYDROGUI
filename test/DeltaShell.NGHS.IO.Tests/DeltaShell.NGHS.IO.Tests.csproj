@@ -106,13 +106,14 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.4.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\protobuf-net.2.4.0\lib\net40\protobuf-net.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51501\lib\net461\DeltaShell\protobuf-net.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ProtoBufRemote, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ProtoBufRemote.1.0.8\lib\net40\ProtoBufRemote.dll</HintPath>
+	<Reference Include="ProtoBufRemote">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51501\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.51501\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
