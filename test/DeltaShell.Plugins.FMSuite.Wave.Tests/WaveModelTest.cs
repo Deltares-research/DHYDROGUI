@@ -15,6 +15,7 @@ using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -470,25 +471,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.Jira)] // D3DFMIQ-2272
-        public void TestUpdatingGridFileIsSyncedWithDataItemTag()
-        {
-            //const string originalName = "Outer";
-            //const string newName = "Blarg";
-
-            //var waveModel = new WaveModel {OuterDomain = new WaveDomainData(originalName)};
-
-            //var dataItem = waveModel.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + originalName) as DataItem;
-            //Assert.NotNull(dataItem);
-
-            //// Simulate setting a new Grid Filepath
-            //waveModel.OuterDomain.GridFileName = newName;
-
-            //Assert.AreEqual(WaveModel.WavmStoreDataItemTag + newName, dataItem.Tag);
-            Assert.Fail("Needs to be reimplemented as part of the D-Waves output epic D3DFMIQ-2272");
-        }
-
-        [Test]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ClearOutput_WithSwanRunLogDataItem_ThenSwanRunLogContentIsEmpty()
         {
             //// Setup
@@ -551,7 +533,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ConnectOutput_ShouldConnectWavmFileAndReadSwanDiagFile()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -566,154 +547,46 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 waveModel.ConnectOutput(outputDirectoryInTemp);
 
                 // Assert
-                Assert.IsFalse(waveModel.OutputIsEmpty);
                 Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves.nc"),
-                                waveModel.WavmFunctionStores.First().Path);
+                                waveModel.WaveOutputData.WavmFileFunctionStores.First().Path);
 
-                IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == "SwanLogDataItemTag");
-                Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")),
-                                ((TextDocument) swanLogDataItem.Value).Content);
+                ReadOnlyTextFileData swnDiagData = waveModel.WaveOutputData.DiagnosticFiles.First(x => x.DocumentName == "swn-diag.Waves");
+                Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")), swnDiagData.Content);
             }
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
-        public void ConnectOutput_WhenOutputWAVMFileIsMissing_ShouldGiveLogWarningToUser()
-        {
-            // Arrange
-            using (var waveModel = new WaveModel())
-            {
-                string outputDirectory =
-                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "NotExisting");
-
-                // Act and Assert
-                var expectedMssg =
-                    $"Could not find output (WAVM) file: {Path.Combine(outputDirectory, "wavm-Waves.nc")}";
-                TestHelper.AssertAtLeastOneLogMessagesContains(() => waveModel.ConnectOutput(outputDirectory),
-                                                               expectedMssg);
-                Assert.IsTrue(waveModel.OutputIsEmpty);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void ConnectOutput_WhenModelHasMultipleDomains_ShouldConnectWavmFileAndReadSwanDiagFile()
         {
-            //using (var tempDirectory = new TemporaryDirectory())
-            //using (var waveModel = new WaveModel())
-            //{
-            //    // Arrange
-            //    waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("Inner"));
-
-            //    string outputDirectory =
-            //        Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains");
-            //    string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
-
-            //    // Act
-            //    waveModel.ConnectOutput(outputDirectoryInTemp);
-
-            //    // Assert
-            //    Assert.IsFalse(waveModel.OutputIsEmpty);
-            //    IEnumerable<WavmFileFunctionStore> functionStores = waveModel.WavmFunctionStores.ToList();
-            //    Assert.AreEqual(2, functionStores.Count());
-            //    Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves-Outer.nc"),
-            //                    functionStores.First().Path);
-            //    Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves-Inner.nc"),
-            //                    functionStores.Last().Path);
-
-            //    IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == WaveModel.SwanLogDataItemTag);
-            //    Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")),
-            //                    ((TextDocument) swanLogDataItem.Value).Content);
-            //}
-            Assert.Fail("Should be improved as part of D3DFMIQ-2286");
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
-        public void ConnectOutput_WhenModelHasMultipleDomainsAndOutputWAVMFilesAreMissing_ShouldGiveLogWarningToUser()
-        {
-            // Arrange
+            using (var tempDirectory = new TemporaryDirectory())
             using (var waveModel = new WaveModel())
             {
+                // Arrange
                 waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("Inner"));
 
                 string outputDirectory =
-                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "NotExisting");
-
-                // Act
-                IEnumerable<string> messages = TestHelper
-                                               .GetAllRenderedMessages(() => waveModel.ConnectOutput(outputDirectory))
-                                               .ToList();
-
-                // Assert
-                var expectedMssg =
-                    $"Could not find output (WAVM) file: {Path.Combine(outputDirectory, "wavm-Waves-Outer.nc")}";
-                var expectedMssg2 =
-                    $"Could not find output (WAVM) file: {Path.Combine(outputDirectory, "wavm-Waves-Inner.nc")}";
-
-                Assert.IsTrue(messages.Contains(expectedMssg));
-                Assert.IsTrue(messages.Contains(expectedMssg2));
-                Assert.IsTrue(waveModel.OutputIsEmpty);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
-        public void ConnectOutput_WhenModelHasMultipleDomainsAndOneOfTheOutputWAVMFilesIsMissing_ShouldGiveLogWarningToUserAndConnectTheExisting()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            using (var waveModel = new WaveModel())
-            {
-                // Arrange
-                waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("Inner"));
-
-                string wavmOuterFilePath =
-                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains", "wavm-Waves-Outer.nc");
-                string swanDiagFilePath =
-                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains", "swn-diag.Waves");
-
-                // Don't copy inner output file
-                string wavmOuterFilePathInTemp = tempDirectory.CopyTestDataFileToTempDirectory(wavmOuterFilePath);
-                tempDirectory.CopyTestDataFileToTempDirectory(swanDiagFilePath);
-                string outputDirectoryInTemp = Path.GetDirectoryName(wavmOuterFilePathInTemp);
-
-                // Act
-                List<string> messages = TestHelper
-                                        .GetAllRenderedMessages(
-                                            () => waveModel.ConnectOutput(outputDirectoryInTemp))
-                                        .ToList();
-
-                // Assert
-                var expectedMssg =
-                    $"Could not find output (WAVM) file: {Path.Combine(outputDirectoryInTemp, "wavm-Waves-Inner.nc")}";
-
-                Assert.AreEqual(1, messages.Count());
-                Assert.IsTrue(messages.Contains(expectedMssg));
-                Assert.IsFalse(waveModel.OutputIsEmpty);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
-        public void ConnectOutput_WhenSwanFileMissing_ShouldGiveLogWarningToUser()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            using (var waveModel = new WaveModel {Name = "wave"})
-            {
-                // Arrange
-                string outputDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm");
+                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains");
                 string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
 
-                // Act and Assert
-                var expectedMssg =
-                    $"Could not find log file: {Path.Combine(outputDirectoryInTemp, "swn-diag.wave")}";
-                TestHelper.AssertLogMessageIsGenerated(() => waveModel.ConnectOutput(outputDirectoryInTemp), expectedMssg);
-                Assert.IsFalse(waveModel.OutputIsEmpty);
+                // Act
+                waveModel.ConnectOutput(outputDirectoryInTemp);
+
+                // Assert
+                IEnumerable<WavmFileFunctionStore> functionStores = waveModel.WaveOutputData.WavmFileFunctionStores.ToList();
+                Assert.AreEqual(2, functionStores.Count());
+
+                string[] expectedPaths =
+                {
+                    Path.Combine(outputDirectoryInTemp, "wavm-Waves-Outer.nc"),
+                    Path.Combine(outputDirectoryInTemp, "wavm-Waves-Inner.nc"),
+                };
+
+                string[] functionStorePaths = functionStores.Select(x => x.Path).ToArray();
+                Assert.That(functionStorePaths, Is.EquivalentTo(expectedPaths));
+
+                ReadOnlyTextFileData swnDiagData = waveModel.WaveOutputData.DiagnosticFiles.First(x => x.DocumentName == "swn-diag.Waves");
+                Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")), swnDiagData.Content);
             }
         }
 
@@ -1255,7 +1128,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 string modelPath = tempDir.CopyDirectoryToTempDirectory(modelSourcePath);
                 string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
                 string outputDir = Path.Combine(modelPath, "output");
-                var outputDirInfo = new DirectoryInfo(outputDir);
 
                 tempDir.CreateDirectory("AnotherWaves");
                 string goalInputDir = tempDir.CreateDirectory("AnotherWaves\\input");
