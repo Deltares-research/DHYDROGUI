@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     /// for <see cref="WavmFileFunctionStore"/> objects.
     /// </summary>
     /// <seealso cref="WaveFileFunctionStoreLayerSubProviderBase{WavmFileFunctionStore}" />
-    public class WavmFileFunctionStoreLayerSubProvider : 
+    public sealed class WavmFileFunctionStoreLayerSubProvider : 
         WaveFileFunctionStoreLayerSubProviderBase<WavmFileFunctionStore>
     {
         /// <summary>
