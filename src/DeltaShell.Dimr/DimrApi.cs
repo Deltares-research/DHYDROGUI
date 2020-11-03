@@ -141,7 +141,18 @@ namespace DeltaShell.Dimr
             else
             {
                 Console.WriteLine(msg);
-                Log.DebugFormat(msg);
+                if (debugLevel < Level.Warning)
+                {
+                    Log.DebugFormat(msg);
+                }
+                else if(debugLevel <Level.Error)
+                {
+                    Log.WarnFormat(msg);
+                }
+                else
+                {
+                    Log.ErrorFormat(msg);
+                }
             }
         }
 
@@ -259,7 +270,8 @@ namespace DeltaShell.Dimr
         }
         public int Update(double step)
         {
-            DimrApiWrapper.update(step);
+            var state = DimrApiWrapper.update(step);
+            if (state != 0) return state;
             DimrApiWrapper.get_current_time(ref tCurrent);
             currentTime = DimrRefDate.AddSeconds(tCurrent-relativeStartTime);
             return 0;
@@ -267,7 +279,8 @@ namespace DeltaShell.Dimr
 
         public int Finish()
         {
-            DimrApiWrapper.finalize();
+            var state = DimrApiWrapper.finalize();
+            if (state != 0) return state;
             return 0;
         }
 

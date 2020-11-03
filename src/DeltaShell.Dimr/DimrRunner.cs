@@ -104,8 +104,11 @@ namespace DeltaShell.Dimr
             try
             {
                 if (dimrApi == null) return;
-                dimrApi.Update(timeStep);
-
+                var state = dimrApi.Update(timeStep);
+                if (state != 0)
+                {
+                    throw new Exception("dimr lib_update failed");
+                }
                 model.CurrentTime = dimrApi.CurrentTime;
                 OnProgressChanged();
                 if (stopTime.Subtract(model.CurrentTime).TotalSeconds <= 0)
@@ -127,7 +130,11 @@ namespace DeltaShell.Dimr
             if (model.RunsInIntegratedModel) return;
             if (dimrApi != null)
             {
-                dimrApi.Finish();
+                var state = dimrApi.Finish();
+                if (state != 0)
+                {
+                    throw new Exception("dimr lib_finalize failed");
+                }
             }
         }
         public void OnCleanup()
@@ -283,7 +290,7 @@ namespace DeltaShell.Dimr
             //log.Info(KernelVersions);
 
             var validationReport = model.Validate();
-            if (validationReport != null && validationReport.Severity() == ValidationSeverity.Error)
+            if (false&&validationReport != null && validationReport.Severity() == ValidationSeverity.Error)
             {
                 var errorMessage = String.Format("Validation errors: {0}",
                     String.Join("\n", validationReport.GetAllIssuesRecursive()

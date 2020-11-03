@@ -20,8 +20,9 @@ namespace DeltaShell.Dimr
             // is not bit dependent, eg IntPtr and the like.
             RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
             api = RemoteInstanceContainer.CreateInstance<IDimrApi, DimrApi>(true);
-            api.SetLoggingLevel("feedbackLevel", DimrApiDataSet.FeedbackLevel);
-            api.SetLoggingLevel("debugLevel", DimrApiDataSet.LogFileLevel);
+            SetLoggingLevel("feedbackLevel", DimrApiDataSet.FeedbackLevel);
+            SetLoggingLevel("debugLevel", DimrApiDataSet.LogFileLevel);
+            set_feedback_logger();
         }
 
         #region Implementation of IDisposable
@@ -79,20 +80,43 @@ namespace DeltaShell.Dimr
         {
             if (api != null)
             {
-                return api.Initialize(xmlFile);
+                var state = api.Initialize(xmlFile);
+                if (state != 0)
+                {
+                    ProcessMessages();
+                }
+                return state;
             }
             return 0;
         }
 
         public int Update(double step)
         {
-            if (api != null) api.Update(step);
+            if (api != null)
+            {
+                var state = api.Update(step);
+                if (state != 0)
+                {
+                    ProcessMessages();
+                }
+                return state;
+            }
+
             return 0;
         }
 
         public int Finish()
         {
-            if (api != null) api.Finish();
+            if (api != null)
+            {
+                var state = api.Finish();
+                if (state != 0)
+                {
+                    ProcessMessages();
+                }
+                return state;
+            }
+
             return 0;
         }
 
@@ -156,6 +180,36 @@ namespace DeltaShell.Dimr
             {
                 foreach (var infoMsg in infoMsgs)
                 {
+                    var containsLogLevel  = new System.Text.RegularExpressions.Regex(@"(?<prefix>Dimr \[.+\][\ ])+(?<level>[a-zA-Z0-9]+)").Match(infoMsg);
+                    if (containsLogLevel.Success)
+                    {
+                        var stringLevel = containsLogLevel.Groups["level"].Value;
+                        if (Enum.TryParse(stringLevel, true, out Level level))
+                        {
+                            if (level >= Level.Error)
+                            {
+                                Log.ErrorFormat(infoMsg);
+                                break;
+                            }
+
+                            if (level >= Level.Warning)
+                            {
+                                Log.WarnFormat(infoMsg);
+                                break;
+                            }
+                            if (level >= Level.Info)
+                            {
+                                Log.InfoFormat(infoMsg);
+                                break;
+                            }
+                            if (level >= Level.Debug)
+                            {
+                                Log.DebugFormat(infoMsg);
+                                break;
+                            }
+                        }
+                    }
+                    // just an info message
                     Log.Info(infoMsg);
                 }
             }
