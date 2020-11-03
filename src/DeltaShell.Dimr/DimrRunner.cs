@@ -290,7 +290,7 @@ namespace DeltaShell.Dimr
             //log.Info(KernelVersions);
 
             var validationReport = model.Validate();
-            if (false&&validationReport != null && validationReport.Severity() == ValidationSeverity.Error)
+            if (validationReport != null && validationReport.Severity() == ValidationSeverity.Error)
             {
                 var errorMessage = String.Format("Validation errors: {0}",
                     String.Join("\n", validationReport.GetAllIssuesRecursive()
