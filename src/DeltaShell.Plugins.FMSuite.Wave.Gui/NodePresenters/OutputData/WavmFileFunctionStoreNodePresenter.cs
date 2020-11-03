@@ -6,11 +6,11 @@ using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
 {
     /// <summary>
-    /// <see cref="WavmFileFunctionStore"/> implements the <see cref="WaveFileFunctionStoreNodePresenter{T}"/>
+    /// <see cref="WavmFileFunctionStore"/> implements the <see cref="WaveFileFunctionStoreNodePresenterBase{T}"/>
     /// for <see cref="WavmFileFunctionStore"/> objects.
     /// </summary>
-    /// <seealso cref="WaveFileFunctionStoreNodePresenter{WavmFileFunctionStore}" />
-    public sealed class WavmFileFunctionStoreNodePresenter : WaveFileFunctionStoreNodePresenter<WavmFileFunctionStore>
+    /// <seealso cref="WaveFileFunctionStoreNodePresenterBase{T}" />
+    public sealed class WavmFileFunctionStoreNodePresenter : WaveFileFunctionStoreNodePresenterBase<WavmFileFunctionStore>
     {
         protected override bool IsContainedInModel(WavmFileFunctionStore nodeData, IWaveModel model) =>
             model.WaveOutputData.WavmFileFunctionStores.Contains(nodeData);

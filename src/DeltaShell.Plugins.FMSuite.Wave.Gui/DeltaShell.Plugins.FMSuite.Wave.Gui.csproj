@@ -352,7 +352,7 @@
     <Compile Include="Layers\WaveMapLayerProviderFactory.cs" />
     <Compile Include="MapTools\GroupedLayerFeature2DLineTool.cs" />
     <Compile Include="NodePresenters\OutputData\ReadOnlyTextFileDataNodePresenter.cs" />
-    <Compile Include="NodePresenters\OutputData\WaveFileFunctionStoreNodePresenter.cs" />
+    <Compile Include="NodePresenters\OutputData\WaveFileFunctionStoreNodePresenterBase.cs" />
     <Compile Include="NodePresenters\OutputData\WaveOutputDataNodePresenter.cs" />
     <Compile Include="NodePresenters\SpatiallyVariantBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
