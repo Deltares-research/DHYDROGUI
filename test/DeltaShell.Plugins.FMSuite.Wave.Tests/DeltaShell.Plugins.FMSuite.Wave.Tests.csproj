@@ -394,7 +394,7 @@
     <Compile Include="Gui\Layers\Providers\ObservationCrossSectionLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\ObservationPointLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\ObstacleLayerSubProviderTest.cs" />
-    <Compile Include="Gui\Layers\Providers\OutputData\WaveMapFileFunctionStoreGroupLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\OutputData\WavmFileFunctionStoreGroupLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\OutputData\WaveOutputDataLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\WaveDomainDataLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\WaveLayerSubProviderTestFixture.cs" />

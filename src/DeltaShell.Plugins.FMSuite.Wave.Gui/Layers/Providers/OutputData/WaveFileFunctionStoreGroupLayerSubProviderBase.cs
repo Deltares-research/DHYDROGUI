@@ -9,12 +9,12 @@ using SharpMap.Api.Layers;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
 {
     /// <summary>
-    /// <see cref="WaveFileFunctionStoreGroupLayerSubProvider{T}"/> implements the
+    /// <see cref="WaveFileFunctionStoreGroupLayerSubProviderBase{T}"/> implements the
     /// <see cref="ILayerSubProvider"/> for function stores.
     /// </summary>
     /// <typeparam name="T">The type of wave function store.</typeparam>
     /// <seealso cref="ILayerSubProvider" />
-    public abstract class WaveFileFunctionStoreGroupLayerSubProvider<T> : ILayerSubProvider 
+    public abstract class WaveFileFunctionStoreGroupLayerSubProviderBase<T> : ILayerSubProvider 
         where T : FMNetCdfFileFunctionStore 
     {
         private readonly IWaveLayerInstanceCreator instanceCreator;
@@ -25,10 +25,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
         protected abstract string LayerName { get; }
 
         /// <summary>
-        /// Creates a new <see cref="WaveFileFunctionStoreGroupLayerSubProvider{T}"/>.
+        /// Creates a new <see cref="WaveFileFunctionStoreGroupLayerSubProviderBase{T}"/>.
         /// </summary>
         /// <param name="instanceCreator">The instance creator.</param>
-        protected WaveFileFunctionStoreGroupLayerSubProvider(IWaveLayerInstanceCreator instanceCreator)
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="instanceCreator"/> is <c>null</c>.
+        /// </exception>
+        protected WaveFileFunctionStoreGroupLayerSubProviderBase(IWaveLayerInstanceCreator instanceCreator)
         {
             Ensure.NotNull(instanceCreator, nameof(instanceCreator));
             this.instanceCreator = instanceCreator;

@@ -3,22 +3,22 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
 {
     /// <summary>
-    /// <see cref="WaveMapFileFunctionStoreGroupLayerSubProvider"/> implements the
-    /// <see cref="WaveFileFunctionStoreGroupLayerSubProvider{T}"/> to create layers
+    /// <see cref="WavmFileFunctionStoreGroupLayerSubProvider"/> implements the
+    /// <see cref="WaveFileFunctionStoreGroupLayerSubProviderBase{T}"/> to create layers
     /// for <see cref="WavmFileFunctionStore"/> objects.
     /// </summary>
-    /// <seealso cref="WaveFileFunctionStoreGroupLayerSubProvider{WavmFileFunctionStore}" />
-    public class WaveMapFileFunctionStoreGroupLayerSubProvider : 
-        WaveFileFunctionStoreGroupLayerSubProvider<WavmFileFunctionStore>
+    /// <seealso cref="WaveFileFunctionStoreGroupLayerSubProviderBase{T}" />
+    public class WavmFileFunctionStoreGroupLayerSubProvider : 
+        WaveFileFunctionStoreGroupLayerSubProviderBase<WavmFileFunctionStore>
     {
         /// <summary>
-        /// Creates a new <see cref="WaveMapFileFunctionStoreGroupLayerSubProvider"/>.
+        /// Creates a new <see cref="WavmFileFunctionStoreGroupLayerSubProvider"/>.
         /// </summary>
         /// <param name="instanceCreator">The instance creator.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="instanceCreator"/> is <c>null</c>.
         /// </exception>
-        public WaveMapFileFunctionStoreGroupLayerSubProvider(IWaveLayerInstanceCreator instanceCreator) : 
+        public WavmFileFunctionStoreGroupLayerSubProvider(IWaveLayerInstanceCreator instanceCreator) : 
             base(instanceCreator) {}
 
         protected override string LayerName => WaveLayerNames.WavmFunctionGroupLayerName;

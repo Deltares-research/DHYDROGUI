@@ -13,7 +13,7 @@ using SharpMap.Api.Layers;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
 {
     [TestFixture]
-    public class WaveMapFileFunctionStoreGroupLayerSubProviderTest
+    public class WavmFileFunctionStoreGroupLayerSubProviderTest
     {
         [Test]
         public void Constructor_ExpectedResults()
@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             var creator = Substitute.For<IWaveLayerInstanceCreator>();
 
             // Call
-            var provider = new WaveMapFileFunctionStoreGroupLayerSubProvider(creator);
+            var provider = new WavmFileFunctionStoreGroupLayerSubProvider(creator);
 
             // Assert
             Assert.That(provider, Is.InstanceOf<ILayerSubProvider>());
@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         [Test]
         public void Constructor_InstanceCreatorNull_ThrowsArgumentNullException()
         {
-            void Call() => new WaveMapFileFunctionStoreGroupLayerSubProvider(null);
+            void Call() => new WavmFileFunctionStoreGroupLayerSubProvider(null);
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("instanceCreator"));
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         {
             // Setup
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
-            var provider = new WaveMapFileFunctionStoreGroupLayerSubProvider(instanceCreator);
+            var provider = new WavmFileFunctionStoreGroupLayerSubProvider(instanceCreator);
 
             using (var tempDir = new TemporaryDirectory())
             {
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             instanceCreator.CreateWaveOutputGroupLayer(WaveLayerNames.WavmFunctionGroupLayerName)
                            .Returns(layer);
 
-            var provider = new WaveMapFileFunctionStoreGroupLayerSubProvider(instanceCreator);
+            var provider = new WavmFileFunctionStoreGroupLayerSubProvider(instanceCreator);
 
             using (var tempDir = new TemporaryDirectory())
             {
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
 
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
 
-            var provider = new WaveMapFileFunctionStoreGroupLayerSubProvider(instanceCreator);
+            var provider = new WavmFileFunctionStoreGroupLayerSubProvider(instanceCreator);
 
             using (var tempDir = new TemporaryDirectory())
             {
@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         {
             // Setup
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
-            var provider = new WaveMapFileFunctionStoreGroupLayerSubProvider(instanceCreator);
+            var provider = new WavmFileFunctionStoreGroupLayerSubProvider(instanceCreator);
             
             // Call
             IEnumerable<object> result = provider.GenerateChildLayerObjects(new object());

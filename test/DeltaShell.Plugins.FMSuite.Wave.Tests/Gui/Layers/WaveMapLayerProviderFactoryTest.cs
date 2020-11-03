@@ -53,8 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         $"Expected one {nameof(WavmFileFunctionStoreLayerSubProvider)}");
             Assert.That(result.Any(x => x is WaveOutputDataLayerSubProvider),
                         $"Expected one {nameof(WaveOutputDataLayerSubProvider)}");
-            Assert.That(result.Any(x => x is WaveMapFileFunctionStoreGroupLayerSubProvider),
-                        $"Expected one {nameof(WaveMapFileFunctionStoreGroupLayerSubProvider)}");
+            Assert.That(result.Any(x => x is WavmFileFunctionStoreGroupLayerSubProvider),
+                        $"Expected one {nameof(WavmFileFunctionStoreGroupLayerSubProvider)}");
         }
 
         [Test]

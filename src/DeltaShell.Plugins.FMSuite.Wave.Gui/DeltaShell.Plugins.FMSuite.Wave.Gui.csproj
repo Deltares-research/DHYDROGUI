@@ -340,9 +340,9 @@
     <Compile Include="Layers\Providers\ObservationPointLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObstacleLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\OutputData\WaveFileFunctionStoreLayerSubProviderBase.cs" />
-    <Compile Include="Layers\Providers\OutputData\WaveMapFileFunctionStoreGroupLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\OutputData\WavmFileFunctionStoreGroupLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\OutputData\WaveOutputDataLayerSubProvider.cs" />
-    <Compile Include="Layers\Providers\OutputData\WaveFileFunctionStoreGroupLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\OutputData\WaveFileFunctionStoreGroupLayerSubProviderBase.cs" />
     <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveModelLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\OutputData\WavmFileFunctionStoreLayerSubProvider.cs" />
