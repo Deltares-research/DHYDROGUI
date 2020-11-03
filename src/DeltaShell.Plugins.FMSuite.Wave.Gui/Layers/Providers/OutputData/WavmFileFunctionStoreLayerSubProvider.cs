@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
-using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
 {
     /// <summary>
-    /// <see cref="WavmFileFunctionStoreLayerSubProvider"/> implements the
-    /// <see cref="ILayerSubProvider"/> for data of type <see cref="WavmFileFunctionStore"/>.
+    /// <see cref="WavmFileFunctionStoreLayerSubProvider"/> implements the layer provider
+    /// for <see cref="WavmFileFunctionStore"/> objects.
     /// </summary>
-    /// <seealso cref="ILayerSubProvider"/>
-    public class WavmFileFunctionStoreLayerSubProvider : ILayerSubProvider
+    /// <seealso cref="WaveFileFunctionStoreLayerSubProviderBase{WavmFileFunctionStore}" />
+    public class WavmFileFunctionStoreLayerSubProvider : 
+        WaveFileFunctionStoreLayerSubProviderBase<WavmFileFunctionStore>
     {
-        private readonly IWaveLayerInstanceCreator instanceCreator;
-        private readonly Func<IEnumerable<IWaveModel>> getWaveModelsFunc;
-
         /// <summary>
         /// Creates a new <see cref="WavmFileFunctionStoreLayerSubProvider"/>.
         /// </summary>
@@ -30,28 +24,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
         /// <paramref name="getWaveModelsFunc"/> is <c>null</c>.
         /// </exception>
         public WavmFileFunctionStoreLayerSubProvider(IWaveLayerInstanceCreator instanceCreator,
-                                                     Func<IEnumerable<IWaveModel>> getWaveModelsFunc)
-        {
-            Ensure.NotNull(instanceCreator, nameof(instanceCreator));
-            Ensure.NotNull(getWaveModelsFunc, nameof(getWaveModelsFunc));
+                                                     Func<IEnumerable<IWaveModel>> getWaveModelsFunc) : 
+            base(instanceCreator, getWaveModelsFunc) { }
 
-            this.instanceCreator = instanceCreator;
-            this.getWaveModelsFunc = getWaveModelsFunc;
-        }
-
-        public bool CanCreateLayerFor(object sourceData, object parentData)
-        {
-            return sourceData is WavmFileFunctionStore store &&
-                   store.Functions.Any();
-        }
-
-        public ILayer CreateLayer(object sourceData, object parentData) =>
-            sourceData is WavmFileFunctionStore funcStore ? instanceCreator.CreateWaveOutputGroupLayer(Path.GetFileName(funcStore.Path)) : null;
-
-        protected bool IsStandAloneFunctionStore(WavmFileFunctionStore store) =>
-            !getWaveModelsFunc.Invoke().Any(m => m.WaveOutputData.WavmFileFunctionStores.Contains(store));
-
-        public IEnumerable<object> GenerateChildLayerObjects(object data)
+        public override IEnumerable<object> GenerateChildLayerObjects(object data)
         {
             if (!(data is WavmFileFunctionStore store))
             {
@@ -68,5 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
                 yield return coverage;
             }
         }
+
+        protected override bool IsContainedInModel(WavmFileFunctionStore store, IWaveModel model) =>
+            model.WaveOutputData.WavmFileFunctionStores.Contains(store);
     }
 }
