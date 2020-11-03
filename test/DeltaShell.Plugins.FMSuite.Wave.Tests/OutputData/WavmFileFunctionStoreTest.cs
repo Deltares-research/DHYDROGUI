@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using System.Runtime.Remoting;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
@@ -69,6 +69,45 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 string[] storeFunctionNames = store.Functions.Select(x => x.Name).ToArray();
                 Assert.That(storeFunctionNames, Is.EquivalentTo(expectedFunctionNames));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ConstructedCoverages_ConfiguredCorrectly()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string localNcPath = tempDir.CopyTestDataFileToTempDirectory(ncPath);
+
+                // Call
+                var store = new WavmFileFunctionStore(localNcPath);
+
+                // Assert
+                foreach (IFunction function in store.Functions)
+                {
+                    Assert.That(function.Arguments[0].Name, Is.EqualTo("Time"));
+                    Assert.That(function.Arguments[0].Attributes["ncName"], Is.EqualTo("time"));
+                    Assert.That(function.Arguments[0].Attributes["hasVariable"], Is.EqualTo("true"));
+                    Assert.That(function.Arguments[0].Attributes, Contains.Key("ncRefDate"));
+                    Assert.That(function.Arguments[0].IsEditable, Is.False);
+
+                    Assert.That(function.Arguments[1].Name, Is.EqualTo("N"));
+                    Assert.That(function.Arguments[1].Attributes, Contains.Key("ncName"));
+                    Assert.That(function.Arguments[1].Attributes["hasVariable"], Is.EqualTo("false"));
+                    Assert.That(function.Arguments[1].IsEditable, Is.False);
+        
+                    Assert.That(function.Arguments[2].Name, Is.EqualTo("M"));
+                    Assert.That(function.Arguments[2].Attributes, Contains.Key("ncName"));
+                    Assert.That(function.Arguments[2].Attributes["hasVariable"], Is.EqualTo("false"));
+                    Assert.That(function.Arguments[2].IsEditable, Is.False);
+
+                    Assert.That(function.Components[0].Name, Is.Not.Null);
+                    Assert.That(function.Components[0].Attributes, Contains.Key("ncName"));
+                    Assert.That(function.Components[0].Attributes["hasVariable"], Is.EqualTo("true"));
+                    Assert.That(function.Components[0].IsEditable, Is.False);
+                }
             }
         }
 
