@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
         private static IEnumerable<string> SearchStateFiles(string dir, string modelName)
         {
-            var reg = new Regex($"state_{modelName}_" + @"\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}.*.zip$");
+            var reg = new Regex($"state_{Regex.Escape(modelName)}_" + @"\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}.*.zip$");
 
             return Directory.EnumerateFiles(dir).Where(f => reg.IsMatch(Path.GetFileName(f)));
         }
