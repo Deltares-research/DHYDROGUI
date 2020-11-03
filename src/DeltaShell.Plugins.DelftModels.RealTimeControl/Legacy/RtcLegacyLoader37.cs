@@ -104,7 +104,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             Ensure.NotNull(rootPath, nameof(rootPath));
 
             RestoreRestartFiles(rootPath, model);
+            RestoreOutputFile(rootPath, model);
             SwitchModelPath(model, rootPath);
+        }
+
+        private void RestoreOutputFile(string rootPath, RealTimeControlModel model)
+        {
+            string filePath = model.OutputFileFunctionStore?.Path;
+            if (filePath == null)
+            {
+                return;
+            }
+
+            if (!File.Exists(filePath))
+            {
+                logHandler.ReportWarning($"File does not exist: {filePath}");
+                return;
+            }
+
+            string targetDirPath = Path.Combine(rootPath, model.Name, DirectoryNameConstants.OutputDirectoryName);
+            Directory.CreateDirectory(targetDirPath);
+
+            string targetFilePath = Path.Combine(targetDirPath, Path.GetFileName(filePath));
+            File.Copy(filePath, targetFilePath);
         }
 
         private static void SwitchModelPath(RealTimeControlModel model, string rootPath)
