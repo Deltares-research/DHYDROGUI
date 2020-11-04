@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
