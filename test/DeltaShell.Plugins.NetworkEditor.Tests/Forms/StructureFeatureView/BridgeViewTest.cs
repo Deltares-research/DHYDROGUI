@@ -59,10 +59,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             bridgeView.Data = bridge;
             bridgeView.Load += delegate
                                    {
+                                       var bridgeTypeCombobox = bridgeView.Controls.Find("bridgeTypeCombobox", true).FirstOrDefault() as ComboBox;
                                        var txtPillarBridge = bridgeView.Controls.Find("textBoxPillarWidth", true).FirstOrDefault() as TextBox;
                                        var txtShapeFactor = bridgeView.Controls.Find("textBoxShapeFactor", true).FirstOrDefault() as TextBox;
+                                       Assert.IsNotNull(bridgeTypeCombobox);
                                        Assert.IsNotNull(txtPillarBridge);
                                        Assert.IsNotNull(txtShapeFactor);
+                                       //Assert.That((BridgeType)bridgeTypeCombobox.SelectedItem, Is.EqualTo(BridgeType.Pillar)); // not yet implemented in the kernel
                                        Assert.IsTrue(txtPillarBridge.Text.StartsWith("84"));
                                        Assert.IsTrue(txtShapeFactor.Text.StartsWith("1"));
                                        Assert.IsTrue(txtPillarBridge.Enabled);

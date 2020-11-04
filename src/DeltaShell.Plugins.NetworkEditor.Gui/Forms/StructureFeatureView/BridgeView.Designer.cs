@@ -398,7 +398,7 @@
             this.bridgeTypeCombobox.DataSource = new DelftTools.Hydro.Structures.BridgeType[] {
         DelftTools.Hydro.Structures.BridgeType.Rectangle,
         DelftTools.Hydro.Structures.BridgeType.Tabulated,
-        DelftTools.Hydro.Structures.BridgeType.Pillar};
+        /*DelftTools.Hydro.Structures.BridgeType.Pillar */};// pillar not yet implemented in the kernel
             this.bridgeTypeCombobox.FormattingEnabled = true;
             this.bridgeTypeCombobox.Location = new System.Drawing.Point(6, 19);
             this.bridgeTypeCombobox.Name = "bridgeTypeCombobox";
