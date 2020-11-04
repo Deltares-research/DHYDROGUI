@@ -454,7 +454,7 @@
             this.roughnessGroupBox.Controls.Add(this.comboBoxFrictionType);
             this.roughnessGroupBox.Location = new System.Drawing.Point(7, 30);
             this.roughnessGroupBox.Name = "roughnessGroupBox";
-            this.roughnessGroupBox.Size = new System.Drawing.Size(251, 193);
+            this.roughnessGroupBox.Size = new System.Drawing.Size(251, 92);
             this.roughnessGroupBox.TabIndex = 29;
             this.roughnessGroupBox.TabStop = false;
             this.roughnessGroupBox.Text = "Roughness";
@@ -475,6 +475,8 @@
             this.groupBox2.TabIndex = 33;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Ground layer";
+            this.groupBox2.Visible = false;// disabled because not yet implemented in the kernel
+            
             // 
             // label56
             // 

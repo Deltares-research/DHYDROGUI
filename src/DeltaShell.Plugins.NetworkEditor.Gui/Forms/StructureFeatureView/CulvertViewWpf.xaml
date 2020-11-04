@@ -21,13 +21,14 @@
                 <GroupBox Margin="5" BorderThickness="0">
                     <StackPanel>
                         <GroupBox Header="Roughness" Margin="0,0,0,5">
-                            <StackPanel>
+                            <StackPanel Margin="0,0,0.2,0">
                                 <StackPanel Orientation="Horizontal">
                                     <Label Width="120" Margin="0,0,5,0">Type</Label>
                                     <ComboBox Width="120" Name="comboBoxRoughnessType" SelectedValue="{Binding SelectedCulvertFrictionType}"/>
                                 </StackPanel>
                                 <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="TextboxFrictionValue" Label="Friction value" Unit="m" Value="{Binding FrictionValue, Mode=TwoWay}"/>
-                                <GroupBox>
+                                <!-- not visible groundlayer from GUI, not yet implemented in the kernel, is confusing for the smart people -->
+                                <GroupBox Name="GroundLayerBox" Visibility="Collapsed" >
                                     <GroupBox.Header>
                                         <CheckBox Name="checkBoxGroundLayer" IsChecked="{Binding IsGroundLayer}">Ground layer</CheckBox>
                                     </GroupBox.Header>

@@ -1,8 +1,14 @@
-﻿using DelftTools.Hydro;
+﻿using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using DelftTools.Controls.Swf;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using NUnit.Framework;
+using FlowDirection = DelftTools.Hydro.FlowDirection;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 {
@@ -30,7 +36,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             var culvertViewWpf = new CulvertViewWpf();
             culvertViewWpf.Data = culvert;
-            WpfTestHelper.ShowModal(culvertViewWpf);
+            WpfTestHelper.ShowModal(culvertViewWpf, () =>
+            {
+                //Assert.That(culvertViewWpf.GroundLayerBox.Visibility, Is.EqualTo(Visibility.Visible));// not yet implemented in the kernel
+                Assert.That(culvertViewWpf.GroundLayerBox.Visibility, Is.EqualTo(Visibility.Collapsed));
+            });
+
         }
 
         [Test]
