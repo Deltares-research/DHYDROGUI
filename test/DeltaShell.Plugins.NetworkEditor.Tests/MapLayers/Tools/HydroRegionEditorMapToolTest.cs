@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         private ILayer pumpLayer;
         private ILayer nodeLayer;
         private ILayer crossSectionLayer;
+        private ClipboardMock clipboard;
 
         [SetUp]
         public void SetUp()
@@ -67,6 +68,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             mapControl.Map.Layers.Add(hydroNetworkLayer);
 
             HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapControl);
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard = new ClipboardMock();
+            clipboard.GetText_Returns_SetText();
+            clipboard.GetData_Returns_SetData();
         }
 
         [TearDown]
@@ -76,6 +81,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             {
                 mapControl.Dispose();
             }
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard.Dispose();
         }
 
         private void Add2BranchesUsingGeometry(HydroRegionMapLayer hydroNetworkLayer)

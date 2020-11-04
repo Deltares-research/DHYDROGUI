@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
@@ -15,10 +16,23 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
     [TestFixture]
     public class HydroNetworkCopyAndPasteHelperTest
     {
+        private ClipboardMock clipboard;
+
+        [SetUp]
+        public void Setup()
+        {
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard = new ClipboardMock();
+            clipboard.GetText_Returns_SetText();
+            clipboard.GetData_Returns_SetData();
+        }
+
         [TearDown]
         public void TearDown()
         {
             HydroNetworkCopyAndPasteHelper.ReleaseCopiedNetworkFeature();
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard.Dispose();
         }
 
         [Test]

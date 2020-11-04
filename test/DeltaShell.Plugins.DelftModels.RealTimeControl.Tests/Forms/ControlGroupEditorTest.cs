@@ -24,6 +24,7 @@ using Netron.GraphLib;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 {
@@ -35,6 +36,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
         private RuleBase rule;
         private ConditionBase condition;
+
+        private ClipboardMock clipboard;
 
         [SetUp]
         public void SetUp()
@@ -74,6 +77,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                                     Feature = new RtcTestFeature { Name = "Element" }
                                 }
                 };
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard = new ClipboardMock();
+            clipboard.GetText_Returns_SetText();
+            clipboard.GetData_Returns_SetData();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard.Dispose();
         }
 
         [Test]

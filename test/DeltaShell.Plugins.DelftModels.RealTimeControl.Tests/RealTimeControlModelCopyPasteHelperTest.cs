@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Controls;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
@@ -15,6 +16,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     [TestFixture]
     public class RealTimeControlModelCopyPasteHelperTest
     {
+        private ClipboardMock clipboard;
+
+        [SetUp]
+        public void Setup()
+        {
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard = new ClipboardMock();
+            clipboard.GetText_Returns_SetText();
+            clipboard.GetData_Returns_SetData();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard.Dispose();
+        }
+
         [Test]
         public void IsClipBoardRtcObjectSetTest()
         {

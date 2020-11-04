@@ -21,6 +21,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
     [TestFixture]
     public class PasteBranchFeaturesMapToolTest
     {
+        private ClipboardMock clipboard;
+
+        [SetUp]
+        public void SetUp()
+        {
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard = new ClipboardMock();
+            clipboard.GetText_Returns_SetText();
+            clipboard.GetData_Returns_SetData();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard.Dispose();
+        }
+
         [Test]
         [Category(TestCategory.Integration)]
         public void CopyAndPasteBridgeInSameNetwork()
