@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -66,6 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                                        Assert.IsNotNull(txtPillarBridge);
                                        Assert.IsNotNull(txtShapeFactor);
                                        //Assert.That((BridgeType)bridgeTypeCombobox.SelectedItem, Is.EqualTo(BridgeType.Pillar)); // not yet implemented in the kernel
+                                       Assert.That((BridgeType[]) bridgeTypeCombobox.DataSource,Does.Not.Contains(BridgeType.Pillar));
                                        Assert.IsTrue(txtPillarBridge.Text.StartsWith("84"));
                                        Assert.IsTrue(txtShapeFactor.Text.StartsWith("1"));
                                        Assert.IsTrue(txtPillarBridge.Enabled);
