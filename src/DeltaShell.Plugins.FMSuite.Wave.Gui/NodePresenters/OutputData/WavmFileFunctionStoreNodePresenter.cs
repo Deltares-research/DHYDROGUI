@@ -6,8 +6,9 @@ using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
 {
     /// <summary>
-    /// <see cref="WavmFileFunctionStore"/> implements the <see cref="WaveFileFunctionStoreNodePresenterBase{T}"/>
-    /// for <see cref="WavmFileFunctionStore"/> objects.
+    /// <see cref="WavmFileFunctionStoreNodePresenter"/> implements the
+    /// <see cref="WaveFileFunctionStoreNodePresenterBase{T}"/> for
+    /// <see cref="WavmFileFunctionStore"/> objects.
     /// </summary>
     /// <seealso cref="WaveFileFunctionStoreNodePresenterBase{T}" />
     public sealed class WavmFileFunctionStoreNodePresenter : WaveFileFunctionStoreNodePresenterBase<WavmFileFunctionStore>

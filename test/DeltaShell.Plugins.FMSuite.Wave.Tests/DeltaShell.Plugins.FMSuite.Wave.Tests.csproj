@@ -406,6 +406,7 @@
     <Compile Include="Gui\MapTools\GroupedLayerFeature2DLineToolTest.cs" />
     <Compile Include="Gui\NodePresenters\OutputData\ReadOnlyTextFileDataNodePresenterTest.cs" />
     <Compile Include="Gui\NodePresenters\OutputData\WaveOutputDataNodePresenterTest.cs" />
+    <Compile Include="Gui\NodePresenters\OutputData\WavhFileFunctionStoreNodePresenterTest.cs" />
     <Compile Include="Gui\NodePresenters\OutputData\WavmFileFunctionStoreNodePresenterTest.cs" />
     <Compile Include="Gui\NodePresenters\SpatiallyVariantBoundaryNodePresenterTest.cs" />
     <Compile Include="Gui\ReadOnlyTextFileViewModelTest.cs" />

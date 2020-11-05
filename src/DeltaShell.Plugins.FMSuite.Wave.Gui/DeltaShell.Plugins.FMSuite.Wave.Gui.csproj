@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -354,6 +354,7 @@
     <Compile Include="NodePresenters\OutputData\ReadOnlyTextFileDataNodePresenter.cs" />
     <Compile Include="NodePresenters\OutputData\WaveFileFunctionStoreNodePresenterBase.cs" />
     <Compile Include="NodePresenters\OutputData\WaveOutputDataNodePresenter.cs" />
+    <Compile Include="NodePresenters\OutputData\WavhFileFunctionStoreNodePresenter.cs" />
     <Compile Include="NodePresenters\SpatiallyVariantBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />
