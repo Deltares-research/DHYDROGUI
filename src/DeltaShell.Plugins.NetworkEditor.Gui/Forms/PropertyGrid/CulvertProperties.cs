@@ -97,6 +97,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Ground layer roughness.")]
         [PropertyOrder(6)]
         [DynamicReadOnly]
+        [Browsable(false)]// not browsable because not yet implemented in kernel
         public double GroundlayerRoughness
         {
             get { return data.GroundLayerRoughness; }
@@ -108,6 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Ground layer thickness.")]
         [PropertyOrder(6)]
         [DynamicReadOnly]
+        [Browsable(false)]// not browsable because not yet implemented in kernel
         public double GroundlayerThickness
         {
             get { return data.GroundLayerThickness; }
@@ -118,6 +120,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Ground layer enabled")]
         [Description("Ground layer enabled.")]
         [PropertyOrder(6)]
+        [Browsable(false)]// not browsable because not yet implemented in kernel
         public bool GroundlayerEnabled
         {
             get { return data.GroundLayerEnabled; }

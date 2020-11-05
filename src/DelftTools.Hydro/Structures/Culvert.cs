@@ -205,15 +205,18 @@ namespace DelftTools.Hydro.Structures
         [DynamicReadOnly]
         [DisplayName("Ground layer roughness")]
         [FeatureAttribute(Order = 9, ExportName = "GLRoughness")]
+        [Browsable(false)]
         public virtual double GroundLayerRoughness { get; set; }
 
         [DynamicReadOnly]
         [DisplayName("Ground layer thickness")]
         [FeatureAttribute(Order = 10, ExportName = "GLThickness")]
+        [Browsable(false)]
         public virtual double GroundLayerThickness { get; set; }
 
         [DisplayName("Ground layer")]
         [FeatureAttribute(Order = 8, ExportName = "GroundLayer")]
+        [Browsable(false)]
         public virtual bool GroundLayerEnabled { get; set; }
 
         [DisplayName("Roughness type")]

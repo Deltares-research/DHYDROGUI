@@ -120,6 +120,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Ground layer enabled.")]
         [PropertyOrder(6)]
         [DynamicReadOnly]
+        [Browsable(false)]
         public bool GroundlayerEnabled
         {
             get { return data.GroundLayerEnabled; }
@@ -131,6 +132,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Ground layer roughness.")]
         [PropertyOrder(6)]
         [DynamicReadOnly]
+        [Browsable(false)]
+
         public double GroundlayerRoughness
         {
             get { return data.GroundLayerRoughness; }
@@ -142,6 +145,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Ground layer thickness.")]
         [PropertyOrder(7)]
         [DynamicReadOnly]
+        [Browsable(false)]
         public double GroundlayerThickness
         {
             get { return data.GroundLayerThickness; }

@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace DelftTools.Hydro.Structures
 {
     public interface IGroundLayer
@@ -5,6 +7,7 @@ namespace DelftTools.Hydro.Structures
         /// <summary>
         /// Define a ground layer?
         /// </summary>
+        [Browsable(false)]
         bool GroundLayerEnabled { get; set; }
 
         /// <summary>
