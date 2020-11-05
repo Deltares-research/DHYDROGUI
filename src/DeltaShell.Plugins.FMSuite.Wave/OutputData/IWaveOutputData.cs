@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         IReadOnlyList<ReadOnlyTextFileData> SpectraFiles { get; }
 
         /// <summary>
-        /// Gets the <see cref="WavmFileFunctionStores"/>.
+        /// Gets the collection of <see cref="WavmFileFunctionStore"/> objects.
         /// </summary>
         /// <remarks>
         /// This is guaranteed to never be null. If no diagnostic files
@@ -60,6 +60,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// disconnected, then an empty list is returned.
         /// </remarks>
         IReadOnlyList<WavmFileFunctionStore> WavmFileFunctionStores { get; }
+
+        /// <summary>
+        /// Gets the collection of <see cref="WavhFileFunctionStore"/> objects.
+        /// </summary>
+        /// <remarks>
+        /// This is guaranteed to never be null. If no diagnostic files
+        /// currently exist, or the <see cref="IWaveOutputData"/> is
+        /// disconnected, then an empty list is returned.
+        /// </remarks>
+        IReadOnlyList<WavhFileFunctionStore> WavhFileFunctionStores { get; }
 
         /// <summary>
         /// Connects this <see cref="IWaveOutputData"/> to the specified path,

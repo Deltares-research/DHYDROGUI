@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         public IReadOnlyList<ReadOnlyTextFileData> DiagnosticFiles { get; private set; } = new List<ReadOnlyTextFileData>();
         public IReadOnlyList<ReadOnlyTextFileData> SpectraFiles { get; private set; } = new List<ReadOnlyTextFileData>();
         public IReadOnlyList<WavmFileFunctionStore> WavmFileFunctionStores { get; private set; } = new List<WavmFileFunctionStore>();
+        public IReadOnlyList<WavhFileFunctionStore> WavhFileFunctionStores { get; private set; } = new List<WavhFileFunctionStore>();
 
         public void ConnectTo(string dataSourcePath, 
                               bool isStoredInWorkingDirectory,
@@ -53,6 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             ConnectDiagnosticFiles(dataSourceInfo, logHandler);
             ConnectSpectraFiles(dataSourceInfo, logHandler);
             ConnectWavmFileFunctionStores(dataSourceInfo, logHandler);
+            ConnectWavhFileFunctionStores(dataSourceInfo, logHandler);
         }
 
         private void ConnectDiagnosticFiles(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
@@ -64,6 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         private void ConnectWavmFileFunctionStores(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
             WavmFileFunctionStores = harvester.HarvestWavmFileFunctionStores(dataSourceInfo, logHandler);
 
+        private void ConnectWavhFileFunctionStores(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
+            WavhFileFunctionStores = harvester.HarvestWavhFileFunctionStores(dataSourceInfo, logHandler);
+
         public void Disconnect()
         {
             DataSourcePath = null;
@@ -72,6 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             DiagnosticFiles = new List<ReadOnlyTextFileData>();
             SpectraFiles = new List<ReadOnlyTextFileData>();
             WavmFileFunctionStores = new List<WavmFileFunctionStore>();
+            WavhFileFunctionStores = new List<WavhFileFunctionStore>();
         }
     }
 }
