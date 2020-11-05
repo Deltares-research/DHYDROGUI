@@ -248,6 +248,7 @@
     <Compile Include="OutputData\WaveOutputData.cs" />
     <Compile Include="OutputData\ReadOnlyTextFileData.cs" />
     <Compile Include="OutputData\WaveOutputDataHarvester.cs" />
+    <Compile Include="OutputData\WavhFileFunctionStore.cs" />
     <Compile Include="OutputData\WavmFileFunctionStore.cs" />
     <Compile Include="IWaveDomainData.cs" />
     <Compile Include="IWaveModel.cs" />
