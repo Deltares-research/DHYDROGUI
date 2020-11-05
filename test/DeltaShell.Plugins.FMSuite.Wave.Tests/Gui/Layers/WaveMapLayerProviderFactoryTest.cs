@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count, Is.EqualTo(10));
+            Assert.That(result.Count, Is.EqualTo(12));
 
             Assert.That(result.Any(x => x is BoundaryMapFeaturesContainerLayerSubProvider),
                         $"Expected one {nameof(BoundaryMapFeaturesContainerLayerSubProvider)}");
@@ -55,6 +55,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         $"Expected one {nameof(WaveOutputDataLayerSubProvider)}");
             Assert.That(result.Any(x => x is WavmFileFunctionStoreGroupLayerSubProvider),
                         $"Expected one {nameof(WavmFileFunctionStoreGroupLayerSubProvider)}");
+            Assert.That(result.Any(x => x is WavhFileFunctionStoreGroupLayerSubProvider),
+                        $"Expected one {nameof(WavhFileFunctionStoreGroupLayerSubProvider)}");
+            Assert.That(result.Any(x => x is WavhFileFunctionStoreLayerSubProvider),
+                        $"Expected one {nameof(WavhFileFunctionStoreLayerSubProvider)}");
         }
 
         [Test]
