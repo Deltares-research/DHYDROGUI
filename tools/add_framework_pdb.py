@@ -5,7 +5,7 @@ D-HYDRO repository
 """
 __author__ = "Maarten Tegelaers"
 __copyright__ = "Copyright 2020"
-__version__ = "0.4"
+__version__ = "0.5"
 __maintainer__ = "Maarten Tegelaers"
 __email__ = "Maarten.Tegelaers@deltares.nl"
 __status__ = "Development"
@@ -229,6 +229,7 @@ def compile_framework(run_config: RunConfig):
 def get_msbuild() -> Path:
     return next(Path("C:\PROGRA~2\Microsoft Visual Studio").glob("**/msbuild.exe"), None)
 
+
 def compile_dhydro(run_config: RunConfig):
     """
     Compile dhydro at run_config.dhydro_root with debug settings
@@ -241,14 +242,15 @@ def compile_dhydro(run_config: RunConfig):
     subprocess.call(["nuget.exe", "restore", str(solution_path),])
     subprocess.call([str(msbuild), str(solution_path), "/t:Build", "/property:Configuration=Debug"])
 
+
 def get_framework_version_regex_string() -> str:
     integer_regex = r'(0|([1-9]\d*))'
-    git_hash_regex = r'(?:(\.|-)\b[0-9a-f]{7})?'
 
-    known_prefixes = ['beta', 'SIGNED']
+    known_prefixes = ['beta']
     prefix_regex = ''.join(f'(?:-{prefix})?' for prefix in known_prefixes)
 
-    return f'{integer_regex}\\.{integer_regex}\\.{integer_regex}{prefix_regex}{git_hash_regex}'
+    return f'{integer_regex}\\.{integer_regex}\\.{integer_regex}\\.{integer_regex}{prefix_regex}'
+
 
 def get_framework_version(dhydro_root: Path) -> str:
     """
