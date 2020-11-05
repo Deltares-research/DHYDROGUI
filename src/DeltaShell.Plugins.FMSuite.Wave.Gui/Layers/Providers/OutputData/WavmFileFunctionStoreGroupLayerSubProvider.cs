@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     /// <see cref="WaveFileFunctionStoreGroupLayerSubProviderBase{T}"/> to create layers
     /// for <see cref="WavmFileFunctionStore"/> objects.
     /// </summary>
-    /// <seealso cref="WaveFileFunctionStoreGroupLayerSubProviderBase{T}" />
+    /// <seealso cref="WaveFileFunctionStoreGroupLayerSubProviderBase{WavmFileFunctionStore}" />
     public class WavmFileFunctionStoreGroupLayerSubProvider : 
         WaveFileFunctionStoreGroupLayerSubProviderBase<WavmFileFunctionStore>
     {
