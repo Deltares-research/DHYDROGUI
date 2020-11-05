@@ -201,14 +201,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             }
         }
 
-        private static void BuildFiles(TemporaryDirectory tempDir, IEnumerable<ReadOnlyTextFileData> files)
-        {
-            foreach (ReadOnlyTextFileData readOnlyTextFileData in files)
-            {
-                tempDir.CreateFile(readOnlyTextFileData.DocumentName, readOnlyTextFileData.Content);
-            }
-        }
-
         [Test]
         public void HarvestWavmFileFunctionStores_DirectoryInfoNull_ThrowsArgumentNullException()
         {
@@ -305,6 +297,114 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 Assert.That(result.Count, Is.EqualTo(expectedPaths.Count));
                 List<string> resultPaths = result.Select(x => x.Path).ToList();
                 Assert.That(resultPaths, Is.EquivalentTo(expectedPaths));
+            }
+        }
+
+        [Test]
+        public void HarvestWavhFileFunctionStores_DirectoryInfoNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var harvester = new WaveOutputDataHarvester();
+
+            // Call | Assert
+            void Call() => harvester.HarvestWavhFileFunctionStores(null);
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("outputDataDirectory"));
+        }
+
+        public static IEnumerable<TestCaseData> GetHarvestWavhFileFunctionStoresValidData()
+        {
+            IList<string> sp1Files =
+                Enumerable.Range(0, 3)
+                          .Select(i => $"spectra{i}.sp1")
+                          .ToList();
+            IList<string> sp2Files =
+                Enumerable.Range(0, 3)
+                          .Select(i => $"spectra{i}.sp2")
+                          .ToList();
+
+            IList<string> wavhFiles =
+                Enumerable.Range(0, 3)
+                          .Select(i => $"wavh-Waves{i}.nc")
+                          .ToList();
+
+            IList<string> wavmFiles =
+                Enumerable.Range(0, 3)
+                          .Select(i => $"wavm-Waves{i}.nc")
+                          .ToList();
+            
+
+            IList<string> otherFiles =
+                new [] {
+                        "swan_bat.log",
+                        "swn-diag.Waves",
+                        "waves.mdw",}
+                    .Concat(sp1Files)
+                    .Concat(sp2Files)
+                    .ToList();
+
+            yield return new TestCaseData(new List<string>(), 
+                                          new List<string>());
+            yield return new TestCaseData(otherFiles, 
+                                          new List<string>());
+            yield return new TestCaseData(wavmFiles, 
+                                          new List<string>());
+            yield return new TestCaseData(otherFiles.Concat(wavmFiles).ToList(), 
+                                          new List<string>());
+            yield return new TestCaseData(new List<string>(),
+                                          wavhFiles);
+            yield return new TestCaseData(otherFiles,
+                                          wavhFiles);
+            yield return new TestCaseData(wavmFiles,
+                                          wavhFiles);
+            yield return new TestCaseData(otherFiles.Concat(wavmFiles).ToList(),
+                                          wavhFiles);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(GetHarvestWavhFileFunctionStoresValidData))]
+        public void HarvestWavhFileFunctionStores_ExpectedResults(IList<string> inputTextFiles, 
+                                                                  IList<string> wavhFiles)
+        {
+            // Setup
+            var harvester = new WaveOutputDataHarvester();
+            using (var tempDir = new TemporaryDirectory())
+            {
+                foreach (string inputFileName in inputTextFiles)
+                {
+                    tempDir.CreateFile(inputFileName);
+                }
+
+                var expectedPaths = new List<string>();
+                foreach (string wavhFileName in wavhFiles)
+                {
+                    string testPath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
+                    string storePath = Path.Combine(Path.GetDirectoryName(testPath), wavhFileName);
+                    File.Move(testPath, storePath);
+
+                    expectedPaths.Add(storePath);
+                }
+
+                var outputDir = new DirectoryInfo(tempDir.Path);
+
+                // Call
+                IReadOnlyList<WavhFileFunctionStore> result = 
+                    harvester.HarvestWavhFileFunctionStores(outputDir);
+
+                // Assert
+                Assert.That(result.Count, Is.EqualTo(expectedPaths.Count));
+                List<string> resultPaths = result.Select(x => x.Path).ToList();
+                Assert.That(resultPaths, Is.EquivalentTo(expectedPaths));
+            }
+        }
+
+        private static void BuildFiles(TemporaryDirectory tempDir, IEnumerable<ReadOnlyTextFileData> files)
+        {
+            foreach (ReadOnlyTextFileData readOnlyTextFileData in files)
+            {
+                tempDir.CreateFile(readOnlyTextFileData.DocumentName, readOnlyTextFileData.Content);
             }
         }
 
