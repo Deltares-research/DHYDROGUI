@@ -12,6 +12,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -221,8 +222,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             }
         }
 
+        public static IEnumerable<TestCaseData> GetProjectTreeVieNodePresenterData()
+        {
+            bool IsPresenterPredicate<T>(ITreeNodePresenter np) => np is T;
+
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WaveModelNodePresenter>);
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WavmFileFunctionStoreNodePresenter>);
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WavhFileFunctionStoreNodePresenter>);
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WaveOutputDataNodePresenter>);
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<ReadOnlyTextFileDataNodePresenter>);
+        }
+
         [Test]
-        public void GetProjectTreeViewNodePresenters_ContainsReadOnlyTextFileDataNodePresenter()
+        [TestCaseSource(nameof(GetProjectTreeVieNodePresenterData))]
+        public void GetProjectTreeViewNodePresenters_ContainsReadOnlyExpectedNodePresenter(Func<ITreeNodePresenter, bool> predicate)
         {
             // Setup
             using (var plugin = new WaveGuiPlugin())
@@ -231,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 IEnumerable<ITreeNodePresenter> nodePresenters = plugin.GetProjectTreeViewNodePresenters();
 
                 // Assert
-                ITreeNodePresenter nodePresenter = nodePresenters.FirstOrDefault(x => x is ReadOnlyTextFileDataNodePresenter);
+                ITreeNodePresenter nodePresenter = nodePresenters.FirstOrDefault(predicate);
                 Assert.That(nodePresenter, Is.Not.Null);
             }
         }

@@ -316,6 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return new WaveDomainNodePresenter(
                 d => WaveModels.FirstOrDefault(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(d)));
             yield return new WavmFileFunctionStoreNodePresenter {GuiPlugin = this};
+            yield return new WavhFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new WaveModelTreeShortcutNodePresenter {GuiPlugin = this};
 
             IBoundaryContainer GetBoundaryContainerFromBoundaryFunc(IWaveBoundary boundary) =>
