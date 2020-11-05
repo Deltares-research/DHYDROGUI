@@ -36,6 +36,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             var culvertViewWpf = new CulvertViewWpf();
             culvertViewWpf.Data = culvert;
+            WpfTestHelper.ShowModal(culvertViewWpf);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowCulvertViewWpfAndCheckIfGroundLayerBoxIsHidden()
+        {
+            var culvert = new Culvert();
+            culvert.GeometryType = CulvertGeometryType.Rectangle;
+            culvert.FrictionType = CulvertFrictionType.WhiteColebrook;
+            culvert.Friction = 10.0;
+            culvert.Length = 10.0;
+
+            var culvertViewWpf = new CulvertViewWpf();
+            culvertViewWpf.Data = culvert;
             WpfTestHelper.ShowModal(culvertViewWpf, () =>
             {
                 //Assert.That(culvertViewWpf.GroundLayerBox.Visibility, Is.EqualTo(Visibility.Visible));// not yet implemented in the kernel
