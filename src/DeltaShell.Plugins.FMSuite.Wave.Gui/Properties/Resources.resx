@@ -262,4 +262,7 @@
   <data name="WaveOutputDataNodePresenter_Map_Files" xml:space="preserve">
     <value>Map Files</value>
   </data>
+  <data name="WaveOutputDataNodePresenter_His_Files" xml:space="preserve">
+    <value>His Files</value>
+  </data>
 </root>

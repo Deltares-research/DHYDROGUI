@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GetChildNodeObjects_WavmFileFunctionStoresNotEmpty_ReturnsNoMapFilesOutputFolder()
+        public void GetChildNodeObjects_WavmFileFunctionStoresNotEmpty_ReturnsMapFilesOutputFolder()
         {
             // Setup
             var nodePresenter = new WaveOutputDataNodePresenter();
@@ -171,6 +171,59 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
 
                 IEnumerable<WavmFileFunctionStore> children = outputFolder.ChildItems.Cast<WavmFileFunctionStore>();
                 Assert.That(children, Is.EquivalentTo(wavmFileFunctionStores));
+            }
+        }
+
+        [Test]
+        public void GetChildNodeObjects_WavhFileFunctionStoresEmpty_ReturnsNoHisFilesOutputFolder()
+        {
+            // Setup
+            var nodePresenter = new WaveOutputDataNodePresenter();
+            var node = Substitute.For<ITreeNode>();
+            var nodeData = Substitute.For<IWaveOutputData>();
+
+            nodeData.WavhFileFunctionStores.Returns(new List<WavhFileFunctionStore>());
+
+            // Call
+            List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
+                                               .Cast<object>().ToList();
+
+            // Assert
+            object outputFolder = result.FirstOrDefault(x => x is TreeFolder tf && tf.Text == "His Files");
+            Assert.That(outputFolder, Is.Null);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetChildNodeObjects_WavhFileFunctionStoresNotEmpty_ReturnsHisFilesOutputFolder()
+        {
+            // Setup
+            var nodePresenter = new WaveOutputDataNodePresenter();
+            var node = Substitute.For<ITreeNode>();
+            var nodeData = Substitute.For<IWaveOutputData>();
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string functionStorePath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
+                var wavhFileFunctionStores = new[]
+                {
+                    new WavhFileFunctionStore(functionStorePath), 
+                    new WavhFileFunctionStore(functionStorePath), 
+                    new WavhFileFunctionStore(functionStorePath), 
+                };
+                
+                nodeData.WavhFileFunctionStores.Returns(wavhFileFunctionStores);
+
+                // Call
+                List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
+                                                   .Cast<object>().ToList();
+
+                // Assert
+                var outputFolder = result.FirstOrDefault(x => x is TreeFolder tf && tf.Text == "His Files") as TreeFolder;
+                Assert.That(outputFolder, Is.Not.Null);
+
+                IEnumerable<WavhFileFunctionStore> children = outputFolder.ChildItems.Cast<WavhFileFunctionStore>();
+                Assert.That(children, Is.EquivalentTo(wavhFileFunctionStores));
             }
         }
     }

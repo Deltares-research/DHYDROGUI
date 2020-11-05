@@ -339,6 +339,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to His Files.
+        /// </summary>
+        public static string WaveOutputDataNodePresenter_His_Files {
+            get {
+                return ResourceManager.GetString("WaveOutputDataNodePresenter_His_Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Map Files.
         /// </summary>
         public static string WaveOutputDataNodePresenter_Map_Files {

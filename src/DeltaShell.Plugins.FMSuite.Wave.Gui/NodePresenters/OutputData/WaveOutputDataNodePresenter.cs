@@ -25,9 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
 
         public override IEnumerable GetChildNodeObjects(IWaveOutputData parentNodeData, ITreeNode node)
         {
-            // TODO: Child objects should go in here
-            // note that the creation of sub folders should be dependent on
-            // whether there exists actual data in these folders.
             foreach (ReadOnlyTextFileData readOnlyTextFileData in parentNodeData.DiagnosticFiles)
             {
                 yield return readOnlyTextFileData;
@@ -46,6 +43,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
                 yield return new TreeFolder(parentNodeData, 
                                             parentNodeData.WavmFileFunctionStores.Where(x => x.Functions.Any()),
                                             Properties.Resources.WaveOutputDataNodePresenter_Map_Files,
+                                            FolderImageType.None);
+            }
+
+            if (parentNodeData.WavhFileFunctionStores.Any(x => x.Functions.Any()))
+            {
+                yield return new TreeFolder(parentNodeData, 
+                                            parentNodeData.WavhFileFunctionStores.Where(x => x.Functions.Any()),
+                                            Properties.Resources.WaveOutputDataNodePresenter_His_Files,
                                             FolderImageType.None);
             }
         }
