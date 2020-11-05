@@ -3,11 +3,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using DelftTools.Controls.Swf;
+using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
+using SharpMap.Data.Providers;
+using SharpMap.Layers;
 using FlowDirection = DelftTools.Hydro.FlowDirection;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
@@ -41,6 +46,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        public void ShowCulvertMDE()
+        {
+            var view = new VectorLayerAttributeTableView()
+            {
+                TableView = { AutoGenerateColumns = false }
+            };
+            view.Data = new VectorLayer
+            {
+                DataSource = new FeatureCollection(new[] {Culvert.CreateDefault()}.ToList(), typeof(Culvert))
+            };
+            WindowsFormsTestHelper.ShowModal(view.TableView);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowCulvertViewWpfAndCheckIfGroundLayerBoxIsHidden()
         {
             var culvert = new Culvert();
@@ -55,6 +75,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             {
                 //Assert.That(culvertViewWpf.GroundLayerBox.Visibility, Is.EqualTo(Visibility.Visible));// not yet implemented in the kernel
                 Assert.That(culvertViewWpf.GroundLayerBox.Visibility, Is.EqualTo(Visibility.Collapsed));
+            });
+
+        }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowCulvertViewWpfAndCheckIfSiphonPropertiesAreHidden()
+        {
+            var culvert = new Culvert();
+            culvert.GeometryType = CulvertGeometryType.Rectangle;
+            culvert.FrictionType = CulvertFrictionType.WhiteColebrook;
+            culvert.Friction = 10.0;
+            culvert.Length = 10.0;
+            culvert.CulvertType = CulvertType.Siphon;
+
+            var culvertViewWpf = new CulvertViewWpf();
+            culvertViewWpf.Data = culvert;
+            WpfTestHelper.ShowModal(culvertViewWpf, () =>
+            {
+                //Assert.That(culvertViewWpf.GroundLayerBox.Visibility, Is.EqualTo(Visibility.Visible));// not yet implemented in the kernel
+                
+                Assert.That(((ICulvert)culvertViewWpf.Data).CulvertType, Is.EqualTo(CulvertType.Siphon));
+                Assert.That((CulvertType)culvertViewWpf.comboBoxCulvertType.SelectedValue, Is.EqualTo(CulvertType.Siphon));
+                Assert.That(culvertViewWpf.SiphonLevels.Visibility, Is.EqualTo(Visibility.Collapsed));
+                Assert.That(culvertViewWpf.TextboxBendLossCoeffInlet.Visibility, Is.EqualTo(Visibility.Collapsed));
             });
 
         }

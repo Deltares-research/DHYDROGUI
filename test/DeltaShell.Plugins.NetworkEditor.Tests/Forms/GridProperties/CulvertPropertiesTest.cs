@@ -44,10 +44,72 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             Assert.That(cats, Has.No.Member(PropertyWindowCategoryHelper.GroundLayerCategory));
         }
 
+        [Test]
+        public void CulvertPropertiesWithReadOnlyCulvertType()
+        {
+            var culvertProperties = new CulvertProperties { Data = new Culvert() };
+            var grid = new PropertyGrid()
+            {
+                SelectedObject = culvertProperties
+            };
+            GridItemCollection categories;
+            if (grid.SelectedGridItem.GridItemType == GridItemType.Category)
+            {
+                categories = grid.SelectedGridItem.Parent.GridItems;
+            }
+            else
+            {
+                categories = grid.SelectedGridItem.Parent.Parent.GridItems;
+            }
+
+            var propertyInfo = TypeUtils.GetPropertyInfo(culvertProperties.GetType(), nameof(culvertProperties.CulvertType));
+            var displayNameAttribute = (DisplayNameAttribute)propertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false).SingleOrDefault();
+            Assert.That(displayNameAttribute, Is.Not.Null);
+            var culvertTypeGridItem = categories.Cast<GridItem>().Where(gi => gi.GridItemType == GridItemType.Category).SelectMany(gi => gi.GridItems.Cast<GridItem>()).SingleOrDefault(ge => string.Equals(ge.Label, displayNameAttribute.DisplayName, StringComparison.InvariantCultureIgnoreCase));
+            var propertyDescriptor = TypeDescriptor.GetProperties(culvertTypeGridItem)["Value"];
+            Assert.That(propertyDescriptor, Is.Not.Null);
+            Assert.That(propertyDescriptor.Attributes, Is.Not.Null);
+            Assert.That(propertyDescriptor.Attributes.Cast<Attribute>().Select(a => a.GetType()), Contains.Item(typeof(ReadOnlyAttribute)));
+            var attribute = propertyDescriptor.Attributes[typeof(ReadOnlyAttribute)];
+            var fieldInfo = attribute.GetType().GetField("isReadOnly", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            Assert.That(fieldInfo, Is.Not.Null);
+            Assert.That(fieldInfo.GetValue(attribute), Is.True);
+        }
+
+        [TestCase(nameof(CulvertProperties.SiphonOnLevel))]
+        [TestCase(nameof(CulvertProperties.SiphonOffLevel))]
+        [TestCase(nameof(CulvertProperties.BendLossCoefficient))]
+        public void CulvertPropertiesWithoutSiphonProperties(string checkName)
+        {
+            var culvertProperties = new CulvertProperties { Data = new Culvert() };
+            var grid = new PropertyGrid()
+            {
+                SelectedObject = culvertProperties
+            };
+            GridItemCollection categories;
+            if (grid.SelectedGridItem.GridItemType == GridItemType.Category)
+            {
+                categories = grid.SelectedGridItem.Parent.GridItems;
+            }
+            else
+            {
+                categories = grid.SelectedGridItem.Parent.Parent.GridItems;
+            }
+            
+            var cats = categories.Cast<GridItem>().Where(gi => gi.GridItemType == GridItemType.Category).SelectMany(gi => gi.GridItems.Cast<GridItem>()).Select(ge => ge.Label);
+            var propertyInfo = TypeUtils.GetPropertyInfo(culvertProperties.GetType(), checkName);
+            var displayNameAttribute = (DisplayNameAttribute)propertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false).SingleOrDefault();
+            Assert.That(displayNameAttribute, Is.Not.Null);
+            Assert.That(cats, Has.No.Member(displayNameAttribute.DisplayName));
+        }
+
         [TestCase(nameof(Culvert.GroundLayerEnabled))]
         [TestCase(nameof(Culvert.GroundLayerRoughness))]
         [TestCase(nameof(Culvert.GroundLayerThickness))]
-        public void CulvertWithoutGroundLayer_MDE_Check(string checkName)
+        [TestCase(nameof(Culvert.BendLossCoefficient))]
+        [TestCase(nameof(Culvert.SiphonOnLevel))]
+        [TestCase(nameof(Culvert.SiphonOffLevel))]
+        public void CulvertWithout_Property_Check(string checkName)
         {
             var culvert = new Culvert() ;
             var grid = new PropertyGrid()

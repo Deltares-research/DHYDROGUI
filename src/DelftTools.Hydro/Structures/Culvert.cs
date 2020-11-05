@@ -204,18 +204,18 @@ namespace DelftTools.Hydro.Structures
 
         [DynamicReadOnly]
         [DisplayName("Ground layer roughness")]
-        [FeatureAttribute(Order = 9, ExportName = "GLRoughness")]
+        //[FeatureAttribute(Order = 9, ExportName = "GLRoughness")]
         [Browsable(false)]
         public virtual double GroundLayerRoughness { get; set; }
 
         [DynamicReadOnly]
         [DisplayName("Ground layer thickness")]
-        [FeatureAttribute(Order = 10, ExportName = "GLThickness")]
+        //[FeatureAttribute(Order = 10, ExportName = "GLThickness")]
         [Browsable(false)]
         public virtual double GroundLayerThickness { get; set; }
 
         [DisplayName("Ground layer")]
-        [FeatureAttribute(Order = 8, ExportName = "GroundLayer")]
+        //[FeatureAttribute(Order = 8, ExportName = "GroundLayer")]
         [Browsable(false)]
         public virtual bool GroundLayerEnabled { get; set; }
 
@@ -289,6 +289,7 @@ namespace DelftTools.Hydro.Structures
         [DisplayName("Culvert type")]
         [EditAction]
         [FeatureAttribute(Order = 20)]
+        [ReadOnly(true)]
         public virtual CulvertType CulvertType {
             get { return culvertType; }
             set
@@ -302,12 +303,14 @@ namespace DelftTools.Hydro.Structures
 
         [DynamicReadOnly]
         [DisplayName("Siphon on level")]
-        [FeatureAttribute(Order = 21, ExportName = "SiphOnLvl")]
+        //[FeatureAttribute(Order = 21, ExportName = "SiphOnLvl")]
+        [Browsable(false)]
         public virtual double SiphonOnLevel { get; set; }
 
         [DynamicReadOnly]
         [DisplayName("Siphon off level")]
-        [FeatureAttribute(Order = 22, ExportName = "SiphOffLvl")]
+        //[FeatureAttribute(Order = 22, ExportName = "SiphOffLvl")]
+        [Browsable(false)]
         public virtual double SiphonOffLevel { get; set; }
 
         [DisplayName("Gated")]
@@ -349,7 +352,8 @@ namespace DelftTools.Hydro.Structures
         }
 
         [DisplayName("Bend loss coefficient")]
-        [FeatureAttribute(Order = 15, ExportName = "BendLosCoef")]
+        //[FeatureAttribute(Order = 15, ExportName = "BendLosCoef")]
+        [Browsable(false)]
         public virtual double BendLossCoefficient { get; set; }
 
         [DisplayName("Shape")]
@@ -600,12 +604,12 @@ namespace DelftTools.Hydro.Structures
         [DynamicReadOnlyValidationMethod]
         public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == "SiphonOnLevel" || propertyName == "SiphonOffLevel")
+            if (propertyName == nameof(SiphonOnLevel) || propertyName == nameof(SiphonOffLevel))
             {
                 return !CulvertType.Equals(CulvertType.Siphon);
             }
 
-            if (propertyName == "AllowNegativeFlow")
+            if (propertyName == nameof(AllowNegativeFlow))
             {
                 return CulvertType.Equals(CulvertType.Siphon);
             }
