@@ -9,7 +9,6 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
     public class WavmFileFunctionStoreTest
     {
         private const string ncPath = "./WaveOutputDataHarvesterTest/wavm-Waves.nc";

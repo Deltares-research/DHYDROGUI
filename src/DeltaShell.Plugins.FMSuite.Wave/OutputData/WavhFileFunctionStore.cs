@@ -12,9 +12,9 @@ using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// <seealso cref="FMNetCdfFileFunctionStore" />
     public class WavhFileFunctionStore : FMNetCdfFileFunctionStore
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(WavhFileFunctionStore));
         private static class StationKeys
         {
             public const string name = "station_name";
@@ -253,24 +254,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             }
 
             string dimensionName = function.Attributes[NcNameAttribute];
-            if (featuresDictionary.ContainsKey(dimensionName))
-            {
-                IMultiDimensionalArray<IFeature> cachedArray;
-                if (!cachedFeatures.TryGetValue(dimensionName, out cachedArray) || cachedArray == null)
-                {
-                    List<IFeature> features = featuresDictionary[dimensionName].ToList();
-                    int functionSize = GetSize(function);
-                    cachedArray = new MultiDimensionalArray<IFeature>(features, new[]
-                    {
-                        functionSize
-                    });
-                    cachedFeatures[dimensionName] = cachedArray;
-                }
 
-                return (MultiDimensionalArray<T>) cachedArray;
+            if (!featuresDictionary.ContainsKey(dimensionName))
+            {
+                log.DebugFormat("Unexpected dimension name: {0}", dimensionName);
             }
 
-            throw new ArgumentException($"Unexpected dimension name: {dimensionName}");
+            return (IMultiDimensionalArray<T>) GetCachedFeatures<T>(dimensionName, function);
+        }
+
+        private IMultiDimensionalArray<IFeature> GetCachedFeatures<T>(string dimensionName,
+                                                                      IVariable function)
+        {
+            if (cachedFeatures.TryGetValue(dimensionName, out IMultiDimensionalArray<IFeature> cachedArray) && cachedArray != null)
+            {
+                return cachedArray;
+            }
+
+            int functionSize = GetSize(function);
+            cachedArray = featuresDictionary.TryGetValue(dimensionName, out IList<IFeature> features) 
+                              ? new MultiDimensionalArray<IFeature>(features.ToList(), functionSize) 
+                              : new MultiDimensionalArray<IFeature>();
+            
+            cachedFeatures[dimensionName] = cachedArray;
+
+            return cachedArray;
         }
 
         private readonly IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures =

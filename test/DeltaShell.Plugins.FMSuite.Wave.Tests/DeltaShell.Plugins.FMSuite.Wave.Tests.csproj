@@ -425,6 +425,7 @@
     <Compile Include="OutputData\ReadOnlyTextFileDataTest.cs" />
     <Compile Include="OutputData\WaveOutputDataHarvesterTest.cs" />
     <Compile Include="OutputData\WaveOutputDataTest.cs" />
+    <Compile Include="OutputData\WavhFileFunctionStoreTest.cs" />
     <Compile Include="OutputData\WavmFileFunctionStoreTest.cs" />
     <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviourTest.cs" />
     <Compile Include="Migrations\1.1.0.0\MigratorInstanceCreatorTest.cs" />
