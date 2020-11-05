@@ -50,6 +50,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
             {
                 yield return outputData.WavmFileFunctionStores;
             }
+
+            if (outputData.WavhFileFunctionStores.Any(x => x.Functions.Any()))
+            {
+                yield return outputData.WavhFileFunctionStores;
+            }
         }
     }
 }

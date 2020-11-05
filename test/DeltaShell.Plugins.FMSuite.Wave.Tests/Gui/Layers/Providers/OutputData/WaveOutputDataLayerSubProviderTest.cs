@@ -142,25 +142,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         public void GenerateChildLayerObjects_ReturnsWaveOutputChildObjects()
         {
             // Setup
-            const string filePath = "./WaveOutputDataHarvesterTest/wavm-Waves.nc";
+            const string mapFilePath = "./WaveOutputDataHarvesterTest/wavm-Waves.nc";
+            const string hisFilePath = "./WaveOutputDataHarvesterTest/wavh-Waves.nc";
 
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
 
             using (var tempDir = new TemporaryDirectory())
             {
-                string ncPath = tempDir.CopyTestDataFileToTempDirectory(filePath);
-                WavmFileFunctionStore[] mapStores = { new WavmFileFunctionStore(ncPath) };
+                string mapNcPath = tempDir.CopyTestDataFileToTempDirectory(mapFilePath);
+                WavmFileFunctionStore[] mapStores = { new WavmFileFunctionStore(mapNcPath) };
+
+                string hisNcPath = tempDir.CopyTestDataFileToTempDirectory(hisFilePath);
+                WavhFileFunctionStore[] hisStores = { new WavhFileFunctionStore(hisNcPath) };
+
 
                 var outputData = Substitute.For<IWaveOutputData>();
                 outputData.WavmFileFunctionStores.Returns(mapStores);
+                outputData.WavhFileFunctionStores.Returns(hisStores);
 
                 // Call
                 IList<object> result = provider.GenerateChildLayerObjects(outputData).ToList();
 
                 // Assert
-                // TODO: this needs to be extended
                 Assert.That(result, Has.Member(mapStores));
+                Assert.That(result, Has.Member(hisStores));
             }
         }
 
