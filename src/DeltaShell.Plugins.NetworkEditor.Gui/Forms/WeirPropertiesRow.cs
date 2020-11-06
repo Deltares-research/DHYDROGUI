@@ -145,6 +145,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         }
 
         [DisplayName("Crest shape")]
+        [Browsable(false)]
         public CrestShape CrestShape
         {
             get { return Weir.CrestShape; }
