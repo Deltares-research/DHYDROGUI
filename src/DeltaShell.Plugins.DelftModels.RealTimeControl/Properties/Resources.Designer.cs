@@ -1036,6 +1036,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File does not exist: {0}.
+        /// </summary>
+        public static string RtcLegacyLoader37_File_does_not_exist {
+            get {
+                return ResourceManager.GetString("RtcLegacyLoader37_File_does_not_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the migration of the D-RTC model.
         /// </summary>
         public static string RtcLegacyLoader37_migration_of_the_rtc_model {
