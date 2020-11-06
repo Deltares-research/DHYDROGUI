@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using NUnit.Framework;
 
@@ -19,6 +23,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                                Data = null
                            };
             WindowsFormsTestHelper.ShowModal(view);
+        }
+
+        [Test]
+        public void CheckIfWeirViewDataDoesNotContainAdvancedWeir()
+        {
+            var view = new WeirView
+            {
+                Data = null
+            };
+
+            var weirViewData = TypeUtils.GetField<WeirView, WeirViewData>(view, "weirViewData");
+            Assert.That(() => weirViewData.GetWeirCurrentFormula(typeof(PierWeirFormula)),
+                Throws.Exception.TypeOf<KeyNotFoundException>());
+            var pierWeirFormula = new PierWeirFormula();
+            Assert.That(() => weirViewData.GetWeirFormulaType(pierWeirFormula.Name),
+                Throws.Exception.TypeOf<KeyNotFoundException>());
+            Assert.That(() => weirViewData.GetWeirFormulaTypeName(pierWeirFormula), Is.Null);
+
+            var weir = new Weir() {WeirFormula = pierWeirFormula};
+            Assert.That(() => { weirViewData.UpdateDataWithWeir(weir); }, Throws.Nothing);
+            Assert.That(() => { view.Data = weir; }, Throws.Nothing);
         }
 
         [Test]

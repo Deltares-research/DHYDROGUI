@@ -169,11 +169,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             switch (structureType)
             {
                 case StructureType.Bridge:
-                case StructureType.BridgePillar:
                     return new BridgeDefinitionReader();
                 case StructureType.Culvert:
-                case StructureType.InvertedSiphon:
-                case StructureType.Siphon:
                     return new CulvertDefinitionReader();
                 case StructureType.ExtraResistance:
                     return new ExtraResistanceDefinitionReader();
@@ -182,13 +179,16 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 case StructureType.Weir:
                 case StructureType.UniversalWeir:
                 case StructureType.RiverWeir:
-                case StructureType.AdvancedWeir:
                 case StructureType.GeneralStructure:
                     return new WeirDefinitionReader();
                 case StructureType.Orifice:
                     return new OrificeDefinitionReader();
                 case StructureType.CompositeBranchStructure:
                     return new CompositeBranchStructureDefinitionReader();
+                case StructureType.BridgePillar: // exists in BridgeDefinitionReader but not implemented in kernel
+                case StructureType.InvertedSiphon: // exists in CulvertDefinitionReader but not implemented in kernel
+                case StructureType.Siphon:// exists in CulvertDefinitionReader but not implemented in kernel
+                case StructureType.AdvancedWeir:// exists in WeirDefinitionReader but not implemented in kernel
                 case StructureType.Unknown:
                 case StructureType.Gate:
                     return null;

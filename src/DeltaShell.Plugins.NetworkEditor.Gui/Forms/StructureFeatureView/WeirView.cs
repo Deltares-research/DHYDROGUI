@@ -304,13 +304,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void ComboBoxWeirFormulaSelectedIndexChanged(object sender, EventArgs e)
        {
+           if (comboBoxWeirFormula.SelectedItem == null)
+           {
+               return;
+           }
+
            var selectedFormulaType = weirViewData.GetWeirFormulaType((string) comboBoxWeirFormula.SelectedItem);
 
            if (data.WeirFormula.GetType() == selectedFormulaType)
            {
                return;
            }
+
            data.WeirFormula = weirViewData.GetWeirCurrentFormula(selectedFormulaType);
+
            if (data.WeirFormula is RiverWeirFormula)
            {
                SetCorrectionCoefficientAndSubmergeLimit((RiverWeirFormula) data.WeirFormula, data.CrestShape);

@@ -12,11 +12,13 @@ using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders 
 {
     public static class StructureFileReader
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(StructureFileReader));
         public static void ReadFile(string structureFilename, string csdFilename, IHydroNetwork network)
         {
             var fileReadingExceptions = new List<FileReadingException>();
@@ -36,7 +38,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
             if (fileReadingExceptions.Count > 0)
             {
                 var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-                throw new FileReadingException(string.Format("While reading cross section definitions for structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
+                //Do not throw because we want to add the successful structures to the model
+                log.Warn(string.Format("While creating structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
+                fileReadingExceptions.Clear();
             }
             
             // do not add crossSectionDefinitions => already added
@@ -171,7 +175,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderStructure(structureType);
             if (definitionReader == null)
             {
-                throw new FileReadingException(string.Format("No definition reader available for this structure definition: {0}", type));
+                throw new FileReadingException(string.Format("No definition reader available for this structure definition: {0}.{1} This structure is not yet supported in the kernel", type, Environment.NewLine));
             }
 
             return definitionReader.ReadDefinition(definitionCategory, crossSectionDefinitions, branch);
