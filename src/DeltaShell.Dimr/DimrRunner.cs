@@ -119,12 +119,18 @@ namespace DeltaShell.Dimr
 
         public void OnFinish()
         {
-            if (model.RunsInIntegratedModel)
+            if (model.RunsInIntegratedModel || Api == null)
             {
                 return;
             }
 
-            Api?.Finish();
+            int returnCode = Api.Finish();
+
+            returnCode = 1;
+            if (returnCode != 0)
+            {
+                throw new DimrErrorCodeException(model.Status, returnCode);
+            }
         }
 
         public void OnCleanup()
