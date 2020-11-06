@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
@@ -39,7 +38,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
         {
             Ensure.NotNull(project, nameof(project));
 
-            GetModels(project).ForEach(MigrateModel);
+            foreach (RealTimeControlModel model in GetModels(project))
+            {
+                MigrateModel(model);
+            }
 
             logHandler.LogReport();
 
@@ -77,6 +79,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
             string targetDirPath = Path.Combine(rootPath, modelName, DirectoryNameConstants.OutputDirectoryName);
             string newFilePath = Path.Combine(targetDirPath, newFileName);
+
+            if (File.Exists(newFilePath))
+            {
+                return;
+            }
 
             FileUtils.CreateDirectoryIfNotExists(targetDirPath);
             File.Move(restartFilePath, newFilePath);
