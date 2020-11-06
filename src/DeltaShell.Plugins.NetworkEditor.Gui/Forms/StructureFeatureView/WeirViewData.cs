@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                                                 {typeof (FreeFormWeirFormula), new FreeFormWeirFormula()},
                                                 {typeof (GatedWeirFormula), new GatedWeirFormula()},
                                                 //{typeof (PierWeirFormula), PierWeirFormula.CreateDefault()},//not yet implemented in the kernel
-                                                {typeof (RiverWeirFormula), RiverWeirFormula.CreateDefault()},
+                                                //{typeof (RiverWeirFormula), RiverWeirFormula.CreateDefault()},//not yet implemented in the kernel
                                                 {typeof (SimpleWeirFormula), new SimpleWeirFormula()},
                                                 {typeof (GeneralStructureWeirFormula), new GeneralStructureWeirFormula()}
                                             };

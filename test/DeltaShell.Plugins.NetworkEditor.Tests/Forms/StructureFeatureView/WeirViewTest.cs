@@ -45,6 +45,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.That(() => { weirViewData.UpdateDataWithWeir(weir); }, Throws.Nothing);
             Assert.That(() => { view.Data = weir; }, Throws.Nothing);
         }
+        [Test]
+        public void CheckIfWeirViewDataDoesNotContainRiverWeir()
+        {
+            var view = new WeirView
+            {
+                Data = null
+            };
+
+            var weirViewData = TypeUtils.GetField<WeirView, WeirViewData>(view, "weirViewData");
+            Assert.That(() => weirViewData.GetWeirCurrentFormula(typeof(RiverWeirFormula)),
+                Throws.Exception.TypeOf<KeyNotFoundException>());
+            var riverWeirFormula = new RiverWeirFormula();
+            Assert.That(() => weirViewData.GetWeirFormulaType(riverWeirFormula.Name),
+                Throws.Exception.TypeOf<KeyNotFoundException>());
+            Assert.That(() => weirViewData.GetWeirFormulaTypeName(riverWeirFormula), Is.Null);
+
+            var weir = new Weir() {WeirFormula = riverWeirFormula};
+            Assert.That(() => { weirViewData.UpdateDataWithWeir(weir); }, Throws.Nothing);
+            Assert.That(() => { view.Data = weir; }, Throws.Nothing);
+        }
 
         [Test]
         [Category(TestCategory.WindowsForms)]
