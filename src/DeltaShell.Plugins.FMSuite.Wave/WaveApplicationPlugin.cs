@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -12,6 +14,7 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.Migrations;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
@@ -29,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion => "1.2.0.0";
+        public override string FileFormatVersion => "1.3.0.0";
 
         public override IApplication Application
         {
@@ -39,6 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 if (application != null)
                 {
                     application.ProjectOpened -= Application_ProjectOpened;
+                    Application.HybridProjectRepository.ProjectOpening -= OnHybridProjectRepositoryOpening;
                 }
 
                 application = value;
@@ -46,6 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 if (application != null)
                 {
                     application.ProjectOpened += Application_ProjectOpened;
+                    Application.HybridProjectRepository.ProjectOpening += OnHybridProjectRepositoryOpening;
                 }
             }
         }
@@ -99,6 +104,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             yield return new WaveDataAccessListener();
+        }
+
+        private void OnHybridProjectRepositoryOpening(object sender, ProjectOpeningEventArgs e)
+        {
+            Application.HybridProjectRepository.GetPluginFileFormatVersions(e.ProjectPath).TryGetValue(Name, out Version projectVersion);
+            if (projectVersion == System.Version.Parse(FileFormatVersion))
+            {
+                return;
+            }
+
+            WavesMigrator.Migrate(e.ProjectPath, projectVersion);
         }
 
         private void Application_ProjectOpened(Project project)
