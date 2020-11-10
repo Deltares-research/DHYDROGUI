@@ -305,12 +305,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     continue;
                 }
 
-                if (dictionaryBoundaries != null && dictionaryBoundaries.ContainsKey(link.NodeToId))
-                {
-                    Link(linksource, dictionaryBoundaries[link.NodeToId], link.Id);
-                    continue;
-                }
-
                 if (dictionaryLateralSources != null && dictionaryLateralSources.ContainsKey(link.NodeToId))
                 {
                     Link(linksource, dictionaryLateralSources[link.NodeToId], link.Id);
@@ -321,6 +315,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     continue;
                 }
 
+                if (dictionaryBoundaries != null && dictionaryBoundaries.ContainsKey(link.NodeToId))
+                {
+                    Link(linksource, dictionaryBoundaries[link.NodeToId], link.Id);
+                    continue;
+                }
+                
                 log.ErrorFormat(
                     "Destination '{0}' of link '{1}' from '{2}' has not been found (or cannot be linked to).",
                     link.NodeToId, linksource.Name, link.NodeFromId);
