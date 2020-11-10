@@ -82,6 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
             if (File.Exists(newFilePath))
             {
+                TryDeleteFile(restartFilePath);
                 return;
             }
 
