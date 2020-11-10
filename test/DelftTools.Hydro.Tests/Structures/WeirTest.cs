@@ -202,7 +202,7 @@ namespace DelftTools.Hydro.Tests.Structures
         {
             
             var weir = new Weir { WeirFormula = new GeneralStructureWeirFormula()};
-            Assert.IsFalse(weir.SpecifyCrestLevelOnWeir);
+            Assert.IsTrue(weir.SpecifyCrestLevelOnWeir);// Since FM1D2D-1015
         }
 
         [Test]
