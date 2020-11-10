@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 if (application != null)
                 {
                     application.ProjectOpened -= Application_ProjectOpened;
-                    Application.HybridProjectRepository.ProjectOpening -= OnHybridProjectRepositoryOpening;
+                    application.HybridProjectRepository.ProjectOpening -= OnHybridProjectRepositoryOpening;
                 }
 
                 application = value;
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 if (application != null)
                 {
                     application.ProjectOpened += Application_ProjectOpened;
-                    Application.HybridProjectRepository.ProjectOpening += OnHybridProjectRepositoryOpening;
+                    application.HybridProjectRepository.ProjectOpening += OnHybridProjectRepositoryOpening;
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private void OnHybridProjectRepositoryOpening(object sender, ProjectOpeningEventArgs e)
         {
-            Application.HybridProjectRepository.GetPluginFileFormatVersions(e.ProjectPath).TryGetValue(Name, out Version projectVersion);
+            Version projectVersion = Application.HybridProjectRepository.GetPluginFileFormatVersions(e.ProjectPath)[Name];
             if (projectVersion == System.Version.Parse(FileFormatVersion))
             {
                 return;

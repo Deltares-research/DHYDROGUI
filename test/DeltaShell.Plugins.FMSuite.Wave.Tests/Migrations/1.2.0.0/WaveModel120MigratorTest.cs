@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._2._0._0
             WaveModel120Migrator.Migrate(dbConnection, version, logHandler);
 
             // Assert
-            dbConnection.DidNotReceive().CreateCommand();
+            Assert.That(dbConnection.ReceivedCalls(), Is.Empty);
         }
 
         [Test]

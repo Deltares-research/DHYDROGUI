@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             plugin.Application = app1;
 
             // Assert 1
-            repo1.Received(0).ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
+            repo1.DidNotReceive().ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
             repo1.Received(1).ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
 
             repo1.ClearReceivedCalls();
@@ -184,8 +184,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             // Assert 2
             repo1.Received(1).ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
-            repo2.Received(0).ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
-            repo1.Received(0).ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
+            repo2.DidNotReceive().ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
+            repo1.DidNotReceive().ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
             repo2.Received(1).ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
         }
 
