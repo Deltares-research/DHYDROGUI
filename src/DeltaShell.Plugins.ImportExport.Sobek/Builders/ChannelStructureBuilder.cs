@@ -72,6 +72,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             this.mappings = new Dictionary<string, SobekStructureMapping>();
             foreach (var m in mlist)
             {
+                if(this.mappings.ContainsKey(m.StructureId)) log.Warn($"Structure mapping for id = {m.StructureId} already read, overwriting with new values (defId: \"{m.DefinitionId ?? string.Empty}\", description: \"{m.Name ?? string.Empty }\", Controller Ids: \"{(m.ControllerIDs != null ? string.Join(", ", m.ControllerIDs) : string.Empty)}\"), when placing this structure on the network old values ARE SKIPPED (OLD: defId: \"{this.mappings[m.StructureId].DefinitionId ?? string.Empty}\", description: \"{this.mappings[m.StructureId].Name ?? string.Empty}\", Controller Ids: \"{(this.mappings[m.StructureId].ControllerIDs != null ? string.Join(", ", this.mappings[m.StructureId].ControllerIDs) : string.Empty)}\").");
                 this.mappings[m.StructureId] = m;
             }
             //mlist.ForEach(m => this.mappings[m.StructureId] = m);
