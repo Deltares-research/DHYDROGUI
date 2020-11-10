@@ -255,11 +255,11 @@ namespace DelftTools.Hydro.Structures
 
         public virtual bool SpecifyCrestLevelOnWeir
         {
-            get { return !(WeirFormula is GeneralStructureWeirFormula); }
+            get { return true; }//used to be disabled for GeneralStructureWeirFormula
         }
         public virtual bool SpecifyCrestWidthOnWeir
         {
-            get { return !(WeirFormula is GeneralStructureWeirFormula || WeirFormula is FreeFormWeirFormula); }
+            get { return !(WeirFormula is FreeFormWeirFormula); }//used to be disabled for GeneralStructureWeirFormula
         }
 
         public virtual bool UseVelocityHeight { get; set; }

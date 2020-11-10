@@ -225,11 +225,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 textBoxLowerEdgeLevel.Visible = true;
                 textBoxGateOpening.Visible = true;
             }
-
-            if (data.IsGated)
-            {
-                comboBoxWeirFormula.Enabled = false;
-            }
         }
 
         private void RenderControls()   
