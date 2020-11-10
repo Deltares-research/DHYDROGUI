@@ -5,6 +5,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
@@ -113,7 +114,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             else if (feature is ICompartment)
                 featureInteractor = new CompartmentInteractor(layer, feature, vectorStyle, Network);
             else if (feature is IWeir weir)
-                featureInteractor = weir.IsGated ? (IFeatureInteractor)new StructureInteractor<Orifice>(layer, feature, vectorStyle, Network) : new StructureInteractor<Weir>(layer, feature, vectorStyle, Network);
+                featureInteractor = weir.WeirFormula is GatedWeirFormula ? (IFeatureInteractor)new StructureInteractor<Orifice>(layer, feature, vectorStyle, Network) : new StructureInteractor<Weir>(layer, feature, vectorStyle, Network);
             else if (feature is ICulvert)
                 featureInteractor = new StructureInteractor<Culvert>(layer, feature, vectorStyle, Network);
             else if (feature is IBridge)
