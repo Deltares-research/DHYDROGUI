@@ -600,10 +600,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             var dataSourcePathInfo = new DirectoryInfo(WaveOutputData.DataSourcePath);
 
-            if (dataSourcePathInfo.Exists)
+            if (!dataSourcePathInfo.Exists || dataSourcePathInfo.FullName == targetDirectoryInfo.FullName)
             {
-                FileUtils.CopyAll(dataSourcePathInfo, targetDirectoryInfo, null);
+                return;
             }
+
+            FileUtils.CopyAll(dataSourcePathInfo, targetDirectoryInfo, null);
         }
 
         private bool IsSavedToCurrentOutputDirectory(FileSystemInfo targetDirectoryInfo) =>
