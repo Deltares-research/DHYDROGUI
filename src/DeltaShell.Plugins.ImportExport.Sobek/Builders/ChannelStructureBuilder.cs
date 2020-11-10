@@ -459,9 +459,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                 crossSectionWidth = nearestCrossSection.Definition.Width;
                 crossSectionOffset = nearestCrossSection.Definition.Left;
             }
-            if (!(weir.WeirFormula is FreeFormWeirFormula))
+            if (!(weir.WeirFormula is FreeFormWeirFormula freeFormWeirFormula))
             {
                 weir.OffsetY = crossSectionOffset + (crossSectionWidth / 2) - (weir.CrestWidth / 2);
+            }
+            else
+            {
+                weir.CrestLevel += freeFormWeirFormula.Z.DefaultIfEmpty().Min();
             }
         }
 
