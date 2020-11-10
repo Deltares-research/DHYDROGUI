@@ -126,7 +126,6 @@ namespace DeltaShell.Dimr
 
             int returnCode = Api.Finish();
 
-            returnCode = 1;
             if (returnCode != 0)
             {
                 throw new DimrErrorCodeException(model.Status, returnCode);
