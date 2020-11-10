@@ -6,7 +6,10 @@ using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
+using SharpMap.Data.Providers;
+using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 {
@@ -110,6 +113,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             // Verify that data is unchanged:
             Assert.AreEqual(2.0, tableView.GetCellValue(0, 0));
             Assert.AreEqual(0.0, tableView.GetCellValue(1, 0));
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowBridgeMDE()
+        {
+            var view = new VectorLayerAttributeTableView()
+            {
+                TableView = { AutoGenerateColumns = false }
+            };
+            view.Data = new VectorLayer
+            {
+                DataSource = new FeatureCollection(new[] { Bridge.CreateDefault() }.ToList(), typeof(Bridge))
+            };
+            WindowsFormsTestHelper.ShowModal(view.TableView);
         }
     }
 }

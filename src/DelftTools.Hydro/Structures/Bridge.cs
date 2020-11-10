@@ -205,6 +205,7 @@ namespace DelftTools.Hydro.Structures
 
         [DisplayName("Shape")]
         [FeatureAttribute(Order = 5, ExportName = "Shape")]
+        [ReadOnly(true)]
         public virtual BridgeType BridgeType
         {
             get { return bridgeType; }

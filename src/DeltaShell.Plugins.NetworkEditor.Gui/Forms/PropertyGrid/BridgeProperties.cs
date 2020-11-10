@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Shape")]
         [Description("Cross sectional bridge shape.")]
         [PropertyOrder(2)]
+        [ReadOnly(true)]
         public BridgeType BridgeType
         {
             get { return data.BridgeType; }
