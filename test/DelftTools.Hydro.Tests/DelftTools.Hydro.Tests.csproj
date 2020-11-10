@@ -183,9 +183,13 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ValidationAspects.dll.2.1.0.0\lib\net35\ValidationAspects.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d">
+      <HintPath>..\..\packages\ValidationAspects.dll.2.2.0\lib\net461\ValidationAspects.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ValidationAspects.PostSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d">
+      <HintPath>..\..\packages\ValidationAspects.dll.2.2.0\lib\net461\ValidationAspects.PostSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
