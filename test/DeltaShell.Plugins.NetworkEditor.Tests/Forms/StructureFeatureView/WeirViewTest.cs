@@ -161,6 +161,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 Assert.That(tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.Formula)].ReadOnly, Is.True);
             });
         }
+        [Test]
+        public void CheckIfWeirViewDataDoesNotContainGatedWeir()
+        {
+            var view = new WeirView
+            {
+                Data = null
+            };
 
+            var weirViewData = TypeUtils.GetField<WeirView, WeirViewData>(view, "weirViewData");
+            Assert.That(() => weirViewData.GetWeirCurrentFormula(typeof(GatedWeirFormula)),
+                Throws.Exception.TypeOf<KeyNotFoundException>());
+            var gatedWeirFormula = new GatedWeirFormula();
+            Assert.That(() => weirViewData.GetWeirFormulaType(gatedWeirFormula.Name),
+                Throws.Exception.TypeOf<KeyNotFoundException>());
+            Assert.That(() => weirViewData.GetWeirFormulaTypeName(gatedWeirFormula), Is.Null);
+
+            var weir = new Weir() { WeirFormula = gatedWeirFormula };
+            Assert.That(() => { weirViewData.UpdateDataWithWeir(weir); }, Throws.Nothing);
+            Assert.That(() => { view.Data = weir; }, Throws.Nothing);
+        }
     }
 }

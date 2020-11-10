@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                                         : new Dictionary<Type, IWeirFormula>
                                             {
                                                 {typeof (FreeFormWeirFormula), new FreeFormWeirFormula()},
-                                                {typeof (GatedWeirFormula), new GatedWeirFormula()},
+                                                //{typeof (GatedWeirFormula), new GatedWeirFormula()},//not yet implemented in the kernel
                                                 //{typeof (PierWeirFormula), PierWeirFormula.CreateDefault()},//not yet implemented in the kernel
                                                 //{typeof (RiverWeirFormula), RiverWeirFormula.CreateDefault()},//not yet implemented in the kernel
                                                 {typeof (SimpleWeirFormula), new SimpleWeirFormula()},
