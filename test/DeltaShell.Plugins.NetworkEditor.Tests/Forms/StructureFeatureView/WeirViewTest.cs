@@ -1,12 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Controls.Swf;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
+using SharpMap.Data.Providers;
+using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 {
@@ -134,6 +140,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.AreEqual(0.77, ((RiverWeirFormula)weir.WeirFormula).SubmergeLimitNeg);
             Assert.AreEqual(0.44, ((RiverWeirFormula)weir.WeirFormula).SubmergeLimitPos);
         }
-        
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowWeirMDEAndMaKeSure()
+        {
+            var view = new VectorLayerAttributeTableView()
+            {
+                TableView = { AutoGenerateColumns = false }
+            };
+            view.Data = new VectorLayer
+            {
+                DataSource = new FeatureCollection(new[] { new Weir() }.ToList(), typeof(Weir))
+            };
+            view.SetCreateFeatureRowFunction(feature => new WeirPropertiesRow((IWeir)feature));
+            WindowsFormsTestHelper.ShowModal(view.TableView, (f) =>
+            {
+                var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();
+                Assert.That(tableView, Is.Not.Null);
+                Assert.That(tableView.Columns.Select(c => c.Name), Contains.Item(nameof(WeirPropertiesRow.Formula)));
+                Assert.That(tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.Formula)].ReadOnly, Is.True);
+            });
+        }
+
     }
 }

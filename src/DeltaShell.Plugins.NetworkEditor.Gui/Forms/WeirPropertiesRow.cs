@@ -73,7 +73,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         {
             get { return Weir.Chainage; }
         }
-
+        [ReadOnly(true)]
+        
         public FormulaEnum Formula
         {
             get { return formula; }
