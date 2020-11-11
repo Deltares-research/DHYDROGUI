@@ -16,7 +16,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             var formula = weir.WeirFormula as SimpleWeirFormula;
             if (formula == null) return IniCategory;
-            
+
+            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, weir.FlowDirection.ToString().ToLower(), StructureRegion.AllowedFlowDir.Description);
+
             IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
             if (weir.CrestWidth > 0)
             {
