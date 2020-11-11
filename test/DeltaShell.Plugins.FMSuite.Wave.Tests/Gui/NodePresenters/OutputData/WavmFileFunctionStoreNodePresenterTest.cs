@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
@@ -116,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
                 string ncPath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavm-Waves.nc");
                 var functionStore = new WavmFileFunctionStore(ncPath);
 
-                model.WaveOutputData.WavmFileFunctionStores.Returns(new[]
+                model.WaveOutputData.WavmFileFunctionStores.Returns(new EventedList<WavmFileFunctionStore>
                 {
                     functionStore
                 });

@@ -2,6 +2,7 @@
 using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
@@ -100,23 +101,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 var harvester = Substitute.For<IWaveOutputDataHarvester>();
                 var logHandler = Substitute.For<ILogHandler>();
 
-                var diagFiles = new List<ReadOnlyTextFileData>();
+                var diagFiles = new List<ReadOnlyTextFileData> { new ReadOnlyTextFileData("name", "content")};
 
                 harvester.HarvestDiagnosticFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
                                                  logHandler)
                          .Returns(diagFiles);
 
-                var spectraFiles = new List<ReadOnlyTextFileData>();
+                var spectraFiles = new List<ReadOnlyTextFileData> { new ReadOnlyTextFileData("name", "content") };
                 harvester.HarvestSpectraFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
                                               logHandler)
                          .Returns(spectraFiles);
 
-                var wavmFileFunctionStores = new List<WavmFileFunctionStore>();
+                var wavmFileFunctionStores = new List<WavmFileFunctionStore> { null };
                 harvester.HarvestWavmFileFunctionStores(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
                                                         logHandler)
                          .Returns(wavmFileFunctionStores);
 
-                var wavhFileFunctionStores = new List<WavhFileFunctionStore>();
+                var wavhFileFunctionStores = new List<WavhFileFunctionStore> { null, null};
                 harvester.HarvestWavhFileFunctionStores(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
                                                         logHandler)
                          .Returns(wavhFileFunctionStores);
@@ -127,10 +128,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 outputData.ConnectTo(dataSourcePath, true, logHandler);
 
                 // Assert
-                Assert.That(outputData.DiagnosticFiles, Is.SameAs(diagFiles));
-                Assert.That(outputData.SpectraFiles, Is.SameAs(spectraFiles));
-                Assert.That(outputData.WavmFileFunctionStores, Is.SameAs(wavmFileFunctionStores));
-                Assert.That(outputData.WavhFileFunctionStores, Is.SameAs(wavhFileFunctionStores));
+                Assert.That(outputData.DiagnosticFiles, Is.EquivalentTo(diagFiles));
+                Assert.That(outputData.SpectraFiles, Is.EquivalentTo(spectraFiles));
+                Assert.That(outputData.WavmFileFunctionStores, Is.EquivalentTo(wavmFileFunctionStores));
+                Assert.That(outputData.WavhFileFunctionStores, Is.EquivalentTo(wavhFileFunctionStores));
                 Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
@@ -237,14 +238,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         {
             var harvester = Substitute.For<IWaveOutputDataHarvester>();
             var outputData = new WaveOutputData(harvester);
-            IReadOnlyList<ReadOnlyTextFileData> prevDiagnosticFiles = outputData.DiagnosticFiles;
+            outputData.DiagnosticFiles.Add(new ReadOnlyTextFileData("test", "content"));
+
+            IEventedList<ReadOnlyTextFileData> prevDiagnosticFiles = outputData.DiagnosticFiles;
 
             // Call
             outputData.Disconnect();
 
             // Assert
-            Assert.That(outputData.DiagnosticFiles, Is.Not.SameAs(prevDiagnosticFiles));
-            Assert.That(outputData.DiagnosticFiles, Is.Not.Null);
+            Assert.That(outputData.DiagnosticFiles, Is.SameAs(prevDiagnosticFiles));
             Assert.That(outputData.DiagnosticFiles, Is.Empty);
         }
 
@@ -253,14 +255,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         {
             var harvester = Substitute.For<IWaveOutputDataHarvester>();
             var outputData = new WaveOutputData(harvester);
-            IReadOnlyList<ReadOnlyTextFileData> prevSpectraFiles = outputData.SpectraFiles;
+            outputData.SpectraFiles.Add(new ReadOnlyTextFileData("test", "content"));
+
+            IEventedList<ReadOnlyTextFileData> prevSpectraFiles = outputData.SpectraFiles;
 
             // Call
             outputData.Disconnect();
 
             // Assert
-            Assert.That(outputData.SpectraFiles, Is.Not.SameAs(prevSpectraFiles));
-            Assert.That(outputData.SpectraFiles, Is.Not.Null);
+            Assert.That(outputData.SpectraFiles, Is.SameAs(prevSpectraFiles));
             Assert.That(outputData.SpectraFiles, Is.Empty);
         }
 
@@ -269,14 +272,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         {
             var harvester = Substitute.For<IWaveOutputDataHarvester>();
             var outputData = new WaveOutputData(harvester);
-            IReadOnlyList<WavmFileFunctionStore> prevWavmFiles = outputData.WavmFileFunctionStores;
+            outputData.WavmFileFunctionStores.Add(null);
+
+            IEventedList<WavmFileFunctionStore> prevWavmFiles = outputData.WavmFileFunctionStores;
 
             // Call
             outputData.Disconnect();
 
             // Assert
-            Assert.That(outputData.WavmFileFunctionStores, Is.Not.SameAs(prevWavmFiles));
-            Assert.That(outputData.WavmFileFunctionStores, Is.Not.Null);
+            Assert.That(outputData.WavmFileFunctionStores, Is.SameAs(prevWavmFiles));
             Assert.That(outputData.WavmFileFunctionStores, Is.Empty);
         }
 
@@ -285,14 +289,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         {
             var harvester = Substitute.For<IWaveOutputDataHarvester>();
             var outputData = new WaveOutputData(harvester);
-            IReadOnlyList<WavhFileFunctionStore> prevWavhFiles = outputData.WavhFileFunctionStores;
+            outputData.WavhFileFunctionStores.Add(null);
+
+            IEventedList<WavhFileFunctionStore> prevWavhFiles = outputData.WavhFileFunctionStores;
 
             // Call
             outputData.Disconnect();
 
             // Assert
-            Assert.That(outputData.WavhFileFunctionStores, Is.Not.SameAs(prevWavhFiles));
-            Assert.That(outputData.WavhFileFunctionStores, Is.Not.Null);
+            Assert.That(outputData.WavhFileFunctionStores, Is.SameAs(prevWavhFiles));
             Assert.That(outputData.WavhFileFunctionStores, Is.Empty);
         }
     }

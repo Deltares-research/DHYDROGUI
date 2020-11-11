@@ -4,6 +4,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var nodeData = Substitute.For<IWaveOutputData>();
 
 
-            var readOnlyData = new List<ReadOnlyTextFileData>
+            var readOnlyData = new EventedList<ReadOnlyTextFileData>
             {
                 new ReadOnlyTextFileData("1.txt", "1"),
                 new ReadOnlyTextFileData("2.txt", "2"),
@@ -83,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
 
-            nodeData.SpectraFiles.Returns(new List<ReadOnlyTextFileData>());
+            nodeData.SpectraFiles.Returns(new EventedList<ReadOnlyTextFileData>());
 
             // Call
             List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
@@ -102,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
 
-            var spectraFiles = new[]
+            var spectraFiles = new EventedList<ReadOnlyTextFileData>
             {
                 new ReadOnlyTextFileData("Wave.sp1", "Spooky spooky"),
                 new ReadOnlyTextFileData("Wave.sp2", "skeletons"),
@@ -129,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
 
-            nodeData.WavmFileFunctionStores.Returns(new List<WavmFileFunctionStore>());
+            nodeData.WavmFileFunctionStores.Returns(new EventedList<WavmFileFunctionStore>());
 
             // Call
             List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
@@ -152,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 string functionStorePath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavm-Waves.nc");
-                var wavmFileFunctionStores = new[]
+                var wavmFileFunctionStores = new EventedList<WavmFileFunctionStore>
                 {
                     new WavmFileFunctionStore(functionStorePath), 
                     new WavmFileFunctionStore(functionStorePath), 
@@ -182,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
 
-            nodeData.WavhFileFunctionStores.Returns(new List<WavhFileFunctionStore>());
+            nodeData.WavhFileFunctionStores.Returns(new EventedList<WavhFileFunctionStore>());
 
             // Call
             List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
@@ -205,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 string functionStorePath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
-                var wavhFileFunctionStores = new[]
+                var wavhFileFunctionStores = new EventedList<WavhFileFunctionStore>
                 {
                     new WavhFileFunctionStore(functionStorePath), 
                     new WavhFileFunctionStore(functionStorePath), 

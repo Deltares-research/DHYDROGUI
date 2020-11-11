@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -27,10 +28,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         public string DataSourcePath { get; private set; } = null;
         public bool IsConnected => DataSourcePath != null;
         public bool IsStoredInWorkingDirectory { get; private set; } = false;
-        public IReadOnlyList<ReadOnlyTextFileData> DiagnosticFiles { get; private set; } = new List<ReadOnlyTextFileData>();
-        public IReadOnlyList<ReadOnlyTextFileData> SpectraFiles { get; private set; } = new List<ReadOnlyTextFileData>();
-        public IReadOnlyList<WavmFileFunctionStore> WavmFileFunctionStores { get; private set; } = new List<WavmFileFunctionStore>();
-        public IReadOnlyList<WavhFileFunctionStore> WavhFileFunctionStores { get; private set; } = new List<WavhFileFunctionStore>();
+
+        public IEventedList<ReadOnlyTextFileData> DiagnosticFiles { get; } = new EventedList<ReadOnlyTextFileData>();
+        public IEventedList<ReadOnlyTextFileData> SpectraFiles { get; } = new EventedList<ReadOnlyTextFileData>();
+        public IEventedList<WavmFileFunctionStore> WavmFileFunctionStores { get; } = new EventedList<WavmFileFunctionStore>();
+        public IEventedList<WavhFileFunctionStore> WavhFileFunctionStores { get; } = new EventedList<WavhFileFunctionStore>();
 
         public void ConnectTo(string dataSourcePath, 
                               bool isStoredInWorkingDirectory,
@@ -40,11 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
             var dataSourceInfo = new DirectoryInfo(dataSourcePath);
 
+            Disconnect();
             if (!dataSourceInfo.Exists)
             {
                 logHandler?.ReportErrorFormat(Resources.WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_output_instead_, 
                                               dataSourceInfo.FullName);
-                Disconnect();
                 return;
             }
 
@@ -58,26 +60,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         }
 
         private void ConnectDiagnosticFiles(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
-            DiagnosticFiles = harvester.HarvestDiagnosticFiles(dataSourceInfo, logHandler);
+            DiagnosticFiles.AddRange(harvester.HarvestDiagnosticFiles(dataSourceInfo, logHandler));
 
         private void ConnectSpectraFiles(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
-            SpectraFiles = harvester.HarvestSpectraFiles(dataSourceInfo, logHandler);
+            SpectraFiles.AddRange(harvester.HarvestSpectraFiles(dataSourceInfo, logHandler));
 
         private void ConnectWavmFileFunctionStores(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
-            WavmFileFunctionStores = harvester.HarvestWavmFileFunctionStores(dataSourceInfo, logHandler);
+            WavmFileFunctionStores.AddRange(harvester.HarvestWavmFileFunctionStores(dataSourceInfo, logHandler));
 
         private void ConnectWavhFileFunctionStores(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
-            WavhFileFunctionStores = harvester.HarvestWavhFileFunctionStores(dataSourceInfo, logHandler);
+            WavhFileFunctionStores.AddRange(harvester.HarvestWavhFileFunctionStores(dataSourceInfo, logHandler));
 
         public void Disconnect()
         {
             DataSourcePath = null;
             IsStoredInWorkingDirectory = false;
 
-            DiagnosticFiles = new List<ReadOnlyTextFileData>();
-            SpectraFiles = new List<ReadOnlyTextFileData>();
-            WavmFileFunctionStores = new List<WavmFileFunctionStore>();
-            WavhFileFunctionStores = new List<WavhFileFunctionStore>();
+            DiagnosticFiles.Clear();
+            SpectraFiles.Clear();
+            WavmFileFunctionStores.Clear();
+            WavhFileFunctionStores.Clear();
         }
     }
 }

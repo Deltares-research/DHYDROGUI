@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
@@ -136,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
                 var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
 
                 var model = Substitute.For<IWaveModel>();
-                model.WaveOutputData.WavhFileFunctionStores.Returns(new List<WavhFileFunctionStore> {store});
+                model.WaveOutputData.WavhFileFunctionStores.Returns(new EventedList<WavhFileFunctionStore> {store});
 
                 IEnumerable<IWaveModel> GetModels() => new[]
                 {

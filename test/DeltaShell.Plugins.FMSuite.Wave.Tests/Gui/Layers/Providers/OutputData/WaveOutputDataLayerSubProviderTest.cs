@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
@@ -151,10 +152,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 string mapNcPath = tempDir.CopyTestDataFileToTempDirectory(mapFilePath);
-                WavmFileFunctionStore[] mapStores = { new WavmFileFunctionStore(mapNcPath) };
+                IEventedList<WavmFileFunctionStore> mapStores = 
+                    new EventedList<WavmFileFunctionStore> { new WavmFileFunctionStore(mapNcPath) };
 
                 string hisNcPath = tempDir.CopyTestDataFileToTempDirectory(hisFilePath);
-                WavhFileFunctionStore[] hisStores = { new WavhFileFunctionStore(hisNcPath) };
+                IEventedList<WavhFileFunctionStore> hisStores = 
+                    new EventedList<WavhFileFunctionStore> { new WavhFileFunctionStore(hisNcPath) };
 
 
                 var outputData = Substitute.For<IWaveOutputData>();

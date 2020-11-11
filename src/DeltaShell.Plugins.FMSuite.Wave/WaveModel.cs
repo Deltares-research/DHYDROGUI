@@ -95,7 +95,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
             runner = new DimrRunner(this);
+
+            OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
+            OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
+            OutputWavmFileFunctionStores = new EventedList<WavmFileFunctionStore>();
+            OutputWavhFileFunctionStores = new EventedList<WavhFileFunctionStore>();
+
             WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester());
+            
+            WaveOutputData.DiagnosticFiles.CollectionChanged += 
+                GetOutputSyncNotifyCollectionChangedEventHandler(OutputDiagnosticFiles);
+            WaveOutputData.SpectraFiles.CollectionChanged +=
+                GetOutputSyncNotifyCollectionChangedEventHandler(OutputSpectraFiles);
+            WaveOutputData.WavmFileFunctionStores.CollectionChanged +=
+                GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavmFileFunctionStores);
+            WaveOutputData.WavhFileFunctionStores.CollectionChanged +=
+                GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavhFileFunctionStores);
 
             BuildModel(creationCode, false);
 
@@ -307,8 +322,81 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         // Note that the private set here and the assignment in the 
         // constructor are required for PostSharp to properly propagate the 
-        // changes in the WaveOutputData.
+        // changes in the WaveOutputData.        
+        /// <summary>
+        /// Gets the <see cref="IWaveOutputData" /> of this <see cref="WaveModel" />
+        /// </summary>
         public IWaveOutputData WaveOutputData { get; private set; }
+
+        #region OutputData Properties
+        // Note: The following properties have been exposed to ensure event propagation
+        // works correctly, and should not be used directly.
+
+        /// <summary>
+        /// Gets the output diagnostic files.
+        /// </summary>
+        /// <remarks>
+        /// This <see cref="IEventedList{ReadOnlyTextFileData}"/> is synced
+        /// with <see cref="WaveOutputData"/> diagnostic files. However any
+        /// changes to this evented list will *not* be reflected in the
+        /// output data. As such it is strongly recommended to use the
+        /// <see cref="WaveOutputData"/> directly.
+        /// </remarks>
+        [Aggregation]
+        public IEventedList<ReadOnlyTextFileData> OutputDiagnosticFiles { get; private set; }
+
+        /// <summary>
+        /// Gets the output spectra files.
+        /// </summary>
+        /// <remarks>
+        /// This <see cref="IEventedList{ReadOnlyTextFileData}"/> is synced
+        /// with <see cref="WaveOutputData"/> spectra files. However any
+        /// changes to this evented list will *not* be reflected in the
+        /// output data. As such it is strongly recommended to use the
+        /// <see cref="WaveOutputData"/> directly.
+        /// </remarks>
+        [Aggregation]
+        public IEventedList<ReadOnlyTextFileData> OutputSpectraFiles { get; private set; }
+
+        /// <summary>
+        /// Gets the output <see cref="WavmFileFunctionStore"/> objects.
+        /// </summary>
+        /// <remarks>
+        /// This <see cref="IEventedList{WavmFileFunctionStore}"/> is synced
+        /// with <see cref="WaveOutputData"/> <see cref="WavmFileFunctionStore"/>
+        /// objects. However any changes to this evented list will *not*
+        /// be reflected in the output data. As such it is strongly recommended
+        /// to use the <see cref="WaveOutputData"/> directly.
+        /// </remarks>
+        [Aggregation]
+        public IEventedList<WavmFileFunctionStore> OutputWavmFileFunctionStores { get; private set; }
+
+        /// <summary>
+        /// Gets the output <see cref="WavhFileFunctionStore"/> objects.
+        /// </summary>
+        /// <remarks>
+        /// This <see cref="IEventedList{WavhFileFunctionStore}"/> is synced
+        /// with <see cref="WaveOutputData"/> <see cref="WavhFileFunctionStore"/>
+        /// objects. However any changes to this evented list will *not*
+        /// be reflected in the output data. As such it is strongly recommended
+        /// to use the <see cref="WaveOutputData"/> directly.
+        /// </remarks>
+        [Aggregation]
+        public IEventedList<WavhFileFunctionStore> OutputWavhFileFunctionStores { get; private set; }
+
+        private static NotifyCollectionChangedEventHandler GetOutputSyncNotifyCollectionChangedEventHandler<T>(IEventedList<T> list) =>
+            (sender, e) =>
+            {
+                IEnumerable<T> itemsToRemove = e.OldItems?.Cast<T>() ?? Enumerable.Empty<T>();
+                foreach (T data in itemsToRemove)
+                {
+                    list.Remove(data);
+                }
+
+                IEnumerable<T> itemsToAdd = e.NewItems?.Cast<T>() ?? Enumerable.Empty<T>();
+                list.AddRange(itemsToAdd);
+            };
+        #endregion
 
         public MdwFile MdwFile { get; } = new MdwFile();
 

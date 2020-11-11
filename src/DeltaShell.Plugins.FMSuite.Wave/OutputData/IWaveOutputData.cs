@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
@@ -39,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// currently exist, or the <see cref="IWaveOutputData"/> is
         /// disconnected, then an empty list is returned.
         /// </remarks>
-        IReadOnlyList<ReadOnlyTextFileData> DiagnosticFiles { get; }
+        IEventedList<ReadOnlyTextFileData> DiagnosticFiles { get; }
 
         /// <summary>
         /// Gets the spectra files.
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// currently exist, or the <see cref="IWaveOutputData"/> is
         /// disconnected, then an empty list is returned.
         /// </remarks>
-        IReadOnlyList<ReadOnlyTextFileData> SpectraFiles { get; }
+        IEventedList<ReadOnlyTextFileData> SpectraFiles { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="WavmFileFunctionStore"/> objects.
@@ -59,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// currently exist, or the <see cref="IWaveOutputData"/> is
         /// disconnected, then an empty list is returned.
         /// </remarks>
-        IReadOnlyList<WavmFileFunctionStore> WavmFileFunctionStores { get; }
+        IEventedList<WavmFileFunctionStore> WavmFileFunctionStores { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="WavhFileFunctionStore"/> objects.
@@ -69,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// currently exist, or the <see cref="IWaveOutputData"/> is
         /// disconnected, then an empty list is returned.
         /// </remarks>
-        IReadOnlyList<WavhFileFunctionStore> WavhFileFunctionStores { get; }
+        IEventedList<WavhFileFunctionStore> WavhFileFunctionStores { get; }
 
         /// <summary>
         /// Connects this <see cref="IWaveOutputData"/> to the specified path,
