@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.SQLite;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._2._0._0
             // Enable the foreign key constraints.
             "PRAGMA foreign_keys = on;";
 
-        private static readonly Version version = new Version(1, 3, 0, 0);
+        private static readonly Version postMigrationVersion = new Version(1, 3, 0, 0);
 
         /// <summary>
         /// Migrates the database for the <see cref="WaveApplicationPlugin"/> to be compatible with version 1.3.0.0.
@@ -43,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._2._0._0
             Ensure.NotNull(dbConnection, nameof(dbConnection));
             Ensure.NotNull(projectVersion, nameof(projectVersion));
 
-            if (projectVersion >= version)
+            if (projectVersion >= postMigrationVersion)
             {
                 return;
             }
@@ -56,9 +57,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._2._0._0
                     command.ExecuteNonQuery();
                 }
             }
-            catch (Exception e)
+            catch (SQLiteException e)
             {
-                logHandler?.ReportError($"Something went wrong while updating the D-Waves plugin from version {projectVersion} to {version}: '{e.Message}'");
+                logHandler?.ReportError($"Something went wrong while updating the D-Waves plugin from version {projectVersion} to {postMigrationVersion}: '{e.Message}'");
             }
         }
     }
