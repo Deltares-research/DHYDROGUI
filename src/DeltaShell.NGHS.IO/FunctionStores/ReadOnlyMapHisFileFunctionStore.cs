@@ -286,7 +286,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             {
                 var features = MetaData?.Locations.Select(GetObjectForLocationName).OfType<IFeature>().ToList();
 
-                if (filters.Length == 1 && argumentTimeFilter != null)
+                if (filters.Length == 1 && argumentTimeFilter != null && features != null)
                 {
                     return new MultiDimensionalArray<IFeature>(features, new[] {1, features.Count});
                 }

@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 : "";
 
             // dsproj_data/<model name>/Sobek_3b.fnm
-            return path.EndsWith(System.IO.Path.Combine(Name, "Sobek_3b.fnm")) ? path : System.IO.Path.Combine(directoryName, Name, "Sobek_3b.fnm");
+            return path != null && path.EndsWith(System.IO.Path.Combine(Name, "Sobek_3b.fnm")) ? path : System.IO.Path.Combine(directoryName, Name, "Sobek_3b.fnm");
         }
         public virtual void SwitchTo(string newPath)
         {

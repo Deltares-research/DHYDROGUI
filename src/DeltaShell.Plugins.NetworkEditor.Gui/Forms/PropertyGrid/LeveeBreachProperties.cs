@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set
             {
                 useBreachLocationSnapping = value;
-                BreachLocationX = BreachLocationX;
+                BreachLocationX = leveeBreach.BreachLocationX;
             }
         }
 
