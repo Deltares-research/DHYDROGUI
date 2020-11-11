@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Controls.Swf;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
@@ -203,6 +204,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             Assert.That(() => weirViewData.GetWeirFormulaType(gatedWeirFormula.Name),
                 Throws.Exception.TypeOf<KeyNotFoundException>());
             Assert.That(() => weirViewData.GetWeirFormulaTypeName(gatedWeirFormula), Is.Null);
+
+            var weir = new Weir() { WeirFormula = gatedWeirFormula };
+            Assert.That(() => { weirViewData.UpdateDataWithWeir(weir); }, Throws.Nothing);
+            Assert.That(() => { view.Data = weir; }, Throws.Nothing);
+        }
+        [Test]
+        public void CheckIfWeirViewDataWithOrificeDoesContainGatedWeir()
+        {
+            var view = new WeirView
+            {
+                Data = new Orifice()
+
+            };
+
+            var weirViewData = TypeUtils.GetField<WeirView, WeirViewData>(view, "weirViewData");
+            Assert.That(() => weirViewData.GetWeirCurrentFormula(typeof(GatedWeirFormula)), Throws.Nothing);
+            var gatedWeirFormula = new GatedWeirFormula();
+            Assert.That(() => weirViewData.GetWeirFormulaType(gatedWeirFormula.Name), Throws.Nothing);
+            Assert.That(() => weirViewData.GetWeirFormulaTypeName(gatedWeirFormula), Is.EqualTo(gatedWeirFormula.Name));
 
             var weir = new Weir() { WeirFormula = gatedWeirFormula };
             Assert.That(() => { weirViewData.UpdateDataWithWeir(weir); }, Throws.Nothing);

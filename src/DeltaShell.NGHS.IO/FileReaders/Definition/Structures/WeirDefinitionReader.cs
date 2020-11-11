@@ -133,7 +133,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                     {
                         GateOpening = category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel.Key) - weir.CrestLevel,
                         ContractionCoefficient = category.ReadProperty<double>(StructureRegion.CorrectionCoeff.Key, true, 1.0),
-                        LateralContraction = 1
+                        LateralContraction = 1,
+                        UseMaxFlowPos = category.ReadProperty<bool>(StructureRegion.UseLimitFlowPos.Key, true),
+                        MaxFlowPos = category.ReadProperty<double>(StructureRegion.LimitFlowPos.Key, true),
+                        UseMaxFlowNeg = category.ReadProperty<bool>(StructureRegion.UseLimitFlowNeg.Key, true),
+                        MaxFlowNeg = category.ReadProperty<double>(StructureRegion.LimitFlowNeg.Key, true),
                     };
                 case StructureType.GeneralStructure:
                     var extraResistance = category.ReadProperty<double>(StructureRegion.ExtraResistance.Key, true, 0.0);

@@ -98,6 +98,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             // Update dictionary with WeirFormula information
             weirFormulaDictionary[weir.WeirFormula.GetType()] = weir.WeirFormula;
+            weirFormulaTypeDictionary = weirFormulaDictionary.ToDictionary(kvp => kvp.Value.Name, kvp => kvp.Key);
+
         }
 
         public static bool IsValidGate(Type weirFormulaType)

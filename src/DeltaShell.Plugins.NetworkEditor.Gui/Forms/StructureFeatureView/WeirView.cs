@@ -9,6 +9,7 @@ using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFormulaViews;
@@ -210,6 +211,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             var gatedWeirFormula = data.WeirFormula as GatedWeirFormula;
             if (gatedWeirFormula != null)
             {
+                var bindingList = new ThreadsafeBindingList<string>(SynchronizationContext.Current, new[] {data.WeirFormula.Name});
+                comboBoxWeirFormula.DataSource = bindingList;
+                comboBoxWeirFormula.Enabled = false;
                 LowerEdgeLevelTimeDependentCheckBox.Visible = gatedWeirFormula.CanBeTimedependent;
                 LowerEdgeLevelTimeDependentCheckBox.Checked = gatedWeirFormula.UseLowerEdgeLevelTimeSeries;
 
@@ -217,6 +221,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
             else
             {
+                FillCombobox(comboBoxWeirFormula, weirViewData.GetWeirFormulaTypes(), ComboBoxWeirFormulaSelectedIndexChanged);
+                comboBoxWeirFormula.Enabled = true;
                 LowerEdgeLevelTimeDependentCheckBox.Visible = false;
                 OpenLowerEdgeLevelTimeSeriesButton.Visible = false;
 
