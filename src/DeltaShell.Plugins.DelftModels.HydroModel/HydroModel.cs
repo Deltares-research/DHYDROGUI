@@ -814,7 +814,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     // are send from async output handlers will cause deadlock
                     bool runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
                                                HydroModelApplicationPlugin.MainThreadId;
-                    dimrApi = DimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
+                    dimrApi = new DimrApiFactory().CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
 
                     if (dimrApi == null)
                     {
@@ -852,7 +852,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void HandleDimrErrorCodeException(DimrErrorCodeException e)
         {
-            Console.WriteLine(e.Message);
             Log.ErrorFormat(e.Message);
 
             dimrApi?.Dispose();

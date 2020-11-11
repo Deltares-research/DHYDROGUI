@@ -90,6 +90,7 @@
       <DependentUpon>rtcRuntimeConfig.xsd</DependentUpon>
     </Compile>
     <Compile Include="IDimrApi.cs" />
+    <Compile Include="IDimrApiFactory.cs" />
     <Compile Include="IDimrModel.cs" />
     <Compile Include="IDimrModelFileImporter.cs" />
     <Compile Include="LoggerToProtoConverter.cs" />

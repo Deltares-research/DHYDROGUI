@@ -8,8 +8,8 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
-using DeltaShell.Dimr.Properties;
 using DeltaShell.Dimr.DimrXsd;
+using DeltaShell.Dimr.Properties;
 using log4net;
 
 namespace DeltaShell.Dimr
@@ -34,9 +34,12 @@ namespace DeltaShell.Dimr
         private double timeStep;
         private DateTime stopTime;
 
-        public DimrRunner(IDimrModel model)
+        public DimrRunner(IDimrModel model, IDimrApiFactory dimrApiFactory)
         {
             this.model = model;
+
+            // initialize dimr
+            Api = dimrApiFactory.CreateNew(!runLocal);
         }
 
         public IDimrApi Api { get; private set; }
@@ -58,15 +61,8 @@ namespace DeltaShell.Dimr
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                log.ErrorFormat(e.Message);
-                model.Status = ActivityStatus.Failed;
-                if (Api != null)
-                {
-                    Api.ProcessMessages();
-                    Api.Dispose();
-                    Api = null;
-                }
+                HandleException(e);
+                throw;
             }
         }
 
@@ -105,15 +101,8 @@ namespace DeltaShell.Dimr
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                log.ErrorFormat(e.Message);
-                model.Status = ActivityStatus.Failed;
-                if (Api != null)
-                {
-                    Api.ProcessMessages();
-                    Api.Dispose();
-                    Api = null;
-                }
+                HandleException(e);
+                throw;
             }
         }
 
@@ -124,11 +113,19 @@ namespace DeltaShell.Dimr
                 return;
             }
 
-            int returnCode = Api.Finish();
-
-            if (returnCode != 0)
+            try
             {
-                throw new DimrErrorCodeException(model.Status, returnCode);
+                int returnCode = Api.Finish();
+
+                if (returnCode != 0)
+                {
+                    throw new DimrErrorCodeException(model.Status, returnCode);
+                }
+            }
+            catch (Exception e)
+            {
+                HandleException(e);
+                throw;
             }
         }
 
@@ -237,6 +234,18 @@ namespace DeltaShell.Dimr
                                                    model.Status == ActivityStatus.Done)
                                                   && Api != null;
 
+        private void HandleException(Exception e)
+        {
+            log.ErrorFormat(e.Message);
+            model.Status = ActivityStatus.Failed;
+            if (Api != null)
+            {
+                Api.ProcessMessages();
+                Api.Dispose();
+                Api = null;
+            }
+        }
+
         private void ValidateExportAndInitialize(bool disconnectOutput)
         {
             // validate the model
@@ -261,9 +270,6 @@ namespace DeltaShell.Dimr
 
             // generate the dimr config xml
             dimrFile = GenerateDimrXML(model, exportPath);
-
-            // initialize dimr
-            Api = DimrApiFactory.CreateNew(!runLocal);
 
             if (Api == null)
             {
