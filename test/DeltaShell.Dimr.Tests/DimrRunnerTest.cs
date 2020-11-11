@@ -16,13 +16,18 @@ namespace DeltaShell.Dimr.Tests
         [Test]
         public void GivenDimrRunnerThatFailsUpdate_WhenOnExecuteCalled_ThenDimrErrorCodeExceptionThrown()
         {
-            var dimrApi = Substitute.For<IDimrApi>();
-            dimrApi.Update(Arg.Any<double>()).Returns(-1);
-            dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
+            using (var tempDir = new TemporaryDirectory())
+            {
+                var dimrApi = Substitute.For<IDimrApi>();
+                dimrApi.Update(Arg.Any<double>()).Returns(-1);
+                dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
 
-            var dimrRunner = new DimrRunner(Substitute.For<IDimrModel>(), dimrApiFactory);
-
-            Assert.That(() => dimrRunner.OnExecute(), Throws.InstanceOf<DimrErrorCodeException>());
+                IDimrModel dimrModel = CreateDimrModel(tempDir);
+                var dimrRunner = new DimrRunner(dimrModel, dimrApiFactory);
+                
+                dimrRunner.OnInitialize();
+                Assert.That(() => dimrRunner.OnExecute(), Throws.InstanceOf<DimrErrorCodeException>());
+            }
         }
 
         [Test]
@@ -34,9 +39,7 @@ namespace DeltaShell.Dimr.Tests
                 dimrApi.Initialize(Arg.Any<string>()).Returns(-1);
                 dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
 
-                var dimrModel = Substitute.For<IDimrModel>();
-                dimrModel.ExporterType.Returns(typeof(TestExporter));
-                dimrModel.DimrExportDirectoryPath.Returns(tempDir.Path);
+                IDimrModel dimrModel = CreateDimrModel(tempDir);
                 var dimrRunner = new DimrRunner(dimrModel, dimrApiFactory);
 
                 Assert.That(() => dimrRunner.OnInitialize(), Throws.InstanceOf<DimrErrorCodeException>());
@@ -46,13 +49,26 @@ namespace DeltaShell.Dimr.Tests
         [Test]
         public void GivenDimrRunnerThatFailsFinish_WhenOnFinishCalled_ThenDimrErrorCodeExceptionThrown()
         {
-            var dimrApi = Substitute.For<IDimrApi>();
-            dimrApi.Finish().Returns(-1);
-            dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
+            using (var tempDir = new TemporaryDirectory())
+            {
+                var dimrApi = Substitute.For<IDimrApi>();
+                dimrApi.Finish().Returns(-1);
+                dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
 
-            var dimrRunner = new DimrRunner(Substitute.For<IDimrModel>(), dimrApiFactory);
+                IDimrModel dimrModel = CreateDimrModel(tempDir);
+                var dimrRunner = new DimrRunner(dimrModel, dimrApiFactory);
 
-            Assert.That(() => dimrRunner.OnFinish(), Throws.InstanceOf<DimrErrorCodeException>());
+                dimrRunner.OnInitialize();
+                Assert.That(() => dimrRunner.OnFinish(), Throws.InstanceOf<DimrErrorCodeException>());
+            }
+        }
+
+        private static IDimrModel CreateDimrModel(TemporaryDirectory tempDir)
+        {
+            var dimrModel = Substitute.For<IDimrModel>();
+            dimrModel.ExporterType.Returns(typeof(TestExporter));
+            dimrModel.DimrExportDirectoryPath.Returns(tempDir.Path);
+            return dimrModel;
         }
 
         private class TestExporter : IFileExporter

@@ -27,6 +27,7 @@ namespace DeltaShell.Dimr
         };
 
         private readonly IDimrModel model;
+        private readonly IDimrApiFactory dimrApiFactory;
         protected bool runLocal;
         private bool disposed;
         private string dimrFile;
@@ -37,9 +38,7 @@ namespace DeltaShell.Dimr
         public DimrRunner(IDimrModel model, IDimrApiFactory dimrApiFactory)
         {
             this.model = model;
-
-            // initialize dimr
-            Api = dimrApiFactory.CreateNew(!runLocal);
+            this.dimrApiFactory = dimrApiFactory;
         }
 
         public IDimrApi Api { get; private set; }
@@ -271,6 +270,9 @@ namespace DeltaShell.Dimr
             // generate the dimr config xml
             dimrFile = GenerateDimrXML(model, exportPath);
 
+            // initialize dimr
+            Api = dimrApiFactory.CreateNew(!runLocal);
+            
             if (Api == null)
             {
                 throw new ArgumentNullException(Resources.DimrRunner_Could_not_load_dimr_api);
