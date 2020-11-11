@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 
@@ -10,12 +9,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     /// <see cref="WavhFileFunctionStoreLayerSubProvider"/> implements the layer provider
     /// for <see cref="WavhFileFunctionStore"/> objects.
     /// </summary>
-    /// <seealso cref="WaveFileFunctionStoreLayerSubProviderBase{WavhFileFunctionStore}" />
+    /// <seealso cref="WaveFileFunctionStoreLayerSubProviderBase{WavhFileFunctionStore}"/>
     public class WavhFileFunctionStoreLayerSubProvider :
         WaveFileFunctionStoreLayerSubProviderBase<WavhFileFunctionStore>
     {
         /// <summary>
-        /// Creates a new <see cref="WavmFileFunctionStoreLayerSubProvider"/>.
+        /// Creates a new <see cref="WavhFileFunctionStoreLayerSubProvider"/>.
         /// </summary>
         /// <param name="instanceCreator">The factory to build the layers with.</param>
         /// <param name="getWaveModelsFunc"> Function to retrieve the WaveModels. </param>
@@ -24,8 +23,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
         /// <paramref name="getWaveModelsFunc"/> is <c>null</c>.
         /// </exception>
         public WavhFileFunctionStoreLayerSubProvider(IWaveLayerInstanceCreator instanceCreator,
-                                                     Func<IEnumerable<IWaveModel>> getWaveModelsFunc) : 
-            base(instanceCreator, getWaveModelsFunc) { }
+                                                     Func<IEnumerable<IWaveModel>> getWaveModelsFunc) :
+            base(instanceCreator, getWaveModelsFunc) {}
 
         public override IEnumerable<object> GenerateChildLayerObjects(object data)
         {
