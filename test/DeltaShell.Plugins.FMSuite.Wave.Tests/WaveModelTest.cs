@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
@@ -1209,11 +1208,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             using (var tempDir = new TemporaryDirectory())
             using (var model = new WaveModel())
             {
+                string modelOutputPath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output");
+                string connectDirectoryPath = tempDir.CopyDirectoryToTempDirectory(modelOutputPath);
+
                 var observer = new NotifyPropertyChangedTestObserver();
                 ((INotifyPropertyChange) model).PropertyChanged += observer.OnPropertyChanged;
 
                 // Call
-                model.WaveOutputData.ConnectTo(tempDir.Path, true);
+                model.WaveOutputData.ConnectTo(connectDirectoryPath, true);
 
                 // Assert
                 Assert.That(observer.NCalls, Is.EqualTo(4));
