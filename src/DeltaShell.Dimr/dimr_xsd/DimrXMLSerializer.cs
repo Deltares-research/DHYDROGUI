@@ -7,7 +7,7 @@
 
 using System.IO;
 
-namespace DeltaShell.Dimr.Xsd
+namespace DeltaShell.Dimr.DimrXsd
 {
     public class DimrXMLSerializer
     {
