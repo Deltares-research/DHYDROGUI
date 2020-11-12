@@ -120,16 +120,18 @@ namespace DelftTools.Hydro.Structures
         [NoNotifyPropertyChange]
         public virtual bool IsPillar
         {
-            get { return BridgeType == BridgeType.Pillar; }
+            get
+            {
+                return false; //return BridgeType == BridgeType.Pillar;//Not yet implemented in the kernel
+            }
             set
             {
                 if (value)
                 {
-                    BridgeType = BridgeType.Pillar;
+                    //BridgeType = BridgeType.Pillar;//Not yet implemented in the kernel
                 }
             }
         }
-
         /// <summary>
         /// Effective crosssection of the bridge. If rectangle a single section tabulated is returned.
         /// </summary>
@@ -177,12 +179,14 @@ namespace DelftTools.Hydro.Structures
 
         [DynamicReadOnly]
         [DisplayName("Pillar width")]
-        [FeatureAttribute(Order = 18)]
+        //[FeatureAttribute(Order = 18)]
+        [Browsable(false)]
         public virtual double PillarWidth { get; set; }
 
         [DynamicReadOnly]
         [DisplayName("Shape factor")]
-        [FeatureAttribute(Order = 19)]
+        //[FeatureAttribute(Order = 19)]
+        [Browsable(false)]
         public virtual double ShapeFactor { get; set; }
 
         [DynamicReadOnly]
@@ -205,7 +209,6 @@ namespace DelftTools.Hydro.Structures
 
         [DisplayName("Shape")]
         [FeatureAttribute(Order = 5, ExportName = "Shape")]
-        [ReadOnly(true)]
         public virtual BridgeType BridgeType
         {
             get { return bridgeType; }
@@ -358,23 +361,23 @@ namespace DelftTools.Hydro.Structures
         [DynamicReadOnlyValidationMethod]
         public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == "BridgeLength" || propertyName == "FrictionType" || propertyName == "Friction" ||
-                propertyName == "GroundLayerEnabled" || propertyName == "InletLossCoefficient" || propertyName == "OutletLossCoefficient")
+            if (propertyName == nameof(BridgeLength) || propertyName == nameof(FrictionType) || propertyName == nameof(Friction) ||
+                propertyName == nameof(GroundLayerEnabled) || propertyName == nameof(InletLossCoefficient) || propertyName == nameof(OutletLossCoefficient))
             {
                 return IsPillar;
             }
 
-            if (propertyName == "GroundLayerThickness" || propertyName == "GroundLayerRoughness")
+            if (propertyName == nameof(GroundLayerThickness) || propertyName == nameof(GroundLayerRoughness))
             {
                 return IsPillar || !GroundLayerEnabled;
             }
 
-            if (propertyName == "BottomLevel" || propertyName == "Width" || propertyName == "Height")
+            if (propertyName == nameof(BottomLevel) || propertyName == nameof(Width) || propertyName == nameof(Height))
             {
                 return !IsRectangle;
             }
 
-            if (propertyName == "PillarWidth" || propertyName == "ShapeFactor")
+            if (propertyName == nameof(PillarWidth) || propertyName == nameof(ShapeFactor))
             {
                 return !IsPillar;
             }

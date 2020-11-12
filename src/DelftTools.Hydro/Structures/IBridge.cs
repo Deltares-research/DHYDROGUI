@@ -106,6 +106,7 @@ namespace DelftTools.Hydro.Structures
 
     public enum BridgeType
     {
-        Rectangle,Tabulated, Pillar
+        Rectangle,
+        Tabulated
     }
 }

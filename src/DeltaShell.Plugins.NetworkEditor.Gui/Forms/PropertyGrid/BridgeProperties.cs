@@ -37,7 +37,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Shape")]
         [Description("Cross sectional bridge shape.")]
         [PropertyOrder(2)]
-        [ReadOnly(true)]
         public BridgeType BridgeType
         {
             get { return data.BridgeType; }
@@ -201,6 +200,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Total width of all pillars.")]
         [PropertyOrder(1)]
         [DynamicReadOnly]
+        [Browsable(false)]//Not yet implemented in the kernel
         public double PillarWidth
         {
             get { return data.PillarWidth; }
@@ -212,6 +212,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Shape/Form factor.")]
         [PropertyOrder(2)]
         [DynamicReadOnly]
+        [Browsable(false)]//Not yet implemented in the kernel
         public double ShapeFactor
         {
             get { return data.ShapeFactor; }
@@ -258,23 +259,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == "Length" || propertyName == "InletLoss" || propertyName == "OutletLoss" || propertyName == "GroundlayerEnabled" || 
-                propertyName == "FrictionType" || propertyName == "Friction")
+            if (propertyName == nameof(Length) || propertyName == nameof(InletLoss) || propertyName == nameof(OutletLoss) || propertyName == nameof(GroundlayerEnabled) || 
+                propertyName == nameof(FrictionType) || propertyName == nameof(Friction))
             {
                 return data.IsPillar;
             }
 
-            if(propertyName == "GroundlayerThickness" || propertyName == "GroundlayerRoughness")
+            if(propertyName == nameof(GroundlayerThickness) || propertyName == nameof(GroundlayerRoughness))
             {
                 return data.IsPillar || !data.GroundLayerEnabled;
             }
 
-            if (propertyName == "PillarWidth" || propertyName == "ShapeFactor")
+            if (propertyName == nameof(PillarWidth) || propertyName == nameof(ShapeFactor))
             {
                 return !data.IsPillar;
             }
 
-            if (propertyName == "BottomLevel" || propertyName == "Width" || propertyName == "Height")
+            if (propertyName == nameof(BottomLevel) || propertyName == nameof(Width) || propertyName == nameof(Height))
             {
                 return !data.IsRectangle;
             }

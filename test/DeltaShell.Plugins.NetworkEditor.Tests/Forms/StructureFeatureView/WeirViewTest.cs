@@ -10,6 +10,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
+using DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
@@ -227,6 +228,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var weir = new Weir() { WeirFormula = gatedWeirFormula };
             Assert.That(() => { weirViewData.UpdateDataWithWeir(weir); }, Throws.Nothing);
             Assert.That(() => { view.Data = weir; }, Throws.Nothing);
+        }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowBridge()
+        {
+            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            var bridge = CompositeStructureViewTestHelper.GetBridge();
+            bridge.BridgeType = BridgeType.Rectangle;
+
+            CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(bridge, network);
         }
     }
 }

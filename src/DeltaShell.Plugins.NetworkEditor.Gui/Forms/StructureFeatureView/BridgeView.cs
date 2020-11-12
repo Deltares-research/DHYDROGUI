@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             bridgeTypeCombobox.SelectedItem = bridge.BridgeType;
             tableViewTabulatedData.Visible = bridge.BridgeType == BridgeType.Tabulated;
-            var isPillar = bridge.BridgeType == BridgeType.Pillar;
+            var isPillar = bridge.IsPillar;
             var isRectangle = bridge.BridgeType == BridgeType.Rectangle;
 
             geometrySplitContainer.SplitterDistance = isPillar

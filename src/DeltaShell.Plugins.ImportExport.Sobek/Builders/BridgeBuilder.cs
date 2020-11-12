@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                                     FlowDirection = GetFlowDirection(sobekBridge.Direction),
                                     PillarWidth = sobekBridge.TotalPillarWidth,
                                     ShapeFactor = sobekBridge.FormFactor,
-                                    BridgeType = BridgeType.Pillar
+                                    BridgeType = BridgeType.Rectangle
                                 };
 
             if (sobekBridge.BridgeType != DeltaShell.Sobek.Readers.SobekDataObjects.BridgeType.PillarBridge)

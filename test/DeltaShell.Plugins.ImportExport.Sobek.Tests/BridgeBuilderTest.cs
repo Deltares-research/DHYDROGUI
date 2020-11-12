@@ -182,6 +182,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Ignore("not yet implemented in the kernel")]
         public void BuildPillarBridge()
         {
             var sobekBridge = new SobekBridge
@@ -208,7 +209,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Bridge pillarBridge = bridges.FirstOrDefault();
 
             Assert.IsNotNull(pillarBridge);
-            Assert.AreEqual(BridgeType.Pillar,pillarBridge.BridgeType);
+            Assert.IsTrue(pillarBridge.IsPillar);
             Assert.AreEqual(123.45f, pillarBridge.PillarWidth);
             Assert.AreEqual(0.123f, pillarBridge.ShapeFactor);
         }
