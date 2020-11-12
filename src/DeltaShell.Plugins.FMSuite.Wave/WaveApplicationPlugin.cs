@@ -109,12 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private void OnHybridProjectRepositoryOpening(object sender, ProjectOpeningEventArgs e)
         {
             Version projectVersion = Application.HybridProjectRepository.GetPluginFileFormatVersions(e.ProjectPath)[Name];
-            if (projectVersion == System.Version.Parse(FileFormatVersion))
-            {
-                return;
-            }
-
-            WavesMigrator.Migrate(e.ProjectPath, projectVersion);
+            WavesMigrator.Migrate(e.ProjectPath, projectVersion, System.Version.Parse(FileFormatVersion));
         }
 
         private void Application_ProjectOpened(Project project)
