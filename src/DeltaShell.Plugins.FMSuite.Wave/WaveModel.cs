@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
-            runner = new DimrRunner(this);
+            runner = new DimrRunner(this, new DimrApiFactory());
             BuildModel(creationCode, false);
 
             ShowModelRunConsole = false;

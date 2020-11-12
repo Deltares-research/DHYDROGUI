@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// </summary>
         public WaterFlowFMModel() : base("FlowFM")
         {
-            runner = new DimrRunner(this);
+            runner = new DimrRunner(this, new DimrApiFactory());
 
             // Create sediment model data item
             SedimentModelDataItem = new SedimentModelDataItem();

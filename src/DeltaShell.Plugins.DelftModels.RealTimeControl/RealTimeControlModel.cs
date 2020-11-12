@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             OutputDocuments = new EventedList<ReadOnlyOutputTextDocument>();
 
-            runner = new DimrRunner(this);
+            runner = new DimrRunner(this, new DimrApiFactory());
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
 
             if (outputFileFunctionStore != null)

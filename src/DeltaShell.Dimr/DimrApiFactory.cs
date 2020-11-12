@@ -2,13 +2,10 @@
 
 namespace DeltaShell.Dimr
 {
-    public static class DimrApiFactory
+    public class DimrApiFactory : IDimrApiFactory
     {
-        public static IDimrApi CreateNew(bool runRemote = true)
+        public IDimrApi CreateNew(bool runRemote = true)
         {
-            /*if(useMessagesBuffering)
-                return new DimrExe(useMessagesBuffering);*/
-
             if (!Environment.Is64BitOperatingSystem || !runRemote && !Environment.Is64BitProcess)
             {
                 return null;
