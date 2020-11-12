@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
@@ -6,12 +7,13 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
+using CulvertType = DelftTools.Hydro.CulvertType;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
     public class CulvertBuilder : BranchStructureBuilderBase<Culvert>
     {
-        protected static readonly ILog Log = LogManager.GetLogger(typeof(BridgeBuilder));
+        protected static readonly ILog Log = LogManager.GetLogger(typeof(CulvertBuilder));
 
         private readonly Dictionary<string, SobekCrossSectionDefinition> sobekCrossSectionDefinitions;
         private IList<SobekValveData> sobekValveData;
@@ -101,6 +103,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 }
             }
 
+            switch (culvert.CulvertType)
+            {
+                case CulvertType.Siphon:
+                    Log.WarnFormat("Siphon culverts are not yet supported in the kernel, skipping this culvert with id : {0}", (string.IsNullOrEmpty(structure.Name) ? "<No id is set>" : structure.Name));
+                    yield break; //not yet implemented in the kernel
+                case CulvertType.InvertedSiphon:
+                    Log.WarnFormat("Inverted siphon culverts are not yet supported in the kernel, skipping this culvert with id : {0}", (string.IsNullOrEmpty(structure.Name) ? "<No id is set>" : structure.Name));
+                    yield break; //not yet implemented in the kernel
+            }
 
             yield return culvert;
         }

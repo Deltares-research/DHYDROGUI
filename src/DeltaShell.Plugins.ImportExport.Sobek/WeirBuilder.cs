@@ -7,6 +7,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
@@ -16,6 +17,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     /// </summary>
     public class WeirBuilder:BranchStructureBuilderBase<Weir>
     {
+        protected static readonly ILog Log = LogManager.GetLogger(typeof(Builders.WeirBuilder));
         //public Dictionary<string, CrossSectionDefinition> CrossSectionDefinitions { get; private set; }
         public Dictionary<string, SobekCrossSectionDefinition> SobekCrossSectionDefinitions { get; private set; }
 
@@ -195,6 +197,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
             else
             {
+                switch (weir.WeirFormula)
+                {
+                    case PierWeirFormula pierWeirFormula:
+                        Log.WarnFormat("Weirs with pier formula are not yet supported in the kernel, skipping this weir with id : {0}", (string.IsNullOrEmpty(weir.Name) ? "<No id is set>" : weir.Name));
+                        yield break; //not yet implemented in the kernel
+                    case RiverWeirFormula riverWeirFormula:
+                        Log.WarnFormat("Weirs with river formula are not yet supported in the kernel, skipping this weir with id : {0}", (string.IsNullOrEmpty(weir.Name) ? "<No id is set>" : weir.Name));
+                        yield break; //not yet implemented in the kernel
+                }
+
                 yield return weir;
             }
             yield return weir;
