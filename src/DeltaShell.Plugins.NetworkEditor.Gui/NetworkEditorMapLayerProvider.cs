@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEnumerable<IManhole>
                    || data is IEnumerable<OutletCompartment>
                    || data is IEnumerable<Compartment>
-                   || data is IEnumerable<Orifice>
+                   || data is IEnumerable<IOrifice>
                    || data is IEnumerable<IPipe>
                    || data is IEnumerable<ISewerConnection>
                    || (data is IEventedList<Pump2D> && parentObject is HydroArea)
@@ -713,9 +713,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     var compartmentLayer = CreateNetworkVectorLayer<Compartment>(compartments, "Compartments", hydroNetwork,
                         MaxVisibilityLayerValue);
                     return compartmentLayer;
-                case IEnumerable<Orifice> orifices:
-                    return CreateNetworkVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork,
-                        MaxVisibilityLayerValue);
                 case IEnumerable<IPipe> pipes:
                     return CreateNetworkVectorLayer<Pipe>(pipes, "Pipes", hydroNetwork);
                 case IEnumerable<ISewerConnection> sewerConnections:
@@ -745,9 +742,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         refreshForChangedItem: o =>
                             o is Channel channel &&
                             channel.ObservationPoints.Any());
+                case IEnumerable<IOrifice> orifices:
+                    return CreateNetworkVectorLayer<IOrifice>(orifices, "Orifices", hydroNetwork,
+                        MaxVisibilityLayerValue, o => o is Channel channel && channel.Weirs.OfType<IOrifice>().Any());
                 case IEnumerable<IWeir> weirs:
                     return CreateNetworkVectorLayer<Weir>(weirs, "Weirs", hydroNetwork, MaxVisibilityLayerValue,
-                        o => o is Channel channel && channel.Weirs.Any());
+                        o => o is Channel channel && channel.Weirs.OfType<Weir>().Any());
                 case IEnumerable<IGate> gates:
                     return CreateNetworkVectorLayer<Gate>(gates, "Gates", hydroNetwork,
                         refreshForChangedItem: o => o is Channel channel && channel.Gates.Any());
@@ -1018,7 +1018,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                            };
             }
             if (type == typeof(Weir) || 
-                type == typeof(Orifice) || 
+                type == typeof(IOrifice) ||
                 type == typeof(Pump))
             {
                 return new List<ISnapRule>
@@ -1084,7 +1084,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) || 
                 type == typeof(Bridge) || type == typeof(ExtraResistance) 
-                || type == typeof(OutletCompartment) || type == typeof(Orifice))
+                || type == typeof(OutletCompartment) || type == typeof(IOrifice))
             {
                 return new List<IFeatureRenderer> { new StructureRenderer() };
             }
@@ -1119,6 +1119,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (type == typeof(Pump))
             {
                 return l => new Pump(false);
+            }
+
+            if (type == typeof(IOrifice))
+            {
+                return l => new Orifice(true);
             }
 
             if (type == typeof(Weir))

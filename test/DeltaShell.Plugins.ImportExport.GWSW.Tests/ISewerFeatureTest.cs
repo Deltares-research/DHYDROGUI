@@ -332,11 +332,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var orifice = new Orifice(orificeName);
             AddSewerFeatureToNetwork(orifice, network);
             Assert.That(Enumerable.Count<ISewerConnection>(network.SewerConnections), Is.EqualTo(1));
-            Assert.That(Enumerable.Count<Orifice>(network.Orifices), Is.EqualTo(1));
+            Assert.That(Enumerable.Count<IOrifice>(network.Orifices), Is.EqualTo(1));
 
             AddSewerFeatureToNetwork(orifice, network);
             Assert.That(Enumerable.Count<ISewerConnection>(network.SewerConnections), Is.EqualTo(1));
-            Assert.That(Enumerable.Count<Orifice>(network.Orifices), Is.EqualTo(1));
+            Assert.That(Enumerable.Count<IOrifice>(network.Orifices), Is.EqualTo(1));
         }
 
         #endregion

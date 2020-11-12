@@ -160,9 +160,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             {
                 return GetEnumerableList(Network.Compartments, (INotifyCollectionChange) Network);
             }
-            if (FeatureType == typeof(Orifice))
+            if (FeatureType == typeof(IOrifice))
             {
-                return GetEnumerableList(Network.Orifices.OfType<Orifice>(), (INotifyCollectionChange) Network);
+                return GetEnumerableList(Network.Orifices, (INotifyCollectionChange) Network);
             }
             if (FeatureType == typeof(SewerConnection))
             {

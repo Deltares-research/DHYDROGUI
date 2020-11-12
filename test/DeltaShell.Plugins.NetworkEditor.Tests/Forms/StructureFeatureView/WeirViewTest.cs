@@ -160,7 +160,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();
                 Assert.That(tableView, Is.Not.Null);
                 Assert.That(tableView.Columns.Select(c => c.Name), Contains.Item(nameof(WeirPropertiesRow.Formula)));
-                Assert.That(tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.Formula)].ReadOnly, Is.True);
+                //Assert.That(tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.Formula)].ReadOnly, Is.True);
+            });
+        }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowOrificeMDEAndMakeSureWeirFormulaIsAlwaysReadyOnly()
+        {
+            var view = new VectorLayerAttributeTableView()
+            {
+                TableView = { AutoGenerateColumns = false }
+            };
+            view.Data = new VectorLayer
+            {
+                DataSource = new FeatureCollection(new[] { new Orifice() }.ToList(), typeof(Orifice))
+            };
+            view.SetCreateFeatureRowFunction(feature => new WeirPropertiesRow((IWeir)feature));
+            WindowsFormsTestHelper.ShowModal(view.TableView, (f) =>
+            {
+                var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();
+                Assert.That(tableView, Is.Not.Null);
+                Assert.That(tableView.Columns.Select(c => c.Name), Contains.Item(nameof(WeirPropertiesRow.Formula)));
+                //Assert.That(tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.Formula)].Visible, Is.False);
             });
         }
         [Test]

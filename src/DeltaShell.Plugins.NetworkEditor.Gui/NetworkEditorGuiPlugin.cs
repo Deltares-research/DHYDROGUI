@@ -268,7 +268,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     GetCompositeViewData = o => gui.Application.Project.GetAllItemsRecursive()
                                                     .OfType<IDataItem>()
                                                     .FirstOrDefault(d => d.Value is IHydroNetwork && 
-                                                                         ((IHydroNetwork)d.Value).Weirs == o),
+                                                                         (((IHydroNetwork)d.Value).Weirs == o || ((IHydroNetwork)d.Value).Orifices == o)),
                     GetViewData = o =>
                         {
                             var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
@@ -284,6 +284,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
                             v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
                             v.SetCreateFeatureRowFunction(feature => new WeirPropertiesRow((IWeir)feature));
+                            if(o is IEnumerable<IOrifice> orifices)
+                                v.TableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.Formula)].Visible = false;
                         }
                 };
             yield return new ViewInfo<IEnumerable<IGate>, ILayer, VectorLayerAttributeTableView>

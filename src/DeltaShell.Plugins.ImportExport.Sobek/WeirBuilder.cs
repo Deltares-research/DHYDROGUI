@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -186,6 +187,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             var weir = new Weir(sobekStructureDefinition.Id);
             weir.WeirFormula = CreateWeirFormula(weir, sobekStructureDefinition);
             SetGeneralProperties(sobekStructureDefinition, weir);
+            if (weir.IsGated)
+            {
+                var orifice = new Orifice(sobekStructureDefinition.Id);
+                orifice.CopyFrom(weir);
+                yield return orifice;
+            }
+            else
+            {
+                yield return weir;
+            }
             yield return weir;
         }
 

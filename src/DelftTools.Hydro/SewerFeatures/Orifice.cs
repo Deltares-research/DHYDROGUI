@@ -14,8 +14,8 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             
         }
-
-        public Orifice(string name) : base(name)
+        public Orifice(bool allowTimeVaryingData = false) : this("Orifice", allowTimeVaryingData) { }
+        public Orifice(string name, bool allowTimeVaryingData = false) : base(name, allowTimeVaryingData)
         {
             WeirFormula = new GatedWeirFormula();
         }

@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(newWeirTool);
 
             var newOrificeTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
-                  && layer.DataSource.FeatureType == typeof(Orifice) && (layer.DataSource is HydroNetworkFeatureCollection), AddOrificeToolName) { Cursor = AddNewOrificeCursor };
+                  && layer.DataSource.FeatureType == typeof(IOrifice) && (layer.DataSource is HydroNetworkFeatureCollection), AddOrificeToolName) { Cursor = AddNewOrificeCursor };
             AddMapTool(newOrificeTool);
 
             var newCulvertTool = new NewPointFeatureTool<Culvert>(AddCulvertToolName) { Cursor = NewCulvertToolCursor };
