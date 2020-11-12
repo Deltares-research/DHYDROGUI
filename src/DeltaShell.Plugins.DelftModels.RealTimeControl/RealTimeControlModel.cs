@@ -1032,7 +1032,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                         OutputDocuments.Add(textDocument);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Log.ErrorFormat("Error reading file");
                 }
