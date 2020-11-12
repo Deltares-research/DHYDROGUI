@@ -167,12 +167,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
             /// <summary>
             /// The value of the "name" column, which contains the name of the restart file.
             /// </summary>
-            private string name;
+            private string name = string.Empty;
 
             /// <summary>
             /// The value of the "content" column, which contains the content of the restart file.
             /// </summary>
-            private string content;
+            private string content = string.Empty;
 
             /// <summary>
             /// Writes the current instance to the specified <see cref="targetDirPath"/>.

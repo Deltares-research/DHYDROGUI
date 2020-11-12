@@ -4,7 +4,6 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Properties;
-using DeltaShell.NGHS.Common.Gui.Restart;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 
@@ -16,12 +15,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
     /// <seealso cref="MenuItemContextMenuStripAdapter"/>
     /// <remarks>
     /// This class can be removed once the input restart file of the <see cref="RealTimeControlModel"/> is FileBased;
-    /// instead, the <see cref="RestartFileContextMenu"/> should be used.
+    /// instead, the <see cref="NGHS.Common.Gui.Restart.RestartFileContextMenu"/> should be used.
     /// </remarks>
     public class RealTimeControlOutputRestartFileContextMenu : MenuItemContextMenuStripAdapter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RestartFileContextMenu"/> class.
+        /// Initializes a new instance of the <see cref="NGHS.Common.Gui.Restart.RestartFileContextMenu"/> class.
         /// </summary>
         /// <param name="restartFile">The restart file.</param>
         /// <param name="node">The corresponding node.</param>
