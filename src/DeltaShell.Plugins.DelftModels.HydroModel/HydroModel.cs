@@ -814,7 +814,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     // are send from async output handlers will cause deadlock
                     bool runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
                                                HydroModelApplicationPlugin.MainThreadId;
-                    dimrApi = DimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
+                    dimrApi = dimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
 
                     if (dimrApi == null)
                     {
@@ -840,12 +840,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
                 catch (DimrErrorCodeException e)
                 {
-                    Console.WriteLine(e.Message);
-                    Log.ErrorFormat(e.Message);
-
-                    dimrApi?.Dispose();
-                    dimrApi = null;
-
+                    HandleDimrErrorCodeException(e);
                     throw;
                 }
             }
@@ -853,6 +848,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 CurrentWorkflow.Initialize();
             }
+        }
+
+        private void HandleDimrErrorCodeException(DimrErrorCodeException e)
+        {
+            Log.ErrorFormat(e.Message);
+
+            dimrApi?.Dispose();
+            dimrApi = null;
         }
 
         private string GetKernelDirectories(IEnumerable<IDimrModel> dimrModels)
@@ -949,19 +952,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnFinish()
         {
-            dimrApi?.Finish();
-
-            if (DoDimrRun())
+            try
             {
-                List<IDimrModel> dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
-                dimrModels.ForEach(m => m.OnFinishIntegratedModelRun(WorkingDirectoryPath));
-            }
-            else
-            {
-                if (CurrentWorkflow != null)
+                if (dimrApi != null)
                 {
-                    CurrentWorkflow.Finish();
+                    int returnCode = dimrApi.Finish();
+                    if (returnCode != 0)
+                    {
+                        throw new DimrErrorCodeException(Status, returnCode);
+                    }
                 }
+
+                if (DoDimrRun())
+                {
+                    List<IDimrModel> dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
+                    dimrModels.ForEach(m => m.OnFinishIntegratedModelRun(WorkingDirectoryPath));
+                }
+                else
+                {
+                    if (CurrentWorkflow != null)
+                    {
+                        CurrentWorkflow.Finish();
+                    }
+                }
+            }
+            catch (DimrErrorCodeException e)
+            {
+                HandleDimrErrorCodeException(e);
+                throw;
             }
         }
 
@@ -1069,8 +1087,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         #region HydroModelBuilder
 
-        private static HydroModelBuilder builder = new HydroModelBuilder();
+        private static readonly HydroModelBuilder builder = new HydroModelBuilder();
         private IDimrApi dimrApi;
+        private readonly DimrApiFactory dimrApiFactory = new DimrApiFactory();
 
         [EditAction]
         public virtual void RefreshDefaultModelWorkflows()

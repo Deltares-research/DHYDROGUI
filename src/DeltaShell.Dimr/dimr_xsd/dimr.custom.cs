@@ -1,7 +1,7 @@
 ﻿using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace DeltaShell.Dimr.Xsd
+namespace DeltaShell.Dimr.DimrXsd
 {
     public partial class dimrXML
     {

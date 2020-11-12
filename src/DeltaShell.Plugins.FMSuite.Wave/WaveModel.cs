@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
-            runner = new DimrRunner(this);
+            runner = new DimrRunner(this, new DimrApiFactory());
 
             OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
             OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
