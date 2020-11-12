@@ -80,6 +80,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 }
 
             }
+            else
+            {
+                Log.WarnFormat("Bridge pillars are not yet supported in the kernel, skipping this bridge with id : {0}", (string.IsNullOrEmpty(structure.Name) ? "<No id is set>" : structure.Name));
+                yield break; //not yet implemented in the kernel
+            }
 
 
             yield return bridge;
