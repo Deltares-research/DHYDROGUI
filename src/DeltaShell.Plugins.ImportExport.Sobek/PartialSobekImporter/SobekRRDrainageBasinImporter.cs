@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -308,10 +309,25 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (dictionaryLateralSources != null && dictionaryLateralSources.ContainsKey(link.NodeToId))
                 {
                     Link(linksource, dictionaryLateralSources[link.NodeToId], link.Id);
-                    if (dictionaryLateralSourcesData != null && 
-                        dictionaryLateralSources[link.NodeToId] is LateralSource lateralSource && 
+                    if (dictionaryLateralSourcesData != null &&
+                        dictionaryLateralSources[link.NodeToId] is LateralSource lateralSource &&
                         dictionaryLateralSourcesData.ContainsKey(lateralSource))
+                    {
                         dictionaryLateralSourcesData[lateralSource].DataType = Model1DLateralDataType.FlowRealTime;
+                        
+                        if (HydroNetwork.Retentions.Any(r => r.Name == link.NodeToId))
+                        {
+                            //remove retention because it is connected to RR
+                            var retentionsToDelete = HydroNetwork.Retentions.Where(r => r.Name == link.NodeToId).ToArray();
+                            foreach (var retention in retentionsToDelete)
+                            {
+                                var network = retention.Network;
+                                network.BeginEdit(new DefaultEditAction("Delete retention " + retention.Name));
+                                retention.Branch.BranchFeatures.Remove(retention);
+                                network.EndEdit();
+                            }
+                        }
+                    }
                     continue;
                 }
 
