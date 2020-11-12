@@ -646,4 +646,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_" xml:space="preserve">
     <value>Error while importing a {0} from {1}</value>
   </data>
+  <data name="FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features" xml:space="preserve">
+    <value>Old his output found, please run the model again. (cannot map {0} to input or generated features)</value>
+  </data>
+  <data name="FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_feature_geometry_" xml:space="preserve">
+    <value>Old his output found, please run the model again. (cannot map {0} to input or generated feature geometry)</value>
+  </data>
 </root>

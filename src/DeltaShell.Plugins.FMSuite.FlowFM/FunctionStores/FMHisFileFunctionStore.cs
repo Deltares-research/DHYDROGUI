@@ -15,6 +15,7 @@ using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -91,14 +92,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     //check if this variable can be mapped to an input or created feature
                     if (!CanBeMappedToFeatureName(dimensions, nodeCoordinatesVariableNames))
                     {
-                        log.Warn($"Old his output found, please run the model again. (cannot map {secondDimensionName} to input or generated features)");
+                        log.Warn(string.Format(Resources.FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features, secondDimensionName));
                         LoadHisFileVariableNamesByDimensionToMapUsingBackWardsCompatibility(secondDimensionName, netCdfVariable);
                     }
 
                     //check if this variable can be mapped to an input or created feature geometry
                     if (!CanBeMappedToFeatureGeometry(dimensions))
                     {
-                        log.Warn($"Old his output found, please run the model again. (cannot map {secondDimensionName} to input or generated feature geometry)");
+                        log.Warn(string.Format(Resources.FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_feature_geometry_, secondDimensionName));
                         LoadHisFileVariableGeometriesByDimensionToMapUsingBackWardsCompatibility(secondDimensionName, netCdfVariable);
                     }
 
@@ -175,15 +176,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             string dimensionName = function.Attributes[NcNameAttribute];
             if (timeSeriesIdsByDimensionNameDictionary.ContainsKey(dimensionName))
             {
-                IMultiDimensionalArray<IFeature> cachedArray;
-                if (!cachedFeatures.TryGetValue(dimensionName, out cachedArray) || cachedArray == null)
+                if (!cachedFeatures.TryGetValue(dimensionName, out IMultiDimensionalArray<IFeature> cachedArray) || cachedArray == null)
                 {
                     List<IFeature> features = featuresDictionary[dimensionName].ToList();
                     int functionSize = GetSize(function);
-                    cachedArray = new MultiDimensionalArray<IFeature>(features, new[]
-                    {
-                        functionSize
-                    });
+                    cachedArray = new MultiDimensionalArray<IFeature>(features, functionSize);
                     cachedFeatures[dimensionName] = cachedArray;
                 }
 
@@ -428,7 +425,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             return coordinatesVariableDimensions?.Length != 1 ? Array.Empty<double>() : GetNetCdfVariableArray(coordinatesVariableName);
         }
 
-        private void LoadHisFileVariableNamesByDimensionToMap(NetCdfVariableInfo[] dataVariables)
+        private void LoadHisFileVariableNamesByDimensionToMap(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             // initialize features by reading their names and
             // match by first dimension name
@@ -593,12 +590,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 }
             };
 
-        private static string GetFeatureNamesVariableForBackWardsCompatibilityName(NetCdfFile netCdfFile, NetCdfVariable netcdfVariable, string[] defaultNames)
+        private static string GetFeatureNamesVariableForBackWardsCompatibilityName(NetCdfFile netCdfFile, NetCdfVariable netCdfVariable, IReadOnlyList<string> defaultNames)
         {
-            string featureNamesVariableNames = netCdfFile.GetAttributeValue(netcdfVariable, "coordinates");
+            string featureNamesVariableNames = netCdfFile.GetAttributeValue(netCdfVariable, "coordinates");
             if (featureNamesVariableNames == null)
             {
-                if (defaultNames.Length == 1)
+                if (defaultNames.Count == 1)
                 {
                     return defaultNames[0];
                 }
@@ -620,12 +617,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             };
             string featureNamesVariableName = featureNamesVariableNames
                                               .Split(separator, StringSplitOptions.RemoveEmptyEntries)
-                                              .SingleOrDefault(s =>
-                                                                   s.IndexOf("x", StringComparison.InvariantCultureIgnoreCase) < 0 &&
-                                                                   s.IndexOf("y", StringComparison.InvariantCultureIgnoreCase) < 0);
+                                              .SingleOrDefault(s => s.IndexOf("x", StringComparison.InvariantCultureIgnoreCase) < 0 &&
+                                                                    s.IndexOf("y", StringComparison.InvariantCultureIgnoreCase) < 0);
             if (featureNamesVariableName == null)
             {
-                if (defaultNames.Length == 1)
+                if (defaultNames.Count == 1)
                 {
                     return defaultNames[0];
                 }
@@ -682,35 +678,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         {
             foreach (string dimensionName in timeSeriesIdsByDimensionNameDictionary.Keys.Where(dn => !mapTypeDictionary.ContainsKey(dn)))
             {
-                log.Warn($"could not find type for this dimension name {dimensionName}, can not safely map the dimension features to input or generate a structure of this type. Skipping reading");
-            }
-
-            foreach (string dimensionName in timeSeriesIdsByDimensionNameDictionary.Keys.Where(mapTypeDictionary.ContainsKey))
-            {
-                AddFeaturesToDictionary(dimensionName, GetOrCreateFeatures(features, dimensionName, timeSeriesIdsByDimensionNameDictionary[dimensionName].ToArray()).ToArray());
+                if (mapTypeDictionary.ContainsKey(dimensionName))
+                {
+                    AddFeaturesToDictionary(dimensionName, GetOrCreateFeatures(features, dimensionName, timeSeriesIdsByDimensionNameDictionary[dimensionName].ToArray()).ToArray());
+                }
+                else
+                {
+                    log.Warn($"could not find type for this dimension name {dimensionName}, can not safely map the dimension features to input or generate a structure of this type. Skipping reading");
+                }
             }
         }
 
-        private IEnumerable<IFeature> GetOrCreateFeatures(IFeature[] features, string dimensionName, string[] timeSeriesIds)
+        private IEnumerable<IFeature> GetOrCreateFeatures(IFeature[] features, string dimensionName, IReadOnlyList<string> timeSeriesIds)
         {
-            for (var i = 0; i < timeSeriesIds.Length; i++)
+            for (var i = 0; i < timeSeriesIds.Count; i++)
             {
                 string name = timeSeriesIds[i];
                 Type type = mapTypeDictionary[dimensionName];
-                yield return features?
-                                 .FirstOrDefault(m =>
-                                                     m.GetType().Implements(type)
-                                                     && m is INameable feature
-                                                     && feature.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                             ?? CreateFeatureFromNetCdf(
-                                 name,
-                                 type,
-                                 geometryByDimensionNameDictionary.ContainsKey(dimensionName)
-                                     ? geometryByDimensionNameDictionary[dimensionName].ElementAt(i)
-                                     : null,
-                                 weirFormulaByDimensionName.ContainsKey(dimensionName)
-                                     ? weirFormulaByDimensionName[dimensionName]()
-                                     : null);
+                yield return features?.FirstOrDefault(m => m.GetType().Implements(type)
+                                                           && m is INameable feature
+                                                           && feature.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                             ?? CreateFeatureFromNetCdf(name, type,
+                                                        geometryByDimensionNameDictionary.ContainsKey(dimensionName)
+                                                            ? geometryByDimensionNameDictionary[dimensionName].ElementAt(i)
+                                                            : null,
+                                                        weirFormulaByDimensionName.ContainsKey(dimensionName)
+                                                            ? weirFormulaByDimensionName[dimensionName]()
+                                                            : null);
             }
         }
 
@@ -742,14 +736,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private static string CharArrayToString(char[] chars)
         {
-            return new string(chars).TrimEnd(new[]
-            {
-                '\0',
-                ' '
-            });
+            return new string(chars).TrimEnd('\0', ' ');
         }
 
-        private IList<string> GetNetCdfFeatureVariableNames(string variableName)
+        private IEnumerable<string> GetNetCdfFeatureVariableNames(string variableName)
         {
             IEnumerable<char[]> variableArray = GetNetCdfVariableIEnumerable<char[]>(variableName);
             List<string> variableContent = variableArray?.Select(CharArrayToString).ToList();

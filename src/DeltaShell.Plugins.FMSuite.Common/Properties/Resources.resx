@@ -159,4 +159,7 @@
   <data name="StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_" xml:space="preserve">
     <value>Failed to convert .ini structure definition '{0}' to actual structure.</value>
   </data>
+  <data name="FMNetCdfFileFunctionStore_Could_not_parse_time_reference" xml:space="preserve">
+    <value>Could not parse time reference</value>
+  </data>
 </root>
