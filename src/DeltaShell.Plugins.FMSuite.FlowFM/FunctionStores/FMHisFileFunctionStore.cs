@@ -676,7 +676,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private void InitializeFeatures(IFeature[] features)
         {
-            foreach (string dimensionName in timeSeriesIdsByDimensionNameDictionary.Keys.Where(dn => !mapTypeDictionary.ContainsKey(dn)))
+            foreach (string dimensionName in timeSeriesIdsByDimensionNameDictionary.Keys)
             {
                 if (mapTypeDictionary.ContainsKey(dimensionName))
                 {
