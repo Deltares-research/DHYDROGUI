@@ -164,8 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 }
 
                 // Then
-                IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(Call, Level.Error);
-                Assert.That(messages, Is.Empty);
+                Assert.That(TestHelper.GetAllRenderedMessages(Call, Level.Error), Is.Empty);
             }
         }
     }
