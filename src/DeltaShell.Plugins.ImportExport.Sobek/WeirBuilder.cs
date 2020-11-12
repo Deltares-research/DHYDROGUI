@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             var sobekUniversalWeir = structure.Definition as SobekUniversalWeir;
             if (sobekUniversalWeir != null)
             {
-                weir.CrestLevel = sobekUniversalWeir.CrestLevelShift;
+                weir.CrestLevel = (weir.WeirFormula as FreeFormWeirFormula)?.Z.DefaultIfEmpty().Min() ?? sobekUniversalWeir.CrestLevelShift;
             }
 
             var riverWeir = structure.Definition as SobekRiverWeir;
