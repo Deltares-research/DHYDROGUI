@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             VectorStyle normalStyle = CulvertStyling.NormalInletStyle;
             VectorStyle selectedStyle = CulvertStyling.SelectedInletStyle;
 
-            var level = Structure.GroundLayerThickness + Structure.EffectiveCrossSectionDefinition.LowestPoint;
+            var level = Structure.GroundLayerThickness + (Structure.BridgeType == BridgeType.YzProfile ? Structure.YZCrossSectionDefinition.LowestPoint : Structure.EffectiveCrossSectionDefinition.LowestPoint);
             var x = OffsetInSideView - Structure.Length / 2;
             var width = Structure.Length;
 
@@ -141,7 +141,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             if (bridge.IsPillar)
                 return null;
 
-            IList<Coordinate> yzValues = bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
+            IList<Coordinate> yzValues = bridge.BridgeType == BridgeType.YzProfile
+                ? bridge.YZCrossSectionDefinition.FlowProfile.ToList()
+                : bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
 
             if (yzValues.Count <= 2)
                 return null;
@@ -169,7 +171,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             if (bridge.IsPillar)
                 return null;
 
-            IList<Coordinate> yzValues = bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
+            IList<Coordinate> yzValues = bridge.BridgeType == BridgeType.YzProfile
+                ? bridge.YZCrossSectionDefinition.FlowProfile.ToList()
+                : bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
 
             if (yzValues.Count <= 2)
                 return null;

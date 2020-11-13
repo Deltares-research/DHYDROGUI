@@ -79,6 +79,11 @@ namespace DelftTools.Hydro.Structures
         CrossSectionDefinitionZW TabulatedCrossSectionDefinition { get; }
 
         /// <summary>
+        /// Geometry used if type is Yz
+        /// </summary>
+        CrossSectionDefinitionYZ YZCrossSectionDefinition { get; }
+
+        /// <summary>
         /// Total width of pillars
         /// </summary>
         double PillarWidth { get; set; }
@@ -92,6 +97,11 @@ namespace DelftTools.Hydro.Structures
         /// ZW (used for databinding). Use bridgegeometrytype to find out about geometry etc
         /// </summary>
         bool IsTabulated { get; set; }
+        
+        /// <summary>
+        /// YZ (used for databinding). Use bridgegeometrytype to find out about geometry etc
+        /// </summary>
+        bool IsYz { get; set; }
 
         /// <summary>
         /// Rectangle (used for databinding). Use bridgegeometrytype to find out about geometry etc
@@ -107,6 +117,7 @@ namespace DelftTools.Hydro.Structures
     public enum BridgeType
     {
         Rectangle,
-        Tabulated
+        Tabulated,
+        YzProfile
     }
 }

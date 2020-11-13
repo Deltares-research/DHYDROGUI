@@ -47,11 +47,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             if (tableViewTabulatedData != null)
             {
                 tableViewTabulatedData.FocusedRowChanged -= OnTableViewTabulatedDataOnFocusedRowChanged;
+                tableViewTabulatedData.FocusedRowChanged -= OnTableViewYzDataOnFocusedRowChanged;
             }
         }
 
         void Bridge_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (e.PropertyName.Equals(nameof(bridge.BridgeType)))
+            {
+                switch (bridge.BridgeType)
+                {
+                    case BridgeType.YzProfile 
+                        when tableViewTabulatedData.EditableObject != null &&
+                             tableViewTabulatedData.EditableObject.Equals(bridge.TabulatedCrossSectionDefinition):
+                    case BridgeType.Tabulated 
+                        when tableViewTabulatedData.EditableObject != null &&
+                             tableViewTabulatedData.EditableObject.Equals(bridge.YZCrossSectionDefinition):
+                        SetTableData();
+                        break;
+                }
+            }
             SyncUI();
         }
 
@@ -98,15 +113,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void SetTableData()
         {
-            if (bridge.TabulatedCrossSectionDefinition == null)
+            if (bridge.BridgeType == BridgeType.Tabulated)
             {
-                //todo think about this.... new cs zw?
-                return;
+                if (bridge.TabulatedCrossSectionDefinition == null)
+                {
+                    //todo think about this.... new cs zw?
+                    return;
+                }
+                if (tableViewTabulatedData.EditableObject != null && tableViewTabulatedData.EditableObject.Equals(bridge.TabulatedCrossSectionDefinition))
+                    tableViewTabulatedData.FocusedRowChanged -= OnTableViewTabulatedDataOnFocusedRowChanged;
+                if (tableViewTabulatedData.EditableObject != null && (bridge.YZCrossSectionDefinition != null && tableViewTabulatedData.EditableObject.Equals(bridge.YZCrossSectionDefinition)))
+                    tableViewTabulatedData.FocusedRowChanged -= OnTableViewYzDataOnFocusedRowChanged; 
+                tableViewTabulatedData.Data = bridge.TabulatedCrossSectionDefinition.ZWDataTable;
+                tableViewTabulatedData.EditableObject = bridge.TabulatedCrossSectionDefinition;
+                tableViewTabulatedData.FocusedRowChanged += OnTableViewTabulatedDataOnFocusedRowChanged;
             }
-
-            tableViewTabulatedData.Data = bridge.TabulatedCrossSectionDefinition.ZWDataTable;
-            tableViewTabulatedData.EditableObject = bridge.TabulatedCrossSectionDefinition;
-            tableViewTabulatedData.FocusedRowChanged += OnTableViewTabulatedDataOnFocusedRowChanged;
+            else if (bridge.BridgeType == BridgeType.YzProfile)
+            {
+                if (bridge.YZCrossSectionDefinition == null)
+                {
+                    //todo think about this.... new cs yz?
+                    return;
+                }
+                if (tableViewTabulatedData.EditableObject != null && (bridge.TabulatedCrossSectionDefinition != null && tableViewTabulatedData.EditableObject.Equals(bridge.TabulatedCrossSectionDefinition)))
+                    tableViewTabulatedData.FocusedRowChanged -= OnTableViewTabulatedDataOnFocusedRowChanged;
+                if (tableViewTabulatedData.EditableObject != null && tableViewTabulatedData.EditableObject.Equals(bridge.YZCrossSectionDefinition))
+                    tableViewTabulatedData.FocusedRowChanged -= OnTableViewYzDataOnFocusedRowChanged;
+                tableViewTabulatedData.Data = bridge.YZCrossSectionDefinition.YZDataTable;
+                tableViewTabulatedData.EditableObject = bridge.YZCrossSectionDefinition;
+                tableViewTabulatedData.BestFitColumns();
+                tableViewTabulatedData.FocusedRowChanged += OnTableViewYzDataOnFocusedRowChanged;
+            }
+            
 
             for (int i = 0; i < tableViewTabulatedData.Columns.Count; i++)
             {
@@ -121,6 +159,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private void OnTableViewTabulatedDataOnFocusedRowChanged(object sender, EventArgs e)
         {
             bridge.IsTabulated = true;
+        }
+
+        [EditAction]
+        private void OnTableViewYzDataOnFocusedRowChanged(object sender, EventArgs e)
+        {
+            bridge.IsYz = true;
         }
 
         private void SetComboboxDataSources()
@@ -168,7 +212,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private void SetBridgeGUI()
         {
             bridgeTypeCombobox.SelectedItem = bridge.BridgeType;
-            tableViewTabulatedData.Visible = bridge.BridgeType == BridgeType.Tabulated;
+            tableViewTabulatedData.Visible = bridge.BridgeType == BridgeType.Tabulated || bridge.BridgeType == BridgeType.YzProfile;
             var isPillar = bridge.IsPillar;
             var isRectangle = bridge.BridgeType == BridgeType.Rectangle;
 
@@ -203,10 +247,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             var sortedRowIndex = tableViewTabulatedData.GetDataSourceIndexByRowIndex(cell.RowIndex);
 
-            if (sortedRowIndex < 0 || sortedRowIndex >= tableViewTabulatedData.RowCount)
+            if (sortedRowIndex < 0 || sortedRowIndex >= tableViewTabulatedData.RowCount || bridge == null)
                 return new DelftTools.Utils.Tuple<string, bool>("", true);
 
-            return bridge.TabulatedCrossSectionDefinition.ValidateCellValue(sortedRowIndex, cell.Column.AbsoluteIndex, o);
+            return bridge.BridgeType == BridgeType.Tabulated 
+                ? bridge.TabulatedCrossSectionDefinition.ValidateCellValue(sortedRowIndex, cell.Column.AbsoluteIndex, o)
+                : bridge.YZCrossSectionDefinition.ValidateCellValue(sortedRowIndex, cell.Column.AbsoluteIndex, o);
         }
 
         public Image Image { get; set; }

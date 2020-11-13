@@ -168,6 +168,7 @@
     <Compile Include="CatchmentType.cs" />
     <Compile Include="Channel.cs" />
     <Compile Include="CompartmentShape.cs" />
+    <Compile Include="CrossSections\CrossSectionYZExtensions.cs" />
     <Compile Include="CrossSections\Extensions\CrossSectionExtensions.cs" />
     <Compile Include="CrossSections\CrossSection.cs" />
     <Compile Include="CrossSections\CrossSectionDefinitionExtensions.cs" />

@@ -86,7 +86,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private static void UpdateMinMaxForBridge(IBridge bridge, ref double min, ref double max)
         {
-            var zValues = bridge.EffectiveCrossSectionDefinition.ZWDataTable.Select(h => h.Z).Where(v => !double.IsNaN(v)).ToList();
+            var zValues = bridge.BridgeType == BridgeType.YzProfile
+                ? bridge.YZCrossSectionDefinition.YZDataTable.Select(h => h.Z).Where(v => !double.IsNaN(v)).ToList()
+                : bridge.EffectiveCrossSectionDefinition.ZWDataTable.Select(h => h.Z).Where(v => !double.IsNaN(v)).ToList();
             if (zValues.Any())
             {
                 min = double.IsNaN(min) ? zValues.Min() : Math.Min(min, zValues.Min());

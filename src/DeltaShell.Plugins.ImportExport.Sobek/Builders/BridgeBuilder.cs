@@ -60,6 +60,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                                     new HeightFlowStorageWidth(t.Height + bridge.BottomLevel, t.TotalWidth, t.FlowWidth));
 
                         bridge.TabulatedCrossSectionDefinition.SetWithHfswData(hfswData);
+                        bridge.YZCrossSectionDefinition.SetWithHfswData(hfswData);
 
                         bridge.BridgeType = BridgeType.Tabulated;
                         if ((sobekCrossSectionDefinition.Name != null) &&

@@ -29,13 +29,15 @@ namespace DelftTools.Hydro.Structures
             PillarWidth = 3;
             ShapeFactor = 1.5;
             
-            TabulatedCrossSectionDefinition = new CrossSectionDefinitionZW();
+            TabulatedCrossSectionDefinition = CrossSectionDefinitionZW.CreateDefault(name);
+            YZCrossSectionDefinition = CrossSectionDefinitionYZ.CreateDefault(name);
             BridgeType = BridgeType.Tabulated;
         }
 
         #region IBridge Members
 
         private CrossSectionDefinitionZW tabulatedCrossSectionDefinition;
+        private CrossSectionDefinitionYZ yzCrossSectionDefinition;
         private ICrossSectionDefinition crossSectionDefinition;
         private BridgeType bridgeType;
 
@@ -46,6 +48,15 @@ namespace DelftTools.Hydro.Structures
         {
             get { return tabulatedCrossSectionDefinition; }
             set { tabulatedCrossSectionDefinition = value; }
+        }
+        
+        /// <summary>
+        /// CrossSection of the bridge.
+        /// </summary>
+        public virtual CrossSectionDefinitionYZ YZCrossSectionDefinition
+        {
+            get { return yzCrossSectionDefinition; }
+            set { yzCrossSectionDefinition = value; }
         }
         /// <summary>
         /// Crosssection as used for model api. It does not include any level since these are passed separately
@@ -74,6 +85,10 @@ namespace DelftTools.Hydro.Structures
                         }
                         BridgeType = BridgeType.Rectangle;
                         break;
+                    case CrossSectionDefinitionYZ definitionYz:
+                        YZCrossSectionDefinition = definitionYz;
+                        BridgeType = BridgeType.YzProfile;
+                        break;
                     case CrossSectionDefinitionZW definitionZw:
                         TabulatedCrossSectionDefinition = definitionZw;
                         BridgeType = BridgeType.Tabulated;
@@ -94,6 +109,22 @@ namespace DelftTools.Hydro.Structures
                 if (value)
                 {
                     BridgeType = BridgeType.Tabulated;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Binding code
+        /// </summary>
+        [NoNotifyPropertyChange]
+        public virtual bool IsYz
+        {
+            get { return BridgeType == BridgeType.YzProfile; }
+            set
+            {
+                if (value)
+                {
+                    BridgeType = BridgeType.YzProfile;
                 }
             }
         }
@@ -306,6 +337,14 @@ namespace DelftTools.Hydro.Structures
                     TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(zwwRow.Z, zwwRow.Width, zwwRow.StorageWidth);
                 }
             }
+            if (copyFrom.BridgeType == BridgeType.YzProfile)
+            {
+                YZCrossSectionDefinition.YZDataTable.Clear();
+                foreach (var yzRow in copyFrom.YZCrossSectionDefinition.YZDataTable)
+                {
+                    YZCrossSectionDefinition.YZDataTable.AddCrossSectionYZRow(yzRow.Yq, yzRow.Z);
+                }
+            }
             BottomLevel = copyFrom.BottomLevel;
             Width = copyFrom.Width;
             Height = copyFrom.Height;
@@ -335,17 +374,14 @@ namespace DelftTools.Hydro.Structures
             //create a single section. Reference level is not used since the crossection is defined absolute. (Ref = 0)
 
             TabulatedCrossSectionDefinition.SetAsRectangle(bedLevel, width, height);
+            YZCrossSectionDefinition.SetAsRectangle(bedLevel, width, height);
         }
 
 
         public static Bridge CreateDefault()
         {
             var bridge = new Bridge();
-            bridge.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
-                                                             {
-                                                                 new HeightFlowStorageWidth(-10, 50, 50),
-                                                                 new HeightFlowStorageWidth(0, 100, 100)
-                                                             });
+            bridge.SetRectangleCrossSection(bridge.BottomLevel, bridge.Width, bridge.Height);
             bridge.FrictionType = BridgeFrictionType.Chezy;
             bridge.Friction = 45.0; 
             return bridge;
@@ -405,6 +441,11 @@ namespace DelftTools.Hydro.Structures
                     break;
                 case BridgeType.Tabulated:
                     crossSectionDefinition = tabulatedCrossSectionDefinition;
+                    if (crossSectionDefinition.Name != Name)
+                        crossSectionDefinition.Name = Name;
+                    break;
+                case BridgeType.YzProfile:
+                    crossSectionDefinition = yzCrossSectionDefinition;
                     if (crossSectionDefinition.Name != Name)
                         crossSectionDefinition.Name = Name;
                     break;

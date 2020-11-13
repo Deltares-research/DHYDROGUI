@@ -43,7 +43,7 @@ namespace DelftTools.Hydro.CrossSections
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns>Updated crossection</returns>
-        public static void SetAsRectangle(this CrossSectionDefinitionZW crossSectionDefinitionZW,double bedLevel,double width,double height,bool closeProfile = false)
+        public static CrossSectionDefinitionZW SetAsRectangle(this CrossSectionDefinitionZW crossSectionDefinitionZW,double bedLevel,double width,double height,bool closeProfile = false)
         {
             crossSectionDefinitionZW.ZWDataTable.Clear();
             crossSectionDefinitionZW.ZWDataTable.AddCrossSectionZWRow(bedLevel, width, 0);
@@ -52,6 +52,8 @@ namespace DelftTools.Hydro.CrossSections
             {
                 crossSectionDefinitionZW.ZWDataTable.AddCrossSectionZWRow(bedLevel + height+0.000001, 0.0, 0);
             }
+
+            return crossSectionDefinitionZW;
         }
 
         public static bool IsProfileMonotonous(this CrossSectionDefinitionZW crossSectionDefinitionZw)

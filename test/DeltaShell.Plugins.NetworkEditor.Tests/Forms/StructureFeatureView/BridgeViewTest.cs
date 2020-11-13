@@ -7,6 +7,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
@@ -88,9 +89,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                                    };
             WindowsFormsTestHelper.ShowModal(bridgeView);
         }
+        
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void BridgeViewWithYzProfileFunctionality()
+        {
+            var bridge = new Bridge();
+            bridge.BridgeType = BridgeType.YzProfile;
+            
+            var bridgeView = new BridgeView();
+            bridgeView.Data = bridge;
+            bridgeView.Load += delegate
+                                   {
+                                       var bridgeTypeCombobox = bridgeView.Controls.Find("bridgeTypeCombobox", true).FirstOrDefault() as ComboBox;
+                                       Assert.IsNotNull(bridgeTypeCombobox);
+                                       Assert.That((BridgeType)bridgeTypeCombobox.SelectedItem, Is.EqualTo(BridgeType.YzProfile));
+                                       
+                                   };
+            WindowsFormsTestHelper.ShowModal(bridgeView);
+        }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowBridge()
+        {
+            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            var bridge = CompositeStructureViewTestHelper.GetBridge();
+            bridge.BridgeType = BridgeType.YzProfile;
+
+            CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(bridge, network);
+        }
 
         [Test]
-        public void InputValidatorTest()
+        public void InputValidatorTabulatedProfileTest()
         {
             var bridge = new Bridge
                 {
@@ -129,6 +159,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 DataSource = new FeatureCollection(new[] { Bridge.CreateDefault() }.ToList(), typeof(Bridge))
             };
             WindowsFormsTestHelper.ShowModal(view.TableView);
+        }
+        
+        [Test]
+        public void InputValidatorYzProfileTest()
+        {
+            var bridge = new Bridge
+                {
+                    BridgeType = BridgeType.YzProfile
+                };
+            bridge.YZCrossSectionDefinition.YZDataTable.Clear();
+            bridge.YZCrossSectionDefinition.YZDataTable.AddCrossSectionYZRow(1, 2); 
+            bridge.YZCrossSectionDefinition.YZDataTable.AddCrossSectionYZRow(2, 0);
+            
+
+            var view = new BridgeView { Data = bridge };
+            var tableView = TypeUtils.GetField<BridgeView, TableView>(view, "tableViewTabulatedData");
+            tableView.ExceptionMode = TableView.ValidationExceptionMode.NoAction;
+
+            Assert.AreEqual(1.0, tableView.GetCellValue(0, 0));
+            Assert.AreEqual(2.0, tableView.GetCellValue(1, 0));
+
+            var succes = true;
+            const string errorMsg = "Can not set value into cell [0, 0] reason:Validation of cell failed: Y' must be unique.";
+            TestHelper.AssertLogMessageIsGenerated(() => succes = tableView.SetCellValue(0, 0, "2"), errorMsg, 1);
+            Assert.IsFalse(succes, "Should not allow a duplicate to be entered.");
+
+            // Verify that data is unchanged:
+            Assert.AreEqual(1.0, tableView.GetCellValue(0, 0));
+            Assert.AreEqual(2.0, tableView.GetCellValue(1, 0));
         }
     }
 }

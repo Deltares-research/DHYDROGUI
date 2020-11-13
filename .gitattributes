@@ -243,6 +243,7 @@ src/DelftTools.Hydro/CrossSections/CrossSectionSectionType.cs -text
 src/DelftTools.Hydro/CrossSections/CrossSectionSectionType.hbm.xml -text
 src/DelftTools.Hydro/CrossSections/CrossSectionStandardShapeType.cs -text
 src/DelftTools.Hydro/CrossSections/CrossSectionType.cs -text
+src/DelftTools.Hydro/CrossSections/CrossSectionYZExtensions.cs -text
 src/DelftTools.Hydro/CrossSections/CrossSectionZWExtensions.cs -text
 src/DelftTools.Hydro/CrossSections/DataSets/CrossSectionDataSet.xsc -text svneol=unset#application/octet-stream
 src/DelftTools.Hydro/CrossSections/DataSets/CrossSectionDataSet.xss -text svneol=unset#application/octet-stream

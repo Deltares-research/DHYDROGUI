@@ -19,16 +19,26 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 
             var standardCrossSectionDefinition = definition as CrossSectionDefinitionStandard;
 
+            var name = category.ReadProperty<string>(StructureRegion.Id.Key);
+            var bottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key);
+            var width = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition()?.Width ?? 50;
+            var height = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition()?.ZWDataTable.Min(t => t.Z) ?? 3;
             return new Bridge
             {
-                Name = category.ReadProperty<string>(StructureRegion.Id.Key),
+                Name = name,
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
                 Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
-                BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : BridgeType.Rectangle,
+                BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : definition?.CrossSectionType == CrossSectionType.YZ ? BridgeType.YzProfile : BridgeType.Rectangle,
                 FlowDirection = (FlowDirection)category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key).GetEnumValueFromDisplayName(typeof(FlowDirection)),
-                BottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key),
-                TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW ? definition as CrossSectionDefinitionZW : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() ?? new CrossSectionDefinitionZW(), 
+                BottomLevel = bottomLevel,
+                TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW 
+                    ? definition as CrossSectionDefinitionZW 
+                    : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() 
+                        ?? CrossSectionDefinitionZW.CreateDefault(name).SetAsRectangle(bottomLevel,width,height), 
+                YZCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.YZ 
+                    ? definition as CrossSectionDefinitionYZ
+                    : CrossSectionDefinitionYZ.CreateDefault(name).SetAsRectangle(bottomLevel, width, height), 
                 Length = category.ReadProperty<double>(StructureRegion.Length.Key, true),
                 InletLossCoefficient = category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key, true),
                 OutletLossCoefficient = category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key, true),
