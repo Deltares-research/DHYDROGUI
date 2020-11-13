@@ -1619,6 +1619,78 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRenamingRunningAndThenSavingAgain_PersistentOutputDirectoryShouldShouldBeBasedOnNewModelName()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
+
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
+                                                  out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                  out string workingDirectoryForRunning);
+
+                // When
+                frameworkSimulator.NewProject(pathBeforeSave);
+                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                rtcModel.Name = "rtc2";
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                frameworkSimulator.Save(pathAfterSave);
+
+
+                // Then
+                AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
+
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningRenamingAndThenSavingAgain_PersistentOutputDirectoryShouldShouldBeBasedOnNewModelName()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
+
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
+                                                  out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                  out string workingDirectoryForRunning);
+
+                // When
+                frameworkSimulator.NewProject(pathBeforeSave);
+                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                rtcModel.Name = "rtc2";
+                frameworkSimulator.Save(pathAfterSave);
+
+
+                // Then
+                AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
+
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
+            }
+        }
+
+        [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void OnFinishIntegratedModelRun_ShouldOnlyMoveOutputFilesAndDirectoriesInRtcFolderToSeparateOutputFolder()
         {

@@ -1568,24 +1568,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         #endregion
 
         #region IFileBased
-        
+        private bool isOpen;
+        private int dirtyCounter; // tells NHibernate we need to be saved
         private string path;
         private string currentOutputDirectoryPath;
         private string persistentOutputDirectory;
-        private bool isOpen;
-
-        private int dirtyCounter; // tells NHibernate we need to be saved
-
+        
+        protected virtual string PersistentOutputDirectory
+        {
+            get
+            {
+                // Check if model has been renamed.
+                var dirInfo = new DirectoryInfo(persistentOutputDirectory);
+                var modelDirectory = dirInfo.Parent;
+                if (modelDirectory.Name != Name)
+                {
+                    persistentOutputDirectory = Path.Combine(modelDirectory.Parent.FullName, Name, DirectoryNameConstants.OutputDirectoryName);
+                }
+                return persistentOutputDirectory;
+            }
+            set => persistentOutputDirectory = value;
+        }
+        
         // Used for Import model
         // Creating new model
         void IFileBased.CreateNew(string path)
         {
             Ensure.NotNull(path, nameof(path));
 
-            persistentOutputDirectory = GetOutputFolderFromDeltaShellPath(path);
+            PersistentOutputDirectory = GetOutputFolderFromDeltaShellPath(path);
             this.path = path;
             isOpen = true;
         }
+
         
         void IFileBased.Close()
         {
@@ -1633,7 +1648,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             
             // Open project, Save  As, Save
             path = newPath;
-            persistentOutputDirectory = expectedOutputPath;
+            PersistentOutputDirectory = expectedOutputPath;
 
             currentOutputDirectoryPath = expectedOutputPath;
             if (Directory.Exists(expectedOutputPath))
@@ -1673,7 +1688,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 // otherwise during opening an export will be done.
                 if (path.StartsWith("$") && isOpen)
                 {
-                    CopyOutputFolderTo(persistentOutputDirectory);
+                    CopyOutputFolderTo(PersistentOutputDirectory);
                 }
             }
         }
