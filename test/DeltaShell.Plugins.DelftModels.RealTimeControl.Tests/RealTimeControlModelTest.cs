@@ -1691,6 +1691,93 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenRunningSavingForFirstTimeRenamingAndThenSavingAgain_PersistentOutputDirectoryShouldShouldBeBasedOnNewModelNameAndOldOneShouldBeRemoved()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                rtcModel.Name = "rtc1";
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
+
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
+                                                  out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                  out string workingDirectoryForRunning);
+
+                // When
+                frameworkSimulator.NewProject(pathBeforeSave);
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                
+                // test precondition
+                Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
+
+                rtcModel.Name = "rtc2";
+                frameworkSimulator.Save(pathAfterSave);
+
+
+                // Then
+                AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
+                Assert.IsFalse(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
+
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenRunningSavingForFirstTimeRenamingAndThenSavingAs_PersistentOutputDirectoryShouldShouldBeBasedOnNewModelNameAndOldOneShouldStay()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                rtcModel.Name = "rtc1";
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSecondSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSecondSaveAs = Path.Combine(projectDirectoryAfterSecondSaveAs, "RealTimeControlModelGUID");
+
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
+                                                  out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                  out string workingDirectoryForRunning);
+
+                // When
+                frameworkSimulator.NewProject(pathBeforeSave);
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                frameworkSimulator.FirstSaveAs(pathAfterSave);
+
+                // test precondition
+                Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
+
+                rtcModel.Name = "rtc2";
+                frameworkSimulator.SaveAs(pathAfterSecondSaveAs);
+
+
+                // Then
+                AssertsPersistentFolderStructure(projectDirectoryAfterSecondSaveAs, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
+                Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
+
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
+            }
+        }
+
+        [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void OnFinishIntegratedModelRun_ShouldOnlyMoveOutputFilesAndDirectoriesInRtcFolderToSeparateOutputFolder()
         {

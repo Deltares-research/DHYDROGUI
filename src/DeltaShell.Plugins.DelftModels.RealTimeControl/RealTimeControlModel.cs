@@ -1573,6 +1573,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private string path;
         private string currentOutputDirectoryPath;
         private string persistentOutputDirectory;
+        private bool modelRenamed;
         
         protected virtual string PersistentOutputDirectory
         {
@@ -1583,6 +1584,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 var modelDirectory = dirInfo.Parent;
                 if (modelDirectory.Name != Name)
                 {
+                    modelRenamed = true;
                     persistentOutputDirectory = Path.Combine(modelDirectory.Parent.FullName, Name, DirectoryNameConstants.OutputDirectoryName);
                 }
                 return persistentOutputDirectory;
@@ -1730,13 +1732,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
+            if (currentOutputDirectoryPath == targetDirectory) return;
+
             DirectoryCopy(currentOutputDirectoryPath, targetDirectory);
+
+            if (modelRenamed)
+            {
+                // clean up old model name folder.
+                DisconnectOutput();
+                FileUtils.DeleteIfExists(Directory.GetParent(currentOutputDirectoryPath).FullName);
+                modelRenamed = false;
+            }
         }
 
         private static void DirectoryCopy(string sourceDirName, string destDirName)
         {
-            if (sourceDirName == destDirName) return;
-            
             var dir = new DirectoryInfo(sourceDirName);
             
             DirectoryInfo[] subDirs = dir.GetDirectories();
