@@ -87,7 +87,7 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         public static bool IsLateralSourceNode(int typeNo)
         {
-            return typeNo == 4 || typeNo == 5 || typeNo == 13 || typeNo == 19;
+            return typeNo == 4 || typeNo == 5 ||  typeNo == 19;
         }
 
         public static bool IsConnectionNode(int typeNo)
