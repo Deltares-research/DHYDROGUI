@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Utils.Editing;
 
 namespace DelftTools.Hydro.CrossSections
@@ -12,6 +13,16 @@ namespace DelftTools.Hydro.CrossSections
             crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(width/2*-1 + 0.000001, bedLevel + height);
             crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(width/2, bedLevel + height);
             crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(width/2 + 0.000001, bedLevel);
+            return crossSectionDefinitionYz;
+        }
+        public static CrossSectionDefinitionYZ ConvertZWDataTableToYZ(this CrossSectionDefinitionYZ crossSectionDefinitionYz, FastZWDataTable zWDataTable)
+        {
+            crossSectionDefinitionYz.YZDataTable.Clear();
+            foreach (var zwRow in zWDataTable)
+            {
+                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRow.Width / 2 * -1, zwRow.Z);
+                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRow.Width / 2, zwRow.Z);
+            }
             return crossSectionDefinitionYz;
         }
 

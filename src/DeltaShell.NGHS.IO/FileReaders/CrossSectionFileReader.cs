@@ -182,8 +182,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
         private static void PlaceDefinitionOnBridgeOrCulvert(ICrossSectionDefinition crossSectionDefinition, IEnumerable<IStructureWithCrossSectionDefinition> structureWithCrossSectionDefinitions)
         {
+            //TODO: Waarom ligt dit niet bij de structures zelf?
             structureWithCrossSectionDefinitions
-                .Where(s => s.Name.Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase))
+                .Where(s => s.CrossSectionDefinition.Name.Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase))
                 .ForEach(
                     structureWithCrossSectionDefinition =>
                     {
@@ -239,14 +240,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
             string defaultFrictionId, out bool hasFriction)
         {
             hasFriction = false;
+            var typeProperty = crossSectionDefinitionCategory.ReadProperty<string>(DefinitionPropertySettings.DefinitionType.Key);
+                
+            var templateProperty = crossSectionDefinitionCategory.ReadProperty<string>(DefinitionPropertySettings.Template.Key,true);
 
-            var typeProperty = crossSectionDefinitionCategory.Properties
-                .First(p => p.Name.ToLowerInvariant() == DefinitionPropertySettings.DefinitionType.Key.ToLowerInvariant());
-
-            var templateProperty = crossSectionDefinitionCategory.Properties
-                .FirstOrDefault(p => p.Name.ToLowerInvariant() == DefinitionPropertySettings.Template.Key.ToLowerInvariant());
-
-            var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderCrossSection(typeProperty.Value, templateProperty?.Value);
+            var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderCrossSection(typeProperty, templateProperty);
             if (definitionReader == null)
             {
                 var errorMessage = "No definition reader available for this cross section definition";
@@ -256,7 +254,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var readCrossSectionDefinition = definitionReader.ReadDefinition(crossSectionDefinitionCategory);
 
             // Don't set friction for structure related cross sections
-            if (nonStructureCrossSectionDefinitions.Contains(readCrossSectionDefinition.Name) || crossSectionDefinitionCategory.ReadProperty<bool>(DefinitionPropertySettings.IsShared.Key, true))
+            if (nonStructureCrossSectionDefinitions != null && (nonStructureCrossSectionDefinitions.Contains(readCrossSectionDefinition.Name) || crossSectionDefinitionCategory.ReadProperty<bool>(DefinitionPropertySettings.IsShared.Key, true)))
             {
                 SetFrictionOnCrossSectionDefinition(crossSectionDefinitionCategory, readCrossSectionDefinition, network,
                     defaultFrictionId, out hasFriction);

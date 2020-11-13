@@ -24,6 +24,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var fileReadingExceptions = new List<FileReadingException>();
             var crossSectionDefinitions = new List<ICrossSectionDefinition>();
 
+            if (File.Exists(csdFilename)) 
+                crossSectionDefinitions = new DelftIniReader().ReadDelftIniFile(csdFilename).Where(category => category.Name.Equals(DefinitionPropertySettings.Header,StringComparison.InvariantCultureIgnoreCase) ).Select(csdDefinitionCategory =>
+                CrossSectionFileReader.TransformDefinitionCategoryIntoCrossSectionDefinition(csdDefinitionCategory, null, null, null, out var hasFriction)).ToList();
+            
             if (fileReadingExceptions.Count > 0)
             {
                 var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);

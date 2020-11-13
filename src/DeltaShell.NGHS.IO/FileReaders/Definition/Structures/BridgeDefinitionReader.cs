@@ -35,10 +35,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW 
                     ? definition as CrossSectionDefinitionZW 
                     : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() 
-                        ?? CrossSectionDefinitionZW.CreateDefault(name).SetAsRectangle(bottomLevel,width,height), 
-                YZCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.YZ 
-                    ? definition as CrossSectionDefinitionYZ
-                    : CrossSectionDefinitionYZ.CreateDefault(name).SetAsRectangle(bottomLevel, width, height), 
+                      ?? CrossSectionDefinitionZW.CreateDefault(crossSectionDefinitionId).SetAsRectangle(bottomLevel,width,height), 
+                YZCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null 
+                    ? definition.CrossSectionType == CrossSectionType.YZ  
+                        ? definition as CrossSectionDefinitionYZ
+                        : definition.CrossSectionType == CrossSectionType.ZW 
+                            ? CrossSectionDefinitionYZ.CreateDefault(crossSectionDefinitionId).ConvertZWDataTableToYZ(((CrossSectionDefinitionZW)definition).ZWDataTable)
+                            : CrossSectionDefinitionYZ.CreateDefault(crossSectionDefinitionId).SetAsRectangle(bottomLevel, width, height)
+                    : CrossSectionDefinitionYZ.CreateDefault(crossSectionDefinitionId).SetAsRectangle(bottomLevel, width, height), 
                 Length = category.ReadProperty<double>(StructureRegion.Length.Key, true),
                 InletLossCoefficient = category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key, true),
                 OutletLossCoefficient = category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key, true),
