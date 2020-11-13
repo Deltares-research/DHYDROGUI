@@ -291,11 +291,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            for (int i = 0; i < readSettings.InfiltrationCapacityDecreases.Length; i++)
+            for (int i = 0; i < readSettings.InfiltrationCapacityDecreases.Length - 1 ; i++)
             {
-                nwrwDefinitionArray[i].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[i];
-                nwrwDefinitionArray[i + 4].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[i];
-                nwrwDefinitionArray[i + 8].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[i];
+                nwrwDefinitionArray[i].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[0];
+                nwrwDefinitionArray[i + 3].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[1];
+                nwrwDefinitionArray[i + 6].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[2];
+                nwrwDefinitionArray[i + 9].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[3];
             }
         }
 
@@ -307,11 +308,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            for (int i = 0; i < readSettings.InfiltrationCapacityIncreases.Length; i++)
+            for (int i = 0; i < readSettings.InfiltrationCapacityIncreases.Length - 1; i++)
             {
-                nwrwDefinitionArray[i].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[i];
-                nwrwDefinitionArray[i + 4].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[i];
-                nwrwDefinitionArray[i + 8].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[i];
+                nwrwDefinitionArray[i].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[0];
+                nwrwDefinitionArray[i + 3].InfiltrationCapacityRecovery= readSettings.InfiltrationCapacityIncreases[1];
+                nwrwDefinitionArray[i + 6].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[2];
+                nwrwDefinitionArray[i + 9].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[3];
             }
         }
 
