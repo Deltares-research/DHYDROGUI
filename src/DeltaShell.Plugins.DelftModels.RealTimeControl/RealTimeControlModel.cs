@@ -18,6 +18,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
@@ -406,6 +407,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return clonedModel;
         }
 
+        IEnumerable<IDataItem> ICoupledModel.GetDataItemsUsedForCouplingModel(DataItemRole role)
+        {
+            return AllDataItems.Where(di => di.Role == role);
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -589,7 +595,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private void OnRemoveModel()
         {
             OutputIsEmpty = false; // hack to make ClearOutput fire appropriately. 
-            ClearOutput();
+            OnClearOutput();
         }
 
         /// <summary>
@@ -966,15 +972,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void DisconnectOutput()
         {
-            if (outputFileFunctionStore == null)
-            {
-                return;
-            }
+            OnClearOutput();
+        }
 
-            outputFileFunctionStore.Functions?.Clear();
-            outputFileFunctionStore.Features?.Clear();
-            outputFileFunctionStore.Close();
-            outputFileFunctionStore = null;
+        protected override void OnClearOutput()
+        {
+            BeginEdit(new DefaultEditAction("Clearing all real time control output"));
+
+            DisconnectOutputFileFunctionStore();
+
+            RestartOutput.Clear();
+            OutputDocuments.Clear();
+
+            EndEdit();
+        }
+
+        private void DisconnectOutputFileFunctionStore()
+        {
+            if (outputFileFunctionStore != null)
+            {
+                outputFileFunctionStore.Functions?.Clear();
+                outputFileFunctionStore.Features?.Clear();
+                outputFileFunctionStore.Close();
+                outputFileFunctionStore = null;
+            }
         }
 
         public virtual void ConnectOutput(string outputPath)
@@ -992,8 +1013,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             string[] newOutputFiles = Directory.GetFiles(outputPath);
 
-            if (newOutputFiles.Length == 0) return;
-            
+            if (newOutputFiles.Length == 0)
+            {
+                return;
+            }
+
             var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
             IList<string> restartFiles = newOutputFiles.Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))).ToList();
             SetRestartOutputFiles(restartFiles);
@@ -1003,6 +1027,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             string rtcToFlowFilePath = Path.Combine(dirInfo.FullName, CommunicationRtcToFmFileName);
             ReconnectRtcToFmOutputFile(rtcToFlowFilePath);
+
+            OutputIsEmpty = false;
         }
 
         private void ReconnectOutputDocuments(IEnumerable<string> outputDocumentFilePaths)
@@ -1028,7 +1054,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     else
                     {
                         var textDocument = new ReadOnlyOutputTextDocument(fileName, log);
-                        
+
                         OutputDocuments.Add(textDocument);
                     }
                 }
@@ -1047,7 +1073,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void ReconnectRtcToFmOutputFile(string outputFilePath)
         {
-            DisconnectOutput();
+            DisconnectOutputFileFunctionStore();
 
             if (!File.Exists(outputFilePath))
             {
@@ -1141,14 +1167,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             Directory.CreateDirectory(Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName));
-            
+
             foreach (string outputPath in allOutputPaths)
             {
                 string outputName = Path.GetFileName(outputPath);
                 string destinationOutputPath = Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName, outputName);
                 Directory.Move(outputPath, destinationOutputPath);
             }
-            
+
             currentOutputDirectoryPath = Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName);
 
             MarkDirty();
@@ -1475,7 +1501,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             set
             {
                 Ensure.NotNull(value, nameof(value));
-                
+
                 if (!string.IsNullOrEmpty(value))
                 {
                     communicationRtcToFmFileName = value + ".nc";
@@ -1568,7 +1594,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         #endregion
 
         #region IFileBased
-        
+
         private string path;
         private string currentOutputDirectoryPath;
         private string persistentOutputDirectory;
@@ -1586,7 +1612,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             this.path = path;
             isOpen = true;
         }
-        
+
         void IFileBased.Close()
         {
             isOpen = false;
@@ -1624,13 +1650,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             Ensure.NotNull(newPath, nameof(newPath));
 
             string expectedOutputPath = GetOutputFolderFromDeltaShellPath(newPath);
-            
+
             // Open project
             if (!isOpen)
             {
                 isOpen = true;
             }
-            
+
             // Open project, Save  As, Save
             path = newPath;
             persistentOutputDirectory = expectedOutputPath;
@@ -1668,7 +1694,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
 
                 path = value;
-                
+
                 // isOpen check needed for saving project,
                 // otherwise during opening an export will be done.
                 if (path.StartsWith("$") && isOpen)
@@ -1678,11 +1704,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        IEnumerable<string> IFileBased.Paths 
+        IEnumerable<string> IFileBased.Paths
         {
             get
             {
-                yield return ((IFileBased)this).Path;
+                yield return ((IFileBased) this).Path;
             }
         }
 
@@ -1693,10 +1719,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         bool IFileBased.CopyFromWorkingDirectory => false;
 
         #region FileBased Helper Methods
-        
+
         private string GetOutputFolderFromDeltaShellPath(string filePath)
         {
-            string projectDirectory = Path.GetDirectoryName(filePath) ;
+            string projectDirectory = Path.GetDirectoryName(filePath);
 
             Ensure.NotNull(projectDirectory, nameof(projectDirectory));
 
@@ -1720,14 +1746,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private static void DirectoryCopy(string sourceDirName, string destDirName)
         {
-            if (sourceDirName == destDirName) return;
-            
+            if (sourceDirName == destDirName)
+            {
+                return;
+            }
+
             var dir = new DirectoryInfo(sourceDirName);
-            
+
             DirectoryInfo[] subDirs = dir.GetDirectories();
 
             FileUtils.CreateDirectoryIfNotExists(destDirName, true);
-            
+
             FileInfo[] files = dir.GetFiles();
             foreach (FileInfo file in files)
             {
@@ -1754,12 +1783,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         #endregion
 
         #endregion
-
-        IEnumerable<IDataItem> ICoupledModel.GetDataItemsUsedForCouplingModel(DataItemRole role)
-        {
-            return AllDataItems.Where(di => di.Role == role);
-        }
     }
-
-    
 }
