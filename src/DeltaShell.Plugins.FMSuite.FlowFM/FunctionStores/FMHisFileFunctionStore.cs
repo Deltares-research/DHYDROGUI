@@ -245,10 +245,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private bool CanBeMappedToFeatureName(NetCdfDimension[] dimensions, string nodeCoordinatesVariableNames)
         {
-            var separators = new[]
-            {
-                " "
-            };
             return nodeCoordinatesVariableNames != null
                    && dimensions != null
                    && dimensions.Any()
@@ -257,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                       .Where(coordinateKeyByDimensionNameDictionary.ContainsKey)
                       .Any(dimensionName =>
                                nodeCoordinatesVariableNames
-                                   .Split(separators, StringSplitOptions.RemoveEmptyEntries)
+                                   .Split(separator, StringSplitOptions.RemoveEmptyEntries)
                                    .Any(coordinateVariableName => coordinateKeyByDimensionNameDictionary[dimensionName]
                                             .Equals(coordinateVariableName, StringComparison.InvariantCultureIgnoreCase)));
         }
@@ -340,7 +336,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     }
 
                     geometryByDimensionNameDictionary[geometryDimension] = GenerateGeometriesFromHisFile(geometryType, nodeCountValues, nodeXCoordinatesValues, nodeYCoordinatesValues);
-                    geometryByDimensionNameDictionary[geometryDimension] = GenerateGeometriesFromHisFile(geometryType, nodeCountValues, nodeXCoordinatesValues, nodeYCoordinatesValues);
                 }
                 catch (Exception e)
                 {
@@ -394,12 +389,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private Array LoadCoordinatesValues(string nodeCoordinatesVariableNames, string nodeCoordinatesSubStringSearchValue)
         {
-            string[] separators =
-            {
-                " "
-            };
             string coordinatesVariableName = nodeCoordinatesVariableNames
-                                             .Split(separators, StringSplitOptions.RemoveEmptyEntries)
+                                             .Split(separator, StringSplitOptions.RemoveEmptyEntries)
                                              .SingleOrDefault(
                                                  name =>
                                                      name.IndexOf(nodeCoordinatesSubStringSearchValue, StringComparison.InvariantCultureIgnoreCase) >= 0);
@@ -595,47 +586,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             string featureNamesVariableNames = netCdfFile.GetAttributeValue(netCdfVariable, "coordinates");
             if (featureNamesVariableNames == null)
             {
-                if (defaultNames.Count == 1)
-                {
-                    return defaultNames[0];
-                }
-
-                foreach (string defaultName in defaultNames)
-                {
-                    if (netCdfFile.GetVariableByName(defaultName) != null)
-                    {
-                        return defaultName;
-                    }
-                }
-
-                return string.Empty;
+                return GetDefaultName(netCdfFile, defaultNames, out string featureName)
+                           ? featureName
+                           : string.Empty;
             }
 
-            var separator = new[]
-            {
-                " "
-            };
             string featureNamesVariableName = featureNamesVariableNames
                                               .Split(separator, StringSplitOptions.RemoveEmptyEntries)
                                               .SingleOrDefault(s => s.IndexOf("x", StringComparison.InvariantCultureIgnoreCase) < 0 &&
                                                                     s.IndexOf("y", StringComparison.InvariantCultureIgnoreCase) < 0);
-            if (featureNamesVariableName == null)
-            {
-                if (defaultNames.Count == 1)
-                {
-                    return defaultNames[0];
-                }
 
-                foreach (string defaultName in defaultNames)
-                {
-                    if (netCdfFile.GetVariableByName(defaultName) != null)
-                    {
-                        return defaultName;
-                    }
-                }
+            if (featureNamesVariableName == null && GetDefaultName(netCdfFile, defaultNames, out string splitFeatureName))
+            {
+                return splitFeatureName;
             }
 
             return featureNamesVariableName;
+        }
+
+        private static bool GetDefaultName(NetCdfFile netCdfFile, IReadOnlyList<string> defaultNames, out string featureName)
+        {
+            if (defaultNames.Count == 1)
+            {
+                featureName = defaultNames[0];
+                return true;
+            }
+
+            foreach (string defaultName in defaultNames)
+            {
+                if (netCdfFile.GetVariableByName(defaultName) != null)
+                {
+                    featureName = defaultName;
+                    return true;
+                }
+            }
+
+            featureName = string.Empty;
+            return false;
         }
 
         // Mapping dictionary used to read feature geometry for backwards compatibility.
@@ -647,6 +634,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 {featureNamePumps, (netCdfVariable, netCdfFile) => GetFeatureGeometryXAndYVariableForBackWardCompatibilityNames(netCdfFile, netCdfVariable, "pump_xmid", "pump_ymid")}
             };
 
+        private static readonly string[] separator =
+        {
+            " "
+        };
+
         private static (string, string) GetFeatureGeometryXAndYVariableForBackWardCompatibilityNames(NetCdfFile netCdfFile, NetCdfVariable netCdfVariable, string defaultXCoordinateName, string defaultYCoordinateName)
         {
             string featureNamesVariableNames = netCdfFile.GetAttributeValue(netCdfVariable, "coordinates");
@@ -655,10 +647,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return (defaultXCoordinateName, defaultYCoordinateName);
             }
 
-            var separator = new[]
-            {
-                " "
-            };
             string featureNamesXVariableName = featureNamesVariableNames
                                                .Split(separator, StringSplitOptions.RemoveEmptyEntries)
                                                .SingleOrDefault(s =>
