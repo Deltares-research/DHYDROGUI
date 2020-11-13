@@ -55,7 +55,7 @@ class ModelGroups:
 
 class HydroModelBuilder(object):
     """Builds pre-configured version of HydroModel containing a set of models and a number of default workflows."""
-    RTC_MODEL_NAME = "Real-Time Control"
+    RTC_MODEL_NAME = "Real_Time_Control"
     DFLOW_FM_MODEL_NAME = "FlowFM"
     WAVE_MODEL_NAME = "Waves"
     
@@ -90,7 +90,7 @@ class HydroModelBuilder(object):
                 return
 
     def build_model(self, modelGroup):
-        model = HydroModel(Name="Integrated Model")
+        model = HydroModel(Name="Integrated_Model")
                 
         if (modelGroup == ModelGroups.FMWaveRtcModels or modelGroup == ModelGroups.All):
 
