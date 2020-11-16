@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using DelftTools.TestUtils;
-using DeltaShell.Dimr.Xsd;
+using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using NUnit.Framework;

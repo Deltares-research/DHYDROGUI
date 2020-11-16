@@ -194,19 +194,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GivenAWaveApplicationPluginWithAnApplication_WhenTheHybridProjectRepositoryIsOpened_ThenTheExpectedCallIsExecuted()
         {
             // Setup
+
             var plugin = new WaveApplicationPlugin();
             var app = Substitute.For<IApplication>();
             var repo = Substitute.For<IHybridProjectRepository>();
 
-            repo.GetPluginFileFormatVersions("the_path.dsproj").Returns(new Dictionary<string, Version> {{"Delft3D Wave", Version.Parse(plugin.FileFormatVersion)}});
-            app.HybridProjectRepository.Returns(repo);
-            plugin.Application = app;
+            using (var temp = new TemporaryDirectory())
+            {
+                string projectFile = temp.CreateFile("the_path.dsproj");
+                repo.GetPluginFileFormatVersions(projectFile).Returns(new Dictionary<string, Version> {{"Delft3D Wave", Version.Parse(plugin.FileFormatVersion)}});
+                app.HybridProjectRepository.Returns(repo);
+                plugin.Application = app;
 
-            // Call
-            repo.ProjectOpening += Raise.EventWith(new object(), new ProjectOpeningEventArgs("the_path.dsproj"));
+                // Call
+                repo.ProjectOpening += Raise.EventWith(new object(), new ProjectOpeningEventArgs(projectFile));
 
-            // Assert
-            repo.Received(1).GetPluginFileFormatVersions("the_path.dsproj");
+                // Assert
+                repo.Received(1).GetPluginFileFormatVersions(projectFile);
+            }
         }
 
         [Test]

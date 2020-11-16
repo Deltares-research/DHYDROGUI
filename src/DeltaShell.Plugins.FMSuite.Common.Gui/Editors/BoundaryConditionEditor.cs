@@ -412,10 +412,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             cachedBoundaryCondition = SelectedBoundaryCondition;
             cachedSelectedSupportPoint = SelectedSupportPointIndex;
             Data = null;
+
+            updatesSuspended = true;
         }
 
         public void ResumeUpdates()
         {
+            if (!updatesSuspended)
+            {
+                return;
+            }
+            
             Data = cachedBoundaryConditionSet;
 
             IBoundaryCondition boundaryCondition =
@@ -433,6 +440,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                                         boundaryConditionSet.Feature.Geometry.Coordinates.Count()
                                             ? cachedSelectedSupportPoint
                                             : 0;
+
+            updatesSuspended = false;
         }
 
         private IEnumerable<string> Categories
@@ -970,6 +979,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         private bool locked;
         private bool showSupportPointChainages;
         private bool showSupportPointNames;
+        private bool updatesSuspended;
 
         public bool Locked
         {
