@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (DeltaShellApplication app = GetRunningApplication())
             {
-                var path = "mdw.dsproj";
+                const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (DeltaShellApplication app = GetRunningApplication())
             {
-                var path = "coords.dsproj";
+                const string path = "coords.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (DeltaShellApplication app = GetRunningApplication())
             {
-                var path = "mdw.dsproj";
+                const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
                 string mdwFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (DeltaShellApplication app = GetRunningApplication())
             {
-                var path = "mdw.dsproj";
+                const string path = "mdw.dsproj";
                 app.SaveProjectAs(path);
 
                 string mdwFilePath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary/obw.mdw");
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (DeltaShellApplication app = GetRunningApplication())
             {
-                var path = "mdw.dsproj";
+                const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (DeltaShellApplication app = GetRunningApplication())
             {
-                var path = "mdw.dsproj";
+                const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
@@ -197,7 +197,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 app.OpenProject(path);
 
                 var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
-                //Check persistance
+
+                //Check persistence
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(newStopTime, retrievedModel.StopTime);
             }
@@ -208,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (DeltaShellApplication app = GetRunningApplication())
             {
-                var path = "mdw.dsproj";
+                const string path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
                 var model = new WaveModel();
@@ -228,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 app.OpenProject(path);
 
                 var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
-                //Check persistance
+                //Check persistence
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(newTimeStep, retrievedModel.TimeStep);
             }
@@ -239,8 +240,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (DeltaShellApplication app = GetRunningApplication())
             {
-                var path = "mdw_grid.dsproj";
-                var secondPath = "target_mdw_grid.dsproj";
+                const string path = "mdw_grid.dsproj";
+                const string secondPath = "target_mdw_grid.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
                 string mdwFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
@@ -248,9 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 app.Project.RootFolder.Add(model);
 
-                // after this call, we should go into PFBIR.Initialize(..) to get filebased items form project ???
                 app.SaveProjectAs(path);
-
                 app.SaveProjectAs(secondPath);
 
                 string targetDir = Path.Combine(secondPath + "_data", model.Name);
@@ -263,7 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (DeltaShellApplication app = GetRunningApplication())
             {
-                var projPath = "modelSaveLoadDomainsTest.dsproj";
+                const string projPath = "modelSaveLoadDomainsTest.dsproj";
                 app.SaveProjectAs(projPath); // save to initialize file repository..
 
                 var model = new WaveModel {Name = "domainSaveLoadTest"};
