@@ -96,7 +96,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
         public void DoubleClickingOutputItemProjectShouldEnableMapLayer()
         {
             string mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\Waves.mdw"));
@@ -155,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         private static void DoubleClickOutputItemAndAssertLayerIsOn(WaveModel model, IGui gui, GuiPlugin guiPlugin, string itemName)
         {
             var wavmFileFunctionStoreNodePresenter = new WavmFileFunctionStoreNodePresenter() {GuiPlugin = guiPlugin};
-            WavmFileFunctionStore wavmFileFunctionStore = model.WavmFunctionStores.FirstOrDefault();
+            WavmFileFunctionStore wavmFileFunctionStore = model.WaveOutputData.WavmFileFunctionStores.FirstOrDefault();
             Assert.NotNull(wavmFileFunctionStore);
 
             IDataItem outputItem =
@@ -184,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 itemName
             };
 
-            IEnumerable<ILayer> allLayers = activeMapView.Map.GetAllLayers(false);
+            IEnumerable<ILayer> allLayers = activeMapView.Map.GetAllLayers(false).ToArray();
 
             ILayer coverageLayer = allLayers.FirstOrDefault(l => l.Name == itemName);
             Assert.IsNotNull(coverageLayer);
