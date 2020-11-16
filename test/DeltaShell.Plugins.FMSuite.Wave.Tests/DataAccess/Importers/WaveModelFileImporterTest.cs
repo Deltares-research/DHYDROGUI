@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -151,14 +152,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         public void ImportItem_TargetNull_ReturnsImportedWaveModel()
         {
             // Setup
-            string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
+            string testFileDirPath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\input");
 
-            Func<string> func = () => "work_directory";
-            var importer = new WaveModelFileImporter(func);
+            string Func() => "work_directory";
+            var importer = new WaveModelFileImporter(Func);
 
             using (var temp = new TemporaryDirectory())
             {
-                string filePath = temp.CopyTestDataFileToTempDirectory(testFilePath);
+                string fileDirPath = temp.CopyDirectoryToTempDirectory(testFileDirPath);
+                string filePath = Path.Combine(fileDirPath, "Waves.mdw");
 
                 // Call
                 object result = importer.ImportItem(filePath, null);
@@ -166,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
                 // Assert
                 var model = result as WaveModel;
                 Assert.That(model, Is.Not.Null);
-                Assert.That(model.WorkingDirectoryPathFunc, Is.SameAs(func));
+                Assert.That(model.WorkingDirectoryPathFunc(), Is.EqualTo(Func()));
             }
         }
 
@@ -174,14 +176,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         public void ImportItem_ShouldCancelTrue_ReturnsNull()
         {
             // Setup
-            string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
+            string testFileDirPath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\input");
 
-            Func<string> func = () => "work_directory";
-            var importer = new WaveModelFileImporter(func) {ShouldCancel = true};
+            string Func() => "work_directory";
+            var importer = new WaveModelFileImporter(Func) {ShouldCancel = true};
 
             using (var temp = new TemporaryDirectory())
             {
-                string filePath = temp.CopyTestDataFileToTempDirectory(testFilePath);
+                string fileDirPath = temp.CopyDirectoryToTempDirectory(testFileDirPath);
+                string filePath = Path.Combine(fileDirPath, "Waves.mdw");
 
                 // Call
                 object result = importer.ImportItem(filePath, null);
@@ -195,10 +198,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         public void ImportItem_TargetWaveModel_WithFolderOwner_ReturnsImportedWaveModel()
         {
             // Setup
-            string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
+            string testFileDirPath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\input");
 
-            Func<string> func = () => "work_directory";
-            var importer = new WaveModelFileImporter(func);
+            string Func() => "work_directory";
+            var importer = new WaveModelFileImporter(Func);
 
             var owner = new Folder();
             var target = new WaveModel {Owner = owner};
@@ -206,7 +209,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
             using (var temp = new TemporaryDirectory())
             {
-                string filePath = temp.CopyTestDataFileToTempDirectory(testFilePath);
+                string fileDirPath = temp.CopyDirectoryToTempDirectory(testFileDirPath);
+                string filePath = Path.Combine(fileDirPath, "Waves.mdw");
 
                 // Call
                 object result = importer.ImportItem(filePath, target);
@@ -215,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
                 var model = result as WaveModel;
                 Assert.That(model, Is.Not.Null);
                 Assert.That(model, Is.Not.SameAs(target));
-                Assert.That(model.WorkingDirectoryPathFunc, Is.SameAs(func));
+                Assert.That(model.WorkingDirectoryPathFunc(), Is.EqualTo(Func()));
                 CollectionContainsOnlyAssert.AssertContainsOnly(owner.Items, model);
             }
         }
@@ -224,10 +228,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         public void ImportItem_TargetWaveModel_WithCompositeActivityOwner_ReturnsCompositeActivityWithImportedWaveModel()
         {
             // Setup
-            string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
+            string testFileDirPath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\input");
 
-            Func<string> func = () => "work_directory";
-            var importer = new WaveModelFileImporter(func);
+            string Func() => "work_directory";
+            var importer = new WaveModelFileImporter(Func);
 
             ICompositeActivity owner = Substitute.For<ICompositeActivity, IEditableObject>();
             var target = new WaveModel {Owner = owner};
@@ -235,14 +239,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
 
             using (var temp = new TemporaryDirectory())
             {
-                string filePath = temp.CopyTestDataFileToTempDirectory(testFilePath);
+                string fileDirPath = temp.CopyDirectoryToTempDirectory(testFileDirPath);
+                string filePath = Path.Combine(fileDirPath, "Waves.mdw");
 
                 // Call
                 object result = importer.ImportItem(filePath, target);
 
                 // Assert
                 Assert.That(result, Is.SameAs(owner));
-                VerifyWaveModel(owner.Activities, func);
+                VerifyWaveModel(owner.Activities, Func);
             }
         }
 
@@ -250,24 +255,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         public void ImportItem_TargetCompositeActivity_ReturnsCompositeActivityWithImportedWaveModel()
         {
             // Setup
-            string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
+            string testFileDirPath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\input");
 
-            Func<string> func = () => "work_directory";
-            var importer = new WaveModelFileImporter(func);
+            string Func() => "work_directory";
+            var importer = new WaveModelFileImporter(Func);
 
             ICompositeActivity target = Substitute.For<ICompositeActivity, IEditableObject>();
             target.Activities.Returns(new EventedList<IActivity>());
 
             using (var temp = new TemporaryDirectory())
             {
-                string filePath = temp.CopyTestDataFileToTempDirectory(testFilePath);
+                string fileDirPath = temp.CopyDirectoryToTempDirectory(testFileDirPath);
+                string filePath = Path.Combine(fileDirPath, "Waves.mdw");
 
                 // Call
                 object result = importer.ImportItem(filePath, target);
 
                 // Assert
                 Assert.That(result, Is.SameAs(target));
-                VerifyWaveModel(target.Activities, func);
+                VerifyWaveModel(target.Activities, Func);
             }
         }
 
@@ -296,7 +302,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
             Assert.That(items, Has.Count.EqualTo(1));
             List<WaveModel> waveModels = items.OfType<WaveModel>().ToList();
             Assert.That(waveModels, Has.Count.EqualTo(1));
-            Assert.That(waveModels[0].WorkingDirectoryPathFunc, Is.SameAs(func));
+            Assert.That(waveModels[0].WorkingDirectoryPathFunc(), Is.EqualTo(func()));
         }
     }
 }
