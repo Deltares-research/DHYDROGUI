@@ -469,47 +469,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
-        public void ClearOutput_WithSwanRunLogDataItem_ThenSwanRunLogContentIsEmpty()
-        {
-            //// Setup
-            //var waveModel = new WaveModel();
-            //var swanTextDocument = (TextDocument) waveModel.GetDataItemByTag(WaveModel.SwanLogDataItemTag).Value;
-            //swanTextDocument.Content = new Random().Next(100).ToString();
-
-            //// Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
-            //// As we do not focus on model run, we use reflection to set this field and omit the model run.
-            //TypeUtils.SetField(waveModel, "outputIsEmpty", false);
-
-            //// Call
-            //waveModel.ClearOutput();
-
-            //// Assert
-            //Assert.That(swanTextDocument.Content, Is.Empty, "Swan run log should be empty after clearing model output.");
-            Assert.Fail("Should be improved as part of D3DFMIQ-2286");
-        }
-
-        [Test]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
-        public void ClearOutput_WithOutputFunctions_ThenFunctionsAreRemovedFromModel()
-        {
-            // Setup
-            var waveModel = new WaveModel();
-            var function = Substitute.For<IFunction>();
-            waveModel.WavmFunctionStores.Single().Functions.Add(function);
-
-            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
-            // As we do not focus on model run, we use reflection to set this field and omit the model run.
-            TypeUtils.SetField(waveModel, "outputIsEmpty", false);
-
-            // Call
-            waveModel.ClearOutput();
-
-            // Assert
-            Assert.That(waveModel.WavmFunctionStores.Single().Functions, Is.Empty, "All output functions should be removed at clearing model output.");
-        }
-
-        [Test]
         public void CheckDefaultTimeDateWhenCreatingWaveTimePointData()
         {
             var waveInputFieldData = new WaveInputFieldData();
