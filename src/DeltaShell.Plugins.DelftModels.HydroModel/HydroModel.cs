@@ -1264,7 +1264,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             Activities.OfType<IModel>().Plus(currentWorkflow as IModel)
                       .Where(m => m != null)
-                      .ForEach(m => m.ClearOutput());
+                      .ForEach(m => m.ClearOutput(true));
 
             RemoveOutputTextDocumentDataItem();
         }
