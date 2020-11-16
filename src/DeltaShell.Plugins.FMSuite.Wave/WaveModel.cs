@@ -84,15 +84,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// <summary>
         /// Creates a new empty <see cref="WaveModel"/>.
         /// </summary>
-        public WaveModel() : this(BuildEmptyModel) {}
+        public WaveModel() : this(BuildEmptyModel, false) {}
 
         /// <summary>
         /// Creates a new <see cref="WaveModel"/> from the provided <paramref name="mdwPath"/>.
         /// </summary>
         /// <param name="mdwPath">The path to the mdw file.</param>
-        public WaveModel(string mdwPath) : this(model => BuildModelFromMdw(model, mdwPath)) {}
+        /// <param name="connectToOutput">Whether to attempt to connect the output or not.</param>
+        public WaveModel(string mdwPath, bool connectToOutput = true) : this(model => BuildModelFromMdw(model, mdwPath), 
+                                                                             connectToOutput) {}
 
-        private WaveModel(Action<WaveModel> creationCode) : base("Waves")
+        private WaveModel(Action<WaveModel> creationCode, bool connectToOutput) : base("Waves")
         {
             runner = new DimrRunner(this, new DimrApiFactory());
 
@@ -124,7 +126,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
 
             InitializeCouplingTime();
-            InitializeWaveOutputData();
+
+            if (connectToOutput)
+            {
+                InitializeWaveOutputData();
+            }
 
             boundaryContainerSyncService = new BoundaryContainerSyncService(this);
 #pragma warning disable 618

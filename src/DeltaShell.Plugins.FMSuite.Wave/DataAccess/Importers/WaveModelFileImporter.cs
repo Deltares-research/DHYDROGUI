@@ -83,51 +83,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers
         {
             try
             {
-                var importedWaveModel = new WaveModel(path) {WorkingDirectoryPathFunc = getWorkingDirectoryPathFunc};
-
-                //replace the Wave Model
-                if (target is WaveModel targetWaveModel)
-                {
-                    IProjectItem parent = targetWaveModel.Owner();
-
-                    //add / replace the Wave Model in the project
-                    if (parent is Folder folder)
-                    {
-                        folder.Items.Remove(targetWaveModel);
-                        folder.Items.Add(importedWaveModel);
-                    }
-
-                    //add / replace the Wave Model in the integrated model
-                    if (parent is ICompositeActivity compositeActivity)
-                    {
-                        importedWaveModel.MoveModelIntoIntegratedModel(null, compositeActivity);
-                        return compositeActivity;
-                    }
-
-                    return ShouldCancel ? null : importedWaveModel;
-                }
-
-                //add / replace the Wave Model in the integrated model
-                if (target is ICompositeActivity hydroModel)
-                {
-                    importedWaveModel.MoveModelIntoIntegratedModel(null, hydroModel);
-                    return hydroModel;
-                }
-
-                return ShouldCancel ? null : importedWaveModel;
+                return ImportWaveModel(path, target);
             }
-            catch (Exception e)
+            catch (Exception e) when (e is ArgumentException    || 
+                                      e is PathTooLongException || 
+                                      e is FormatException      ||
+                                      e is OutOfMemoryException || 
+                                      e is IOException          || 
+                                      e is InvalidOperationException)
             {
-                if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
-                    e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
-                {
-                    log.Error(string.Format("An error occurred while trying to import a {0}; Cause: ",
-                                            Name), e);
-                    return null;
-                }
+                log.Error($"An error occurred while trying to import a {Name}; Cause: ", e);
+                return null;
+            }
+        }
 
-                // !!Unexpected type of exception (like NotSupportedException or NotImplementedException), so fail fast!!
-                throw;
+        private object ImportWaveModel(string path, object target)
+        {
+            var importedWaveModel = new WaveModel(path, connectToOutput: false)
+            {
+                WorkingDirectoryPathFunc = getWorkingDirectoryPathFunc
+            };
+
+            if (TryGetParentHydroModel(target, out ICompositeActivity parentModel))
+            {
+                importedWaveModel.MoveModelIntoIntegratedModel(null, parentModel);
+                return parentModel;
+            }
+
+            //replace the Wave Model
+            if (target is WaveModel targetWaveModel && 
+                targetWaveModel.Owner() is Folder folder)
+            {
+                folder.Items.Remove(targetWaveModel);
+                folder.Items.Add(importedWaveModel);
+            }
+
+            return ShouldCancel ? null : importedWaveModel;
+        }
+
+        private static bool TryGetParentHydroModel(object target, out ICompositeActivity hydroModel)
+        {
+            hydroModel = null;
+
+            switch (target)
+            {
+                case ICompositeActivity compositeActivity:
+                    hydroModel = compositeActivity;
+                    return true;
+                case WaveModel targetWaveModel when targetWaveModel.Owner() is ICompositeActivity parentCompositeActivity:
+                    hydroModel = parentCompositeActivity;
+                    return true;
+                default:
+                    return false;
             }
         }
     }
