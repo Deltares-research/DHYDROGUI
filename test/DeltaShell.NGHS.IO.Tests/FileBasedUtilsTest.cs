@@ -351,7 +351,7 @@ namespace DeltaShell.NGHS.IO.Tests
                 return null;
             }
 
-            public void ClearOutput() {}
+            public void ClearOutput(bool forceClean = false) {}
 
             public IEventedList<IDataItem> DataItems { get; set; }
             public IEnumerable<IDataItem> AllDataItems { get; }
