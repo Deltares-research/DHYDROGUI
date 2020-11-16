@@ -1573,25 +1573,52 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private string path;
         private string currentOutputDirectoryPath;
         private string persistentOutputDirectory;
-        private bool modelRenamed;
-        
+        private bool removeSourceOutputFolder;
+
+        /// <summary>
+        /// The persistent output directory to which output files
+        /// should be copied.
+        /// </summary>
+        /// <remarks>
+        /// Can be outdated when asked due to a rename model action and
+        /// save (not outdated during save-as). Therefore
+        /// <see cref="CheckModelRenamedFollowedBySave"/> should be called.
+        /// </remarks>
         protected virtual string PersistentOutputDirectory
         {
             get
             {
-                // Check if model has been renamed.
-                var dirInfo = new DirectoryInfo(persistentOutputDirectory);
-                var modelDirectory = dirInfo.Parent;
-                if (modelDirectory.Name != Name)
-                {
-                    modelRenamed = true;
-                    persistentOutputDirectory = Path.Combine(modelDirectory.Parent.FullName, Name, DirectoryNameConstants.OutputDirectoryName);
-                }
+                CheckModelRenamedFollowedBySave();
                 return persistentOutputDirectory;
             }
             set => persistentOutputDirectory = value;
         }
-        
+
+        /// <summary>
+        /// Check if model has been renamed followed by a save (not a save-as).
+        /// During normal save <see cref="persistentOutputDirectory"/> contains
+        /// old model name and therefore if condition is true. Resulting in
+        /// correcting <see cref="persistentOutputDirectory"/> and removing
+        /// source folder in <see cref="CopyOutputFolderTo"/> method called from
+        /// <see cref="IFileBased.Path"/> setter. During Save As first
+        /// <see cref="IFileBased.CopyTo"/> and <see cref="IFileBased.SwitchTo"/>
+        /// will be called with an argument, which is the new path. Due to this
+        /// <see cref="persistentOutputDirectory"/> is up to date when setting
+        /// <see cref="IFileBased.Path"/> property afterwards. Resulting in unnecessary
+        /// second copy action without removal of source folder and second
+        /// <see cref="IFileBased.SwitchTo"/>. 
+        /// </summary>
+        private void CheckModelRenamedFollowedBySave()
+        {
+            var dirInfo = new DirectoryInfo(persistentOutputDirectory);
+            var modelDirectory = dirInfo.Parent;
+            if (modelDirectory.Name != Name)
+            {
+                removeSourceOutputFolder = true;
+                persistentOutputDirectory = Path.Combine(modelDirectory.Parent.FullName, Name, DirectoryNameConstants.OutputDirectoryName);
+            }
+        }
+
         // Used for Import model
         // Creating new model
         void IFileBased.CreateNew(string path)
@@ -1732,38 +1759,40 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            if (currentOutputDirectoryPath == targetDirectory) return;
+            var dirInfoSource = new DirectoryInfo(currentOutputDirectoryPath);
+            var dirInfoTarget = new DirectoryInfo(targetDirectory);
 
-            DirectoryCopy(currentOutputDirectoryPath, targetDirectory);
+            if (dirInfoSource.FullName == dirInfoTarget.FullName) return;
 
-            if (modelRenamed)
+            DirectoryCopy(dirInfoSource, dirInfoTarget);
+
+            if (removeSourceOutputFolder)
             {
                 // clean up old model name folder.
                 DisconnectOutput();
                 FileUtils.DeleteIfExists(Directory.GetParent(currentOutputDirectoryPath).FullName);
-                modelRenamed = false;
+                removeSourceOutputFolder = false;
             }
         }
 
-        private static void DirectoryCopy(string sourceDirName, string destDirName)
+        private static void DirectoryCopy(DirectoryInfo sourceDir, DirectoryInfo destDir)
         {
-            var dir = new DirectoryInfo(sourceDirName);
-            
-            DirectoryInfo[] subDirs = dir.GetDirectories();
+            DirectoryInfo[] sourceSubDirs = sourceDir.GetDirectories();
 
-            FileUtils.CreateDirectoryIfNotExists(destDirName, true);
+            FileUtils.CreateDirectoryIfNotExists(destDir.FullName, true);
             
-            FileInfo[] files = dir.GetFiles();
-            foreach (FileInfo file in files)
+            FileInfo[] sourceFiles = sourceDir.GetFiles();
+            foreach (FileInfo file in sourceFiles)
             {
-                string destFilePath = Path.Combine(destDirName, file.Name);
+                string destFilePath = Path.Combine(destDir.FullName, file.Name);
                 file.CopyTo(destFilePath, true);
             }
 
-            foreach (DirectoryInfo subDir in subDirs)
+            foreach (DirectoryInfo subDir in sourceSubDirs)
             {
-                string destDirPath = Path.Combine(destDirName, subDir.Name);
-                DirectoryCopy(subDir.FullName, destDirPath);
+                string newDestDirPath = Path.Combine(destDir.FullName, subDir.Name);
+                var newDestDirInfo = new DirectoryInfo(newDestDirPath);
+                DirectoryCopy(subDir, newDestDirInfo);
             }
         }
 

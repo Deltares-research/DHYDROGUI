@@ -1749,7 +1749,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
                 string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
 
-                string projectDirectoryAfterSecondSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string projectDirectoryAfterSecondSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSecondSave_data");
                 string pathAfterSecondSaveAs = Path.Combine(projectDirectoryAfterSecondSaveAs, "RealTimeControlModelGUID");
 
                 BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
