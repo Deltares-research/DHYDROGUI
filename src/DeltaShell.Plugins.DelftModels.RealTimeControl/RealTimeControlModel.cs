@@ -1741,9 +1741,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            if (outputFileFunctionStore == null)
+            if (outputFileFunctionStore == null && !OutputDocuments.Any())
             {
-                Directory.Delete(targetDirectory, true);
+                if (Directory.Exists(targetDirectory))
+                {
+                    Directory.Delete(targetDirectory, true);
+                }
             }
             else
             {

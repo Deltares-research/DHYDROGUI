@@ -1392,6 +1392,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
                 rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
 
                 // Then
@@ -1426,6 +1427,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.NewProject(pathBeforeSave);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
                 rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
                 frameworkSimulator.Save(pathAfterSave);
 
                 // Then
@@ -1463,6 +1465,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.NewProject(pathBeforeSave);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
                 rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
                 frameworkSimulator.SaveAs(pathAfterSaveAs);
 
                 // Then
@@ -1566,7 +1569,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryPersistentFolder, rtcModel, persistentOutputFileName, persistentOutputSubDirectoryName);
-                ;
             }
         }
 
@@ -1679,6 +1681,40 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
         }
 
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenRunningAndClearingAndSavingForFirstTime_ThenNoOutputFolderWrittenToProjectFolder()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
+
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
+                                                  out string _, out string _,
+                                                  out string workingDirectoryForRunning);
+
+                // When
+                frameworkSimulator.NewProject(pathBeforeSave);
+                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
+                rtcModel.ClearOutput(true);
+                frameworkSimulator.FirstSaveAs(pathAfterSave);
+
+                // Then
+                Assert.IsTrue(!Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc", DirectoryNameConstants.OutputDirectoryName)));
+
+                Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
+                Assert.AreEqual(0, rtcModel.OutputDocuments.Count);
+            }
+        }
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void OnFinishIntegratedModelRun_ShouldOnlyMoveOutputFilesAndDirectoriesInRtcFolderToSeparateOutputFolder()
