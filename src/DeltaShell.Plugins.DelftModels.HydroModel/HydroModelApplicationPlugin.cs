@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
@@ -70,7 +71,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaving -= ApplicationProjectSaving;
                     Application.ProjectSaved -= ApplicationProjectSavedOrFailed;
                     Application.ProjectSaveFailed -= ApplicationProjectSavedOrFailed;
-                    Application.ProjectOpened -= ApplicationProjectOpened;
                 }
                 
                 base.Application = value;
@@ -81,23 +81,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaving += ApplicationProjectSaving;
                     Application.ProjectSaveFailed += ApplicationProjectSavedOrFailed;
                     Application.ProjectSaved += ApplicationProjectSavedOrFailed;
-                    Application.ProjectOpened += ApplicationProjectOpened;
                     //Application.ProjectDataDirectory
                 }
             }
         }
 
         public static Iterative1D2DCouplerAppender IterativeCouplerAppender { get; set; }
-
-        private void ApplicationProjectOpened(Project project)
-        {
-            // relink all dataitems (between rtc and flowFM) for all hydromodels
-            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
-            {
-                hm.RelinkDataItems();
-                hm.RelinkHydroRegionLinks();
-            });
-        }
 
         private void ApplicationProjectSaving(Project project)
         {

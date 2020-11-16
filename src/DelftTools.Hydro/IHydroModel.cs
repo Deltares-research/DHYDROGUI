@@ -11,5 +11,7 @@ namespace DelftTools.Hydro
         /// Hydrographic region being simulated by this hydro model.
         /// </summary>
         IHydroRegion Region { get; }
+
+        bool FileBasedModelIsLoaded { get; }
     }
 }

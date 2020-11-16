@@ -87,13 +87,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
                 importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
+                rainfallRunoffModel.FileBasedModelIsLoaded = true;
             }
-            // relink all dataitems & links (between rr and flowFM) for all hydromodels
-            Application.GetAllModelsInProject().OfType<HydroModel.HydroModel>().ForEach(hm =>
-            {
-                hm.RelinkDataItems();
-                hm.RelinkHydroRegionLinks();
-            });
         }
 
         private void SaveToFile(Project project)

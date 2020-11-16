@@ -134,6 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ImportSpatialOperationsAfterCreating(modelDataItems);
 
                 AddSewerRoughnessIfNecessary();
+                FileBasedModelIsLoaded = true;
             }
             else
             {
@@ -2576,6 +2577,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             UpdateSpatialDataAfterGridSet(grid, false, false, false);
             ImportSpatialOperationsAfterLoading();
+            FileBasedModelIsLoaded = true;
         }
 
         private void UpdateDataItemsNotCreatedInPreviousVersion()
@@ -3681,6 +3683,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get { return fmRegion; }
         }
+
+        public bool FileBasedModelIsLoaded { get; set; } = false;
 
         public bool IsActivityOfEnumType(ModelType type)
         {

@@ -12,10 +12,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges
         {
             var hydroSourceObject = link.Source == null ? null : TypeUtils.Unproxy(link.Source);
             SourceName = GetExchangeIdentifier(hydroSourceObject);
-            SourceType = hydroSourceObject?.GetType().AssemblyQualifiedName;
+            var sourceType = hydroSourceObject?.GetType();
+            SourceType = sourceType?.FullName + ", " + sourceType?.Assembly.GetName().Name;
             var hydroTargetObject = link.Target== null ? null : TypeUtils.Unproxy(link.Target);
             TargetName = GetExchangeIdentifier(hydroTargetObject);
-            TargetType = hydroTargetObject?.GetType().AssemblyQualifiedName;
+            var targetType = hydroTargetObject?.GetType();
+            TargetType = targetType?.FullName + ", " + targetType?.Assembly.GetName().Name;
             LinkName = link.Name;
             LinkGeometryWkt = new WKTWriter().Write(link.Geometry);
         }
