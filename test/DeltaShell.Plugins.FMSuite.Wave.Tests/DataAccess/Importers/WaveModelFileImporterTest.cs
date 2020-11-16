@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -149,6 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ImportItem_TargetNull_ReturnsImportedWaveModel()
         {
             // Setup
@@ -173,6 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ImportItem_ShouldCancelTrue_ReturnsNull()
         {
             // Setup
@@ -195,6 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ImportItem_TargetWaveModel_WithFolderOwner_ReturnsImportedWaveModel()
         {
             // Setup
@@ -225,6 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ImportItem_TargetWaveModel_WithCompositeActivityOwner_ReturnsCompositeActivityWithImportedWaveModel()
         {
             // Setup
@@ -252,6 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ImportItem_TargetCompositeActivity_ReturnsCompositeActivityWithImportedWaveModel()
         {
             // Setup
