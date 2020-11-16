@@ -61,41 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             }
         }
 
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-2272
-        public void DisconnectWavmFunctionStores_FileExists_FunctionStorePathIsSetToEmpty()
-        {
-            // Setup
-            string inputDataPath = TestHelper.GetTestFilePath(Path.Combine("Migrations", "1.1.0.0", nameof(WaveDirectoryStructureMigrationHelperTest), "wavm-wad.nc"));
-
-            using (var tempDir = new TemporaryDirectory())
-            using (var model = new WaveModel())
-            {
-                string ncPath = Path.Combine(tempDir.Path, Path.GetFileName(inputDataPath));
-                File.Copy(inputDataPath, ncPath);
-
-                // Associate wavm file function store with the outer domain
-                const string functionStoreName = "someName";
-                var functionStore = new WavmFileFunctionStore(ncPath) {Name = functionStoreName};
-                var dataItem = new DataItem(functionStore, DataItemRole.Output, 
-                                            WavmFunctionStoreMigrationHelper.WavmStoreDataItemTag + model.OuterDomain.Name);
-                model.DataItems.Add(dataItem);
-
-                Assert.That(GetWavmFunctionStoresFromModel(model).Count(), Is.EqualTo(1), "Precondition: model has one WavmFileFunctionStore.");
-                var logHandler = Substitute.For<ILogHandler>();
-
-                // Call
-                WavmFunctionStoreMigrationHelper.DisconnectWavmFunctionStores(model, logHandler);
-
-                // Assert
-                logHandler.Received(1).ReportWarningFormat("The link with {0} has been broken.", functionStoreName);
-                Assert.That(GetWavmFunctionStoresFromModel(model).Count(), Has.Member(functionStore));
-                Assert.That(functionStore.Path, Is.EqualTo(string.Empty));
-                functionStore.Close();
-            }
-        }
-
         private static IEnumerable<WavmFileFunctionStore> GetWavmFunctionStoresFromModel(WaveModel model)
         {
                 return
