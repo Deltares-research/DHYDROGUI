@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Services;
@@ -262,12 +263,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
         private static void AssertCorrectWaveModelFileImporter(WaveModelFileImporter importer, string expectedWorkingDirectory)
         {
-            string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
+            string testDataPath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest");
             using (var temp = new TemporaryDirectory())
             {
-                string filePath = temp.CopyTestDataFileToTempDirectory(testFilePath);
+                string localDataPath = temp.CopyDirectoryToTempDirectory(testDataPath);
 
-                var model = (WaveModel) importer.ImportItem(filePath);
+                var model = (WaveModel) importer.ImportItem(Path.Combine(localDataPath, "input", "Waves.mdw"));
 
                 Assert.That(model.WorkingDirectoryPathFunc, Is.Not.Null);
                 Assert.That(model.WorkingDirectoryPathFunc(), Is.EqualTo(expectedWorkingDirectory));
