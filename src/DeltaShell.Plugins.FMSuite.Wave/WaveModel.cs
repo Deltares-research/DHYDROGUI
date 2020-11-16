@@ -124,6 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
 
             InitializeCouplingTime();
+            InitializeWaveOutputData();
 
             boundaryContainerSyncService = new BoundaryContainerSyncService(this);
 #pragma warning disable 618
@@ -310,14 +311,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        // TODO
-        [Obsolete("Will be removed as part of D3DFMIQ-2272")]
-        public IEnumerable<WavmFileFunctionStore> WavmFunctionStores
+        private void InitializeWaveOutputData()
         {
-            get
+            if (OutputDirPath == null || 
+                !Directory.Exists(OutputDirPath) || 
+                !Directory.EnumerateFiles(OutputDirPath).Any())
             {
-                yield break;
+                return;
             }
+
+            var logHandler = new LogHandler(Resources.WaveModel_Connect_model_output, log);
+            WaveOutputData.ConnectTo(OutputDirPath, false, logHandler);
+            logHandler.LogReport();
+
+            OutputIsEmpty = false;
         }
 
         // Note that the private set here and the assignment in the 
@@ -866,6 +873,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             get
             {
+                if (string.IsNullOrEmpty(InputDirPath))
+                {
+                    return null;
+                }
+
                 string outputDir = Path.Combine(InputDirPath, "..", "output");
                 return Path.GetFullPath(outputDir);
             }
@@ -1055,10 +1067,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(model.ModelDefinition.OuterDomain);
 
             model.BuildWaveDomains(allDomains, model.InputDirPath, model);
-
-            var logHandler = new LogHandler(Resources.WaveModel_Connect_model_output, log);
-            model.WaveOutputData.ConnectTo(model.OutputDirPath, false, logHandler);
-            logHandler.LogReport();
         }
 
         private static void BuildEmptyModel(WaveModel model)
