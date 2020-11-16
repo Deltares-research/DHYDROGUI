@@ -985,6 +985,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             OutputDocuments.Clear();
 
             EndEdit();
+            
+            MarkDirty();
         }
 
         private void DisconnectOutputFileFunctionStore()
@@ -1739,7 +1741,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            DirectoryCopy(currentOutputDirectoryPath, targetDirectory);
+            if (outputFileFunctionStore == null)
+            {
+                Directory.Delete(targetDirectory, true);
+            }
+            else
+            {
+                DirectoryCopy(currentOutputDirectoryPath, targetDirectory);
+            }
         }
 
         private static void DirectoryCopy(string sourceDirName, string destDirName)
