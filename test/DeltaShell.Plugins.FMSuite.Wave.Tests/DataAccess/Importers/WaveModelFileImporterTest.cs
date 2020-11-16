@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -279,6 +279,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
                 // Assert
                 Assert.That(result, Is.SameAs(target));
                 VerifyWaveModel(target.Activities, Func);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportItem_PathWithOutput_DoesNotConnectData()
+        {
+            // Setup
+            string testFileDirPath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\input");
+
+            string Func() => "work_directory";
+            var importer = new WaveModelFileImporter(Func);
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string fileDirPath = temp.CopyDirectoryToTempDirectory(testFileDirPath);
+                string filePath = Path.Combine(fileDirPath, "Waves.mdw");
+
+                // Call
+                object result = importer.ImportItem(filePath, null);
+
+                // Assert
+                var model = result as WaveModel;
+                Assert.That(model, Is.Not.Null);
+                Assert.That(model.WaveOutputData.IsConnected, Is.False);
             }
         }
 
