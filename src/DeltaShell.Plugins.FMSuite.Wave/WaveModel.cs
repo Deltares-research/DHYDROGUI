@@ -1323,6 +1323,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             if (MdwFile.MdwFilePath == null)
             {
                 BuildModel(model => BuildModelFromMdw(model, newMdwFilePath), true);
+                InitializeWaveOutputData();
             }
             else
             {
