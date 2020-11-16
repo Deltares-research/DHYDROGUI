@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
                 Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
-                Tag = category.ReadProperty<string>(StructureRegion.StructureIds.Key)
+                Tag = category.ReadProperty<string>(StructureRegion.StructureIds.Key, true)// optional if numStructures == 0
             };
         }
     }
