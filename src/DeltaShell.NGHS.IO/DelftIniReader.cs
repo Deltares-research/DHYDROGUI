@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO
         /// value can be anything and an optional comment 
         /// starting with the '#' character.
         /// </summary>
-        protected const string KeyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#=]*)(#(?<comment>.*))?$";
+        protected const string KeyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#]*)(#(?<comment>.*))?$";
 
         /// <summary>
         /// Reads a Delft .ini format file.
