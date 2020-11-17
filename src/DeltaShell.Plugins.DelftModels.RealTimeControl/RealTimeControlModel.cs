@@ -972,7 +972,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void DisconnectOutput()
         {
-            OnClearOutput();
+            DisconnectOutputFileFunctionStore();
+            RestartOutput.Clear();
         }
 
         protected override void OnClearOutput()
