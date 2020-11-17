@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Properties;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
@@ -12,17 +14,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
     /// Context menu for a <see cref="RealTimeControlRestartFile"/>.
     /// </summary>
     /// <seealso cref="MenuItemContextMenuStripAdapter"/>
-    public class RealTimeControlRestartFileContextMenu : MenuItemContextMenuStripAdapter
+    /// <remarks>
+    /// This class can be removed once the input restart file of the <see cref="RealTimeControlModel"/> is FileBased;
+    /// instead, the <see cref="NGHS.Common.Gui.Restart.RestartFileContextMenu"/> should be used.
+    /// </remarks>
+    public class RealTimeControlInputRestartFileContextMenu : MenuItemContextMenuStripAdapter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RealTimeControlRestartFileContextMenu"/> class.
+        /// Initializes a new instance of the <see cref="RealTimeControlInputRestartFileContextMenu"/> class.
         /// </summary>
         /// <param name="restartFile">The restart file.</param>
         /// <param name="node">The corresponding node.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="restartFile"/> or <paramref name="node"/> is <c>null</c>.
         /// </exception>
-        public RealTimeControlRestartFileContextMenu(RealTimeControlRestartFile restartFile, ITreeNode node) : base(new ContextMenuStrip())
+        public RealTimeControlInputRestartFileContextMenu(RealTimeControlRestartFile restartFile, ITreeNode node) : base(new ContextMenuStrip())
         {
             Ensure.NotNull(restartFile, nameof(restartFile));
             Ensure.NotNull(node, nameof(node));
@@ -36,10 +42,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             {
                 AddItemsForInputRealTimeControlRestartFile(model);
             }
-            else if (model.RestartOutput.Contains(restartFile))
-            {
-                AddItemsForOutputRealTimeControlRestartFile(model, restartFile);
-            }
         }
 
         private void AddItemsForInputRealTimeControlRestartFile(RealTimeControlModel model)
@@ -50,19 +52,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
         }
 
-        private void AddItemsForOutputRealTimeControlRestartFile(RealTimeControlModel model, RealTimeControlRestartFile restartFile)
-        {
-            ContextMenuStrip.Items.Add(GetUseAsRestartMenuItem(model, restartFile));
-        }
-
-        private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(RealTimeControlModel model, RealTimeControlRestartFile restartFile)
-        {
-            var menuItem = new ClonableToolStripMenuItem {Text = Resources.UseAsRestart};
-            menuItem.Click += (s, e) => model.RestartInput = restartFile.Clone();
-
-            return menuItem;
-        }
-
         private static ClonableToolStripMenuItem GetUseLastValidRestartMenuItem(RealTimeControlModel model)
         {
             var menuItem = new ClonableToolStripMenuItem
@@ -71,14 +60,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
                 Enabled = false
             };
 
-            RealTimeControlRestartFile outputRealTimeControlRestartFile = model.RestartOutput.LastOrDefault();
+            RestartFile outputRealTimeControlRestartFile = model.RestartOutput.LastOrDefault();
             if (outputRealTimeControlRestartFile == null)
             {
                 return menuItem;
             }
 
             menuItem.Enabled = true;
-            menuItem.Click += (s, e) => model.RestartInput = outputRealTimeControlRestartFile.Clone();
+            menuItem.Click += (s, e) => model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(outputRealTimeControlRestartFile.Path),
+                                                                                            File.ReadAllText(outputRealTimeControlRestartFile.Path));
 
             return menuItem;
         }

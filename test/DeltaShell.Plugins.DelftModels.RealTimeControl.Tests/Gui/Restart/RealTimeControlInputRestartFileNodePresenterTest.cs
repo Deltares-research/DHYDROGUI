@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
 {
     [TestFixture]
-    public class RealTimeControlRestartFileNodePresenterTest
+    public class RealTimeControlInputRestartFileNodePresenterTest
     {
         [Test]
         public void Constructor_InitializesInstance()
@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             var guiPlugin = Substitute.For<GuiPlugin>();
 
             // Call
-            var nodePresenter = new RealTimeControlRestartFileNodePresenter(guiPlugin);
+            var nodePresenter = new RealTimeControlInputRestartFileNodePresenter(guiPlugin);
 
             // Assert
             Assert.That(nodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
         public void Constructor_GuiPluginNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new RealTimeControlRestartFileNodePresenter(null);
+            void Call() => new RealTimeControlInputRestartFileNodePresenter(null);
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
         public void UpdateNode_ForEmptyRealTimeControlRestartFile()
         {
             // Setup
-            var nodePresenter = Create.For<RealTimeControlRestartFileNodePresenter>();
+            var nodePresenter = Create.For<RealTimeControlInputRestartFileNodePresenter>();
             var node = Substitute.For<ITreeNode>();
             var nodeData = new RealTimeControlRestartFile();
 
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
         public void UpdateNode_ForNotEmptyRealTimeControlRestartFile()
         {
             // Setup
-            var nodePresenter = Create.For<RealTimeControlRestartFileNodePresenter>();
+            var nodePresenter = Create.For<RealTimeControlInputRestartFileNodePresenter>();
             var node = Substitute.For<ITreeNode>();
             var nodeData = new RealTimeControlRestartFile("restart.file", "file content");
 
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
         public void UpdateNode_NodeNull_ThrowsArgumentNullException()
         {
             // Setup
-            var nodePresenter = Create.For<RealTimeControlRestartFileNodePresenter>();
+            var nodePresenter = Create.For<RealTimeControlInputRestartFileNodePresenter>();
             var nodeData = new RealTimeControlRestartFile();
 
             // Call
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
         public void UpdateNode_NodeDataNull_ThrowsArgumentNullException()
         {
             // Setup
-            var nodePresenter = Create.For<RealTimeControlRestartFileNodePresenter>();
+            var nodePresenter = Create.For<RealTimeControlInputRestartFileNodePresenter>();
             var node = Substitute.For<ITreeNode>();
 
             // Call

@@ -62,6 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
 
             File.WriteAllText(Path.Combine(directory, "settings.json"), settingsString);
 
+            realTimeControlModel.LastExportedPaths = NGHS.IO.FileBasedUtils.CollectNonRecursivePaths(directory);
+
             return true;
         }
 

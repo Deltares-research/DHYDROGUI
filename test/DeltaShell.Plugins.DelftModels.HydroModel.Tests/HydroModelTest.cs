@@ -16,6 +16,9 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.RealTimeControl;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NSubstitute;
 using NUnit.Framework;
@@ -29,6 +32,48 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [TestFixture]
     public class HydroModelTest
     {
+        [Test]
+        public void CreateCoupler_WhenSourceIsRtcModel_ShouldCreateNewCouplerAndSetCommunicationRtcToFmFileName()
+        {
+           // Arrange
+            var provider = new RealTimeControlDimrConfigModelCouplerProvider();
+
+            var rtcModel = new RealTimeControlModel();
+            var fmModel = Substitute.For<IDimrModel>();
+            fmModel.ShortName.Returns("fm");
+            fmModel.Name.Returns("FlowFM");
+
+            // Act
+            IDimrConfigModelCoupler coupler = provider.CreateCoupler(rtcModel, fmModel, null, null);
+
+            //Assert
+            Assert.AreEqual(rtcModel.ShortName + "_to_" + fmModel.ShortName + ".nc", rtcModel.CommunicationRtcToFmFileName);
+            Assert.AreEqual("rtc_to_fm", coupler.Name);
+            Assert.AreEqual("RTC Model", coupler.Source);
+            Assert.AreEqual("FlowFM", coupler.Target);
+        }
+
+        [Test]
+        public void CreateCoupler_WhenTargetIsRtcModel_ShouldCreateNewCouplerAndSetCommunicationFmToRtcFileName()
+        {
+            // Arrange
+            var provider = new RealTimeControlDimrConfigModelCouplerProvider();
+            
+            var rtcModel = new RealTimeControlModel();
+            var fmModel = Substitute.For<IDimrModel>();
+            fmModel.ShortName.Returns("fm");
+            fmModel.Name.Returns("FlowFM");
+
+            // Act
+            IDimrConfigModelCoupler coupler = provider.CreateCoupler(fmModel, rtcModel, null, null);
+
+            //Assert
+            Assert.AreEqual(fmModel.ShortName + "_to_" + rtcModel.ShortName + ".nc", rtcModel.CommunicationFmToRtcFileName);
+            Assert.AreEqual("fm_to_rtc", coupler.Name);
+            Assert.AreEqual("FlowFM", coupler.Source);
+            Assert.AreEqual("RTC Model", coupler.Target);
+        }
+
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
@@ -686,6 +731,32 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("value"));
+        }
+
+        [Test]
+        [TestCase(DataItemRole.Input)]
+        [TestCase(DataItemRole.Output)]
+        [TestCase(DataItemRole.None)]
+        public void GetDataItemsUsedForCouplingModel_WhenCalledForModelWhichCannotCouple_ShouldReturnEmptyList(DataItemRole role)
+        {
+            var model = Substitute.For<IModel>();
+            IEnumerable<IDataItem> dataItems = HydroModel.GetDataItemsUsedForCouplingModel(model, role);
+
+            CollectionAssert.IsEmpty(dataItems);
+        }
+
+        [Test]
+        [TestCase(DataItemRole.Input)]
+        [TestCase(DataItemRole.Output)]
+        [TestCase(DataItemRole.None)]
+        public void GetDataItemsUsedForCouplingModel_WhenCalledForModelWhichCanCouple_ShouldReturnItsDataItemsUsedForCoupling(DataItemRole role)
+        {
+            IModel model = Substitute.For<IModel, ICoupledModel>();
+            var expectedDataItems = new List<IDataItem>();
+            ((ICoupledModel) model).GetDataItemsUsedForCouplingModel(role).Returns(expectedDataItems);
+            IEnumerable<IDataItem> dataItems = HydroModel.GetDataItemsUsedForCouplingModel(model, role);
+
+            Assert.AreSame(dataItems, expectedDataItems);
         }
 
         private class SimpleFileExporter : IFileExporter

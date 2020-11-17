@@ -82,6 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             void MainWindowShown()
             {
                 ActivityRunner.RunActivity(hydroModel);
+                Assert.AreNotEqual(ActivityStatus.Failed, hydroModel.Status);
                 gui.Selection = flow;
                 gui.CommandHandler.OpenViewForSelection(typeof(ProjectItemMapView));
                 var view = gui.DocumentViews.ActiveView as ProjectItemMapView;
@@ -393,7 +394,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     new Coordinate(99, 90),
                     new Coordinate(99, 110)
                 }),
-                CrestLevel = 2.5
+                CrestLevel = 2.5,
+                CrestWidth = 1
             });
             flow.Area.ObservationPoints.Add(new GroupableFeature2DPoint
             {

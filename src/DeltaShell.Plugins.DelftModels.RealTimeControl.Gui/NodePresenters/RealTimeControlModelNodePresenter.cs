@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
@@ -90,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         public override IEnumerable GetChildNodeObjects(RealTimeControlModel model, ITreeNode node)
         {
             yield return new TreeFolder(model, GetInputItems(model), InputFolderName, FolderImageType.Input);
-            yield return new TreeFolder(model, GetOutputItems(model), OutputFolderName, FolderImageType.Output);
+            yield return new OutputTreeFolder(model, GetOutputItems(model), OutputFolderName);
         }
 
         protected override void OnPropertyChanged(RealTimeControlModel model, ITreeNode node, PropertyChangedEventArgs e)
@@ -155,11 +154,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
                 yield return outputFeatureCoverage;
             }
 
-            //find a better way :(
-            IDataItem logItem = model.DataItems.FirstOrDefault(di => di.Tag == "lastRunLogFileDataItem");
-            if (logItem != null)
+            foreach (ReadOnlyOutputTextDocument textDocument in model.OutputDocuments)
             {
-                yield return logItem;
+                yield return textDocument;
             }
         }
 

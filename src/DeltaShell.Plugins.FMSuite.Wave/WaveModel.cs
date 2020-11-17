@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -22,7 +22,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
-using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
@@ -1436,7 +1436,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private string GetMdwPathFromDeltaShellPath(string dsPath)
         {
             // dsproj_data/<model name>/<model name>.mdw
-            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, FileConstants.InputDirectoryName, Name + ".mdw"));
+            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, DirectoryNameConstants.InputDirectoryName, Name + ".mdw"));
         }
 
         #endregion
