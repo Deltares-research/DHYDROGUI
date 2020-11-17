@@ -333,31 +333,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [TestCase(false, "")]
-        [TestCase(true, "output")]
+        [TestCase(false)]
+        [TestCase(true)]
         [Category(TestCategory.Integration)]
-        public void Test_GivenFmModelWithRunsInIntegratedModel_WhenMduFileWrite_ThenOutputDirIs_Expected(bool runsInIntegratedModel, string expectedOutputDirValue)
+        public void ExportTo_OutputDirPropertyValue_ShouldAlwaysBeOutput(bool runsInIntegratedModel)
         {
-            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            using (var temp = new TemporaryDirectory())
             {
-                // Given
-                var fmModel = new WaterFlowFMModel();
-                fmModel.RunsInIntegratedModel = runsInIntegratedModel;
-                string testFile = Path.Combine(tempDir, "runsInIntegratedModel.mdu");
+                // Setup
+                var model = new WaterFlowFMModel {RunsInIntegratedModel = runsInIntegratedModel};
+                string targetFilePath = Path.Combine(temp.Path, "test.mdu");
 
-                // When
-                fmModel.ExportTo(testFile);
+                // Call
+                model.ExportTo(targetFilePath);
 
-                // Then
-                Assert.That(File.Exists(testFile));
-                IEnumerable<string> lines = File.ReadLines(testFile);
-                string outputDir = lines.SingleOrDefault(l => l.StartsWith("OutputDir"));
-                Assert.That(outputDir, Is.Not.Null);
-                string[] fields = outputDir.Trim().Split('=');
-                // Remove the comments (if there are).
-                string outputDirValue = fields[1].Split('#')[0].Trim();
-                Assert.That(outputDirValue, Is.EqualTo(expectedOutputDirValue));
-            });
+                // Assert
+                Assert.That(targetFilePath, Does.Exist);
+                string[] lines = File.ReadAllLines(targetFilePath);
+                string outputDirValue = GetPropertyValue(lines, "OutputDir");
+                Assert.That(outputDirValue, Is.EqualTo("output"));
+            }
         }
 
         [Test]
@@ -1084,6 +1079,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Call
                 mduFile.Write(filePath, new WaterFlowFMModelDefinition(), hydroArea, fixedWeirData);
             }
+        }
+
+        private string GetPropertyValue(string[] lines, string propName)
+        {
+            string line = lines.SingleOrDefault(l => l.StartsWith(propName));
+            Assert.That(line, Is.Not.Null);
+
+            string[] fields = line.Split('=', '#');
+            return fields[1].Trim();
         }
 
         /// <summary>
