@@ -1705,7 +1705,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.NewProject(pathBeforeSave);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
                 rtcModel.Name = "rtc2";
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.Save(pathAfterSave);
 
 
@@ -1740,7 +1740,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 rtcModel.Name = "rtc2";
                 frameworkSimulator.Save(pathAfterSave);
 
@@ -1776,7 +1776,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
                 
                 // test precondition
@@ -1821,7 +1821,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
 
                 // test precondition
@@ -2071,6 +2071,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             string workingDirectorySubDirectoryFile = Path.Combine(workingDirectorySubDirectory, workingDirectoryOutputFileName);
             File.WriteAllText(workingDirectorySubDirectoryFile, "WDSub");
+        }
+
+        private static void SimulateRun(RealTimeControlModel rtcModel, string workingDirectoryForRunning)
+        {
+            rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+            rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
         }
 
         private static void AssertsPersistentFolderStructure(string projectDirectoryAfterSave, RealTimeControlModel rtcModel, string outputFileName, string outputSubDirectoryName)
