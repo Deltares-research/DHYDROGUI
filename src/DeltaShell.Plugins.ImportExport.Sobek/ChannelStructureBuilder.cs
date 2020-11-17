@@ -242,6 +242,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
                         ProcesStruct(location, channel, definitionMapping, compositeStructure, existingStructures, structureName);
                     }
+
+                    if (!compositeStructure.Structures.Any())
+                    {
+                        // no structures could be generated and the component structure should be removed again from the branch
+                        channel.BranchFeatures.Remove(compositeStructure);
+                    }
                 }
             }
         }
