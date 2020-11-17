@@ -595,7 +595,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private void OnRemoveModel()
         {
             OutputIsEmpty = false; // hack to make ClearOutput fire appropriately. 
-            OnClearOutput();
+            ClearOutput();
         }
 
         /// <summary>
