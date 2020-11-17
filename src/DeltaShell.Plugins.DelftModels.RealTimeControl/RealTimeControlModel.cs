@@ -1775,41 +1775,57 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void CopyOutputFolderTo(string targetDirectory)
         {
-            if (string.IsNullOrEmpty(currentOutputDirectoryPath))
+            if (!CanOutputBeCopied())
             {
                 return;
             }
 
-            if (!Directory.Exists(currentOutputDirectoryPath))
+            if (IsRtcOutputEmpty)
             {
-                return;
-            }
-
-            if (outputFileFunctionStore == null && !OutputDocuments.Any())
-            {
-                if (Directory.Exists(targetDirectory))
-                {
-                    Directory.Delete(targetDirectory, true);
-                }
+                RemoveOutputDirectory(targetDirectory);
             }
             else
             {
                 var dirInfoSource = new DirectoryInfo(currentOutputDirectoryPath);
                 var dirInfoTarget = new DirectoryInfo(targetDirectory);
 
-                if (dirInfoSource.FullName == dirInfoTarget.FullName) return;
+                if (dirInfoSource.FullName == dirInfoTarget.FullName)
+                {
+                    return;
+                }
 
                 DirectoryCopy(dirInfoSource, dirInfoTarget);
 
                 if (removeSourceOutputFolder)
                 {
-                    // clean up old model name folder.
-                    DisconnectOutput();
-                    FileUtils.DeleteIfExists(Directory.GetParent(currentOutputDirectoryPath).FullName);
-                    removeSourceOutputFolder = false;
+                    RemoveOutputFolderInOldDirectory();
                 }
             }
         }
+
+        private bool CanOutputBeCopied()
+        {
+            return !string.IsNullOrEmpty(currentOutputDirectoryPath) && Directory.Exists(currentOutputDirectoryPath);
+        }
+
+        private void RemoveOutputFolderInOldDirectory()
+        {
+            DisconnectOutput();
+            FileUtils.DeleteIfExists(Directory.GetParent(currentOutputDirectoryPath).FullName);
+            removeSourceOutputFolder = false;
+        }
+
+        private static void RemoveOutputDirectory(string targetDirectory)
+        {
+            FileUtils.DeleteIfExists(targetDirectory);
+        }
+
+        /// <summary>
+        /// Gets whether the RTC model output is empty.
+        /// </summary>
+        /// <remarks>This replaces the <see cref="ModelBase.OutputIsEmpty"/> property, as it is not used properly
+        /// in this model.</remarks>
+        private bool IsRtcOutputEmpty => outputFileFunctionStore == null && !OutputDocuments.Any();
 
         private static void DirectoryCopy(DirectoryInfo sourceDir, DirectoryInfo destDir)
         {
