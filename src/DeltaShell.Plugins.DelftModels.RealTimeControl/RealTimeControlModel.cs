@@ -1780,7 +1780,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            if (IsRtcOutputEmpty)
+            if (!IsRtcOutputPresent)
             {
                 RemoveOutputDirectory(targetDirectory);
             }
@@ -1821,11 +1821,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         /// <summary>
-        /// Gets whether the RTC model output is empty.
+        /// Gets whether the RTC model output is present.
         /// </summary>
-        /// <remarks>This replaces the <see cref="ModelBase.OutputIsEmpty"/> property, as it is not used properly
-        /// in this model.</remarks>
-        private bool IsRtcOutputEmpty => outputFileFunctionStore == null && !OutputDocuments.Any();
+        private bool IsRtcOutputPresent => outputFileFunctionStore != null || OutputDocuments.Any() || RestartOutput.Any();
 
         private static void DirectoryCopy(DirectoryInfo sourceDir, DirectoryInfo destDir)
         {

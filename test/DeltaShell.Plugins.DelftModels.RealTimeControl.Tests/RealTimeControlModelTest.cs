@@ -1874,6 +1874,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.AreEqual(0, rtcModel.OutputDocuments.Count);
             }
         }
+        
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void OnFinishIntegratedModelRun_ShouldOnlyMoveOutputFilesAndDirectoriesInRtcFolderToSeparateOutputFolder()
