@@ -1358,7 +1358,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.NewProject(filePathBeforeSave);
-                frameworkSimulator.FirstSaveAs(filePathAfterSave);
+                frameworkSimulator.FirstSave(filePathAfterSave);
 
                 // Then
                 // There aren't output files, so there is nothing to write.
@@ -1392,7 +1392,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
-                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                frameworkSimulator.FirstSave(pathAfterSave);
 
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
@@ -1424,7 +1424,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
-                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                frameworkSimulator.FirstSave(pathAfterSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.Save(pathAfterSave);
 
@@ -1461,7 +1461,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
-                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                frameworkSimulator.FirstSave(pathAfterSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.SaveAs(pathAfterSaveAs);
 
@@ -1700,7 +1700,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
-                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                frameworkSimulator.FirstSave(pathAfterSave);
                 rtcModel.Name = "rtc2";
                 SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.Save(pathAfterSave);
@@ -1736,7 +1736,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
-                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                frameworkSimulator.FirstSave(pathAfterSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
                 rtcModel.Name = "rtc2";
                 frameworkSimulator.Save(pathAfterSave);
@@ -1774,7 +1774,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
-                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                frameworkSimulator.FirstSave(pathAfterSave);
                 
                 // test precondition
                 Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
@@ -1819,7 +1819,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
-                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                frameworkSimulator.FirstSave(pathAfterSave);
 
                 // test precondition
                 Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
@@ -1861,7 +1861,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.NewProject(pathBeforeSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
                 rtcModel.ClearOutput(true);
-                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                frameworkSimulator.FirstSave(pathAfterSave);
 
                 // Then
                 Assert.IsTrue(!Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc", DirectoryNameConstants.OutputDirectoryName)));

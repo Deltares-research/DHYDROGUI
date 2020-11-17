@@ -20,9 +20,12 @@ namespace DeltaShell.NGHS.TestUtils
         {
             model.CopyTo(filePath);
             model.SwitchTo(filePath);
+
+            model.Path = filePath;
+            model.SwitchTo(filePath);
         }
 
-        public void FirstSaveAs(string filePath)
+        public void FirstSave(string filePath)
         {
             model.CopyTo(filePath);
             model.SwitchTo(filePath);
