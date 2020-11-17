@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
         private static bool IsDiagnosticFile(FileInfo fileInfo) =>
             fileInfo.Name == WaveOutputConstants.SwanLogFileName ||
-            fileInfo.Name == WaveOutputConstants.SwanDiagnosticFileName;
+            fileInfo.Name.StartsWith(WaveOutputConstants.SwanDiagnosticFilePrefix);
 
         private static bool IsSpectraFile(FileInfo fileInfo) =>
             fileInfo.Extension == WaveOutputConstants.sp1Extension ||

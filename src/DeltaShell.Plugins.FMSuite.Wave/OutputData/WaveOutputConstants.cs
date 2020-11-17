@@ -12,9 +12,9 @@
         public const string SwanLogFileName = "swan_bat.log";
 
         /// <summary>
-        /// The name of the diagnostic file produced by the SWAN kernel.
+        /// The prefix of the diagnostic file produced by the SWAN kernel.
         /// </summary>
-        public const string SwanDiagnosticFileName = "swn-diag.Waves";
+        public const string SwanDiagnosticFilePrefix = "swn-diag.";
 
         /// <summary>
         /// The .sp1 extension, used by spectra files produced by the SWAN kernel.

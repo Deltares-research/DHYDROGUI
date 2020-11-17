@@ -48,6 +48,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             const string otherFileContent = "swoosh swash";
             var otherFile = new ReadOnlyTextFileData(otherFileName, otherFileContent);
 
+            const string diagAlternativeName = "swn-diag.dwaves";
+            const string diagAlternativeContent = "Some diagnostic data.";
+            var diagAlternativeFile = 
+                new ReadOnlyTextFileData(diagAlternativeName, diagAlternativeContent);
+
             yield return new TestCaseData(new List<ReadOnlyTextFileData>(), 
                                           new List<ReadOnlyTextFileData>());
             yield return new TestCaseData(new List<ReadOnlyTextFileData>
@@ -109,6 +114,90 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                           {
                                               logFile,
                                               diagFile,
+                                          });
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>
+                                          {
+                                              diagAlternativeFile,
+                                          }, 
+                                          new List<ReadOnlyTextFileData>
+                                          {
+                                              diagAlternativeFile,
+                                          });
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>
+                                          {
+                                              logFile,
+                                              diagAlternativeFile,
+                                          }, 
+                                          new List<ReadOnlyTextFileData>
+                                          {
+                                              logFile,
+                                              diagAlternativeFile,
+                                          });
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>
+                                          {
+                                              diagFile,
+                                              diagAlternativeFile,
+                                          }, 
+                                          new List<ReadOnlyTextFileData>
+                                          {
+                                              diagFile,
+                                              diagAlternativeFile,
+                                          });
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>
+                                          {
+                                              otherFile,
+                                              diagAlternativeFile,
+                                          }, 
+                                          new List<ReadOnlyTextFileData>
+                                          {
+                                              diagAlternativeFile,
+                                          });
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>
+                                          {
+                                              logFile,
+                                              otherFile,
+                                              diagAlternativeFile,
+                                          }, 
+                                          new List<ReadOnlyTextFileData>
+                                          {
+                                              logFile,
+                                              diagAlternativeFile,
+                                          });
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>
+                                          {
+                                              diagFile,
+                                              otherFile,
+                                              diagAlternativeFile,
+                                          }, 
+                                          new List<ReadOnlyTextFileData>
+                                          {
+                                              diagFile,
+                                              diagAlternativeFile,
+                                          });
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>
+                                          {
+                                              diagFile,
+                                              logFile,
+                                              diagAlternativeFile,
+                                          }, 
+                                          new List<ReadOnlyTextFileData>
+                                          {
+                                              diagFile,
+                                              logFile,
+                                              diagAlternativeFile,
+                                          });
+            yield return new TestCaseData(new List<ReadOnlyTextFileData>
+                                          {
+                                              logFile,
+                                              diagFile,
+                                              otherFile,
+                                              diagAlternativeFile,
+                                          }, 
+                                          new List<ReadOnlyTextFileData>
+                                          {
+                                              logFile,
+                                              diagFile,
+                                              diagAlternativeFile,
                                           });
         }
 
