@@ -660,7 +660,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
             else if (WaveOutputData.IsStoredInWorkingDirectory)
             {
-                CopyRunDataTo(targetDirectoryInfo);
+                CopyRunDataTo(targetDirectoryInfo, logHandler);
                 WaveOutputData.ConnectTo(targetDirectoryInfo.FullName, false, logHandler);
             }
             else if (!IsSavedToCurrentOutputDirectory(targetDirectoryInfo))
@@ -672,21 +672,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             logHandler.LogReport();
         }
 
-        private void CopyRunDataTo(DirectoryInfo targetDirectoryInfo)
+        private void CopyRunDataTo(DirectoryInfo targetDirectoryInfo, ILogHandler logHandler)
         {
             var dataSourcePathInfo = new DirectoryInfo(WaveOutputData.DataSourcePath);
 
             ClearDirectory(targetDirectoryInfo);
 
+            // TODO: move the strings to resources.
             if (!dataSourcePathInfo.Exists)
             {
+                logHandler.ReportWarningFormat("The output source path {0} does not exist, skipping copying output data.", 
+                                               targetDirectoryInfo.FullName);
                 return;
             }
 
-            // The exported model to run is always called Waves.mdw, as such we cannot use the name of 
-            // the mdw path of the wave model.
-            string mdwRunPath = Path.Combine(dataSourcePathInfo.FullName, "Waves.mdw");
-            HashSet<string> inputFilePaths = WaveOutputFileHelper.CollectInputFileNamesFromWorkingDirectoryMdw(mdwRunPath);
+            // Under normal circumstances there should only be one .mdw file in
+            // the working directory. As such we take the first. It might happened
+            // that the user has messed with the data, in which case we try to 
+            // inform the user.
+            FileInfo mdwRunPath = dataSourcePathInfo.EnumerateFiles("*.mdw")
+                                                    .FirstOrDefault();
+
+            if (mdwRunPath == null)
+            {
+                logHandler.ReportWarningFormat("No .mdw path could be found in {0}, skipping copying output data.", 
+                                               targetDirectoryInfo.FullName);
+                return;
+            }
+
+            HashSet<string> inputFilePaths = WaveOutputFileHelper.CollectInputFileNamesFromWorkingDirectoryMdw(mdwRunPath.FullName);
 
             foreach (FileInfo file in dataSourcePathInfo.EnumerateFiles())
             {
