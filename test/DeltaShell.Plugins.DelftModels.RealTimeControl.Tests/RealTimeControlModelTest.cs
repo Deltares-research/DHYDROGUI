@@ -1391,8 +1391,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
-                rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
 
                 // Then
@@ -1426,8 +1425,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
-                rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.Save(pathAfterSave);
 
                 // Then
@@ -1464,8 +1462,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
-                rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.SaveAs(pathAfterSaveAs);
 
                 // Then
@@ -1618,7 +1615,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.OpenProject(pathPersistentFolder);
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.Save(pathPersistentFolder);
 
                 // Then
@@ -1649,7 +1646,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.OpenProject(pathBeforeSaveAs);
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.SaveAs(pathAfterSaveAs);
 
                 // Then
@@ -1862,8 +1859,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
-                rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
-                rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
+                SimulateRun(rtcModel, workingDirectoryForRunning);
                 rtcModel.ClearOutput(true);
                 frameworkSimulator.FirstSaveAs(pathAfterSave);
 
