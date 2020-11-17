@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Utils.Editing;
 
@@ -10,7 +11,7 @@ namespace DelftTools.Hydro.CrossSections
         {
             crossSectionDefinitionYz.YZDataTable.Clear();
             crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(width/2*-1, bedLevel);
-            crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(width/2*-1 + 0.000001, bedLevel + height);
+            crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(width/2*-1 - 0.000001, bedLevel + height);
             crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(width/2, bedLevel + height);
             crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(width/2 + 0.000001, bedLevel);
             return crossSectionDefinitionYz;
@@ -20,8 +21,14 @@ namespace DelftTools.Hydro.CrossSections
             crossSectionDefinitionYz.YZDataTable.Clear();
             foreach (var zwRow in zWDataTable)
             {
-                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRow.Width / 2 * -1, zwRow.Z);
-                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRow.Width / 2, zwRow.Z);
+                var zwRowYLeft = zwRow.Width / 2 * -1;
+                if (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(zwRowYLeft))
+                    zwRowYLeft -= 0.000001;
+                var zwRowYRight = zwRow.Width / 2;
+                if (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(zwRowYRight))
+                    zwRowYRight += 0.000001;
+                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRowYLeft, zwRow.Z);
+                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRowYRight, zwRow.Z);
             }
             return crossSectionDefinitionYz;
         }
