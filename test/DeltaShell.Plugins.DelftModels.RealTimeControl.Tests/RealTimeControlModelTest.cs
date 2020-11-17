@@ -1884,7 +1884,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.NewProject(pathBeforeSave);
                 rtcModel.OnFinishIntegratedModelRun(workingDirectoryForRunning);
                 rtcModel.ConnectOutput(Path.Combine(workingDirectoryForRunning, "rtc", DirectoryNameConstants.OutputDirectoryName));
-                frameworkSimulator.FirstSaveAs(pathAfterSave);
+                frameworkSimulator.FirstSave(pathAfterSave);
                 
                 // When
                 rtcModel.ClearOutput(true);
