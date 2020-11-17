@@ -80,9 +80,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             InitializeAreaDataColumns();
 
+            SetOutputDirProperty();
             if (RunsInIntegratedModel)
             {
-                SetOutputDirAndWaqDirProperty();
+                SetWaqOutputDirProperty();
             }
 
             var mduFileWriteConfig = new MduFileWriteConfig()

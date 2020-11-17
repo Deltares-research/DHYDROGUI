@@ -29,7 +29,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ReportProgressText("Initializing");
 
             // Force fm kernel to write output to 'output' Directory
-            SetOutputDirAndWaqDirProperty();
+            SetOutputDirProperty();
+            SetWaqOutputDirProperty();
 
             if (Directory.Exists(WorkingOutputDirectoryPath))
             {
@@ -118,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         #region Output
 
-        private void SetOutputDirAndWaqDirProperty()
+        private void SetOutputDirProperty()
         {
             WaterFlowFMProperty outputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.OutputDir);
 
@@ -129,7 +130,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 Log.InfoFormat(Resources.WaterFlowFMModel_Running_this_model_requires_the_OutputDirectory_to_be_overwritten_to___0_,
                                DirectoryNameConstants.OutputDirectoryName);
             }
+        }
 
+        private void SetWaqOutputDirProperty()
+        {
             if (!SpecifyWaqOutputInterval)
             {
                 return;
@@ -140,9 +144,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             waqOutputDirProperty.SetValueAsString(relativeDWaqOutputDirectory);
         }
 
-        private void ClearOutputDirAndWaqDirProperty()
+        private void ClearWaqOutputDirProperty()
         {
-            ModelDefinition.GetModelProperty(KnownProperties.OutputDir).SetValueAsString(string.Empty);
             ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir).SetValueAsString(string.Empty);
         }
 

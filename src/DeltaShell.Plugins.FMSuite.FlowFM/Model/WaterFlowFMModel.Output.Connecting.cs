@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             currentOutputDirectoryPath = outputPath;
             ReconnectOutputFiles(outputPath);
             ReadDiaFile(outputPath);
-            ClearOutputDirAndWaqDirProperty();
+            ClearWaqOutputDirProperty();
         }
 
         /// <summary>
