@@ -248,10 +248,12 @@
     <Compile Include="Migrations\1.2.0.0\WaveModel120Migrator.cs" />
     <Compile Include="Migrations\WavesMigrator.cs" />
     <Compile Include="OutputData\IWaveOutputData.cs" />
+    <Compile Include="OutputData\IWaveOutputDataCopyHandler.cs" />
     <Compile Include="OutputData\IWaveOutputDataHarvester.cs" />
     <Compile Include="OutputData\WaveOutputConstants.cs" />
     <Compile Include="OutputData\WaveOutputData.cs" />
     <Compile Include="OutputData\ReadOnlyTextFileData.cs" />
+    <Compile Include="OutputData\WaveOutputDataCopyHandler.cs" />
     <Compile Include="OutputData\WaveOutputDataHarvester.cs" />
     <Compile Include="OutputData\WavhFileFunctionStore.cs" />
     <Compile Include="OutputData\WavmFileFunctionStore.cs" />
@@ -259,7 +261,7 @@
     <Compile Include="IWaveModel.cs" />
     <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviour.cs" />
     <Compile Include="Migrations\1.1.0.0\FileMigrateBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\MigratorInstanceCreator.cs" />    
+    <Compile Include="Migrations\1.1.0.0\MigratorInstanceCreator.cs" />
     <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviour.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelper.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveModel110LegacyLoader.cs" />
