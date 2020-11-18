@@ -1847,6 +1847,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 // When
                 frameworkSimulator.NewProject(pathBeforeSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
+
+                ReadOnlyOutputTextDocument[] outputDocumentsBeforeClear = rtcModel.OutputDocuments.ToArray();
+                
                 rtcModel.ClearOutput(true);
                 frameworkSimulator.FirstSave(pathAfterSave);
 
@@ -1855,6 +1858,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 Assert.That(((IFileBased) rtcModel).IsOpen);
                 Assert.That(rtcModel.OutputDocuments.Count, Is.EqualTo(0));
+                
+                Assert.That(outputDocumentsBeforeClear.Single().Content, Is.Empty);
             }
         }
         
