@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     && !(owner is ParallelActivity)
                     && !(owner is SequentialActivity)
                     && !((ICompositeActivity) owner).Activities.OfType<RealTimeControlModel>().Any(), // Don't allow multiple realtime control models in one composite activity
-                CreateModel = owner => new RealTimeControlModel("Real-Time Control")
+                CreateModel = owner => new RealTimeControlModel("Real_Time_Control")
             };
         }
 

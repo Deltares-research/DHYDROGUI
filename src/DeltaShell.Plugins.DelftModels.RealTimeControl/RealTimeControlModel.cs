@@ -595,7 +595,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private void OnRemoveModel()
         {
             OutputIsEmpty = false; // hack to make ClearOutput fire appropriately. 
-            OnClearOutput();
+            ClearOutput();
         }
 
         /// <summary>
@@ -972,7 +972,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void DisconnectOutput()
         {
-            OnClearOutput();
+            DisconnectOutputFileFunctionStore();
+            RestartOutput.Clear();
         }
 
         protected override void OnClearOutput()
@@ -980,13 +981,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             BeginEdit(new DefaultEditAction("Clearing all real time control output"));
 
             DisconnectOutputFileFunctionStore();
-
             RestartOutput.Clear();
-            OutputDocuments.Clear();
+            ClearOutputDocuments();
 
             EndEdit();
             
             MarkDirty();
+        }
+
+        private void ClearOutputDocuments()
+        {
+            foreach (ReadOnlyOutputTextDocument outputDocument in OutputDocuments)
+            {
+                outputDocument.Content = string.Empty;
+            }
+
+            OutputDocuments.Clear();
         }
 
         private void DisconnectOutputFileFunctionStore()
@@ -1594,13 +1604,56 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         #endregion
 
         #region IFileBased
-
+        private bool isOpen;
+        private int dirtyCounter; // tells NHibernate we need to be saved
         private string path;
         private string currentOutputDirectoryPath;
         private string persistentOutputDirectory;
-        private bool isOpen;
+        private bool removeSourceOutputFolder;
 
-        private int dirtyCounter; // tells NHibernate we need to be saved
+        /// <summary>
+        /// The persistent output directory to which output files
+        /// should be copied.
+        /// </summary>
+        /// <remarks>
+        /// Can be outdated when asked due to a rename model action and
+        /// save (not outdated during save-as). Therefore
+        /// <see cref="UpdatePersistentOutputDirectoryIfNeeded"/> should be called.
+        /// </remarks>
+        protected virtual string PersistentOutputDirectory
+        {
+            get
+            {
+                UpdatePersistentOutputDirectoryIfNeeded();
+                return persistentOutputDirectory;
+            }
+            set => persistentOutputDirectory = value;
+        }
+
+        /// <summary>
+        /// Check if model has been renamed followed by a save (not a save-as).
+        /// During normal save <see cref="persistentOutputDirectory"/> contains
+        /// old model name and therefore if condition is true. Resulting in
+        /// correcting <see cref="persistentOutputDirectory"/> and removing
+        /// source folder in <see cref="CopyOutputFolderTo"/> method called from
+        /// <see cref="IFileBased.Path"/> setter. During Save As first
+        /// <see cref="IFileBased.CopyTo"/> and <see cref="IFileBased.SwitchTo"/>
+        /// will be called with an argument, which is the new path. Due to this
+        /// <see cref="persistentOutputDirectory"/> is up to date when setting
+        /// <see cref="IFileBased.Path"/> property afterwards. Resulting in unnecessary
+        /// second copy action without removal of source folder and second
+        /// <see cref="IFileBased.SwitchTo"/>. 
+        /// </summary>
+        private void UpdatePersistentOutputDirectoryIfNeeded()
+        {
+            var dirInfo = new DirectoryInfo(persistentOutputDirectory);
+            var modelDirectory = dirInfo.Parent;
+            if (modelDirectory.Name != Name)
+            {
+                removeSourceOutputFolder = true;
+                persistentOutputDirectory = Path.Combine(modelDirectory.Parent.FullName, Name, DirectoryNameConstants.OutputDirectoryName);
+            }
+        }
 
         // Used for Import model
         // Creating new model
@@ -1608,11 +1661,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             Ensure.NotNull(path, nameof(path));
 
-            persistentOutputDirectory = GetOutputFolderFromDeltaShellPath(path);
+            PersistentOutputDirectory = GetOutputFolderFromDeltaShellPath(path);
             this.path = path;
             isOpen = true;
         }
 
+        
         void IFileBased.Close()
         {
             isOpen = false;
@@ -1659,7 +1713,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             // Open project, Save  As, Save
             path = newPath;
-            persistentOutputDirectory = expectedOutputPath;
+            PersistentOutputDirectory = expectedOutputPath;
 
             currentOutputDirectoryPath = expectedOutputPath;
             if (Directory.Exists(expectedOutputPath))
@@ -1699,7 +1753,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 // otherwise during opening an export will be done.
                 if (path.StartsWith("$") && isOpen)
                 {
-                    CopyOutputFolderTo(persistentOutputDirectory);
+                    CopyOutputFolderTo(PersistentOutputDirectory);
                 }
             }
         }
@@ -1731,53 +1785,74 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void CopyOutputFolderTo(string targetDirectory)
         {
-            if (string.IsNullOrEmpty(currentOutputDirectoryPath))
+            if (!CanOutputBeCopied())
             {
                 return;
             }
 
-            if (!Directory.Exists(currentOutputDirectoryPath))
+            if (!IsRtcOutputPresent)
             {
-                return;
-            }
-
-            if (outputFileFunctionStore == null && !OutputDocuments.Any())
-            {
-                if (Directory.Exists(targetDirectory))
-                {
-                    Directory.Delete(targetDirectory, true);
-                }
+                RemoveOutputDirectory(targetDirectory);
             }
             else
             {
-                DirectoryCopy(currentOutputDirectoryPath, targetDirectory);
+                var dirInfoSource = new DirectoryInfo(currentOutputDirectoryPath);
+                var dirInfoTarget = new DirectoryInfo(targetDirectory);
+
+                if (dirInfoSource.FullName == dirInfoTarget.FullName)
+                {
+                    return;
+                }
+
+                DirectoryCopy(dirInfoSource, dirInfoTarget);
+
+                if (removeSourceOutputFolder)
+                {
+                    RemoveOutputFolderInOldDirectory();
+                }
             }
         }
 
-        private static void DirectoryCopy(string sourceDirName, string destDirName)
+        private bool CanOutputBeCopied()
         {
-            if (sourceDirName == destDirName)
+            return !string.IsNullOrEmpty(currentOutputDirectoryPath) && Directory.Exists(currentOutputDirectoryPath);
+        }
+
+        private void RemoveOutputFolderInOldDirectory()
+        {
+            DisconnectOutput();
+            FileUtils.DeleteIfExists(Directory.GetParent(currentOutputDirectoryPath).FullName);
+            removeSourceOutputFolder = false;
+        }
+
+        private static void RemoveOutputDirectory(string targetDirectory)
+        {
+            FileUtils.DeleteIfExists(targetDirectory);
+        }
+
+        /// <summary>
+        /// Gets whether the RTC model output is present.
+        /// </summary>
+        private bool IsRtcOutputPresent => outputFileFunctionStore != null || OutputDocuments.Any() || RestartOutput.Any();
+
+        private static void DirectoryCopy(DirectoryInfo sourceDir, DirectoryInfo destDir)
+        {
+            DirectoryInfo[] sourceSubDirs = sourceDir.GetDirectories();
+
+            FileUtils.CreateDirectoryIfNotExists(destDir.FullName, true);
+
+            FileInfo[] sourceFiles = sourceDir.GetFiles();
+            foreach (FileInfo file in sourceFiles)
             {
-                return;
-            }
-
-            var dir = new DirectoryInfo(sourceDirName);
-
-            DirectoryInfo[] subDirs = dir.GetDirectories();
-
-            FileUtils.CreateDirectoryIfNotExists(destDirName, true);
-
-            FileInfo[] files = dir.GetFiles();
-            foreach (FileInfo file in files)
-            {
-                string destFilePath = Path.Combine(destDirName, file.Name);
+                string destFilePath = Path.Combine(destDir.FullName, file.Name);
                 file.CopyTo(destFilePath, true);
             }
 
-            foreach (DirectoryInfo subDir in subDirs)
+            foreach (DirectoryInfo subDir in sourceSubDirs)
             {
-                string destDirPath = Path.Combine(destDirName, subDir.Name);
-                DirectoryCopy(subDir.FullName, destDirPath);
+                string newDestDirPath = Path.Combine(destDir.FullName, subDir.Name);
+                var newDestDirInfo = new DirectoryInfo(newDestDirPath);
+                DirectoryCopy(subDir, newDestDirInfo);
             }
         }
 
