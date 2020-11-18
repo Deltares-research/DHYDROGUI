@@ -678,10 +678,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             ClearDirectory(targetDirectoryInfo);
 
-            // TODO: move the strings to resources.
             if (!dataSourcePathInfo.Exists)
             {
-                logHandler.ReportWarningFormat("The output source path {0} does not exist, skipping copying output data.", 
+                logHandler.ReportWarningFormat(Resources.WaveModel_CopyRunDataTo_The_output_source_path__0__does_not_exist__skipping_copying_output_data_, 
                                                targetDirectoryInfo.FullName);
                 return;
             }
@@ -695,7 +694,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             if (mdwRunPath == null)
             {
-                logHandler.ReportWarningFormat("No .mdw path could be found in {0}, skipping copying output data.", 
+                logHandler.ReportWarningFormat(Resources.WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_output_data_, 
                                                targetDirectoryInfo.FullName);
                 return;
             }

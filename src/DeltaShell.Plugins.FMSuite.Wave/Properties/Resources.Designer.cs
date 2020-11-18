@@ -570,6 +570,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No .mdw path could be found in {0}, skipping copying output data..
+        /// </summary>
+        public static string WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_output_data_ {
+            get {
+                return ResourceManager.GetString("WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_outp" +
+                        "ut_data_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The output source path {0} does not exist, skipping copying output data..
+        /// </summary>
+        public static string WaveModel_CopyRunDataTo_The_output_source_path__0__does_not_exist__skipping_copying_output_data_ {
+            get {
+                return ResourceManager.GetString("WaveModel_CopyRunDataTo_The_output_source_path__0__does_not_exist__skipping_copyi" +
+                        "ng_output_data_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grid is set in project but doesn&apos;t contain a coordinate system. The model has co-ordinate system {0}, setting grid to this co-oordinate system type..
         /// </summary>
         public static string WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_ {

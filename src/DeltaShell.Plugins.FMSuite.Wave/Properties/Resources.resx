@@ -355,4 +355,10 @@
   <data name="WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__" xml:space="preserve">
     <value>Could not read file: {0} due to {1}.</value>
   </data>
+  <data name="WaveModel_CopyRunDataTo_The_output_source_path__0__does_not_exist__skipping_copying_output_data_" xml:space="preserve">
+    <value>The output source path {0} does not exist, skipping copying output data.</value>
+  </data>
+  <data name="WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_output_data_" xml:space="preserve">
+    <value>No .mdw path could be found in {0}, skipping copying output data.</value>
+  </data>
 </root>
