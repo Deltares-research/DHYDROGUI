@@ -103,7 +103,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             OutputWavmFileFunctionStores = new EventedList<WavmFileFunctionStore>();
             OutputWavhFileFunctionStores = new EventedList<WavhFileFunctionStore>();
 
-            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester());
+            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(), 
+                                                new WaveOutputDataCopyHandler());
             
             WaveOutputData.DiagnosticFiles.CollectionChanged += 
                 GetOutputSyncNotifyCollectionChangedEventHandler(OutputDiagnosticFiles);
@@ -653,73 +654,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             if (!WaveOutputData.IsConnected)
             {
-                if (IsSavedToCurrentOutputDirectory(targetDirectoryInfo))
-                {
-                    ClearDirectory(targetDirectoryInfo);
-                }
+                ClearDirectory(targetDirectoryInfo);
             }
-            else if (WaveOutputData.IsStoredInWorkingDirectory)
+            else if (WaveOutputData.IsStoredInWorkingDirectory ||
+                     !IsSavedToCurrentOutputDirectory(targetDirectoryInfo))
             {
-                CopyRunDataTo(targetDirectoryInfo, logHandler);
-                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName, false, logHandler);
-            }
-            else if (!IsSavedToCurrentOutputDirectory(targetDirectoryInfo))
-            {
-                CopyOutputDataTo(targetDirectoryInfo);
-                WaveOutputData.ConnectTo(targetDirectoryInfo.FullName, false, logHandler);
+                WaveOutputData.SwitchTo(targetDirectoryInfo.FullName, logHandler);
             }
 
             logHandler.LogReport();
-        }
-
-        private void CopyRunDataTo(DirectoryInfo targetDirectoryInfo, ILogHandler logHandler)
-        {
-            var dataSourcePathInfo = new DirectoryInfo(WaveOutputData.DataSourcePath);
-
-            ClearDirectory(targetDirectoryInfo);
-
-            if (!dataSourcePathInfo.Exists)
-            {
-                logHandler.ReportWarningFormat(Resources.WaveModel_CopyRunDataTo_The_output_source_path__0__does_not_exist__skipping_copying_output_data_, 
-                                               targetDirectoryInfo.FullName);
-                return;
-            }
-
-            // Under normal circumstances there should only be one .mdw file in
-            // the working directory. As such we take the first. It might happened
-            // that the user has messed with the data, in which case we try to 
-            // inform the user.
-            FileInfo mdwRunPath = dataSourcePathInfo.EnumerateFiles("*.mdw")
-                                                    .FirstOrDefault();
-
-            if (mdwRunPath == null)
-            {
-                logHandler.ReportWarningFormat(Resources.WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_output_data_, 
-                                               targetDirectoryInfo.FullName);
-                return;
-            }
-
-            HashSet<string> inputFilePaths = WaveOutputFileHelper.CollectInputFileNamesFromWorkingDirectoryMdw(mdwRunPath.FullName);
-
-            foreach (FileInfo file in dataSourcePathInfo.EnumerateFiles())
-            {
-                if (!inputFilePaths.Contains(file.FullName))
-                {
-                    file.CopyTo(Path.Combine(targetDirectoryInfo.FullName, file.Name));
-                }
-            }
-        }
-
-        private void CopyOutputDataTo(DirectoryInfo targetDirectoryInfo)
-        {
-            var dataSourcePathInfo = new DirectoryInfo(WaveOutputData.DataSourcePath);
-
-            if (!dataSourcePathInfo.Exists || dataSourcePathInfo.FullName == targetDirectoryInfo.FullName)
-            {
-                return;
-            }
-
-            FileUtils.CopyAll(dataSourcePathInfo, targetDirectoryInfo, null);
         }
 
         private bool IsSavedToCurrentOutputDirectory(FileSystemInfo targetDirectoryInfo) =>
@@ -727,7 +670,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private static void ClearDirectory(DirectoryInfo directoryInfo) => 
             FileUtils.CreateDirectoryIfNotExists(directoryInfo.FullName, true);
-            
 
         /// <summary>
         /// Reloads all grids associated with each domain.

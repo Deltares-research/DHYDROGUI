@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DelftTools.Utils.Collections.Generic;
+﻿using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Logging;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
@@ -73,11 +72,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         IEventedList<WavhFileFunctionStore> WavhFileFunctionStores { get; }
 
         /// <summary>
-        /// Connects this <see cref="IWaveOutputData"/> to the specified path,
-        /// this will read all supported files from the specified folder.
+        /// Connects this <see cref="IWaveOutputData"/> to the specified path.
+        /// This will read all supported files from the specified folder.
         /// </summary>
         /// <param name="dataSourcePath">The new path for the data source.</param>
-        /// <param name="isStoredInWorkingDirectory">Whether the provided dataSourcePath is in the working directory.</param>
+        /// <param name="isStoredInWorkingDirectory">Whether the provided dataTargetPath is in the working directory.</param>
         /// <param name="logHandler">optional log handler to report any problems with.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataSourcePath"/> is <c>null</c>.
@@ -87,6 +86,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// and the output data is disconnected instead.
         /// </remarks>
         void ConnectTo(string dataSourcePath, bool isStoredInWorkingDirectory, ILogHandler logHandler = null);
+
+        /// <summary>
+        /// Switches this <see cref="IWaveOutputData"/> to the specified path.
+        /// This will copy the underlying current output data but keep the same data in
+        /// this <see cref="IWaveOutputData"/>.
+        /// </summary>
+        /// <param name="dataTargetPath">The data source path.</param>
+        /// <param name="logHandler">optional log handler to report any problems with.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="dataTargetPath"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// Thrown when <see cref="IsConnected"/> is <c>false</c>.
+        /// </exception>
+        /// <remarks>
+        /// If the path at <paramref name="dataTargetPath"/> does not exist, an error is logged
+        /// and the output data is disconnected instead.
+        /// </remarks>
+        /// <remarks>
+        /// If the output data should be read from the provided folder, then <see cref="ConnectTo"/> should
+        /// be used.
+        /// </remarks>
+        void SwitchTo(string dataTargetPath, ILogHandler logHandler = null);
 
         /// <summary>
         /// Disconnects the output data from the current <see cref="DataSourcePath"/>.

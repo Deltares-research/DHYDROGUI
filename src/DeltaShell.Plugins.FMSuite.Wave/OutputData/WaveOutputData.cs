@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
@@ -17,12 +17,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     public class WaveOutputData : IWaveOutputData
     {
         private readonly IWaveOutputDataHarvester harvester;
+        private readonly IWaveOutputDataCopyHandler copyHandler;
 
-        public WaveOutputData(IWaveOutputDataHarvester harvester)
+        public WaveOutputData(IWaveOutputDataHarvester harvester,
+                              IWaveOutputDataCopyHandler copyHandler)
         {
             Ensure.NotNull(harvester, nameof(harvester));
+            Ensure.NotNull(copyHandler, nameof(copyHandler));
 
             this.harvester = harvester;
+            this.copyHandler = copyHandler;
         }
 
         public string DataSourcePath { get; private set; } = null;
@@ -59,6 +63,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             ConnectWavhFileFunctionStores(dataSourceInfo, logHandler);
         }
 
+        public void SwitchTo(string dataTargetPath, 
+                             ILogHandler logHandler = null)
+        {
+            Ensure.NotNull(dataTargetPath, nameof(dataTargetPath));
+            var dataTargetDirectoryInfo = new DirectoryInfo(dataTargetPath);
+
+            if (!dataTargetDirectoryInfo.Exists)
+            {
+                Disconnect();
+                logHandler?.ReportErrorFormat(Resources.WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_output_instead_, 
+                                              dataTargetDirectoryInfo.FullName);
+                return;
+            }
+
+            var dataSourceDirectoryInfo = new DirectoryInfo(DataSourcePath);
+            if (IsStoredInWorkingDirectory)
+            {
+                copyHandler.CopyRunDataTo(dataSourceDirectoryInfo, 
+                                          dataTargetDirectoryInfo,
+                                          logHandler);
+            }
+            else
+            {
+                copyHandler.CopyOutputDataTo(dataSourceDirectoryInfo, 
+                                             dataTargetDirectoryInfo,
+                                             logHandler);
+            }
+
+            DataSourcePath = dataTargetPath;
+            IsStoredInWorkingDirectory = false;
+            UpdateOutputDataAfterSwitch();
+        }
+
         private void ConnectDiagnosticFiles(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
             DiagnosticFiles.AddRange(harvester.HarvestDiagnosticFiles(dataSourceInfo, logHandler));
 
@@ -71,6 +108,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         private void ConnectWavhFileFunctionStores(DirectoryInfo dataSourceInfo, ILogHandler logHandler) =>
             WavhFileFunctionStores.AddRange(harvester.HarvestWavhFileFunctionStores(dataSourceInfo, logHandler));
 
+        private void UpdateOutputDataAfterSwitch()
+        {
+            // Validate text files
+            RemoveTextFileDataWithoutFiles(DiagnosticFiles);
+            RemoveTextFileDataWithoutFiles(SpectraFiles);
+
+            // Validate function stores
+            WavmFileFunctionStores.RemoveAllWhere(fs => !File.Exists(Path.Combine(DataSourcePath, Path.GetFileName(fs.Path))));
+            foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFileFunctionStores)
+            {
+                wavmFileFunctionStore.Path = Path.Combine(DataSourcePath, Path.GetFileName(wavmFileFunctionStore.Path));
+            }
+
+            WavhFileFunctionStores.RemoveAllWhere(fs => !File.Exists(Path.Combine(DataSourcePath, Path.GetFileName(fs.Path))));
+            foreach (WavhFileFunctionStore wavhFileFunctionStore in WavhFileFunctionStores)
+            {
+                wavhFileFunctionStore.Path = Path.Combine(DataSourcePath, Path.GetFileName(wavhFileFunctionStore.Path));
+            }
+        }
+
+        private void RemoveTextFileDataWithoutFiles(IEventedList<ReadOnlyTextFileData> textFiles) =>
+            textFiles.RemoveAllWhere(tfd => !File.Exists(Path.Combine(DataSourcePath, tfd.DocumentName)));
+
         public void Disconnect()
         {
             DataSourcePath = null;
@@ -78,7 +138,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
             DiagnosticFiles.Clear();
             SpectraFiles.Clear();
+
+            foreach (WavmFileFunctionStore store in WavmFileFunctionStores)
+            {
+                store.Close();
+            }
             WavmFileFunctionStores.Clear();
+
+            foreach (WavhFileFunctionStore store in WavhFileFunctionStores)
+            {
+                store.Close();
+            }
             WavhFileFunctionStores.Clear();
         }
     }
