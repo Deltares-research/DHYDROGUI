@@ -17,7 +17,6 @@ using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
@@ -1463,29 +1462,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAnOpenedProjectWithRTC_ThenIsOpenPropertyShouldBeTrueAndThePathPropertyShouldBeAbsolute()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Given
-                IFileBased rtcModel = new RealTimeControlModel();
-                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
-
-                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
-                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
-
-                // When
-                frameworkSimulator.OpenProject(pathBeforeSave);
-
-                // Then
-                Assert.IsTrue(rtcModel.IsOpen);
-                Assert.AreEqual(pathBeforeSave, rtcModel.Path);
-            }
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAProjectWithRTCAndOutput_WhenOpened_ThenOutputShouldBeConnected()
+        public void GivenAProjectWithRTCAndOutput_WhenOpened_ThenIsOpenShouldBeTruePathShouldBeAbsoluteAndOutputShouldBeConnected()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1502,6 +1479,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.OpenProject(pathPersistentFolder);
 
                 // Then
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.AreEqual(pathPersistentFolder, ((IFileBased)rtcModel).Path);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
@@ -1643,7 +1622,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAnOpenedProjectWithRTCAndOutput_WhenDeleteHasCalled_ThenPersistentOutputDirectoryShouldNotBeDeleted()
+        public void GivenAnOpenedProjectWithRTCAndOutput_WhenRemovingModelFromProject_ThenPersistentOutputDirectoryShouldNotBeDeleted()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1658,7 +1637,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // When
                 frameworkSimulator.OpenProject(pathBeforeSaveAs);
-                ((IFileBased) rtcModel).Delete();
+                frameworkSimulator.RemoveModelFromProject();
 
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryBeforeSaveAs, rtcModel, persistentOutputFileName, persistentOutputSubDirectoryName);
@@ -1667,7 +1646,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRenamingRunningAndThenSavingAgain_PersistentOutputDirectoryShouldShouldBeBasedOnNewModelName()
+        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRenamingRunningAndThenSavingAgain_PersistentOutputDirectoryShouldBeBasedOnNewModelName()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1703,7 +1682,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningRenamingAndThenSavingAgain_PersistentOutputDirectoryShouldShouldBeBasedOnNewModelName()
+        public void GivenNewProjectWithRTC_WhenSavingForFirstTimeRunningRenamingAndThenSavingAgain_PersistentOutputDirectoryShouldBeBasedOnNewModelName()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1739,7 +1718,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenNewProjectWithRTC_WhenRunningSavingForFirstTimeRenamingAndThenSavingAgain_PersistentOutputDirectoryShouldShouldBeBasedOnNewModelNameAndOldOneShouldBeRemoved()
+        public void GivenNewProjectWithRTC_WhenRunningSavingForFirstTimeRenamingAndThenSavingAgain_PersistentOutputDirectoryShouldBeBasedOnNewModelNameAndOldOneShouldBeRemoved()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1781,7 +1760,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenNewProjectWithRTC_WhenRunningSavingForFirstTimeRenamingAndThenSavingAs_PersistentOutputDirectoryShouldShouldBeBasedOnNewModelNameAndOldOneShouldStay()
+        public void GivenNewProjectWithRTC_WhenRunningSavingForFirstTimeRenamingAndThenSavingAs_PersistentOutputDirectoryShouldBeBasedOnNewModelNameAndOldOneShouldStay()
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
