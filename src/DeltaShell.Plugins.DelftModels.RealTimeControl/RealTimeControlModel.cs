@@ -981,13 +981,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             BeginEdit(new DefaultEditAction("Clearing all real time control output"));
 
             DisconnectOutputFileFunctionStore();
-
             RestartOutput.Clear();
-            OutputDocuments.Clear();
+            ClearOutputDocuments();
 
             EndEdit();
             
             MarkDirty();
+        }
+
+        private void ClearOutputDocuments()
+        {
+            foreach (ReadOnlyOutputTextDocument outputDocument in OutputDocuments)
+            {
+                outputDocument.Content = string.Empty;
+            }
+
+            OutputDocuments.Clear();
         }
 
         private void DisconnectOutputFileFunctionStore()
