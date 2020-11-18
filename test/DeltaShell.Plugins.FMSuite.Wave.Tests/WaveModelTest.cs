@@ -1180,6 +1180,63 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAValidModelWithDataAvailableInTheWorkingDirectoryWithADifferentMdwName_WhenTheModelIsSaved_ThenTheOutputFolderContainsTheDataFromTheWorkingLocation()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string mdwFileName = "Waves.mdw";
+                string testDataPath = TestHelper.GetTestFilePath(@"WaveModelTest\Waves");
+
+                string modelPath = tempDir.CopyDirectoryToTempDirectory(testDataPath);
+                string mdwPath = Path.Combine(modelPath, "input", mdwFileName);
+
+                tempDir.CreateDirectory("AnotherWaves");
+                string goalInputDir = tempDir.CreateDirectory("AnotherWaves\\input");
+                string goalOutputDir = tempDir.CreateDirectory("AnotherWaves\\output");
+
+                string goalMdwPath = Path.Combine(goalInputDir, mdwFileName);
+
+                string alternativeOutputSourcePath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output");
+                string alternativeOutputPath = tempDir.CopyDirectoryToTempDirectory(alternativeOutputSourcePath);
+
+                // Rename the output name to something other than "Waves.mdw"
+                File.Move(Path.Combine(alternativeOutputPath, "Waves.mdw"), Path.Combine(alternativeOutputPath, "5a.mdw"));
+
+                string alternativeOutputReferencePath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output_reference");
+                FileCompareInfo[] origFileDataReference = 
+                    CollectFileInformation(new DirectoryInfo(alternativeOutputReferencePath)).ToArray();
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    // Mimic DeltaShell behaviour to first switch to the model before saving.
+                    // This is necessary because the save to logic relies on having the correct
+                    // previous save directory set, which is set as part of Switch to. 
+                    // This is far from ideal, however changing this would require significant 
+                    // changes to DeltaShell's save logic.
+                    ((IFileBased) model).SwitchTo(modelPath);
+
+                    // Connect to different data source
+                    model.WaveOutputData.ConnectTo(alternativeOutputPath, true);
+
+                    // When 
+                    model.ModelSaveTo(goalMdwPath, true);
+
+                    // Then
+                    var outputDirInfo = new DirectoryInfo(goalOutputDir);
+                    FileCompareInfo[] saveFileData = CollectFileInformation(outputDirInfo).ToArray();
+
+                    AssertContainsSameFiles(origFileDataReference, saveFileData);
+
+                    Assert.That(outputDirInfo.EnumerateDirectories(), Is.Empty);
+
+                    Assert.That(model.WaveOutputData.IsConnected, Is.True);
+                    Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputDirInfo.FullName));
+                }
+            }
+        }
 
         private static void AssertContainsSameFiles(IReadOnlyList<FileCompareInfo> originalFileData,
                                                     IReadOnlyList<FileCompareInfo> savedFileData)
