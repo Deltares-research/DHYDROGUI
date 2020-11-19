@@ -45,9 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
         #region SetUp / TearDown
 
-        public override void TestFixtureSetUp()
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
 
             var waterQualityModelApplicationPlugin = new WaterQualityModelApplicationPlugin();
             factory.AddPlugin(waterQualityModelApplicationPlugin);
@@ -356,7 +356,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             entity.InputFileCommandLine.Content = "<Content for command line input file>";
             entity.InputFileHybrid.Content = "<Content for hybrid model input file>";
 
-            entity.ObservationPoints.AddRange(new[] {new WaterQualityObservationPoint {Name = "obs1"}});
+            entity.ObservationPoints.AddRange(new[]
+            {
+                new WaterQualityObservationPoint {Name = "obs1"}
+            });
 
             new SubFileImporter().Import(entity.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
             Assert.AreEqual(5, entity.InitialConditions.Count, "Precondition: read sub-file contains 5 substances.");

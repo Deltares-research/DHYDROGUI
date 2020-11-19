@@ -34,7 +34,7 @@ namespace DeltaShell.Dimr
         // TODO: temporary, need to remove when models can no longer run without Dimr
         bool RunsInIntegratedModel { get; set; }
 
-        string DimrExportDirectoryPath { get; set; }
+        string DimrExportDirectoryPath { get; }
 
         string DimrModelRelativeWorkingDirectory { get; }
 
@@ -64,9 +64,9 @@ namespace DeltaShell.Dimr
         /// <summary>
         /// Actions, which should be done in the IDimrModel after a successful integrated model run.
         /// </summary>
-        /// <param name="workingDirectoryPath">
+        /// <param name="hydroModelWorkingDirectoryPath">
         /// Working directory path of the integrated model.
         /// </param>
-        void OnFinishIntegratedModelRun(string workingDirectoryPath);
+        void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath);
     }
 }

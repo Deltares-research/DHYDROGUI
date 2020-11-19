@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Hydro.Helpers;
 using NUnit.Framework;
 
@@ -9,7 +10,7 @@ namespace DelftTools.Hydro.Tests.Helpers
     public class ThreadingHelperTest
     {
         [Test]
-        [RequiresMTA]
+        [Apartment(ApartmentState.MTA)]
         public void ConvertMultiThreaded()
         {
             List<int> numbers = Enumerable.Range(0, 5000).ToList();

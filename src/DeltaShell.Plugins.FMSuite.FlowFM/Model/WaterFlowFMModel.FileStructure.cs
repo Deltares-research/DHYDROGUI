@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -15,13 +16,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
-
         private string outputSnappedFeaturesPath;
 
         private CacheFile cacheFile = null;
 
         public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
 
         /// <summary>
         /// Gets the mdu file.
@@ -62,9 +62,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public string DelwaqOutputDirectoryPath { get; set; }
 
         public string WorkingOutputDirectoryPath =>
-            Path.Combine(WorkingDirectoryPath, DirectoryName, FileConstants.OutputDirectoryName);
+            Path.Combine(WorkingDirectoryPath, DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
-        public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, FileConstants.OutputDirectoryName);
+        public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, DirectoryNameConstants.OutputDirectoryName);
 
         public string MduSavePath => GetMduPathFromDeltaShellPath(RecursivelyGetModelDirectoryPathFromMduFile());
 
@@ -309,7 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                        : modelDir.FullName;
         }
 
-        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = FileConstants.InputDirectoryName)
+        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = DirectoryNameConstants.InputDirectoryName)
         {
             string directoryName = path != null
                                        ? Path.GetDirectoryName(path) ?? ""
@@ -365,14 +365,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             return Path.Combine(directoryName, InputFile == null ? Name + FileConstants.MduFileExtension : Path.GetFileName(InputFile));
         }
 
-        public virtual string DimrExportDirectoryPath
-        {
-            get => WorkingDirectoryPath;
-            set => WorkingDirectoryPath = value;
-        }
+        public virtual string DimrExportDirectoryPath => WorkingDirectoryPath;
 
-        public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, FileConstants.InputDirectoryName);
-        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, FileConstants.OutputDirectoryName);
+        public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.InputDirectoryName);
+        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
         #endregion Implementation of IDimrModel
     }

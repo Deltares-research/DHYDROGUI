@@ -36,7 +36,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
                                         new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-
         public StructuresValueBox()
         {
             InitializeComponent();

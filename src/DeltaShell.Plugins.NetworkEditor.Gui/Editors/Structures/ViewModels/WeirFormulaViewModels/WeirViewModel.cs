@@ -10,6 +10,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// </summary>
     public abstract class WeirViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Creates a new <see cref="WeirViewModel"/>.
         /// </summary>
@@ -26,9 +28,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <summary>
         /// Gets the weir properties view model.
         /// </summary>
+        /// <remarks>
+        /// Note that the <see cref="WeirViewModel"/> is not the "owner " of the
+        /// <see cref="WeirPropertiesViewModel"/> it merely holds a reference to it.
+        /// The actual life-time management is done by the <see cref="StructureViewModel"/>
+        /// As such we do not need to dispose of this object.
+        /// </remarks>
         public WeirPropertiesViewModel WeirPropertiesViewModel { get; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

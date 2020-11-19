@@ -9,18 +9,12 @@
     {
         public GaussShape ConstructDefaultGaussShape()
         {
-            return new GaussShape()
-            {
-                GaussianSpread = 0.1
-            };
+            return new GaussShape() {GaussianSpread = 0.1};
         }
 
         public JonswapShape ConstructDefaultJonswapShape()
         {
-            return new JonswapShape()
-            {
-                PeakEnhancementFactor = 3.3
-            };
+            return new JonswapShape() {PeakEnhancementFactor = 3.3};
         }
 
         public PiersonMoskowitzShape ConstructDefaultPiersonMoskowitzShape()

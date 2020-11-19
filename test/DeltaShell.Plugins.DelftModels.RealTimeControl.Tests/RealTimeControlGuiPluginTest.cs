@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void ReleaseCopiedBranchFeatureOnProjectClosing()
         {
             // Setup
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.ClearData();
 
             // Precondition
@@ -36,7 +36,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // that the helper is in a clear state
             Assert.That(helper.IsDataSet, Is.False);
             Assert.That(helper.CopiedShapes, Is.Empty);
-
 
             var gui = mocks.DynamicMock<IGui>();
             var documentViews = mocks.DynamicMock<IViewList>();
@@ -65,7 +64,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 pluginGui.Activate();
 
                 // Precondition
-                helper.SetCopiedData(new ShapeBase[] {new RuleShape()});
+                helper.SetCopiedData(new ShapeBase[]
+                {
+                    new RuleShape()
+                });
                 Assert.IsTrue(helper.IsDataSet);
                 CollectionAssert.IsNotEmpty(helper.CopiedShapes);
 
@@ -122,8 +124,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             ITreeNodePresenter[] nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
 
             // Then
-            var restartFileNodePresenter = Contains<RealTimeControlRestartFileNodePresenter>(nodePresenters);
-            Assert.That(restartFileNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+            var restartInputNodePresenter = Contains<RealTimeControlInputRestartFileNodePresenter>(nodePresenters);
+            Assert.That(restartInputNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
+            var restartOutputNodePresenter = Contains<RealTimeControlOutputRestartFileNodePresenter>(nodePresenters);
+            Assert.That(restartOutputNodePresenter.GuiPlugin, Is.SameAs(guiPlugin));
         }
 
         private static T Contains<T>(IEnumerable<ITreeNodePresenter> source)

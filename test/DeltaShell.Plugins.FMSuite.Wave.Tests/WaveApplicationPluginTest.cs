@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -157,6 +159,62 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        public void SetApplication_EventsAreSubscribedAndUnsubscribedCorrectly()
+        {
+            // Setup
+            var plugin = new WaveApplicationPlugin();
+            var app1 = Substitute.For<IApplication>();
+            var repo1 = Substitute.For<IHybridProjectRepository>();
+            app1.HybridProjectRepository.Returns(repo1);
+
+            var app2 = Substitute.For<IApplication>();
+            var repo2 = Substitute.For<IHybridProjectRepository>();
+            app2.HybridProjectRepository.Returns(repo2);
+
+            // Call 1
+            plugin.Application = app1;
+
+            // Assert 1
+            repo1.DidNotReceive().ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
+            repo1.Received(1).ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
+
+            repo1.ClearReceivedCalls();
+
+            // Call 2
+            plugin.Application = app2;
+
+            // Assert 2
+            repo1.Received(1).ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
+            repo2.DidNotReceive().ProjectOpening -= Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
+            repo1.DidNotReceive().ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
+            repo2.Received(1).ProjectOpening += Arg.Any<EventHandler<ProjectOpeningEventArgs>>();
+        }
+
+        [Test]
+        public void GivenAWaveApplicationPluginWithAnApplication_WhenTheHybridProjectRepositoryIsOpened_ThenTheExpectedCallIsExecuted()
+        {
+            // Setup
+
+            var plugin = new WaveApplicationPlugin();
+            var app = Substitute.For<IApplication>();
+            var repo = Substitute.For<IHybridProjectRepository>();
+
+            using (var temp = new TemporaryDirectory())
+            {
+                string projectFile = temp.CreateFile("the_path.dsproj");
+                repo.GetPluginFileFormatVersions(projectFile).Returns(new Dictionary<string, Version> {{"Delft3D Wave", Version.Parse(plugin.FileFormatVersion)}});
+                app.HybridProjectRepository.Returns(repo);
+                plugin.Application = app;
+
+                // Call
+                repo.ProjectOpening += Raise.EventWith(new object(), new ProjectOpeningEventArgs(projectFile));
+
+                // Assert
+                repo.Received(1).GetPluginFileFormatVersions(projectFile);
+            }
+        }
+
+        [Test]
         public void GetFileImporters_ReturnsCorrectCollection()
         {
             // Setup
@@ -194,14 +252,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             AssertCorrectWaveModelFileImporter(importer, "application_working_directory");
         }
 
+        [Test]
+        public void Constructor_InitializesInstanceCorrectly()
+        {
+            // Call
+            var plugin = new WaveApplicationPlugin();
+
+            // Assert
+            Assert.That(plugin.Name, Is.EqualTo("Delft3D Wave"));
+            Assert.That(plugin.DisplayName, Is.EqualTo("D-Waves Plugin"));
+            Assert.That(plugin.Description, Is.EqualTo("A 2D/3D Wave module"));
+            Assert.That(plugin.Version, Is.Not.Null.Or.Empty);
+            Assert.That(plugin.FileFormatVersion, Is.EqualTo("1.3.0.0"));
+        }
+
         private static void AssertCorrectWaveModelFileImporter(WaveModelFileImporter importer, string expectedWorkingDirectory)
         {
-            string testFilePath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest\\Waves.mdw");
+            string testDataPath = TestHelper.GetTestFilePath("WaveModelSaveLoadTest");
             using (var temp = new TemporaryDirectory())
             {
-                string filePath = temp.CopyTestDataFileToTempDirectory(testFilePath);
+                string localDataPath = temp.CopyDirectoryToTempDirectory(testDataPath);
 
-                var model = (WaveModel) importer.ImportItem(filePath);
+                var model = (WaveModel) importer.ImportItem(Path.Combine(localDataPath, "input", "Waves.mdw"));
 
                 Assert.That(model.WorkingDirectoryPathFunc, Is.Not.Null);
                 Assert.That(model.WorkingDirectoryPathFunc(), Is.EqualTo(expectedWorkingDirectory));

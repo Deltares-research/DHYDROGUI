@@ -61,7 +61,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain.Restart
             Assert.That(exception.ParamName, Is.EqualTo("value"));
         }
 
-
         [Test]
         public void Clone_ReturnsCorrectClone()
         {

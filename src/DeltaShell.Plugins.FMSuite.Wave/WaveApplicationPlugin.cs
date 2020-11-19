@@ -1,17 +1,20 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Shell.Core.Services;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.Migrations;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
@@ -29,7 +32,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion => "1.2.0.0";
+        public override string FileFormatVersion => "1.3.0.0";
+
+        public override IApplication Application
+        {
+            get => application;
+            set
+            {
+                if (application != null)
+                {
+                    application.ProjectOpened -= Application_ProjectOpened;
+                    application.HybridProjectRepository.ProjectOpening -= OnHybridProjectRepositoryOpening;
+                }
+
+                application = value;
+
+                if (application != null)
+                {
+                    application.ProjectOpened += Application_ProjectOpened;
+                    application.HybridProjectRepository.ProjectOpening += OnHybridProjectRepositoryOpening;
+                }
+            }
+        }
 
         public IEnumerable<WaveModel> GetModels()
         {
@@ -82,23 +106,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             yield return new WaveDataAccessListener();
         }
 
-        public override IApplication Application
+        private void OnHybridProjectRepositoryOpening(object sender, ProjectOpeningEventArgs e)
         {
-            get => application;
-            set
-            {
-                if (application != null)
-                {
-                    application.ProjectOpened -= Application_ProjectOpened;
-                }
-
-                application = value;
-
-                if (application != null)
-                {
-                    application.ProjectOpened += Application_ProjectOpened;
-                }
-            }
+            Version projectVersion = Application.HybridProjectRepository.GetPluginFileFormatVersions(e.ProjectPath)[Name];
+            WavesMigrator.Migrate(e.ProjectPath, projectVersion, System.Version.Parse(FileFormatVersion));
         }
 
         private void Application_ProjectOpened(Project project)

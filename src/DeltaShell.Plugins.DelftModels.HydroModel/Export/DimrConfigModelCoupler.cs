@@ -79,8 +79,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
         private IEnumerable<DimrCoupleInfo> GetCoupleInfos(IModel sourceModel, IModel targetModel)
         {
-            List<IDataItem> outputItems = HydroModel.GetDataItems(sourceModel, DataItemRole.Output).ToList();
-            List<IDataItem> inputItems = HydroModel.GetDataItems(targetModel, DataItemRole.Input).ToList();
+            List<IDataItem> outputItems = HydroModel.GetDataItemsUsedForCouplingModel(sourceModel, DataItemRole.Output).ToList();
+            List<IDataItem> inputItems = HydroModel.GetDataItemsUsedForCouplingModel(targetModel, DataItemRole.Input).ToList();
 
             var coupledDataItems = new List<DimrCoupleInfo>();
 

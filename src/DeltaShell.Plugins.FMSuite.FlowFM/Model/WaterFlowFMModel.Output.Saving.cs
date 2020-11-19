@@ -9,8 +9,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        private string currentOutputDirectoryPath;
         public const string DiaFileDataItemTag = "DiaFile";
+        private string currentOutputDirectoryPath;
 
         /// <summary>
         /// Saves the output by either moving or copying the source output to the target output directory.

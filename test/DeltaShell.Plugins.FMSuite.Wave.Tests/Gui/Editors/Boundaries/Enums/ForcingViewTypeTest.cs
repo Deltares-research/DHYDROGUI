@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
 {
-    // TODO (MWT): Add tests for verifying descriptions
-    // TODO (MWT): Move descriptions to Resources
     [TestFixture]
     public class ForcingViewTypeTest :
         EnumValuesTestFixture<ForcingViewType>
@@ -18,5 +17,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
                 {ForcingViewType.TimeSeries, 2},
                 {ForcingViewType.FileBased, 3}
             };
+
+        [TestCase(ForcingViewType.Constant, "Parametrized (Constant)")]
+        [TestCase(ForcingViewType.TimeSeries, "Parametrized (Time Series)")]
+        [TestCase(ForcingViewType.FileBased, "Spectrum based (From file)")]
+        public void ForcingViewType_GetDescription_ReturnsCorrectDescription(ForcingViewType forcingViewType, string expectedDescription)
+        {
+            Assert.That(forcingViewType.GetDescription(), Is.EqualTo(expectedDescription));
+        }
     }
 }

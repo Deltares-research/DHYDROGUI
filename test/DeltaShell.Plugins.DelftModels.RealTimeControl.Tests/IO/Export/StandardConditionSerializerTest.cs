@@ -60,11 +60,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
         [Test]
         public void GivenStandardConditionWithoutConnectedObjects_WhenSerializedToXml_ThenExpectedXmlReturned()
         {
-            var serializer = new StandardConditionSerializer(new StandardCondition()); 
+            var serializer = new StandardConditionSerializer(new StandardCondition());
             Assert.AreEqual(XmlWithoutConnectedObjects(), serializer.ToXml(fns, "").Single().ToString(SaveOptions.DisableFormatting));
         }
 
-    [Test]
+        [Test]
         public void CheckXmlGenerationOtherBooleanCheck()
         {
             standardCondition.Operation = Operation.Less;
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             Assert.AreEqual(expectedXml, retrievedXml);
         }
 
-        private string XmlWithoutConnectedObjects() 
+        private string XmlWithoutConnectedObjects()
         {
             return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                    "<standard id=\"[StandardCondition]Standard Condition\">" +
@@ -220,11 +220,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                    "<output>" +
                    "<status>" + RtcXmlTag.Status + "Standard Condition</status>" +
                    "</output>" +
-                   "</standard>" + 
+                   "</standard>" +
                    "</trigger>";
         }
 
-    private string OriginXml()
+        private string OriginXml()
         {
             return "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                    "<standard id=\"[StandardCondition]" + standardCondition.Name + "\">" +

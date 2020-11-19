@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             // Move existing output
             string currentOutputDirName = GetOldOutputDirectoryName(waterFlowFMModel.ModelDefinition);
-            string currentWaqOutputDirName = $"DFM_DELWAQ_{waterFlowFMModel.Name}";
+            var currentWaqOutputDirName = $"DFM_DELWAQ_{waterFlowFMModel.Name}";
 
             var modelDirectoryInfo = new DirectoryInfo(waterFlowFMModel.MduFilePath);
             while (modelDirectoryInfo != null && modelDirectoryInfo.Name != waterFlowFMModel.Name)
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static DirectoryInfo RecursivelyGetDsProjDataDirectoryFromMduPath(
             Project project, WaterFlowFMModel waterFlowFmModel)
         {
-            string dsprojDataDirName = $"{project.Name}.dsproj_data";
+            var dsprojDataDirName = $"{project.Name}.dsproj_data";
             var projectDataDirectoryInfo = new DirectoryInfo(waterFlowFmModel.MduFilePath);
             while (projectDataDirectoryInfo != null && projectDataDirectoryInfo.Name != dsprojDataDirName)
             {

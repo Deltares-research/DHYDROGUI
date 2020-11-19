@@ -25,10 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             var parallelActivity = activity as ParallelActivity;
             if (parallelActivity != null)
             {
-                var parallelActivityShape = new ParallelActivityShape(graphControl)
-                {
-                    Activity = activity
-                };
+                var parallelActivityShape = new ParallelActivityShape(graphControl) {Activity = activity};
                 parallelActivityShape.ShapeColor = CreateDefaultColorFromActivityShape(parallelActivityShape);
                 parallelActivityShape.Inflate();
                 return parallelActivityShape;
@@ -37,10 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             var sequentialActivity = activity as SequentialActivity;
             if (sequentialActivity != null)
             {
-                var sequentialActivityShape = new SequentialActivityShape(graphControl)
-                {
-                    Activity = activity
-                };
+                var sequentialActivityShape = new SequentialActivityShape(graphControl) {Activity = activity};
                 sequentialActivityShape.ShapeColor = CreateDefaultColorFromActivityShape(sequentialActivityShape);
                 sequentialActivityShape.Inflate();
                 return sequentialActivityShape;
@@ -49,10 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             var compositeActivity = activity as ICompositeActivity;
             if (compositeActivity != null)
             {
-                var compositeActivityShape = new CompositeActivityShape(graphControl)
-                {
-                    Activity = activity
-                };
+                var compositeActivityShape = new CompositeActivityShape(graphControl) {Activity = activity};
                 compositeActivityShape.ShapeColor = CreateDefaultColorFromActivityShape(compositeActivityShape);
                 compositeActivityShape.Inflate();
                 return compositeActivityShape;

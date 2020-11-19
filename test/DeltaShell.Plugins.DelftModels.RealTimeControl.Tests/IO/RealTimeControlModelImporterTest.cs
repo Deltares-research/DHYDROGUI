@@ -12,18 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
     {
         private RealTimeControlModelImporter importer;
 
-        [TestFixtureSetUp]
-        public void SetUp()
-        {
-            importer = new RealTimeControlModelImporter();
-        }
-
-        [TestFixtureTearDown]
-        public void TearDown()
-        {
-            importer = null;
-        }
-
         [Test]
         public void GivenAnInvalidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndNullIsReturned()
         {
@@ -82,6 +70,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         public void GivenARealTimeControlModelImporter_WhenSupportedItemTypesIsCalled_ThenExpectedIsReturned()
         {
             Assert.AreEqual(new List<Type>(), importer.SupportedItemTypes);
+        }
+
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            importer = new RealTimeControlModelImporter();
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            importer = null;
         }
     }
 }

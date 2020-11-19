@@ -25,10 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         public void Test_WaterFlowFMModelViewWPF()
         {
             var fmModel = new WaterFlowFMModel();
-            var fmViewWPF = new WpfSettingsView()
-            {
-                Data = fmModel
-            };
+            var fmViewWPF = new WpfSettingsView() {Data = fmModel};
 
             var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWPF.DataContext;
             SetUiProperties(fmModel, wpfSettingsViewModel);
@@ -44,10 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         public void Test_WaterFlowFMModelViewWPF_AddExtras_Category_Sediment()
         {
             var fmModel = new WaterFlowFMModel();
-            var fmViewWpf = new WpfSettingsView
-            {
-                Data = fmModel
-            };
+            var fmViewWpf = new WpfSettingsView {Data = fmModel};
             var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWpf.DataContext;
 
             SetUiProperties(fmModel, wpfSettingsViewModel);
@@ -116,10 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         public void Test_IsEnabled_WaterFlowFMModelViewWPF()
         {
             var fmModel = new WaterFlowFMModel();
-            var fmViewWPF = new WpfSettingsView()
-            {
-                Data = fmModel
-            };
+            var fmViewWPF = new WpfSettingsView() {Data = fmModel};
 
             var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWPF.DataContext;
             SetUiProperties(fmModel, wpfSettingsViewModel);
@@ -137,10 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         public void Test_IsVisible_WaterFlowFMModelViewWPF()
         {
             var fmModel = new WaterFlowFMModel();
-            var fmViewWPF = new WpfSettingsView()
-            {
-                Data = fmModel
-            };
+            var fmViewWPF = new WpfSettingsView() {Data = fmModel};
 
             var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWPF.DataContext;
             SetUiProperties(fmModel, wpfSettingsViewModel);

@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
     [TestFixture]
     public class Coordinate2DEqualityComparerTest
     {
-        private IEnumerable<TestCaseData> EqualsTestData
+        private static IEnumerable<TestCaseData> EqualsTestData
         {
             get
             {

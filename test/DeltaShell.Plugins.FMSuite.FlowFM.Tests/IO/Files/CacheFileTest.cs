@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value = true;
         }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             temporaryDirectory = new TemporaryDirectory();
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             GenerateDummyCacheFile(mduFilePath);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void OneTimeTearDown()
         {
             ((IDisposable) temporaryDirectory).Dispose();

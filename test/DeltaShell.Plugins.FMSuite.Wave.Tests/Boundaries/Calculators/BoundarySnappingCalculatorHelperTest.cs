@@ -12,10 +12,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
     public class BoundarySnappingCalculatorHelperTest
     {
         private const double tolerance = 1E-10;
-        private readonly Random random = new Random();
+        private static readonly Random random = new Random();
         private IDistanceCalculator distanceCalculator;
 
-        private IEnumerable<TestCaseData> CoordinateTestData
+        private static IEnumerable<TestCaseData> CoordinateTestData
         {
             get
             {

@@ -11,29 +11,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         /// <summary>
         /// The label property
         /// </summary>
-        public static readonly DependencyProperty LabelProperty = 
-            DependencyProperty.Register(nameof(Label), 
-                                        typeof(string), 
-                                        typeof(GeneralStructureCoefficientView), 
+        public static readonly DependencyProperty LabelProperty =
+            DependencyProperty.Register(nameof(Label),
+                                        typeof(string),
+                                        typeof(GeneralStructureCoefficientView),
                                         new PropertyMetadata(default(string)));
 
         /// <summary>
         /// The value content first property
         /// </summary>
-        public static readonly DependencyProperty ValueContentFirstProperty = 
-            DependencyProperty.Register(nameof(ValueContentFirst), 
-                                        typeof(string), 
-                                        typeof(GeneralStructureCoefficientView), 
+        public static readonly DependencyProperty ValueContentFirstProperty =
+            DependencyProperty.Register(nameof(ValueContentFirst),
+                                        typeof(string),
+                                        typeof(GeneralStructureCoefficientView),
                                         new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
         /// The value content second property
         /// </summary>
-        public static readonly DependencyProperty ValueContentSecondProperty = 
-            DependencyProperty.Register(nameof(ValueContentSecond), 
-                                        typeof(string), 
-                                        typeof(GeneralStructureCoefficientView), 
+        public static readonly DependencyProperty ValueContentSecondProperty =
+            DependencyProperty.Register(nameof(ValueContentSecond),
+                                        typeof(string),
+                                        typeof(GeneralStructureCoefficientView),
                                         new FrameworkPropertyMetadata(default(string),
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 

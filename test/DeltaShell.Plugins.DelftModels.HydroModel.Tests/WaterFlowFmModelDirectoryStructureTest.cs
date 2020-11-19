@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static List<string> filtersOutputWAQ;
         private static List<string> filtersSnapped;
 
-        [TestFixtureSetUp]
+        [SetUp]
         public void Setup()
         {
             // Get TestData Directory
@@ -229,47 +229,39 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithTrachytopes_WhenProjectSavedAs_ThenInputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyTrachytopeFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyTrachytopeFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        SimulateUserAddingTrachytopesInMduFile(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        app.CloseProject();
-
-                        AssertProjectFileAndFolderExist();
-                        AssertModelDirectoryExists();
-                        AssertInputDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes, inputDirPath);
-                    }
+                    AddFeaturesToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    SimulateUserAddingTrachytopesInMduFile(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    app.CloseProject();
+
+                    AssertProjectFileAndFolderExist();
+                    AssertModelDirectoryExists();
+                    AssertInputDirectoryExists();
+                    AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes, inputDirPath);
+                }
             }
         }
 
@@ -278,48 +270,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithMorphology_WhenProjectSavedAs_ThenInputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        EnableMorphology(model);
-                        AddMorphologyBoundaryConditionToModel(model);
-                        AddSedimentFraction(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        app.CloseProject();
-
-                        AssertProjectFileAndFolderExist();
-                        AssertModelDirectoryExists();
-                        AssertInputDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithMorphology, inputDirPath);
-                    }
+                    AddFeaturesToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    EnableMorphology(model);
+                    AddMorphologyBoundaryConditionToModel(model);
+                    AddSedimentFraction(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    app.CloseProject();
+
+                    AssertProjectFileAndFolderExist();
+                    AssertModelDirectoryExists();
+                    AssertInputDirectoryExists();
+                    AssertFilesExtensionsExistInDirectory(filtersInputWithMorphology, inputDirPath);
+                }
             }
         }
 
@@ -328,48 +312,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithWind_WhenProjectSavedAs_ThenInputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyWindFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyWindFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        AddWindToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        app.CloseProject();
-
-                        AssertProjectFileAndFolderExist();
-                        AssertModelDirectoryExists();
-                        AssertInputDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithWind, inputDirPath);
-                    }
+                    AddFeaturesToModel(model);
+                    AddWindToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    app.CloseProject();
+
+                    AssertProjectFileAndFolderExist();
+                    AssertModelDirectoryExists();
+                    AssertInputDirectoryExists();
+                    AssertFilesExtensionsExistInDirectory(filtersInputWithWind, inputDirPath);
+                }
             }
         }
 
@@ -378,55 +354,47 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithTrachytopes_WhenRun_ThenWorkDirIsCreatedInTemp()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyTrachytopeFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyTrachytopeFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        SimulateUserAddingTrachytopesInMduFile(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        ValidateAndRunModel(model, app);
-
-                        app.CloseProject();
-
-                        var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
-                        Assert.That(workDirInfo.Exists, "The working directory does not exist.");
-
-                        string retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
-                        Assert.NotNull(retrievedTempFolderPathFromWorkingDirectory, "Retrieved temp folder path is null");
-
-                        string tempFolderPathFullName = Path.GetTempPath();
-                        Assert.That(retrievedTempFolderPathFromWorkingDirectory, Is.SamePath(tempFolderPathFullName), "The working directory is not created in Temp");
-
-                        AssertWorkingOutputDirectoryWithSubFoldersExists(model.WorkingOutputDirectoryPath);
-                    }
+                    AddFeaturesToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    SimulateUserAddingTrachytopesInMduFile(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    ValidateAndRunModel(model, app);
+
+                    app.CloseProject();
+
+                    var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
+                    Assert.That(workDirInfo.Exists, "The working directory does not exist.");
+
+                    string retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
+                    Assert.NotNull(retrievedTempFolderPathFromWorkingDirectory, "Retrieved temp folder path is null");
+
+                    string tempFolderPathFullName = Path.GetTempPath();
+                    Assert.That(retrievedTempFolderPathFromWorkingDirectory, Is.SamePath(tempFolderPathFullName), "The working directory is not created in Temp");
+
+                    AssertWorkingOutputDirectoryWithSubFoldersExists(model.WorkingOutputDirectoryPath);
+                }
             }
         }
 
@@ -435,57 +403,48 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithMorphology_WhenRun_ThenWorkDirIsCreatedInTemp()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        EnableMorphology(model);
-                        AddMorphologyBoundaryConditionToModel(model);
-                        AddSedimentFraction(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        ValidateAndRunModel(model, app);
-
-                        app.CloseProject();
-
-                        var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
-                        Assert.That(workDirInfo.Exists, "The working directory does not exist.");
-
-                        string retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
-                        Assert.NotNull(retrievedTempFolderPathFromWorkingDirectory, "Retrieved temp folder path is null");
-
-                        string tempFolderPathFullName = Path.GetTempPath();
-                        Assert.That(retrievedTempFolderPathFromWorkingDirectory, Is.SamePath(tempFolderPathFullName), "The working directory is not created in Temp");
-
-                        AssertWorkingOutputDirectoryWithSubFoldersExists(model.WorkingOutputDirectoryPath);
-                    }
+                    AddFeaturesToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    EnableMorphology(model);
+                    AddMorphologyBoundaryConditionToModel(model);
+                    AddSedimentFraction(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
 
-            finally
-            {
-                DeleteTestDirectories();
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    ValidateAndRunModel(model, app);
+
+                    app.CloseProject();
+
+                    var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
+                    Assert.That(workDirInfo.Exists, "The working directory does not exist.");
+
+                    string retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
+                    Assert.NotNull(retrievedTempFolderPathFromWorkingDirectory, "Retrieved temp folder path is null");
+
+                    string tempFolderPathFullName = Path.GetTempPath();
+                    Assert.That(retrievedTempFolderPathFromWorkingDirectory, Is.SamePath(tempFolderPathFullName), "The working directory is not created in Temp");
+
+                    AssertWorkingOutputDirectoryWithSubFoldersExists(model.WorkingOutputDirectoryPath);
+                }
             }
         }
 
@@ -494,55 +453,47 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithWind_WhenRun_ThenWorkDirIsCreatedInTemp()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyWindFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyWindFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        AddWindToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        ValidateAndRunModel(model, app);
-
-                        app.CloseProject();
-
-                        var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
-                        Assert.That(workDirInfo.Exists, "The working directory does not exist.");
-
-                        string retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
-                        Assert.NotNull(retrievedTempFolderPathFromWorkingDirectory, "Retrieved temp folder path is null");
-
-                        string tempFolderPathFullName = Path.GetTempPath();
-                        Assert.That(retrievedTempFolderPathFromWorkingDirectory, Is.SamePath(tempFolderPathFullName), "The working directory is not created in Temp");
-
-                        AssertWorkingOutputDirectoryWithSubFoldersExists(model.WorkingOutputDirectoryPath);
-                    }
+                    AddFeaturesToModel(model);
+                    AddWindToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    ValidateAndRunModel(model, app);
+
+                    app.CloseProject();
+
+                    var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
+                    Assert.That(workDirInfo.Exists, "The working directory does not exist.");
+
+                    string retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
+                    Assert.NotNull(retrievedTempFolderPathFromWorkingDirectory, "Retrieved temp folder path is null");
+
+                    string tempFolderPathFullName = Path.GetTempPath();
+                    Assert.That(retrievedTempFolderPathFromWorkingDirectory, Is.SamePath(tempFolderPathFullName), "The working directory is not created in Temp");
+
+                    AssertWorkingOutputDirectoryWithSubFoldersExists(model.WorkingOutputDirectoryPath);
+                }
             }
         }
 
@@ -551,60 +502,52 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithWind_WhenRunAndSaved_ThenAllOutputFromWorkingDirIsCopiedToPersistentDirWhileMaintainingTheStructure()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyWindFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyWindFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        AddWindToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        ValidateAndRunModel(model, app);
-
-                        string workingDirectoryPath = model.WorkingDirectoryPath;
-                        string workingOutputDirectoryPath = model.WorkingOutputDirectoryPath;
-
-                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputWorkingDirStructure =
-                            GetDirectoryStructure(workingOutputDirectoryPath, ".", true);
-
-                        AssertWorkingDirectoryWithOutputExists(workingDirectoryPath, workingOutputDirectoryPath);
-
-                        app.SaveProject();
-
-                        AssertWorkingDirectoryIsCleaned(workingDirectoryPath, workingOutputDirectoryPath);
-
-                        app.CloseProject();
-
-                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputPersistentDirStructure = GetDirectoryStructure(outputDirPath, ".", true);
-                        AssertEqualDirectoryStructure(".", ref outputWorkingDirStructure,
-                                                      ref outputPersistentDirStructure, true);
-                    }
+                    AddFeaturesToModel(model);
+                    AddWindToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    ValidateAndRunModel(model, app);
+
+                    string workingDirectoryPath = model.WorkingDirectoryPath;
+                    string workingOutputDirectoryPath = model.WorkingOutputDirectoryPath;
+
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputWorkingDirStructure =
+                        GetDirectoryStructure(workingOutputDirectoryPath, ".", true);
+
+                    AssertWorkingDirectoryWithOutputExists(workingDirectoryPath, workingOutputDirectoryPath);
+
+                    app.SaveProject();
+
+                    AssertWorkingDirectoryIsCleaned(workingDirectoryPath, workingOutputDirectoryPath);
+
+                    app.CloseProject();
+
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputPersistentDirStructure = GetDirectoryStructure(outputDirPath, ".", true);
+                    AssertEqualDirectoryStructure(".", ref outputWorkingDirStructure,
+                                                  ref outputPersistentDirStructure, true);
+                }
             }
         }
 
@@ -612,62 +555,54 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         //3.1
         public void GivenAnFMModelWithTrachytopes_WhenDimrExported_ThenCorrectFoldersAndFilesAreGiven()
         {
-            CreateTestDirectories();
-
             var expectedExtension = ".xml";
 
-            try
-            {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyTrachytopeFilesToTemp();
+            CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyTrachytopeFilesToTemp();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
+            using (DeltaShellApplication app = GetConfiguredApplication())
+            {
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        SimulateUserAddingTrachytopesInMduFile(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        AssertProjectFileAndFolderExist();
-
-                        FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
-                        Assert.IsTrue(Directory.Exists(exportDimrDirPath));
-
-                        new DHydroConfigXmlExporter().Export(model, exportDimrFilePath);
-
-                        app.CloseProject();
-
-                        Assert.IsTrue(File.Exists(exportDimrFilePath));
-                        var expectedFileCount = 1;
-                        int actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
-                        Assert.AreEqual(expectedFileCount, actualFileCount,
-                                        Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
-                                                                            actualFileCount, exportDimrDirPath));
-                        AssertDflowfmDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes,
-                                                              dflowfmDirPath);
-                    }
+                    AddFeaturesToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    SimulateUserAddingTrachytopesInMduFile(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    AssertProjectFileAndFolderExist();
+
+                    FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
+                    Assert.IsTrue(Directory.Exists(exportDimrDirPath));
+
+                    new DHydroConfigXmlExporter().Export(model, exportDimrFilePath);
+
+                    app.CloseProject();
+
+                    Assert.IsTrue(File.Exists(exportDimrFilePath));
+                    var expectedFileCount = 1;
+                    int actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
+                    Assert.AreEqual(expectedFileCount, actualFileCount,
+                                    Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
+                                                                        actualFileCount, exportDimrDirPath));
+                    AssertDflowfmDirectoryExists();
+                    AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes,
+                                                          dflowfmDirPath);
+                }
             }
         }
 
@@ -675,63 +610,55 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         //3.2
         public void GivenAnFMModelWithMorphology_WhenDimrExported_ThenCorrectFoldersAndFilesAreGiven()
         {
-            CreateTestDirectories();
-
             const string expectedExtension = ".xml";
 
-            try
-            {
-                CopyFourierAndCalibrationFilesToTemp();
+            CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
+            using (DeltaShellApplication app = GetConfiguredApplication())
+            {
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        EnableMorphology(model);
-                        AddMorphologyBoundaryConditionToModel(model);
-                        AddSedimentFraction(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        AssertProjectFileAndFolderExist();
-
-                        FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
-                        Assert.IsTrue(Directory.Exists(exportDimrDirPath));
-
-                        new DHydroConfigXmlExporter().Export(model, exportDimrFilePath);
-
-                        app.CloseProject();
-
-                        Assert.IsTrue(File.Exists(exportDimrFilePath));
-                        const int expectedFileCount = 1;
-                        int actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
-                        Assert.AreEqual(expectedFileCount, actualFileCount,
-                                        Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
-                                                                            actualFileCount, exportDimrDirPath));
-                        AssertDflowfmDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithMorphology,
-                                                              dflowfmDirPath);
-                    }
+                    AddFeaturesToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    EnableMorphology(model);
+                    AddMorphologyBoundaryConditionToModel(model);
+                    AddSedimentFraction(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    AssertProjectFileAndFolderExist();
+
+                    FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
+                    Assert.IsTrue(Directory.Exists(exportDimrDirPath));
+
+                    new DHydroConfigXmlExporter().Export(model, exportDimrFilePath);
+
+                    app.CloseProject();
+
+                    Assert.IsTrue(File.Exists(exportDimrFilePath));
+                    const int expectedFileCount = 1;
+                    int actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
+                    Assert.AreEqual(expectedFileCount, actualFileCount,
+                                    Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
+                                                                        actualFileCount, exportDimrDirPath));
+                    AssertDflowfmDirectoryExists();
+                    AssertFilesExtensionsExistInDirectory(filtersInputWithMorphology,
+                                                          dflowfmDirPath);
+                }
             }
         }
 
@@ -739,63 +666,54 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         //3.3
         public void GivenAnFMModelWithWind_WhenDimrExported_ThenCorrectFoldersAndFilesAreGiven()
         {
-            CreateTestDirectories();
-
             var expectedExtension = ".xml";
 
-            try
-            {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyWindFilesToTemp();
+            CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyWindFilesToTemp();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
+            using (DeltaShellApplication app = GetConfiguredApplication())
+            {
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        AddWindToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        AssertProjectFileAndFolderExist();
-
-                        FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
-                        Assert.IsTrue(Directory.Exists(exportDimrDirPath));
-
-                        new DHydroConfigXmlExporter().Export(model, exportDimrFilePath);
-
-                        Assert.IsTrue(File.Exists(exportDimrFilePath));
-                        var expectedFileCount = 1;
-                        int actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
-                        Assert.AreEqual(expectedFileCount, actualFileCount,
-                                        Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
-                                                                            actualFileCount, exportDimrDirPath));
-                        AssertDflowfmDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithWind,
-                                                              dflowfmDirPath);
-
-                        app.CloseProject();
-                    }
+                    AddFeaturesToModel(model);
+                    AddWindToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
 
-            finally
-            {
-                DeleteTestDirectories();
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    AssertProjectFileAndFolderExist();
+
+                    FileUtils.CreateDirectoryIfNotExists(exportDimrDirPath);
+                    Assert.IsTrue(Directory.Exists(exportDimrDirPath));
+
+                    new DHydroConfigXmlExporter().Export(model, exportDimrFilePath);
+
+                    Assert.IsTrue(File.Exists(exportDimrFilePath));
+                    var expectedFileCount = 1;
+                    int actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
+                    Assert.AreEqual(expectedFileCount, actualFileCount,
+                                    Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
+                                                                        actualFileCount, exportDimrDirPath));
+                    AssertDflowfmDirectoryExists();
+                    AssertFilesExtensionsExistInDirectory(filtersInputWithWind,
+                                                          dflowfmDirPath);
+
+                    app.CloseProject();
+                }
             }
         }
 
@@ -804,58 +722,50 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithTrachytopesThatRunsAndSaves_WhenUserClearsOutputAndSaves_ThenOutputFolderShouldBePresentButEmpty()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyTrachytopeFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyTrachytopeFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        SimulateUserAddingTrachytopesInMduFile(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        ValidateAndRunModel(model, app);
-
-                        app.SaveProject();
-
-                        model.ClearOutput();
-
-                        Assert.IsFalse(FileUtils.IsDirectoryEmpty(outputDirPath),
-                                       $"Expected: Output folder '{outputDirPath}' should not be emptied after ClearModelOutput.");
-
-                        app.SaveProject();
-
-                        app.CloseProject();
-
-                        AssertProjectFileAndFolderExist();
-                        AssertModelDirectoryExists();
-                        AssertOutputDirectoryExists();
-                        AssertOutputDirectoryIsEmpty();
-                    }
+                    AddFeaturesToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    SimulateUserAddingTrachytopesInMduFile(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    ValidateAndRunModel(model, app);
+
+                    app.SaveProject();
+
+                    model.ClearOutput();
+
+                    Assert.IsFalse(FileUtils.IsDirectoryEmpty(outputDirPath),
+                                   $"Expected: Output folder '{outputDirPath}' should not be emptied after ClearModelOutput.");
+
+                    app.SaveProject();
+
+                    app.CloseProject();
+
+                    AssertProjectFileAndFolderExist();
+                    AssertModelDirectoryExists();
+                    AssertOutputDirectoryExists();
+                    AssertOutputDirectoryIsEmpty();
+                }
             }
         }
 
@@ -864,85 +774,77 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithTrachytopesAfterARun_WhenSavingItAndRenamingItAndSavingItAgain_OnlyFolderNameOfModelIsChangedAndTheMDUFileName()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyTrachytopeFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyTrachytopeFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        SimulateUserAddingTrachytopesInMduFile(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        model.ValidateBeforeRun = true;
-                        ValidationReport report = model.Validate();
-                        Assert.AreEqual(0, report.AllErrors.Count(),
-                                        "There are errors in the model after importing the MDU file");
-                        app.RunActivity(model);
-                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-                        app.SaveProject();
-
-                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectFolderBeforeRename =
-                            GetDirectoryStructure(
-                                Path.Combine(projectFilePath, modelDirPath),
-                                ".",
-                                false,
-                                ".mdu",
-                                ".cache");
-
-                        //Rename
-                        model.Name = "FlowFM2";
-
-                        app.SaveProject();
-
-                        app.CloseProject();
-
-                        AssertProjectFileAndFolderExist();
-
-                        //MDU file name check
-                        string newModelDirPath = Path.Combine(projectDirPath, "FlowFM2");
-                        Assert.IsTrue(Directory.Exists(newModelDirPath),
-                                      Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
-                        Assert.IsFalse(Directory.Exists(modelDirPath),
-                                       Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
-                        string newInputDirPath = Path.Combine(newModelDirPath, InputDirName);
-                        string newMduFileNameWithoutExtension =
-                            Path.GetFileNameWithoutExtension(Directory.GetFiles(newInputDirPath, $"*{".mdu"}")[0]);
-                        Assert.AreEqual("FlowFM2", newMduFileNameWithoutExtension);
-
-                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectFolderAfterRename =
-                            GetDirectoryStructure(Path.Combine(projectFilePath, newModelDirPath),
-                                                  ".",
-                                                  false,
-                                                  ".mdu",
-                                                  ".cache");
-                        AssertEqualDirectoryStructure(".", ref projectFolderBeforeRename, ref projectFolderAfterRename);
-                    }
+                    AddFeaturesToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    SimulateUserAddingTrachytopesInMduFile(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    model.ValidateBeforeRun = true;
+                    ValidationReport report = model.Validate();
+                    Assert.AreEqual(0, report.AllErrors.Count(),
+                                    "There are errors in the model after importing the MDU file");
+                    app.RunActivity(model);
+                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                    app.SaveProject();
+
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectFolderBeforeRename =
+                        GetDirectoryStructure(
+                            Path.Combine(projectFilePath, modelDirPath),
+                            ".",
+                            false,
+                            ".mdu",
+                            ".cache");
+
+                    //Rename
+                    model.Name = "FlowFM2";
+
+                    app.SaveProject();
+
+                    app.CloseProject();
+
+                    AssertProjectFileAndFolderExist();
+
+                    //MDU file name check
+                    string newModelDirPath = Path.Combine(projectDirPath, "FlowFM2");
+                    Assert.IsTrue(Directory.Exists(newModelDirPath),
+                                  Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
+                    Assert.IsFalse(Directory.Exists(modelDirPath),
+                                   Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
+                    string newInputDirPath = Path.Combine(newModelDirPath, InputDirName);
+                    string newMduFileNameWithoutExtension =
+                        Path.GetFileNameWithoutExtension(Directory.GetFiles(newInputDirPath, $"*{".mdu"}")[0]);
+                    Assert.AreEqual("FlowFM2", newMduFileNameWithoutExtension);
+
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectFolderAfterRename =
+                        GetDirectoryStructure(Path.Combine(projectFilePath, newModelDirPath),
+                                              ".",
+                                              false,
+                                              ".mdu",
+                                              ".cache");
+                    AssertEqualDirectoryStructure(".", ref projectFolderBeforeRename, ref projectFolderAfterRename);
+                }
             }
         }
 
@@ -951,75 +853,67 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnFMModelWithTrachytopes_WhenRunAndProjectSavedAsInAnotherDirectory_ThenInputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
+            CopyFourierAndCalibrationFilesToTemp();
+            CopyTrachytopeFilesToTemp();
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyFourierAndCalibrationFilesToTemp();
-                CopyTrachytopeFilesToTemp();
-
-                using (DeltaShellApplication app = GetConfiguredApplication())
+                using (var model = new WaterFlowFMModel())
                 {
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        AddFeaturesToModel(model);
-                        EnableSalinityAndTemperature(model);
-                        SimulateUserAddingTrachytopesInMduFile(model);
-                        model.ExportTo(tempMduFilePath);
-                        model.ReloadGrid(true, true);
-                    }
-
-                    SimulateUserAddingReferencesInMduFile();
-
-                    using (var model = new WaterFlowFMModel())
-                    {
-                        model.ImportFromMdu(tempMduFilePath);
-
-                        AdjustSettingsOutputParameters(model);
-                        UpdateBedLevel(model);
-                        AddModelToProject(model, app);
-
-                        app.SaveProjectAs(projectFilePath);
-
-                        model.ValidateBeforeRun = true;
-                        ValidationReport report = model.Validate();
-                        Assert.AreEqual(0, report.AllErrors.Count(),
-                                        "There are errors in the model after importing the MDU file");
-                        app.RunActivity(model);
-                        Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-                        app.SaveProject();
-
-                        AssertProjectFileAndFolderExist();
-                        AssertModelDirectoryExists();
-                        AssertInputDirectoryExists();
-
-                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectDirStructureBeforeSaveAs =
-                            GetDirectoryStructure(projectDirPath, ".", true);
-
-                        string newSaveAsDestinationDirPath = Path.Combine(Path.GetTempPath(),
-                                                                          Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
-                        string newSaveAsProjectFilePath = Path.Combine(newSaveAsDestinationDirPath, projectFileName);
-
-                        app.SaveProjectAs(newSaveAsProjectFilePath);
-
-                        app.CloseProject();
-                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectDirStructureAfterSaveAs =
-                            GetDirectoryStructure(projectDirPath, ".", true);
-                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> newDirStructureAfterSaveAs = GetDirectoryStructure(
-                            Path.Combine(newSaveAsDestinationDirPath, ProjectName + ProjectDirExtension), ".",
-                            true);
-
-                        // Since we asserted that everything is correct before we started, if the structure is the same, it should still be correct after.
-                        AssertEqualDirectoryStructure(".", ref projectDirStructureBeforeSaveAs,
-                                                      ref projectDirStructureAfterSaveAs, true);
-                        AssertEqualDirectoryStructure(".", ref projectDirStructureAfterSaveAs,
-                                                      ref newDirStructureAfterSaveAs, true);
-                    }
+                    AddFeaturesToModel(model);
+                    EnableSalinityAndTemperature(model);
+                    SimulateUserAddingTrachytopesInMduFile(model);
+                    model.ExportTo(tempMduFilePath);
+                    model.ReloadGrid(true, true);
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+
+                SimulateUserAddingReferencesInMduFile();
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    model.ImportFromMdu(tempMduFilePath);
+
+                    AdjustSettingsOutputParameters(model);
+                    UpdateBedLevel(model);
+                    AddModelToProject(model, app);
+
+                    app.SaveProjectAs(projectFilePath);
+
+                    model.ValidateBeforeRun = true;
+                    ValidationReport report = model.Validate();
+                    Assert.AreEqual(0, report.AllErrors.Count(),
+                                    "There are errors in the model after importing the MDU file");
+                    app.RunActivity(model);
+                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                    app.SaveProject();
+
+                    AssertProjectFileAndFolderExist();
+                    AssertModelDirectoryExists();
+                    AssertInputDirectoryExists();
+
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectDirStructureBeforeSaveAs =
+                        GetDirectoryStructure(projectDirPath, ".", true);
+
+                    string newSaveAsDestinationDirPath = Path.Combine(Path.GetTempPath(),
+                                                                      Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
+                    string newSaveAsProjectFilePath = Path.Combine(newSaveAsDestinationDirPath, projectFileName);
+
+                    app.SaveProjectAs(newSaveAsProjectFilePath);
+
+                    app.CloseProject();
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectDirStructureAfterSaveAs =
+                        GetDirectoryStructure(projectDirPath, ".", true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> newDirStructureAfterSaveAs = GetDirectoryStructure(
+                        Path.Combine(newSaveAsDestinationDirPath, ProjectName + ProjectDirExtension), ".",
+                        true);
+
+                    // Since we asserted that everything is correct before we started, if the structure is the same, it should still be correct after.
+                    AssertEqualDirectoryStructure(".", ref projectDirStructureBeforeSaveAs,
+                                                  ref projectDirStructureAfterSaveAs, true);
+                    AssertEqualDirectoryStructure(".", ref projectDirStructureAfterSaveAs,
+                                                  ref newDirStructureAfterSaveAs, true);
+                }
             }
         }
 
@@ -1101,67 +995,58 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             string newSavePath = Path.Combine(destinationDirPath, "newSaveLocation");
             FileUtils.CreateDirectoryIfNotExists(newSavePath);
 
-            try
+            CopyProjectToDestinationDir("TestModel");
+
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyProjectToDestinationDir("TestModel");
+                // Given
+                CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
+                string exportFilePath = Path.Combine(exportPath,
+                                                     Path.GetFileName(fmModel.MduFilePath));
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
-                {
-                    // Given
-                    CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
-                    string exportFilePath = Path.Combine(exportPath,
-                                                         Path.GetFileName(fmModel.MduFilePath));
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
 
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
+                string originalInputFolder = Path.Combine(projectDirPath, fmModel.Name, "input");
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> originalInputDirStructure = GetDirectoryStructure(originalInputFolder, ".");
 
-                    string originalInputFolder = Path.Combine(projectDirPath, fmModel.Name, "input");
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> originalInputDirStructure = GetDirectoryStructure(originalInputFolder, ".");
+                // When
+                app.CreateNewProject();
+                IFileImporter relevantImporter = app.FileImporters
+                                                    .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
 
-                    // When
-                    app.CreateNewProject();
-                    IFileImporter relevantImporter = app.FileImporters
-                                                        .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
+                var importedModel = relevantImporter.ImportItem(exportFilePath) as WaterFlowFMModel;
+                Assert.That(importedModel, Is.Not.Null,
+                            "Expected the imported model to exist.");
+                AddModelToProject(importedModel, app);
 
-                    var importedModel = relevantImporter.ImportItem(exportFilePath) as WaterFlowFMModel;
-                    Assert.That(importedModel, Is.Not.Null,
-                                "Expected the imported model to exist.");
-                    AddModelToProject(importedModel, app);
+                string newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
+                app.SaveProjectAs(newSaveFilePath);
 
-                    string newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
-                    app.SaveProjectAs(newSaveFilePath);
+                // Then
+                // The import location does not change.
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
+                AssertEqualDirectoryStructure(".",
+                                              ref preImportExportDirStructure,
+                                              ref postImportExportDirStructure,
+                                              true);
 
-                    // Then
-                    // The import location does not change.
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
-                    AssertEqualDirectoryStructure(".",
-                                                  ref preImportExportDirStructure,
-                                                  ref postImportExportDirStructure,
-                                                  true);
+                // a new model is created in the project folder
+                string newDsProjData = Path.Combine(newSavePath, "Project1.dsproj_data");
+                List<string> projectDirSubFolders =
+                    Directory.EnumerateDirectories(newDsProjData).ToList();
 
-                    // a new model is created in the project folder
-                    string newDsProjData = Path.Combine(newSavePath, "Project1.dsproj_data");
-                    List<string> projectDirSubFolders =
-                        Directory.EnumerateDirectories(newDsProjData).ToList();
+                Assert.That(projectDirSubFolders.Count, Is.EqualTo(1),
+                            $"Expected one folders in {newDsProjData}: '{ModelName}'");
 
-                    Assert.That(projectDirSubFolders.Count, Is.EqualTo(1),
-                                $"Expected one folders in {newDsProjData}: '{ModelName}'");
+                string modelPath = Path.Combine(newDsProjData, fmModel.Name);
+                Assert.That(projectDirSubFolders.First(), Is.EqualTo(modelPath),
+                            "Expected a different model folder name.");
 
-                    string modelPath = Path.Combine(newDsProjData, fmModel.Name);
-                    Assert.That(projectDirSubFolders.First(), Is.EqualTo(modelPath),
-                                "Expected a different model folder name.");
+                AssertInputImportedModelIsCorrect(modelPath,
+                                                  originalInputDirStructure);
 
-                    AssertInputImportedModelIsCorrect(modelPath,
-                                                      originalInputDirStructure);
-
-                    importedModel.Dispose();
-                    fmModel.Dispose();
-                }
-            }
-            finally
-            {
-                DeleteTestDirectories();
-                FileUtils.DeleteIfExists(exportPath);
-                FileUtils.DeleteIfExists(newSavePath);
+                importedModel.Dispose();
+                fmModel.Dispose();
             }
         }
 
@@ -1184,82 +1069,73 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             string newSavePath = Path.Combine(destinationDirPath, "newSaveLocation");
             FileUtils.CreateDirectoryIfNotExists(newSavePath);
 
-            try
-            {
-                CopyProjectToDestinationDir("TestModel");
+            CopyProjectToDestinationDir("TestModel");
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
+            using (DeltaShellApplication app = GetConfiguredApplication())
+            {
+                // Given
+                CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
+                string exportFilePath = Path.Combine(exportPath,
+                                                     Path.GetFileName(fmModel.MduFilePath));
+
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
+
+                string originalInputFolder = Path.Combine(projectDirPath, fmModel.Name, "input");
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> originalInputDirStructure = GetDirectoryStructure(originalInputFolder,
+                                                                                                                               ".",
+                                                                                                                               ignoreFileExtension: "meta"); // The restart.meta file is ignored, as it should not be present in the HydroModel.
+
+                // When
+                app.CreateNewProject();
+                var newIntegratedModel = new HydroModel() {Name = "Blastoise"};
+
+                AddModelToProject(newIntegratedModel, app);
+
+                IFileImporter relevantImporter = app.FileImporters
+                                                    .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
+
+                relevantImporter.ImportItem(exportFilePath, newIntegratedModel);
+
+                string newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
+                app.SaveProjectAs(newSaveFilePath);
+
+                // Then
+                // A new model is created in the integrated model
+                List<IActivity> integratedModelActivities = newIntegratedModel.Activities.ToList();
+                Assert.That(integratedModelActivities.Count, Is.EqualTo(1), "Expected the integrated model to contain a single activity.");
+                Assert.That(integratedModelActivities.First().Name, Is.EqualTo(fmModel.Name), "Expected the imported model name to be equal to the exported model name.");
+
+                // The import location does not change.
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
+                AssertEqualDirectoryStructure(".",
+                                              ref preImportExportDirStructure,
+                                              ref postImportExportDirStructure,
+                                              true);
+
+                // a new model is created in the project folder
+                string newDsProjData = Path.Combine(newSavePath, "Project1.dsproj_data");
+                string fmModelPath = Path.Combine(newDsProjData, fmModel.Name);
+                string hydroModelPath = Path.Combine(newDsProjData, newIntegratedModel.Name);
+
+                Assert.That(Directory.Exists(newDsProjData), "Expected the dsproj_data folder to exist.");
+                Assert.That(Directory.Exists(fmModelPath), "Expected the D-FlowFM model folder to exist.");
+                Assert.That(Directory.Exists(hydroModelPath), "Expected the Integrated Model folder to exist.");
+
+                foreach (string subDirectory in Directory.EnumerateDirectories(newDsProjData))
                 {
-                    // Given
-                    CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
-                    string exportFilePath = Path.Combine(exportPath,
-                                                         Path.GetFileName(fmModel.MduFilePath));
-
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
-
-                    string originalInputFolder = Path.Combine(projectDirPath, fmModel.Name, "input");
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> originalInputDirStructure = GetDirectoryStructure(originalInputFolder,
-                                                                                                                                   ".",
-                                                                                                                                   ignoreFileExtension: "meta"); // The restart.meta file is ignored, as it should not be present in the HydroModel.
-
-                    // When
-                    app.CreateNewProject();
-                    var newIntegratedModel = new HydroModel() {Name = "Blastoise"};
-
-                    AddModelToProject(newIntegratedModel, app);
-
-                    IFileImporter relevantImporter = app.FileImporters
-                                                        .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
-
-                    relevantImporter.ImportItem(exportFilePath, newIntegratedModel);
-
-                    string newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
-                    app.SaveProjectAs(newSaveFilePath);
-
-                    // Then
-                    // A new model is created in the integrated model
-                    List<IActivity> integratedModelActivities = newIntegratedModel.Activities.ToList();
-                    Assert.That(integratedModelActivities.Count, Is.EqualTo(1), "Expected the integrated model to contain a single activity.");
-                    Assert.That(integratedModelActivities.First().Name, Is.EqualTo(fmModel.Name), "Expected the imported model name to be equal to the exported model name.");
-
-                    // The import location does not change.
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
-                    AssertEqualDirectoryStructure(".",
-                                                  ref preImportExportDirStructure,
-                                                  ref postImportExportDirStructure,
-                                                  true);
-
-                    // a new model is created in the project folder
-                    string newDsProjData = Path.Combine(newSavePath, "Project1.dsproj_data");
-                    string fmModelPath = Path.Combine(newDsProjData, fmModel.Name);
-                    string hydroModelPath = Path.Combine(newDsProjData, newIntegratedModel.Name);
-
-                    Assert.That(Directory.Exists(newDsProjData), "Expected the dsproj_data folder to exist.");
-                    Assert.That(Directory.Exists(fmModelPath), "Expected the D-FlowFM model folder to exist.");
-                    Assert.That(Directory.Exists(hydroModelPath), "Expected the Integrated Model folder to exist.");
-
-                    foreach (string subDirectory in Directory.EnumerateDirectories(newDsProjData))
-                    {
-                        string dirName = new DirectoryInfo(subDirectory).Name;
-                        Assert.That(dirName.StartsWith(fmModel.Name) ||
-                                    dirName.StartsWith(newIntegratedModel.Name),
-                                    "Expected only folders corresponding with the model names.");
-                    }
-
-                    Assert.That(Directory.EnumerateFiles(newDsProjData).Any(), Is.False,
-                                $"Expected no files in {newDsProjData}");
-                    Assert.That(Directory.EnumerateFileSystemEntries(hydroModelPath).Any(), Is.False,
-                                "Expected the integrated model to be empty.");
-
-                    AssertInputImportedModelIsCorrect(fmModelPath,
-                                                      originalInputDirStructure);
+                    string dirName = new DirectoryInfo(subDirectory).Name;
+                    Assert.That(dirName.StartsWith(fmModel.Name) ||
+                                dirName.StartsWith(newIntegratedModel.Name),
+                                "Expected only folders corresponding with the model names.");
                 }
-            }
-            finally
-            {
-                DeleteTestDirectories();
-                FileUtils.DeleteIfExists(exportPath);
-                FileUtils.DeleteIfExists(newSavePath);
+
+                Assert.That(Directory.EnumerateFiles(newDsProjData).Any(), Is.False,
+                            $"Expected no files in {newDsProjData}");
+                Assert.That(Directory.EnumerateFileSystemEntries(hydroModelPath).Any(), Is.False,
+                            "Expected the integrated model to be empty.");
+
+                AssertInputImportedModelIsCorrect(fmModelPath,
+                                                  originalInputDirStructure);
             }
         }
 
@@ -1275,50 +1151,42 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnOldModelWithOutputAndWithoutOutputDirSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
         {
             CreateTestDirectories();
+            CopyProjectToDestinationDir("TestModel");
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyProjectToDestinationDir("TestModel");
+                // Given
+                string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
-                {
-                    // Given
-                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                string mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
 
-                    string mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                           ".",
+                                                                                                                           true);
 
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                               ".",
-                                                                                                                               true);
+                // When
+                string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
-                    // When
-                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                // Then
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                            ".",
+                                                                                                                            true);
+                AssertEqualDirectoryStructure(".",
+                                              ref preImportDirStructure,
+                                              ref postImportDirStructure,
+                                              true);
 
-                    // Then
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                                ".",
-                                                                                                                                true);
-                    AssertEqualDirectoryStructure(".",
-                                                  ref preImportDirStructure,
-                                                  ref postImportDirStructure,
-                                                  true);
+                string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                string inputDirSave = Path.Combine(modelDirSave, "input");
+                Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
-                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    string inputDirSave = Path.Combine(modelDirSave, "input");
-                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+                IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
-                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
-
-                    AssertThatOutputNotExists(modelDirSave, importedModel);
-                }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+                AssertThatOutputNotExists(modelDirSave, importedModel);
             }
         }
 
@@ -1334,53 +1202,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnOldModelWithOutputAndWithOutputDirSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
         {
             CreateTestDirectories();
+            CopyProjectToDestinationDir("TestModel");
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyProjectToDestinationDir("TestModel");
+                // Given
+                string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
-                {
-                    // Given
-                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                const string importOutputFolder = "DFM_OUTPUT_FlowFM1";
 
-                    const string importOutputFolder = "DFM_OUTPUT_FlowFM1";
+                string mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
+                UpdateOutputDirInMDUTo(mduPath, importOutputFolder);
 
-                    string mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
-                    UpdateOutputDirInMDUTo(mduPath, importOutputFolder);
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                           ".",
+                                                                                                                           true);
 
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                               ".",
-                                                                                                                               true);
+                // When
+                string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
-                    // When
-                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                // Then
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                            ".",
+                                                                                                                            true);
+                AssertEqualDirectoryStructure(".",
+                                              ref preImportDirStructure,
+                                              ref postImportDirStructure,
+                                              true);
 
-                    // Then
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                                ".",
-                                                                                                                                true);
-                    AssertEqualDirectoryStructure(".",
-                                                  ref preImportDirStructure,
-                                                  ref postImportDirStructure,
-                                                  true);
+                string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                string inputDirSave = Path.Combine(modelDirSave, "input");
+                Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
-                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    string inputDirSave = Path.Combine(modelDirSave, "input");
-                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+                IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
-                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
-
-                    AssertThatOutputNotExists(modelDirSave, importedModel);
-                }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+                AssertThatOutputNotExists(modelDirSave, importedModel);
             }
         }
 
@@ -1396,53 +1256,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAMigratedModelWithOutputAtACustomLocationAndWithoutOutputDirValueSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
         {
             CreateTestDirectories();
+            CopyProjectToDestinationDir("TestModel");
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyProjectToDestinationDir("TestModel");
+                // Given
+                string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
-                {
-                    // Given
-                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
-                    string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+                MigrateModel(app, projectFilePath);
+                MoveOutputDirToCustomLocation(modelDirImport);
 
-                    MigrateModel(app, projectFilePath);
-                    MoveOutputDirToCustomLocation(modelDirImport);
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                           ".",
+                                                                                                                           true);
 
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                               ".",
-                                                                                                                               true);
+                // When
+                string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
-                    // When
-                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                // Then
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                            ".",
+                                                                                                                            true);
+                AssertEqualDirectoryStructure(".",
+                                              ref preImportDirStructure,
+                                              ref postImportDirStructure,
+                                              true);
 
-                    // Then
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                                ".",
-                                                                                                                                true);
-                    AssertEqualDirectoryStructure(".",
-                                                  ref preImportDirStructure,
-                                                  ref postImportDirStructure,
-                                                  true);
+                string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                string inputDirSave = Path.Combine(modelDirSave, "input");
+                Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
-                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    string inputDirSave = Path.Combine(modelDirSave, "input");
-                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+                IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
-                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
-
-                    AssertThatOutputNotExists(modelDirSave, importedModel);
-                }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+                AssertThatOutputNotExists(modelDirSave, importedModel);
             }
         }
 
@@ -1458,54 +1310,46 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAMigratedModelWithOutputAtACustomLocationAndWithOutputDirValueSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
         {
             CreateTestDirectories();
+            CopyProjectToDestinationDir("TestModel");
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyProjectToDestinationDir("TestModel");
+                // Given
+                string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
-                {
-                    // Given
-                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
-                    string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+                MigrateModel(app, projectFilePath);
+                UpdateOutputDirInMDUTo(mduPath, "../" + customOutputFolder);
+                MoveOutputDirToCustomLocation(modelDirImport);
 
-                    MigrateModel(app, projectFilePath);
-                    UpdateOutputDirInMDUTo(mduPath, "../" + customOutputFolder);
-                    MoveOutputDirToCustomLocation(modelDirImport);
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                           ".",
+                                                                                                                           true);
 
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                               ".",
-                                                                                                                               true);
+                // When
+                string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
-                    // When
-                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                // Then
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                            ".",
+                                                                                                                            true);
+                AssertEqualDirectoryStructure(".",
+                                              ref preImportDirStructure,
+                                              ref postImportDirStructure,
+                                              true);
 
-                    // Then
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                                ".",
-                                                                                                                                true);
-                    AssertEqualDirectoryStructure(".",
-                                                  ref preImportDirStructure,
-                                                  ref postImportDirStructure,
-                                                  true);
+                string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                string inputDirSave = Path.Combine(modelDirSave, "input");
+                Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
-                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    string inputDirSave = Path.Combine(modelDirSave, "input");
-                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+                IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
-                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
-
-                    AssertThatOutputNotExists(modelDirSave, importedModel); 
-                }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+                AssertThatOutputNotExists(modelDirSave, importedModel);
             }
         }
 
@@ -1521,58 +1365,50 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAMigratedModelWithOutputAndAnOutputDirSet_WhenThisModelIsImportedIntoAnIntegratedModel_ThenTheInputFilesAreHandledCorrectlyAndTheModelIsAddedToTheIntegratedModelAndTheOutputOfTheImportedModelIsEmpty()
         {
             CreateTestDirectories();
+            CopyProjectToDestinationDir("TestModel");
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyProjectToDestinationDir("TestModel");
+                // Given
+                string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
-                {
-                    // Given
-                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
-                    string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+                MigrateModel(app, projectFilePath);
 
-                    MigrateModel(app, projectFilePath);
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                           ".",
+                                                                                                                           true);
 
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                               ".",
-                                                                                                                               true);
+                // When
+                string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                HydroModel integratedModel = ImportModelIntoIntegratedModel(app, mduPath, dsprojSave);
 
-                    // When
-                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    HydroModel integratedModel = ImportModelIntoIntegratedModel(app, mduPath, dsprojSave);
+                // Then
 
-                    // Then
+                List<IActivity> integratedModelActivities = integratedModel.Activities.ToList();
+                Assert.That(integratedModelActivities.Count, Is.EqualTo(1), "Expected the integrated model to contain a single activity.");
+                var importedModel = integratedModelActivities.First() as WaterFlowFMModel;
+                Assert.That(importedModel, Is.Not.Null, "Expected the imported model to be a WaterFlowFMModel.");
 
-                    List<IActivity> integratedModelActivities = integratedModel.Activities.ToList();
-                    Assert.That(integratedModelActivities.Count, Is.EqualTo(1), "Expected the integrated model to contain a single activity.");
-                    var importedModel = integratedModelActivities.First() as WaterFlowFMModel;
-                    Assert.That(importedModel, Is.Not.Null, "Expected the imported model to be a WaterFlowFMModel.");
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                            ".",
+                                                                                                                            true);
+                AssertEqualDirectoryStructure(".",
+                                              ref preImportDirStructure,
+                                              ref postImportDirStructure,
+                                              true);
 
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                                ".",
-                                                                                                                                true);
-                    AssertEqualDirectoryStructure(".",
-                                                  ref preImportDirStructure,
-                                                  ref postImportDirStructure,
-                                                  true);
+                string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                string inputDirSave = Path.Combine(modelDirSave, "input");
+                Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
-                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    string inputDirSave = Path.Combine(modelDirSave, "input");
-                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+                IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
-                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
-
-                    AssertThatOutputNotExists(modelDirSave, importedModel);
-                }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+                AssertThatOutputNotExists(modelDirSave, importedModel);
             }
         }
 
@@ -1600,44 +1436,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             FileUtils.CreateDirectoryIfNotExists(destinationDirPath);
 
-            try
+            CopyProjectToDestinationDir(projectFolder);
+
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyProjectToDestinationDir(projectFolder);
+                app.OpenProject(projectFilePath);
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
-                {
-                    app.OpenProject(projectFilePath);
+                app.CloseProject();
 
-                    app.CloseProject();
+                AssertProjectFileAndFolderExist();
+                AssertModelDirectoryExists();
+                AssertInputDirectoryExists();
+                AssertOutputDirectoryExists();
+                AssertFilesExtensionsExistInDirectory(filtersInput, inputDirPath);
+                string[] directoriesInOutputFolder = Directory.GetDirectories(outputDirPath);
+                Assert.AreEqual(2, directoriesInOutputFolder.Length,
+                                $"The number of folders in '{OutputDirName}' is not as expected. There should be a waq output folder and a snapped folder.");
+                AssertFilesExtensionsExistInDirectory(filtersOutputWAQ, outputWAQDirPath);
+                AssertFilesExtensionsExistInDirectory(filtersOutputFM_OldModel, outputDirPath);
+                Assert.IsTrue(Directory.Exists(snappedDirPath));
 
-                    AssertProjectFileAndFolderExist();
-                    AssertModelDirectoryExists();
-                    AssertInputDirectoryExists();
-                    AssertOutputDirectoryExists();
-                    AssertFilesExtensionsExistInDirectory(filtersInput, inputDirPath);
-                    string[] directoriesInOutputFolder = Directory.GetDirectories(outputDirPath);
-                    Assert.AreEqual(2, directoriesInOutputFolder.Length,
-                                    $"The number of folders in '{OutputDirName}' is not as expected. There should be a waq output folder and a snapped folder.");
-                    AssertFilesExtensionsExistInDirectory(filtersOutputWAQ, outputWAQDirPath);
-                    AssertFilesExtensionsExistInDirectory(filtersOutputFM_OldModel, outputDirPath);
-                    Assert.IsTrue(Directory.Exists(snappedDirPath));
+                app.OpenProject(projectFilePath);
 
-                    app.OpenProject(projectFilePath);
+                var model = (WaterFlowFMModel) app.GetAllModelsInProject().FirstOrDefault();
 
-                    var model = (WaterFlowFMModel) app.GetAllModelsInProject().FirstOrDefault();
+                Assert.NotNull(model);
 
-                    Assert.NotNull(model);
+                app.RunActivity(model);
 
-                    app.RunActivity(model);
+                Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
-                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-                    app.CloseProject();
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(destinationDirPath);
+                app.CloseProject();
             }
         }
 
@@ -1654,53 +1483,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAMigratedModelWithOutput_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly(string outputDirValue)
         {
             CreateTestDirectories();
+            CopyProjectToDestinationDir("TestModel");
 
-            try
+            using (DeltaShellApplication app = GetConfiguredApplication())
             {
-                CopyProjectToDestinationDir("TestModel");
+                // Given
+                string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
-                using (DeltaShellApplication app = GetConfiguredApplication())
-                {
-                    // Given
-                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
-                    string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+                MigrateModel(app, projectFilePath);
+                UpdateOutputDirInMDUTo(mduPath, outputDirValue);
 
-                    MigrateModel(app, projectFilePath);
-                    UpdateOutputDirInMDUTo(mduPath, outputDirValue);
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                           ".",
+                                                                                                                           true);
 
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                               ".",
-                                                                                                                               true);
+                // When
+                string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
-                    // When
-                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                // Then
+                Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                            ".",
+                                                                                                                            true);
+                AssertEqualDirectoryStructure(".",
+                                              ref preImportDirStructure,
+                                              ref postImportDirStructure,
+                                              true);
 
-                    // Then
-                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                                                                                ".",
-                                                                                                                                true);
-                    AssertEqualDirectoryStructure(".",
-                                                  ref preImportDirStructure,
-                                                  ref postImportDirStructure,
-                                                  true);
+                string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                string inputDirSave = Path.Combine(modelDirSave, "input");
+                Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
-                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    string inputDirSave = Path.Combine(modelDirSave, "input");
-                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+                IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
-                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
-                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
-
-                    AssertThatOutputNotExists(modelDirSave, importedModel);
-                }
-            }
-            finally
-            {
-                DeleteTestDirectories();
+                AssertThatOutputNotExists(modelDirSave, importedModel);
             }
         }
 
@@ -2502,7 +2323,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     continue;
                 }
 
-                string assertMsgNotEqualContent =
+                var assertMsgNotEqualContent =
                     $"Checksum of file {sourceDirFilesAndChecksums[i].Item1} does not match checksum of file {targetDirFilesAndChecksums[i].Item1} in {curDir}";
 
                 // time is written in mdu

@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         public override string DisplayName => "D-Real Time Control Plugin (UI)";
 
-        public override string Description => 
+        public override string Description =>
             RealTimeControl.Properties.Resources.RealTimeControlApplicationPlugin_Description;
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
@@ -219,7 +219,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return new RtcOutputFileFunctionStoreNodePresenter();
             yield return new ControlGroupCollectionNodePresenter {GuiPlugin = this};
             yield return new ControlGroupNodePresenter(this);
-            yield return new RealTimeControlRestartFileNodePresenter(this);
+            yield return new RealTimeControlInputRestartFileNodePresenter(this);
+            yield return new RealTimeControlOutputRestartFileNodePresenter(this);
+            yield return new ReadOnlyOutputTextDocumentNodePresenter();
+            yield return new OutputTreeFolderNodePresenter();
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -332,7 +335,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private void Application_ProjectClosing(Project project)
         {
-            RealTimeControlModelCopyPasteHelper helper = RealTimeControlModelCopyPasteHelper.Instance;
+            var helper = RealTimeControlModelCopyPasteHelper.Instance;
             helper.ClearData();
         }
 

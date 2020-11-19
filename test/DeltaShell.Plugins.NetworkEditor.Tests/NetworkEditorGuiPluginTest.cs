@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -14,7 +15,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpTestsEx;
-using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {

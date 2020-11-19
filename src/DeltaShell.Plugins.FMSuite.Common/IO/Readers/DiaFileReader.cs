@@ -17,11 +17,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
         /// </summary>
         /// <param name="streamReader"> The reader to read with. </param>
         /// <returns> A dictionary containing all messages per log severity. </returns>
-        /// <exception cref="ArgumentNullException"> In case
+        /// <exception cref="ArgumentNullException">
+        /// In case
         /// <param name="streamReader"/>
         /// is <c>null</c>.
         /// </exception>
-        /// <exception cref="ArgumentException"> In case
+        /// <exception cref="ArgumentException">
+        /// In case
         /// <param name="streamReader"/>
         /// is not readable (i.e. closed).
         /// </exception>

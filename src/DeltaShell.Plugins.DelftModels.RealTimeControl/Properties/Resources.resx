@@ -427,4 +427,22 @@
   <data name="RtcLegacyLoader36_an_error_occurred_while_deleting_file" xml:space="preserve">
     <value>An error occurred while deleting {0}: {1}</value>
   </data>
+  <data name="RealTimeControlModelImporter_OnImportItem_Target_null_expected" xml:space="preserve">
+    <value>Null is expected, because target argument is unused.</value>
+  </data>
+  <data name="RealTimeControlModelNodePresenter_OutputLocationWarningMessage" xml:space="preserve">
+    <value>Output RTC rule already assigned to a different output. Are you sure you want to assign it?</value>
+  </data>
+  <data name="RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="RtcLegacyLoader37_An_error_occurred_while_writing_file" xml:space="preserve">
+    <value>An error occurred while writing file {0}: {1}</value>
+  </data>
+  <data name="RtcLegacyLoader37_migration_of_the_rtc_model" xml:space="preserve">
+    <value>the migration of the D-RTC model</value>
+  </data>
+  <data name="RtcLegacyLoader37_File_does_not_exist" xml:space="preserve">
+    <value>File does not exist: {0}</value>
+  </data>
 </root>

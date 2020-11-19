@@ -637,8 +637,20 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel_Save_project_after_model_run_with_write_restart" xml:space="preserve">
     <value>Please save the project after a model run with 'write restart' on.</value>
   </data>
+  <data name="WaterFlowFMModelTimersValidator_Interval_must_be_a_multiple_of_the_output_timestep" xml:space="preserve">
+    <value>{0} interval must be a multiple of the output timestep.</value>
+  </data>
+  <data name="WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time" xml:space="preserve">
+    <value>Model start time precedes reference time</value>
+  </data>
   <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_" xml:space="preserve">
     <value>Error while importing a {0} from {1}</value>
+  </data>
+  <data name="FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features" xml:space="preserve">
+    <value>Old his output found, please run the model again. (cannot map {0} to input or generated features)</value>
+  </data>
+  <data name="FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_feature_geometry_" xml:space="preserve">
+    <value>Old his output found, please run the model again. (cannot map {0} to input or generated feature geometry)</value>
   </data>
   <data name="BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Boundary_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_import___2_" xml:space="preserve">
     <value>Skipped DataPoint {0} for Boundary Condition {1} could not be added as the following exception was risen during import: {2}</value>

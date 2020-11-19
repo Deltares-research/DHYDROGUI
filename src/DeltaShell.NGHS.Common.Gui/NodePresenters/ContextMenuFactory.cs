@@ -25,7 +25,8 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
         /// <param name="nodePresenter">
         /// The node presenter for the <paramref name="data"/> object.
         /// </param>
-        /// <param name="node"> Tree node for the <paramref name="data"/> object.
+        /// <param name="node">
+        /// Tree node for the <paramref name="data"/> object.
         /// </param>
         /// <returns> A <see cref="ContextMenuStrip"/> object with defined functionality. </returns>
         public static ContextMenuStrip CreateMenuFor(object data, IGui gui, ITreeNodePresenter nodePresenter, ITreeNode node)
@@ -54,12 +55,25 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
             if (addToolStripSeparator)
             {
                 menu.Items.Add(new ToolStripSeparator());
+                addToolStripSeparator = false;
             }
 
-            menu.Items.Add(GetImportItem(data, gui));
-            menu.Items.Add(GetExportItem(data, gui));
+            if (HasImportItem(data, gui))
+            {
+                menu.Items.Add(GetImportItem(data, gui));
+                addToolStripSeparator = true;
+            }
 
-            menu.Items.Add(new ToolStripSeparator());
+            if (HasExportItem(data, gui))
+            {
+                menu.Items.Add(GetExportItem(data, gui));
+                addToolStripSeparator = true;
+            }
+
+            if (addToolStripSeparator)
+            {
+                menu.Items.Add(new ToolStripSeparator());
+            }
 
             menu.Items.Add(GetPropertiesItem(data, gui));
 
@@ -88,9 +102,8 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
             return openWithItem;
         }
 
-        private static bool HasRenameItem(ITreeNodePresenter nodePresenter, ITreeNode node) => 
+        private static bool HasRenameItem(ITreeNodePresenter nodePresenter, ITreeNode node) =>
             nodePresenter.CanRenameNode(node);
-
 
         private static ToolStripItem GetRenameItem(object data, ITreeNode node)
         {
@@ -105,13 +118,12 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
             return renameItem;
         }
 
-        private static bool HasDeleteItem(ITreeNodePresenter nodePresenter, ITreeNode node) => 
+        private static bool HasDeleteItem(ITreeNodePresenter nodePresenter, ITreeNode node) =>
             node != null && nodePresenter.CanRemove(null, node.Tag);
 
-
-        private static ToolStripItem GetDeleteItem(object data, 
-                                                       ITreeNodePresenter nodePresenter, 
-                                                       ITreeNode node)
+        private static ToolStripItem GetDeleteItem(object data,
+                                                   ITreeNodePresenter nodePresenter,
+                                                   ITreeNode node)
         {
             var deleteItem = new ClonableToolStripMenuItem
             {
@@ -125,6 +137,11 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
             return deleteItem;
         }
 
+        private static bool HasImportItem(object data, IGui gui)
+        {
+            return gui.CommandHandler.CanImportOn(data);
+        }
+
         private static ToolStripItem GetImportItem(object data, IGui gui)
         {
             var importItem = new ClonableToolStripMenuItem
@@ -132,13 +149,17 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
                 Text = Resources.ContextMenuFactory_Import,
                 Tag = data,
                 Image = import,
-                Enabled = gui.CommandHandler.CanImportOn(data)
+                Enabled = true
             };
             importItem.Click += (s, a) => gui.CommandHandler.ImportOn(data);
 
             return importItem;
         }
 
+        private static bool HasExportItem(object data, IGui gui)
+        {
+            return gui.CommandHandler.CanExportFrom(data);
+        }
 
         private static ToolStripItem GetExportItem(object data, IGui gui)
         {
@@ -146,9 +167,12 @@ namespace DeltaShell.NGHS.Common.Gui.NodePresenters
             {
                 Text = Resources.ContextMenuFactory_Export,
                 Tag = data,
-                Enabled = gui.CommandHandler.CanExportFrom(data)
+                Enabled = true
             };
-            exportItem.Click += (s, a) => { gui.CommandHandler.ExportFrom(data); };
+            exportItem.Click += (s, a) =>
+            {
+                gui.CommandHandler.ExportFrom(data);
+            };
 
             return exportItem;
         }

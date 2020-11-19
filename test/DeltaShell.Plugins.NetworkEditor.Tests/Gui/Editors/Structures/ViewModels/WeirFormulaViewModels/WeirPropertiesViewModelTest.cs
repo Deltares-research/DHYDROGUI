@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
@@ -16,7 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         {
             void Call() => new WeirPropertiesViewModel(null);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("weir"));
         }
 
@@ -29,7 +30,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
-
                 var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
@@ -45,19 +45,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
                 Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
-                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName,
                             Is.EqualTo(nameof(viewModel.CrestLevel)));
 
                 // Clean up
                 viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
             }
         }
-        
+
         [Test]
         public void CrestWidth_SetsCorrectly()
         {
             // Setup
-            var weir = new Weir2D() { CrestWidth = 1.0 };
+            var weir = new Weir2D() {CrestWidth = 1.0};
             const double crestWidthValue = 21.3;
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
                 Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
-                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName,
                             Is.EqualTo(nameof(viewModel.CrestWidth)));
 
                 // Clean up
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void CrestWidth_MapsNaNCorrectlyToNull()
         {
             // Setup
-            var weir = new Weir2D { CrestWidth = double.NaN };
+            var weir = new Weir2D {CrestWidth = double.NaN};
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
                 Assert.That(propertyChangedObserver.NCalls, Is.GreaterThanOrEqualTo(1));
 
-                PropertyChangedEventArgs useCrestLevelTimeSeriesEventArg = 
+                PropertyChangedEventArgs useCrestLevelTimeSeriesEventArg =
                     propertyChangedObserver.EventArgses.FirstOrDefault(e => e.PropertyName == nameof(viewModel.UseCrestLevelTimeSeries));
                 Assert.That(useCrestLevelTimeSeriesEventArg, Is.Not.Null);
 
@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
                 Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
-                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, 
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName,
                             Is.EqualTo(nameof(viewModel.StructureName)));
 
                 // Clean up

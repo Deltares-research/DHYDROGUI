@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 mduFilePath = destFilePath;
 
                 var ncFileName = "netfile_projected_assigned.nc";
-                string ncGeomFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}geom.nc";
+                var ncGeomFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}geom.nc";
                 string ncFilePath = Path.Combine(testBaseFolder, ncFileName);
                 destFilePath = Path.Combine(inputPath, Path.GetFileName(ncFilePath));
                 File.Copy(ncFilePath, destFilePath, true);
@@ -329,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 mduFilePath = destFilePath;
 
                 var ncFileName = "netfile_projected_assigned.nc";
-                string ncGeomFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}geom.nc";
+                var ncGeomFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}geom.nc";
                 string ncFilePath = Path.Combine(testBaseFolder, ncFileName);
                 destFilePath = Path.Combine(inputPath, Path.GetFileName(ncFilePath));
                 File.Copy(ncFilePath, destFilePath, true);
@@ -365,7 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 Assert.That(File.Exists(outputFilePath), Is.True);
 
                 // Assert output is correct
-                string outputNcFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}(3).nc";
+                var outputNcFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}(3).nc";
 
                 IList<string> filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath);
                 Assert.That(filesInExportedZip.Count, Is.EqualTo(2));
@@ -386,7 +386,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        [ExpectedException(typeof(NotImplementedException))]
         public void GivenAGeometryZipExporterAndAnUnstructuredGridWithoutAModel_WhenExportIsCalled_ThenAnExceptionIsReturned()
         {
             var mocks = new MockRepository();
@@ -395,7 +394,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             mocks.ReplayAll();
 
-            exporter.Export(gridMock, Arg<string>.Is.Anything);
+            Assert.That(() => exporter.Export(gridMock, Arg<string>.Is.Anything), Throws.InstanceOf<NotImplementedException>());
         }
     }
 }

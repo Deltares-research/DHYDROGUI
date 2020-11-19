@@ -3,6 +3,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
@@ -34,5 +35,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// Gets the boundary container of this <see cref="IWaveModel"/>.
         /// </summary>
         IBoundaryContainer BoundaryContainer { get; }
+
+        /// <summary>
+        /// Gets the <see cref="IWaveOutputData"/> of this <see cref="WaveModel"/>
+        /// </summary>
+        IWaveOutputData WaveOutputData { get; }
     }
 }

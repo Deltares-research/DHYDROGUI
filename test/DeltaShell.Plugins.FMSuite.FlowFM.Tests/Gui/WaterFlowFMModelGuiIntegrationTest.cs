@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check model name
                     WaterFlowFMModel targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
+                    Assert.That(targetModel.Name, Does.Contain("FlowFM"));
 
                     // Import new water flow model
                     WaterFlowFMFileImporter importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check name of imported water flow model
                     targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("har"));
+                    Assert.That(targetModel.Name, Does.Contain("har"));
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
@@ -181,14 +181,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check folder name
                     Folder testFolder = project.RootFolder.Folders.FirstOrDefault();
                     Assert.IsNotNull(testFolder);
-                    Assert.That(testFolder.Name, Is.StringContaining("Test Folder"));
+                    Assert.That(testFolder.Name, Does.Contain("Test Folder"));
 
                     // Add new water flow model to the new folder and check its name
                     testFolder.Add(new WaterFlowFMModel());
                     WaterFlowFMModel targetModel =
                         testFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
+                    Assert.That(targetModel.Name, Does.Contain("FlowFM"));
 
                     // Import new water flow model
                     WaterFlowFMFileImporter importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Check name of imported water flow model
                     targetModel = testFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
-                    Assert.That(targetModel.Name, Is.StringContaining("har"));
+                    Assert.That(targetModel.Name, Does.Contain("har"));
                 };
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
@@ -423,6 +423,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
 
                     IEnumerable<ILayer> layers = ((ProjectItemMapView) gui.DocumentViews.ActiveView).MapView.Map.GetAllLayers(true);
+                    var i = 2;
                     ILayer velocityLayer =
                         layers.FirstOrDefault(
                             l => l.Name == "velocity (ucx + ucy)" && l is UnstructuredGridCellVectorCoverageLayer);
@@ -530,6 +531,86 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
+            }
+        }
+
+        /// <summary>
+        /// Test for issue TOOLS_22977, Not working test only reproducing scenario
+        /// </summary>
+        [Test]
+        [Category(TestCategory.Wpf)]
+        [Category(TestCategory.WorkInProgress)]
+        [Ignore("Ignored.")]
+        public void TOOLS_22977Test()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                IApplication app = gui.Application;
+
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                var sharpMapGisGuiPlugin = new SharpMapGisGuiPlugin();
+                gui.Plugins.Add(sharpMapGisGuiPlugin);
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Run();
+                string testFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+                testFilePath = TestHelper.CreateLocalCopy(testFilePath);
+
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(testFilePath);
+
+                gui.Application.Project.RootFolder.Add(model);
+
+                Assert.IsTrue(gui.DocumentViewsResolver.OpenViewForData(model, typeof(ProjectItemMapView)));
+                var mapView = gui.DocumentViews.ActiveView as ProjectItemMapView;
+                mapView.SetSpatialOperationLayer(mapView.MapView.GetLayerForData(model.Bathymetry), true);
+                sharpMapGisGuiPlugin.FocusSpatialOperationView();
+
+                SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
+                    model.GetDataItemByValue(model.Bathymetry));
+
+                Assert.IsNotNull(valueConverter.SpatialOperationSet);
+
+                var sampleSet = new SpatialOperationSet();
+                valueConverter.SpatialOperationSet.AddOperation(sampleSet);
+
+                string samplesPath = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
+                var importSamples = new ImportSamplesOperation(false)
+                {
+                    FilePath = samplesPath,
+                    Name = "Test import"
+                };
+                Assert.IsNotNull(sampleSet.AddOperation(importSamples));
+
+                var interpolate = new InterpolateOperation
+                {
+                    InterpolationMethod = SpatialInterpolationMethod.Triangulation,
+                    OperationType = PointwiseOperationType.OverwriteWhereMissing
+                };
+                interpolate.LinkInput(InterpolateOperation.InputSamplesName, importSamples.Output);
+
+                valueConverter.SpatialOperationSet.AddOperation(interpolate);
+                valueConverter.SpatialOperationSet.Execute();
+                Action onShown = delegate
+                {
+                    interpolate.OperationType = PointwiseOperationType.Overwrite;
+                    var layer = (SpatialOperationSetLayer) mapView.SpatialOperationLayer;
+                    valueConverter.SpatialOperationSet.Execute();
+
+                    int beforeRefreshThreadCount = Process.GetCurrentProcess().Threads.Count;
+                    TestHelper.AssertIsFasterThan(4000, layer.ShowOutputOnly);
+                    Thread.Sleep(3000);
+                    Assert.AreEqual(beforeRefreshThreadCount, Process.GetCurrentProcess().Threads.Count);
+                };
+
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, onShown);
             }
         }
 
@@ -1057,7 +1138,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             // [D3DFMIQ-1276]
             // Disabling following testcase as this causes an GDI+ exception on the build agent which cannot be easily solved. 
             // According to sources on the internet, the exception is caused by MultiThreading access to a certain source.
-            // However, setting the test with the STAThread or RequiresSTA attribute does not resolve this issue on the agent.
+            // However, setting the test with the STAThread or Apartment(ApartmentState.STA) attribute does not resolve this issue on the agent.
             // Locally this test runs fine.
 
             //            var boundaryConditionSetWithoutMatchingBoundaryCondition = new BoundaryConditionSet

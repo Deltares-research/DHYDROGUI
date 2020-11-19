@@ -35,7 +35,6 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
-using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -130,36 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.IsTrue(importedModel.UseTemperature);
         }
-
-        [TestCase(false)]
-        [TestCase(true)]
-        public void ExportTo_ModelUsesRestart_SetsCorrectPropertyAndCopiesFile(bool switchTo)
-        {
-            // Setup
-            using (var tempDir = new TemporaryDirectory())
-            {
-                var model = new WaterFlowFMModel();
-                string restartFilePath = tempDir.CreateFile("restart.file");
-                string exportDir = tempDir.CreateDirectory("export_dir");
-
-                model.RestartInput = new RestartFile(restartFilePath);
-
-                // Precondition
-                Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo(string.Empty));
-
-                // Call
-                model.ExportTo(Path.Combine(exportDir, "model.mdu"), switchTo, false, false);
-
-                // Assert
-                string exportRestartFilePath = Path.Combine(exportDir, "restart.file");
-                Assert.That(restartFilePath, Does.Exist);
-                Assert.That(exportRestartFilePath, Does.Exist);
-                Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo("restart.file"));
-                Assert.That(model.RestartInput.Path, Is.EqualTo(switchTo ? exportRestartFilePath : restartFilePath));
-            }
-        }
-
-        private static string GetRestartFilePropertyValue(WaterFlowFMModel model) => model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
 
         [Test]
         [Category(TestCategory.Integration)]
@@ -433,6 +402,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 FileUtils.DeleteIfExists(tempDirPath);
             }
         }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ExportTo_ModelUsesRestart_SetsCorrectPropertyAndCopiesFile(bool switchTo)
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                var model = new WaterFlowFMModel();
+                string restartFilePath = tempDir.CreateFile("restart.file");
+                string exportDir = tempDir.CreateDirectory("export_dir");
+
+                model.RestartInput = new RestartFile(restartFilePath);
+
+                // Precondition
+                Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo(string.Empty));
+
+                // Call
+                model.ExportTo(Path.Combine(exportDir, "model.mdu"), switchTo, false, false);
+
+                // Assert
+                string exportRestartFilePath = Path.Combine(exportDir, "restart.file");
+                Assert.That(restartFilePath, Does.Exist);
+                Assert.That(exportRestartFilePath, Does.Exist);
+                Assert.That(GetRestartFilePropertyValue(model), Is.EqualTo("restart.file"));
+                Assert.That(model.RestartInput.Path, Is.EqualTo(switchTo ? exportRestartFilePath : restartFilePath));
+            }
+        }
+
+        private static string GetRestartFilePropertyValue(WaterFlowFMModel model) => model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
 
         [TestCase(false)]
         [TestCase(true)]

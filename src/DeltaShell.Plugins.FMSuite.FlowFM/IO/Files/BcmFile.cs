@@ -224,18 +224,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private DateTime StringDateToDateTime(string value, string format)
         {
-            DateTime date;
             try
             {
-                date = DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
+                return DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
             }
             catch (Exception)
             {
                 log.Error("Could not load the reference time correctly, check the format. Using Now as a time reference instead.");
-                date = DateTime.Now;
+                return DateTime.Now;
             }
-
-            return date;
         }
 
         private BcmBlockData ReadDataBlock(out string line, string blockName)
@@ -338,14 +335,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             return new BcmBlockData
-                {
-                    FilePath = InputFilePath,
-                    SupportPoint = blockName,
-                    FunctionType = contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
-                    TimeInterpolationType = interpolationValue,
-                    Location = locationValue,
-                    Quantities = quantityDataList
-                };
+            {
+                FilePath = InputFilePath,
+                SupportPoint = blockName,
+                FunctionType = contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
+                TimeInterpolationType = interpolationValue,
+                Location = locationValue,
+                Quantities = quantityDataList
+            };
         }
     }
 }

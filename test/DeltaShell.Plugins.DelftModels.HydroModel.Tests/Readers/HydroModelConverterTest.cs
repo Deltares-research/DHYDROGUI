@@ -6,7 +6,7 @@ using Castle.Core.Internal;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
-using DeltaShell.Dimr.xsd;
+using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
@@ -114,7 +114,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         {
             // Given
             string tempFilePath = Path.Combine("myDirectory", "myFile.here");
-            var dimrXml = new dimrXML {component = new dimrComponentXML[] {}};
+            var dimrXml = new dimrXML
+            {
+                component = new dimrComponentXML[]
+                    {}
+            };
             Assert.IsNull(dimrXml.coupler); // Test initial requirement
 
             // When/Then
@@ -377,7 +381,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             dimrFileImporter.ImportItem(Arg.Any<string>()).Returns(modelWithNullRegion);
 
             string dimrPath = Path.Combine("FileReader", "dimr.xml");
-            
+
             var dimrXml = new dimrXML
             {
                 component = new[]

@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             Assert.That(exception.ParamName, Is.EqualTo("weirPropertiesViewModel"));
         }
 
-        private IEnumerable<TestCaseData> GetPropertySetData()
+        private static IEnumerable<TestCaseData> GetPropertySetData()
         {
             // Stream fields
             yield return new TestCaseData(new Action<GeneralStructureViewModel, double>((f, v) => f.Upstream1Width = v), 

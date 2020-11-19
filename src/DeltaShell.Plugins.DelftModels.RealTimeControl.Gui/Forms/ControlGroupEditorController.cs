@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private static bool refreshingConnections;
         private static readonly Bitmap timeConditionIcon = Resources.timecondition;
         private static readonly Bitmap directionalConditionIcon = Resources.directionalcondition;
-        
+
         private ControlGroup controlGroup;
 
         private object replaceable;
@@ -495,8 +495,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     DisconnectFromSignal(to, fromSignal);
                     break;
             }
-            
+
             adjustingConnectionInDomain = false;
+        }
+
+        internal void PlaceShapeOnGraphControl(object obj, double x, double y)
+        {
+            ShapeBase shape = ObjectToShape(obj);
+            graphControl.AddShape(shape);
+            MoveShape(shape, x, y);
         }
 
         private static void DisconnectFromSignal(object to, SignalBase fromSignal)
@@ -557,13 +564,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     toMathematicalExpression.Inputs.Remove(fromInput);
                     break;
             }
-        }
-
-        internal void PlaceShapeOnGraphControl(object obj, double x, double y)
-        {
-            ShapeBase shape = ObjectToShape(obj);
-            graphControl.AddShape(shape);
-            MoveShape(shape, x, y);
         }
 
         private static bool ValidateTargetConnector(object target, ConnectorType targetConnector)

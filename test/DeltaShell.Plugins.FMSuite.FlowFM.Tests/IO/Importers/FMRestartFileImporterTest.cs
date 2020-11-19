@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(importer.Category, Is.EqualTo("NetCdf"));
             Assert.That(importer.Description, Is.EqualTo(string.Empty));
             Assert.That(importer.Image, Is.Not.Null);
-            Assert.That(importer.SupportedItemTypes, Collection.OnlyContains(typeof(RestartFile)));
+            CollectionContainsOnlyAssert.AssertContainsOnly(importer.SupportedItemTypes, typeof(RestartFile));
             Assert.That(importer.CanImportOnRootLevel, Is.False);
             Assert.That(importer.FileFilter, Is.EqualTo($"FM restart files|*_rst.nc"));
             Assert.That(importer.TargetDataDirectory, Is.Null);
@@ -47,7 +47,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void CanImportOn_IsRestartInputForModel_ReturnsTrue()
         {
             var model = new WaterFlowFMModel();
-            var importer = new FMRestartFileImporter(() => new[] { model });
+            var importer = new FMRestartFileImporter(() => new[]
+            {
+                model
+            });
 
             // Call
             bool result = importer.CanImportOn(model.RestartInput);
@@ -61,7 +64,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // Setup
             var model = new WaterFlowFMModel();
-            var importer = new FMRestartFileImporter(() => new[] { model });
+            var importer = new FMRestartFileImporter(() => new[]
+            {
+                model
+            });
 
             // Call
             bool result = importer.CanImportOn(new RestartFile());
@@ -82,21 +88,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(e.ParamName, Is.EqualTo("target"));
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        public void ImportItem_PathNullOrEmpty_ThrowsArgumentException(string path)
-        {
-            // Setup
-            var importer = new FMRestartFileImporter(Enumerable.Empty<WaterFlowFMModel>);
-
-            // Call
-            void Call() => importer.ImportItem(path, new RestartFile());
-
-            // Assert
-            var e = Assert.Throws<ArgumentException>(Call);
-            Assert.That(e.Message, Is.EqualTo("Path cannot be null or empty."));
         }
 
         [Test]
@@ -120,7 +111,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             {
                 // Setup
                 var model = new WaterFlowFMModel();
-                var importer = new FMRestartFileImporter(() => new[] {model});
+                var importer = new FMRestartFileImporter(() => new[]
+                {
+                    model
+                });
                 string filePath = Path.Combine(tempDir.Path, "file_rst.nc");
                 File.WriteAllText(filePath, "");
 
@@ -132,6 +126,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.That(model.RestartInput.Path, Is.EqualTo(filePath));
                 Assert.That(model.UseRestart, Is.True);
             }
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void ImportItem_PathNullOrEmpty_ThrowsArgumentException(string path)
+        {
+            // Setup
+            var importer = new FMRestartFileImporter(Enumerable.Empty<WaterFlowFMModel>);
+
+            // Call
+            void Call() => importer.ImportItem(path, new RestartFile());
+
+            // Assert
+            var e = Assert.Throws<ArgumentException>(Call);
+            Assert.That(e.Message, Is.EqualTo("Path cannot be null or empty."));
         }
     }
 }

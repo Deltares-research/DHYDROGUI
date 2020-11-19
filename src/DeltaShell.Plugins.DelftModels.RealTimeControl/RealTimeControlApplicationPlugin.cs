@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return "3.7.0.0";
+                return "3.8.0.0";
             }
         }
 
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     && !(owner is ParallelActivity)
                     && !(owner is SequentialActivity)
                     && !((ICompositeActivity) owner).Activities.OfType<RealTimeControlModel>().Any(), // Don't allow multiple realtime control models in one composite activity
-                CreateModel = owner => new RealTimeControlModel("Real-Time Control")
+                CreateModel = owner => new RealTimeControlModel("Real_Time_Control")
             };
         }
 
@@ -124,18 +124,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             yield return new RealTimeControlRestartFileImporter(GetRealTimeControlModels);
         }
 
-        private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
-
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             yield return new RtcDataAccessListener();
         }
 
+        private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+
         private void HybridProjectRepositoryOnProjectOpening(object sender, ProjectOpeningEventArgs e)
         {
             Ensure.NotNull(e, nameof(e), "Empty project path is not allowed");
 
-            var projectFilePath = e.ProjectPath;
+            string projectFilePath = e.ProjectPath;
 
             if (string.IsNullOrEmpty(projectFilePath) || !File.Exists(projectFilePath))
             {

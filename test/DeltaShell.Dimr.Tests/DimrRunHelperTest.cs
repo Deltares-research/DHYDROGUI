@@ -44,15 +44,14 @@ namespace DeltaShell.Dimr.Tests
                 DimrRunHelper.ConnectDimrRunLogFile(model, tempDirectory.Path);
 
                 // Assert
-                Assert.AreEqual(text, ((TextDocument)dataItem.Value).Content);
+                Assert.AreEqual(text, ((TextDocument) dataItem.Value).Content);
             }
         }
 
         [Test]
         public void DimrRunLogfileDataItemTag_ShouldReturnCorrectTagName()
         {
-            Assert.AreEqual("DimrRunLog",DimrRunHelper.dimrRunLogfileDataItemTag);
+            Assert.AreEqual("DimrRunLog", DimrRunHelper.dimrRunLogfileDataItemTag);
         }
-
     }
 }

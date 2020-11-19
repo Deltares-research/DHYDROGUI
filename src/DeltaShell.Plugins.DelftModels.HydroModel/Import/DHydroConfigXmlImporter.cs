@@ -53,12 +53,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// with the default read function and the specified dimrFileImporters.
         /// </summary>
         /// <param name="dimrFileImporters">The DIMR file importers.</param>
-        /// <param name="getWorkingDirectoryPathFunc"> Func for retrieving working directory
-        /// from the framework.</param>
+        /// <param name="getWorkingDirectoryPathFunc">
+        /// Func for retrieving working directory
+        /// from the framework.
+        /// </param>
         public DHydroConfigXmlImporter(Func<IList<IDimrModelFileImporter>> dimrFileImporters, Func<string> getWorkingDirectoryPathFunc) : this(
             HydroModelReader.Read,
             dimrFileImporters, getWorkingDirectoryPathFunc) {}
-        
+
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public string Name => "DIMR Configuration File (*.xml)";

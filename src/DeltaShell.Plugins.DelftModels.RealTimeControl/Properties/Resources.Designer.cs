@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -509,6 +509,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Null is expected, because target argument is unused..
+        /// </summary>
+        public static string RealTimeControlModelImporter_OnImportItem_Target_null_expected {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelImporter_OnImportItem_Target_null_expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import time series for signals are not existing, export failed..
         /// </summary>
         public static string RealTimeControlModelIntervalRule_Import_time_series_for_signals_are_not_existing_export_failed {
@@ -533,6 +542,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         public static string RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input {
             get {
                 return ResourceManager.GetString("RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output RTC rule already assigned to a different output. Are you sure you want to assign it?.
+        /// </summary>
+        public static string RealTimeControlModelNodePresenter_OutputLocationWarningMessage {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_OutputLocationWarningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        public static string RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_WhenAlreadyAssigned_OutputLocation_GivesWarning" +
+                        "", resourceCulture);
             }
         }
         
@@ -995,6 +1023,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
             get {
                 return ResourceManager.GetString("RtcLegacyLoader36_MigrateModel_was_migrated_to_the_newest_version_verify_the_rest" +
                         "art_file_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while writing file {0}: {1}.
+        /// </summary>
+        public static string RtcLegacyLoader37_An_error_occurred_while_writing_file {
+            get {
+                return ResourceManager.GetString("RtcLegacyLoader37_An_error_occurred_while_writing_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File does not exist: {0}.
+        /// </summary>
+        public static string RtcLegacyLoader37_File_does_not_exist {
+            get {
+                return ResourceManager.GetString("RtcLegacyLoader37_File_does_not_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the migration of the D-RTC model.
+        /// </summary>
+        public static string RtcLegacyLoader37_migration_of_the_rtc_model {
+            get {
+                return ResourceManager.GetString("RtcLegacyLoader37_migration_of_the_rtc_model", resourceCulture);
             }
         }
         

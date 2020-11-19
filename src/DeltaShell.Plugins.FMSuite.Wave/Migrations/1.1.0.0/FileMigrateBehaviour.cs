@@ -2,6 +2,7 @@
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
@@ -10,19 +11,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// <see cref="FileMigrateBehaviour"/> defines the base migration of a
     /// property describing a path to a file. When the file at the specified property
     /// exists it is migrated, otherwise a warning is logged.
-    ///
     /// Implementation of the actual file migration is left to the specific base class.
     /// </summary>
-    /// <seealso cref="IMigrationBehaviour" />
-    public abstract class FileMigrateBehaviour : IMigrationBehaviour
+    /// <seealso cref="IDelftIniPropertyBehaviour"/>
+    public abstract class FileMigrateBehaviour : IDelftIniPropertyBehaviour
     {
-        private readonly string expectedKey;
-        private readonly string relativeDirectory;
-
         /// <summary>
         /// The directory to which files are migrated.
         /// </summary>
         protected readonly string GoalDirectory;
+
+        private readonly string expectedKey;
+        private readonly string relativeDirectory;
 
         /// <summary>
         /// Creates a new <see cref="NoDependentsFileMigrateBehaviour"/>.
@@ -46,11 +46,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             GoalDirectory = goalDirectory;
         }
 
-        public void MigrateProperty(DelftIniProperty property, ILogHandler logHandler)
+        public void Invoke(DelftIniProperty property, ILogHandler logHandler)
         {
             Ensure.NotNull(property, nameof(property));
 
-            if (property.Name != expectedKey || 
+            if (property.Name != expectedKey ||
                 property.Value.Trim() == string.Empty)
             {
                 return;

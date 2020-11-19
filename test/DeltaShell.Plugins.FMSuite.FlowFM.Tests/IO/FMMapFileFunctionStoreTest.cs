@@ -86,15 +86,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string mapFilePathTemp = tempDirectory.CopyTestDataFileToTempDirectory(TestHelper.GetTestFilePath(mapFilePath));
 
                 // Act
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePathTemp
-                };
+                var store = new FMMapFileFunctionStore {Path = mapFilePathTemp};
 
                 // Assert
                 Assert.IsInstanceOf<FMNetCdfFileFunctionStore>(store);
 
-                string retrievedReferenceDate = ((ICoverage)store.Functions.First()).Time.Attributes["ncRefDate"];
+                string retrievedReferenceDate = ((ICoverage) store.Functions.First()).Time.Attributes["ncRefDate"];
                 Assert.AreEqual(expectedReferenceDate, retrievedReferenceDate);
             }
         }
@@ -429,7 +426,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string expectedMsg = string.Format(Resources.FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_file__1__an_error_was_encountered___2_,
                                                    compName, mapFileName, ""); // we ignore the actual error message, and just test for the beginning of the message.
-                Assert.That(msgs[0], Is.StringStarting(expectedMsg), "Expected a different msg:");
+                Assert.That(msgs[0], Does.StartWith(expectedMsg), "Expected a different msg:");
             }
         }
 

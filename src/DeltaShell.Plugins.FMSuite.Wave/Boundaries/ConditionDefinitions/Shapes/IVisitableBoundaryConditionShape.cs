@@ -1,6 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
-
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
+﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
 {
     /// <summary>
     /// <see cref="IVisitableBoundaryConditionShape"/> defines method to accept a <see cref="IShapeVisitor"/>

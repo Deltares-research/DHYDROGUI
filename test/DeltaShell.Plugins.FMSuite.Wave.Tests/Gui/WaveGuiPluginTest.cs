@@ -10,10 +10,11 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.Gui;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
@@ -153,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         private static void DoubleClickOutputItemAndAssertLayerIsOn(WaveModel model, IGui gui, GuiPlugin guiPlugin, string itemName)
         {
             var wavmFileFunctionStoreNodePresenter = new WavmFileFunctionStoreNodePresenter() {GuiPlugin = guiPlugin};
-            WavmFileFunctionStore wavmFileFunctionStore = model.WavmFunctionStores.FirstOrDefault();
+            WavmFileFunctionStore wavmFileFunctionStore = model.WaveOutputData.WavmFileFunctionStores.FirstOrDefault();
             Assert.NotNull(wavmFileFunctionStore);
 
             IDataItem outputItem =
@@ -182,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 itemName
             };
 
-            IEnumerable<ILayer> allLayers = activeMapView.Map.GetAllLayers(false);
+            IEnumerable<ILayer> allLayers = activeMapView.Map.GetAllLayers(false).ToArray();
 
             ILayer coverageLayer = allLayers.FirstOrDefault(l => l.Name == itemName);
             Assert.IsNotNull(coverageLayer);
@@ -191,6 +192,60 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             Assert.NotNull(otherLayers);
 
             Assert.IsTrue(coverageLayer.Visible);
+        }
+
+        [Test]
+        public void Constructor_ExpectedProperties()
+        {
+            using (var plugin = new WaveGuiPlugin())
+            {
+                Assert.That(plugin.Name, Is.EqualTo("Delft3D Wave (Gui)"));
+                Assert.That(plugin.DisplayName, Is.EqualTo("D-Waves Plugin (UI)"));
+                Assert.That(plugin.Description, Is.EqualTo("A 2D/3D Waves module"));
+                Assert.That(plugin.FileFormatVersion, Is.EqualTo("1.1.0.0"));
+            }
+        }
+
+        [Test]
+        public void GetViewInfoObjects_ContainsTextFileViewInfo()
+        {
+            // Setup
+            using (var plugin = new WaveGuiPlugin())
+            {
+                // Call
+                IEnumerable<ViewInfo> viewInfos = plugin.GetViewInfoObjects();
+
+                // Assert
+                ViewInfo relevantViewInfo = viewInfos.FirstOrDefault(x => x.Description == "Text File");
+                Assert.That(relevantViewInfo, Is.Not.Null);
+            }
+        }
+
+        public static IEnumerable<TestCaseData> GetProjectTreeVieNodePresenterData()
+        {
+            bool IsPresenterPredicate<T>(ITreeNodePresenter np) => np is T;
+
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WaveModelNodePresenter>);
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WavmFileFunctionStoreNodePresenter>);
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WavhFileFunctionStoreNodePresenter>);
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WaveOutputDataNodePresenter>);
+            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<ReadOnlyTextFileDataNodePresenter>);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetProjectTreeVieNodePresenterData))]
+        public void GetProjectTreeViewNodePresenters_ContainsReadOnlyExpectedNodePresenter(Func<ITreeNodePresenter, bool> predicate)
+        {
+            // Setup
+            using (var plugin = new WaveGuiPlugin())
+            {
+                // Call
+                IEnumerable<ITreeNodePresenter> nodePresenters = plugin.GetProjectTreeViewNodePresenters();
+
+                // Assert
+                ITreeNodePresenter nodePresenter = nodePresenters.FirstOrDefault(predicate);
+                Assert.That(nodePresenter, Is.Not.Null);
+            }
         }
     }
 }

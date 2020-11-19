@@ -13,15 +13,15 @@ namespace DelftTools.Hydro.Tests
     [TestFixture]
     public class HydroNetworkTest
     {
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             LogHelper.ConfigureLogging();
             LogHelper.SetLoggingLevel(Level.Info);
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             LogHelper.ResetLogging();
         }
@@ -117,7 +117,7 @@ namespace DelftTools.Hydro.Tests
             Assert.AreEqual(2, clonedNetwork.Branches.Count);
         }
 
-       private HydroNetwork GetNetwork()
+        private HydroNetwork GetNetwork()
         {
             var network = new HydroNetwork();
             var from = new HydroNode();
@@ -130,7 +130,7 @@ namespace DelftTools.Hydro.Tests
                 Target = to
             };
             network.Branches.Add(channel);
-            
+
             return network;
         }
     }

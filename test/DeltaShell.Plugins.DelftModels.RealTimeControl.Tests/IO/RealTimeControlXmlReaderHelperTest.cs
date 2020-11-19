@@ -43,10 +43,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         {
             // Given
             const string missingControlGroupName = "not_existing_control_group_name";
-            string id = $"[TimeRule]{missingControlGroupName}/time_rule_name";
+            var id = $"[TimeRule]{missingControlGroupName}/time_rule_name";
 
             string expectedMessage = string.Format(Resources.RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___,
-                                                   missingControlGroupName, id, RealTimeControlXMLFiles.XmlTools);
+                                                   missingControlGroupName, id, RealTimeControlXmlFiles.XmlTools);
 
             // When
             IControlGroup resultedControlGroup = new List<IControlGroup>().GetControlGroupByElementId(id, logHandler);
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             string expectedMessage = string.Format(
                 Resources.RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_output___0____The_input_output_needs_to_be_referenced_in_file___1___,
                 missingConnectionPointName,
-                RealTimeControlXMLFiles.XmlData);
+                RealTimeControlXmlFiles.XmlData);
 
             // When
             var resultedControlGroup = new List<ConnectionPoint>().GetByName<Output>(missingConnectionPointName, logHandler);
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             string expectedMessage = string.Format(
                 Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___,
-                timeRuleName, timeRuleId, RealTimeControlXMLFiles.XmlData);
+                timeRuleName, timeRuleId, RealTimeControlXmlFiles.XmlData);
 
             // When
             RuleBase rule = controlGroup.GetRuleByElementId<RelativeTimeRule>(timeRuleId, logHandler);
@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         {
             // Given
             const string missingRuleName = "not_existing_rule_name";
-            string id = $"[TimeRule]control_group_name/{missingRuleName}";
+            var id = $"[TimeRule]control_group_name/{missingRuleName}";
 
             var controlGroup = new ControlGroup();
             controlGroup.Rules.AddRange(new List<RuleBase>
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             });
 
             string expectedMessage = string.Format(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___,
-                                                   missingRuleName, id, RealTimeControlXMLFiles.XmlData);
+                                                   missingRuleName, id, RealTimeControlXmlFiles.XmlData);
 
             // When
             RuleBase resultedRule = controlGroup.GetRuleByElementId(id, logHandler);
@@ -300,13 +300,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         {
             // Given
             const string missingConditionName = "not_existing_condition_name";
-            string id = $"[TimeCondition]control_group_name/{missingConditionName}";
+            var id = $"[TimeCondition]control_group_name/{missingConditionName}";
             var controlGroup = new ControlGroup();
 
             string expectedMessage = string.Format(
                 Resources
                     .RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_find_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___,
-                missingConditionName, RealTimeControlXMLFiles.XmlData);
+                missingConditionName, RealTimeControlXmlFiles.XmlData);
 
             // When
             var resultedCondition = controlGroup.GetConditionByElementId<TimeCondition>(id, logHandler);
@@ -324,7 +324,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             foreach (string tag in tagsOfInterest)
             {
                 // Given
-                string id = $"[Status]{tag}[Delayed]";
+                var id = $"[Status]{tag}[Delayed]";
 
                 // When
                 string resultedTag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);

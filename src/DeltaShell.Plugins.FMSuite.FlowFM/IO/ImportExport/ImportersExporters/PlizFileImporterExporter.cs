@@ -155,10 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         protected IEnumerable<TFeat> ReadFeaturesFromFile<TFileType>(string path)
             where TFileType : PliFile<TFeat>, new()
         {
-            var reader = new TFileType
-            {
-                CreateDelegate = CreateDelegate
-            };
+            var reader = new TFileType {CreateDelegate = CreateDelegate};
             return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
         }
 
@@ -199,10 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         protected void WriteFeaturesToFile<TFileType>(string path, IEnumerable<TFeat> features)
             where TFileType : PliFile<TFeat>, new()
         {
-            var writer = new TFileType
-            {
-                CreateDelegate = CreateDelegate
-            };
+            var writer = new TFileType {CreateDelegate = CreateDelegate};
             writer.Write(path, features);
         }
 

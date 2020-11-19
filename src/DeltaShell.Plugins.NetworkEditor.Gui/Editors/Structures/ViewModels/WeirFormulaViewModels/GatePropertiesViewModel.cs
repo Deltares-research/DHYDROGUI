@@ -1,5 +1,6 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -11,9 +12,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// <see cref="GatePropertiesViewModel"/> defines the view model for the
     /// <see cref="Views.WeirFormulaViews.GatePropertiesView"/>.
     /// </summary>
-    public sealed class GatePropertiesViewModel : INotifyPropertyChanged
+    public sealed class GatePropertiesViewModel : INotifyPropertyChanged, IDisposable
     {
         private readonly IGatedWeirFormula formula;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private bool hasDisposed = false;
+
+        private readonly IReadOnlyDictionary<string, string> propertyMapping =
+            new Dictionary<string, string>()
+            {
+                {nameof(GatedWeirFormula.DoorHeight), nameof(GateHeight)},
+                {nameof(GatedWeirFormula.HorizontalDoorOpeningDirection), nameof(GateOpeningDirection)},
+                {nameof(GatedWeirFormula.HorizontalDoorOpeningWidth), nameof(HorizontalOpeningWidth)},
+                {nameof(GatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries), nameof(UseHorizontalOpeningWidthTimeSeries)},
+                {nameof(GatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries), nameof(HorizontalOpeningWidthTimeSeries)},
+                {nameof(GatedWeirFormula.LowerEdgeLevel), nameof(GateLowerEdgeLevel)},
+                {nameof(GatedWeirFormula.UseLowerEdgeLevelTimeSeries), nameof(UseGateLowerEdgeLevelTimeSeries)},
+                {nameof(GatedWeirFormula.LowerEdgeLevelTimeSeries), nameof(GateLowerEdgeLevelTimeSeries)}
+            };
 
         /// <summary>
         /// Creates a new <see cref="GatePropertiesViewModel"/>.
@@ -23,7 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <param name="canChooseGateOpeningDirection">
         /// if set to <c>true</c> then the gate opening direction can be set.
         /// </param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="formula"/> or
         /// <paramref name="weirPropertiesViewModel"/> is <c>null</c>.
         /// </exception>
@@ -37,6 +55,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
             this.formula = formula;
             WeirPropertiesViewModel = weirPropertiesViewModel;
             CanChooseGateOpeningDirection = canChooseGateOpeningDirection;
+
+            Subscribe();
         }
 
         /// <summary>
@@ -56,7 +76,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 }
 
                 formula.LowerEdgeLevel = value;
-                OnPropertyChanged();
             }
         }
 
@@ -75,7 +94,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 }
 
                 formula.UseLowerEdgeLevelTimeSeries = value;
-                OnPropertyChanged();
             }
         }
 
@@ -99,7 +117,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 }
 
                 formula.DoorHeight = value;
-                OnPropertyChanged();
             }
         }
 
@@ -117,7 +134,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 }
 
                 formula.HorizontalDoorOpeningWidth = value;
-                OnPropertyChanged();
             }
         }
 
@@ -134,9 +150,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {
                     return;
                 }
-                
+
                 formula.UseHorizontalDoorOpeningWidthTimeSeries = value;
-                OnPropertyChanged();
             }
         }
 
@@ -158,9 +173,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {
                     return;
                 }
-                
+
                 formula.HorizontalDoorOpeningDirection = value;
-                OnPropertyChanged();
             }
         }
 
@@ -175,11 +189,64 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public bool CanChooseGateOpeningDirection { get; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Subscribe()
+        {
+            ((INotifyPropertyChanged)formula).PropertyChanged += PropagatePropertyChanged;
+        }
+
+        private void Unsubscribe()
+        {
+            ((INotifyPropertyChanged)formula).PropertyChanged -= PropagatePropertyChanged;
+        }
+
+        /// <summary>
+        /// Propagates the property changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="PropertyChangedEventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This leverages the PostSharp Entity properties of the <see cref="IGatedWeirFormula"/>. Unfortunately,
+        /// their exist no proper way to pass messages around within DeltaShell / D-HYDRO. Instead we
+        /// abuse callbacks. This means that the only way to determine whether the underlying domain is
+        /// updated, is by adding callbacks to the property changed events. Instead of creating a significant
+        /// amount of boilerplate, we propagate the property changed events here. Ideally however, this type
+        /// of synchronisation would not be necessary, and instead we would use messages to achieve a cleaner
+        /// architecture.
+        /// </remarks>
+        private void PropagatePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!Equals(sender, formula) || !IsObservedProperty(e.PropertyName))
+            {
+                return;
+            }
+
+            OnPropertyChanged(propertyMapping[e.PropertyName]);
+        }
+
+        private bool IsObservedProperty(string propertyName) =>
+            propertyMapping.ContainsKey(propertyName);
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <remarks>
+        /// Note that this class is sealed, and no un-managed resources need to be
+        /// released, as such we do not need to use an isDisposing approach.
+        /// </remarks>
+        public void Dispose()
+        {
+            if (hasDisposed)
+            {
+                return;
+            }
+            Unsubscribe();
+            hasDisposed = true;
+            
         }
     }
 }

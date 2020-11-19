@@ -12,6 +12,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
+using log4net.Core;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -48,9 +49,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 app.SaveProjectAs(dsprojPath);
 
                 // Then
-                var modelWaveFolder = 
+                var modelWaveFolder =
                     new DirectoryInfo(Path.Combine(temporaryDirectory.Path, "old_model", dsprojName + "_data", waveName));
-                var expectedWaveFolder = 
+                var expectedWaveFolder =
                     new DirectoryInfo(Path.Combine(temporaryDirectory.Path, "expected_dsproj_data", dsprojName + "_data", waveName));
 
                 AssertExpectedFolderStructure(modelWaveFolder, expectedWaveFolder);
@@ -100,8 +101,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 DirectoryInfo nextExpectedDirectory = expectedDirectories.Dequeue();
                 DirectoryInfo nextActualDirectory = actualDirectories.Dequeue();
 
-                Assert.That(Path.GetFileName(nextActualDirectory.Name), 
-                            Is.EqualTo(Path.GetFileName(nextExpectedDirectory.Name)), 
+                Assert.That(Path.GetFileName(nextActualDirectory.Name),
+                            Is.EqualTo(Path.GetFileName(nextExpectedDirectory.Name)),
                             $"Expected the wave model (sub) directories to be equal, but found a difference in {nextActualDirectory.Name}:");
 
                 AssertEqualFiles(nextExpectedDirectory, nextActualDirectory);
@@ -139,6 +140,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 Assert.That(actualFileContent, Is.EqualTo(expectedFileContent),
                             $"Expected the file {actualFiles[i].Name} to be equal to expected.");
+            }
+        }
+
+        [TestCase("DWaves_1.1.0.0.zip", "DWaves_1.1.0.0.dsproj")]
+        [TestCase("DWaves_1.2.0.0.zip", "DWaves_1.2.0.0.dsproj")]
+        public void GivenAProject_WithPreviousWavePluginVersion_WhenMigrating_ThenNoErrorsAreGenerated(string zipName, string dsProjName)
+        {
+            // Given
+            using (var temporaryDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication app = GetConfiguredHydroApplication(temporaryDirectory.Path))
+            {
+                string testData = TestHelper.GetTestFilePath(Path.Combine("WavesDirectoryStructureTest", zipName));
+                ZipFileUtils.Extract(testData, temporaryDirectory.Path);
+
+                string dsprojPath = Path.Combine(temporaryDirectory.Path, dsProjName);
+
+                // When
+                void Call()
+                {
+                    app.OpenProject(dsprojPath);
+                    app.SaveProjectAs(dsprojPath);
+                }
+
+                // Then
+                Assert.That(TestHelper.GetAllRenderedMessages(Call, Level.Error), Is.Empty);
             }
         }
     }

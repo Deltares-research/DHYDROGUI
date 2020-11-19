@@ -6,12 +6,12 @@ using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 {
-
     /// <summary>
     /// <see cref="WaveDirectoryStructureMigrationHelper"/> provides the methods
     /// for the Directory Structure migration associated with file format version
@@ -76,9 +76,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 throw new ArgumentException("Cannot create a temporary directory name if the parent folder is null.");
             }
 
-            IEnumerable<string> folderNames = 
+            IEnumerable<string> folderNames =
                 srcDirectory.Parent.GetDirectories()
-                                   .Select(x => x.Name);
+                            .Select(x => x.Name);
 
             string nameFormat = srcDirectory.Name + "_tmp.{0}";
             return NamingHelper.GenerateUniqueNameFromList(nameFormat, true, folderNames);
@@ -88,13 +88,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         /// Migrates the wave model associated with the specified
         /// <paramref name="mdwPath"/> to the directory structure associated
         /// with file format version 1.2.0.0 defined as:
-        /// 
         /// <code>
         /// └───waveModelName
         ///     ├───input
         ///     └───output
         /// </code>
-        /// 
         /// </summary>
         /// <param name="mdwPath">Path to the mdw file of the waves model to migrate.</param>
         /// <exception cref="ArgumentNullException">
@@ -104,15 +102,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         {
             Ensure.NotNull(mdwPath, nameof(mdwPath));
 
-            DirectoryInfo origModelDirectoryInfo = 
-                (new FileInfo(mdwPath)).Directory;
+            DirectoryInfo origModelDirectoryInfo =
+                new FileInfo(mdwPath).Directory;
 
-            DirectoryInfo temporaryDirectory = 
+            DirectoryInfo temporaryDirectory =
                 CreateToTemporaryDirectory(origModelDirectoryInfo);
 
             MigrateMdw(mdwPath, origModelDirectoryInfo, temporaryDirectory);
             MigrateRemainingOutputFiles(mdwPath, origModelDirectoryInfo, temporaryDirectory);
-            
+
             RemoveOldModelDirectory(origModelDirectoryInfo);
             RenameNewModelDirectory(temporaryDirectory, origModelDirectoryInfo.Name);
 
@@ -138,9 +136,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 
         private static DirectoryInfo CreateToTemporaryDirectory(DirectoryInfo oldModelDirectory)
         {
-            string temporaryDirectoryName = 
+            string temporaryDirectoryName =
                 GetTemporaryMigrationDirectoryName(oldModelDirectory);
-            string temporaryDirectoryPath = 
+            string temporaryDirectoryPath =
                 Path.Combine(oldModelDirectory.Parent.FullName, temporaryDirectoryName);
 
             var temporaryDirectoryInfo = new DirectoryInfo(temporaryDirectoryPath);
@@ -152,27 +150,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             return temporaryDirectoryInfo;
         }
 
-        private static void MigrateMdw(string mdwPath, 
+        private static void MigrateMdw(string mdwPath,
                                        DirectoryInfo origModelDirectoryInfo,
                                        DirectoryInfo goalDirectory)
         {
             string newInputDirectory = Path.Combine(goalDirectory.FullName, "input");
             string mdwFileName = Path.GetFileName(mdwPath);
 
-            IDelftIniMigrator migrator = 
-                MigratorFactory.CreateMdwMigrator(origModelDirectoryInfo.FullName, newInputDirectory);
+            IDelftIniFileOperator migrator =
+                MigratorInstanceCreator.CreateMdwMigrator(origModelDirectoryInfo.FullName, newInputDirectory);
 
             var fileStream = new FileStream(mdwPath, FileMode.Open);
-            string targetFilePath = Path.Combine(newInputDirectory, mdwFileName);
 
-            var logMessage = string.Format(Resources.WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0, mdwFileName);
+            string logMessage = string.Format(Resources.WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0, mdwFileName);
             var logHandler = new LogHandler(logMessage, log);
-            migrator.MigrateFile(fileStream, mdwPath, targetFilePath, logHandler);
+            migrator.Invoke(fileStream, mdwPath, logHandler);
             logHandler.LogReport();
         }
 
-        private static void MigrateRemainingOutputFiles(string mdwPath, 
-                                                        DirectoryInfo origModelDirectoryInfo, 
+        private static void MigrateRemainingOutputFiles(string mdwPath,
+                                                        DirectoryInfo origModelDirectoryInfo,
                                                         DirectoryInfo goalDirectory)
         {
             FileInfo[] outputFiles = origModelDirectoryInfo.GetFiles("*", SearchOption.AllDirectories);
@@ -183,12 +180,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             }
 
             string mdwFileName = Path.GetFileName(mdwPath);
-            string warningMessage = string.Format(Resources.WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_Migrating_remaining_files_of___0___to_1_2_0_0, 
+            string warningMessage = string.Format(Resources.WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_Migrating_remaining_files_of___0___to_1_2_0_0,
                                                   mdwFileName);
             var logHandler = new LogHandler(warningMessage);
 
             string outputFilesString = string.Join(", ", outputFiles.Select(x => x.Name));
-            logHandler.ReportWarningFormat(Resources.WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_The_following_files_are_assumed_to_be_output_and_moved_to_the_new_output_folder___0_, outputFilesString, 
+            logHandler.ReportWarningFormat(Resources.WaveDirectoryStructureMigrationHelper_MigrateRemainingOutputFiles_The_following_files_are_assumed_to_be_output_and_moved_to_the_new_output_folder___0_, outputFilesString,
                                            outputFilesString);
 
             string newOutputDirectory = Path.Combine(goalDirectory.FullName, "output");

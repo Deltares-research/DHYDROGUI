@@ -23,12 +23,10 @@ namespace DeltaShell.NGHS.IO.Adapters
         /// <param name="oneBased">
         /// Whether the mesh associated with the meshID is one-based (fortran),
         /// or zero based (C-based).
-        ///
         /// <paramref name="oneBased"/> defaults to false.
         /// </param>
         /// <param name="callCreateCells">
         /// Whether to call CreateCells for the retrieved grid.
-        /// 
         /// <paramref name="callCreateCells"/> defaults to false.
         /// </param>
         /// <returns>
@@ -44,8 +42,8 @@ namespace DeltaShell.NGHS.IO.Adapters
         /// grids, the data associated with cells will be incorrect, if the indices
         /// are reshuffled.
         /// </remarks>
-        public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int meshId, 
-                                                                   bool oneBased = false, 
+        public UnstructuredGrid GetUnstructuredGridFromUGridMeshId(int meshId,
+                                                                   bool oneBased = false,
                                                                    bool callCreateCells = false)
         {
             if (meshId > uGrid.GetNumberOf2DMeshes() || meshId <= 0)
@@ -76,6 +74,11 @@ namespace DeltaShell.NGHS.IO.Adapters
             return grid;
         }
 
+        public void Dispose()
+        {
+            uGrid?.Dispose();
+        }
+
         private static void CreateCells(UnstructuredGrid grid)
         {
             using (var api = new RemoteGridGeomApi())
@@ -84,11 +87,6 @@ namespace DeltaShell.NGHS.IO.Adapters
                 DisposableMeshGeometry resultMesh = api.CreateCells(mesh);
                 grid.Cells = resultMesh.CreateCells();
             }
-        }
-
-        public void Dispose()
-        {
-            uGrid?.Dispose();
         }
     }
 }

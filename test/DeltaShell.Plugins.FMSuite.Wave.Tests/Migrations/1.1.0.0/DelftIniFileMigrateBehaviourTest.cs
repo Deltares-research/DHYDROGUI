@@ -5,6 +5,7 @@ using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0;
 using NSubstitute;
 using NUnit.Framework;
@@ -14,45 +15,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
     [TestFixture]
     public class DelftIniFileMigrateBehaviourTest
     {
-        private static void VerifyLogHandlerDidNotReceiveAnyReports(ILogHandler logHandler)
-        {
-            logHandler.DidNotReceiveWithAnyArgs().ReportError(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportErrorFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarning(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportWarningFormat(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfo(null);
-            logHandler.DidNotReceiveWithAnyArgs().ReportInfoFormat(null);
-        }
-
         [Test]
         public void Constructor_ExpectedBehaviour()
         {
             // Setup
-            var migrator = Substitute.For<IDelftIniMigrator>();
+            var migrator = Substitute.For<IDelftIniFileOperator>();
 
             // Call
             var behaviour = new DelftIniFileMigrateBehaviour("key", ".", ".", migrator);
 
             // Assert
-            Assert.That(behaviour, Is.InstanceOf<IMigrationBehaviour>());
-        }
-
-        private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
-        {
-            var migrator = Substitute.For<IDelftIniMigrator>();
-
-            yield return new TestCaseData(null, ".", ".", migrator, "expectedKey");
-            yield return new TestCaseData("key", null, ".", migrator, "relativeDirectory");
-            yield return new TestCaseData("key", ".", null, migrator, "goalDirectory");
-            yield return new TestCaseData("key", ".", ".", null, "migrator");
+            Assert.That(behaviour, Is.InstanceOf<IDelftIniPropertyBehaviour>());
         }
 
         [Test]
         [TestCaseSource(nameof(Constructor_ParameterNull_Data))]
-        public void Constructor_ParameterNull_ThrowsArgumentNullException(string key, 
-                                                                          string relativeDirectory, 
-                                                                          string goalDirectory, 
-                                                                          IDelftIniMigrator migrator, 
+        public void Constructor_ParameterNull_ThrowsArgumentNullException(string key,
+                                                                          string relativeDirectory,
+                                                                          string goalDirectory,
+                                                                          IDelftIniFileOperator migrator,
                                                                           string expectedParameter)
         {
             void Call() => new DelftIniFileMigrateBehaviour(key, relativeDirectory, goalDirectory, migrator);
@@ -62,22 +43,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         }
 
         [Test]
-        public void MigrateProperty_PropertyNull_ThrowsArgumentNullException()
+        public void Invoke_PropertyNull_ThrowsArgumentNullException()
         {
-            var migrator = Substitute.For<IDelftIniMigrator>();
+            var migrator = Substitute.For<IDelftIniFileOperator>();
             var behaviour = new DelftIniFileMigrateBehaviour("key", ".", ".", migrator);
 
-            void Call() => behaviour.MigrateProperty(null, null);
+            void Call() => behaviour.Invoke(null, null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("property"));
         }
 
         [Test]
-        public void MigrateProperty_NotAffected_ReturnsUnchangedProperty()
+        public void Invoke_NotAffected_ReturnsUnchangedProperty()
         {
             // Setup
-            var migrator = Substitute.For<IDelftIniMigrator>();
+            var migrator = Substitute.For<IDelftIniFileOperator>();
             var logHandler = Substitute.For<ILogHandler>();
 
             const string key = "key";
@@ -86,31 +67,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
             var property = new DelftIniProperty(key, value, comment);
 
-            var behaviour = new DelftIniFileMigrateBehaviour("notKey", 
-                                                             ".", 
-                                                             ".", 
+            var behaviour = new DelftIniFileMigrateBehaviour("notKey",
+                                                             ".",
+                                                             ".",
                                                              migrator);
 
             // Call
-            behaviour.MigrateProperty(property, logHandler);
+            behaviour.Invoke(property, logHandler);
 
             // Assert
             Assert.That(property.Name, Is.EqualTo(key));
             Assert.That(property.Value, Is.EqualTo(value));
             Assert.That(property.Comment, Is.EqualTo(comment));
 
-            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void MigrateProperty_Affected_PropertyRelativePath_CallsMigrator()
+        public void Invoke_Affected_PropertyRelativePath_CallsMigrator()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
-            var migrator = Substitute.For<IDelftIniMigrator>();
-            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
-                                 Arg.Any<string>(),
+            var migrator = Substitute.For<IDelftIniFileOperator>();
+            migrator.Invoke(Arg.Do<Stream>(x => x.Dispose()),
                                  Arg.Any<string>(),
                                  Arg.Any<ILogHandler>());
 
@@ -135,35 +115,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
                                                                  Path.Combine(tempDir.Path, subDirectory),
-                                                                 goalDir, 
+                                                                 goalDir,
                                                                  migrator);
 
                 // Call 
-                behaviour.MigrateProperty(property, logHandler);
+                behaviour.Invoke(property, logHandler);
 
                 // Assert
                 Assert.That(property.Name, Is.EqualTo(propertyName));
                 Assert.That(property.Comment, Is.EqualTo(propertyComment));
                 Assert.That(property.Value, Is.EqualTo(fileName));
 
-                migrator.Received(1).MigrateFile(Arg.Any<Stream>(),
-                                                 oldPath, 
-                                                 expectedPath, 
-                                                 Arg.Any<ILogHandler>() );
+                migrator.Received(1).Invoke(Arg.Any<Stream>(),
+                                                 oldPath,
+                                                 Arg.Any<ILogHandler>());
 
-                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+                Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void MigrateProperty_Affected_PropertyAbsolutePath_CallsMigrator()
+        public void Invoke_Affected_PropertyAbsolutePath_CallsMigrator()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
-            var migrator = Substitute.For<IDelftIniMigrator>();
-            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
-                                 Arg.Any<string>(),
+            var migrator = Substitute.For<IDelftIniFileOperator>();
+            migrator.Invoke(Arg.Do<Stream>(x => x.Dispose()),
                                  Arg.Any<string>(),
                                  Arg.Any<ILogHandler>());
 
@@ -189,37 +167,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
                                                                  Path.Combine(tempDir.Path, subDirectory),
-                                                                 goalDir, 
+                                                                 goalDir,
                                                                  migrator);
 
                 // Call 
-                behaviour.MigrateProperty(property, logHandler);
+                behaviour.Invoke(property, logHandler);
 
                 // Assert
                 Assert.That(property.Name, Is.EqualTo(propertyName));
                 Assert.That(property.Comment, Is.EqualTo(propertyComment));
                 Assert.That(property.Value, Is.EqualTo(fileName));
 
-                migrator.Received(1).MigrateFile(Arg.Any<Stream>(),
-                                                 absolutePath, 
-                                                 expectedPath, 
-                                                 Arg.Any<ILogHandler>() );
+                migrator.Received(1).Invoke(Arg.Any<Stream>(),
+                                                 absolutePath,
+                                                 Arg.Any<ILogHandler>());
 
-                VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+                Assert.That(logHandler.ReceivedCalls(), Is.Empty);
             }
         }
 
-
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void MigrateProperty_Affected_FileNotFound_LogsWarning()
+        public void Invoke_Affected_FileNotFound_LogsWarning()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
-            var migrator = Substitute.For<IDelftIniMigrator>();
+            var migrator = Substitute.For<IDelftIniFileOperator>();
 
-            migrator.MigrateFile(Arg.Do<Stream>(x => x.Dispose()), 
-                                 Arg.Any<string>(),
+            migrator.Invoke(Arg.Do<Stream>(x => x.Dispose()),
                                  Arg.Any<string>(),
                                  Arg.Any<ILogHandler>());
 
@@ -237,11 +212,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 var behaviour = new DelftIniFileMigrateBehaviour(propertyName,
                                                                  tempDir.Path,
-                                                                 goalDir, 
+                                                                 goalDir,
                                                                  migrator);
 
                 // Call 
-                behaviour.MigrateProperty(property, logHandler);
+                behaviour.Invoke(property, logHandler);
 
                 // Assert
                 Assert.That(property.Name, Is.EqualTo(propertyName));
@@ -254,11 +229,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         }
 
         [Test]
-        public void MigrateProperty_Affected_PathEmpty_Skipped()
+        public void Invoke_Affected_PathEmpty_Skipped()
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
-            var migrator = Substitute.For<IDelftIniMigrator>();
+            var migrator = Substitute.For<IDelftIniFileOperator>();
 
             const string key = "key";
             const string value = "";
@@ -269,14 +244,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             var behaviour = new DelftIniFileMigrateBehaviour("key", ".", ".", migrator);
 
             // Call
-            behaviour.MigrateProperty(property, logHandler);
+            behaviour.Invoke(property, logHandler);
 
             // Assert
             Assert.That(property.Name, Is.EqualTo(key));
             Assert.That(property.Value, Is.EqualTo(value));
             Assert.That(property.Comment, Is.EqualTo(comment));
 
-            VerifyLogHandlerDidNotReceiveAnyReports(logHandler);
+            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
+        }
+
+        private static IEnumerable<TestCaseData> Constructor_ParameterNull_Data()
+        {
+            var migrator = Substitute.For<IDelftIniFileOperator>();
+
+            yield return new TestCaseData(null, ".", ".", migrator, "expectedKey");
+            yield return new TestCaseData("key", null, ".", migrator, "relativeDirectory");
+            yield return new TestCaseData("key", ".", null, migrator, "goalDirectory");
+            yield return new TestCaseData("key", ".", ".", null, "migrator");
         }
     }
 }
