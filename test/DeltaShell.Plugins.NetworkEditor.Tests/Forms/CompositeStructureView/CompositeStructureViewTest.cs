@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -389,6 +390,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             var weir = new Weir();
             var pump = new Pump();
             var bridge = new Bridge();
+            bridge.TabulatedCrossSectionDefinition = new CrossSectionDefinitionZW();
+            bridge.BridgeType = BridgeType.Tabulated;
             var culvert = new Culvert();
             var crossSection =
                 CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>(
@@ -400,6 +403,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             weir.CrestLevel = double.NaN;
             pump.StartDelivery = double.NaN;
             bridge.EffectiveCrossSectionDefinition.ZWDataTable.Select(v => v.Z = double.NaN);
+            bridge.YZCrossSectionDefinition.YZDataTable.Select(v => v.Z = double.NaN);
             culvert.CrossSectionDefinitionAtInletAbsolute.ZWDataTable.Select(v => v.Z = double.NaN);
             crossSection.Definition.Profile.ForEach(c => c.Y = double.NaN);
 
