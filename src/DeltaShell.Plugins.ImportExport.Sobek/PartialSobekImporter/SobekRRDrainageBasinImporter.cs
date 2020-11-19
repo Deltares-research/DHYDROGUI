@@ -314,19 +314,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         dictionaryLateralSourcesData.ContainsKey(lateralSource))
                     {
                         dictionaryLateralSourcesData[lateralSource].DataType = Model1DLateralDataType.FlowRealTime;
-                        
-                        if (HydroNetwork.Retentions.Any(r => r.Name == link.NodeToId))
-                        {
-                            //remove retention because it is connected to RR
-                            var retentionsToDelete = HydroNetwork.Retentions.Where(r => r.Name == link.NodeToId).ToArray();
-                            foreach (var retention in retentionsToDelete)
-                            {
-                                var network = retention.Network;
-                                network.BeginEdit(new DefaultEditAction("Delete retention " + retention.Name));
-                                retention.Branch.BranchFeatures.Remove(retention);
-                                network.EndEdit();
-                            }
-                        }
                     }
                     continue;
                 }

@@ -205,5 +205,10 @@ namespace DeltaShell.Sobek.Readers.Readers
                 }
             }
         }
+
+        public static bool IsFlowConnectionNode(int typeNo)
+        {
+            return typeNo == 35;
+        }
     }
 }

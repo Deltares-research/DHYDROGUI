@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (readNodeTypes != null)
                     {
                         //verification if node is declared in netter file as lateral source or connection node
-                        if (readNodeTypes.ContainsKey(retention.Name) && (SobekNetworkNetterReader.IsConnectionNode(readNodeTypes[retention.Name]) || SobekNetworkNetterReader.IsLateralSourceNode(readNodeTypes[retention.Name])))
+                        if (readNodeTypes.ContainsKey(retention.Name) && (SobekNetworkNetterReader.IsConnectionNode(readNodeTypes[retention.Name]) || SobekNetworkNetterReader.IsLateralSourceNode(readNodeTypes[retention.Name]) || SobekNetworkNetterReader.IsFlowConnectionNode(readNodeTypes[retention.Name])))
                         {
                             continue;
                         }
