@@ -149,11 +149,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #endregion
 
         #region Orifice Elements
-        public static readonly ConfigurationSetting OpenLevel = new ConfigurationSetting(key: "openlevel", description: "Gate height (m)");
-        public static readonly ConfigurationSetting UseLimitFlowPos = new ConfigurationSetting(key: "uselimitflowpos", description: "0 = unlimited, 1 = limited");
-        public static readonly ConfigurationSetting LimitFlowPos = new ConfigurationSetting(key: "limitflowpos", description: "Maximum positive flow (m3/s)");
-        public static readonly ConfigurationSetting UseLimitFlowNeg = new ConfigurationSetting(key: "uselimitflowneg", description: "0 = unlimited, 1 = limited");
-        public static readonly ConfigurationSetting LimitFlowNeg = new ConfigurationSetting(key: "limitflowneg", description: "Maximum negative flow (m3/s)");
+        public static readonly ConfigurationSetting OpenLevel = new ConfigurationSetting(key: "openLevel", description: "Gate height (m)");
+        public static readonly ConfigurationSetting UseLimitFlowPos = new ConfigurationSetting(key: "useLimitFlowPos", description: "0 = unlimited, 1 = limited");
+        public static readonly ConfigurationSetting LimitFlowPos = new ConfigurationSetting(key: "limitFlowPos", description: "Maximum positive flow (m3/s)");
+        public static readonly ConfigurationSetting UseLimitFlowNeg = new ConfigurationSetting(key: "useLimitFlowNeg", description: "0 = unlimited, 1 = limited");
+        public static readonly ConfigurationSetting LimitFlowNeg = new ConfigurationSetting(key: "limitFlowNeg", description: "Maximum negative flow (m3/s)");
         #endregion
 
         #region General Structure Elements
