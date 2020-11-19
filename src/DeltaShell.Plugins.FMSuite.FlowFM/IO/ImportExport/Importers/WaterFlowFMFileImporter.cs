@@ -113,9 +113,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 FireProgressChanged("Import finished", 10, 10);
                 return ShouldCancel ? null : importedFmModel;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                log.ErrorFormat(Resources.WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_, Name, path);
+                log.ErrorFormat(Resources.WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__, Name, path, e);
                 return null;
             }
         }

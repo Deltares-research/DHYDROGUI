@@ -643,8 +643,8 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time" xml:space="preserve">
     <value>Model start time precedes reference time</value>
   </data>
-  <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_" xml:space="preserve">
-    <value>Error while importing a {0} from {1}</value>
+  <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__" xml:space="preserve">
+    <value>Error while importing a {0} from {1}: {2}</value>
   </data>
   <data name="FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features" xml:space="preserve">
     <value>Old his output found, please run the model again. (cannot map {0} to input or generated features)</value>

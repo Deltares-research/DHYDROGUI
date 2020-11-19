@@ -1335,11 +1335,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while importing a {0} from {1}.
+        ///   Looks up a localized string similar to Error while importing a {0} from {1}: {2}.
         /// </summary>
-        public static string WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_ {
+        public static string WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__ {
             get {
-                return ResourceManager.GetString("WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_", resourceCulture);
+                return ResourceManager.GetString("WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__", resourceCulture);
             }
         }
         
