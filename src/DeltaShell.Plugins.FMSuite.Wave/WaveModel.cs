@@ -29,7 +29,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Api;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Exporters;
-using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -1522,7 +1521,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             //wave doesn't run standalone via dimr but via kernels
         }
 
-        public virtual void OnFinishIntegratedModelRun(string workingDirectoryPath)
+        public virtual void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath)
         {
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.

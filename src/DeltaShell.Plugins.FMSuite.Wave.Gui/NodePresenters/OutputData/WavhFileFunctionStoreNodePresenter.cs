@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Linq;
 using DelftTools.Controls;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 

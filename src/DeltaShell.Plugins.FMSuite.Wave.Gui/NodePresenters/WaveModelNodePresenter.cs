@@ -145,11 +145,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                                                    model.ObservationCrossSections, ShortCutType.FeatureSet);
         }
 
-        private static IEnumerable<object> GetOutputItems(WaveModel model)
-        {
-            yield break;
-        }
-
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaveModel model)
         {
             var item = new ClonableToolStripMenuItem

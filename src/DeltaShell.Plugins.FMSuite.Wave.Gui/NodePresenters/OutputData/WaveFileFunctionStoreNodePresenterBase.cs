@@ -7,18 +7,17 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
-using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
 {
     /// <summary>
-    /// <see cref="WaveOutputDataNodePresenter"/> implements the node presenter
-    /// for the <see cref="WavmFileFunctionStore"/>.
+    /// <see cref="WaveOutputDataNodePresenter"/> provides the base
+    /// implementation node presenter for file function stores.
     /// </summary>
     /// <seealso cref="TreeViewNodePresenterBaseForPluginGui{T}" />
     public abstract class WaveFileFunctionStoreNodePresenterBase<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : FMNetCdfFileFunctionStore
     {
-        private static readonly Bitmap icon = new Bitmap(Resources.wave);
+        private readonly Bitmap icon = new Bitmap(Resources.wave);
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, T nodeData)
         {

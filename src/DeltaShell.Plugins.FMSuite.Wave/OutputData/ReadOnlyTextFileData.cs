@@ -6,7 +6,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// <see cref="ReadOnlyTextFileData"/> defines the data obtained from a
     /// single text document.
     /// </summary>
-    // TODO: See whether this concept can be set more generic
     public class ReadOnlyTextFileData
     {
         /// <summary>

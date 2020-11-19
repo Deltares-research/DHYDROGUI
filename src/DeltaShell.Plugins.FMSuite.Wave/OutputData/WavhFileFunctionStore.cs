@@ -260,11 +260,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
                 log.DebugFormat("Unexpected dimension name: {0}", dimensionName);
             }
 
-            return (IMultiDimensionalArray<T>) GetCachedFeatures<T>(dimensionName, function);
+            return (IMultiDimensionalArray<T>) GetCachedFeatures(dimensionName, function);
         }
 
-        private IMultiDimensionalArray<IFeature> GetCachedFeatures<T>(string dimensionName,
-                                                                      IVariable function)
+        private IMultiDimensionalArray<IFeature> GetCachedFeatures(string dimensionName,
+                                                                   IVariable function)
         {
             if (cachedFeatures.TryGetValue(dimensionName, out IMultiDimensionalArray<IFeature> cachedArray) && cachedArray != null)
             {

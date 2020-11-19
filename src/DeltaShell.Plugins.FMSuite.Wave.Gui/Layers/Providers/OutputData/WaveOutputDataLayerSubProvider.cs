@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
@@ -21,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
         /// Creates a new <see cref="WaveOutputDataLayerSubProvider"/>.
         /// </summary>
         /// <param name="instanceCreator">The factory to build the layers with.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Throw when <paramref name="instanceCreator"/> is <c>null</c>.
         /// </exception>
         public WaveOutputDataLayerSubProvider(IWaveLayerInstanceCreator instanceCreator)
