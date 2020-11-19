@@ -2147,6 +2147,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.That(line, Is.Not.Null);
 
             string[] fields = line.Split('=', '#');
+            Assert.That(fields, Has.Length.GreaterThan(1));
+
             return fields[1].Trim();
         }
 
