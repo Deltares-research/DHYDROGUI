@@ -1,4 +1,4 @@
-STDS id '##1' nm 'Weir' ty 0 cl 5 cw 40 cs 0 po 1 ps 0.82 pt pr
+STDS id '##1' nm 'Weir' ty 6 cl 5 cw 40 ce 0 sc 1 rt 0.82 pt pr
 TBLE
 0.82 1.00 <
 0.86 0.95 <
