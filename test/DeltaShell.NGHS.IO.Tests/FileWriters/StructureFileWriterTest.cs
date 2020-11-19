@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -605,7 +606,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(13, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_ID.ToString(), idProperty.Value);
@@ -627,6 +628,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestWidth.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH.ToString(StructureRegion.CrestWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_FLOW_DIRECTION.GetDescription().ToLower(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.UseLimitFlowNeg.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_NEG.ToString(), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.LimitFlowNeg.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG.ToString(StructureRegion.LimitFlowNeg.Format, CultureInfo.InvariantCulture), idProperty.Value);
         }
 
         [Test]
@@ -1097,6 +1107,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         }
 
         [Test]
+        [Ignore("Not yet implemented in the kernel")]
         public void TestStructureFileWriterGivesExpectedResults_BridgePillar()
         {
             var branch = network.Branches.First();

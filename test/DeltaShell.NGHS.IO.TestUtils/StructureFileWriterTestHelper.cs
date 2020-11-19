@@ -3,6 +3,7 @@ using System.IO;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Collections;
@@ -371,12 +372,20 @@ namespace DeltaShell.NGHS.IO.TestUtils
             double crestLevel, double crestWidth, double gateOpening, double corrCoeff,
             bool useLimitFlowPos, double limitFlowPos, bool useLimitFlowNeg, double limitFlowNeg)
         {
-            var weir = AddWeir1D(branch, id, name, chainage);
-            weir.FlowDirection = flowDirection;
-            weir.CrestLevel = crestLevel;
-            weir.CrestWidth = crestWidth;
+            var orifice = new Orifice
+            {
+                Branch = branch,
+                Name = id.ToString(),
+                LongName = name,
+                Chainage = chainage
+            };
+            orifice.FlowDirection = flowDirection;
+            orifice.CrestLevel = crestLevel;
+            orifice.CrestWidth = crestWidth;
+            
+            branch.AddStructure(orifice);
 
-            weir.WeirFormula = new GatedWeirFormula
+            orifice.WeirFormula = new GatedWeirFormula
             {
                 GateOpening = gateOpening, // openlevel = CrestHeight + GateOpening
                 ContractionCoefficient = corrCoeff,

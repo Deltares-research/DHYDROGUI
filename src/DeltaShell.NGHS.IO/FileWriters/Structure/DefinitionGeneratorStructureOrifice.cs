@@ -30,13 +30,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             if (formula.UseMaxFlowPos && orifice.AllowPositiveFlow)
             {
                 IniCategory.AddProperty(StructureRegion.UseLimitFlowPos.Key, formula.UseMaxFlowPos, StructureRegion.UseLimitFlowPos.Description);
-                IniCategory.AddProperty(StructureRegion.LimitFlowPos.Key, formula.MaxFlowPos, StructureRegion.LimitFlowPos.Description);
+                IniCategory.AddProperty(StructureRegion.LimitFlowPos.Key, formula.MaxFlowPos, StructureRegion.LimitFlowPos.Description, StructureRegion.LimitFlowPos.Format);
             }
 
             if (formula.UseMaxFlowNeg && orifice.AllowNegativeFlow)
             {
                 IniCategory.AddProperty(StructureRegion.UseLimitFlowNeg.Key, formula.UseMaxFlowNeg, StructureRegion.UseLimitFlowNeg.Description);
-                IniCategory.AddProperty(StructureRegion.LimitFlowNeg.Key, formula.MaxFlowNeg, StructureRegion.LimitFlowNeg.Description);
+                IniCategory.AddProperty(StructureRegion.LimitFlowNeg.Key, formula.MaxFlowNeg, StructureRegion.LimitFlowNeg.Description, StructureRegion.LimitFlowNeg.Format);
             }
 
             return IniCategory;
