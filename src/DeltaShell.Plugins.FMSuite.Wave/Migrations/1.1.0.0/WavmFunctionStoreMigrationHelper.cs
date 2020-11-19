@@ -3,7 +3,7 @@ using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
@@ -15,6 +15,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// </summary>
     public static class WavmFunctionStoreMigrationHelper
     {
+        public const string WavmStoreDataItemTag = "WavmStoreDataItemTag";
+
         /// <summary>
         /// Disconnects the wavm function stores from the provided <paramref name="waveModel"/>.
         /// </summary>
@@ -42,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
 
         private static IEnumerable<IDataItem> GetWavmFunctionStoreDataItems(WaveModel model) =>
             WaveDomainHelper.GetAllDomains(model.OuterDomain)
-                            .Select(domain => model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name))
+                            .Select(domain => model.GetDataItemByTag(WavmStoreDataItemTag + domain.Name))
                             .Where(di => di != null && di.Value != null);
     }
 }

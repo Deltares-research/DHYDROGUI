@@ -16,14 +16,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// <summary>
         /// Creates a new <see cref="Feature2DLayerSubProvider"/>.
         /// </summary>
-        /// <param name="factory">The factory.</param>
+        /// <param name="instanceCreator">The factory.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// Throw when <paramref name="instanceCreator"/> is <c>null</c>.
         /// </exception>
-        protected Feature2DLayerSubProvider(IWaveLayerFactory factory)
+        protected Feature2DLayerSubProvider(IWaveLayerInstanceCreator instanceCreator)
         {
-            Ensure.NotNull(factory, nameof(factory));
-            Factory = factory;
+            Ensure.NotNull(instanceCreator, nameof(instanceCreator));
+            InstanceCreator = instanceCreator;
         }
 
         public bool CanCreateLayerFor(object sourceData, object parentData)
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// <summary>
         /// Gets the factory.
         /// </summary>
-        protected IWaveLayerFactory Factory { get; }
+        protected IWaveLayerInstanceCreator InstanceCreator { get; }
 
         /// <summary>
         /// Determines whether the provided features match the condition to

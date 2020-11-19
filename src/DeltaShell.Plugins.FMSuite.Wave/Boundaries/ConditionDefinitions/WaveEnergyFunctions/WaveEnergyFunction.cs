@@ -4,7 +4,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions
 {

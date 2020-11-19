@@ -2,6 +2,7 @@
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
@@ -12,8 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
     /// exists it is migrated, otherwise a warning is logged.
     /// Implementation of the actual file migration is left to the specific base class.
     /// </summary>
-    /// <seealso cref="IMigrationBehaviour"/>
-    public abstract class FileMigrateBehaviour : IMigrationBehaviour
+    /// <seealso cref="IDelftIniPropertyBehaviour"/>
+    public abstract class FileMigrateBehaviour : IDelftIniPropertyBehaviour
     {
         /// <summary>
         /// The directory to which files are migrated.
@@ -45,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             GoalDirectory = goalDirectory;
         }
 
-        public void MigrateProperty(DelftIniProperty property, ILogHandler logHandler)
+        public void Invoke(DelftIniProperty property, ILogHandler logHandler)
         {
             Ensure.NotNull(property, nameof(property));
 

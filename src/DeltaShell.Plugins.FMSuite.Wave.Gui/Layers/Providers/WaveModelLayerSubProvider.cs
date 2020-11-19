@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
@@ -16,20 +14,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
     /// <seealso cref="ILayerSubProvider"/>
     public class WaveModelLayerSubProvider : ILayerSubProvider
     {
-        private readonly IWaveLayerFactory factory;
+        private readonly IWaveLayerInstanceCreator instanceCreator;
 
         /// <summary>
         /// Creates a new <see cref="WaveModelLayerSubProvider"/>.
         /// </summary>
-        /// <param name="factory">The factory to build the layers with.</param>
+        /// <param name="instanceCreator">The factory to build the layers with.</param>
         /// <exception cref="ArgumentNullException">
-        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// Throw when <paramref name="instanceCreator"/> is <c>null</c>.
         /// </exception>
-        public WaveModelLayerSubProvider(IWaveLayerFactory factory)
+        public WaveModelLayerSubProvider(IWaveLayerInstanceCreator instanceCreator)
         {
-            Ensure.NotNull(factory, nameof(factory));
+            Ensure.NotNull(instanceCreator, nameof(instanceCreator));
 
-            this.factory = factory;
+            this.instanceCreator = instanceCreator;
         }
 
         public bool CanCreateLayerFor(object sourceData, object parentData)
@@ -40,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         public ILayer CreateLayer(object sourceData, object parentData)
         {
             return sourceData is WaveModel waveModel
-                       ? factory.CreateModelGroupLayer(waveModel)
+                       ? instanceCreator.CreateModelGroupLayer(waveModel)
                        : null;
         }
 
@@ -64,12 +62,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
                 yield return waveDomain;
             }
 
-            IEnumerable<WavmFileFunctionStore> relevantFunctionStores =
-                model.WavmFunctionStores.Where(fs => fs.Functions.Any() &&
-                                                     !string.IsNullOrEmpty(fs.Path));
-            foreach (WavmFileFunctionStore wavmFunctionStore in relevantFunctionStores)
+            if (model.WaveOutputData.IsConnected)
             {
-                yield return wavmFunctionStore;
+                yield return model.WaveOutputData;
             }
         }
     }

@@ -6,15 +6,12 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
-using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 {
@@ -89,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, model,
                                                    NumericalParametersName);
             yield return new WaveModelTreeShortcut(OutputParametersName, OutputParametersIcon, model, "Output");
-            yield return new TreeFolder(model, GetOutputItems(model), "Output", FolderImageType.Output);
+            yield return model.WaveOutputData;
         }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
@@ -150,27 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private static IEnumerable<object> GetOutputItems(WaveModel model)
         {
-            IDataItem dataItem = model.GetDataItemByTag(WaveModel.SwanLogDataItemTag);
-            var swanLog = dataItem.Value as TextDocument;
-            if (swanLog != null && !string.IsNullOrEmpty(swanLog.Content))
-            {
-                yield return dataItem;
-            }
-
-            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
-            {
-                IDataItem subDataItem = model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name);
-                if (subDataItem == null)
-                {
-                    continue;
-                }
-
-                var functionStore = subDataItem.Value as WavmFileFunctionStore;
-                if (functionStore != null && functionStore.Functions.Any() && !string.IsNullOrEmpty(functionStore.Path))
-                {
-                    yield return subDataItem;
-                }
-            }
+            yield break;
         }
 
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaveModel model)

@@ -82,6 +82,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap DocumentHS {
+            get {
+                object obj = ResourceManager.GetObject("DocumentHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap domain {
             get {
                 object obj = ResourceManager.GetObject("domain", resourceCulture);
@@ -325,6 +335,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         public static string WaveModelNodePresenter_CreateValidationMenuItem_Validate___ {
             get {
                 return ResourceManager.GetString("WaveModelNodePresenter_CreateValidationMenuItem_Validate___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to His Files.
+        /// </summary>
+        public static string WaveOutputDataNodePresenter_His_Files {
+            get {
+                return ResourceManager.GetString("WaveOutputDataNodePresenter_His_Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map Files.
+        /// </summary>
+        public static string WaveOutputDataNodePresenter_Map_Files {
+            get {
+                return ResourceManager.GetString("WaveOutputDataNodePresenter_Map_Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output.
+        /// </summary>
+        public static string WaveOutputDataNodePresenter_Output {
+            get {
+                return ResourceManager.GetString("WaveOutputDataNodePresenter_Output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spectra.
+        /// </summary>
+        public static string WaveOutputDataNodePresenter_Spectra {
+            get {
+                return ResourceManager.GetString("WaveOutputDataNodePresenter_Spectra", resourceCulture);
             }
         }
         
