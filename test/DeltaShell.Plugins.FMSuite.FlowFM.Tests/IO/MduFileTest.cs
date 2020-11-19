@@ -333,29 +333,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        [Category(TestCategory.Integration)]
-        public void ExportTo_OutputDirPropertyValue_ShouldAlwaysBeOutput(bool runsInIntegratedModel)
-        {
-            using (var temp = new TemporaryDirectory())
-            {
-                // Setup
-                var model = new WaterFlowFMModel {RunsInIntegratedModel = runsInIntegratedModel};
-                string targetFilePath = Path.Combine(temp.Path, "test.mdu");
-
-                // Call
-                model.ExportTo(targetFilePath);
-
-                // Assert
-                Assert.That(targetFilePath, Does.Exist);
-                string[] lines = File.ReadAllLines(targetFilePath);
-                string outputDirValue = GetPropertyValue(lines, "OutputDir");
-                Assert.That(outputDirValue, Is.EqualTo("output"));
-            }
-        }
-
-        [Test]
         public void Write_AllFixedWeirsAndCorrespondingPropertiesNull_ThrowsArgumentNullException()
         {
             // Setup
@@ -1079,15 +1056,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Call
                 mduFile.Write(filePath, new WaterFlowFMModelDefinition(), hydroArea, fixedWeirData);
             }
-        }
-
-        private string GetPropertyValue(string[] lines, string propName)
-        {
-            string line = lines.SingleOrDefault(l => l.StartsWith(propName));
-            Assert.That(line, Is.Not.Null);
-
-            string[] fields = line.Split('=', '#');
-            return fields[1].Trim();
         }
 
         /// <summary>

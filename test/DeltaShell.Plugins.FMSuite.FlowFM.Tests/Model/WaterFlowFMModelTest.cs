@@ -20,6 +20,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -2118,6 +2119,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Assert
             CollectionAssert.IsEmpty(couplingDataItems);
+        }
+
+        [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ExportTo_OutputDirPropertyValue_ShouldAlwaysBeOutput(bool runsInIntegratedModel)
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                var model = new WaterFlowFMModel {RunsInIntegratedModel = runsInIntegratedModel};
+                string targetFilePath = Path.Combine(temp.Path, "test.mdu");
+
+                // Call
+                model.ExportTo(targetFilePath);
+
+                // Assert
+                Assert.That(targetFilePath, Does.Exist);
+                string[] lines = File.ReadAllLines(targetFilePath);
+                string outputDirValue = GetPropertyValue(lines, "OutputDir");
+                Assert.That(outputDirValue, Is.EqualTo("output"));
+            }
+        }
+        
+        private static string GetPropertyValue(string[] lines, string propName)
+        {
+            string line = lines.SingleOrDefault(l => l.StartsWith(propName));
+            Assert.That(line, Is.Not.Null);
+
+            string[] fields = line.Split('=', '#');
+            return fields[1].Trim();
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
