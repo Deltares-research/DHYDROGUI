@@ -2127,10 +2127,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ExportTo_OutputDirPropertyValue_ShouldAlwaysBeOutput(bool runsInIntegratedModel)
         {
+            // Setup
             using (var temp = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel {RunsInIntegratedModel = runsInIntegratedModel})
             {
-                // Setup
-                var model = new WaterFlowFMModel {RunsInIntegratedModel = runsInIntegratedModel};
                 string targetFilePath = Path.Combine(temp.Path, "test.mdu");
 
                 // Call
@@ -2143,7 +2143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.That(outputDirValue, Is.EqualTo("output"));
             }
         }
-        
+
         private static string GetPropertyValue(string[] lines, string propName)
         {
             string line = lines.SingleOrDefault(l => l.StartsWith(propName));
