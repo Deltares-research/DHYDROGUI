@@ -126,6 +126,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 {
                     BridgeType = BridgeType.Tabulated
                 };
+
+            bridge.TabulatedCrossSectionDefinition.ZWDataTable.Clear();
             bridge.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(0, 2, 0);
             bridge.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(2, 2, 0);
 

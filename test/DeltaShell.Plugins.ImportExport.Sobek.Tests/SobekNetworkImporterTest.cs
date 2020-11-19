@@ -585,13 +585,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             Assert.AreEqual(2, network.Nodes.Count);
             Assert.AreEqual(1, network.Branches.Count);
-            Assert.AreEqual(7, network.Structures.Count());
+            Assert.AreEqual(6 , network.Structures.Count());// not reading river weirs yet, not available in the kernel
             Assert.AreEqual(3, network.Structures.Where(s => s is ICompositeBranchStructure).Count());
-            ICompositeBranchStructure compound = (ICompositeBranchStructure) network.Structures.Where(
-                    s => s is ICompositeBranchStructure && ((ICompositeBranchStructure) s).Structures.Count() > 1)
-                                                                                 .FirstOrDefault();
-            Assert.IsNotNull(compound);
-            Assert.AreEqual(2, compound.Structures.Count);
+            // not reading river weirs yet, not available in the kernel so not multiple in the compound
+            //ICompositeBranchStructure compound = (ICompositeBranchStructure) network.Structures.Where(
+            //        s => s is ICompositeBranchStructure && ((ICompositeBranchStructure) s).Structures.Count() > 1)
+            //                                                                     .FirstOrDefault();
+            //Assert.IsNotNull(compound);
+            //Assert.AreEqual(2, compound.Structures.Count);
         }
 
         [Test]

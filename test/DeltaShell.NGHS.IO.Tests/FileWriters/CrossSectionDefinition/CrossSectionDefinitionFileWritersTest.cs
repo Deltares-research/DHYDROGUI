@@ -270,6 +270,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             var bridge = new Bridge("Bridge1");
 
+            bridge.TabulatedCrossSectionDefinition.ZWDataTable.Clear();
             bridge.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(0, 30, 0);
             bridge.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(-5, 50, 0);
             bridge.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(-10, 20, 0);
