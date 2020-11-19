@@ -13,19 +13,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
     /// <seealso cref="ILayerSubProvider"/>
     public class BoundaryMapFeaturesContainerLayerSubProvider : ILayerSubProvider
     {
-        private readonly IWaveLayerFactory factory;
+        private readonly IWaveLayerInstanceCreator instanceCreator;
 
         /// <summary>
         /// Creates a new <see cref="BoundaryMapFeaturesContainerLayerSubProvider"/>.
         /// </summary>
-        /// <param name="factory">The factory to build the layers with.</param>
+        /// <param name="instanceCreator">The factory to build the layers with.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// Throw when <paramref name="instanceCreator"/> is <c>null</c>.
         /// </exception>
-        public BoundaryMapFeaturesContainerLayerSubProvider(IWaveLayerFactory factory)
+        public BoundaryMapFeaturesContainerLayerSubProvider(IWaveLayerInstanceCreator instanceCreator)
         {
-            Ensure.NotNull(factory, nameof(factory));
-            this.factory = factory;
+            Ensure.NotNull(instanceCreator, nameof(instanceCreator));
+            this.instanceCreator = instanceCreator;
         }
 
         public bool CanCreateLayerFor(object sourceData, object parentData) =>
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         public ILayer CreateLayer(object sourceData, object parentData) =>
             sourceData is IBoundaryMapFeaturesContainer container &&
             parentData is IWaveModel
-                ? factory.CreateBoundaryLayer(container)
+                ? instanceCreator.CreateBoundaryLayer(container)
                 : null;
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)

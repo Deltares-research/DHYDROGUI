@@ -595,7 +595,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private void OnRemoveModel()
         {
             OutputIsEmpty = false; // hack to make ClearOutput fire appropriately. 
-            OnClearOutput();
+            ClearOutput();
         }
 
         /// <summary>
@@ -972,7 +972,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void DisconnectOutput()
         {
-            OnClearOutput();
+            DisconnectOutputFileFunctionStore();
+            RestartOutput.Clear();
         }
 
         protected override void OnClearOutput()
@@ -980,13 +981,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             BeginEdit(new DefaultEditAction("Clearing all real time control output"));
 
             DisconnectOutputFileFunctionStore();
-
             RestartOutput.Clear();
-            OutputDocuments.Clear();
+            ClearOutputDocuments();
 
             EndEdit();
             
             MarkDirty();
+        }
+
+        private void ClearOutputDocuments()
+        {
+            foreach (ReadOnlyOutputTextDocument outputDocument in OutputDocuments)
+            {
+                outputDocument.Content = string.Empty;
+            }
+
+            OutputDocuments.Clear();
         }
 
         private void DisconnectOutputFileFunctionStore()
@@ -1608,13 +1618,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <remarks>
         /// Can be outdated when asked due to a rename model action and
         /// save (not outdated during save-as). Therefore
-        /// <see cref="CheckModelRenamedFollowedBySave"/> should be called.
+        /// <see cref="UpdatePersistentOutputDirectoryIfNeeded"/> should be called.
         /// </remarks>
         protected virtual string PersistentOutputDirectory
         {
             get
             {
-                CheckModelRenamedFollowedBySave();
+                UpdatePersistentOutputDirectoryIfNeeded();
                 return persistentOutputDirectory;
             }
             set => persistentOutputDirectory = value;
@@ -1634,7 +1644,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// second copy action without removal of source folder and second
         /// <see cref="IFileBased.SwitchTo"/>. 
         /// </summary>
-        private void CheckModelRenamedFollowedBySave()
+        private void UpdatePersistentOutputDirectoryIfNeeded()
         {
             var dirInfo = new DirectoryInfo(persistentOutputDirectory);
             var modelDirectory = dirInfo.Parent;

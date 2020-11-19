@@ -20,15 +20,14 @@ namespace DeltaShell.NGHS.TestUtils
         {
             model.CopyTo(filePath);
             model.SwitchTo(filePath);
-        }
-
-        public void FirstSaveAs(string filePath)
-        {
-            model.CopyTo(filePath);
-            model.SwitchTo(filePath);
 
             model.Path = filePath;
             model.SwitchTo(filePath);
+        }
+
+        public void FirstSave(string filePath)
+        {
+            SaveAs(filePath);
         }
 
         public void Save(string filePath)
@@ -42,6 +41,11 @@ namespace DeltaShell.NGHS.TestUtils
             string relativePath = Path.GetFileName(filePath);
             model.Path = relativePath;
             model.SwitchTo(filePath);
+        }
+
+        public void RemoveModelFromProject()
+        {
+            model.Delete();
         }
     }
 }

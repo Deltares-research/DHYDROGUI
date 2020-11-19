@@ -12,7 +12,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyD
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NSubstitute;

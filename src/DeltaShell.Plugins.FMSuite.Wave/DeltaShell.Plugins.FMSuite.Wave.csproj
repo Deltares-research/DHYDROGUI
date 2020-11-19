@@ -114,6 +114,9 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.136-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
@@ -189,57 +192,76 @@
     <Compile Include="Boundaries\SimpleBoundaryProvider.cs" />
     <Compile Include="Boundaries\SnapBoundariesToNewGrid.cs" />
     <Compile Include="Boundaries\WaveBoundary.cs" />
-    <Compile Include="IO\BcwFile.cs" />
-    <Compile Include="IO\BcwTimeSeriesOfBoundaryCollector.cs" />
-    <Compile Include="IO\Helpers\Boundaries\BoundaryOrientationType.cs" />
-    <Compile Include="IO\Helpers\Boundaries\DistanceDirType.cs" />
-    <Compile Include="IO\Helpers\Boundaries\DomainWideBoundaryCategoryConverter.cs" />
-    <Compile Include="IO\Exporters\WaveModelFileExporter.cs" />
-    <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverter.cs" />
-    <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlock.cs" />
-    <Compile Include="IO\Helpers\Boundaries\DefinitionImportType.cs" />
-    <Compile Include="IO\Helpers\Boundaries\IImportBoundaryConditionDataComponentFactory.cs" />
-    <Compile Include="IO\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactory.cs" />
-    <Compile Include="IO\Helpers\Boundaries\IWaveBoundaryGeometricDefinitionFactory.cs" />
-    <Compile Include="IO\Helpers\Boundaries\KnownWaveBoundariesFileConstants.cs" />
-    <Compile Include="IO\Helpers\Boundaries\DomainWideBoundaryMdwBlock.cs" />
-    <Compile Include="IO\Helpers\Boundaries\ParametersBlock.cs" />
-    <Compile Include="IO\Helpers\Boundaries\PeriodImportExportType.cs" />
-    <Compile Include="IO\Helpers\Boundaries\ShapeImportType.cs" />
-    <Compile Include="IO\Helpers\Boundaries\SpectrumImportExportType.cs" />
-    <Compile Include="IO\Helpers\Boundaries\SpreadingImportType.cs" />
-    <Compile Include="IO\Helpers\Boundaries\WaveBoundaryConverter.cs" />
-    <Compile Include="IO\Helpers\DelftIniCategoryExtensions.cs" />
-    <Compile Include="IO\Helpers\Domain\WaveDomainDataConverter.cs" />
-    <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValues.cs" />
-    <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactory.cs" />
-    <Compile Include="IO\Importers\WaveBoundaryFileImporter.cs" />
-    <Compile Include="IO\Importers\WaveDepthFileImporter.cs" />
-    <Compile Include="IO\Importers\WaveGridFileImporter.cs" />
-    <Compile Include="IO\Importers\WaveModelFileImporter.cs" />
-    <Compile Include="IO\Importers\WavmFileImporter.cs" />
-    <Compile Include="IO\IForcingTypeDefinedParametersVisitor.cs" />
-    <Compile Include="IO\IBoundaryConditionVisitor.cs" />
-    <Compile Include="IO\IShapeVisitor.cs" />
-    <Compile Include="IO\ISpatiallyDefinedDataComponentVisitor.cs" />
-    <Compile Include="IO\ISpreadingVisitor.cs" />
-    <Compile Include="IO\MdwBoundaryCategoryConditionsExtender.cs" />
-    <Compile Include="IO\MdwFile.cs" />
-    <Compile Include="IO\MdwBoundaryCategoryGeometryExtender.cs" />
-    <Compile Include="IO\MdwBoundaryCategoriesCreator.cs" />
-    <Compile Include="IO\MeteoFileProperty.cs" />
-    <Compile Include="IO\MeteoFileReader.cs" />
-    <Compile Include="IO\SpectrumDataComponentVisitor.cs" />
-    <Compile Include="IO\SpectrumParametersVisitor.cs" />
-    <Compile Include="IO\WavmFileFunctionStore.cs" />
+    <Compile Include="DataAccess\BcwFile.cs" />
+    <Compile Include="DataAccess\BcwTimeSeriesOfBoundaryCollector.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\DelftIniFileOperator.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\IDelftIniFileOperator.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DeleteSourcePostOperationBehaviour.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DelftIniPostOperationBehaviour.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\IDelftIniPostOperationBehaviour.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\WriteCategoriesPostOperationBehaviour.cs" />
+    <Compile Include="DataAccess\DelftIniOperations\IDelftIniPropertyBehaviour.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryOrientationType.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DistanceDirType.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DomainWideBoundaryCategoryConverter.cs" />
+    <Compile Include="DataAccess\Exporters\WaveModelFileExporter.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryCategoryConverter.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryMdwBlock.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DefinitionImportType.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\IImportBoundaryConditionDataComponentFactory.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactory.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\IWaveBoundaryGeometricDefinitionFactory.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\KnownWaveBoundariesFileConstants.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\DomainWideBoundaryMdwBlock.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\ParametersBlock.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\PeriodImportExportType.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\ShapeImportType.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\SpectrumImportExportType.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\SpreadingImportType.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\WaveBoundaryConverter.cs" />
+    <Compile Include="DataAccess\Helpers\DelftIniCategoryExtensions.cs" />
+    <Compile Include="DataAccess\Helpers\Domain\WaveDomainDataConverter.cs" />
+    <Compile Include="DataAccess\Helpers\MdwFileBackwardsCompatibilityConfigurationValues.cs" />
+    <Compile Include="DataAccess\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactory.cs" />
+    <Compile Include="DataAccess\Helpers\WaveOutputData\CollectIniFileNamePostOperationBehaviour.cs" />
+    <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueBehaviour.cs" />
+    <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueWithDependentsBehaviour.cs" />
+    <Compile Include="DataAccess\Helpers\WaveOutputData\WaveOutputFileHelper.cs" />
+    <Compile Include="DataAccess\Importers\WaveBoundaryFileImporter.cs" />
+    <Compile Include="DataAccess\Importers\WaveDepthFileImporter.cs" />
+    <Compile Include="DataAccess\Importers\WaveGridFileImporter.cs" />
+    <Compile Include="DataAccess\Importers\WaveModelFileImporter.cs" />
+    <Compile Include="DataAccess\Importers\WavmFileImporter.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IForcingTypeDefinedParametersVisitor.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\IBoundaryConditionVisitor.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Shapes\IShapeVisitor.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponentVisitor.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Spreading\ISpreadingVisitor.cs" />
+    <Compile Include="DataAccess\MdwBoundaryCategoryConditionsExtender.cs" />
+    <Compile Include="DataAccess\MdwFile.cs" />
+    <Compile Include="DataAccess\MdwBoundaryCategoryGeometryExtender.cs" />
+    <Compile Include="DataAccess\MdwBoundaryCategoriesCreator.cs" />
+    <Compile Include="DataAccess\MeteoFileProperty.cs" />
+    <Compile Include="DataAccess\MeteoFileReader.cs" />
+    <Compile Include="DataAccess\SpectrumDataComponentVisitor.cs" />
+    <Compile Include="DataAccess\SpectrumParametersVisitor.cs" />
+    <Compile Include="Migrations\1.2.0.0\WaveModel120Migrator.cs" />
+    <Compile Include="Migrations\WavesMigrator.cs" />
+    <Compile Include="OutputData\IWaveOutputData.cs" />
+    <Compile Include="OutputData\IWaveOutputDataCopyHandler.cs" />
+    <Compile Include="OutputData\IWaveOutputDataHarvester.cs" />
+    <Compile Include="OutputData\WaveOutputConstants.cs" />
+    <Compile Include="OutputData\WaveOutputData.cs" />
+    <Compile Include="OutputData\ReadOnlyTextFileData.cs" />
+    <Compile Include="OutputData\WaveOutputDataCopyHandler.cs" />
+    <Compile Include="OutputData\WaveOutputDataHarvester.cs" />
+    <Compile Include="OutputData\WavhFileFunctionStore.cs" />
+    <Compile Include="OutputData\WavmFileFunctionStore.cs" />
     <Compile Include="IWaveDomainData.cs" />
     <Compile Include="IWaveModel.cs" />
     <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\DelftIniMigrator.cs" />
     <Compile Include="Migrations\1.1.0.0\FileMigrateBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\IMigrationBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\IDelftIniMigrator.cs" />
-    <Compile Include="Migrations\1.1.0.0\MigratorFactory.cs" />
+    <Compile Include="Migrations\1.1.0.0\MigratorInstanceCreator.cs" />
     <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviour.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelper.cs" />
     <Compile Include="Migrations\1.1.0.0\WaveModel110LegacyLoader.cs" />
@@ -325,14 +347,8 @@
     <EmbeddedResource Include="WaveModel.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="IO\WavmFileFunctionStore.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="WaveModel.1.1.0.hbm.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

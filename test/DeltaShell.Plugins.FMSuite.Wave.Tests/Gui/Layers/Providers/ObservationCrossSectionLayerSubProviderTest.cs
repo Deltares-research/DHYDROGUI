@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
     [TestFixture]
     public class ObservationCrossSectionLayerSubProviderTest : Feature2DLayerSubProviderTestFixture
     {
-        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
+        protected override Func<IWaveLayerInstanceCreator, ILayerSubProvider> ConstructorCall { get; } =
             (factory) => new ObservationCrossSectionLayerSubProvider(factory);
 
         protected override IWaveModel Model { get; } = GetConfiguredModel();
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             return model;
         }
 
-        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
-            FactoryMock.CreateObservationCrossSectionLayer(Model);
+        protected override ILayer ExpectedCall(IWaveLayerInstanceCreator instanceCreatorMock) =>
+            instanceCreatorMock.CreateObservationCrossSectionLayer(Model);
     }
 }

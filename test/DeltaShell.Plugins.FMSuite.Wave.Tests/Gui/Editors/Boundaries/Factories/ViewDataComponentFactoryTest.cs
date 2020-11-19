@@ -7,7 +7,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergy
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
 using NUnit.Framework;

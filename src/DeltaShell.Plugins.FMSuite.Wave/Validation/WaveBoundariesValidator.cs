@@ -13,7 +13,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
