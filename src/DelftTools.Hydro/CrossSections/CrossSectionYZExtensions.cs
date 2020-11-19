@@ -22,10 +22,10 @@ namespace DelftTools.Hydro.CrossSections
             foreach (var zwRow in zWDataTable)
             {
                 var zwRowYLeft = zwRow.Width / 2 * -1;
-                if (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(zwRowYLeft))
+                while (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(zwRowYLeft))
                     zwRowYLeft -= 0.000001;
                 var zwRowYRight = zwRow.Width / 2;
-                if (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(zwRowYRight))
+                while (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(zwRowYRight))
                     zwRowYRight += 0.000001;
                 crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRowYLeft, zwRow.Z);
                 crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRowYRight, zwRow.Z);
@@ -48,8 +48,17 @@ namespace DelftTools.Hydro.CrossSections
 
             foreach (var hfsw in heightFlowStorageWidth)
             {
-                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(-1*(hfsw.TotalWidth/2), hfsw.Height);
-                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(hfsw.TotalWidth/2, hfsw.Height);
+                var hfswYLeft = -1*(hfsw.TotalWidth/2);
+                while (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(hfswYLeft))
+                    hfswYLeft -= 0.000001;
+                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(hfswYLeft, hfsw.Height);
+
+                var hfswYRight = hfsw.TotalWidth / 2; 
+                while (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(hfswYRight))
+                    hfswYRight += 0.000001;
+
+                
+                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(hfswYRight, hfsw.Height);
             }
             crossSectionDefinitionYz.EndEdit();
         }

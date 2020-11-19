@@ -1038,7 +1038,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var network = GetNetwork(path);
 
             var culverts = network.Culverts.ToList();
-            Assert.AreEqual(16, culverts.Count);
+            Assert.AreEqual(14, culverts.Count); // siphon and inverted siphon are not yet implemented in the kernel
             
             //first the 'normal culvert'
             var simpleCulvert = culverts[0];
@@ -1072,7 +1072,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             
             //check the gate-opening reduction function
             Assert.AreEqual(11,valvedCulvertWithRectangleCrossSection.GateOpeningLossCoefficientFunction.Arguments[0].Values.Count);
-
+            /*
+             // siphon and inverted siphon are not yet implemented in the kernel
             //number 3..the siphon
             var siphon = culverts[2];
             Assert.IsTrue(siphon.CulvertType.Equals(DelftTools.Hydro.CulvertType.Siphon));
@@ -1086,15 +1087,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.IsFalse(invertedSiphon.CulvertType.Equals(DelftTools.Hydro.CulvertType.Siphon));
             Assert.AreEqual(FlowDirection.Negative, invertedSiphon.FlowDirection);
             Assert.AreEqual(3.0, invertedSiphon.BendLossCoefficient);
-
+            */
             // this should be an eggie
-            var eitje = culverts[5];
+            var eitje = culverts[3];
             Assert.AreEqual(0.5, eitje.Width, 1.0e-6);
             Assert.AreEqual(0.75, eitje.Height, 1.0e-6);
 
             //number 5..the inverted siphon
             //notice this is NOT a siphon
-            var circle = culverts[4];
+            var circle = culverts[2];
             Assert.AreEqual(0.1, circle.Diameter, 1.0e-6); // Diameter = 2 * 0.05
         }
 

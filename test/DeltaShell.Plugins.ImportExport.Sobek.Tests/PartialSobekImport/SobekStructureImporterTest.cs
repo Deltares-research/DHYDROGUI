@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(61, hydroNetwork.Structures.Count());
+            Assert.AreEqual(46, hydroNetwork.Structures.Count());
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(61, hydroNetwork.Structures.Count());
+            Assert.AreEqual(46, hydroNetwork.Structures.Count());
 
             var firstStructure = hydroNetwork.Structures.Where(s => s.ParentStructure != null).First();
             var longName = firstStructure.LongName;
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(61, hydroNetwork.Structures.Count());
+            Assert.AreEqual(46, hydroNetwork.Structures.Count());
             Assert.AreEqual(longName, firstStructure.LongName);
         }
 
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(61, hydroNetwork.Structures.Count());
+            Assert.AreEqual(46, hydroNetwork.Structures.Count());
 
             var firstStructure = hydroNetwork.Structures.Where(s => s.ParentStructure != null).First();
             var orgBranch = firstStructure.Branch;
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(61, hydroNetwork.Structures.Count());
+            Assert.AreEqual(46, hydroNetwork.Structures.Count());
             Assert.AreSame(orgBranch, firstStructure.Branch);
             Assert.AreEqual(nFeatures, branch.BranchFeatures.Count());
         }
@@ -151,14 +151,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(4, hydroNetwork.Structures.OfType<IWeir>().Count());
+            Assert.AreEqual(1, hydroNetwork.Structures.OfType<IWeir>().Count()); // was 4 but -1 rivier weir && 2 adv weir
             Assert.AreEqual("Weir 1", hydroNetwork.Weirs.Where(s => s.Name == "wr1").FirstOrDefault().LongName);
+            /*
+            // River weir and Advanced weir are not yet implemented in the kernel
             Assert.AreEqual("River Weir 1", hydroNetwork.Weirs.Where(s => s.Name == "rwr1").FirstOrDefault().LongName);
             Assert.AreEqual("mem 1", hydroNetwork.Weirs.Where(s => s.Name == "cs1~~1").FirstOrDefault().LongName);
             Assert.AreEqual("mem 2", hydroNetwork.Weirs.Where(s => s.Name == "cs1~~2").FirstOrDefault().LongName);
-
+            */
             //name for (real) composite structure is also imported:
-            Assert.AreEqual("Comp Struct 1", hydroNetwork.CompositeBranchStructures.First(s => s.Name == "cs1 [compound]").LongName);
+            Assert.AreEqual("Weir 1", hydroNetwork.CompositeBranchStructures.FirstOrDefault(s => s.Name == "wr1 [compound]").LongName);
         }
 
         [Test]
@@ -171,7 +173,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.AreEqual(32, hydroNetwork.Structures.OfType<IWeir>().Count());
+            Assert.AreEqual(19, hydroNetwork.Structures.OfType<IWeir>().Count()); // was 32 but -13 riverweirs
             Assert.AreEqual("stuw_Borgh_zom", hydroNetwork.Weirs.Where(s => s.Name == "01").FirstOrDefault().LongName);
             Assert.AreEqual("sluis___Limmel", hydroNetwork.Weirs.Where(s => s.Name == "04").FirstOrDefault().LongName);
 
