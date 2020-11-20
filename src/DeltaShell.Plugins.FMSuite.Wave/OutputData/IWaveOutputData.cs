@@ -83,6 +83,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataSourcePath"/> is <c>null</c>.
         /// </exception>
+        /// <exception cref="System.Security.SecurityException">
+        /// The caller does not have the required permission to open <paramref name="dataSourcePath"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// <paramref name="dataSourcePath"/> contains invalid characters such as ", <, >, or |.
+        /// </exception>
+        /// <exception cref="System.IO.PathTooLongException">
+        /// The specified <paramref name="dataSourcePath"/>, exceeds the system-defined maximum length.
+        /// </exception>
         /// <remarks>
         /// If the path at <paramref name="dataSourcePath"/> does not exist, an error is logged
         /// and the output data is disconnected instead.
@@ -101,6 +110,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// </exception>
         /// <exception cref="System.InvalidOperationException">
         /// Thrown when <see cref="IsConnected"/> is <c>false</c>.
+        /// </exception>
+        /// <exception cref="System.Security.SecurityException">
+        /// The caller does not have the required permission to open <paramref name="dataTargetPath"/>.
+        /// </exception>
+        /// <exception cref="System.ArgumentException">
+        /// <paramref name="dataTargetPath"/> contains invalid characters such as ", <, >, or |.
+        /// </exception>
+        /// <exception cref="System.IO.PathTooLongException">
+        /// The specified <paramref name="dataTargetPath"/>, exceeds the system-defined maximum length.
         /// </exception>
         /// <remarks>
         /// If the path at <paramref name="dataTargetPath"/> does not exist, an error is logged
