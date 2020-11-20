@@ -59,8 +59,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Deltares.UGrid, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Deltares.UGrid.1.0.67005\lib\net40\Deltares.UGrid.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\packages\Deltares.UGrid.1.0.67988\lib\net40\Deltares.UGrid.dll</HintPath>
     </Reference>
     <Reference Include="DeltaShell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0.45-beta\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
@@ -106,12 +105,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.4.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0.45-beta\lib\net461\DeltaShell\protobuf-net.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\packages\protobuf-net.2.4.0\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="ProtoBufRemote">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.6.0.45-beta\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="ProtoBufRemote, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ProtoBufRemote.1.0.11\lib\net40\ProtoBufRemote.dll</HintPath>
     </Reference>
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0.45-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
@@ -138,7 +135,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataObjects\Friction\ChannelFrictionDefinitionTest.cs" />
@@ -233,8 +233,10 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0.45-beta\tools\mklink
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.6.0.45-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.6.0.45-beta\build\net461\DeltaShell.Framework.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.1.6.0.45-beta\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.1.6.0.45-beta\build\net40\DeltaShell.TestProject.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Deltares.UGrid.1.0.67988\build\net40\Deltares.UGrid.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Deltares.UGrid.1.0.67988\build\net40\Deltares.UGrid.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.1.6.0.45-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.6.0.45-beta\build\net461\DeltaShell.Framework.targets')" />
   <Import Project="..\..\packages\DeltaShell.TestProject.1.6.0.45-beta\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.1.6.0.45-beta\build\net40\DeltaShell.TestProject.targets')" />
+  <Import Project="..\..\packages\Deltares.UGrid.1.0.67988\build\net40\Deltares.UGrid.targets" Condition="Exists('..\..\packages\Deltares.UGrid.1.0.67988\build\net40\Deltares.UGrid.targets')" />
 </Project>
