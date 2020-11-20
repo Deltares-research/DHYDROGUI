@@ -130,6 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void ImportHKTGModelSaveAndLoadGivesException_Tools6984()
         {
+            // please note this model is a RTC<>FMModel but the links are on hydro objects which are not yet supported in the kernel
             const string projectPath = "HKTG.dsproj";
             var modelImporter = new SobekModelToIntegratedModelImporter();
 

@@ -4,11 +4,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
@@ -54,7 +56,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 var hydroModel = targetItemInternal as HydroModel;
                 if (hydroModel != null)
                 {
-                    if (hydroModel.Activities.OfType<RealTimeControlModel>().First().ControlGroups.Any())
+                    var realTimeControlModel = hydroModel.Activities.OfType<RealTimeControlModel>().FirstOrDefault();
+                    if (realTimeControlModel != null && realTimeControlModel.ControlGroups.Any())
                     {
                         var timeDependentModel = hydroModel.Activities.OfType<ITimeDependentModel>().FirstOrDefault();
                         if (timeDependentModel != null)
@@ -65,8 +68,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                         }
                         return hydroModel;
                     }
-            
-                    return hydroModel.Activities.OfType<WaterFlowFMModel>().First();
+                    var waterFlowFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().First();
+                    string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString(), waterFlowFmModel.Name ?? "FMModel" + ".mdu");
+                    new WaterFlowFMFileExporter().Export(waterFlowFmModel, fileName);
+                    return new WaterFlowFMModel(fileName);
                 }
             }
             importer = null;
