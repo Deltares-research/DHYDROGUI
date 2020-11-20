@@ -305,6 +305,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             get { return GatedWeirFormula.UseMaxFlowNeg; }
             set { GatedWeirFormula.UseMaxFlowNeg = value; }
         }
+        
+        [DynamicReadOnly]
+        [DisplayName("Use velocity height")]
+        public bool UseVelocityHeight
+        {
+            get { return Weir.UseVelocityHeight; }
+            set { Weir.UseVelocityHeight = value; }
+        }
 
         [Browsable(false)]
         public bool HasParent { get; set; }
@@ -350,6 +358,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                     return GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries;
                 }
                 return Formula != FormulaEnum.GeneralStructure;
+            }
+
+            if (propertyName == nameof(UseVelocityHeight))
+            {
+                return !(Weir is IOrifice) && Formula == FormulaEnum.FreeFormWeir;
             }
 
             if (propertyName == nameof(GContractionCoefficient) || propertyName == nameof(GLateralContraction) || propertyName == nameof(GMaxFlowPos) || 

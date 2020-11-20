@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         }
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void ShowWeirMDEAndMakeSureWeirCrestWidthIsReadyOnlyOnUniversalWeirFormula()
+        public void ShowWeirMDEAndMakeSureWeirCrestWidthIsReadOnlyOnUniversalWeirFormula()
         {
             var view = new VectorLayerAttributeTableView()
             {
@@ -209,6 +209,70 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 Assert.That(tableView.CellIsReadOnly(0, tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.CrestWidth)]), Is.False);
                 Assert.That(tableView.CellIsReadOnly(1, tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.CrestWidth)]), Is.True);
                 Assert.That(tableView.CellIsReadOnly(2, tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.CrestWidth)]), Is.False);
+            });
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowWeirMDEAndMakeSureUseVelocityHeightIsReadOnlyOnUniversalWeirFormula()
+        {
+            var view = new VectorLayerAttributeTableView()
+            {
+                TableView = {AutoGenerateColumns = false}
+            };
+            var weir1 = new Weir();
+            var weir2 = new Weir() {WeirFormula = new FreeFormWeirFormula()};
+            var weir3 = new Weir() {WeirFormula = new GeneralStructureWeirFormula()};
+
+            view.Data = new VectorLayer
+            {
+                DataSource = new FeatureCollection(new[] {weir1, weir2, weir3}.ToList(), typeof(Weir))
+            };
+            view.SetCreateFeatureRowFunction(feature => new WeirPropertiesRow((IWeir) feature));
+            WindowsFormsTestHelper.ShowModal(view.TableView, (f) =>
+            {
+                var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>()
+                    .SingleOrDefault();
+
+                Assert.That(tableView, Is.Not.Null);
+                Assert.That(tableView.Columns.Select(c => c.Name),
+                    Contains.Item(nameof(WeirPropertiesRow.UseVelocityHeight)));
+                Assert.That(
+                    tableView.CellIsReadOnly(0,
+                        tableView.Columns.ToDictionary(c => c.Name, c => c)[
+                            nameof(WeirPropertiesRow.UseVelocityHeight)]), Is.False);
+                Assert.That(
+                    tableView.CellIsReadOnly(1,
+                        tableView.Columns.ToDictionary(c => c.Name, c => c)[
+                            nameof(WeirPropertiesRow.UseVelocityHeight)]), Is.True);
+                Assert.That(
+                    tableView.CellIsReadOnly(2,
+                        tableView.Columns.ToDictionary(c => c.Name, c => c)[
+                            nameof(WeirPropertiesRow.UseVelocityHeight)]), Is.False);
+            });
+        }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowWeirMDEAndMakeSureUseVelocityHeightIsNotReadOnlyOnOrifices()
+        {
+            var view = new VectorLayerAttributeTableView()
+            {
+                TableView = { AutoGenerateColumns = false }
+            };
+
+            var orifice = new Orifice();
+            view.Data = new VectorLayer
+            {
+                DataSource = new FeatureCollection(new[] { orifice }.ToList(), typeof(Orifice))
+            };
+            view.SetCreateFeatureRowFunction(feature => new WeirPropertiesRow((IWeir)feature));
+            WindowsFormsTestHelper.ShowModal(view.TableView, (f) =>
+            {
+                var tableView = f.Controls.GetAllControlsRecursive().OfType<DelftTools.Controls.Swf.Table.TableView>().SingleOrDefault();
+
+                Assert.That(tableView, Is.Not.Null);
+                Assert.That(tableView.Columns.Select(c => c.Name), Contains.Item(nameof(WeirPropertiesRow.UseVelocityHeight)));
+                Assert.That(tableView.CellIsReadOnly(0, tableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.UseVelocityHeight)]), Is.False);
             });
         }
         [Test]
