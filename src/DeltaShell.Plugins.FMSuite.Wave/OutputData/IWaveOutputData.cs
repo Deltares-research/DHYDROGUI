@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Gets the spectra files.
         /// </summary>
         /// <remarks>
-        /// This is guaranteed to never be null. If no diagnostic files
+        /// This is guaranteed to never be null. If no spectra files
         /// currently exist, or the <see cref="IWaveOutputData"/> is
         /// disconnected, then an empty list is returned.
         /// </remarks>
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Gets the collection of <see cref="WavmFileFunctionStore"/> objects.
         /// </summary>
         /// <remarks>
-        /// This is guaranteed to never be null. If no diagnostic files
+        /// This is guaranteed to never be null. If no Wavm File Function Stores
         /// currently exist, or the <see cref="IWaveOutputData"/> is
         /// disconnected, then an empty list is returned.
         /// </remarks>
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Gets the collection of <see cref="WavhFileFunctionStore"/> objects.
         /// </summary>
         /// <remarks>
-        /// This is guaranteed to never be null. If no diagnostic files
+        /// This is guaranteed to never be null. If no Wavh File Function Stores
         /// currently exist, or the <see cref="IWaveOutputData"/> is
         /// disconnected, then an empty list is returned.
         /// </remarks>
@@ -76,7 +76,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// This will read all supported files from the specified folder.
         /// </summary>
         /// <param name="dataSourcePath">The new path for the data source.</param>
-        /// <param name="isStoredInWorkingDirectory">Whether the provided dataTargetPath is in the working directory.</param>
+        /// <param name="isStoredInWorkingDirectory">
+        /// Whether the provided <paramref name="dataSourcePath"/> is in the working directory.
+        /// </param>
         /// <param name="logHandler">optional log handler to report any problems with.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataSourcePath"/> is <c>null</c>.
@@ -92,8 +94,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// This will copy the underlying current output data but keep the same data in
         /// this <see cref="IWaveOutputData"/>.
         /// </summary>
-        /// <param name="dataTargetPath">The data source path.</param>
-        /// <param name="logHandler">optional log handler to report any problems with.</param>
+        /// <param name="dataTargetPath">The data target path.</param>
+        /// <param name="logHandler">Optional log handler to report any problems with.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataTargetPath"/> is <c>null</c>.
         /// </exception>
