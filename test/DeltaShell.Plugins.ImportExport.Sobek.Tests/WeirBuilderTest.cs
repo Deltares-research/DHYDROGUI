@@ -64,6 +64,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Ignore("kernel cannot handle river weirs yet")]
         public void CanBuildRiverWeir()
         {            
             var structure = new SobekRiverWeir();
@@ -127,6 +128,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Ignore("kernel cannot handle river weirs yet")]
         public void AdvancedWeirToPiersWeirConversionWorksCorrectly()
         {
             var structure = new SobekRiverAdvancedWeir()
@@ -208,6 +210,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Ignore("kernel cannot handle river weirs yet")]
         public void RiverWeirShapesAreConvertedCorrectly()
         {
             var structure = new SobekRiverWeir();
@@ -272,6 +275,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Ignore("kernel cannot handle pier weirs yet")]
         public void CanBuildPierWeir()
         {
             var structure = new SobekRiverAdvancedWeir();
@@ -371,7 +375,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(1.4, zetjes[1], 1.0e-6);
             // (for freeformweir crestlevel is the actual lowest Z -> 1.7 + -0.3 = 1.4)
             // Not any more. FM crest level shift is the Sobek2 crest level shift (FM1D2D-1023)
-            Assert.AreEqual(1.7F, weir.CrestLevel, 1.0e-6);
+            // It is now again (FM1D2D-1170)
+            Assert.AreEqual(1.4, weir.CrestLevel, 1.0e-6);
         }
 
         [Test]
