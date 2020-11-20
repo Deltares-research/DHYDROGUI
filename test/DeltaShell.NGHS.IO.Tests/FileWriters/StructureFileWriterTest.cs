@@ -211,6 +211,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.BRIDGE_GROUNDFRICTION,
                 StructureFileWriterTestHelper.BRIDGE_ENABLE_GROUNDLAYER);
 
+/*
+ bridge pillar not yet implemented in the kernel
             branch.AddBridgePillar(
                 StructureFileWriterTestHelper.BRIDGE_PILLAR_ID,
                 StructureFileWriterTestHelper.BRIDGE_PILLAR_NAME,
@@ -220,6 +222,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.BRIDGE_PILLAR_CSDEF_ID,
                 StructureFileWriterTestHelper.BRIDGE_PILLAR_WIDTH,
                 StructureFileWriterTestHelper.BRIDGE_PILLAR_FORM_FACTOR);
+*/
 
             branch.AddExtraResistance(
                 StructureFileWriterTestHelper.EXTRA_RESISTANCE_ID,

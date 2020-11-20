@@ -26,6 +26,7 @@
     branchId              = branch              
     chainage              = 1.000000            
     type                  = weir                
+    allowedFlowDir        = both                
     crestLevel            = 3.000               
     crestWidth            = 5.000               
     corrCoeff             = 2.000               
@@ -87,11 +88,14 @@
     branchId              = branch              
     chainage              = 3.000000            
     type                  = orifice             
+    allowedFlowDir        = both                
     crestLevel            = 3.000               
     crestWidth            = 5.000               
     gateLowerEdgeLevel    = 5.500               
     corrCoeff             = 0.500               
     useVelocityHeight     = true                
+    useLimitFlowNeg       = True                
+    limitFlowNeg          = 0.150               
 
 [Structure]
     id                    = 7                   
@@ -216,17 +220,6 @@
     bedFriction           = 0.65000             
     groundFrictionType    = 1                   
     groundFriction        = 0.350               
-
-[Structure]
-    id                    = 12                  
-    name                  = BridgePillar_1D_1   
-    branchId              = branch              
-    chainage              = 6.000000            
-    type                  = bridgePillar        
-    allowedFlowDir        = both                
-    bedLevel              = 0.300               
-    pillarwidth           = 0.750               
-    formfactor            = 0.500               
 
 [Structure]
     id                    = 13                  
