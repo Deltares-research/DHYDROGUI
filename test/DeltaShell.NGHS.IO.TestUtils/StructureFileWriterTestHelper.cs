@@ -136,6 +136,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG = 1.3;
         public const double GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG = 0.8;
         public const double GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG = 1.3;
+        public const bool   GENERAL_STRUCTURE_USE_VELOCITY_HEIGHT = true;
 
         public const int CULVERT_ID = 8;
         public const string CULVERT_NAME = "Culvert_1D_1";
@@ -401,9 +402,11 @@ namespace DeltaShell.NGHS.IO.TestUtils
                                                 double levelLeftZb1, double levelLeftZbsl, double levelCenter, double levelRightZbsr, double levelRightZb2,
                                                 double posFreeGateFlowCoeff, double posDrownGateFlowCoeff, double posFreeWeirFlowCoeff, double posDrownWeirFlowCoeff, double posContrCoefFreeGate,
                                                 double negFreeGateFlowCoeff, double negDrownGateFlowCoeff, double negFreeWeirFlowCoeff, double negDrownWeirFlowCoeff, double negContrCoefFreeGate,
+                                                bool useVelocityHeight,
                                                 bool useExtraResistance = true)
         {
             var weir = AddWeir1D(branch, id, name, chainage);
+            weir.UseVelocityHeight = useVelocityHeight;
 
             weir.WeirFormula = new GeneralStructureWeirFormula
             {

@@ -137,7 +137,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
-                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_USE_VELOCITY_HEIGHT);
 
             branch.AddCulvert(
                 StructureFileWriterTestHelper.CULVERT_ID,
@@ -677,7 +678,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
-                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG);
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG,
+                !StructureFileWriterTestHelper.GENERAL_STRUCTURE_USE_VELOCITY_HEIGHT
+                );
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
@@ -770,6 +773,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.ExtraResistance.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_EXTRA_RESISTANCE.ToString(StructureRegion.ExtraResistance.Format, CultureInfo.InvariantCulture), idProperty.Value);
+
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.UseVelocityHeight.Key);
+            Assert.AreEqual((!StructureFileWriterTestHelper.GENERAL_STRUCTURE_USE_VELOCITY_HEIGHT).ToString().ToLower(), idProperty.Value);
         }
 
         [Test]
