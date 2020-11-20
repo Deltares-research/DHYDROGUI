@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Ignore("kernel cannot handle gated weirs, use orifices")]
         public void ReadNetworkWithGatedWeir()
         {
             var sobekStructureDefinition = new SobekStructureDefinition {Type = (int) SobekStructureType.orifice};
@@ -41,6 +42,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Ignore("kernel cannot handle river weirs yet")]
         public void ReadNetworkWithRiverWeir()
         {
             var sobekStructureDefinition = new SobekStructureDefinition {Type = (int) SobekStructureType.riverWeir};

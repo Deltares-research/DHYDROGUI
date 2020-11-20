@@ -331,7 +331,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(9, content.Properties.Count);
+            Assert.AreEqual(10, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.WEIR_ID.ToString(), idProperty.Value);
@@ -353,6 +353,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestWidth.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.WEIR_CREST_WIDTH.ToString(StructureRegion.CrestWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_FLOW_DIRECTION.GetDescription().ToLower(), idProperty.Value);
+
         }
 
         [Test]

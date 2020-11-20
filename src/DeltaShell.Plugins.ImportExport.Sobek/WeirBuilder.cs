@@ -209,7 +209,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
                 yield return weir;
             }
-            yield return weir;
         }
 
         //TODO: get this stuff in a common interface 
