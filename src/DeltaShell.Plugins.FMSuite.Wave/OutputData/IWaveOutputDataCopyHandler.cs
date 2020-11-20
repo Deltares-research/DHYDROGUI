@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// </exception>
         /// <remarks>
         /// The copy run data assumes a Waves working directory file structure,
-        /// as such it will not working when provided with a regular output folder.
+        /// as such it will not work when provided with a regular output folder.
         /// </remarks>
         void CopyRunDataTo(DirectoryInfo sourceDirectoryInfo, 
                            DirectoryInfo targetDirectoryInfo,
