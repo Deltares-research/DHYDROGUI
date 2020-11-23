@@ -1399,7 +1399,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual string LibraryName => "wave";
 
-        public virtual string InputFile => Path.GetFileName(MdwFilePath);
+        public virtual string InputFile => Name + ".mdw"; //Path.GetFileName(MdwFilePath);
 
         public virtual string DirectoryName => "wave";
 
@@ -1419,10 +1419,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual Type ExporterType => typeof(WaveModelFileExporter);
 
-        public virtual string GetExporterPath(string directoryName)
-        {
-            return Path.Combine(directoryName, MdwFilePath == null ? Name + ".mdw" : Path.GetFileName(MdwFilePath));
-        }
+        public virtual string GetExporterPath(string directoryName) =>
+            Path.Combine(directoryName, InputFile);
 
         public virtual bool CanRunParallel => true;
 

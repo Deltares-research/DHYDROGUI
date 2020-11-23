@@ -1238,6 +1238,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
+        [Test]
+        [TestCase("Waves", "Waves.mdw")]
+        [TestCase("Potato", "Potato.mdw")]
+        [TestCase("", "Waves.mdw")]
+        [TestCase(null, "Waves.mdw")]
+
+        public void InputFile_MatchesModelName(string modelName, string expectedInputFile)
+        {
+            // Setup
+            using (var model = new WaveModel())
+            {
+                model.Name = modelName;
+
+                // Call
+                string result = model.InputFile;
+
+                // Assert
+                Assert.That(result, Is.EqualTo(expectedInputFile));
+            }
+        }
+
+        [Test]
+        [TestCase("Waves", "path/to/workDir", "Waves.mdw")]
+        [TestCase("Potato", "path/to/workDir", "Potato.mdw")]
+        [TestCase("", "path/to/workDir", "Waves.mdw")]
+        [TestCase(null, "path/to/workDir", "Waves.mdw")]
+        public void GetExporterPath_ReturnsExpectedPath(string modelName, 
+                                                        string dirPath, 
+                                                        string expectedInputFile)
+        {
+            // Setup
+            using (var model = new WaveModel())
+            {
+                model.Name = modelName;
+
+                // Call
+                string result = model.GetExporterPath(dirPath);
+
+                // Assert
+                string expectedExporterPath = Path.Combine(dirPath, expectedInputFile);
+                Assert.That(result, Is.EqualTo(expectedExporterPath));
+            }
+        }
+
         private static void AssertContainsSameFiles(IReadOnlyList<FileCompareInfo> originalFileData,
                                                     IReadOnlyList<FileCompareInfo> savedFileData)
         {
