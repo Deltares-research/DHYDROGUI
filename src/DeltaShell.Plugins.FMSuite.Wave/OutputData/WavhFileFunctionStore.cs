@@ -7,6 +7,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using GeoAPI.Extensions.Coverages;
@@ -54,10 +55,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Creates a new <see cref="WavhFileFunctionStore"/>.
         /// </summary>
         /// <param name="ncPath">The path to the netcdf file to read.</param>
-        public WavhFileFunctionStore(string ncPath) : base(ncPath)
+        /// <param name="featureProvider">The wave model feature provider. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="featureProvider"/> is <c>null</c>.
+        /// </exception>
+        public WavhFileFunctionStore(string ncPath, IWaveFeatureProvider featureProvider) : base(ncPath)
         {
-            DisableCaching = true;
+            Ensure.NotNull(featureProvider, nameof(featureProvider));
 
+            DisableCaching = true;
 
             using (ReconnectToMapFile())
             {

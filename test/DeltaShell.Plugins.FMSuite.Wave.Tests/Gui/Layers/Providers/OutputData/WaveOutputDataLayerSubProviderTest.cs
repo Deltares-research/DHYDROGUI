@@ -148,6 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
 
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
+            var featureProvider = Substitute.For<IWaveFeatureProvider>();
 
             using (var tempDir = new TemporaryDirectory())
             {
@@ -157,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
 
                 string hisNcPath = tempDir.CopyTestDataFileToTempDirectory(hisFilePath);
                 IEventedList<WavhFileFunctionStore> hisStores = 
-                    new EventedList<WavhFileFunctionStore> { new WavhFileFunctionStore(hisNcPath) };
+                    new EventedList<WavhFileFunctionStore> { new WavhFileFunctionStore(hisNcPath, featureProvider) };
 
 
                 var outputData = Substitute.For<IWaveOutputData>();

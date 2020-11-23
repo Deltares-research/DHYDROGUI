@@ -90,8 +90,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         private static WavmFileFunctionStore ConstructWavmFileFunctionStore(FileInfo fileInfo) =>
             new WavmFileFunctionStore(fileInfo.FullName);
 
-        private static WavhFileFunctionStore ConstructWavhFileFunctionStore(FileInfo fileInfo) =>
-            new WavhFileFunctionStore(fileInfo.FullName);
+        private WavhFileFunctionStore ConstructWavhFileFunctionStore(FileInfo fileInfo) =>
+            new WavhFileFunctionStore(fileInfo.FullName, featureProvider);
 
         private static bool IsDiagnosticFile(FileInfo fileInfo) =>
             fileInfo.Name == WaveOutputConstants.SwanLogFileName ||

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
@@ -6,6 +7,7 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.Coverages;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
@@ -16,6 +18,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         private const string ncPath = "./WaveOutputDataHarvesterTest/wavh-Waves.nc";
 
         [Test]
+        public void Constructor_FeatureProviderNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => new WavhFileFunctionStore("the_path", null);
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("featureProvider"));
+        }
+
+        [Test]
         [Category(TestCategory.DataAccess)]
         public void Constructor_ExpectedResults()
         {
@@ -23,9 +36,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 string localNcPath = tempDir.CopyTestDataFileToTempDirectory(ncPath);
+                var featureProvider = Substitute.For<IWaveFeatureProvider>();
 
                 // Call
-                var store = new WavhFileFunctionStore(localNcPath);
+                var store = new WavhFileFunctionStore(localNcPath, featureProvider);
 
                 // Assert
                 Assert.That(store, Is.InstanceOf<FMNetCdfFileFunctionStore>());
@@ -61,9 +75,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 string localNcPath = tempDir.CopyTestDataFileToTempDirectory(ncPath);
+                var featureProvider = Substitute.For<IWaveFeatureProvider>();
 
                 // Call
-                var store = new WavhFileFunctionStore(localNcPath);
+                var store = new WavhFileFunctionStore(localNcPath, featureProvider);
 
                 // Assert
                 foreach (IFunction function in store.Functions)
