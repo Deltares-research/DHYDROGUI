@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -23,6 +23,7 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
@@ -1260,9 +1261,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ModelSaveTo(mdwFilePath, true);
         }
 
+        private string GetModelDirectoryPathFromMdwFile()
+        {
+            if (string.IsNullOrEmpty(MdwFilePath))
+            {
+                return Name;
+            }
+
+            string modelDirectoryName = Path.GetFileNameWithoutExtension(MdwFilePath);
+            var modelDirInfo = new DirectoryInfo(MdwFilePath);
+
+            while (modelDirInfo != null && modelDirInfo.Name != modelDirectoryName)
+            {
+                modelDirInfo = modelDirInfo.Parent;
+            }
+
+            return modelDirInfo?.Parent != null
+                       ? modelDirInfo.FullName
+                       : Path.GetDirectoryName(Path.GetDirectoryName(MdwFilePath)); // default behaviour if file-based repository is corrupted.
+
+        }
+
         private void OnSave()
         {
-            ModelSaveTo(MdwFile.MdwFilePath, true);
+            string modelDirectoryPath = GetModelDirectoryPathFromMdwFile();
+            string mdwSavePath = GetMdwPathFromDeltaShellPath(modelDirectoryPath);
+            bool isRenamed = mdwSavePath != MdwFilePath;
+
+            ModelSaveTo(mdwSavePath, true);
+
+            if (!isRenamed)
+            {
+                return;
+            }
+
+            FileUtils.DeleteIfExists(modelDirectoryPath);
         }
 
         private void OnCopyTo(string targetMdwFilePath)

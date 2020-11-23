@@ -1282,6 +1282,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenASavedModel_WhenTheModelIsRenamedAndSaved_ThenTheModelDirectoryIsUpdatedCorrectly()
+        {
+            // Setup
+            const string persistPath = "$data$WaveModel-47e9a5e9-fe4c-4528-966e-6a7b8fd97082";
+            const string relativePath = "WaveModelTest\\Waves";
+            string testPath = TestHelper.GetTestFilePath(relativePath);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string modelDirectory = tempDir.CopyDirectoryToTempDirectory(testPath);
+                string mdwPath = Path.Combine(modelDirectory, "input", "Waves.mdw");
+                DirectoryInfo initialInputDirectoryInfo = 
+                    new DirectoryInfo(mdwPath).Parent;
+                var initialOutputDirectoryInfo = 
+                    new DirectoryInfo(Path.Combine(initialInputDirectoryInfo.Parent.FullName, "output"));
+
+                IReadOnlyList<FileCompareInfo> referenceFiles =
+                    CollectFileInformation(initialInputDirectoryInfo)
+                        .Where(x => !x.Name.EndsWith(".mdw"))
+                        .Concat(CollectFileInformation(initialOutputDirectoryInfo))
+                        .ToList();
+                const string newName = "NotWaves";
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    ((IFileBased) model).Open(mdwPath);
+
+                    model.Name = newName;
+
+                    // Call
+                    // Trigger save: This mimicks the behaviour of a BeforePersist call, which passes a
+                    // string containing a hash to the path.
+                    ((IFileBased) model).Path = persistPath;
+
+                    // Assert
+                    var actualInputDirectoryInfo = 
+                        new DirectoryInfo(Path.Combine(tempDir.Path, newName, "input"));
+                    var actualOutputDirectoryInfo = 
+                        new DirectoryInfo(Path.Combine(tempDir.Path, newName, "output"));
+
+                    IReadOnlyList<FileCompareInfo> actualFiles = 
+                        CollectFileInformation(actualInputDirectoryInfo)
+                            .Where(x => !x.Name.EndsWith(".mdw"))
+                            .Concat(CollectFileInformation(actualOutputDirectoryInfo))
+                            .ToList();
+
+                    AssertContainsSameFiles(referenceFiles, actualFiles);
+                    Assert.That(File.Exists(Path.Combine(actualInputDirectoryInfo.FullName, (newName + ".mdw"))), 
+                                Is.True);
+                }
+            }
+        }
+
         private static void AssertContainsSameFiles(IReadOnlyList<FileCompareInfo> originalFileData,
                                                     IReadOnlyList<FileCompareInfo> savedFileData)
         {
