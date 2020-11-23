@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
     public class WaveOutputDataHarvesterTest
     {
         [Test]
-        public void ConstructorFeatureProviderNull_ThrowsArgumentNullException()
+        public void Constructor_FeatureProviderNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => new WaveOutputDataHarvester(null);
