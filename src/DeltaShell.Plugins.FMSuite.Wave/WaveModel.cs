@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             OutputWavmFileFunctionStores = new EventedList<WavmFileFunctionStore>();
             OutputWavhFileFunctionStores = new EventedList<WavhFileFunctionStore>();
 
-            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(), 
+            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(new WaveFeatureProvider(this)),
                                                 new WaveOutputDataCopyHandler());
             
             WaveOutputData.DiagnosticFiles.CollectionChanged += 

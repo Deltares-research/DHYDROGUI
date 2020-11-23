@@ -17,6 +17,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// <seealso cref="IWaveOutputDataHarvester" />
     public sealed class WaveOutputDataHarvester : IWaveOutputDataHarvester
     {
+        private readonly IWaveFeatureProvider featureProvider;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WaveOutputDataHarvester"/> class.
+        /// </summary>
+        /// <param name="featureProvider">The wave model feature provider.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="featureProvider"/> is <c>null</c>.
+        /// </exception>
+        public WaveOutputDataHarvester(IWaveFeatureProvider featureProvider)
+        {
+            Ensure.NotNull(featureProvider, nameof(featureProvider));
+
+            this.featureProvider = featureProvider;
+        }
+
         public IReadOnlyList<ReadOnlyTextFileData> HarvestDiagnosticFiles(DirectoryInfo outputDataDirectory,
                                                                           ILogHandler logHandler = null) =>
             HarvestTextFiles(IsDiagnosticFile, outputDataDirectory, logHandler);
