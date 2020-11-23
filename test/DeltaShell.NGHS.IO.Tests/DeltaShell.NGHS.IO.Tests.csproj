@@ -60,6 +60,7 @@
     </Reference>
     <Reference Include="Deltares.UGrid, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Deltares.UGrid.1.0.67988\lib\net40\Deltares.UGrid.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0.45-beta\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
@@ -106,9 +107,11 @@
     </Reference>
     <Reference Include="protobuf-net, Version=2.4.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\..\packages\protobuf-net.2.4.0\lib\net40\protobuf-net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ProtoBufRemote, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ProtoBufRemote.1.0.11\lib\net40\ProtoBufRemote.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\DeltaShell.Framework.1.6.0.45-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
