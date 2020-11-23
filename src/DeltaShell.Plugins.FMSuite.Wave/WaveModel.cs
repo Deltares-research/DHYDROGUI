@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -1390,7 +1390,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private string GetMdwPathFromDeltaShellPath(string dsPath)
         {
             // dsproj_data/<model name>/<model name>.mdw
-            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, DirectoryNameConstants.InputDirectoryName, Name + ".mdw"));
+            return Path.Combine(Path.GetDirectoryName(dsPath), 
+                                Name, 
+                                DirectoryNameConstants.InputDirectoryName, 
+                                Name + FileConstants.MdwFileExtension);
         }
 
         #endregion
@@ -1399,7 +1402,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual string LibraryName => "wave";
 
-        public virtual string InputFile => Name + ".mdw"; //Path.GetFileName(MdwFilePath);
+        public virtual string InputFile => Name + FileConstants.MdwFileExtension;
 
         public virtual string DirectoryName => "wave";
 
