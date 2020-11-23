@@ -247,9 +247,11 @@
     <Compile Include="DataAccess\SpectrumParametersVisitor.cs" />
     <Compile Include="Migrations\1.2.0.0\WaveModel120Migrator.cs" />
     <Compile Include="Migrations\WavesMigrator.cs" />
+    <Compile Include="OutputData\IWaveFeatureProvider.cs" />
     <Compile Include="OutputData\IWaveOutputData.cs" />
     <Compile Include="OutputData\IWaveOutputDataCopyHandler.cs" />
     <Compile Include="OutputData\IWaveOutputDataHarvester.cs" />
+    <Compile Include="OutputData\WaveFeatureProvider.cs" />
     <Compile Include="OutputData\WaveOutputConstants.cs" />
     <Compile Include="OutputData\WaveOutputData.cs" />
     <Compile Include="OutputData\ReadOnlyTextFileData.cs" />
