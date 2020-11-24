@@ -771,11 +771,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             yield return WaveOutputData;
 
-            foreach (IFunction function in WaveOutputData.WavhFileFunctionStores.SelectMany(s => s.Functions))
-            {
-                yield return function;
-            }
-
             foreach (ReadOnlyTextFileData diagnosticFile in WaveOutputData.DiagnosticFiles)
             {
                 yield return diagnosticFile;
@@ -794,6 +789,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             foreach (WavhFileFunctionStore wavhFileFunctionStore in WaveOutputData.WavhFileFunctionStores)
             {
                 yield return wavhFileFunctionStore;
+
+                foreach (IFunction function in wavhFileFunctionStore.Functions)
+                {
+                    yield return function;
+                }
             }
         }
 

@@ -579,32 +579,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void GetDirectChildren_ContainsWavhFileFunctionStoreFunctions()
-        {
-            // Setup
-            using (var temp = new TemporaryDirectory())
-            {
-                temp.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
-
-                var model = new WaveModel();
-                model.WaveOutputData.ConnectTo(temp.Path, false);
-                List<IFunction> functions = model.WaveOutputData.WavhFileFunctionStores.SelectMany(s => s.Functions).ToList();
-
-                // Precondition
-                Assert.That(functions, Has.Count.EqualTo(11));
-
-                // Call
-                List<object> result = model.GetDirectChildren().ToList();
-
-                // Assert
-                foreach (IFunction function in functions)
-                {
-                    Assert.That(result, Has.Member(function));
-                }
-            }
-        }
-
-        [Test]
         public void GetDirectChildren_ContainsDiagnosticFiles()
         {
             // Setup
@@ -683,12 +657,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 model.WaveOutputData.WavhFileFunctionStores.Add(functionStore1);
                 model.WaveOutputData.WavhFileFunctionStores.Add(functionStore2);
 
+                List<IFunction> functions = model.WaveOutputData.WavhFileFunctionStores.SelectMany(s => s.Functions).ToList();
+
+                // Precondition
+                Assert.That(functions, Has.Count.EqualTo(22));
+
                 // Call
                 IEnumerable<object> result = model.GetDirectChildren()
                                                   .ToList();
 
                 Assert.That(result, Has.Member(functionStore1));
                 Assert.That(result, Has.Member(functionStore2));
+
+                foreach (IFunction function in functions)
+                {
+                    Assert.That(result, Has.Member(function));
+                }
             }
         }
 
