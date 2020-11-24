@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             AssertCategoryExists(wpfGuiCategories, "Spectral Domain");
             AssertCategoryExists(wpfGuiCategories, "Physical Processes");
             AssertCategoryExists(wpfGuiCategories, "Numerical Parameters");
-            AssertCategoryExists(wpfGuiCategories, "Output");
+            AssertCategoryExists(wpfGuiCategories, "Output Parameters");
             AssertCategoryExists(wpfGuiCategories, "Domain specific settings");
         }
 

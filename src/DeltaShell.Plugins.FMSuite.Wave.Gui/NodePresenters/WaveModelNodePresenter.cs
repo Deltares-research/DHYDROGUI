@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return new WaveModelTreeShortcut(PhysicalProcessesName, ProcessesImage, model, PhysicalProcessesName);
             yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, model,
                                                    NumericalParametersName);
-            yield return new WaveModelTreeShortcut(OutputParametersName, OutputParametersIcon, model, "Output");
+            yield return new WaveModelTreeShortcut(OutputParametersName, OutputParametersIcon, model, OutputParametersName);
             yield return model.WaveOutputData;
         }
 

@@ -361,4 +361,8 @@
   <data name="WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_output_data_" xml:space="preserve">
     <value>No .mdw path could be found in {0}, skipping copying output data.</value>
   </data>
+  <data name="WaveDirectoryStructureMigrationHelper_MigrateFileStructure_ErrorMigrateFileStructure" xml:space="preserve">
+    <value>An error occurred during the migration of one of the D-Waves models in this project, most likely due to two or more models sharing the same name within the project.
+Please reboot the application and create a new project and import the models individually with the corresponding importers to ensure everything is in a valid state.</value>
+  </data>
 </root>

@@ -512,6 +512,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred during the migration of one of the D-Waves models in this project, most likely due to two or more models sharing the same name within the project.
+        ///Please reboot the application and create a new project and import the models individually with the corresponding importers to ensure everything is in a valid state..
+        /// </summary>
+        public static string WaveDirectoryStructureMigrationHelper_MigrateFileStructure_ErrorMigrateFileStructure {
+            get {
+                return ResourceManager.GetString("WaveDirectoryStructureMigrationHelper_MigrateFileStructure_ErrorMigrateFileStruct" +
+                        "ure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Migrating &apos;{0}&apos; to 1.2.0.0.
         /// </summary>
         public static string WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0 {
