@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -574,6 +575,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             foreach (IWaveBoundary waveBoundary in boundaries)
             {
                 Assert.That(result, Has.Member(waveBoundary));
+            }
+        }
+
+        [Test]
+        public void GetDirectChildren_ContainsWavhFileFunctionStoreFunctions()
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            {
+                temp.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
+
+                var model = new WaveModel();
+                model.WaveOutputData.ConnectTo(temp.Path, false);
+                List<IFunction> functions = model.WaveOutputData.WavhFileFunctionStores.SelectMany(s => s.Functions).ToList();
+
+                // Precondition
+                Assert.That(functions, Has.Count.EqualTo(11));
+
+                // Call
+                List<object> result = model.GetDirectChildren().ToList();
+
+                // Assert
+                foreach (IFunction function in functions)
+                {
+                    Assert.That(result, Has.Member(function));
+                }
             }
         }
 

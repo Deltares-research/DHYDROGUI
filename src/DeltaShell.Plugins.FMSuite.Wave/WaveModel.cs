@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
@@ -769,6 +770,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             yield return WaveOutputData;
+
+            foreach (IFunction function in WaveOutputData.WavhFileFunctionStores.SelectMany(s => s.Functions))
+            {
+                yield return function;
+            }
         }
 
         protected override void OnInitialize()
