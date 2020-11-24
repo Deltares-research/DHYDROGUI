@@ -5,7 +5,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.NetCdf;
@@ -67,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
             using (ReconnectToMapFile())
             {
-                InitializeStationFeatures();
+                InitializeStationFeatures(featureProvider.Features.ToList());
             }
 
             foreach (IFeatureCoverage coverage in Functions.OfType<IFeatureCoverage>())
@@ -204,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             return longName != null ? $"{longName} ({variableName})" : variableName;
         }
 
-        private void InitializeStationFeatures()
+        private void InitializeStationFeatures(IList<IFeature> features)
         {
             IList<string> stationIds = GetStationIds();
 
@@ -217,9 +216,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             double[] ys = GetNetCdfVariableIEnumerable<double>(StationKeys.yCoordinate).ToArray();
 
             IEnumerable<Point> points = xs.Zip(ys, (x, y) => new Point(x, y));
-            IEnumerable<IFeature> stations = stationIds.Zip(points, CreateFeature2D);
 
-            featuresDictionary[featureNameStations].AddRange(stations);
+            foreach (var data in stationIds.Zip(points, (id, p) => new {Id = id, Geometry = p}))
+            {
+                IFeature feature = TryGetExistingFeature(features, data.Geometry, out IFeature existingFeature)
+                                       ? existingFeature
+                                       : CreateFeature2D(data.Id, data.Geometry);
+
+                featuresDictionary[featureNameStations].Add(feature);
+            }
+        }
+
+        private static bool TryGetExistingFeature(IEnumerable<IFeature> features, IGeometry geometry,
+                                                  out IFeature feature)
+        {
+            feature = features.FirstOrDefault(f => f.Geometry.EqualsExact(geometry));
+            return feature != null;
         }
 
         private static Feature2D CreateFeature2D(string idName, IGeometry geometry) =>

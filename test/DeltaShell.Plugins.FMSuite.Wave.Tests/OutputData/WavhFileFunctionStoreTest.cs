@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -7,6 +8,9 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -69,13 +73,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ConstructedCoverages_ConfiguredCorrectly()
+        [TestCaseSource(nameof(ConstructedCoveragesCases))]
+        public void ConstructedCoverages_ConfiguredCorrectly(IEnumerable<IFeature> modelFeatures, string expFeatureName)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
                 string localNcPath = tempDir.CopyTestDataFileToTempDirectory(ncPath);
                 var featureProvider = Substitute.For<IWaveFeatureProvider>();
+
+                featureProvider.Features.Returns(modelFeatures);
 
                 // Call
                 var store = new WavhFileFunctionStore(localNcPath, featureProvider);
@@ -98,6 +105,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                     Assert.That(coverage.Time.Attributes, Contains.Key("ncRefDate"));
                     Assert.That(coverage.Time.IsEditable, Is.False);
 
+                    var feature = (Feature2D) coverage.Features.Single();
+                    Assert.That(feature.Name, Is.EqualTo(expFeatureName));
+                    Assert.That(feature.Geometry.EqualsExact(new Point(3296.9479015919, 3694.42836468886)));
+
                     IVariable featureVariable = coverage.Arguments.LastOrDefault();
                     Assert.That(featureVariable, Is.Not.Null);
 
@@ -108,6 +119,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                     Assert.That(featureVariable.Attributes["hasVariable"], Is.EqualTo("false"));
                 }
             }
+        }
+
+        private static IEnumerable<TestCaseData> ConstructedCoveragesCases()
+        {
+            var sameGeom = new Point(3296.9479015919, 3694.42836468886);
+            var otherGeom = new Point(3296, 3694);
+
+            yield return new TestCaseData(new IFeature[]
+            {
+                new Feature2D
+                {
+                    Name = "model_feature",
+                    Geometry = sameGeom
+                }
+            }, "model_feature");
+
+            yield return new TestCaseData(new IFeature[]
+            {
+                new Feature2D
+                {
+                    Name = "model_feature",
+                    Geometry = otherGeom
+                }
+            }, "Station");
+
+            yield return new TestCaseData(Enumerable.Empty<IFeature>(), "Station");
         }
     }
 }
