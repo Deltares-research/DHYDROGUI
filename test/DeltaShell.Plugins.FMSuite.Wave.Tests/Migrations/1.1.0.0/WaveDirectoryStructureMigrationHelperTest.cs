@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.Remoting;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -156,6 +159,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
             // Assert
             Assert.That(hasParsed, Is.EqualTo(couldParse));
             Assert.That(databasePath, Is.EqualTo(expectedDatabasePath));
+        }
+
+        [Test]
+        public void MigrateFileStructure_MdwFileDoesNotExist_LogsErrorMessage()
+        {
+            // Call 
+            void Call() => WaveDirectoryStructureMigrationHelper.MigrateFileStructure("nonExistingPath");
+            IList<string> messages = TestHelper.GetAllRenderedMessages(Call).ToList();
+
+            // Assert
+            Assert.That(messages.Count, Is.EqualTo(1));
+
+            string msg = messages.First();
+            const string expectedMsg =
+                "An error occurred during the migration of one of the D-Waves models in this project, most likely due to two or more models sharing the same name within the project.\r\nPlease reboot the application and create a new project and import the models individually with the corresponding importers to ensure everything is in a valid state.";
+
+            Assert.That(msg, Is.EqualTo(expectedMsg));
         }
 
         private static void AssertSameFiles(DirectoryInfo sourceDirectoryInfo, DirectoryInfo referenceDirectoryInfo)

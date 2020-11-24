@@ -102,9 +102,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         {
             Ensure.NotNull(mdwPath, nameof(mdwPath));
 
-            DirectoryInfo origModelDirectoryInfo =
-                new FileInfo(mdwPath).Directory;
+            var expectedMdwInfo = new FileInfo(mdwPath);
 
+            if (!expectedMdwInfo.Exists)
+            {
+                log.Error(Resources.WaveDirectoryStructureMigrationHelper_MigrateFileStructure_ErrorMigrateFileStructure);
+                return;
+            }
+
+            DirectoryInfo origModelDirectoryInfo =
+                expectedMdwInfo.Directory;
             DirectoryInfo temporaryDirectory =
                 CreateToTemporaryDirectory(origModelDirectoryInfo);
 
