@@ -577,6 +577,93 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
+        [Test]
+        public void GetDirectChildren_ContainsDiagnosticFiles()
+        {
+            // Setup
+            var diagFile1 = new ReadOnlyTextFileData("", "");
+            var diagFile2 = new ReadOnlyTextFileData("", "");
+            using (var model = new WaveModel())
+            {
+                
+                model.WaveOutputData.DiagnosticFiles.Add(diagFile1);
+                model.WaveOutputData.DiagnosticFiles.Add(diagFile2);
+
+                // Call
+                IEnumerable<object> result = model.GetDirectChildren()
+                                                  .ToList();
+
+                Assert.That(result, Has.Member(diagFile1));
+                Assert.That(result, Has.Member(diagFile2));
+            }
+        }
+
+        [Test]
+        public void GetDirectChildren_ContainsSpectraFiles()
+        {
+            // Setup
+            var spectraFile1 = new ReadOnlyTextFileData("", "");
+            var spectraFile2 = new ReadOnlyTextFileData("", "");
+            using (var model = new WaveModel())
+            {
+                
+                model.WaveOutputData.SpectraFiles.Add(spectraFile1);
+                model.WaveOutputData.SpectraFiles.Add(spectraFile2);
+
+                // Call
+                IEnumerable<object> result = model.GetDirectChildren()
+                                                  .ToList();
+
+                Assert.That(result, Has.Member(spectraFile1));
+                Assert.That(result, Has.Member(spectraFile2));
+            }
+        }
+
+        [Test]
+        public void GetDirectChildren_ContainsWavmFileFunctionStores()
+        {
+            // Setup
+            var functionStore1 = new WavmFileFunctionStore("");
+            var functionStore2 = new WavmFileFunctionStore("");
+            using (var model = new WaveModel())
+            {
+                
+                model.WaveOutputData.WavmFileFunctionStores.Add(functionStore1);
+                model.WaveOutputData.WavmFileFunctionStores.Add(functionStore2);
+
+                // Call
+                IEnumerable<object> result = model.GetDirectChildren()
+                                                  .ToList();
+
+                Assert.That(result, Has.Member(functionStore1));
+                Assert.That(result, Has.Member(functionStore2));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetDirectChildren_ContainsWavhFileFunctionStores()
+        {
+            // Setup
+            using(var tempDir = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string ncPath = tempDir.CopyTestDataFileToTempDirectory("WaveOutputDataHarvesterTest\\wavh-Waves.nc");
+                var functionStore1 = new WavhFileFunctionStore(ncPath);
+                var functionStore2 = new WavhFileFunctionStore(ncPath);
+                
+                model.WaveOutputData.WavhFileFunctionStores.Add(functionStore1);
+                model.WaveOutputData.WavhFileFunctionStores.Add(functionStore2);
+
+                // Call
+                IEnumerable<object> result = model.GetDirectChildren()
+                                                  .ToList();
+
+                Assert.That(result, Has.Member(functionStore1));
+                Assert.That(result, Has.Member(functionStore2));
+            }
+        }
+
         private sealed class PathProvider
         {
             public string Path { get; set; }

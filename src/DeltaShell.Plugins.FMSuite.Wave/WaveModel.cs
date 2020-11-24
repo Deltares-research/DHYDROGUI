@@ -769,6 +769,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             yield return WaveOutputData;
+
+            foreach (ReadOnlyTextFileData diagnosticFile in WaveOutputData.DiagnosticFiles)
+            {
+                yield return diagnosticFile;
+            }
+
+            foreach (ReadOnlyTextFileData spectraFile in WaveOutputData.SpectraFiles)
+            {
+                yield return spectraFile;
+            }
+
+            foreach (WavmFileFunctionStore wavmFileFunctionStore in WaveOutputData.WavmFileFunctionStores)
+            {
+                yield return wavmFileFunctionStore;
+            }
+
+            foreach (WavhFileFunctionStore wavhFileFunctionStore in WaveOutputData.WavhFileFunctionStores)
+            {
+                yield return wavhFileFunctionStore;
+            }
         }
 
         protected override void OnInitialize()
