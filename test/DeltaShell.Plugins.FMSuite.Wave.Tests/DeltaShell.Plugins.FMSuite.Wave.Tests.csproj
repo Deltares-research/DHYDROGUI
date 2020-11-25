@@ -451,6 +451,7 @@
     <Compile Include="Validation\WavePropertiesValidatorTest.cs" />
     <Compile Include="Gui\WaveTimePointValidatorTest.cs" />
     <Compile Include="WaveApplicationPluginTest.cs" />
+    <Compile Include="WaveFeatureContainerTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
     <Compile Include="WaveModelRunTest.cs" />
     <Compile Include="WaveModelSaveLoadTest.cs" />
