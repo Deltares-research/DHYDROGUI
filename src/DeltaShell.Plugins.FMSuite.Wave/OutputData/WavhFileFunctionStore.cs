@@ -214,12 +214,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             }
 
             IEnumerable<Point> points = GetStationPoints();
+            Dictionary<IGeometry, Feature2D> featureDict = features.ToDictionary(f => f.Geometry);
             IEnumerable<(string, Point)> stationData = points.Zip(stationIds, (p, id) =>
                                                                       new ValueTuple<string, Point>(id, p));
 
             foreach ((string id, Point geometry) in stationData)
             {
-                IFeature feature = TryGetExistingFeature(features, geometry, out IFeature existingFeature)
+                IFeature feature = featureDict.TryGetValue(geometry, out Feature2D existingFeature)
                                        ? existingFeature
                                        : CreateFeature2D(id, geometry);
 

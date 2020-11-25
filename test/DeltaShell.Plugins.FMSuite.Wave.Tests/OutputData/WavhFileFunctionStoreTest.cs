@@ -8,7 +8,6 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NSubstitute;
