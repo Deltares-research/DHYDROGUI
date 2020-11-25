@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {
     /// <summary>
-    /// Defines the interface used for providing an <see cref="IFeature"/> collection for D-Waves.
+    /// Defines the interface used for providing the features of an <see cref="IWaveModel"/>.
     /// </summary>
     public interface IWaveFeatureProvider
     {
         /// <summary>
-        /// Gets the features.
+        /// Gets the observation points.
         /// </summary>
         /// <remarks>
         /// This is guaranteed to never be <c>null</c>.
         /// </remarks>
-        IEnumerable<IFeature> Features { get; }
+        IEnumerable<Feature2D> ObservationPoints { get; }
     }
 }

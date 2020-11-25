@@ -5,6 +5,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.NetCdf;
@@ -54,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Creates a new <see cref="WavhFileFunctionStore"/>.
         /// </summary>
         /// <param name="ncPath">The path to the netcdf file to read.</param>
-        /// <param name="featureProvider">The wave model feature provider. </param>
+        /// <param name="featureProvider">The <see cref="IWaveFeatureProvider"/> used to match data to their corresponding features during initialization. </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="featureProvider"/> is <c>null</c>.
         /// </exception>
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
             using (ReconnectToMapFile())
             {
-                InitializeStationFeatures(featureProvider.Features.ToList());
+                InitializeStationFeatures(featureProvider.ObservationPoints.ToList());
             }
 
             foreach (IFeatureCoverage coverage in Functions.OfType<IFeatureCoverage>())
@@ -203,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             return longName != null ? $"{longName} ({variableName})" : variableName;
         }
 
-        private void InitializeStationFeatures(IList<IFeature> features)
+        private void InitializeStationFeatures(IList<Feature2D> features)
         {
             IList<string> stationIds = GetStationIds();
 
@@ -212,16 +213,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
                 return;
             }
 
-            double[] xs = GetNetCdfVariableIEnumerable<double>(StationKeys.xCoordinate).ToArray();
-            double[] ys = GetNetCdfVariableIEnumerable<double>(StationKeys.yCoordinate).ToArray();
+            IEnumerable<Point> points = GetStationPoints();
+            IEnumerable<(string, Point)> stationData = points.Zip(stationIds, (p, id) =>
+                                                                      new ValueTuple<string, Point>(id, p));
 
-            IEnumerable<Point> points = xs.Zip(ys, (x, y) => new Point(x, y));
-
-            foreach (var data in stationIds.Zip(points, (id, p) => new {Id = id, Geometry = p}))
+            foreach ((string id, Point geometry) in stationData)
             {
-                IFeature feature = TryGetExistingFeature(features, data.Geometry, out IFeature existingFeature)
+                IFeature feature = TryGetExistingFeature(features, geometry, out IFeature existingFeature)
                                        ? existingFeature
-                                       : CreateFeature2D(data.Id, data.Geometry);
+                                       : CreateFeature2D(id, geometry);
 
                 featuresDictionary[featureNameStations].Add(feature);
             }
@@ -245,6 +245,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         {
             IList<string> stationIds = GetNetCdfFeatureVariableNames(StationKeys.name);
             return stationIds.Any() ? stationIds : GetNetCdfFeatureVariableNames(StationKeys.id);
+        }
+
+        private IEnumerable<Point> GetStationPoints()
+        {
+            double[] xs = GetNetCdfVariableIEnumerable<double>(StationKeys.xCoordinate).ToArray();
+            double[] ys = GetNetCdfVariableIEnumerable<double>(StationKeys.yCoordinate).ToArray();
+
+            return xs.Zip(ys, (x, y) => new Point(x, y));
         }
 
         private IList<string> GetNetCdfFeatureVariableNames(string variableName) =>

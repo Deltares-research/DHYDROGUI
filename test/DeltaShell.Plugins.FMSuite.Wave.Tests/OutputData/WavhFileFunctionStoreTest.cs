@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         [Test]
         [Category(TestCategory.DataAccess)]
         [TestCaseSource(nameof(ConstructedCoveragesCases))]
-        public void ConstructedCoverages_ConfiguredCorrectly(IEnumerable<IFeature> modelFeatures, string expFeatureName)
+        public void ConstructedCoverages_ConfiguredCorrectly(IEnumerable<Feature2D> observationPoints, string expFeatureName)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 string localNcPath = tempDir.CopyTestDataFileToTempDirectory(ncPath);
                 var featureProvider = Substitute.For<IWaveFeatureProvider>();
 
-                featureProvider.Features.Returns(modelFeatures);
+                featureProvider.ObservationPoints.Returns(observationPoints);
 
                 // Call
                 var store = new WavhFileFunctionStore(localNcPath, featureProvider);
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             var sameGeom = new Point(3296.9479015919, 3694.42836468886);
             var otherGeom = new Point(3296, 3694);
 
-            yield return new TestCaseData(new IFeature[]
+            yield return new TestCaseData(new[]
             {
                 new Feature2D
                 {
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 }
             }, "model_feature");
 
-            yield return new TestCaseData(new IFeature[]
+            yield return new TestCaseData(new[]
             {
                 new Feature2D
                 {
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 }
             }, "Station");
 
-            yield return new TestCaseData(Enumerable.Empty<IFeature>(), "Station");
+            yield return new TestCaseData(Enumerable.Empty<Feature2D>(), "Station");
         }
     }
 }

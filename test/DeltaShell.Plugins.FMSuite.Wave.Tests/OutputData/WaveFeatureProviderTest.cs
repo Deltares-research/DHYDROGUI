@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         }
 
         [Test]
-        public void GetFeatures_ReturnsCorrectCollection()
+        public void GetObservationPoints_ReturnsCorrectCollection()
         {
             // Setup
             var model = Substitute.For<IWaveModel>();
@@ -39,14 +39,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             var featureProvider = new WaveFeatureProvider(model);
 
             // Call
-            List<IFeature> features = featureProvider.Features.ToList();
+            List<Feature2D> result = featureProvider.ObservationPoints.ToList();
 
             // Assert
-            CollectionAssert.AreEqual(observationPoints, features);
+            CollectionAssert.AreEqual(observationPoints, result);
         }
 
         [TestCaseSource(nameof(ModelObservationPointsNullOrEmptyCases))]
-        public void GetFeatures_ModelObservationPointsNullOrEmpty_ReturnsEmptyCollection(IEventedList<Feature2DPoint> observationPoints)
+        public void GetObservationPoints_ModelObservationPointsNullOrEmpty_ReturnsEmptyCollection(IEventedList<Feature2DPoint> observationPoints)
         {
             // Setup
             var model = Substitute.For<IWaveModel>();
@@ -54,10 +54,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             var featureProvider = new WaveFeatureProvider(model);
 
             // Call
-            List<IFeature> features = featureProvider.Features.ToList();
+            List<Feature2D> result = featureProvider.ObservationPoints.ToList();
 
             // Assert
-            Assert.That(features, Is.Empty);
+            Assert.That(result, Is.Empty);
         }
 
         private static IEnumerable<IEventedList<Feature2DPoint>> ModelObservationPointsNullOrEmptyCases()

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {
     /// <summary>
-    /// Implements the interface used for providing an <see cref="IFeature"/> collection for D-Waves.
+    /// Implements the interface used for providing the features of an <see cref="IWaveModel"/>.
     /// </summary>
     public class WaveFeatureProvider : IWaveFeatureProvider
     {
@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// <summary>
         /// Initializes a new instance of the <see cref="WaveFeatureProvider"/> class.
         /// </summary>
-        /// <param name="model">The wave model.</param>
+        /// <param name="model">The wave model from which to obtain the features.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="model"/> is <c>null</c>.
         /// </exception>
@@ -26,6 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             this.model = model;
         }
 
-        public IEnumerable<IFeature> Features => model.ObservationPoints ?? Enumerable.Empty<IFeature>();
+        public IEnumerable<Feature2D> ObservationPoints => model.ObservationPoints ?? Enumerable.Empty<Feature2D>();
     }
 }
