@@ -8,6 +8,7 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NSubstitute;
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 Assert.That(store.Functions.Count, Is.EqualTo(11));
                 string[] expectedFunctionNames =
-                { 
+                {
                     "Water depth (Depth)",
                     "Significant wave height (Hsig)",
                     "Mean wave direction (Dir)",
@@ -106,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                     var feature = (Feature2D) coverage.Features.Single();
                     Assert.That(feature.Name, Is.EqualTo(expFeatureName));
-                    Assert.That(feature.Geometry.EqualsExact(new Point(3296.9479015919, 3694.42836468886)));
+                    Assert.That(feature.Geometry.EqualsExact(new Point(3296.9479015919, 3694.42836468886), 1E-7));
 
                     IVariable featureVariable = coverage.Arguments.LastOrDefault();
                     Assert.That(featureVariable, Is.Not.Null);
@@ -122,28 +123,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
         private static IEnumerable<TestCaseData> ConstructedCoveragesCases()
         {
-            var sameGeom = new Point(3296.9479015919, 3694.42836468886);
-            var otherGeom = new Point(3296, 3694);
+            const double x = 3296.9479015919;
+            const double y = 3694.42836468886;
 
-            yield return new TestCaseData(new[]
+            yield return new TestCaseData(GetFeatureArray(new Point(x, y)),
+                                          "model_feature");
+            yield return new TestCaseData(GetFeatureArray(new Point(x - 5E-8, y - 5E-8)),
+                                          "model_feature");
+            yield return new TestCaseData(GetFeatureArray(new Point(x + 5E-8, y + 5E-8)),
+                                          "model_feature");
+            yield return new TestCaseData(GetFeatureArray(new Point(x - 1E-7, y - 1E-7)),
+                                          "Station");
+            yield return new TestCaseData(GetFeatureArray(new Point(x + 1E-7, y + 1E-7)),
+                                          "Station");
+            yield return new TestCaseData(GetFeatureArray(new Point((int) x, (int) y)),
+                                          "Station");
+            yield return new TestCaseData(Enumerable.Empty<Feature2D>(),
+                                          "Station");
+        }
+
+        private static Feature2D[] GetFeatureArray(IGeometry geom)
+        {
+            return new[]
             {
                 new Feature2D
                 {
                     Name = "model_feature",
-                    Geometry = sameGeom
+                    Geometry = geom
                 }
-            }, "model_feature");
-
-            yield return new TestCaseData(new[]
-            {
-                new Feature2D
-                {
-                    Name = "model_feature",
-                    Geometry = otherGeom
-                }
-            }, "Station");
-
-            yield return new TestCaseData(Enumerable.Empty<Feature2D>(), "Station");
+            };
         }
     }
 }

@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             }
 
             IEnumerable<Point> points = GetStationPoints();
-            Dictionary<IGeometry, Feature2D> featureDict = features.ToDictionary(f => f.Geometry);
+            Dictionary<IGeometry, Feature2D> featureDict = features.ToDictionary(f => f.Geometry, new GeometryComparer());
             IEnumerable<(string, Point)> stationData = points.Zip(stationIds, (p, id) =>
                                                                       new ValueTuple<string, Point>(id, p));
 
@@ -226,13 +226,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
                 featuresDictionary[featureNameStations].Add(feature);
             }
-        }
-
-        private static bool TryGetExistingFeature(IEnumerable<IFeature> features, IGeometry geometry,
-                                                  out IFeature feature)
-        {
-            feature = features.FirstOrDefault(f => f.Geometry.EqualsExact(geometry));
-            return feature != null;
         }
 
         private static Feature2D CreateFeature2D(string idName, IGeometry geometry) =>
@@ -313,5 +306,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             {
                 {featureNameStations, null},
             };
+
+        /// <summary>
+        /// This geometry comparer compares with a tolerance of 1E-7, since there is a precision
+        /// difference between the newly created coordinates in memory and the ones from file.
+        /// </summary>
+        private class GeometryComparer : IEqualityComparer<IGeometry>
+        {
+            public bool Equals(IGeometry x, IGeometry y) => x.EqualsExact(y, 1E-7);
+
+            public int GetHashCode(IGeometry obj) =>
+                ((int) obj.EnvelopeInternal.Centre.X).GetHashCode() *
+                ((int) obj.EnvelopeInternal.Centre.Y).GetHashCode();
+        }
     }
 }
