@@ -1609,6 +1609,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private string path;
         private string currentOutputDirectoryPath;
         private string persistentOutputDirectory;
+        private string oldPersistentOutputDirectory = string.Empty;
         private bool removeSourceOutputFolder;
 
         /// <summary>
@@ -1651,6 +1652,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             if (modelDirectory.Name != Name)
             {
                 removeSourceOutputFolder = true;
+                oldPersistentOutputDirectory = persistentOutputDirectory;
                 persistentOutputDirectory = Path.Combine(modelDirectory.Parent.FullName, Name, DirectoryNameConstants.OutputDirectoryName);
             }
         }
@@ -1821,7 +1823,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private void RemoveOutputFolderInOldDirectory()
         {
             DisconnectOutput();
-            FileUtils.DeleteIfExists(Directory.GetParent(currentOutputDirectoryPath).FullName);
+            FileUtils.DeleteIfExists(Directory.GetParent(oldPersistentOutputDirectory).FullName);
+            oldPersistentOutputDirectory = String.Empty;
             removeSourceOutputFolder = false;
         }
 
