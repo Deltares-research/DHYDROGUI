@@ -98,6 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             runner = new DimrRunner(this, new DimrApiFactory());
 
+            BuildModel(creationCode, false);
+
             OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
             OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
             OutputWavmFileFunctionStores = new EventedList<WavmFileFunctionStore>();
@@ -114,8 +116,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavmFileFunctionStores);
             WaveOutputData.WavhFileFunctionStores.CollectionChanged +=
                 GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavhFileFunctionStores);
-
-            BuildModel(creationCode, false);
 
             ShowModelRunConsole = false;
             ValidateBeforeRun = true;
