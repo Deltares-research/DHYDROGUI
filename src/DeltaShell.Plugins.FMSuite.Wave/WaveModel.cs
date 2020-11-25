@@ -281,11 +281,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public IBoundaryContainer BoundaryContainer => ModelDefinition.BoundaryContainer;
 
-        public IEventedList<Feature2DPoint> ObservationPoints => ModelDefinition.ObservationPoints;
+        public IEventedList<Feature2DPoint> ObservationPoints => ModelDefinition.FeatureContainer.ObservationPoints;
 
-        public IEventedList<Feature2D> ObservationCrossSections => ModelDefinition.ObservationCrossSections;
+        public IEventedList<Feature2D> ObservationCrossSections => ModelDefinition.FeatureContainer.ObservationCrossSections;
 
-        public IEventedList<WaveObstacle> Obstacles => ModelDefinition.Obstacles;
+        public IEventedList<WaveObstacle> Obstacles => ModelDefinition.FeatureContainer.Obstacles;
         #endregion
 
         /// <summary>

@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                                                         KnownWaveProperties.LocationFile)
                                       .GetValueAsString();
 
-            if (modelDefinition.ObservationPoints.Any())
+            if (modelDefinition.FeatureContainer.ObservationPoints.Any())
             {
                 if (string.IsNullOrEmpty(locationFileName))
                 {
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 }
 
                 new ObsFile<Feature2DPoint>().Write(Path.Combine(targetDir, locationFileName),
-                                                    modelDefinition.ObservationPoints, false);
+                                                    modelDefinition.FeatureContainer.ObservationPoints, false);
             }
             else
             {
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             #region Not synchronized with modeldefintionproperties, since property is missing in csv file
 
             string curvesFileName = outputCategory.GetPropertyValue(KnownWaveProperties.CurveFile);
-            if (modelDefinition.ObservationCrossSections.Any())
+            if (modelDefinition.FeatureContainer.ObservationCrossSections.Any())
             {
                 if (string.IsNullOrEmpty(curvesFileName))
                 {
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 }
 
                 new PliFile<Feature2D>().Write(Path.Combine(targetDir, curvesFileName),
-                                               modelDefinition.ObservationCrossSections);
+                                               modelDefinition.FeatureContainer.ObservationCrossSections);
             }
             else
             {
@@ -215,21 +215,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
             ReadWaveBoundaries(modelDefinition, mdwCategories, mdwDir, logHandler);
 
-            modelDefinition.Obstacles.AddRange(CreateObstacleData(mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory),
-                                                                  modelDefinition));
+            modelDefinition.FeatureContainer.Obstacles.AddRange(CreateObstacleData(mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory),
+                                                                                   modelDefinition));
 
             string locFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)
                                           .GetPropertyValue(KnownWaveProperties.LocationFile);
             if (locFile != null)
             {
-                modelDefinition.ObservationPoints = new ObsFile<Feature2DPoint>().Read(Path.Combine(mdwDir, locFile), false);
+                modelDefinition.FeatureContainer.ObservationPoints = new ObsFile<Feature2DPoint>().Read(Path.Combine(mdwDir, locFile), false);
             }
 
             string curveFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)
                                             .GetPropertyValue(KnownWaveProperties.CurveFile);
             if (curveFile != null)
             {
-                modelDefinition.ObservationCrossSections = new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile)));
+                modelDefinition.FeatureContainer.ObservationCrossSections = new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile)));
             }
 
             logHandler.LogReport();
@@ -450,7 +450,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             WaveModelProperty propertyObstacleFile = modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
                                                                                       KnownWaveProperties.ObstacleFile);
 
-            if (modelDefinition.Obstacles.Any())
+            if (modelDefinition.FeatureContainer.Obstacles.Any())
             {
                 var obtCategories = new List<DelftIniCategory>();
 
@@ -467,7 +467,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                     geometryFile = modelName + ".pol";
                 }
 
-                IEventedList<WaveObstacle> features = modelDefinition.Obstacles;
+                IEventedList<WaveObstacle> features = modelDefinition.FeatureContainer.Obstacles;
                 new PliFile<Feature2D>().Write(Path.Combine(targetDir, geometryFile), features);
 
                 var fileInfo = new DelftIniCategory(KnownWaveObsCategories.ObstacleFileInformation);
@@ -475,7 +475,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 fileInfo.AddProperty(KnownWaveObsProperties.PolylineFile, geometryFile);
                 obtCategories.Add(fileInfo);
 
-                foreach (WaveObstacle obstacle in modelDefinition.Obstacles.OfType<WaveObstacle>())
+                foreach (WaveObstacle obstacle in modelDefinition.FeatureContainer.Obstacles.OfType<WaveObstacle>())
                 {
                     var obstacleCategory = new DelftIniCategory(KnownWaveCategories.ObstacleCategory);
 
