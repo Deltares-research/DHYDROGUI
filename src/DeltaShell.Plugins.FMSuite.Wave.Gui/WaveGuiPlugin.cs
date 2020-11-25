@@ -127,8 +127,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             // observation points
             ViewInfo<IEventedList<Feature2DPoint>, ILayer, VectorLayerAttributeTableView> obsPointViewInfo =
-                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, IWaveFeatureContainer>(
-                    "Observation Points (Waves)", m => m.ObservationPoints, () => Gui);
+                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, IWaveModel>(
+                    "Observation Points (Waves)", m => m.FeatureContainer.ObservationPoints, () => Gui);
             yield return obsPointViewInfo;
             yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsPointViewInfo, o => o.Data,
                                                                        o => o.ShortCutType == ShortCutType.FeatureSet);
@@ -144,9 +144,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             // obs. cross sections  
             ViewInfo<IEventedList<Feature2D>, ILayer, VectorLayerAttributeTableView> obsCrossSectionViewInfo =
-                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, IWaveFeatureContainer>(
+                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, IWaveModel>(
                     "Observation Cross Section (Waves)",
-                    m => m.ObservationCrossSections,
+                    m => m.FeatureContainer.ObservationCrossSections,
                     () => Gui);
             yield return obsCrossSectionViewInfo;
             yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsCrossSectionViewInfo, o => o.Data,
