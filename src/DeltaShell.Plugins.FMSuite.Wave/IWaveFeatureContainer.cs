@@ -1,4 +1,6 @@
-﻿using DelftTools.Utils.Collections.Generic;
+﻿using System.Collections.Generic;
+using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
@@ -22,5 +24,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// Gets the obstacles.
         /// </summary>
         IEventedList<WaveObstacle> Obstacles { get; }
+
+        /// <summary>
+        /// Gets all the features this <see cref="IWaveFeatureContainer"/> contains.
+        /// </summary>
+        IEnumerable<IFeature> GetAllFeatures();
     }
 }

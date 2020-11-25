@@ -1,4 +1,7 @@
-﻿using DelftTools.Utils.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
@@ -23,5 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public IEventedList<Feature2D> ObservationCrossSections { get; set; }
 
         public IEventedList<WaveObstacle> Obstacles { get; }
+
+        public IEnumerable<IFeature> GetAllFeatures() => ObservationPoints.Concat(ObservationCrossSections).Concat(Obstacles);
     }
 }
