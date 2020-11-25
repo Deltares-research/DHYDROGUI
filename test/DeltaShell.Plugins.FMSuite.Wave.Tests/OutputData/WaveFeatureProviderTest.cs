@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
-using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 using NSubstitute;
 using NUnit.Framework;
@@ -21,22 +20,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("model"));
+            Assert.That(e.ParamName, Is.EqualTo("featureContainer"));
         }
 
         [Test]
         public void GetObservationPoints_ReturnsCorrectCollection()
         {
             // Setup
-            var model = Substitute.For<IWaveModel>();
+            var featureContainer = Substitute.For<IWaveFeatureContainer>();
             var observationPoints = new EventedList<Feature2DPoint>
             {
                 new Feature2DPoint(),
                 new Feature2DPoint(),
                 new Feature2DPoint()
             };
-            model.FeatureContainer.ObservationPoints.Returns(observationPoints);
-            var featureProvider = new WaveFeatureProvider(model);
+            featureContainer.ObservationPoints.Returns(observationPoints);
+            var featureProvider = new WaveFeatureProvider(featureContainer);
 
             // Call
             List<Feature2D> result = featureProvider.ObservationPoints.ToList();
@@ -45,13 +44,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             CollectionAssert.AreEqual(observationPoints, result);
         }
 
-        [TestCaseSource(nameof(ModelObservationPointsNullOrEmptyCases))]
-        public void GetObservationPoints_ModelObservationPointsNullOrEmpty_ReturnsEmptyCollection(IEventedList<Feature2DPoint> observationPoints)
+        [TestCaseSource(nameof(ContainerObservationPointsNullOrEmptyCases))]
+        public void GetObservationPoints_ContainerObservationPointsNullOrEmpty_ReturnsEmptyCollection(IEventedList<Feature2DPoint> observationPoints)
         {
             // Setup
-            var model = Substitute.For<IWaveModel>();
-            model.FeatureContainer.ObservationPoints.Returns(observationPoints);
-            var featureProvider = new WaveFeatureProvider(model);
+            var featureContainer = Substitute.For<IWaveFeatureContainer>();
+            featureContainer.ObservationPoints.Returns(observationPoints);
+            var featureProvider = new WaveFeatureProvider(featureContainer);
 
             // Call
             List<Feature2D> result = featureProvider.ObservationPoints.ToList();
@@ -60,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             Assert.That(result, Is.Empty);
         }
 
-        private static IEnumerable<IEventedList<Feature2DPoint>> ModelObservationPointsNullOrEmptyCases()
+        private static IEnumerable<IEventedList<Feature2DPoint>> ContainerObservationPointsNullOrEmptyCases()
         {
             yield return null;
             yield return new EventedList<Feature2DPoint>();

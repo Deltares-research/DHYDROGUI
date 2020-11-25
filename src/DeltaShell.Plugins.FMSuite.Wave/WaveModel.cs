@@ -41,7 +41,6 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api;
 using SharpMap.Extensions.CoordinateSystems;
@@ -104,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             OutputWavmFileFunctionStores = new EventedList<WavmFileFunctionStore>();
             OutputWavhFileFunctionStores = new EventedList<WavhFileFunctionStore>();
 
-            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(new WaveFeatureProvider(this)),
+            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(new WaveFeatureProvider(FeatureContainer)),
                                                 new WaveOutputDataCopyHandler());
             
             WaveOutputData.DiagnosticFiles.CollectionChanged += 

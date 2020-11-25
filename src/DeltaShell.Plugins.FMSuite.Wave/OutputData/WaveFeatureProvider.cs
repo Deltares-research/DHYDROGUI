@@ -6,26 +6,26 @@ using NetTopologySuite.Extensions.Features;
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {
     /// <summary>
-    /// Implements the interface used for providing the features of an <see cref="IWaveModel"/>.
+    /// Implements the interface used for providing the features of an <see cref="IWaveFeatureContainer"/>.
     /// </summary>
     public class WaveFeatureProvider : IWaveFeatureProvider
     {
-        private readonly IWaveModel model;
+        private readonly IWaveFeatureContainer featureContainer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WaveFeatureProvider"/> class.
         /// </summary>
-        /// <param name="model">The wave model from which to obtain the features.</param>
+        /// <param name="featureContainer">The feature container from which to obtain the features.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="model"/> is <c>null</c>.
+        /// Thrown when <paramref name="featureContainer"/> is <c>null</c>.
         /// </exception>
-        public WaveFeatureProvider(IWaveModel model)
+        public WaveFeatureProvider(IWaveFeatureContainer featureContainer)
         {
-            Ensure.NotNull(model, nameof(model));
+            Ensure.NotNull(featureContainer, nameof(featureContainer));
 
-            this.model = model;
+            this.featureContainer = featureContainer;
         }
 
-        public IEnumerable<Feature2D> ObservationPoints => model.FeatureContainer.ObservationPoints ?? Enumerable.Empty<Feature2D>();
+        public IEnumerable<Feature2D> ObservationPoints => featureContainer.ObservationPoints ?? Enumerable.Empty<Feature2D>();
     }
 }
