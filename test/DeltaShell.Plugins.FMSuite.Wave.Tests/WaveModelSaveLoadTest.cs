@@ -124,11 +124,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
 
                 Assert.AreEqual(retrievedModel.BoundaryContainer.Boundaries.Count, model.BoundaryContainer.Boundaries.Count);
-                Assert.AreEqual(retrievedModel.Obstacles.Count, model.Obstacles.Count);
-                Assert.AreEqual(retrievedModel.Obstacles.Count, model.Obstacles.Count);
+                Assert.AreEqual(retrievedModel.FeatureContainer.Obstacles.Count, model.FeatureContainer.Obstacles.Count);
+                Assert.AreEqual(retrievedModel.FeatureContainer.Obstacles.Count, model.FeatureContainer.Obstacles.Count);
                 Assert.AreEqual(WaveDomainHelper.GetAllDomains(retrievedModel.OuterDomain).Count,
                                 WaveDomainHelper.GetAllDomains(model.OuterDomain).Count);
-                Assert.AreEqual(retrievedModel.Obstacles.Count, model.Obstacles.Count);
+                Assert.AreEqual(retrievedModel.FeatureContainer.Obstacles.Count, model.FeatureContainer.Obstacles.Count);
 
                 int subscriptionsAfter = TestReferenceHelper.FindEventSubscriptions(model);
                 int subscriptionsAfterRetrieved = TestReferenceHelper.FindEventSubscriptions(retrievedModel);

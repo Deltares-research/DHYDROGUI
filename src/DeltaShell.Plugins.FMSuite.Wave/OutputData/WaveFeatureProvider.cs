@@ -26,6 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             this.model = model;
         }
 
-        public IEnumerable<Feature2D> ObservationPoints => model.ObservationPoints ?? Enumerable.Empty<Feature2D>();
+        public IEnumerable<Feature2D> ObservationPoints => model.FeatureContainer.ObservationPoints ?? Enumerable.Empty<Feature2D>();
     }
 }

@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 new Feature2DPoint(),
                 new Feature2DPoint()
             };
-            model.ObservationPoints.Returns(observationPoints);
+            model.FeatureContainer.ObservationPoints.Returns(observationPoints);
             var featureProvider = new WaveFeatureProvider(model);
 
             // Call
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         {
             // Setup
             var model = Substitute.For<IWaveModel>();
-            model.ObservationPoints.Returns(observationPoints);
+            model.FeatureContainer.ObservationPoints.Returns(observationPoints);
             var featureProvider = new WaveFeatureProvider(model);
 
             // Call

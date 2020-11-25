@@ -20,8 +20,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// </exception>
         public ObstacleLayerSubProvider(IWaveLayerInstanceCreator instanceCreator) : base(instanceCreator) {}
 
-        protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveModel model) =>
-            Equals(features, model.Obstacles);
+        protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveFeatureContainer featureContainer) =>
+            Equals(features, featureContainer.Obstacles);
 
         protected override ILayer CreateFeatureLayer(IWaveModel model) =>
             InstanceCreator.CreateObstacleLayer(model);

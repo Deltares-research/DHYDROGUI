@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         public static ValidationReport Validate(WaveModel model)
         {
             IEnumerable<ValidationReport> subReports =
-                model.ObservationCrossSections.Select(
+                model.FeatureContainer.ObservationCrossSections.Select(
                     cs => new ValidationReport(cs.Name, ValidateObservationCrossSection(cs)));
 
             return new ValidationReport("Waves Model Area", subReports);

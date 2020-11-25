@@ -252,18 +252,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             ICoordinateTransformation fromUTM16ToWebMercator = new OgrCoordinateSystemFactory().CreateTransformation(src, target);
             ICoordinateTransformation fromWebMercatorToUTM16 = new OgrCoordinateSystemFactory().CreateTransformation(target, src);
 
-            List<Coordinate> coordinates =
-                WaveModelCoordinateConversion.GetAllModelFeatures(waveModel)
-                                             .SelectMany(f => f.Geometry.Coordinates)
-                                             .ToList();
+            List<Coordinate> coordinates = waveModel.FeatureContainer.GetAllFeatures()
+                                                    .SelectMany(f => f.Geometry.Coordinates)
+                                                    .ToList();
 
             waveModel.TransformCoordinates(fromUTM16ToWebMercator);
             waveModel.TransformCoordinates(fromWebMercatorToUTM16);
 
             List<Coordinate> coordinatesAfter =
-                WaveModelCoordinateConversion.GetAllModelFeatures(waveModel)
-                                             .SelectMany(f => f.Geometry.Coordinates)
-                                             .ToList();
+                waveModel.FeatureContainer.GetAllFeatures()
+                         .SelectMany(f => f.Geometry.Coordinates)
+                         .ToList();
 
             Assert.AreEqual(coordinatesAfter.Count, coordinates.Count);
             for (var i = 0; i < coordinates.Count; ++i)
