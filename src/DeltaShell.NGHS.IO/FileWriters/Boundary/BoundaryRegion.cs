@@ -25,6 +25,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             public const string QHDischargeDependencyKey = "discharge";
             public const string WaterDischarge = "dischargebnd";
             public const string WaterLevel = "waterlevelbnd";
+            public const string WaterLevelQuantityInRR = "water_level";
             public const string Time = "time";
             public const string WaterSalinity = "water_salinity";
             public const string WaterTemperature = "water_temperature";

@@ -74,12 +74,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             var boundaryDefinition = GetBoundaryDefinition(boundaryData);
             if (boundaryData.Series.IsTimeSeries)
             {
-                var waterLevelData = new Dictionary<string, string>{ {BoundaryRegion.QuantityStrings.WaterLevel, BoundaryRegion.UnitStrings.WaterLevel} };
+                var waterLevelData = new Dictionary<string, string>{ {BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR, BoundaryRegion.UnitStrings.WaterLevel} };
                 boundaryDefinition.Table = GenerateTableForTimeSeriesData(waterLevelData, boundaryData.Series.Data, startTime);
             }
             else
             {
-                boundaryDefinition.Table = GenerateTableForConstantData(BoundaryRegion.QuantityStrings.WaterLevel, BoundaryRegion.UnitStrings.WaterLevel, boundaryData.Series.Value);
+                boundaryDefinition.Table = GenerateTableForConstantData(BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR, BoundaryRegion.UnitStrings.WaterLevel, boundaryData.Series.Value);
             }
             
             return boundaryDefinition;

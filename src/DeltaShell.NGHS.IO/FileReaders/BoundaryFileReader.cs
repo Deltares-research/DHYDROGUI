@@ -200,6 +200,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowConstant;
                         boundaryCondition.Flow = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Name);
                         break;
+                    case BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR:
                     case BoundaryRegion.QuantityStrings.WaterLevel:
                         boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                         boundaryCondition.WaterLevel = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Name);
@@ -228,6 +229,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     case BoundaryRegion.QuantityStrings.WaterDischarge:
                         boundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowTimeSeries;
                         break;
+                    case BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR:
                     case BoundaryRegion.QuantityStrings.WaterLevel:
                         boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
                         break;

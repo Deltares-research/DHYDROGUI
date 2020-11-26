@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual("RBC1", boundaryNodeCategories[0].ReadProperty<string>(BoundaryRegion.Name.Key));
             Assert.AreEqual(BoundaryRegion.FunctionStrings.Constant, boundaryNodeCategories[0].ReadProperty<string>(BoundaryRegion.Function.Key));
             Assert.AreEqual(1, boundaryNodeCategories[0].Table.Count);
-            Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterLevel, boundaryNodeCategories[0].Table[0].Quantity.Value);
+            Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR, boundaryNodeCategories[0].Table[0].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.WaterLevel, boundaryNodeCategories[0].Table[0].Unit.Value);
             Assert.AreEqual(1, boundaryNodeCategories[0].Table[0].Values.Count);
             Assert.AreEqual("123.4", boundaryNodeCategories[0].Table[0].Values[0]);
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
             Assert.AreEqual("60", boundaryNodeCategories[1].Table[0].Values[1]);
             Assert.AreEqual("120", boundaryNodeCategories[1].Table[0].Values[2]);
             Assert.AreEqual("180", boundaryNodeCategories[1].Table[0].Values[3]);
-            Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterLevel, boundaryNodeCategories[1].Table[1].Quantity.Value);
+            Assert.AreEqual(BoundaryRegion.QuantityStrings.WaterLevelQuantityInRR, boundaryNodeCategories[1].Table[1].Quantity.Value);
             Assert.AreEqual(BoundaryRegion.UnitStrings.WaterLevel, boundaryNodeCategories[1].Table[1].Unit.Value);
             Assert.AreEqual(4, boundaryNodeCategories[1].Table[1].Values.Count);
             Assert.AreEqual("0", boundaryNodeCategories[1].Table[1].Values[0]);
