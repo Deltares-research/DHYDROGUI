@@ -30,11 +30,11 @@ def get_args():
 
 def get_dimr_version_regex_string() -> str:
     integer_regex = r'(0|([1-9]\d*))'
-
+    integers_regex = fr'(\.{integer_regex})*'
     known_prefixes = ['beta']
     prefix_regex = ''.join(f'(?:-{prefix})?' for prefix in known_prefixes)
 
-    return f'{integer_regex}\\.{integer_regex}\\.{integer_regex}{prefix_regex}'
+    return f'{integer_regex}{integers_regex}{prefix_regex}'
 
 
 if __name__ == "__main__":
