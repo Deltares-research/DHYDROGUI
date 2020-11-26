@@ -196,6 +196,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 SynchronizingGuiSelection = true;
                 region = value;
 
+                treeView.SelectedNode = null; 
                 treeView.Data = Region;
 
                 SynchronizingGuiSelection = false;
