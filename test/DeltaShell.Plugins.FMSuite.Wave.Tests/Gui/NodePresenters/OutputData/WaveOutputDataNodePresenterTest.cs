@@ -5,7 +5,6 @@ using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NSubstitute;

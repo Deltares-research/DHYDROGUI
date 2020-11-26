@@ -3,7 +3,6 @@ using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
 using Does = NUnit.Framework.Does;
 

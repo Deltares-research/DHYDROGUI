@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
-using DeltaShell.NGHS.IO.TestUtils;
+using DelftTools.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 

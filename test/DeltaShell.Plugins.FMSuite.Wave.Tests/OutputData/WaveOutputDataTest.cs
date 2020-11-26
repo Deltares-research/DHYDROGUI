@@ -4,7 +4,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Logging;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NSubstitute;
 using NUnit.Framework;

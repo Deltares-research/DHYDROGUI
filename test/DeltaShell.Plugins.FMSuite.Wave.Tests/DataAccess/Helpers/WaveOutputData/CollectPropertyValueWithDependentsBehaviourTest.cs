@@ -3,7 +3,6 @@ using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Helpers.WaveOutputData;
 using NSubstitute;
