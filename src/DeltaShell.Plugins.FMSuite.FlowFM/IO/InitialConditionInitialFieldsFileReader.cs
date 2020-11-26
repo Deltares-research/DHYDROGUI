@@ -42,19 +42,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                     c.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all")
                                         .Equals("2d", StringComparison.InvariantCultureIgnoreCase) &&
                                     c.ReadProperty<string>(InitialConditionRegion.Quantity.Key)
-                                        .Equals(ExtForceQuantNames.InitialWaterLevel, StringComparison.InvariantCultureIgnoreCase)))
+                                        .Equals(ExtForceQuantNames.WaterLevel, StringComparison.InvariantCultureIgnoreCase)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterLevel).ToString());
-                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.WaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
             }
             else if (categories.Any(c => c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase) &&
                                     c.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all")
                                         .Equals("2d", StringComparison.InvariantCultureIgnoreCase) &&
                                     c.ReadProperty<string>(InitialConditionRegion.Quantity.Key)
-                                        .Equals(ExtForceQuantNames.InitialWaterDepth, StringComparison.InvariantCultureIgnoreCase)))
+                                        .Equals(ExtForceQuantNames.WaterDepth, StringComparison.InvariantCultureIgnoreCase)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterDepth).ToString());
-                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.InitialWaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.WaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
             }
 
 
