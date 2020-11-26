@@ -66,6 +66,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     function = value;
                     if (bindingList != null)
                     {
+                        bindingList.Clear();
                         bindingList.Dispose();
                     }
 
@@ -100,6 +101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 if (bindingList != null)
                 {
+                    bindingList.Clear();
                     bindingList.Dispose();
                 }
             }
@@ -348,7 +350,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         public void EnsureVisible(object item) { }
         public ViewInfo ViewInfo { get; set; }
 
-        [InvokeRequired]
+        
         public void OnViewDataChanged(bool computeMinMax)
         {
             if (null == networkSideViewDataController)
@@ -395,18 +397,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 bottomProfileChartData.Add(d);
             });
 
-            var pipeSeries = CreatePipeChartData().Select(CreateSeries).ToList();
-            chart.Series.AddRange(pipeSeries);
-
-            if (pipeSeries.Count > 1)
-            {
-                chartView.Tools.Remove(pipeSeriesBandTool);
-                pipeSeriesBandTool = chartView.NewSeriesBandTool(pipeSeries[0], pipeSeries[1], pipeColor);
-                chartView.Tools.Add(pipeSeriesBandTool);
-            }
-
-            chartView.Tools.Remove(waterLevelPipesSeriesBandTool);
-
             var waterLevelChartData = CreateWaterLevelChartData();
             if (waterLevelChartData != null)
             {
@@ -414,13 +404,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 bottomProfileChartData.Add(waterLevelChartData);
             }
 
-            var waterLevelInPipeChartData = CreateWaterLevelInPipeChartData();
-            if (waterLevelInPipeChartData != null)
+            if (NetworkRoute.Segments.Values.All(s => s.Branch is IPipe))
             {
-                var waterLevelInPipeSeries = CreateSeries(waterLevelInPipeChartData);
-                chart.Series.Add(waterLevelInPipeSeries);
-                waterLevelPipesSeriesBandTool = chartView.NewSeriesBandTool(waterLevelInPipeSeries, pipeSeries[1], Color.FromArgb(72, Color.RoyalBlue));
-                chartView.Tools.Add(waterLevelPipesSeriesBandTool);
+                var pipeSeries = CreatePipeChartData().Select(CreateSeries).ToList();
+                chart.Series.AddRange(pipeSeries);
+
+                if (pipeSeries.Count > 1)
+                {
+                    chartView.Tools.Remove(pipeSeriesBandTool);
+                    pipeSeriesBandTool = chartView.NewSeriesBandTool(pipeSeries[0], pipeSeries[1], pipeColor);
+                    chartView.Tools.Add(pipeSeriesBandTool);
+                }
+
+                chartView.Tools.Remove(waterLevelPipesSeriesBandTool);
+
+                var waterLevelInPipeChartData = CreateWaterLevelInPipeChartData();
+                if (waterLevelInPipeChartData != null)
+                {
+                    var waterLevelInPipeSeries = CreateSeries(waterLevelInPipeChartData);
+                    chart.Series.Add(waterLevelInPipeSeries);
+                    waterLevelPipesSeriesBandTool = chartView.NewSeriesBandTool(waterLevelInPipeSeries, pipeSeries[1],
+                        Color.FromArgb(72, Color.RoyalBlue));
+                    chartView.Tools.Add(waterLevelPipesSeriesBandTool);
+                }
             }
 
             CreateRenderedCoverageChartData().ForEach(d =>
@@ -436,6 +442,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             UpdateStructureShapes();
             UpdateCompartmentShapes();
             UpdateTitle();
+            RefreshView();
+        }
+
+        [InvokeRequired]
+        private void RefreshView()
+        {
+            
         }
 
         private SideViewChartData CreateWaterLevelInPipeChartData()
@@ -889,26 +902,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             IShapeFeature shape = null;
             foreach (var structure in compositeStructure.Structures)
             {
-                if (structure is IWeir)
+                if (!FeatureToShape.TryGetValue(structure, out shape))
                 {
-                    shape = GetWeirShape((IWeir)structure);
+                    if (structure is IWeir)
+                    {
+                        shape = GetWeirShape((IWeir) structure);
+                    }
+                    else if (structure is IPump)
+                    {
+                        shape = GetPumpShape((IPump) structure);
+                    }
+                    else if (structure is IBridge)
+                    {
+                        shape = GetBrigdeShape((IBridge) structure);
+                    }
+                    else if (structure is ICulvert)
+                    {
+                        shape = GetCulvertShape((ICulvert) structure);
+                    }
+                    else if (structure is IExtraResistance)
+                    {
+                        shape = GetExtraResistanceShape((IExtraResistance) structure);
+                    }
                 }
-                else if (structure is IPump)
-                {
-                    shape = GetPumpShape((IPump)structure);
-                }
-                else if (structure is IBridge)
-                {
-                    shape = GetBrigdeShape((IBridge) structure);
-                }
-                else if (structure is ICulvert)
-                {
-                    shape = GetCulvertShape((ICulvert) structure);
-                }
-                else if (structure is IExtraResistance)
-                {
-                    shape = GetExtraResistanceShape((IExtraResistance)structure);
-                }
+
                 shape.Active = active;
                 AddStructureAndShape(structure, shape);
             }
@@ -955,9 +972,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         
         private void AddStructureAndShape(IStructure1D structure, IShapeFeature symbolShapeFeature)
         {
-            ((IHover)symbolShapeFeature).AddHover(new HoverRectangle(symbolShapeFeature, Color.FromArgb(50, Color.DarkTurquoise)));
             var hoverText = new HoverText(structure.Name, null, symbolShapeFeature, Color.Black, HoverPosition.Top, ArrowHeadPosition.None);
-            ((IHover)symbolShapeFeature).AddHover(hoverText);
+            if (symbolShapeFeature is IHover hoverShape)
+            {
+                hoverShape.ClearHovers();
+                hoverShape.AddHover(new HoverRectangle(symbolShapeFeature, Color.FromArgb(50, Color.DarkTurquoise)));
+                hoverShape.AddHover(hoverText);
+            }
 
             if (structure is IWeir)
             {
@@ -975,56 +996,68 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 hoverText.BackColor = Color.Thistle;
             }
-            shapeModifyTool.AddShape(symbolShapeFeature);
+            if(!shapeModifyTool.ShapeFeatures.Contains(symbolShapeFeature)) 
+                shapeModifyTool.AddShape(symbolShapeFeature);
             FeatureToShape[structure] = symbolShapeFeature;
             ShapesToFeature[symbolShapeFeature] = structure;
         }
 
         private void AddImageShape(Image image, IBranchFeature structure, double minY)
         {
-            double offset = RouteHelper.GetRouteChainage(NetworkRoute, structure);
-
-            var symbolShapeFeature = new SymbolShapeFeature(chart, offset, minY,
-                                                            SymbolShapeFeatureHorizontalAlignment.Center,
-                                                            SymbolShapeFeatureVerticalAlignment.Center)
-                                         {Image = image};
-            shapeModifyTool.AddShape(symbolShapeFeature);
-            symbolShapeFeature.AddHover(new HoverRectangle(symbolShapeFeature, Color.FromArgb(100, Color.Cyan)));
-            var hoverText = new HoverText(structure.Name, null, symbolShapeFeature, Color.Black,
-                                          HoverPosition.Bottom, ArrowHeadPosition.None) { BackColor = Color.WhiteSmoke };
-            symbolShapeFeature.AddHover(hoverText);
-
+            if (!FeatureToShape.TryGetValue(structure, out var symbolShapeFeature))
+            {
+                double offset = RouteHelper.GetRouteChainage(NetworkRoute, structure);
+                symbolShapeFeature = new SymbolShapeFeature(chart, offset, minY,
+                        SymbolShapeFeatureHorizontalAlignment.Center,
+                        SymbolShapeFeatureVerticalAlignment.Center)
+                    {Image = image};
+                shapeModifyTool.AddShape(symbolShapeFeature);
+                if (symbolShapeFeature is IHover hoverShape)
+                {
+                    hoverShape.AddHover(new HoverRectangle(symbolShapeFeature,Color.FromArgb(100, Color.Cyan)));
+                    var hoverText = new HoverText(structure.Name, null, symbolShapeFeature, Color.Black, HoverPosition.Bottom, ArrowHeadPosition.None) {BackColor = Color.WhiteSmoke};
+                    hoverShape.AddHover(hoverText);
+                }
+            }
+            if (!shapeModifyTool.ShapeFeatures.Contains(symbolShapeFeature))
+                shapeModifyTool.AddShape(symbolShapeFeature);
             FeatureToShape[structure] = symbolShapeFeature;
             ShapesToFeature[symbolShapeFeature] = structure;
         }
 
         private void AddDiffuseLateralSourceShape(IBranchFeature structure, double minY)
         {
-            double offset = RouteHelper.GetRouteChainage(NetworkRoute, structure);
-            double length = structure.Length;
+            if (!FeatureToShape.TryGetValue(structure, out var symbolShapeFeature))
+            {
+                double offset = RouteHelper.GetRouteChainage(NetworkRoute, structure);
+                double length = structure.Length;
 
-            var renderStyle = new VectorStyle
-                                          {
-                                              Line = new Pen(Color.MediumVioletRed, 2),
-                                              Outline = new Pen(Color.MediumVioletRed, 2)
-                                          };
+                var renderStyle = new VectorStyle
+                {
+                    Line = new Pen(Color.MediumVioletRed, 2),
+                    Outline = new Pen(Color.MediumVioletRed, 2)
+                };
 
-            renderStyle.Outline.DashStyle = DashStyle.Dash;
-            renderStyle.Line.DashStyle = DashStyle.Dash;
+                renderStyle.Outline.DashStyle = DashStyle.Dash;
+                renderStyle.Line.DashStyle = DashStyle.Dash;
 
-            var hoverStyle = renderStyle;
-            hoverStyle.Outline.Color = Color.LightBlue;
+                var hoverStyle = renderStyle;
+                hoverStyle.Outline.Color = Color.LightBlue;
 
-            var symbolShapeFeature = new FixedRectangleShapeFeature(chart, offset, minY, length, 6, true, false)
-                                         {
-                                             NormalStyle = renderStyle,
-                                         };
-
-            shapeModifyTool.AddShape(symbolShapeFeature);
-            symbolShapeFeature.AddHover(new HoverRectangle(symbolShapeFeature, hoverStyle));
-            var hoverText = new HoverText(structure.Name, null, symbolShapeFeature, Color.Black,
-                                          HoverPosition.Bottom, ArrowHeadPosition.None) { BackColor = Color.WhiteSmoke };
-            symbolShapeFeature.AddHover(hoverText);
+                symbolShapeFeature = new FixedRectangleShapeFeature(chart, offset, minY, length, 6, true, false)
+                {
+                    NormalStyle = renderStyle,
+                };
+                if (symbolShapeFeature is IHover hoverShape)
+                {
+                    hoverShape.AddHover(new HoverRectangle(symbolShapeFeature, hoverStyle));
+                    var hoverText = new HoverText(structure.Name, null, symbolShapeFeature, Color.Black,
+                        HoverPosition.Bottom, ArrowHeadPosition.None) {BackColor = Color.WhiteSmoke};
+                    hoverShape.AddHover(hoverText);
+                }
+            }
+            if (!shapeModifyTool.ShapeFeatures.Contains(symbolShapeFeature))
+                shapeModifyTool.AddShape(symbolShapeFeature);
 
             FeatureToShape[structure] = symbolShapeFeature;
             ShapesToFeature[symbolShapeFeature] = structure;

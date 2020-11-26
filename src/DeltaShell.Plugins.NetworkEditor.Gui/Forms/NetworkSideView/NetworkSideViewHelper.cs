@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             
             var yComponent = function.GetFirstComponentVariableOfType<double>();
-            if (xArgument == null)
+            if (yComponent == null)
             {
                 throw new ArgumentException(
                     String.Format("Couldn't create view because function {0} does not have a component of type double.",function.Name));

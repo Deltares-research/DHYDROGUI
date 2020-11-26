@@ -7,12 +7,14 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Units;
+using DelftTools.Utils;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -28,12 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string TimeDimensionName = "time";
         private IHydroNetwork outputNetwork = new HydroNetwork();
         private IHydroNetwork inputNetwork;
-        private IDiscretization outputDiscretization = new Discretization();
+        private readonly IDiscretization outputDiscretization;
         public IDictionary<string, IList<INetworkLocation>> LocationsByNetworkDataType { get; set; }
-
-        private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
-        private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
+        
         private readonly Dictionary<IVariable, IMultiDimensionalArray> argumentVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
+        private readonly Dictionary<IVariable, IMultiDimensionalArray> networkLocationsForThisFunctionCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         
         private FeatureTypeConverter featureTypeConverter = new FeatureTypeConverter();
         private NetworkLocationTypeConverter networkLocationTypeConverter = new NetworkLocationTypeConverter();
@@ -48,6 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public FM1DFileFunctionStore(IHydroNetwork network)
         {
             OutputFileReader = new FmMapFile1DOutputFileReader();
+            outputDiscretization = new Discretization();
+            outputDiscretization.Locations.IsAutoSorted = false;
             sobekStartIndex = 0;
             inputNetwork = network;
             DisableCaching = true;
@@ -131,24 +134,281 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var networkLocations = LocationsByNetworkDataType[location];
                     if (filters.Length == 0 || featureFilter == null)
                     {
-
-                        return new MultiDimensionalArray<T>((IList<T>)networkLocations);
+                        if (!networkLocationsForThisFunctionCache.TryGetValue(function, out var networkLocationsForThisFunction))
+                        {
+                            networkLocationsForThisFunction = new MultiDimensionalArray<T>((IList<T>)networkLocations);
+                            networkLocationsForThisFunctionCache[function] = networkLocationsForThisFunction;
+                        }
+                        return (MultiDimensionalArray<T>)networkLocationsForThisFunction;
                     }
 
                     if (featureFilter is VariableIndexFilter indexFilter)
                     {
-                        return new MultiDimensionalArray<T>(
-                            new List<T>(indexFilter.Indices.Select(i => (T)networkLocations[i])));
+                        if (!networkLocationsForThisFunctionCache.TryGetValue(function, out var networkLocationsForThisFunction))
+                        {
+                            networkLocationsForThisFunction = new MultiDimensionalArray<T>((IList<T>)networkLocations);
+                            networkLocationsForThisFunctionCache[function] = networkLocationsForThisFunction;
+                        }
+                        // ik weet niet helemaal zeker of dit nou moet... maar hier zit volgens mij de conversie naar de output
+                        var indexesOfLocationsInOutput = indexFilter.Indices.Select(i => LocationsByNetworkDataType[location].IndexOf(networkLocations[i])).ToArray();
+                        return new MultiDimensionalArray<T>((IList<T>)((MultiDimensionalArray<T>)networkLocationsForThisFunction).Select(1, indexesOfLocationsInOutput), new[] { MetaData?.Times.Count ?? 1, indexesOfLocationsInOutput.Length } );
                     }
                 }
                 return new MultiDimensionalArray<T>();
             }
+
+            if (function.ValueType == typeof(DateTime) && function.Name.Equals("Time", StringComparison.InvariantCultureIgnoreCase) && filters!= null && filters.Length ==0) //waarom double, gewoon omdat het kan (alle values in de map dile zijn direct doubles in de output, nooit int of ander type
+            {
+                if (!argumentVariableCache.TryGetValue(function, out var timeArgument))
+                {
+                    timeArgument = new MultiDimensionalArray<T>((IList<T>) MetaData.Times);
+                    argumentVariableCache[function] = timeArgument;
+                }
+                return (MultiDimensionalArray<T>) timeArgument;
+            }
+
+            if (function.ValueType == typeof(double) && !function.IsIndependent)//waarom double, gewoon omdat het kan (alle values in de map dile zijn direct doubles in de output, nooit int of ander type)
+            {
+                var coverage = GetCoverage(function);
+                if (coverage == null) return new MultiDimensionalArray<T>(new List<T>(), new[] {0, 0});
+                var coverageComponent = coverage.Components[0];
+                var ncVariableName = coverageComponent.Attributes.ContainsKey(NcNameAttribute) 
+                    ? coverageComponent.Attributes[NcNameAttribute] 
+                    : null;
+
+                if (ncVariableName == null)
+                {
+                    return new MultiDimensionalArray<T>(new List<T>(), new[] { 0, 0 });
+                }
+
+                if (filters == null  || filters.Length == 0)
+                {
+                    return GetValuesForTimeSeriesAtAllLocations<T>(function, ncVariableName); ;
+                }
+
+                var dateTimeFilter = filters.OfType<VariableValueFilter<DateTime>>().FirstOrDefault(f => f.Variable == coverage.Time);
+
+                var featureVariable = coverage.Arguments.FirstOrDefault(a => a != coverage.Time && a.ValueType.Implements(typeof(IBranchFeature)));
+                var branchFeatureFilter = filters.OfType<IVariableValueFilter>().FirstOrDefault(f => f.Variable == featureVariable);
+                var branchRangeFilter = filters.OfType<VariableIndexRangesFilter>().FirstOrDefault(f => f.Variable == featureVariable);
+
+                var hasBranchRangeFilter = branchRangeFilter != null && branchRangeFilter.IndexRanges.Count == 1;
+                var hasBranchFilter = branchFeatureFilter != null && branchFeatureFilter.Values.Count == 1;
+                var hasTimeFilter = dateTimeFilter != null && dateTimeFilter.Values.Count == 1;
+
+                int[] shape = null;
+                IList<T> timeSeriesData = null;
+                try
+                {
+                    if (hasTimeFilter)
+                    {
+                        var timeStepIndex = MetaData.Times.IndexOf(dateTimeFilter.Values[0]);
+                        if (hasBranchFilter)
+                        {
+                            
+                            timeSeriesData = GetValueForTimeStepAtSingleLocation<T>(function, ncVariableName, branchFeatureFilter, timeStepIndex, out shape);
+                            
+                        }
+                        else if (hasBranchRangeFilter)
+                        {
+                            timeSeriesData = GetValuesForTimeStepAtRangeOfLocations<T>(function, ncVariableName, branchRangeFilter, timeStepIndex, out shape);
+                        }
+                        else
+                        {
+                            timeSeriesData = GetValuesForTimeStepAtAllLocations<T>(function, ncVariableName, timeStepIndex, out shape);
+                        }
+                    }
+                    else
+                    {
+                        if (hasBranchFilter)
+                        {
+                            timeSeriesData = GetValuesForTimeSeriesAtSingleLocation<T>(function, ncVariableName, branchFeatureFilter, out shape);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    return new MultiDimensionalArray<T>(new List<T>(), new[] { 0, 0 });
+                }
+
+
+                if (shape == null || timeSeriesData == null)
+                {
+                    throw new NotImplementedException();
+                }
+                
+                UpdateMinMaxCache(timeSeriesData.Cast<double>(), function);
+                return new MultiDimensionalArray<T>(timeSeriesData, shape);
+            }
             return base.GetVariableValues<T>(function, filters);
+        }
+        #region private GetValue helper methods
+
+        private IMultiDimensionalArray<T> GetValuesForTimeSeriesAtAllLocations<T>(IVariable function, string ncVariableName)
+        {
+            if (argumentVariableCache.TryGetValue(function, out var timeSeriesAtAllLocations))
+            {
+                return (IMultiDimensionalArray<T>)timeSeriesAtAllLocations;
+            }
+            
+            Func<IMultiDimensionalArray<T>> realGetFunction = () =>
+                    {
+                        var variableData = GetAllVariableData<T>(ncVariableName);
+                        var variableDataShape = variableData.GetShape();
+                        UpdateMinMaxCache(variableData.Cast<double>(), function);
+                        return new MultiDimensionalArray<T>(variableData, variableDataShape);
+                    };
+            timeSeriesAtAllLocations = new LazyMultiDimensionalArray<T>(realGetFunction, () => (MetaData?.Times.Count ?? 1) * (MetaData?.NumLocationsForFunctionId(ncVariableName) ?? 1));
+            argumentVariableCache[function] = timeSeriesAtAllLocations;
+            return (IMultiDimensionalArray<T>) timeSeriesAtAllLocations;
+        }
+
+        private T[,] GetAllVariableData<T>(string variableName)
+        {
+            using (ReconnectToMapFile())
+            {
+                var variable = netCdfFile.GetVariableByName(variableName);
+                if (variable == null) return new T[0, 0];
+                return (T[,]) netCdfFile.Read(variable);
+            }
+        }
+
+        private IList<T> GetValuesForTimeSeriesAtSingleLocation<T>(IVariable function, string ncVariableName, IVariableValueFilter branchFeatureFilter, out int[] shape)
+        {
+            var locationIndex = GetLocationIndex((IBranchFeature)branchFeatureFilter.Values[0], ncVariableName);
+
+            var origin = new[] { 0, locationIndex };
+            shape = new[] { MetaData.Times.Count, 1 };
+            if (argumentVariableCache.TryGetValue(function, out var timeSeriesAtAllLocations))
+            {
+                return ((IMultiDimensionalArray<T>)timeSeriesAtAllLocations).Select(1, new [] {locationIndex} );
+            }
+        
+            return GetSelectionOfVariableData<T>(ncVariableName, origin, ref shape);
+        }
+
+        private IList<T> GetValuesForTimeStepAtAllLocations<T>(IVariable function, string ncVariableName, int timeStepIndex, out int[] shape)
+        {
+            var origin = new[] { timeStepIndex, 0 };
+            var timeDependentVariableMetaDataBaseKeyForThisLocation = MetaData.Locations.Keys.FirstOrDefault(tdv => tdv.Name.Equals(ncVariableName));
+            if (timeDependentVariableMetaDataBaseKeyForThisLocation == null)
+                throw new ArgumentNullException(nameof(timeDependentVariableMetaDataBaseKeyForThisLocation));
+            
+            shape = new[] { 1, MetaData.Locations[timeDependentVariableMetaDataBaseKeyForThisLocation].Count };
+            
+            if (argumentVariableCache.TryGetValue(function, out var timeSeriesAtAllLocations))
+            {
+                return ((IMultiDimensionalArray<T>) timeSeriesAtAllLocations).Select(0, new[] {timeStepIndex});
+
+            }
+
+            return GetSelectionOfVariableData<T>(ncVariableName, origin, ref shape);
+        }
+
+        private IList<T> GetValuesForTimeStepAtRangeOfLocations<T>(IVariable function, string ncVariableName, VariableIndexRangesFilter branchRangeFilter, int timeStepIndex, out int[] shape)
+        {
+            var endIndex = branchRangeFilter.IndexRanges[0].Second;
+            var beginIndex = branchRangeFilter.IndexRanges[0].First;
+
+            var origin = new[] { timeStepIndex, beginIndex };
+            shape = new[] { 1, endIndex - beginIndex + 1 };
+            if (argumentVariableCache.TryGetValue(function, out var timeSeriesAtAllLocations))
+            {
+                return ((IMultiDimensionalArray<T>)timeSeriesAtAllLocations).Select(new[] { timeStepIndex, beginIndex}, new[] { timeStepIndex, endIndex});
+
+            }
+            return GetSelectionOfVariableData<T>(ncVariableName, origin, ref shape);
+        }
+
+        private IList<T> GetValueForTimeStepAtSingleLocation<T>(IVariable function, string ncVariableName,
+            IVariableValueFilter branchFeatureFilter, int timeStepIndex, out int[] shape)
+        {
+            var locationIndex = GetLocationIndex((IBranchFeature)branchFeatureFilter.Values[0], ncVariableName);
+            shape = new[] { 1, 1 };
+            if (argumentVariableCache.TryGetValue(function, out var timeSeriesAtAllLocations))
+            {
+                return ((IMultiDimensionalArray<T>)timeSeriesAtAllLocations).Select(new[] {timeStepIndex, locationIndex}, new[] {timeStepIndex, locationIndex});
+
+            }
+            var origin = new[] { timeStepIndex, locationIndex };
+            
+            return GetSelectionOfVariableData<T>(ncVariableName, origin, ref shape);
+        }
+
+        private IList<T> GetSelectionOfVariableData<T>(string ncVariableName, int[] origin, ref int[] shape)
+        {
+            try
+            {
+                using (ReconnectToMapFile())
+                {
+                    var fileVariable = netCdfFile.GetVariableByName(ncVariableName);
+
+                    var locationData = netCdfFile.Read(fileVariable, origin, shape);
+                    return (IList<T>)locationData.OfType<object>().Select(Convert.ToDouble).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                shape = new[] { 0, 0 };
+                return new List<T>();
+            }
+        }
+
+        #endregion
+
+        private ICoverage GetCoverage(IVariable variable)
+        {
+            return Functions.OfType<ICoverage>().FirstOrDefault(f => f.Arguments.Concat(f.Components).Contains(variable));
+        }
+        private int GetLocationIndex(IBranchFeature branchFeature, string netCdfVariableName)
+        {
+            var timeDependentVariableMetaDataBaseKeyForThisLocation = MetaData.Locations.Keys.FirstOrDefault(tdv => tdv.Name.Equals(netCdfVariableName));
+            if (timeDependentVariableMetaDataBaseKeyForThisLocation == null)
+                throw new ArgumentNullException(nameof(timeDependentVariableMetaDataBaseKeyForThisLocation));
+            LocationMetaData location;
+            if (branchFeature is INetworkLocation)
+            {
+                var branchIndex = branchFeature.Network.Branches.IndexOf(branchFeature.Branch);
+                location = MetaData.Locations[timeDependentVariableMetaDataBaseKeyForThisLocation]
+                               .FirstOrDefault(l => l.BranchId == branchIndex 
+                                        && Math.Abs(l.Chainage - branchFeature.Chainage) < double.Epsilon) 
+                           ??  MetaData.Locations[timeDependentVariableMetaDataBaseKeyForThisLocation]
+                               .FirstOrDefault(l => l.Id.Equals(branchFeature.Name, StringComparison.InvariantCultureIgnoreCase))
+                           ??  MetaData.Locations[timeDependentVariableMetaDataBaseKeyForThisLocation]
+                               .FirstOrDefault(l => Math.Abs(l.XCoordinate - branchFeature.Geometry.Coordinate.X) < double.Epsilon 
+                                                 && Math.Abs(l.YCoordinate - branchFeature.Geometry.Coordinate.Y) < double.Epsilon);
+            }
+            else if (branchFeature is IStructure1D)
+            {
+                var structure = (IStructure1D)branchFeature;
+
+                var compositePrefix = structure.ParentStructure?.Structures.Count > 1
+                    ? structure.ParentStructure.Name + "_"
+                    : string.Empty;
+
+                var structureName = compositePrefix + branchFeature.Name;
+
+                location = MetaData.Locations[timeDependentVariableMetaDataBaseKeyForThisLocation].FirstOrDefault(l => l.Id == structureName);
+            }
+            else
+            {
+                location = MetaData.Locations[timeDependentVariableMetaDataBaseKeyForThisLocation].FirstOrDefault(l => l.Id == branchFeature.Name);
+            }
+
+            if (location == null)
+            {
+                throw new ArgumentException($"Values for {branchFeature.Name} feature type {branchFeature.GetType().Name} could not be found.");
+            }
+
+            return MetaData.Locations[timeDependentVariableMetaDataBaseKeyForThisLocation].IndexOf(location);
         }
         protected override void UpdateFunctionsAfterPathSet()
         {
             UpdateNetworkAndDiscretisationAfterPathSet();
             if (CoordinateSystem == null) CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(Path);
+            // clear caches for argument variables and networkLocations
+            argumentVariableCache.Clear();
+            networkLocationsForThisFunctionCache.Clear();
             Functions.Clear();
             if (File.Exists(Path))
             {

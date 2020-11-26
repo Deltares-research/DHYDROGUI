@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private INetworkCoverage waterLevelNetworkCoverage;
         private readonly IList<IFeatureCoverage> renderedFeatureCoverages = new List<IFeatureCoverage>();
         private readonly IList<INetworkCoverage> renderedNetworkCoverages = new List<INetworkCoverage>();
-
+        private readonly IDictionary<string, IFunction> createdRoutes = new Dictionary<string, IFunction>();
         private NetworkSideViewCoverageManager networkSideViewCoverageManager;
 
         public NetworkSideViewDataController(Route route, NetworkSideViewCoverageManager coverageManager, ModelNameForCoverageDelegate modelNameForCoverageDelegate = null)
@@ -501,13 +501,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        public static IFunction CreateRouteFunctionFromNetworkCoverage(Route route, INetworkCoverage coverage, IUnit yUnit)
+        public IFunction CreateRouteFunctionFromNetworkCoverage(Route route, INetworkCoverage coverage, IUnit yUnit)
         {
             if (route == null || coverage == null || (coverage.Time != null && coverage.Time.Values.Count == 0))
                 // Last condition: if time-dependent, but no times available, do not create function. 
                 return null; 
             
-            var networkLocations = RouteHelper.GetLocationsInRoute(coverage, route);
+            var networkLocations = RouteHelper.GetLocationsInRoute(coverage, route).OrderBy(loc => RouteHelper.GetRouteChainage(route, loc));
             
             var chainagesValues = networkLocations.Select(loc => RouteHelper.GetRouteChainage(route, loc));
             var chainages = new Variable<double>("Chainage");
@@ -522,7 +522,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             IFunction function = new Function();
             function.Arguments.Add(chainages);
             function.Components.Add(yVar);
-            function.Name = yUnit.Name; 
+            function.Name = yUnit.Name;
+
+            if (function.Name != null && createdRoutes.ContainsKey(function.Name))
+            {
+                //prevent memory leaking
+                createdRoutes[function.Name].Components = null;
+                createdRoutes[function.Name].Arguments = null;
+                createdRoutes[function.Name].Store = null;
+                createdRoutes[function.Name].Parent = null;
+                createdRoutes[function.Name] = function;
+            }
+            
             return function; 
         }
 
@@ -942,6 +953,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     {
                         delayedCoverageValuesChanged.Dispose();
                     }
+
+                    foreach (var createdRoute in createdRoutes)
+                    {
+                        createdRoute.Value.Components = null;
+                        createdRoute.Value.Arguments = null;
+                        createdRoute.Value.Store = null;
+                        createdRoute.Value.Parent = null;
+                    }
+                    createdRoutes.Clear();
                 }
             }
             disposed = true;

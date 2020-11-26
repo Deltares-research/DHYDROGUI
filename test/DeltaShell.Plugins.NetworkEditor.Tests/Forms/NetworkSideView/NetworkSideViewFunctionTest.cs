@@ -122,6 +122,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
             var route = RouteHelper.CreateRoute(new NetworkLocation(branch2, 90.0),
                                     new NetworkLocation(branch1, 10.0));
+            route.Network = network;
 
 
             // see above
@@ -201,7 +202,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
                                             new NetworkLocation(network.Branches[0], 10.0)
                                         );
 
-            var function = NetworkSideViewDataController.CreateRouteFunctionFromNetworkCoverage(route, source, new Unit("bla"));
+            var function = new NetworkSideViewDataController(route,null).CreateRouteFunctionFromNetworkCoverage(route, source, new Unit("bla"));
             
             Assert.AreEqual(190, function.Components[0].MinValue);
             Assert.AreEqual(730, function.Components[0].MaxValue);

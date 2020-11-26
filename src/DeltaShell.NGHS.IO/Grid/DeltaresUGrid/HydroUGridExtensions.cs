@@ -202,7 +202,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     Chainage = networkBranch.Length - meshGeometryBranchChainage < 0.00001 ? networkBranch.Length : meshGeometryBranchChainage,
                     Name = meshGeometry.NodeIds[i],
                     LongName = meshGeometry.NodeLongNames[i],
-                    Geometry = HydroNetworkHelper.GetStructureGeometry(networkBranch, networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage) // => werkt niet! new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
+                    Geometry = new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
                 };
             }
 
