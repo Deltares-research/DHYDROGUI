@@ -7,14 +7,12 @@ def search_files(folder_path: Path, extension: str):
     return folder_path.glob(f"**/*{extension}")
 
 
-def update_files(file_paths, find_and_replace_list, encoding=None):
+def update_files(file_paths, find, replace, encoding=None):
     """Finds and replaces the content for each specified file."""
     for p in file_paths:
         with p.open(encoding=encoding) as f:
             lines = f.read()
-
-        for regex_find, replacement in find_and_replace_list:
-            lines = regex_find.sub(replacement, lines)
+            lines = find.sub(replace, lines)
 
         with p.open(mode='w', encoding=encoding) as f:
             f.writelines(lines)
@@ -44,20 +42,12 @@ if __name__ == "__main__":
     root_path = Path(args.root_path)
     package_name = args.package_name
     new_version_string = args.new_version
-    
-    project_file_paths = search_files(root_path, '.csproj')
+     
     escaped_package_name = re.escape(package_name)
     version_regex = get_version_regex_string()
-
-    find_and_replace_csproj = [
-        (re.compile(f'{escaped_package_name}\\.{version_regex}'),   f"{package_name}.{new_version_string}"),
-    ]
-
-    update_files(project_file_paths, find_and_replace_csproj, "utf-8-sig")
+    
+    project_file_paths = search_files(root_path, '.csproj')
+    update_files(project_file_paths, re.compile(f'{escaped_package_name}\\.{version_regex}'), f"{package_name}.{new_version_string}", "utf-8-sig")
 
     config_file_paths = search_files(root_path, 'packages.config')
-    find_and_replace_config = [
-        (re.compile(f'"{escaped_package_name}" version="{version_regex}"'), f'"{package_name}" version="{new_version_string}"'),
-    ]    
-
-    update_files(config_file_paths, find_and_replace_config)
+    update_files(config_file_paths, re.compile(f'"{escaped_package_name}" version="{version_regex}"'), f'"{package_name}" version="{new_version_string}"')
