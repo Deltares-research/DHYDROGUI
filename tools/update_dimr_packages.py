@@ -24,11 +24,13 @@ def get_args():
     """Parses and returns the arguments"""
     parser = argparse.ArgumentParser()
     parser.add_argument("root_path", help="Path to the root of the working directory")
-    parser.add_argument("dimr_version", help="The full DIMR version to update to i.e. Major.Minor.Patch[-Prefixes.counter.hash]")
+    parser.add_argument("package_name", help="The name of the NuGet package.")
+    parser.add_argument("new_version", help="The full version to update to i.e. Major.Minor.Patch[-Prefixes.counter.hash]")
+
     return parser.parse_args()
 
 
-def get_dimr_version_regex_string() -> str:
+def get_version_regex_string() -> str:
     integer_regex = r'(0|([1-9]\d*))'
     integers_regex = fr'(\.{integer_regex})*'
     known_prefixes = ['beta']
@@ -40,14 +42,12 @@ def get_dimr_version_regex_string() -> str:
 if __name__ == "__main__":
     args = get_args()
     root_path = Path(args.root_path)
+    package_name = args.package_name
+    new_version_string = args.new_version
     
     project_file_paths = search_files(root_path, '.csproj')
-
-    new_version_string = args.dimr_version
-    version_regex = get_dimr_version_regex_string()
-
-    package_name = 'Dimr.Libs'
     escaped_package_name = re.escape(package_name)
+    version_regex = get_version_regex_string()
 
     find_and_replace_csproj = [
         (re.compile(f'{escaped_package_name}\\.{version_regex}'),   f"{package_name}.{new_version_string}"),
