@@ -2577,6 +2577,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             UpdateSpatialDataAfterGridSet(grid, false, false, false);
             ImportSpatialOperationsAfterLoading();
+            ReconnectOutputFiles(Path.GetDirectoryName(mduPath));
             FileBasedModelIsLoaded = true;
         }
 
