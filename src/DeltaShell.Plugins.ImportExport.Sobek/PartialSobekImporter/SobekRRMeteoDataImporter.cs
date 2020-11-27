@@ -196,7 +196,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void ReadAndSetEvaporation()
         {
-            var evaporationTable = SobekRREvaporationReader.ReadEvaporationData(filePathEvaporation).FirstOrDefault();
+            var model = GetModel<RainfallRunoffModel>();
+            var evaporationTable = SobekRREvaporationReader.ReadEvaporationData(filePathEvaporation, model.StartTime, model.StopTime).FirstOrDefault();
 
             if (evaporationTable == null)
             {

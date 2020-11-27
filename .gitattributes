@@ -36596,6 +36596,7 @@ test/DeltaShell.Sobek.Readers.Tests/Readers/SobekWaqReaders/SobekWaqUserDefinedT
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekWeirReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekWindReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/packages.config -text
+test/DeltaShell.Sobek.Readers.Tests/test-data/Evaporation/EVAPOR_with_longtime_average.GEM -text
 test/DeltaShell.Sobek.Readers.Tests/test-data/FlowBoundaryConditionRecord.txt -text
 test/DeltaShell.Sobek.Readers.Tests/test-data/JAKARTA_STRUCT.DEF -text
 test/DeltaShell.Sobek.Readers.Tests/test-data/RD-02X.bui -text

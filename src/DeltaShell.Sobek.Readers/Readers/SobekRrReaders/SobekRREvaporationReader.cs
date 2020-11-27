@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using DelftTools.Utils.RegularExpressions;
 using log4net;
 
@@ -12,7 +13,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekRREvaporationReader));
 
-        public static IEnumerable<DataTable> ReadEvaporationData(string filePath)
+        public static IEnumerable<DataTable> ReadEvaporationData(string filePath, DateTime? startDateTime = null, DateTime? stopDateTime = null)
         {
             //todo: refactor reading efficiently (w.r.t memory use)
 
@@ -21,26 +22,38 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
                 log.ErrorFormat("Could not find file {0}.", filePath);
                 return new List<DataTable>();
             }
-            return new[] {GetSobekEvaporationStation(File.ReadLines(filePath))};
+            return new[] {GetSobekEvaporationStation(File.ReadLines(filePath), startDateTime, stopDateTime)};
         }
 
-        public static IEnumerable<DataTable> ParseEvaporationData(string fileContent)
+        public static IEnumerable<DataTable> ParseEvaporationData(string fileContent, DateTime? startDateTime = null, DateTime? stopDateTime = null)
         {
             var lines = fileContent.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            return new[] {GetSobekEvaporationStation(lines)};
+            return new[] {GetSobekEvaporationStation(lines, startDateTime, stopDateTime)};
         }
 
-        private static DataTable GetSobekEvaporationStation(IEnumerable<string> lines)
+        private static DataTable GetSobekEvaporationStation(IEnumerable<string> lines, DateTime? startDateTime, DateTime? stopDateTime)
         {
             const string pattern = @"\s*(?<year>\d+)\s+(?<month>\d+)\s+(?<day>\d+)\s+(?<mm_per_day>" + RegularExpression.Scientific + @"\s*)+";
+            const string specialKeyPattern = @"^\*(?<special_key>[^*].*$)";
 
             bool tableCreated = false;
+            bool longTimeAveraging = false;
             int numberOfStations = 0;
 
             DataTable table = null;
 
             foreach (var line in lines)
             {
+                
+                var specialKeyMatch = RegularExpression.GetMatches(specialKeyPattern, line);
+                if (specialKeyMatch.Count == 1)
+                {
+                    var specialKey = specialKeyMatch[0].Groups["special_key"].Captures[0].Value;
+                    if(!longTimeAveraging)
+                        longTimeAveraging = CheckIfSpecialKeyIsLongTimeAveraging(specialKey);
+                    continue;
+                }
+                    
                 var matches = RegularExpression.GetMatches(pattern, line);
 
                 if (matches.Count == 1)
@@ -77,7 +90,37 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
                 }
             }
 
-            return table;
+            if (!longTimeAveraging || table == null )
+                return table;
+            if (!startDateTime.HasValue || !stopDateTime.HasValue) return table;
+            DataTable modelTimesTable = CreateTimeEvaporationTable(numberOfStations);
+            var currentTime = startDateTime.Value;
+            while (!currentTime.Equals(stopDateTime.Value.AddDays(1)))
+            {
+                var dataRow = table.AsEnumerable()
+                    .SingleOrDefault(myRow => myRow.Field<int>("Month") == currentTime.Month
+                                              && myRow.Field<int>("Day") == currentTime.Day);
+                if (dataRow != null)
+                {
+                    var row = modelTimesTable.NewRow();
+                    row[0] = currentTime.Year;
+                    row[1] = currentTime.Month;
+                    row[2] = currentTime.Day;
+                    for (int i = 0; i < numberOfStations; i++)
+                    {
+                        row[3 + i] = dataRow[3 + i];
+                    }
+                    modelTimesTable.Rows.Add(row);
+                }
+                currentTime = currentTime.AddDays(1);
+            }
+
+            return modelTimesTable;
+        }
+
+        private static bool CheckIfSpecialKeyIsLongTimeAveraging(string specialKey)
+        {
+            return specialKey.Equals("Longtime average", StringComparison.InvariantCultureIgnoreCase);
         }
 
         private static DataTable CreateTimeEvaporationTable(int numberOfStations)

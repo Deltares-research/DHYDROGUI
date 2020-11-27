@@ -93,5 +93,30 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual(13, lstEvaporationData.FirstOrDefault().Columns.Count);
             Assert.AreEqual(16437, lstEvaporationData.FirstOrDefault().Rows.Count);
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ReadEvaporationFileWithLongtimeAverage()
+        {
+            string gemFilePath = TestHelper.GetTestFilePath(@"Evaporation\EVAPOR_with_longtime_average.GEM");
+            var lstEvaporationData = SobekRREvaporationReader.ReadEvaporationData(gemFilePath);
+            var dataTable = lstEvaporationData.FirstOrDefault();
+            Assert.NotNull(dataTable);
+            Assert.AreEqual(366, dataTable.Rows.Count);
+            var startDateTime = DateTime.Today;
+            var stopDateTime = startDateTime.AddDays(2);
+            lstEvaporationData = SobekRREvaporationReader.ReadEvaporationData(gemFilePath, startDateTime, stopDateTime);
+            
+            dataTable = lstEvaporationData.FirstOrDefault();
+            Assert.NotNull(dataTable);
+            Assert.AreEqual(3, dataTable.Rows.Count);// today + 2 more days
+            Assert.That(dataTable.Rows[0]["Year"], Is.EqualTo(startDateTime.Year));
+            Assert.That(dataTable.Rows[0]["Month"], Is.EqualTo(startDateTime.Month));
+            Assert.That(dataTable.Rows[0]["Day"], Is.EqualTo(startDateTime.Day));
+
+            Assert.That(dataTable.Rows[2]["Year"], Is.EqualTo(stopDateTime.Year));
+            Assert.That(dataTable.Rows[2]["Month"], Is.EqualTo(stopDateTime.Month));
+            Assert.That(dataTable.Rows[2]["Day"], Is.EqualTo(stopDateTime.Day));
+        }
     }
 }
