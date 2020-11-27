@@ -204,11 +204,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             {
                 new SobekRRDrainageBasinImporter(),
                 new SobekRRSettingsImporter(),
+                new SobekRRMeteoDataImporter(),
                 new SobekRRPavedImporter(),
                 new SobekRRUnpavedImporter(),
                 new SobekRRGreenhouseImporter(),
                 new SobekRRSacramentoImporter(),
-                new SobekRRMeteoDataImporter(),
                 new SobekRRBoundaryConditionsImporter(),
                 new SobekRRNwrwImporter()
             };
