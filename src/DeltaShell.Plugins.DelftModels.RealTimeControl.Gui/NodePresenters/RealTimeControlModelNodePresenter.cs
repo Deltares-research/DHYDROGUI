@@ -83,13 +83,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         /// <summary>
         /// Gets the child node objects.
         /// </summary>
-        /// <param name="model">The RTC model.</param>
-        /// <param name="parentNodeData">The node.</param>
+        /// <param name="parentNodeData">The RTC model.</param>
+        /// <param name="node">The node.</param>
         /// <returns></returns>
-        public override IEnumerable GetChildNodeObjects(RealTimeControlModel model, ITreeNode parentNodeData)
+        public override IEnumerable GetChildNodeObjects(RealTimeControlModel parentNodeData, ITreeNode node)
         {
-            yield return new TreeFolder(model, GetInputItems(model), InputFolderName, FolderImageType.Input);
-            yield return new OutputTreeFolder(model, GetOutputItems(model), OutputFolderName);
+            yield return new TreeFolder(parentNodeData, GetInputItems(parentNodeData), InputFolderName, FolderImageType.Input);
+            yield return new OutputTreeFolder(parentNodeData, GetOutputItems(parentNodeData), OutputFolderName);
         }
 
         protected override void OnPropertyChanged(RealTimeControlModel item, ITreeNode node, PropertyChangedEventArgs e)
