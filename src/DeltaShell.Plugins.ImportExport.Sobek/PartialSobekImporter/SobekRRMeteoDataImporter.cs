@@ -197,67 +197,70 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void ReadAndSetEvaporation()
         {
             var model = GetModel<RainfallRunoffModel>();
-            var evaporationTable = SobekRREvaporationReader.ReadEvaporationData(filePathEvaporation, model.StartTime, model.StopTime).FirstOrDefault();
+            var hydroModel = TryGetModel<DelftModels.HydroModel.HydroModel>();
 
-            if (evaporationTable == null)
-            {
-                log.ErrorFormat("Error importing evaporation data.");
-                return;
-            }
-
-            var precipitationIsDefinedPerStation = precipitation.DataDistributionType ==
-                                                   MeteoDataDistributionType.PerStation;
-
-            var numStations = evaporationTable.Columns.Count - 3; //first 3 rows are the date
             bool isPeriodic;
-            var evapDict = ParseEvaporationTableToDictionary(evaporationTable, out isPeriodic);
-
-            if (numStations == 1) //one station, typical
+            using (var evaporationTable = hydroModel != null ? SobekRREvaporationReader.ReadEvaporationData(filePathEvaporation, hydroModel.StartTime, hydroModel.StopTime).FirstOrDefault() : SobekRREvaporationReader.ReadEvaporationData(filePathEvaporation, model.StartTime, model.StopTime).FirstOrDefault())
             {
-                if (!precipitationIsDefinedPerStation)
+                if (evaporationTable == null)
                 {
-                    SetGlobalEvaporation(evapDict.Keys, evapDict.Values);
+                    log.ErrorFormat("Error importing evaporation data.");
+                    return;
                 }
-                else
-                {
-                    evaporation.Data.Arguments[0].Clear();
-                    evaporation.Data.Arguments[0].SetValues(evapDict.Keys);
 
-                    // stations already filled in (shared with precipitation)
-                    foreach (var stationName in rainfallRunoffModel.MeteoStations)
+                var precipitationIsDefinedPerStation = precipitation.DataDistributionType ==
+                                                       MeteoDataDistributionType.PerStation;
+
+                var numStations = evaporationTable.Columns.Count - 3; //first 3 rows are the date
+                var evapDict = ParseEvaporationTableToDictionary(evaporationTable, out isPeriodic);
+
+                if (numStations == 1) //one station, typical
+                {
+                    if (!precipitationIsDefinedPerStation)
                     {
-                        evaporation.Data.SetValues(evapDict.Values, new VariableValueFilter<string>(
-                                                               evaporation.Data.Arguments[1], stationName));
+                        SetGlobalEvaporation(evapDict.Keys, evapDict.Values);
+                    }
+                    else
+                    {
+                        evaporation.Data.Arguments[0].Clear();
+                        evaporation.Data.Arguments[0].SetValues(evapDict.Keys);
+
+                        // stations already filled in (shared with precipitation)
+                        foreach (var stationName in rainfallRunoffModel.MeteoStations)
+                        {
+                            evaporation.Data.SetValues(evapDict.Values, new VariableValueFilter<string>(
+                                evaporation.Data.Arguments[1], stationName));
+                        }
                     }
                 }
-            }
-            else //multiple stations
-            {
-                if (!precipitationIsDefinedPerStation)
+                else //multiple stations
                 {
-                    log.Error("Evaporation has multiple stations while precipitation has not! Not supported");
-                    SetGlobalEvaporation(evapDict.Keys, evapDict.Values);
-                } 
-                else if (numStations != rainfallRunoffModel.MeteoStations.Count)
-                {
-                    log.Error("Number of evaporation stations does not match the number of precipitation stations! Not supported");
-                    SetGlobalEvaporation(evapDict.Keys, evapDict.Values);
-                }
-                else
-                {
-                    evaporation.Data.Arguments[0].SetValues(evapDict.Keys);
-
-                    // stations already filled in (shared with precipitation)
-                    var stationIndex = 0;
-                    foreach (var stationName in rainfallRunoffModel.MeteoStations)
+                    if (!precipitationIsDefinedPerStation)
                     {
-                        var values = evaporationTable.Rows.OfType<DataRow>()
-                                            .Select(row => Convert.ToDouble(row[3 + stationIndex]))
-                                            .ToList();
+                        log.Error("Evaporation has multiple stations while precipitation has not! Not supported");
+                        SetGlobalEvaporation(evapDict.Keys, evapDict.Values);
+                    } 
+                    else if (numStations != rainfallRunoffModel.MeteoStations.Count)
+                    {
+                        log.Error("Number of evaporation stations does not match the number of precipitation stations! Not supported");
+                        SetGlobalEvaporation(evapDict.Keys, evapDict.Values);
+                    }
+                    else
+                    {
+                        evaporation.Data.Arguments[0].SetValues(evapDict.Keys);
 
-                        evaporation.Data.SetValues(values, new VariableValueFilter<string>(
-                                                               evaporation.Data.Arguments[1], stationName));
-                        stationIndex++;
+                        // stations already filled in (shared with precipitation)
+                        var stationIndex = 0;
+                        foreach (var stationName in rainfallRunoffModel.MeteoStations)
+                        {
+                            var values = evaporationTable.Rows.OfType<DataRow>()
+                                .Select(row => Convert.ToDouble(row[3 + stationIndex]))
+                                .ToList();
+
+                            evaporation.Data.SetValues(values, new VariableValueFilter<string>(
+                                evaporation.Data.Arguments[1], stationName));
+                            stationIndex++;
+                        }
                     }
                 }
             }
