@@ -185,7 +185,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="discretization">Discretization to set</param>
         /// <param name="meshGeometry">Mesh geometry to set</param>
         /// <param name="network">Network that the <paramref name="meshGeometry"/> is based on</param>
-        public static void SetMesh1DGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network)
+        public static void SetMesh1DGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates = true)
         {
             discretization.Network = network;
 
@@ -202,7 +202,9 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     Chainage = networkBranch.Length - meshGeometryBranchChainage < 0.00001 ? networkBranch.Length : meshGeometryBranchChainage,
                     Name = meshGeometry.NodeIds[i],
                     LongName = meshGeometry.NodeLongNames[i],
-                    Geometry = new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
+                    Geometry = canUseXYForMesh1DNodeCoordinates 
+                        ? new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
+                        : HydroNetworkHelper.GetStructureGeometry(networkBranch, networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage) 
                 };
             }
 

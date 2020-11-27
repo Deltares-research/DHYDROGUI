@@ -292,14 +292,74 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 return;
             }
+            // check if can use x/y or get coordinate via branch/chainage
+            bool canUseXYForMesh1DNodeCoordinates = CanUseXYCoordinatePossibilitiesOfGridTypeOnLocation(path, UGridMeshType.Mesh1D, GridLocationType.Node);
+
 
             // needs to be done with new api instance
             // otherwise leads to crashes
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
-                Read1DMesh(api, discretization, network);
+                Read1DMesh(api, discretization, network, canUseXYForMesh1DNodeCoordinates);
             }
+        }
+
+        private static bool CanUseXYCoordinatePossibilitiesOfGridTypeOnLocation(string path, UGridMeshType meshType, GridLocationType locationType)
+        {
+            // using old implementation because api.getvar is not yet implemented
+            if (!IsUGridFile(path)) return false;
+
+            var file = NetCdfFile.OpenExisting(path);
+            try
+            {
+                var variablesWithCfRoleAndTopologyDimension = file.GetVariables().Where(v =>
+                    file.GetAttributeValue(v, "cf_role") != null && file.GetAttributeValue(v, "topology_dimension") != null);
+                switch (meshType)
+                {
+                    case UGridMeshType.Combined:
+                        break;
+                    case UGridMeshType.Mesh1D:
+                        //search correct variable on long name... this should probably be improved in the kernel....
+                        var mesh1d = variablesWithCfRoleAndTopologyDimension.SingleOrDefault(v =>
+                        {
+                            var longName = file.GetAttributeValue(v, "long_name");
+                            return longName.IndexOf("1D", StringComparison.InvariantCultureIgnoreCase) >=0 
+                                   && longName.IndexOf("Mesh", StringComparison.InvariantCultureIgnoreCase) >= 0;
+                        });
+                        if (mesh1d == null) return false;
+
+                        switch (locationType)
+                        {
+                            case GridLocationType.None:
+                                break;
+                            case GridLocationType.Node:
+                                var mesh1DNodeCoordinates = file.GetAttributeValue(mesh1d, "node_coordinates");
+                                return mesh1DNodeCoordinates != null 
+                                       && mesh1DNodeCoordinates.IndexOf("node_x", StringComparison.InvariantCultureIgnoreCase) >=0 
+                                       && mesh1DNodeCoordinates.IndexOf("node_y", StringComparison.InvariantCultureIgnoreCase) >=0;
+                            case GridLocationType.Edge:
+                                break;
+                            case GridLocationType.Face:
+                                break;
+                            case GridLocationType.Volume:
+                                break;
+                            case GridLocationType.All2D:
+                                break;
+                        }
+                        break;
+                    case UGridMeshType.Mesh2D:
+                        break;
+                    case UGridMeshType.Mesh3D:
+                        break;
+                }
+            }
+            finally
+            {
+                file.Close();
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -539,13 +599,13 @@ namespace DeltaShell.NGHS.IO.Grid
                 : null;
         }
 
-        private static void Read1DMesh(IUGridApi api, IDiscretization discretization, IHydroNetwork network)
+        private static void Read1DMesh(IUGridApi api, IDiscretization discretization, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates)
         {
             var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh1D);
             if (meshIds.Length != 0)
             {
                 var mesh1D = api.GetMesh1D(meshIds[0]);
-                discretization.SetMesh1DGeometry(mesh1D, network);
+                discretization.SetMesh1DGeometry(mesh1D, network, canUseXYForMesh1DNodeCoordinates);
             }
         }
 
