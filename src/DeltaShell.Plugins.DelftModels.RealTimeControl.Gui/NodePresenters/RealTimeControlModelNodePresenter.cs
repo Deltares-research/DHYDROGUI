@@ -83,18 +83,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         /// <summary>
         /// Gets the child node objects.
         /// </summary>
-        /// <param name="model">The RTC model.</param>
+        /// <param name="parentNodeData">The RTC model.</param>
         /// <param name="node">The node.</param>
         /// <returns></returns>
-        public override IEnumerable GetChildNodeObjects(RealTimeControlModel model, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(RealTimeControlModel parentNodeData, ITreeNode node)
         {
-            yield return new TreeFolder(model, GetInputItems(model), InputFolderName, FolderImageType.Input);
-            yield return new OutputTreeFolder(model, GetOutputItems(model), OutputFolderName);
+            yield return new TreeFolder(parentNodeData, GetInputItems(parentNodeData), InputFolderName, FolderImageType.Input);
+            yield return new OutputTreeFolder(parentNodeData, GetOutputItems(parentNodeData), OutputFolderName);
         }
 
-        protected override void OnPropertyChanged(RealTimeControlModel model, ITreeNode node, PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(RealTimeControlModel item, ITreeNode node, PropertyChangedEventArgs e)
         {
-            base.OnPropertyChanged(model, node, e);
+            base.OnPropertyChanged(item, node, e);
 
             if (e.PropertyName == nameof(RealTimeControlModel.RestartInput))
             {
@@ -102,12 +102,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             }
         }
 
-        protected override bool CanRemove(RealTimeControlModel model)
+        protected override bool CanRemove(RealTimeControlModel nodeData)
         {
             return true;
         }
 
-        protected override bool RemoveNodeData(object parentNodeData, RealTimeControlModel o)
+        protected override bool RemoveNodeData(object parentNodeData, RealTimeControlModel nodeData)
         {
             return gui.CommandHandler.DeleteCurrentProjectItem();
         }

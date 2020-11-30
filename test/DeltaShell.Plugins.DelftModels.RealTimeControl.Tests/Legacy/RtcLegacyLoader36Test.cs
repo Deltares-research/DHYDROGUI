@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy;
 using log4net.Core;
 using NSubstitute;

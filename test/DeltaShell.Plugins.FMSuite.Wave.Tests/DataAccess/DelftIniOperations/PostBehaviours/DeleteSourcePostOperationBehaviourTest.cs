@@ -2,7 +2,6 @@
 using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations.PostBehaviours;
 using NUnit.Framework;
 

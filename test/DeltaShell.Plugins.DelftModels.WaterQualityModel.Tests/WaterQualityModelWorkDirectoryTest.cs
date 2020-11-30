@@ -9,7 +9,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.Gui;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;

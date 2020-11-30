@@ -1,8 +1,6 @@
-﻿using System;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import

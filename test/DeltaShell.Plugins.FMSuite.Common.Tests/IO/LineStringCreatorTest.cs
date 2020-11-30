@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+﻿using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;

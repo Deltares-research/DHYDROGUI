@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;

@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         public WaterFlowFMModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaterFlowFMModel model)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaterFlowFMModel nodeData)
         {
             if (firstTimeCreate)
             {
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 firstTimeCreate = false;
             }
 
-            node.Text = model.Name;
+            node.Text = nodeData.Name;
             node.Image = UnstrucModelIcon;
         }
 
@@ -68,16 +68,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return DragOperations.Move | DragOperations.Copy;
         }
 
-        public override IEnumerable GetChildNodeObjects(WaterFlowFMModel model, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(WaterFlowFMModel parentNodeData, ITreeNode node)
         {
             // experimental: don't have 'Input' folder..
-            foreach (object input in GetInputItems(model))
+            foreach (object input in GetInputItems(parentNodeData))
             {
                 yield return input;
             }
 
             //yield return new TreeFolder(parentNodeData, , "Input", FolderImageType.Input);
-            yield return new TreeFolder(model, GetOutputItems(model), "Output", FolderImageType.Output);
+            yield return new TreeFolder(parentNodeData, GetOutputItems(parentNodeData), "Output", FolderImageType.Output);
         }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
@@ -124,9 +124,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return menu;
         }
 
-        protected override void OnPropertyChanged(WaterFlowFMModel model, ITreeNode node, PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(WaterFlowFMModel item, ITreeNode node, PropertyChangedEventArgs e)
         {
-            base.OnPropertyChanged(model, node, e);
+            base.OnPropertyChanged(item, node, e);
 
             if (e.PropertyName == nameof(WaterFlowFMModel.InitialCoverageSetChanged) ||
                 e.PropertyName == nameof(WaterFlowFMModel.RestartInput))

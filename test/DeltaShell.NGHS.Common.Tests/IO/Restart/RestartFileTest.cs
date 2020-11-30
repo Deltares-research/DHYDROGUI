@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
-using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.Common.Tests.IO.Restart

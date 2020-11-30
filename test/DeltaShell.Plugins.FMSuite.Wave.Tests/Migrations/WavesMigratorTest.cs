@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DeltaShell.NGHS.IO.TestUtils;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Migrations;
 using NUnit.Framework;
 

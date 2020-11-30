@@ -13,7 +13,6 @@ using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
