@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -35,6 +36,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             Assert.That(result, Is.EqualTo(expResult));
         }
 
+        [Category(TestCategory.Integration)]
+        [TestCaseSource(nameof(DictionaryCases))]
+        public void GivenAWaveGeometryComparer_WhenUsedForADictionary_ThenExpectedResultIsReturned(IGeometry keyInDictionary, IGeometry key, bool expResult)
+        {
+            // Setup
+            var comparer = new WaveGeometryComparer();
+            var dictionary = new Dictionary<IGeometry, string>(comparer)
+            {
+                {new Point(1, 2), "no"},
+                {keyInDictionary, "yes"},
+                {new Point(3, 4), "no"}
+            };
+
+            // When
+            bool result = dictionary.TryGetValue(key, out string value);
+
+            // Then
+            Assert.That(result, Is.EqualTo(expResult));
+            Assert.That(value, Is.EqualTo(expResult ? "yes" : null));
+        }
+
+        private static IEnumerable<TestCaseData> DictionaryCases()
+        {
+            yield return new TestCaseData(new Point(0.1234567, 7.654321), new Point(0.1234567, 7.654321), true);
+            yield return new TestCaseData(new Point(0.1234567, 7.654321), new Point(0.1, 7.0), false);
+        }
+
         private static IEnumerable<TestCaseData> GetHashCodeCases()
         {
             yield return new TestCaseData(new Point(0, 1), 0);
@@ -63,6 +91,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                               new Point(i - 5e-7, i + 5e-7),
                                               true);
             }
+
+            yield return new TestCaseData(new Point(0, 0), null, false);
+            yield return new TestCaseData(null, new Point(0, 0), false);
+            yield return new TestCaseData(null, null, true);
         }
     }
 }

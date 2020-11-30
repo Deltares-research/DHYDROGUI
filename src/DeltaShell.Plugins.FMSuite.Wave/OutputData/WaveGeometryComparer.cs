@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     public sealed class WaveGeometryComparer : IEqualityComparer<IGeometry>
     {
         /// <summary>
-        /// Compared the specified geometries with a tolerance of 1E-7.
+        /// Compares the specified geometries with a tolerance of 1E-7.
         /// </summary>
         /// <param name="x">The first geometry.</param>
         /// <param name="y">The second geometry.</param>
