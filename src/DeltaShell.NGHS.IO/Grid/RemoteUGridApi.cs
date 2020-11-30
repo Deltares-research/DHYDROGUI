@@ -5,7 +5,7 @@ using DeltaShell.Dimr;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public sealed class RemoteUGridApi : RemoteGridApi, IUGridApi
+    public class RemoteUGridApi : RemoteGridApi, IUGridApi
     {
         public RemoteUGridApi()
         {

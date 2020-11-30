@@ -7,7 +7,7 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
-    public class FeatureDataSyncer<TFeat, TData> : IDisposable where TFeat : IFeature
+    public sealed class FeatureDataSyncer<TFeat, TData> : IDisposable where TFeat : IFeature
     {
         private bool synchronizing;
 
