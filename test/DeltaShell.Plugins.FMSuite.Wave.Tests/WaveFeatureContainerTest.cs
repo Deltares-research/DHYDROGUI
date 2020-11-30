@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
@@ -26,9 +27,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GetAllFeatures_ContainsAllFeatures()
         {
             var container = new WaveFeatureContainer();
-            List<Feature2DPoint> observationPoints = GetSome<Feature2DPoint>().ToList();
-            List<Feature2D> observationCrossSections = GetSome<Feature2D>().ToList();
-            List<WaveObstacle> obstacles = GetSome<WaveObstacle>().ToList();
+            var observationPoints = Create.For<List<Feature2DPoint>>();
+            var observationCrossSections = Create.For<List<Feature2D>>();
+            var obstacles = Create.For<List<WaveObstacle>>();
 
             container.ObservationPoints.AddRange(observationPoints);
             container.ObservationCrossSections.AddRange(observationCrossSections);
@@ -38,17 +39,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             List<IFeature> features = container.GetAllFeatures().ToList();
 
             // Assert
+            Assert.That(features, Has.Count.EqualTo(9));
             CollectionAssert.IsSupersetOf(features, observationPoints);
             CollectionAssert.IsSupersetOf(features, observationCrossSections);
             CollectionAssert.IsSupersetOf(features, obstacles);
-        }
-
-        private IEnumerable<T> GetSome<T>() where T : new()
-        {
-            for (var i = 0; i < 3; i++)
-            {
-                yield return new T();
-            }
         }
     }
 }

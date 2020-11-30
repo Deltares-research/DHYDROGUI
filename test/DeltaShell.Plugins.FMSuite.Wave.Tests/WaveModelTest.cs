@@ -50,6 +50,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        public void Constructor_SetsCorrectFeatureContainer()
+        {
+            // Call
+            using (var model = new WaveModel())
+            {
+                // Assert
+                Assert.That(model.FeatureContainer, Is.Not.Null);
+            }
+        }
+
+        [Test]
         public void Constructor_AddingABoundaryToTheBoundaryContainerShouldFireCollectionChangedEvent()
         {
             // Call

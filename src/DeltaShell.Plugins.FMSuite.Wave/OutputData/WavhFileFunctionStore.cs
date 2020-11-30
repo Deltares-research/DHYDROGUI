@@ -243,8 +243,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
         private IEnumerable<Point> GetStationPoints()
         {
-            double[] xs = GetNetCdfVariableIEnumerable<double>(StationKeys.xCoordinate).ToArray();
-            double[] ys = GetNetCdfVariableIEnumerable<double>(StationKeys.yCoordinate).ToArray();
+            IEnumerable<double> xs = GetNetCdfVariableIEnumerable<double>(StationKeys.xCoordinate);
+            IEnumerable<double> ys = GetNetCdfVariableIEnumerable<double>(StationKeys.yCoordinate);
 
             return xs.Zip(ys, (x, y) => new Point(x, y));
         }

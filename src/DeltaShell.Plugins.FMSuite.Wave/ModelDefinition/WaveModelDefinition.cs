@@ -61,7 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             Dependencies.CompileVisibleDependencies(Properties);
 
             TimePointData = new WaveInputFieldData();
-            FeatureContainer = new WaveFeatureContainer();
             BoundaryContainer = new BoundaryContainer();
         }
 
@@ -72,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         /// <summary>
         /// Gets the feature container.
         /// </summary>
-        public IWaveFeatureContainer FeatureContainer { get; }
+        public IWaveFeatureContainer FeatureContainer { get; } = new WaveFeatureContainer();
 
         public string ObstaclePolylineFile { get; set; }
 
