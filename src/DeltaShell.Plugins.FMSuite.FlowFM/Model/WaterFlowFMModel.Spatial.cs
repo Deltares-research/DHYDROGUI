@@ -687,7 +687,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                 bool nodesChanged, bool cellsChanged, bool linksChanged,
                                                 bool reInterpolate)
         {
-            if (disposing)
+            if (disposed)
             {
                 return;
             }

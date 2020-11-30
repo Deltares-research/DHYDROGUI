@@ -702,8 +702,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public void Dispose()
         {
-            RestoreEnvironment();
-            runner?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                RestoreEnvironment();
+                runner?.Dispose();
+            }
         }
 
         public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)

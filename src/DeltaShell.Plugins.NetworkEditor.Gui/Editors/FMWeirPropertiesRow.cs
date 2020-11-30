@@ -140,9 +140,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
 
         public void Dispose()
         {
-            Weir = null;
-            PropertyChanged = null;
-            PropertyChanging = null;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Weir = null;
+                PropertyChanged = null;
+                PropertyChanging = null;
+            }
         }
 
         public IFeature GetFeature()

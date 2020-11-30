@@ -183,7 +183,6 @@
     <Compile Include="MapLayers\Editors\Interactors\RunoffBoundaryFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\SubCatchmentRelationInteractor.cs" />
     <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
-    <Compile Include="MapLayers\CustomRenderers\StructureRenderer.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CatchmentFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\DiffuseLateralSourceInteractor.cs" />
