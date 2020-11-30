@@ -398,16 +398,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         public void Dispose()
         {
-            HydroData = null;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                HydroData = null;
+            }
         }
 
         /// <summary>
         /// Method to connect the DeltaShell framework working directory to the ModelSettings.WorkingDirectory.
         /// The model also adds a folder with the model name to the path.
-        /// <param name="WorkingDirectoryWithoutModelName"></param>
-        protected internal virtual void SetWorkingDirectoryInModelSettings(Func<string> WorkingDirectoryWithoutModelName)
+        /// </summary>
+        /// <param name="workingDirectoryWithoutModelName">Function to get the working directory without the model name.</param>
+        protected internal virtual void SetWorkingDirectoryInModelSettings(Func<string> workingDirectoryWithoutModelName)
         {
-            modelSettings.WorkingDirectoryPathFuncWithModelName = () => Path.Combine(WorkingDirectoryWithoutModelName(), GetWaqDataFolderName());
+            modelSettings.WorkingDirectoryPathFuncWithModelName = () => Path.Combine(workingDirectoryWithoutModelName(), GetWaqDataFolderName());
         }
 
         [EditAction]

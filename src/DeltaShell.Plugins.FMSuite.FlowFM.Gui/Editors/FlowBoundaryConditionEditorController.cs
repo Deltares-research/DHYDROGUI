@@ -229,10 +229,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            Model = null;
-            base.Dispose();
+            if (disposing)
+            {
+                Model = null;
+            }
         }
 
         private void OnModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -105,12 +105,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public void Dispose()
         {
-            foreach (IDisposable activity in Activities.GetActivitiesOfType<IDisposable>())
-            {
-                activity.Dispose();
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            dimrApi?.Dispose();
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (IDisposable activity in Activities.GetActivitiesOfType<IDisposable>())
+                {
+                    activity.Dispose();
+                }
+
+                dimrApi?.Dispose();
+            }
         }
 
         #endregion

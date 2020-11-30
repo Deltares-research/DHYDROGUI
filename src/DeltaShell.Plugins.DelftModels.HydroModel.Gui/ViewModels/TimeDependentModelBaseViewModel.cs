@@ -8,7 +8,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 {
     [Entity]
-    public class TimeDependentModelBaseViewModel : IDisposable
+    public sealed class TimeDependentModelBaseViewModel : IDisposable
     {
         private readonly ITimeDependentModel timeDependentModel;
         private DateTime startTime;
