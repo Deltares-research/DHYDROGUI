@@ -428,7 +428,6 @@
     <Compile Include="Migrations\1.2.0.0\WaveModel120MigratorTest.cs" />
     <Compile Include="Migrations\WavesMigratorTest.cs" />
     <Compile Include="OutputData\ReadOnlyTextFileDataTest.cs" />
-    <Compile Include="OutputData\WaveFeatureProviderTest.cs" />
     <Compile Include="OutputData\WaveOutputDataCopyHandlerTest.cs" />
     <Compile Include="OutputData\WaveOutputDataHarvesterTest.cs" />
     <Compile Include="OutputData\WaveOutputDataTest.cs" />
