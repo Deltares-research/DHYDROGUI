@@ -20,14 +20,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("featureProvider"));
+            Assert.That(e.ParamName, Is.EqualTo("featureContainer"));
         }
 
         [Test]
         public void Constructor_ExpectedResults()
         {
             // Call
-            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureProvider>());
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
 
             // Assert
             Assert.That(harvester, Is.InstanceOf<IWaveOutputDataHarvester>());
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         public void HarvestDiagnosticFiles_DirectoryInfoNull_ThrowsArgumentNullException()
         {
             // Setup
-            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureProvider>());
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
 
             // Call | Assert
             void Call() => harvester.HarvestDiagnosticFiles(null);
@@ -220,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                                            IList<ReadOnlyTextFileData> expectedDiagnosticFiles)
         {
             // Setup
-            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureProvider>());
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
             using (var tempDir = new TemporaryDirectory())
             {
                 BuildFiles(tempDir, inputFiles);
@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         public void HarvestSpectraFiles_DirectoryInfoNull_ThrowsArgumentNullException()
         {
             // Setup
-            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureProvider>());
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
 
             // Call | Assert
             void Call() => harvester.HarvestSpectraFiles(null);
@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                                         IList<ReadOnlyTextFileData> expectedDiagnosticFiles)
         {
             // Setup
-            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureProvider>());
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
             using (var tempDir = new TemporaryDirectory())
             {
                 BuildFiles(tempDir, inputFiles);
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         public void HarvestWavmFileFunctionStores_DirectoryInfoNull_ThrowsArgumentNullException()
         {
             // Setup
-            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureProvider>());
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
 
             // Call | Assert
             void Call() => harvester.HarvestWavmFileFunctionStores(null);
@@ -370,7 +370,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                                                   IList<string> wavmFiles)
         {
             // Setup
-            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureProvider>());
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
             using (var tempDir = new TemporaryDirectory())
             {
                 foreach (string inputFileName in inputTextFiles)
@@ -405,7 +405,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         public void HarvestWavhFileFunctionStores_DirectoryInfoNull_ThrowsArgumentNullException()
         {
             // Setup
-            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureProvider>());
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
 
             // Call | Assert
             void Call() => harvester.HarvestWavhFileFunctionStores(null);
@@ -470,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                                                                   IList<string> wavhFiles)
         {
             // Setup
-            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureProvider>());
+            var harvester = new WaveOutputDataHarvester(Substitute.For<IWaveFeatureContainer>());
             using (var tempDir = new TemporaryDirectory())
             {
                 foreach (string inputFileName in inputTextFiles)

@@ -201,16 +201,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var nodePresenter = new WaveOutputDataNodePresenter();
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
-            var featureProvider = Substitute.For<IWaveFeatureProvider>();
+            var waveFeatureContainer = Substitute.For<IWaveFeatureContainer>();
 
             using (var tempDir = new TemporaryDirectory())
             {
                 string functionStorePath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
                 var wavhFileFunctionStores = new EventedList<WavhFileFunctionStore>
                 {
-                    new WavhFileFunctionStore(functionStorePath, featureProvider),
-                    new WavhFileFunctionStore(functionStorePath, featureProvider),
-                    new WavhFileFunctionStore(functionStorePath, featureProvider),
+                    new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
+                    new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
+                    new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
                 };
                 
                 nodeData.WavhFileFunctionStores.Returns(wavhFileFunctionStores);

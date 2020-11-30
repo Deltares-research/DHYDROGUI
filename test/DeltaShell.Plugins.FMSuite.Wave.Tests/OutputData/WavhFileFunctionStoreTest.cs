@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using GeoAPI.Extensions.Coverages;
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("featureProvider"));
+            Assert.That(e.ParamName, Is.EqualTo("featureContainer"));
         }
 
         [Test]
@@ -39,10 +40,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 string localNcPath = tempDir.CopyTestDataFileToTempDirectory(ncPath);
-                var featureProvider = Substitute.For<IWaveFeatureProvider>();
+                var featureContainer = Substitute.For<IWaveFeatureContainer>();
 
                 // Call
-                var store = new WavhFileFunctionStore(localNcPath, featureProvider);
+                var store = new WavhFileFunctionStore(localNcPath, featureContainer);
 
                 // Assert
                 Assert.That(store, Is.InstanceOf<FMNetCdfFileFunctionStore>());
@@ -73,18 +74,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         [Test]
         [Category(TestCategory.DataAccess)]
         [TestCaseSource(nameof(ConstructedCoveragesCases))]
-        public void ConstructedCoverages_ConfiguredCorrectly(IEnumerable<Feature2D> observationPoints, string expFeatureName)
+        public void ConstructedCoverages_ConfiguredCorrectly(IEventedList<Feature2DPoint> observationPoints, string expFeatureName)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
             {
                 string localNcPath = tempDir.CopyTestDataFileToTempDirectory(ncPath);
-                var featureProvider = Substitute.For<IWaveFeatureProvider>();
+                var featureContainer = Substitute.For<IWaveFeatureContainer>();
 
-                featureProvider.ObservationPoints.Returns(observationPoints);
+                featureContainer.ObservationPoints.Returns(observationPoints);
 
                 // Call
-                var store = new WavhFileFunctionStore(localNcPath, featureProvider);
+                var store = new WavhFileFunctionStore(localNcPath, featureContainer);
 
                 // Assert
                 foreach (IFunction function in store.Functions)
@@ -125,27 +126,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             const double x = 3296.9479015919;
             const double y = 3694.42836468886;
 
-            yield return new TestCaseData(GetFeatureArray(new Point(x, y)),
+            yield return new TestCaseData(GetFeatures(new Point(x, y)),
                                           "model_feature");
-            yield return new TestCaseData(GetFeatureArray(new Point(x - 5E-8, y - 5E-8)),
+            yield return new TestCaseData(GetFeatures(new Point(x - 5E-8, y - 5E-8)),
                                           "model_feature");
-            yield return new TestCaseData(GetFeatureArray(new Point(x + 5E-8, y + 5E-8)),
+            yield return new TestCaseData(GetFeatures(new Point(x + 5E-8, y + 5E-8)),
                                           "model_feature");
-            yield return new TestCaseData(GetFeatureArray(new Point(x - 1E-7, y - 1E-7)),
+            yield return new TestCaseData(GetFeatures(new Point(x - 1E-7, y - 1E-7)),
                                           "Station");
-            yield return new TestCaseData(GetFeatureArray(new Point(x + 1E-7, y + 1E-7)),
+            yield return new TestCaseData(GetFeatures(new Point(x + 1E-7, y + 1E-7)),
                                           "Station");
-            yield return new TestCaseData(GetFeatureArray(new Point((int) x, (int) y)),
+            yield return new TestCaseData(GetFeatures(new Point((int) x, (int) y)),
                                           "Station");
-            yield return new TestCaseData(Enumerable.Empty<Feature2D>(),
+            yield return new TestCaseData(new EventedList<Feature2DPoint>(),
                                           "Station");
         }
 
-        private static Feature2D[] GetFeatureArray(IGeometry geom)
+        private static IEventedList<Feature2DPoint> GetFeatures(IGeometry geom)
         {
-            return new[]
+            return new EventedList<Feature2DPoint>()
             {
-                new Feature2D
+                new Feature2DPoint
                 {
                     Name = "model_feature",
                     Geometry = geom

@@ -659,9 +659,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             using (var model = new WaveModel())
             {
                 string ncPath = tempDir.CopyTestDataFileToTempDirectory("WaveOutputDataHarvesterTest\\wavh-Waves.nc");
-                var featureProvider = Substitute.For<IWaveFeatureProvider>();
-                var functionStore1 = new WavhFileFunctionStore(ncPath, featureProvider);
-                var functionStore2 = new WavhFileFunctionStore(ncPath, featureProvider);
+                var featureContainer = Substitute.For<IWaveFeatureContainer>();
+                var functionStore1 = new WavhFileFunctionStore(ncPath, featureContainer);
+                var functionStore2 = new WavhFileFunctionStore(ncPath, featureContainer);
                 
                 model.WaveOutputData.WavhFileFunctionStores.Add(functionStore1);
                 model.WaveOutputData.WavhFileFunctionStores.Add(functionStore2);

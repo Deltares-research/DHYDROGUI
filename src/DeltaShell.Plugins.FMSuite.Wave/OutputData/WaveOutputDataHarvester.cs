@@ -17,20 +17,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// <seealso cref="IWaveOutputDataHarvester" />
     public sealed class WaveOutputDataHarvester : IWaveOutputDataHarvester
     {
-        private readonly IWaveFeatureProvider featureProvider;
+        private readonly IWaveFeatureContainer featureContainer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WaveOutputDataHarvester"/> class.
         /// </summary>
-        /// <param name="featureProvider">The wave model feature provider.</param>
+        /// <param name="featureContainer">The wave model feature container.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="featureProvider"/> is <c>null</c>.
+        /// Thrown when <paramref name="featureContainer"/> is <c>null</c>.
         /// </exception>
-        public WaveOutputDataHarvester(IWaveFeatureProvider featureProvider)
+        public WaveOutputDataHarvester(IWaveFeatureContainer featureContainer)
         {
-            Ensure.NotNull(featureProvider, nameof(featureProvider));
+            Ensure.NotNull(featureContainer, nameof(featureContainer));
 
-            this.featureProvider = featureProvider;
+            this.featureContainer = featureContainer;
         }
 
         public IReadOnlyList<ReadOnlyTextFileData> HarvestDiagnosticFiles(DirectoryInfo outputDataDirectory,
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             new WavmFileFunctionStore(fileInfo.FullName);
 
         private WavhFileFunctionStore ConstructWavhFileFunctionStore(FileInfo fileInfo) =>
-            new WavhFileFunctionStore(fileInfo.FullName, featureProvider);
+            new WavhFileFunctionStore(fileInfo.FullName, featureContainer);
 
         private static bool IsDiagnosticFile(FileInfo fileInfo) =>
             fileInfo.Name == WaveOutputConstants.SwanLogFileName ||

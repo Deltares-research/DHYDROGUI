@@ -55,19 +55,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Creates a new <see cref="WavhFileFunctionStore"/>.
         /// </summary>
         /// <param name="ncPath">The path to the netcdf file to read.</param>
-        /// <param name="featureProvider">The <see cref="IWaveFeatureProvider"/> used to match data to their corresponding features during initialization. </param>
+        /// <param name="featureContainer">The <see cref="IWaveFeatureContainer"/> used to match data to their corresponding features during initialization. </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="featureProvider"/> is <c>null</c>.
+        /// Thrown when <paramref name="featureContainer"/> is <c>null</c>.
         /// </exception>
-        public WavhFileFunctionStore(string ncPath, IWaveFeatureProvider featureProvider) : base(ncPath)
+        public WavhFileFunctionStore(string ncPath, IWaveFeatureContainer featureContainer) : base(ncPath)
         {
-            Ensure.NotNull(featureProvider, nameof(featureProvider));
+            Ensure.NotNull(featureContainer, nameof(featureContainer));
 
             DisableCaching = true;
 
             using (ReconnectToMapFile())
             {
-                InitializeStationFeatures(featureProvider.ObservationPoints.ToList());
+                InitializeStationFeatures(featureContainer.ObservationPoints);
             }
 
             foreach (IFeatureCoverage coverage in Functions.OfType<IFeatureCoverage>())
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             return longName != null ? $"{longName} ({variableName})" : variableName;
         }
 
-        private void InitializeStationFeatures(IList<Feature2D> features)
+        private void InitializeStationFeatures(IEnumerable<Feature2D> features)
         {
             IList<string> stationIds = GetStationIds();
 
