@@ -23,7 +23,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("root_path", help="Path to the root of the working directory")
     parser.add_argument("package_name", help="The name of the NuGet package.")
-    parser.add_argument("new_version", help="The full version to update to i.e. Major.Minor.Patch[-Prefixes.counter.hash]")
+    parser.add_argument("new_version", help="The full version to update to i.e. Major.Minor.Patch")
 
     return parser.parse_args()
 
@@ -32,14 +32,12 @@ def get_version_regex_string() -> str:
     """ Gets the regex string to match a version number """
     integer_regex = r'(0|([1-9]\d*))'
     integers_regex = fr'(\.{integer_regex})*'
-    known_prefixes = ['beta']
-    prefix_regex = ''.join(f'(?:-{prefix})?' for prefix in known_prefixes)
 
-    return f'{integer_regex}{integers_regex}{prefix_regex}'
+    return f'{integer_regex}{integers_regex}'
 
-def get_new_version_string(argStr: str) -> str:
+def get_new_version_string(string: str) -> str:
     """ Removes the leading zeros from the version string"""
-    return ".".join(str(int(x)) for x in argStr.split("."))
+    return ".".join(str(int(x)) for x in string.split("."))
 
 if __name__ == "__main__":
     args = get_args()
