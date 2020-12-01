@@ -47,9 +47,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
             }
 
             Assert.IsFalse(expression.CanHandleExpression("dfgh5678_ = \t1.2"),
-                           string.Format("Should not handle equals comparison with double"));
+                           "Should not handle equals comparison with double");
             Assert.IsFalse(expression.CanHandleExpression("dfgh5678_=9"),
-                           string.Format("Should not handle equals comparison with integer"));
+                           "Should not handle equals comparison with integer");
         }
 
         [Test]

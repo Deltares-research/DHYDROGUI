@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     e is IOException || e is FormatException || e is OverflowException)
                 {
                     Log.Error(
-                        string.Format("An error occurred while importing structures file, import stopped; Cause: "), e);
+                        "An error occurred while importing structures file, import stopped; Cause: ", e);
                     return null;
                 }
 
