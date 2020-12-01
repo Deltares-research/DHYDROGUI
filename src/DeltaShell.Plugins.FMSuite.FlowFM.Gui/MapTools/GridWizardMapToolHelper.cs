@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 for (var i = 1; i < coordinates.Length - 1; i++)
                 {
                     Coordinate current = coordinates[i];
-                    if (!(previous.Distance(current) >= minimumSupportPointDistance))
+                    if (previous.Distance(current) < minimumSupportPointDistance)
                     {
                         continue;
                     }
@@ -379,7 +379,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 for (var i = 2; i < orderedChainages.Count() - 2; i++)
                 {
                     double current = orderedChainages[i];
-                    if (!(Math.Abs(previous - current) >= minimumDistance))
+                    if (Math.Abs(previous - current) < minimumDistance)
                     {
                         continue;
                     }
@@ -424,7 +424,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                         double distance = velocityLineStrings[j].Distance(midPoint);
                         // Corner case: A Embankment whose Branch(es) lie outside the userPolygon will be associated to the nearest Branch inside the userPolygon.
                         // Approximate solution: demand distance < 500 m;
-                        if (!(distance < closest))
+                        if (distance >= closest)
                         {
                             continue;
                         }
@@ -650,7 +650,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 }
 
                 double numberOfParts = Math.Floor(distance / optimum);
-                if (!(numberOfParts > 1))
+                if (numberOfParts <= 1)
                 {
                     continue;
                 }
