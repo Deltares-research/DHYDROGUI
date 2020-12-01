@@ -403,24 +403,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         private void OnActivityRunnerStatusChanged(object sender,
                                                    ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
-            if (sender is FileImportActivity)
+            if (sender is FileImportActivity activity)
             {
-                IFileImporter importer = ((FileImportActivity) sender).FileImporter;
-                if (importer is WaveModelFileImporter &&
-                    activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
+                IFileImporter importer = activity.FileImporter;
+                switch (importer)
                 {
-                    Gui.MainWindow.ProjectExplorer.TreeView.Refresh();
-
-                    if (ActiveMapView != null)
-                    {
+                    case WaveModelFileImporter _ when activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished:
+                        Gui.MainWindow.ProjectExplorer.TreeView.Refresh();
+                        ActiveMapView?.Map.ZoomToExtents();
+                        break;
+                    case WaveGridFileImporter _ when activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished && ActiveMapView != null:
                         ActiveMapView.Map.ZoomToExtents();
-                    }
-                }
-
-                if (importer is WaveGridFileImporter &&
-                    activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished && ActiveMapView != null)
-                {
-                    ActiveMapView.Map.ZoomToExtents();
+                        break;
                 }
             }
 

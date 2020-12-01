@@ -218,9 +218,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 feature2D.Attributes = (IFeatureAttributeCollection) feature.Attributes.Clone();
             }
 
-            if (feature is INameable)
+            if (feature is INameable nameable)
             {
-                feature2D.Name = ((INameable) feature).Name;
+                feature2D.Name = nameable.Name;
             }
 
             if (snappedGeometry == null)
@@ -234,38 +234,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 snappedGeometry = GetSnappedGeometryForPoint(snappedGeometry, feature.Geometry.Coordinate);
             }
 
-            if (snappedGeometry is MultiPoint &&
+            if (snappedGeometry is MultiPoint points &&
                 typeof(IMultiLineString).IsAssignableFrom(SnappedLayerStyle.GeometryType))
             {
-                var points = snappedGeometry as MultiPoint;
                 var auxGeom = new List<ILineString>();
 
                 if (points.Count == 1)
                 {
-                    Coordinate coordinateSnappedPoint = points.Coordinate;
-                    var distances = new List<double>();
-
-                    foreach (Coordinate coord in feature.Geometry.Coordinates)
-                    {
-                        distances.Add(coord.Distance(points.Coordinate));
-                    }
+                    List<double> distances = feature.Geometry.Coordinates.Select(coord => coord.Distance(points.Coordinate)).ToList();
 
                     int smallestNumberIndex = distances.IndexOf(distances.Min());
 
-                    auxGeom.Add(
-                        (LineString) GetSnappedGeometryForPoint(
-                            points, feature.Geometry.Coordinates[smallestNumberIndex]));
+                    auxGeom.Add((LineString) GetSnappedGeometryForPoint(points, feature.Geometry.Coordinates[smallestNumberIndex]));
                     snappedGeometry = new MultiLineString(auxGeom.ToArray());
                 }
 
                 if (points.Count == 2)
                 {
-                    auxGeom.Add(
-                        (LineString) GetSnappedGeometryForPoint(points.FirstOrDefault(),
-                                                                feature.Geometry.Coordinates.FirstOrDefault()));
-                    auxGeom.Add(
-                        (LineString) GetSnappedGeometryForPoint(points.LastOrDefault(),
-                                                                feature.Geometry.Coordinates.LastOrDefault()));
+                    auxGeom.Add((LineString) GetSnappedGeometryForPoint(points.FirstOrDefault(),
+                                                                        feature.Geometry.Coordinates.FirstOrDefault()));
+                    auxGeom.Add((LineString) GetSnappedGeometryForPoint(points.LastOrDefault(),
+                                                                        feature.Geometry.Coordinates.LastOrDefault()));
                     snappedGeometry = new MultiLineString(auxGeom.ToArray());
                 }
             }
@@ -293,8 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             }
 
             object removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var data = removedOrAddedItem as IFeatureData;
-            IFeature feature = data != null
+            IFeature feature = removedOrAddedItem is IFeatureData data
                                    ? data.Feature
                                    : removedOrAddedItem as IFeature;
 
@@ -345,9 +333,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             for (var i = 0; i < OriginalFeatures.Count; i++)
             {
                 object feature = OriginalFeatures[i];
-                if (feature is IFeatureData)
+                if (feature is IFeatureData data)
                 {
-                    feature = ((IFeatureData) feature).Feature;
+                    feature = data.Feature;
                 }
 
                 SnappedFeatures.Add(GetSnappedFeature((IFeature) feature, snappedGeometries[i]));

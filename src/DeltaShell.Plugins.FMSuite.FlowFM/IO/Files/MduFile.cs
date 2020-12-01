@@ -715,7 +715,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                         alternativeExtensions);
                 List<string> featuresFilePaths =
                     MduFileHelper.GetMultipleSubfilePath(targetMduFilePath, waterFlowFMProperty).ToList();
-                CollectionExtensions.RemoveAllWhere(featuresFilePaths, ffp => ffp == null);
+                featuresFilePaths.RemoveAllWhere(ffp => ffp == null);
 
                 if (fileWriter == null)
                 {
@@ -854,7 +854,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 List<string> featuresFilePaths =
                     MduFileHelper.GetMultipleSubfilePath(targetMduFilePath, waterFlowFMProperty).ToList();
-                CollectionExtensions.RemoveAllWhere(featuresFilePaths, ffp => ffp == null);
+                featuresFilePaths.RemoveAllWhere(ffp => ffp == null);
 
                 if (dryAreaFile == null)
                 {
@@ -1305,17 +1305,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (IStructure structure in structures)
             {
-                if (structure is Pump2D)
+                switch (structure)
                 {
-                    hydroArea.Pumps.Add((Pump2D) structure);
-                }
-                else if (structure is Weir2D)
-                {
-                    hydroArea.Weirs.Add((Weir2D) structure);
-                }
-                else
-                {
-                    throw new NotImplementedException();
+                    case Pump2D pump2D:
+                        hydroArea.Pumps.Add(pump2D);
+                        break;
+                    case Weir2D weir2D:
+                        hydroArea.Weirs.Add(weir2D);
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
             }
 
@@ -1335,7 +1334,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 Log.WarnFormat(
                     "The following enclosure files do not contain the correct extension and will not be read. {0}",
                     enclosuresToRemove);
-                CollectionExtensions.RemoveAllWhere(enclosureMultipleFilePath, efp => !efp.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension));
+                enclosureMultipleFilePath.RemoveAllWhere(efp => !efp.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension));
             }
 
             if (enclosureMultipleFilePath.Count > 0)
@@ -1356,7 +1355,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void ReadDryPointsAndDryAreas(string mduFilePath, WaterFlowFMModelDefinition modelDefinition,
                                               HydroArea hydroArea)
         {
-            string dryPointsPropertyKey = KnownProperties.DryPointsFile;
+            const string dryPointsPropertyKey = KnownProperties.DryPointsFile;
             string mduPathName = System.IO.Path.GetFileNameWithoutExtension(mduFilePath);
 
             WaterFlowFMProperty modelProperty = modelDefinition.GetModelProperty(dryPointsPropertyKey);
@@ -1394,11 +1393,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         });
                     hydroArea.DryPoints.AddRange(dryPointsToAdd);
                 }
-                // D3DFMIQ-1037: We want to import all kind of dry areas as long as they come from a .pol file (regardles of their suffix).
+                // D3DFMIQ-1037: We want to import all kind of dry areas as long as they come from a .pol file (regardless of their suffix).
                 else if (featureFilePath.EndsWith(FileConstants.PolylineFileExtension))
                 {
                     IList<GroupableFeature2DPolygon> dryAreasToAdd = dryAreaFile.Read(featureFilePath);
-                    EnumerableExtensions.ForEach(dryAreasToAdd, f =>
+                    dryAreasToAdd.ForEach(f =>
                     {
                         f.GroupName = groupName;
                         f.IsDefaultGroup = groupName != null &&
@@ -1467,7 +1466,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                MduFilePropertyDescriptionDictionary[propertyKey], modelDefinition.ModelName);
             }
 
-            CollectionExtensions.RemoveAllWhere(featureFilePaths, gn => gn == null || nonExistentFilePaths.Contains(gn));
+            featureFilePaths.RemoveAllWhere(gn => gn == null || nonExistentFilePaths.Contains(gn));
         }
 
         /// <summary>
@@ -1520,7 +1519,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
             }
 
-            CollectionExtensions.RemoveAllWhere(featureFilePaths, gn => structureFilesWithBadReferences.Contains(gn));
+            featureFilePaths.RemoveAllWhere(gn => structureFilesWithBadReferences.Contains(gn));
         }
 
         #endregion
@@ -1605,12 +1604,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <param name="bridgePillars"> The bridge pillars. </param>
         internal static void CleanBridgePillarAttributes(IEnumerable<BridgePillar> bridgePillars)
         {
-            if (bridgePillars == null)
-            {
-                return;
-            }
-
-            EnumerableExtensions.ForEach(bridgePillars, bp => bp.Attributes.Clear());
+            bridgePillars?.ForEach(bp => bp.Attributes.Clear());
         }
 
         #endregion
