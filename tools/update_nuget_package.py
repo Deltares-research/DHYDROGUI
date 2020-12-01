@@ -29,6 +29,7 @@ def get_args():
 
 
 def get_version_regex_string() -> str:
+    """ Gets the regex string to match a version number """
     integer_regex = r'(0|([1-9]\d*))'
     integers_regex = fr'(\.{integer_regex})*'
     known_prefixes = ['beta']
@@ -36,18 +37,24 @@ def get_version_regex_string() -> str:
 
     return f'{integer_regex}{integers_regex}{prefix_regex}'
 
+def get_new_version_string(argStr: str) -> str:
+    """ Removes the leading zeros from the version string"""
+    return ".".join(str(int(x)) for x in argStr.split("."))
 
 if __name__ == "__main__":
     args = get_args()
     root_path = Path(args.root_path)
     package_name = args.package_name
-    new_version_string = args.new_version
+    new_version_string = get_new_version_string(args.new_version)
      
     escaped_package_name = re.escape(package_name)
     version_regex = get_version_regex_string()
     
     project_file_paths = search_files(root_path, '.csproj')
-    update_files(project_file_paths, re.compile(f'{escaped_package_name}\\.{version_regex}'), f"{package_name}.{new_version_string}", "utf-8-sig")
+    update_files(project_file_paths, re.compile(f'{escaped_package_name}\\.{version_regex}'), 
+                                                f"{package_name}.{new_version_string}", 
+                                                "utf-8-sig")
 
     config_file_paths = search_files(root_path, 'packages.config')
-    update_files(config_file_paths, re.compile(f'"{escaped_package_name}" version="{version_regex}"'), f'"{package_name}" version="{new_version_string}"')
+    update_files(config_file_paths, re.compile(f'"{escaped_package_name}" version="{version_regex}"'), 
+                                               f'"{package_name}" version="{new_version_string}"')
