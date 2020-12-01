@@ -217,7 +217,7 @@ namespace DeltaShell.NGHS.IO
         {
             if (inputLine == null)
             {
-                throw new ArgumentNullException("inputLine");
+                throw new ArgumentNullException(nameof(inputLine));
             }
 
             string trimmedInputLine = inputLine.Trim();

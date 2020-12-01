@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 return "Proxy Rule";
             }
 
-            throw new ArgumentException(@"Unsupported type", "ruleType");
+            throw new ArgumentException(@"Unsupported type", nameof(ruleType));
         }
     }
 }

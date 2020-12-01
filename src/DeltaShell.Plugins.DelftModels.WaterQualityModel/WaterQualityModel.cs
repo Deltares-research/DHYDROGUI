@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             if (data == null)
             {
                 HasHydroDataImported = false;
-                throw new ArgumentNullException("data", "No hydrodynamics data was specified.");
+                throw new ArgumentNullException(nameof(data), "No hydrodynamics data was specified.");
             }
 
             //As per issue D3DFMIQ-318, we should override the coordinate system with the imported one. 

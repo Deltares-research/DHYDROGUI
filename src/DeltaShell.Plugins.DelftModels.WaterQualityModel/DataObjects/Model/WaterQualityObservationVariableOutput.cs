@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         {
             if (outputVariableTuples == null)
             {
-                throw new ArgumentNullException("outputVariableTuples");
+                throw new ArgumentNullException(nameof(outputVariableTuples));
             }
 
             foreach (DelftTools.Utils.Tuple<string, string> outputVariableTuple in outputVariableTuples)
