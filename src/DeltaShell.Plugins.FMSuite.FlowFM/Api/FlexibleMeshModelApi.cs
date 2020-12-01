@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
     /// Do not use directly (mixing x86 and x64 dlls not possible, and unstruct.dll = 64bit).
     /// Instead use RemoteFlexibleMeshModelApi (and don't forget to dispose)
     /// </summary>
-    public sealed class FlexibleMeshModelApi : IFlexibleMeshModelApi
+    public class FlexibleMeshModelApi : IFlexibleMeshModelApi
     {
         private readonly FlexibleMeshBasicModelInterface flexibleMeshBasicModelInterface; //BMI strategy
 
@@ -181,6 +181,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         }
 
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             // nothing to do here
         }
