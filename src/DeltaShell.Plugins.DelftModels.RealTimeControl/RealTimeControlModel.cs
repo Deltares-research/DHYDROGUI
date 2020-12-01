@@ -329,11 +329,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public override IDataItem GetDataItemByTag(string tag)
-        {
-            return base.GetDataItemByTag(tag) ?? CreateDataItemNotAvailableInPreviousVersion(tag);
-        }
-
         /// <exception cref="NotSupportedException">
         /// When a <see cref="DataItem"/> (either in this model or it's child-models) is
         /// unlinked and the <see cref="DataItem.Value"/> either does not inherit from <see cref="ICloneable"/>, is not null, or is
@@ -596,22 +591,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             OutputIsEmpty = false; // hack to make ClearOutput fire appropriately. 
             ClearOutput();
-        }
-
-        /// <summary>
-        /// Incredibly ugly construct, but this is used for backward compatibility reasons
-        /// </summary>
-        /// <param name="tag"></param>
-        private IDataItem CreateDataItemNotAvailableInPreviousVersion(string tag)
-        {
-            //TODO D3DFMIQ-2183
-            //if (tag == RestartInputStateTag || tag == UseRestartTag || tag == WriteRestartTag)
-            //{
-            //    AddRestartDataItems();
-            //    return GetDataItemByTag(tag);
-            //}
-
-            return null;
         }
 
         [EditAction]
@@ -1493,7 +1472,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual bool CanMerge(object sourceModel)
         {
-            //return sourceModel is RealTimeControlModel;
             var rtcModel = sourceModel as RealTimeControlModel;
             if (rtcModel == null)
             {

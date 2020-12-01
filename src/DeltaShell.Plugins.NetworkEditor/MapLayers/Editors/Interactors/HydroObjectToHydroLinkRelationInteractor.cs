@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override IFeatureRelationInteractor Activate(IFeature feature, IFeature cloneFeature, AddRelatedFeature addRelatedFeature, int level, IFallOffPolicy fallOffPolicy)
         {
-            FallOffPolicy = new LinearFallOffPolicy(); //fallOffPolicy ?? new NoFallOffPolicy();
+            FallOffPolicy = new LinearFallOffPolicy();
 
             var hydroObject = feature as IHydroObject;
             if (hydroObject == null)

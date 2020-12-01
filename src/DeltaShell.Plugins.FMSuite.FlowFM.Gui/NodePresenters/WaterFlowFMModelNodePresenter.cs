@@ -42,7 +42,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private static readonly Bitmap PhysParamIcon = new Bitmap(Common.Gui.Properties.Resources.folder_wrench, 16, 16);
         private static readonly Bitmap NumParamIcon = new Bitmap(Common.Gui.Properties.Resources.settings, 16, 16);
         private static readonly Bitmap OutParamIcon = new Bitmap(Common.Gui.Properties.Resources.output_param, 16, 16);
-        private static readonly Bitmap WindIcon = new Bitmap(Resources.Wind1, 16, 16);
 
         private static readonly IList<DataItem> DataItems = new List<DataItem>();
 
@@ -70,13 +69,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         public override IEnumerable GetChildNodeObjects(WaterFlowFMModel parentNodeData, ITreeNode node)
         {
-            // experimental: don't have 'Input' folder..
             foreach (object input in GetInputItems(parentNodeData))
             {
                 yield return input;
             }
 
-            //yield return new TreeFolder(parentNodeData, , "Input", FolderImageType.Input);
             yield return new TreeFolder(parentNodeData, GetOutputItems(parentNodeData), "Output", FolderImageType.Output);
         }
 

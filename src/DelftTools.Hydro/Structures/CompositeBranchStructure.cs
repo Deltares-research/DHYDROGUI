@@ -88,8 +88,7 @@ namespace DelftTools.Hydro.Structures
             if (structure.Structures.Count == 0)
             {
                 exceptions.Add(
-                    new ValidationException(string.Format("Composite structure {0} contains no structures",
-                                                          structure.Name)));
+                    new ValidationException($"Composite structure {structure.Name} contains no structures"));
             }
 
             // Check for emptyness
@@ -103,7 +102,7 @@ namespace DelftTools.Hydro.Structures
                 if (!result.IsValid)
                 {
                     exceptions.Add(new ValidationException(
-                                       string.Format("{0}:{1}", weir.Name, result.ValidationException.Message),
+                                       $"{weir.Name}:{result.ValidationException.Message}",
                                        result.ValidationException));
                 }
             }
@@ -114,9 +113,8 @@ namespace DelftTools.Hydro.Structures
                 ValidationResult result = gate.Validate();
                 if (!result.IsValid)
                 {
-                    exceptions.Add(new ValidationException(
-                                       string.Format("{0}:{1}", gate.Name, result.ValidationException.Message),
-                                       result.ValidationException));
+                    exceptions.Add(new ValidationException($"{gate.Name}:{result.ValidationException.Message}",
+                                                           result.ValidationException));
                 }
             }
 
@@ -140,18 +138,15 @@ namespace DelftTools.Hydro.Structures
         [EditAction]
         private void StructuresCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var structure = (IStructure1D) e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException();
 
                 case NotifyCollectionChangedAction.Remove:
-                    //structure.ParentStructure = null;
                     break;
 
                 case NotifyCollectionChangedAction.Add:
-                    //structure.ParentStructure = this;
                     break;
             }
 

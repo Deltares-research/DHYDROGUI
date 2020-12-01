@@ -834,7 +834,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                            .ConvertSpatialOperation)
                                                                .ToList();
 
-                    //spatialOperations.AddRange(spatialOperation);
                     spatialOperationsLookupTable.Add(dataItem.Name, spatialOperation);
                 }
                 // null check to see if it has a final coverage. It could be that there are only point clouds in the set.

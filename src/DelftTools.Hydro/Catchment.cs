@@ -126,8 +126,8 @@ namespace DelftTools.Hydro
                 throw new InvalidOperationException("This catchment cannot have sub catchments of given type");
             }
 
-            var delta = new Coordinate(0, 0);
-            var offset = 100;
+            Coordinate delta;
+            const int offset = 100;
             switch (catchmentType.Name)
             {
                 case CatchmentType.PavedTypeName:
@@ -199,9 +199,7 @@ namespace DelftTools.Hydro
         {
             var copyFrom = (Catchment) source;
 
-            // Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null;
             copyFrom.IsGeometryDerivedFromAreaSize = IsGeometryDerivedFromAreaSize;
-            // copyFrom.Name = Name;
             copyFrom.Attributes = (IFeatureAttributeCollection) Attributes.Clone();
             copyFrom.Basin = Basin;
             copyFrom.Description = Description;

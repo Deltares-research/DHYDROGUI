@@ -55,8 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
             foreach (IDimrModel dHydroActivity in allDHydroActivities)
             {
-                int nodeCount;
-                CoreCountDictionary.TryGetValue(dHydroActivity, out nodeCount);
+                CoreCountDictionary.TryGetValue(dHydroActivity, out int nodeCount);
                 rootNode.Add(CreateComponentNode(dHydroActivity, nodeCount));
             }
 
@@ -201,7 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                     }
 
                     /*** Generate a new coupler and add to list ***/
-                    IDimrConfigModelCoupler modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(sourceModel, targetModel, wrapperSource as CompositeActivity, wrapperTarget as CompositeActivity); // new DimrConfigModelCoupler(sourceModel, targetModel, wrapperSource as CompositeActivity, wrapperTarget as CompositeActivity);
+                    IDimrConfigModelCoupler modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(sourceModel, targetModel, wrapperSource as CompositeActivity, wrapperTarget as CompositeActivity);
                     if (!modelCoupler.CoupleInfos.Any())
                     {
                         continue;
@@ -228,15 +227,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             }
             else
             {
-                var compositeActivity = activity as ICompositeActivity;
-                if (compositeActivity != null && compositeActivity.Activities.Any())
+                if (activity is ICompositeActivity compositeActivity && compositeActivity.Activities.Any())
                 {
                     RecursivelyAddCompositeControlNodes(node, compositeActivity);
                 }
                 else
                 {
-                    var dHydroActivity = activity as IDimrModel;
-                    if (dHydroActivity != null)
+                    if (activity is IDimrModel dHydroActivity)
                     {
                         if (dHydroActivity.IsMasterTimeStep)
                         {
@@ -252,8 +249,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                         else
                         {
                             var groupElement = new XElement(DHyd + "startGroup");
-                            var timeDependentModel = activity as ITimeDependentModel;
-                            if (timeDependentModel != null && refTime != null)
+                            if (activity is ITimeDependentModel timeDependentModel && refTime != null)
                             {
                                 var timeElement = new XElement(DHyd + "time");
                                 double startTime = (timeDependentModel.StartTime - refTime.Value).TotalSeconds;
@@ -347,9 +343,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         private static IActivity UnwrapActivity(IActivity activity)
         {
             IActivity result = activity;
-            while (result is ActivityWrapper)
+            while (result is ActivityWrapper wrapper)
             {
-                result = ((ActivityWrapper) result).Activity;
+                result = wrapper.Activity;
             }
 
             return result;

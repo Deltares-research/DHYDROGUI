@@ -144,7 +144,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
         public void Delete()
         {
-            //FileUtils.DeleteIfExists(path);
+            // Nothing to delete
         }
 
         public Type GetEntityType()

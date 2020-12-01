@@ -97,15 +97,9 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// <summary>
         /// Update the shape of the weir.
         /// </summary>
-        public virtual void SetShape(double[] yvalues, double[] zvalues)
+        public virtual void SetShape(double[] yValues, double[] zValues)
         {
-            var vertices = new List<Coordinate>();
-            for (var i = 0; i < yvalues.Length; i++)
-            {
-                vertices.Add(new Coordinate(yvalues[i], zvalues[i]));
-            }
-
-            Shape = new LineString(vertices.ToArray()); // endGeometry;
+            Shape = new LineString(yValues.Select((t, i) => new Coordinate(t, zValues[i])).ToArray());
         }
 
         public virtual object Clone()

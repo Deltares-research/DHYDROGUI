@@ -19,10 +19,10 @@ namespace DelftTools.Hydro.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -113,7 +113,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The roughness positions of cross section &apos;{0}&apos; have been shifted by {1} [m] to match the flow profile.
         /// </summary>
-        public static string CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_section___0___have_been_shifted_by__1___m__to_match_the_flow_profile {
+        internal static string CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_section___0___have_been_shifted_by__1___m__to_match_the_flow_profile {
             get {
                 return ResourceManager.GetString("CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_" +
                         "section___0___have_been_shifted_by__1___m__to_match_the_flow_profile", resourceCulture);
@@ -163,7 +163,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Branch feature names must be unique, the following Branch features have been renamed:.
         /// </summary>
-        public static string HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_ {
+        internal static string HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_ {
             get {
                 return ResourceManager.GetString("HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_f" +
                         "ollowing_Branch_features_have_been_renamed_", resourceCulture);
