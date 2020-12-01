@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             // nothing to do here
         }
 
-        public bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout,
+        public virtual bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout,
                                               ref double[] yout, ref int[] featureIds)
         {
             int numInputs = xin.Length;
