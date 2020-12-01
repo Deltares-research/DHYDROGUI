@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using DelftTools.Controls;
+﻿using DelftTools.Controls;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
