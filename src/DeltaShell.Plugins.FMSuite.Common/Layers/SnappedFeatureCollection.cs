@@ -319,7 +319,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                     dirty = true;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
 
             FireFeaturesChanged();

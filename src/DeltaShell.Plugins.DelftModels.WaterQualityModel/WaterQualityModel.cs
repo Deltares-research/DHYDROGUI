@@ -365,7 +365,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 case LayerType.ZLayer:
                     return ZTop;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidOperationException($"{nameof(LayerType)} is not a valid {typeof(LayerType)}");
             }
         }
 

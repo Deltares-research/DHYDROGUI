@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 case StructuresListType.Gates:
                     return "Gates";
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new NotSupportedException($"{nameof(Type)} is not a valid {typeof(StructuresListType)}");
             }
         }
 
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     case StructuresListType.Gates:
                         return Resources.GateSmall;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new NotSupportedException($"{nameof(Type)} is not a valid {typeof(StructuresListType)}");
                 }
             }
         }

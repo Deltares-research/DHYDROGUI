@@ -824,7 +824,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                     if (dimrApi == null)
                     {
-                        throw new ArgumentNullException("Could not load the Dimr api.");
+                        throw new InvalidOperationException("Could not load the Dimr api.");
                     }
 
                     //run dimr

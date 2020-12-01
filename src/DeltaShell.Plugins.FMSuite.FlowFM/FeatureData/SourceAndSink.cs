@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 case NotifyCollectionChangedAction.Reset:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 
@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     break;
-                default: throw new ArgumentOutOfRangeException();
+                default: throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 

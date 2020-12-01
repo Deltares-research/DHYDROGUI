@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(Distance));
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
 
                 distance = value;

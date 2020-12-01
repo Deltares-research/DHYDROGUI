@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                         // ...
                         for (var l = 0; l < waterQualityModel.NumberOfWaqSegmentLayers; l++)
                         {
-                            string obsName = string.Format("{0}_L{1}", obsPoint.Name, l + 1);
+                            string obsName = $"{obsPoint.Name}_L{l + 1}";
                             obsInformation[obsName] = new[]
                             {
                                 cellId + (l * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer)
@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                         }
                     }
                         break;
-                    default: throw new ArgumentOutOfRangeException();
+                    default: throw new ArgumentOutOfRangeException(nameof(obsPoint.ObservationPointType));
                 }
             }
         }

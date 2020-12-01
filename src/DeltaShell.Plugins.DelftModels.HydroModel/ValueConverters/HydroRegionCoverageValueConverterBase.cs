@@ -335,17 +335,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 
         private bool IsBackingArrayInEditMode(IFunction function)
         {
-            var variable = function as IVariable;
-            if (variable != null)
+            if (function is IVariable variable)
             {
-                var editableObject = variable.Values as IEditableObject;
-                if (editableObject != null)
+                if (variable.Values is IEditableObject editableObject)
                 {
                     return editableObject.IsEditing;
                 }
@@ -356,8 +354,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
 
         private bool IsConvertedValueInEditMode()
         {
-            var editableObject = ConvertedValue as IEditableObject;
-            bool isEditing = editableObject != null && editableObject.IsEditing;
+            bool isEditing = ConvertedValue is IEditableObject editableObject && editableObject.IsEditing;
             return isEditing;
         }
 
