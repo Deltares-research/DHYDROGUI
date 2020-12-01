@@ -15,7 +15,7 @@ using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
-    public class WaveMapViewDecorator
+    public static class WaveMapViewDecorator
     {
         internal const string ObstacleToolName = "Obstacle Tool (Waves)";
         internal const string BoundaryToolName = "Boundary Tool (Waves)";
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         private static readonly Bitmap ObservationPointIcon = Common.Gui.Properties.Resources.Observation;
         private static readonly Bitmap ObservationCrossSectionIcon = Common.Gui.Properties.Resources.ObservationCS;
 
-        private static readonly string ModelName = typeof(WaveModel).Name;
+        private static readonly string ModelName = nameof(WaveModel);
 
         public static void AddMapToolsIfMissing(MapView mapView)
         {

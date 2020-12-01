@@ -47,9 +47,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         }
     }
 
-    public class GridWizardMapToolHelper
+    public static class GridWizardMapToolHelper
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(GridWizardMapToolHelper));
+        private static readonly ILog log = LogManager.GetLogger(typeof(GridWizardMapToolHelper));
 
         public static IList<IPolygon> ComputePolygons(IDiscretization discretization, IList<Feature2D> embankments,
                                                       IPolygon userPolygon, double supportPointDistance, double minimumSupportPointDistance)
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             // Protect against a folded userPolygon.
             if (!userPolygon.IsValid)
             {
-                Log.Error("Invalid or folded user polygon.");
+                log.Error("Invalid or folded user polygon.");
                 return null;
             }
 
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             if (!embankmentLineStrings.Any())
             {
-                Log.Error("No embankments cross the user polygon.");
+                log.Error("No embankments cross the user polygon.");
                 return null;
             }
 
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if (oddEmbankments.Any())
             {
                 // Show the names of 5 problematic embankments. 
-                Log.ErrorFormat("The following {0} embankments crosses the user polygon an odd number of times (max 5): {1}", oddEmbankments.Count, string.Join(", ", oddEmbankments.Take(5).Select(e => e.Name)));
+                log.ErrorFormat("The following {0} embankments crosses the user polygon an odd number of times (max 5): {1}", oddEmbankments.Count, string.Join(", ", oddEmbankments.Take(5).Select(e => e.Name)));
                 return null;
             }
 
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             if (!branches.Any())
             {
-                Log.Error("No branches cross the user polygon.");
+                log.Error("No branches cross the user polygon.");
                 return null;
             }
 
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             List<ILineString> velocityLineStrings = GetVelocityLineStrings(discretization, branches, userPolygon);
             if (!velocityLineStrings.Any())
             {
-                Log.Error("No branch velocity points inside the user polygon.");
+                log.Error("No branch velocity points inside the user polygon.");
                 return null;
             }
 
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             List<ILineString> projectedLineStrings = ProjectLineStrings(associations, minimumSupportPointDistance, supportPointDistance).ToList();
             if (!projectedLineStrings.Any())
             {
-                Log.Error("Less than two Locations in the Spatial data of a Branch are inside the user polygon.");
+                log.Error("Less than two Locations in the Spatial data of a Branch are inside the user polygon.");
                 return null;
             }
 
@@ -179,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             int numberOfUnassociatedEmbankmentLineStrings = densifiedLineStrings.Count;
             if (numberOfUnassociatedEmbankmentLineStrings > 0)
             {
-                Log.Warn("Found " + numberOfUnassociatedEmbankmentLineStrings + " embankment(s) not belonging to any branch.");
+                log.Warn("Found " + numberOfUnassociatedEmbankmentLineStrings + " embankment(s) not belonging to any branch.");
             }
 
             return densifiedLineStrings;
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             // Self-intersecting LineStrings lead to folded polygons.
             if (projectedLineStrings.Any(l => !l.IsSimple))
             {
-                Log.Warn("Found a self-intersecting embankment.");
+                log.Warn("Found a self-intersecting embankment.");
                 return null;
             }
 
@@ -331,14 +331,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             // Protect against a folded polygons.
             if (polygons.Any(polygon => !polygon.IsValid))
             {
-                Log.Warn("Generated invalid or folded polygon, aborting.");
+                log.Warn("Generated invalid or folded polygon, aborting.");
                 return null;
             }
 
             // Test for overlap, indicating misconstructed polygons.
             if (polygons.Count > 1 && polygons.Any(p => polygons.Any(p2 => p != p2 && p.Intersects(p2))))
             {
-                Log.Warn("Constructed overlapping polygons, aborting.");
+                log.Warn("Constructed overlapping polygons, aborting.");
                 return null;
             }
 
@@ -575,7 +575,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             // Sanity check.
             if (typedCoordinates.Count(c => c.Flavour == Flavour.Branch) < 2)
             {
-                Log.Warn("Fewer than two crossings between branches and the user polygon found.");
+                log.Warn("Fewer than two crossings between branches and the user polygon found.");
                 return null;
             }
 

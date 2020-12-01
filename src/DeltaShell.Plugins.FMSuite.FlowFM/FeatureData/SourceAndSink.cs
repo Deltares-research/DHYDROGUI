@@ -15,7 +15,7 @@ using NetTopologySuite.Extensions.Features.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
-    public class SourceSinkVariableInfo
+    public static class SourceSinkVariableInfo
     {
         public const string DischargeUnitDescription = "cubic meters per second";
         public const string DischargeUnitSymbol = "m3/s";

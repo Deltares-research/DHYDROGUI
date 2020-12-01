@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
-    public class RuleProvider
+    public static class RuleProvider
     {
         public static IEnumerable<Type> GetAllRules()
         {

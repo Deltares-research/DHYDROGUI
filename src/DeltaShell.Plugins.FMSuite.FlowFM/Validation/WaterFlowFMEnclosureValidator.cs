@@ -10,7 +10,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
-    public class WaterFlowFMEnclosureValidator
+    public static class WaterFlowFMEnclosureValidator
     {
         public static ValidationReport Validate(WaterFlowFMModel model)
         {

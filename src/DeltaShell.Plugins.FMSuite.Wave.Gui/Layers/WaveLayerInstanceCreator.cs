@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
     public class WaveLayerInstanceCreator : IWaveLayerInstanceCreator
     {
         /// <summary> The wave model name. </summary>
-        private static readonly string waveModelName = typeof(WaveModel).Name;
+        private static readonly string waveModelName = nameof(WaveModel);
 
         public ILayer CreateModelGroupLayer(WaveModel waveModel)
         {
