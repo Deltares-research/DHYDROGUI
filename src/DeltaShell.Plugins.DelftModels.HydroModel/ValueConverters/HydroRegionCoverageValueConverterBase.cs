@@ -339,14 +339,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             }
         }
 
-        private bool IsBackingArrayInEditMode(IFunction function)
+        private static bool IsBackingArrayInEditMode(IFunction function)
         {
-            if (function is IVariable variable)
+            if (function is IVariable variable && variable.Values is IEditableObject editableObject)
             {
-                if (variable.Values is IEditableObject editableObject)
-                {
-                    return editableObject.IsEditing;
-                }
+                return editableObject.IsEditing;
             }
 
             return false;
