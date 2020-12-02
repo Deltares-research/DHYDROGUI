@@ -35,11 +35,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var presenter = new WavhFileFunctionStoreNodePresenter();
             var parentNode = Substitute.For<ITreeNode>();
             var node = Substitute.For<ITreeNode>();
+            var featureContainer = Substitute.For<IWaveFeatureContainer>();
 
             using (var tempDir = new TemporaryDirectory())
             {
                 string ncPath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
-                var functionStore = new WavhFileFunctionStore(ncPath);
+                var functionStore = new WavhFileFunctionStore(ncPath, featureContainer);
 
                 // Call
                 presenter.UpdateNode(parentNode, node, functionStore);
@@ -73,10 +74,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
 
             var node = Substitute.For<ITreeNode>();
 
+            var featureContainer = Substitute.For<IWaveFeatureContainer>();
+
             using (var tempDir = new TemporaryDirectory())
             {
                 string ncPath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
-                var functionStore = new WavhFileFunctionStore(ncPath);
+                var functionStore = new WavhFileFunctionStore(ncPath, featureContainer);
 
                 model.WaveOutputData.WavhFileFunctionStores.Returns(new EventedList<WavhFileFunctionStore>
                 {

@@ -52,9 +52,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
                 model.BoundaryContainer,
                 model.CoordinateSystem);
 
-            yield return model.Obstacles;
-            yield return model.ObservationPoints;
-            yield return model.ObservationCrossSections;
+            yield return model.FeatureContainer.Obstacles;
+            yield return model.FeatureContainer.ObservationPoints;
+            yield return model.FeatureContainer.ObservationCrossSections;
 
             foreach (WaveDomainData waveDomain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
             {

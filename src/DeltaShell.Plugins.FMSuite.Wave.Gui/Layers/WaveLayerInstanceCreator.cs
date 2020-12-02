@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 
             return new VectorLayer(WaveLayerNames.ObstacleLayerName)
             {
-                DataSource = new Feature2DCollection().Init(waveModel.Obstacles,
+                DataSource = new Feature2DCollection().Init(waveModel.FeatureContainer.Obstacles,
                                                             "Obstacle",
                                                             waveModelName,
                                                             waveModel.CoordinateSystem),
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                     GeometryType = typeof(IPoint),
                     Symbol = WaveLayerIcons.ObservationPoint
                 },
-                DataSource = new Feature2DCollection().Init(waveModel.ObservationPoints,
+                DataSource = new Feature2DCollection().Init(waveModel.FeatureContainer.ObservationPoints,
                                                             "ObservationPoints",
                                                             waveModelName,
                                                             waveModel.CoordinateSystem)
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 
             return new VectorLayer(WaveLayerNames.ObservationCrossSectionLayerName)
             {
-                DataSource = new Feature2DCollection().Init(waveModel.ObservationCrossSections,
+                DataSource = new Feature2DCollection().Init(waveModel.FeatureContainer.ObservationCrossSections,
                                                             "CrS",
                                                             waveModelName,
                                                             waveModel.CoordinateSystem),

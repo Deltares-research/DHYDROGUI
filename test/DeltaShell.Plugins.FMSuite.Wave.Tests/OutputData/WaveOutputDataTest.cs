@@ -285,6 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 var copyHandler = Substitute.For<IWaveOutputDataCopyHandler>();
                 var harvester = Substitute.For<IWaveOutputDataHarvester>();
+                var featureContainer = Substitute.For<IWaveFeatureContainer>();
                 var logHandler = Substitute.For<ILogHandler>();
 
                 var outputData = new WaveOutputData(harvester, copyHandler);
@@ -302,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 string sourceWavhPath = TestHelper.GetTestFilePath(@"WaveOutputDataHarvesterTest\wavh-Waves.nc");
                 string ncWavhPath = tempDir.CopyTestDataFileToTempDirectory(sourceWavhPath);
-                var ncWavhStore = new WavhFileFunctionStore(ncWavhPath);
+                var ncWavhStore = new WavhFileFunctionStore(ncWavhPath, featureContainer);
                 outputData.WavhFileFunctionStores.Add(ncWavhStore);
                 string targetWavhPath = Path.Combine(tempDir.Path, 
                                                      targetDirectoryName, 
@@ -371,6 +372,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 var copyHandler = Substitute.For<IWaveOutputDataCopyHandler>();
                 var harvester = Substitute.For<IWaveOutputDataHarvester>();
+                var featureContainer = Substitute.For<IWaveFeatureContainer>();
                 var logHandler = Substitute.For<ILogHandler>();
 
                 var outputData = new WaveOutputData(harvester, copyHandler);
@@ -383,7 +385,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 string sourceWavhPath = TestHelper.GetTestFilePath(@"WaveOutputDataHarvesterTest\wavh-Waves.nc");
                 string ncWavhPath = tempDir.CopyTestDataFileToTempDirectory(sourceWavhPath);
-                var ncWavhStore = new WavhFileFunctionStore(ncWavhPath);
+                var ncWavhStore = new WavhFileFunctionStore(ncWavhPath, featureContainer);
                 outputData.WavhFileFunctionStores.Add(ncWavhStore);
 
                 outputData.DiagnosticFiles.Add(new ReadOnlyTextFileData("", ""));
@@ -526,12 +528,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         {
             var copyHandler = Substitute.For<IWaveOutputDataCopyHandler>();
             var harvester = Substitute.For<IWaveOutputDataHarvester>();
+            var featureContainer = Substitute.For<IWaveFeatureContainer>();
 
             using (var tempDir = new TemporaryDirectory())
             {
                 string sourcePath = TestHelper.GetTestFilePath(@"WaveOutputDataHarvesterTest\wavh-Waves.nc");
                 string ncPath = tempDir.CopyTestDataFileToTempDirectory(sourcePath);
-                var ncStore = new WavhFileFunctionStore(ncPath);
+                var ncStore = new WavhFileFunctionStore(ncPath, featureContainer);
 
                 var outputData = new WaveOutputData(harvester, copyHandler);
                 outputData.WavhFileFunctionStores.Add(ncStore);

@@ -127,8 +127,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             // observation points
             ViewInfo<IEventedList<Feature2DPoint>, ILayer, VectorLayerAttributeTableView> obsPointViewInfo =
-                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, WaveModel>(
-                    "Observation Points (Waves)", m => m.ObservationPoints, () => Gui);
+                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, IWaveModel>(
+                    "Observation Points (Waves)", m => m.FeatureContainer.ObservationPoints, () => Gui);
             yield return obsPointViewInfo;
             yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsPointViewInfo, o => o.Data,
                                                                        o => o.ShortCutType == ShortCutType.FeatureSet);
@@ -136,17 +136,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return ViewInfoWrapper<Feature2DPoint>.Create(obsPointViewInfo,
                                                                 o =>
                                                                     WaveModels
-                                                                        .First(m => m.ObservationPoints.Contains(o))
-                                                                        .ObservationPoints,
+                                                                        .First(m => m.FeatureContainer.ObservationPoints.Contains(o))
+                                                                        .FeatureContainer.ObservationPoints,
                                                                 o =>
                                                                     WaveModels.Any(
-                                                                        m => m.ObservationPoints.Contains(o)));
+                                                                        m => m.FeatureContainer.ObservationPoints.Contains(o)));
 
             // obs. cross sections  
             ViewInfo<IEventedList<Feature2D>, ILayer, VectorLayerAttributeTableView> obsCrossSectionViewInfo =
-                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaveModel>(
+                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, IWaveModel>(
                     "Observation Cross Section (Waves)",
-                    m => m.ObservationCrossSections,
+                    m => m.FeatureContainer.ObservationCrossSections,
                     () => Gui);
             yield return obsCrossSectionViewInfo;
             yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsCrossSectionViewInfo, o => o.Data,
@@ -154,10 +154,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             yield return ViewInfoWrapper<Feature2D>.Create(obsCrossSectionViewInfo,
                                                            o => WaveModels
-                                                                .First(m => m.ObservationCrossSections.Contains(o))
-                                                                .ObservationCrossSections,
+                                                                .First(m => m.FeatureContainer.ObservationCrossSections.Contains(o))
+                                                                .FeatureContainer.ObservationCrossSections,
                                                            o => WaveModels.Any(
-                                                               m => m.ObservationCrossSections.Contains(o)));
+                                                               m => m.FeatureContainer.ObservationCrossSections.Contains(o)));
 
             // time points
             var timePointViewInfo = new ViewInfo<WaveInputFieldData, WaveTimePointEditor>
@@ -222,25 +222,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 Description = "Obstacles",
                 GetViewName = (v, o) => "Obstacles",
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => WaveModels.FirstOrDefault(m => m.Obstacles.Equals(o)),
+                GetCompositeViewData = o => WaveModels.FirstOrDefault(m => m.FeatureContainer.Obstacles.Equals(o)),
                 AfterCreate = (v, o) => v.RemoveObstacles = obs =>
                 {
-                    WaveModel model = WaveModels.FirstOrDefault(m => m.Obstacles.Equals(o));
+                    WaveModel model = WaveModels.FirstOrDefault(m => m.FeatureContainer.Obstacles.Equals(o));
                     if (model != null)
                     {
-                        obs.ForEach(f => model.Obstacles.Remove(f));
+                        obs.ForEach(f => model.FeatureContainer.Obstacles.Remove(f));
                     }
                 }
             };
             yield return obstacleViewInfo;
             yield return ViewInfoWrapper<WaveObstacle>.Create(obstacleViewInfo, o =>
             {
-                WaveModel model = WaveModels.FirstOrDefault(m => m.Obstacles.Contains(o));
-                return model != null ? model.Obstacles : null;
+                WaveModel model = WaveModels.FirstOrDefault(m => m.FeatureContainer.Obstacles.Contains(o));
+                return model != null ? model.FeatureContainer.Obstacles : null;
             });
             yield return ViewInfoWrapper<Feature2D>.Create(obstacleViewInfo, FindObstaclesForFeature, IsModelObstacle);
             yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obstacleViewInfo, o => o.Data,
-                                                                       o => o.WaveModel.Obstacles.Equals(o.Data) &&
+                                                                       o => o.WaveModel.FeatureContainer.Obstacles.Equals(o.Data) &&
                                                                             o.ShortCutType == ShortCutType.FeatureSet);
 
             yield return new ViewInfo<WaveModelTreeShortcut, WaveModel, WpfSettingsView>
@@ -348,13 +348,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         private bool IsModelObstacle(Feature2D f)
         {
-            return WaveModels.FirstOrDefault(m => m.Obstacles.Contains(f)) != null;
+            return WaveModels.FirstOrDefault(m => m.FeatureContainer.Obstacles.Contains(f)) != null;
         }
 
         private IEventedList<WaveObstacle> FindObstaclesForFeature(Feature2D f)
         {
-            return WaveModels.First(m => m.Obstacles.Contains(f)) != null
-                       ? WaveModels.First(m => m.Obstacles.Contains(f)).Obstacles
+            return WaveModels.First(m => m.FeatureContainer.Obstacles.Contains(f)) != null
+                       ? WaveModels.First(m => m.FeatureContainer.Obstacles.Contains(f)).FeatureContainer.Obstacles
                        : null;
         }
 

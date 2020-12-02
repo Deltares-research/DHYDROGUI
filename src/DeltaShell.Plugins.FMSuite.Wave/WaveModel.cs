@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
@@ -40,7 +41,6 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api;
 using SharpMap.Extensions.CoordinateSystems;
@@ -98,12 +98,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             runner = new DimrRunner(this, new DimrApiFactory());
 
+            BuildModel(creationCode, false);
+
             OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
             OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
             OutputWavmFileFunctionStores = new EventedList<WavmFileFunctionStore>();
             OutputWavhFileFunctionStores = new EventedList<WavhFileFunctionStore>();
 
-            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(), 
+            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(FeatureContainer),
                                                 new WaveOutputDataCopyHandler());
             
             WaveOutputData.DiagnosticFiles.CollectionChanged += 
@@ -114,8 +116,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavmFileFunctionStores);
             WaveOutputData.WavhFileFunctionStores.CollectionChanged +=
                 GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavhFileFunctionStores);
-
-            BuildModel(creationCode, false);
 
             ShowModelRunConsole = false;
             ValidateBeforeRun = true;
@@ -280,11 +280,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public IBoundaryContainer BoundaryContainer => ModelDefinition.BoundaryContainer;
 
-        public IEventedList<Feature2DPoint> ObservationPoints => ModelDefinition.ObservationPoints;
+        public IWaveFeatureContainer FeatureContainer => ModelDefinition.FeatureContainer;
 
-        public IEventedList<Feature2D> ObservationCrossSections => ModelDefinition.ObservationCrossSections;
-
-        public IEventedList<WaveObstacle> Obstacles => ModelDefinition.Obstacles;
         #endregion
 
         /// <summary>
@@ -797,6 +794,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             foreach (WavhFileFunctionStore wavhFileFunctionStore in WaveOutputData.WavhFileFunctionStores)
             {
                 yield return wavhFileFunctionStore;
+
+                foreach (IFunction function in wavhFileFunctionStore.Functions)
+                {
+                    yield return function;
+                }
             }
         }
 

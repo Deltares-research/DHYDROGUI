@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -45,6 +46,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             {
                 // Assert
                 Assert.That(model.WaveOutputData, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public void Constructor_SetsCorrectFeatureContainer()
+        {
+            // Call
+            using (var model = new WaveModel())
+            {
+                // Assert
+                Assert.That(model.FeatureContainer, Is.Not.Null);
             }
         }
 
@@ -250,18 +262,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             ICoordinateTransformation fromUTM16ToWebMercator = new OgrCoordinateSystemFactory().CreateTransformation(src, target);
             ICoordinateTransformation fromWebMercatorToUTM16 = new OgrCoordinateSystemFactory().CreateTransformation(target, src);
 
-            List<Coordinate> coordinates =
-                WaveModelCoordinateConversion.GetAllModelFeatures(waveModel)
-                                             .SelectMany(f => f.Geometry.Coordinates)
-                                             .ToList();
+            List<Coordinate> coordinates = waveModel.FeatureContainer.GetAllFeatures()
+                                                    .SelectMany(f => f.Geometry.Coordinates)
+                                                    .ToList();
 
             waveModel.TransformCoordinates(fromUTM16ToWebMercator);
             waveModel.TransformCoordinates(fromWebMercatorToUTM16);
 
             List<Coordinate> coordinatesAfter =
-                WaveModelCoordinateConversion.GetAllModelFeatures(waveModel)
-                                             .SelectMany(f => f.Geometry.Coordinates)
-                                             .ToList();
+                waveModel.FeatureContainer.GetAllFeatures()
+                         .SelectMany(f => f.Geometry.Coordinates)
+                         .ToList();
 
             Assert.AreEqual(coordinatesAfter.Count, coordinates.Count);
             for (var i = 0; i < coordinates.Count; ++i)
@@ -648,11 +659,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             using (var model = new WaveModel())
             {
                 string ncPath = tempDir.CopyTestDataFileToTempDirectory("WaveOutputDataHarvesterTest\\wavh-Waves.nc");
-                var functionStore1 = new WavhFileFunctionStore(ncPath);
-                var functionStore2 = new WavhFileFunctionStore(ncPath);
+                var featureContainer = Substitute.For<IWaveFeatureContainer>();
+                var functionStore1 = new WavhFileFunctionStore(ncPath, featureContainer);
+                var functionStore2 = new WavhFileFunctionStore(ncPath, featureContainer);
                 
                 model.WaveOutputData.WavhFileFunctionStores.Add(functionStore1);
                 model.WaveOutputData.WavhFileFunctionStores.Add(functionStore2);
+
+                List<IFunction> functions = model.WaveOutputData.WavhFileFunctionStores.SelectMany(s => s.Functions).ToList();
+
+                // Precondition
+                Assert.That(functions, Has.Count.EqualTo(22));
 
                 // Call
                 IEnumerable<object> result = model.GetDirectChildren()
@@ -660,6 +677,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 Assert.That(result, Has.Member(functionStore1));
                 Assert.That(result, Has.Member(functionStore2));
+
+                foreach (IFunction function in functions)
+                {
+                    Assert.That(result, Has.Member(function));
+                }
             }
         }
 

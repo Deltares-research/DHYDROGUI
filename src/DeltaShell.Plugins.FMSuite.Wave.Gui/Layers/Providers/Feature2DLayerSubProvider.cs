@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         {
             return sourceData is IEnumerable<Feature2D> features &&
                    parentData is IWaveModel model &&
-                   IsCorrectFeatureSet(features, model);
+                   IsCorrectFeatureSet(features, model.FeatureContainer);
         }
 
         public ILayer CreateLayer(object sourceData, object parentData)
@@ -55,12 +55,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// create a <see cref="ILayer"/> of.
         /// </summary>
         /// <param name="features">The features.</param>
-        /// <param name="model">The model.</param>
+        /// <param name="featureContainer">The feature container of the model.</param>
         /// <returns>
         /// <c>true</c> if a layer can be created by this <see cref="Feature2DLayerSubProvider"/>;
         /// <c>false</c> otherwise.
         /// </returns>
-        protected abstract bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveModel model);
+        protected abstract bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveFeatureContainer featureContainer);
 
         /// <summary>
         /// Creates the actual <see cref="ILayer"/>.

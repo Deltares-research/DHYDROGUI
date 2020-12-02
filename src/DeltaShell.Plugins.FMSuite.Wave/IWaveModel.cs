@@ -1,10 +1,8 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
@@ -17,19 +15,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     public interface IWaveModel : ITimeDependentModel, IHasCoordinateSystem, IEditableObject
     {
         /// <summary>
-        /// Gets the observation points.
+        /// Gets the feature container of this <see cref="IWaveModel"/>.
         /// </summary>
-        IEventedList<Feature2DPoint> ObservationPoints { get; }
-
-        /// <summary>
-        /// Gets the observation cross sections.
-        /// </summary>
-        IEventedList<Feature2D> ObservationCrossSections { get; }
-
-        /// <summary>
-        /// Gets the obstacles.
-        /// </summary>
-        IEventedList<WaveObstacle> Obstacles { get; }
+        IWaveFeatureContainer FeatureContainer { get; }
 
         /// <summary>
         /// Gets the boundary container of this <see cref="IWaveModel"/>.

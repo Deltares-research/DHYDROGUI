@@ -245,11 +245,13 @@
     <Compile Include="DataAccess\MeteoFileReader.cs" />
     <Compile Include="DataAccess\SpectrumDataComponentVisitor.cs" />
     <Compile Include="DataAccess\SpectrumParametersVisitor.cs" />
+    <Compile Include="IWaveFeatureContainer.cs" />
     <Compile Include="Migrations\1.2.0.0\WaveModel120Migrator.cs" />
     <Compile Include="Migrations\WavesMigrator.cs" />
     <Compile Include="OutputData\IWaveOutputData.cs" />
     <Compile Include="OutputData\IWaveOutputDataCopyHandler.cs" />
     <Compile Include="OutputData\IWaveOutputDataHarvester.cs" />
+    <Compile Include="OutputData\WaveGeometryComparer.cs" />
     <Compile Include="OutputData\WaveOutputConstants.cs" />
     <Compile Include="OutputData\WaveOutputData.cs" />
     <Compile Include="OutputData\ReadOnlyTextFileData.cs" />
@@ -285,6 +287,7 @@
     <Compile Include="Validation\WaveValidationShortcut.cs" />
     <Compile Include="WaveDataAccessListener.cs" />
     <Compile Include="WaveDomainHelper.cs" />
+    <Compile Include="WaveFeatureContainer.cs" />
     <Compile Include="WaveGridOperationApi.cs" />
     <Compile Include="WaveMeteoData.cs" />
     <Compile Include="WaveModelCoordinateConversion.cs" />

@@ -428,6 +428,7 @@
     <Compile Include="Migrations\1.2.0.0\WaveModel120MigratorTest.cs" />
     <Compile Include="Migrations\WavesMigratorTest.cs" />
     <Compile Include="OutputData\ReadOnlyTextFileDataTest.cs" />
+    <Compile Include="OutputData\WaveGeometryComparerTest.cs" />
     <Compile Include="OutputData\WaveOutputDataCopyHandlerTest.cs" />
     <Compile Include="OutputData\WaveOutputDataHarvesterTest.cs" />
     <Compile Include="OutputData\WaveOutputDataTest.cs" />
@@ -450,6 +451,7 @@
     <Compile Include="Validation\WavePropertiesValidatorTest.cs" />
     <Compile Include="Gui\WaveTimePointValidatorTest.cs" />
     <Compile Include="WaveApplicationPluginTest.cs" />
+    <Compile Include="WaveFeatureContainerTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
     <Compile Include="WaveModelRunTest.cs" />
     <Compile Include="WaveModelSaveLoadTest.cs" />

@@ -137,12 +137,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private static IEnumerable<object> GetArea2DItems(WaveModel model)
         {
-            yield return new WaveModelTreeShortcut(ObstacleNodeName, ObstacleImage, model, model.Obstacles,
+            yield return new WaveModelTreeShortcut(ObstacleNodeName, ObstacleImage, model, model.FeatureContainer.Obstacles,
                                                    ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(ObsPointNodeName, ObsPointImage, model, model.ObservationPoints,
+            yield return new WaveModelTreeShortcut(ObsPointNodeName, ObsPointImage, model, model.FeatureContainer.ObservationPoints,
                                                    ShortCutType.FeatureSet);
             yield return new WaveModelTreeShortcut(ObsCurveNodeName, ObsCurveImage, model,
-                                                   model.ObservationCrossSections, ShortCutType.FeatureSet);
+                                                   model.FeatureContainer.ObservationCrossSections, ShortCutType.FeatureSet);
         }
 
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaveModel model)
