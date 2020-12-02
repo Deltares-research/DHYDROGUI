@@ -239,16 +239,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 .Concat(Area.ObservationPoints)
                                 .Concat(Area.ObservationCrossSections)
                                 .Except(Network.Branches)
+                                .Except(Network.Retentions)
                                     .Where(p => ids.Contains(p.Name)).OfType<IFeature>().ToArray(); 
                 }
                 else if ((ids != null || xCoordinates != null && yCoordinates != null) && FMHisFileFunctionStoreHelper.OutputStructuresGenerators.ContainsKey(featureName))
                 {
                     features = FMHisFileFunctionStoreHelper.OutputStructuresGenerators[featureName](ids, maxNumberOfCoordinatesTheGeometryOfTheObjectConsistOf, xCoordinates, yCoordinates).ToArray();
                 }
-                FeaturesByCoverage[featureName] = features; // null check?
+                if (features != null && features.Length != 0)
+                    FeaturesByCoverage[featureName] = features; // null check?
             }
 
-            coverage.Features = new EventedList<IFeature>(FeaturesByCoverage[featureName]);
+            coverage.Features = new EventedList<IFeature>(FeaturesByCoverage.ContainsKey(featureName) ? FeaturesByCoverage[featureName] : new IFeature[0]);
         }
 
         private readonly IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
@@ -283,15 +285,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var functionName = function.Attributes[NcNameAttribute];
             if (function.Attributes[NcUseVariableSizeAttribute] == "false" 
-                && !string.IsNullOrEmpty(functionName) 
-                && FeaturesByCoverage.ContainsKey(functionName)) 
+                && !string.IsNullOrEmpty(functionName)) 
             {
-                if (!cachedFeatures.ContainsKey(functionName))
+                if (FeaturesByCoverage.ContainsKey(functionName))
                 {
-                    cachedFeatures[functionName] = new MultiDimensionalArray<IFeature>(FeaturesByCoverage[functionName].ToArray(),
-                        new[] { GetSize(function) });
+                    if (!cachedFeatures.ContainsKey(functionName))
+                    {
+                        cachedFeatures[functionName] = new MultiDimensionalArray<IFeature>(
+                            FeaturesByCoverage[functionName].ToArray(),
+                            new[] {GetSize(function)});
+                    }
+
+                    return (MultiDimensionalArray<T>) cachedFeatures[functionName];
                 }
-                return (MultiDimensionalArray<T>)cachedFeatures[functionName];
+                return new MultiDimensionalArray<T>(new List<T>(), new[] { 0, 0 });
             }
             return base.GetVariableValuesCore<T>(function, filters);
         }
