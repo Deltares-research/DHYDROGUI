@@ -204,69 +204,6 @@
   <data name="UGrid_GetMeshName_Couldn_t_get_meshname" xml:space="preserve">
     <value>Couldn't get meshname</value>
   </data>
-  <data name="UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_nodes__1___number_of_branches__2___number_of_geometry_points__3_" xml:space="preserve">
-    <value>Couldn't create new network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}</value>
-  </data>
-  <data name="UGridNetwork_WriteNetworkNodes_Couldn_t_write_network_nodes" xml:space="preserve">
-    <value>Couldn't write network nodes</value>
-  </data>
-  <data name="UGridNetwork_WriteNetworkBranches_Couldn_t_write_network_branches" xml:space="preserve">
-    <value>Couldn't write network branches</value>
-  </data>
-  <data name="UGridNetwork_WriteNetworkGeometry_Couldn_t_write_network_geometry" xml:space="preserve">
-    <value>Couldn't write network geometry</value>
-  </data>
-  <data name="UGridNetwork_GetNetworkName_Couldn_t_obtain_the_network_name" xml:space="preserve">
-    <value>Couldn't obtain the network name</value>
-  </data>
-  <data name="UGridNetwork_GetNumberOfNetworkNodes_Couldn_t_get_number_of_network_nodes" xml:space="preserve">
-    <value>Couldn't get number of network nodes</value>
-  </data>
-  <data name="UGridNetwork_GetNumberOfNetworkBranches_Couldn_t_get_the_number_of_network_branches" xml:space="preserve">
-    <value>Couldn't get the number of network branches</value>
-  </data>
-  <data name="UGridNetwork_GetNumberOfNetworkGeometryPoints_Couldn_t_get_the_number_of_network_geometry_points" xml:space="preserve">
-    <value>Couldn't get the number of network geometry points</value>
-  </data>
-  <data name="UGridNetwork_ReadNetworkNodes_Couldn_t_read_network_nodes" xml:space="preserve">
-    <value>Couldn't read network nodes</value>
-  </data>
-  <data name="UGridNetwork_ReadNetworkBranches_Couldn_t_read_network_branches" xml:space="preserve">
-    <value>Couldn't read network branches</value>
-  </data>
-  <data name="UGridNetwork_ReadNetworkGeometry_Couldn_t_read_network_geometry" xml:space="preserve">
-    <value>Couldn't read network geometry</value>
-  </data>
-  <data name="UGridNetworkDiscretisation_CreateNetworkDiscretisationInFile_Couldn_t_create_new_network_in_" xml:space="preserve">
-    <value>Couldn't create new network in </value>
-  </data>
-  <data name="UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_network_discretisation_points" xml:space="preserve">
-    <value>Couldn't write the network discretisation points</value>
-  </data>
-  <data name="UGridNetworkDiscretisation_GetNetworkDiscretisationName_Couldn_t_get_the_mesh_discretisation_name" xml:space="preserve">
-    <value>Couldn't get the mesh discretisation name</value>
-  </data>
-  <data name="UGridNetworkDiscretisation_GetNetworkIdForMeshId_Couldn_t_get_the_network_Id_corresponding_to_the_network_discretisation" xml:space="preserve">
-    <value>Couldn't get the network Id corresponding to the network discretisation</value>
-  </data>
-  <data name="UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisations_Couldn_t_get_the_number_of_network_discretisations" xml:space="preserve">
-    <value>Couldn't get the number of network discretisations</value>
-  </data>
-  <data name="UGridNetworkDiscretisation_GetNetworkDiscretisationIds_Couldn_t_get_the_network_discretisation_IDs" xml:space="preserve">
-    <value>Couldn't get the network discretisation IDs</value>
-  </data>
-  <data name="UGridNetworkDiscretisation_GetNumberOfNetworkDiscretisationPointsForMeshId_Couldn_t_get_the_number_of_network_discretisation_points" xml:space="preserve">
-    <value>Couldn't get the number of network discretisation points</value>
-  </data>
-  <data name="UGridNetworkDiscretisation_ReadNetworkDiscretisationPointsForMeshId_Couldn_t_read_the_network_discretisation_points" xml:space="preserve">
-    <value>Couldn't read the network discretisation points</value>
-  </data>
-  <data name="UGridNetworkDiscretisation_ReadNetworkDiscretisationPointIds_Couldn_t_read_discretisation_point_ids" xml:space="preserve">
-    <value>Couldn't read the network discretisation point ids</value>
-  </data>
-  <data name="UGridNetworkDiscretisation_WriteNetworkDiscretisationPointIds_Couldn_t_write_discretisation_point_ids" xml:space="preserve">
-    <value>Couldn't write the network discretisation point ids</value>
-  </data>
   <data name="SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_type__0__" xml:space="preserve">
     <value>No snapped geometry was generated for type {0}.</value>
   </data>
@@ -308,21 +245,6 @@
   </data>
   <data name="WaterFlowFMModel_DisposeSnapApi_Error_disposing_grid_operation_api___0_" xml:space="preserve">
     <value>Error disposing grid operation api: {0}</value>
-  </data>
-  <data name="SpatialDataConverter_ConvertToSpatialData_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_" xml:space="preserve">
-    <value>Unable to parse {0} property: {1}, Branch not found in Network.{2}</value>
-  </data>
-  <data name="RetentionConverter_ConvertToRetention_Unable_to_parse__0__property___1___Branch_not_found_in_Network__2_" xml:space="preserve">
-    <value>Unable to parse {0} property: {1}, Branch not found in Network.{2}</value>
-  </data>
-  <data name="RetentionConverter_ValidateConvertedRetention_Retention_point_with_id__0__already_exists__there_cannot_be_any_duplicate_retention_ids__1_" xml:space="preserve">
-    <value>Retention point with id {0} already exists, there cannot be any duplicate retention ids.{1}</value>
-  </data>
-  <data name="RetentionFileReader_ReadRetention_While_reading_the_retention_from_file__an_error_occured" xml:space="preserve">
-    <value>While reading the retention from file, an error occured</value>
-  </data>
-  <data name="NetworkCoverageFileReader_ReadSpatialFileData_Spatial_data_file_at_location___0___does_not_contain_a___1___tab_" xml:space="preserve">
-    <value>Spatial data file at location '{0}' does not contain a '{1}' tab. The corresponding interpolation type has been set to Constant.</value>
   </data>
   <data name="DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_" xml:space="preserve">
     <value>Invalid key-value-comment line on line {0} in file {1}</value>
