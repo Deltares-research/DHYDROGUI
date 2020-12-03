@@ -278,36 +278,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\greenhouse.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\openwater.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\paved.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\polder_concept.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\unpaved.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\sacramento.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\hbv.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\polder_soft.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="HydroArea.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Embankment.hbm.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
