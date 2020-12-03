@@ -1,6 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
-
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading
+﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading
 {
     /// <summary>
     /// <see cref="IVisitableBoundaryConditionSpreading"/> defines method to accept a <see cref="ISpreadingVisitor"/>

@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             }
             catch (Exception e)
             {
-                Assert.Fail(string.Format("Not the right kind of exception {0}", e));
+                Assert.Fail("Not the right kind of exception {0}", e);
             }
         }
 
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             }
             catch (Exception e)
             {
-                Assert.Fail(string.Format("Removing sediment franction from null function should not fail. {0}", e));
+                Assert.Fail("Removing sediment franction from null function should not fail. {0}", e);
             }
         }
 
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             }
             catch (Exception e)
             {
-                Assert.Fail(string.Format("Removing sediment franction from null function should not fail. {0}", e));
+                Assert.Fail("Removing sediment franction from null function should not fail. {0}", e);
             }
         }
 

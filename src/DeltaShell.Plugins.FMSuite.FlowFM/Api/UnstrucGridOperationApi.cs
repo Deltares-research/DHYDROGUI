@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -83,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             // gather paths            
             string mduName = model.Name + FileConstants.MduFileExtension;
 
-            mduFilePath = Path.Combine(tempPath, model.Name, FileConstants.InputDirectoryName, mduName);
+            mduFilePath = Path.Combine(tempPath, model.Name, DirectoryNameConstants.InputDirectoryName, mduName);
 
             // make sure we initialize without: ext, thin dams, cross sections, etc..
             List<WaterFlowFMProperty> adjustedMduProperties = model.ModelDefinition.Properties.ToList();
@@ -139,32 +140,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         public void Dispose()
         {
-            if (disposed)
-            {
-                return;
-            }
-
-            if (api != null)
-            {
-                api.Finish();
-                api.Dispose();
-                api = null;
-                Thread.Sleep(100);
-                try
-                {
-                    FileUtils.DeleteIfExists(tempPath);
-                    disposed = true;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unable to clean up temp snap directory: " + e);
-                }
-                finally
-                {
-                    // Must always ensure this happens to prevent GC deadlock on project close!
-                    GC.SuppressFinalize(this);
-                }
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public bool SnapsToGrid(IGeometry geometry)
@@ -242,6 +219,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
 
             return linkedCells;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing && api != null)
+            {
+                api.Finish();
+                api.Dispose();
+                api = null;
+                Thread.Sleep(100);
+                try
+                {
+                    FileUtils.DeleteIfExists(tempPath);
+                    disposed = true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unable to clean up temp snap directory: " + e);
+                }
+            }
         }
 
         private int[] GetLinkedCellsCore()

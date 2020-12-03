@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -229,6 +229,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string FlowFMApplicationPlugin_Description {
             get {
                 return ResourceManager.GetString("FlowFMApplicationPlugin_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old his output found, please run the model again. (cannot map {0} to input or generated feature geometry).
+        /// </summary>
+        public static string FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_feature_geometry_ {
+            get {
+                return ResourceManager.GetString("FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_" +
+                        "feature_geometry_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old his output found, please run the model again. (cannot map {0} to input or generated features).
+        /// </summary>
+        public static string FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features {
+            get {
+                return ResourceManager.GetString("FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_" +
+                        "features", resourceCulture);
             }
         }
         

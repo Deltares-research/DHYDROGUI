@@ -7,7 +7,7 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
-    public class FeatureDataSyncer<TFeat, TData> : IDisposable where TFeat : IFeature
+    public sealed class FeatureDataSyncer<TFeat, TData> : IDisposable where TFeat : IFeature
     {
         private bool synchronizing;
 
@@ -70,14 +70,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     {
                         ModelData.Remove(ModelData.First(md =>
                         {
-                            var featureData = md as IFeatureData;
-                            if (featureData != null)
+                            if (md is IFeatureData featureData)
                             {
                                 return Equals(featureData.Feature, removedOrAddedItem);
                             }
 
-                            var feature = md as IFeature;
-                            if (feature != null)
+                            if (md is IFeature feature)
                             {
                                 return Equals(feature, removedOrAddedItem);
                             }
@@ -92,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 
@@ -103,8 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 return;
             }
 
-            var featureData = e.GetRemovedOrAddedItem() as IFeatureData;
-            if (featureData == null)
+            if (!(e.GetRemovedOrAddedItem() is IFeatureData featureData))
             {
                 return;
             }
@@ -171,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
     }

@@ -49,11 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             get => distance;
             set
             {
-                if (value < 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(Distance));
-                }
-
+                ValidateDistance(value);
                 distance = value;
             }
         }
@@ -65,5 +61,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// The geometric definition.
         /// </value>
         public IWaveBoundaryGeometricDefinition GeometricDefinition { get; }
+
+        private static void ValidateDistance(double distance)
+        {
+            if (distance < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(distance));
+            }
+        }
     }
 }

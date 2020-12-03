@@ -6,6 +6,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.DelftIniOperations;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
@@ -101,9 +102,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
         {
             Ensure.NotNull(mdwPath, nameof(mdwPath));
 
-            DirectoryInfo origModelDirectoryInfo =
-                new FileInfo(mdwPath).Directory;
+            var expectedMdwInfo = new FileInfo(mdwPath);
 
+            if (!expectedMdwInfo.Exists)
+            {
+                log.Error(Resources.WaveDirectoryStructureMigrationHelper_MigrateFileStructure_ErrorMigrateFileStructure);
+                return;
+            }
+
+            DirectoryInfo origModelDirectoryInfo =
+                expectedMdwInfo.Directory;
             DirectoryInfo temporaryDirectory =
                 CreateToTemporaryDirectory(origModelDirectoryInfo);
 
@@ -156,15 +164,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
             string newInputDirectory = Path.Combine(goalDirectory.FullName, "input");
             string mdwFileName = Path.GetFileName(mdwPath);
 
-            IDelftIniMigrator migrator =
-                MigratorFactory.CreateMdwMigrator(origModelDirectoryInfo.FullName, newInputDirectory);
+            IDelftIniFileOperator migrator =
+                MigratorInstanceCreator.CreateMdwMigrator(origModelDirectoryInfo.FullName, newInputDirectory);
 
             var fileStream = new FileStream(mdwPath, FileMode.Open);
-            string targetFilePath = Path.Combine(newInputDirectory, mdwFileName);
 
             string logMessage = string.Format(Resources.WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0, mdwFileName);
             var logHandler = new LogHandler(logMessage, log);
-            migrator.MigrateFile(fileStream, mdwPath, targetFilePath, logHandler);
+            migrator.Invoke(fileStream, mdwPath, logHandler);
             logHandler.LogReport();
         }
 

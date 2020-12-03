@@ -12,7 +12,7 @@ namespace DelftTools.Hydro.Helpers
     /// Utility class to work with networks
     /// </summary>
     [Obsolete("D3DFMIQ-2083 Remove obsolete 1D functionality")]
-    public class HydroNetworkHelper
+    public static class HydroNetworkHelper
     {
         /// <summary>
         /// Sets the default name of a specific feature.

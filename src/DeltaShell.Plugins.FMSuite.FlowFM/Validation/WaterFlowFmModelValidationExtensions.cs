@@ -115,24 +115,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (roughnessValues.Contains(model.Roughness.Components[0].NoDataValue))
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               string.Format(
-                                                   "Roughness contains unspecified points, the calculation kernel will replace these with default values")));
+                                               "Roughness contains unspecified points, the calculation kernel will replace these with default values"));
             }
 
             IMultiDimensionalArray<double> viscosityValues = model.Viscosity.GetValues<double>();
             if (viscosityValues.Contains(model.Viscosity.Components[0].NoDataValue))
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               string.Format(
-                                                   "Viscosity contains unspecified points, the calculation kernel will replace these with default values")));
+                                               "Viscosity contains unspecified points, the calculation kernel will replace these with default values"));
             }
 
             IMultiDimensionalArray<double> diffusivityValues = model.Diffusivity.GetValues<double>();
             if (diffusivityValues.Contains(model.Diffusivity.Components[0].NoDataValue))
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               string.Format(
-                                                   "Diffusivity contains unspecified points, the calculation kernel will replace these with default values")));
+                                               "Diffusivity contains unspecified points, the calculation kernel will replace these with default values"));
             }
 
             return new ValidationReport("Physical Processes", issues);
@@ -146,8 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (values.Contains(model.Bathymetry.Components[0].NoDataValue))
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               string.Format(
-                                                   "Bathymetry contains unspecified points, the calculation kernel will replace these with default values")));
+                                               "Bathymetry contains unspecified points, the calculation kernel will replace these with default values"));
             }
 
             return new ValidationReport("Bathymetry", issues);

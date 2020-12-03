@@ -27,12 +27,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
-            var layerFactory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
             // Call
             var configurator = new GeometryPreviewMapConfigurator(geometryFactory,
-                                                                  layerFactory,
+                                                                  instanceCreator,
                                                                   coordinateSystem);
 
             // Assert
@@ -42,11 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         [Test]
         public void Constructor_GeometryFactoryNull_ThrowsArgumentNullException()
         {
-            var layerFactory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
             void Call() => new GeometryPreviewMapConfigurator(null,
-                                                              layerFactory,
+                                                              instanceCreator,
                                                               coordinateSystem);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
                                                               coordinateSystem);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("layerFactory"));
+            Assert.That(exception.ParamName, Is.EqualTo("layerInstanceCreator"));
         }
 
         [Test]
@@ -72,39 +72,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
-            var layerFactory = Substitute.For<IWaveLayerFactory>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
             var lineLayer = Substitute.For<ILayer>();
-            layerFactory.CreateBoundaryLineLayer(Arg.Is<IFeatureProvider>(x => x != null))
+            instanceCreator.CreateBoundaryLineLayer(Arg.Is<IFeatureProvider>(x => x != null))
                         .Returns(lineLayer);
 
             var startLayer = Substitute.For<ILayer>();
-            layerFactory.CreateBoundaryStartPointLayer(Arg.Is<IFeatureProvider>(x => x != null))
+            instanceCreator.CreateBoundaryStartPointLayer(Arg.Is<IFeatureProvider>(x => x != null))
                         .Returns(startLayer);
 
             var endLayer = Substitute.For<ILayer>();
-            layerFactory.CreateBoundaryEndPointLayer(Arg.Is<IFeatureProvider>(x => x != null))
+            instanceCreator.CreateBoundaryEndPointLayer(Arg.Is<IFeatureProvider>(x => x != null))
                         .Returns(endLayer);
 
             var supportPointsLayer = Substitute.For<ILayer>();
-            layerFactory.CreateSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null))
+            instanceCreator.CreateSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null))
                         .Returns(supportPointsLayer);
 
             var activeSupportPointsLayer = Substitute.For<ILayer>();
-            layerFactory.CreateActiveSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null))
+            instanceCreator.CreateActiveSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null))
                         .Returns(activeSupportPointsLayer);
 
             var inactiveSupportPointsLayer = Substitute.For<ILayer>();
-            layerFactory.CreateInactiveSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null))
+            instanceCreator.CreateInactiveSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null))
                         .Returns(inactiveSupportPointsLayer);
 
             var selectedSupportPointsLayer = Substitute.For<ILayer>();
-            layerFactory.CreateSelectedSupportPointLayer(Arg.Is<IFeatureProvider>(x => x != null))
+            instanceCreator.CreateSelectedSupportPointLayer(Arg.Is<IFeatureProvider>(x => x != null))
                         .Returns(selectedSupportPointsLayer);
 
             var configurator = new GeometryPreviewMapConfigurator(geometryFactory,
-                                                                  layerFactory,
+                                                                  instanceCreator,
                                                                   coordinateSystem);
 
             var map = Substitute.For<IMap>();
@@ -116,13 +116,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             configurator.ConfigureMap(map, boundaryProvider, viewModel, refreshGeometryView);
 
             // Assert
-            layerFactory.Received(1).CreateBoundaryLineLayer(Arg.Is<IFeatureProvider>(x => x != null));
-            layerFactory.Received(1).CreateBoundaryStartPointLayer(Arg.Is<IFeatureProvider>(x => x != null));
-            layerFactory.Received(1).CreateBoundaryEndPointLayer(Arg.Is<IFeatureProvider>(x => x != null));
-            layerFactory.Received(1).CreateSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null));
-            layerFactory.Received(1).CreateActiveSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null));
-            layerFactory.Received(1).CreateInactiveSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null));
-            layerFactory.Received(1).CreateSelectedSupportPointLayer(Arg.Is<IFeatureProvider>(x => x != null));
+            instanceCreator.Received(1).CreateBoundaryLineLayer(Arg.Is<IFeatureProvider>(x => x != null));
+            instanceCreator.Received(1).CreateBoundaryStartPointLayer(Arg.Is<IFeatureProvider>(x => x != null));
+            instanceCreator.Received(1).CreateBoundaryEndPointLayer(Arg.Is<IFeatureProvider>(x => x != null));
+            instanceCreator.Received(1).CreateSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null));
+            instanceCreator.Received(1).CreateActiveSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null));
+            instanceCreator.Received(1).CreateInactiveSupportPointsLayer(Arg.Is<IFeatureProvider>(x => x != null));
+            instanceCreator.Received(1).CreateSelectedSupportPointLayer(Arg.Is<IFeatureProvider>(x => x != null));
 
             lineLayer.Received(1).RenderOrder = 5;
             startLayer.Received(1).RenderOrder = 1;
@@ -145,11 +145,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
-            var layerFactory = Substitute.For<IWaveLayerFactory>();
+            var layerInstanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
             var configurator = new GeometryPreviewMapConfigurator(geometryFactory,
-                                                                  layerFactory,
+                                                                  layerInstanceCreator,
                                                                   coordinateSystem);
 
             // Call | Assert
@@ -188,9 +188,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             boundaryProvider.Boundaries.Returns(boundaryList);
 
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
-            var layerFactory = Substitute.For<IWaveLayerFactory>();
+            var layerInstanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
 
-            var mapConfigurator = new GeometryPreviewMapConfigurator(geometryFactory, layerFactory, null);
+            var mapConfigurator = new GeometryPreviewMapConfigurator(geometryFactory, layerInstanceCreator, null);
             var refreshGeometryView = Substitute.For<IRefreshGeometryView>();
 
             var supportPoint = new SupportPoint(10.0, geometricDefinition);

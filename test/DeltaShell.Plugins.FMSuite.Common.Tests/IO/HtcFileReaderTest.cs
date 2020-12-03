@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using NUnit.Framework;
 

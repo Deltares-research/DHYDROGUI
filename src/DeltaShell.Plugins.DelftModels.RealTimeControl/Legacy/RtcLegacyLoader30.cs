@@ -82,8 +82,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
                 IDataItem hydroModelNetworkDataItem = ((IModel) hydroModel).AllDataItems.First(di => di.Value == network);
 
-                //networkDataItem.LinkTo(hydroModelNetworkDataItem);
-
                 TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "LinkedTo",
                                                    hydroModelNetworkDataItem);
                 TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "ComposedValue",
@@ -111,10 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
                 foreach (IDataItem orphanedDataItem in orphanedDataItems)
                 {
-                    if (orphanedDataItem.Parent != null)
-                    {
-                        orphanedDataItem.Parent.Children.Remove(orphanedDataItem);
-                    }
+                    orphanedDataItem.Parent?.Children.Remove(orphanedDataItem);
                 }
 
                 var hydroModelAsTimeDependent = (ITimeDependentModel) hydroModel;

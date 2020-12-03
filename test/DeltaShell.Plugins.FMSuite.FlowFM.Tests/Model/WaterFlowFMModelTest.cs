@@ -17,6 +17,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -1175,10 +1176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 fmModel.ReferenceTime = fmModel.StartTime;
 
                 var messages = new List<string>();
-                fmModel.ProgressChanged += (sender, args) =>
-                {
-                    messages.Add(fmModel.ProgressText);
-                };
+                fmModel.ProgressChanged += (sender, args) => { messages.Add(fmModel.ProgressText); };
 
                 ActivityRunner.RunActivity(fmModel);
                 ActivityRunner.RunActivity(fmModel);
@@ -1920,6 +1918,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.AreEqual(restartStopTime, retrievedRestartStopTime);
         }
 
+        [Test]
+        public void Constructor_WaterFlowFMModelShouldBeInstanceOfICoupledModel()
+        {
+            // Arrange, Act
+            var rtcModel = new WaterFlowFMModel();
+
+            // Assert
+            Assert.IsInstanceOf<ICoupledModel>(rtcModel);
+        }
+
+        [Test]
+        public void GetDataItemsUsedForCouplingModel_ForInputRoles_ShouldReturnCorrespondingDataItems()
+        {
+            // Arrange
+            var fmModel = new WaterFlowFMModel();
+            var weir = new Weir2D();
+            fmModel.Area.Weirs.Add(weir);
+
+            // Act
+            IList<IDataItem> couplingDataItems = ((ICoupledModel) fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Input).ToList();
+
+            // Assert
+            Assert.AreEqual(1, couplingDataItems.Count);
+        }
+
+        [Test]
+        public void GetDataItemsUsedForCouplingModel_ForOutputRoles_ShouldReturnCorrespondingDataItems()
+        {
+            // Arrange
+            var fmModel = new WaterFlowFMModel();
+            var observationPoint = new GroupableFeature2DPoint();
+            fmModel.Area.ObservationPoints.Add(observationPoint);
+
+            // Act
+            IList<IDataItem> couplingDataItems = ((ICoupledModel) fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Output).ToList();
+
+            // Assert
+            Assert.AreEqual(2, couplingDataItems.Count);
+        }
+
+        [Test]
+        public void GetDataItemsUsedForCouplingModel_ForNoneRoles_ShouldReturnEmptyList()
+        {
+            // Arrange
+            ICoupledModel fmModel = new WaterFlowFMModel();
+
+            // Act
+            IList<IDataItem> couplingDataItems = fmModel.GetDataItemsUsedForCouplingModel(DataItemRole.Input).ToList();
+
+            // Assert
+            CollectionAssert.IsEmpty(couplingDataItems);
+        }
+
+        [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ExportTo_OutputDirPropertyValue_ShouldAlwaysBeOutput(bool runsInIntegratedModel)
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel {RunsInIntegratedModel = runsInIntegratedModel})
+            {
+                string targetFilePath = Path.Combine(temp.Path, "test.mdu");
+
+                // Call
+                model.ExportTo(targetFilePath);
+
+                // Assert
+                Assert.That(targetFilePath, Does.Exist);
+                string[] lines = File.ReadAllLines(targetFilePath);
+                string outputDirValue = GetPropertyValue(lines, "OutputDir");
+                Assert.That(outputDirValue, Is.EqualTo("output"));
+            }
+        }
+
         [TestCase(
             new[]
             {
@@ -2064,6 +2138,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
+        }
+
+        private static string GetPropertyValue(string[] lines, string propName)
+        {
+            string line = lines.SingleOrDefault(l => l.StartsWith(propName));
+            Assert.That(line, Is.Not.Null);
+
+            string[] fields = line.Split('=', '#');
+            Assert.That(fields, Has.Length.GreaterThan(1));
+
+            return fields[1].Trim();
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)

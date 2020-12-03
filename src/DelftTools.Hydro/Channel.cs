@@ -173,8 +173,6 @@ namespace DelftTools.Hydro
 
         public virtual IHydroNetwork HydroNetwork => (IHydroNetwork) Network;
 
-        //public string Description { get; set; }
-
         #endregion
     }
 }

@@ -8,6 +8,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -286,14 +287,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 if (!ContainsProperty(KnownProperties.OutputDir))
                 {
-                    return FileConstants.OutputDirectoryName;
+                    return DirectoryNameConstants.OutputDirectoryName;
                 }
 
                 string mduOutputDir = GetModelProperty(KnownProperties.OutputDir).GetValueAsString()?.Trim();
 
                 if (string.IsNullOrEmpty(mduOutputDir))
                 {
-                    return FileConstants.OutputDirectoryName;
+                    return DirectoryNameConstants.OutputDirectoryName;
                 }
 
                 if (string.Equals(mduOutputDir, "."))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
@@ -105,9 +106,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> or <paramref name="target"/> is <c>null</c>.</exception>
         public static bool IsShapeCompatibleWithTarget(ShapeBase source, ShapeBase target, ConnectorType targetConnector)
         {
-            if (source == null || target == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("Could not check if source shape is connectable with target shape.");
+                throw new ArgumentNullException(nameof(source),Resources.ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_with_target_shape_);
+            }
+
+            if (target == null)
+            {
+                throw new ArgumentNullException(nameof(target),Resources.ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_with_target_shape_);
             }
 
             if (ReferenceEquals(source, target))

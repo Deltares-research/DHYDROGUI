@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 
 namespace DelftTools.Hydro.Structures.WeirFormula
 {

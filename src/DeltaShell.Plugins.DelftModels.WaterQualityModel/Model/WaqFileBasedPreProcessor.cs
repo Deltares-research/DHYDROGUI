@@ -10,7 +10,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 {
-    public class WaqFileBasedPreProcessor : IWaqPreProcessor
+    public sealed class WaqFileBasedPreProcessor : IWaqPreProcessor
     {
         private const string RestartString = "0\n" + FileConstants.RestartInFileName + "\n";
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedPreProcessor));

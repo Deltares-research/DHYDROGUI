@@ -75,8 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public virtual void Configure(object item)
         {
-            var bcFileExporter = item as BcFileExporter;
-            if (bcFileExporter != null)
+            if (item is BcFileExporter bcFileExporter)
             {
                 bcFileExporter.ExcludedQuantities =
                     quantities.Keys.Except(quantitiesListBox.CheckedItems.Cast<string>())
@@ -100,9 +99,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         private void ExportModeComboBoxFormat(object sender, ListControlConvertEventArgs e)
         {
-            if (e.ListItem is BcFile.WriteMode)
+            if (e.ListItem is BcFile.WriteMode mode)
             {
-                e.Value = ((BcFile.WriteMode) e.ListItem).GetDescription();
+                e.Value = mode.GetDescription();
             }
         }
 

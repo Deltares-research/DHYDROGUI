@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     e is IOException || e is FormatException || e is OverflowException)
                 {
                     Log.Error(
-                        string.Format("An error occurred while importing structures file, import stopped; Cause: "), e);
+                        "An error occurred while importing structures file, import stopped; Cause: ", e);
                     return null;
                 }
 
@@ -165,19 +165,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             foreach (IStructure structure in structures)
             {
-                if (structure is Pump2D)
+                switch (structure)
                 {
-                    targetHydroArea.Pumps.Add((Pump2D) structure);
-                    pumpCount++;
-                }
-                else if (structure is Weir2D)
-                {
-                    targetHydroArea.Weirs.Add((Weir2D) structure);
-                    weirCount++;
-                }
-                else
-                {
-                    throw new NotImplementedException();
+                    case Pump2D pump2D:
+                        targetHydroArea.Pumps.Add(pump2D);
+                        pumpCount++;
+                        break;
+                    case Weir2D weir2D:
+                        targetHydroArea.Weirs.Add(weir2D);
+                        weirCount++;
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
             }
 

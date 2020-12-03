@@ -29,9 +29,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
         /// </summary>
         public WaterQualityModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaterQualityModel model)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaterQualityModel nodeData)
         {
-            base.UpdateNode(parentNode, node, model);
+            base.UpdateNode(parentNode, node, nodeData);
             if (!node.IsLoaded)
             {
                 node.Expand();
@@ -42,14 +42,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
         /// <summary>
         /// Gets the child node objects.
         /// </summary>
-        /// <param name="model">The water quality model.</param>
+        /// <param name="parentNodeData">The water quality model.</param>
         /// <param name="node">The node.</param>
         /// <returns>The collection of child node objects.</returns>
-        public override IEnumerable GetChildNodeObjects(WaterQualityModel model, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(WaterQualityModel parentNodeData, ITreeNode node)
         {
-            yield return new WaterQualityInputTreeFolder(model, null, "Input", FolderImageType.Input,
+            yield return new WaterQualityInputTreeFolder(parentNodeData, null, "Input", FolderImageType.Input,
                                                          GuiPlugin);
-            yield return new TreeFolder(model, GetOutputItems(model), "Output",
+            yield return new TreeFolder(parentNodeData, GetOutputItems(parentNodeData), "Output",
                                         FolderImageType.Output);
         }
 
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
             return menu;
         }
 
-        protected override void OnPropertyChanged(WaterQualityModel model, ITreeNode node, PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(WaterQualityModel item, ITreeNode node, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(WaterQualityModel.OutputOutOfSync))
             {

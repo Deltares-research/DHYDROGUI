@@ -1641,11 +1641,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase("", FileConstants.OutputDirectoryName)]
-        [TestCase(null, FileConstants.OutputDirectoryName)]
+        [TestCase("", DirectoryNameConstants.OutputDirectoryName)]
+        [TestCase(null, DirectoryNameConstants.OutputDirectoryName)]
         [TestCase(".", "")]
         [TestCase("custom", "custom")]
-        [TestCase(FileConstants.OutputDirectoryName, FileConstants.OutputDirectoryName)]
+        [TestCase(DirectoryNameConstants.OutputDirectoryName, DirectoryNameConstants.OutputDirectoryName)]
         public void GivenAWaterFlowFMModelDefinitionWithAnOutputDirectoryProperty_WhenOutputDirectoryNameIsCalled_ThenCorrectStringIsReturned(string propertyValue, string expectedString)
         {
             // given
@@ -1667,7 +1667,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var modelDefinition = new WaterFlowFMModelDefinition();
             WaterFlowFMProperty property = modelDefinition.GetModelProperty(KnownProperties.OutputDir);
             modelDefinition.Properties.Remove(property);
-            const string expectedString = FileConstants.OutputDirectoryName;
+            const string expectedString = DirectoryNameConstants.OutputDirectoryName;
 
             // When
             string resultedString = modelDefinition.OutputDirectoryName;

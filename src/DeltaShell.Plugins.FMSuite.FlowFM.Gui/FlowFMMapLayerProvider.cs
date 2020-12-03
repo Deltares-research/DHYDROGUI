@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
 
-        private static readonly string modelName = typeof(WaterFlowFMModel).Name;
+        private static readonly string modelName = nameof(WaterFlowFMModel);
 
         /// <summary>
         /// Creates a maplayer.

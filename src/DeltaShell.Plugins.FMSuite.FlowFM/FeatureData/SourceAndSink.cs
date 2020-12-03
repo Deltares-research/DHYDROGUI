@@ -15,7 +15,7 @@ using NetTopologySuite.Extensions.Features.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
-    public class SourceSinkVariableInfo
+    public static class SourceSinkVariableInfo
     {
         public const string DischargeUnitDescription = "cubic meters per second";
         public const string DischargeUnitSymbol = "m3/s";
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 case NotifyCollectionChangedAction.Reset:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 
@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     break;
-                default: throw new ArgumentOutOfRangeException();
+                default: throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 

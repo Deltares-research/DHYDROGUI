@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Shell.Core;
@@ -12,9 +13,11 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.CommonTools.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
@@ -23,8 +26,9 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -53,6 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         public override string Description => "A 2D/3D Waves module";
 
+        [ExcludeFromCodeCoverage]
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         public override string FileFormatVersion => "1.1.0.0";
@@ -122,8 +127,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             // observation points
             ViewInfo<IEventedList<Feature2DPoint>, ILayer, VectorLayerAttributeTableView> obsPointViewInfo =
-                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, WaveModel>(
-                    "Observation Points (Waves)", m => m.ObservationPoints, () => Gui);
+                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, IWaveModel>(
+                    "Observation Points (Waves)", m => m.FeatureContainer.ObservationPoints, () => Gui);
             yield return obsPointViewInfo;
             yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsPointViewInfo, o => o.Data,
                                                                        o => o.ShortCutType == ShortCutType.FeatureSet);
@@ -131,17 +136,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return ViewInfoWrapper<Feature2DPoint>.Create(obsPointViewInfo,
                                                                 o =>
                                                                     WaveModels
-                                                                        .First(m => m.ObservationPoints.Contains(o))
-                                                                        .ObservationPoints,
+                                                                        .First(m => m.FeatureContainer.ObservationPoints.Contains(o))
+                                                                        .FeatureContainer.ObservationPoints,
                                                                 o =>
                                                                     WaveModels.Any(
-                                                                        m => m.ObservationPoints.Contains(o)));
+                                                                        m => m.FeatureContainer.ObservationPoints.Contains(o)));
 
             // obs. cross sections  
             ViewInfo<IEventedList<Feature2D>, ILayer, VectorLayerAttributeTableView> obsCrossSectionViewInfo =
-                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaveModel>(
+                FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, IWaveModel>(
                     "Observation Cross Section (Waves)",
-                    m => m.ObservationCrossSections,
+                    m => m.FeatureContainer.ObservationCrossSections,
                     () => Gui);
             yield return obsCrossSectionViewInfo;
             yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsCrossSectionViewInfo, o => o.Data,
@@ -149,10 +154,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             yield return ViewInfoWrapper<Feature2D>.Create(obsCrossSectionViewInfo,
                                                            o => WaveModels
-                                                                .First(m => m.ObservationCrossSections.Contains(o))
-                                                                .ObservationCrossSections,
+                                                                .First(m => m.FeatureContainer.ObservationCrossSections.Contains(o))
+                                                                .FeatureContainer.ObservationCrossSections,
                                                            o => WaveModels.Any(
-                                                               m => m.ObservationCrossSections.Contains(o)));
+                                                               m => m.FeatureContainer.ObservationCrossSections.Contains(o)));
 
             // time points
             var timePointViewInfo = new ViewInfo<WaveInputFieldData, WaveTimePointEditor>
@@ -197,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     var referenceDateTimeProvider = new ModelDefinitionReferenceDateTimeProvider(model.ModelDefinition);
 
                     var geometryPreviewConfigurator = new GeometryPreviewMapConfigurator(geometryFactory,
-                                                                                         new WaveLayerFactory(),
+                                                                                         new WaveLayerInstanceCreator(),
                                                                                          model.CoordinateSystem);
 
                     view.DataContext = new WaveBoundaryConditionEditorViewModel(data,
@@ -217,25 +222,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 Description = "Obstacles",
                 GetViewName = (v, o) => "Obstacles",
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => WaveModels.FirstOrDefault(m => m.Obstacles.Equals(o)),
+                GetCompositeViewData = o => WaveModels.FirstOrDefault(m => m.FeatureContainer.Obstacles.Equals(o)),
                 AfterCreate = (v, o) => v.RemoveObstacles = obs =>
                 {
-                    WaveModel model = WaveModels.FirstOrDefault(m => m.Obstacles.Equals(o));
+                    WaveModel model = WaveModels.FirstOrDefault(m => m.FeatureContainer.Obstacles.Equals(o));
                     if (model != null)
                     {
-                        obs.ForEach(f => model.Obstacles.Remove(f));
+                        obs.ForEach(f => model.FeatureContainer.Obstacles.Remove(f));
                     }
                 }
             };
             yield return obstacleViewInfo;
             yield return ViewInfoWrapper<WaveObstacle>.Create(obstacleViewInfo, o =>
             {
-                WaveModel model = WaveModels.FirstOrDefault(m => m.Obstacles.Contains(o));
-                return model != null ? model.Obstacles : null;
+                WaveModel model = WaveModels.FirstOrDefault(m => m.FeatureContainer.Obstacles.Contains(o));
+                return model != null ? model.FeatureContainer.Obstacles : null;
             });
             yield return ViewInfoWrapper<Feature2D>.Create(obstacleViewInfo, FindObstaclesForFeature, IsModelObstacle);
             yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obstacleViewInfo, o => o.Data,
-                                                                       o => o.WaveModel.Obstacles.Equals(o.Data) &&
+                                                                       o => o.WaveModel.FeatureContainer.Obstacles.Equals(o.Data) &&
                                                                             o.ShortCutType == ShortCutType.FeatureSet);
 
             yield return new ViewInfo<WaveModelTreeShortcut, WaveModel, WpfSettingsView>
@@ -285,6 +290,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     v.OnValidate = d => new WaveModelValidator().Validate(d as WaveModel, d as WaveModel);
                 }
             };
+
+            yield return new ViewInfo<ReadOnlyTextFileData, ReadOnlyTextFileViewModel, TextDocumentView>
+            {
+                Description = "Text File",
+                GetViewName = (v, o) => o.Name,
+                GetViewData = o => new ReadOnlyTextFileViewModel(o),
+                ViewDataContainsData = (v, o) =>
+                    v.Data is ReadOnlyTextFileViewModel viewModel && viewModel.Data.Equals(o),
+                CloseForData = (v, o) =>
+                    v.Data is ReadOnlyTextFileViewModel viewModel && viewModel.Data.Equals(o),
+            };
+
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
@@ -299,6 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return new WaveDomainNodePresenter(
                 d => WaveModels.FirstOrDefault(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(d)));
             yield return new WavmFileFunctionStoreNodePresenter {GuiPlugin = this};
+            yield return new WavhFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new WaveModelTreeShortcutNodePresenter {GuiPlugin = this};
 
             IBoundaryContainer GetBoundaryContainerFromBoundaryFunc(IWaveBoundary boundary) =>
@@ -306,6 +324,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                           .FirstOrDefault(bc => bc.Boundaries.Contains(boundary));
 
             yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
+            yield return new WaveOutputDataNodePresenter { GuiPlugin = this};
+            yield return new ReadOnlyTextFileDataNodePresenter {GuiPlugin = this};
         }
 
         public override void OnActiveViewChanged(IView view)
@@ -328,13 +348,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         private bool IsModelObstacle(Feature2D f)
         {
-            return WaveModels.FirstOrDefault(m => m.Obstacles.Contains(f)) != null;
+            return WaveModels.FirstOrDefault(m => m.FeatureContainer.Obstacles.Contains(f)) != null;
         }
 
         private IEventedList<WaveObstacle> FindObstaclesForFeature(Feature2D f)
         {
-            return WaveModels.First(m => m.Obstacles.Contains(f)) != null
-                       ? WaveModels.First(m => m.Obstacles.Contains(f)).Obstacles
+            return WaveModels.First(m => m.FeatureContainer.Obstacles.Contains(f)) != null
+                       ? WaveModels.First(m => m.FeatureContainer.Obstacles.Contains(f)).FeatureContainer.Obstacles
                        : null;
         }
 
@@ -383,25 +403,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         private void OnActivityRunnerStatusChanged(object sender,
                                                    ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
-            if (sender is FileImportActivity)
+            if (sender is FileImportActivity activity)
             {
-                IFileImporter importer = ((FileImportActivity) sender).FileImporter;
-                if (importer is WaveModelFileImporter &&
-                    activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
+                IFileImporter importer = activity.FileImporter;
+                switch (importer)
                 {
-                    Gui.MainWindow.ProjectExplorer.TreeView.Refresh();
-
-                    if (ActiveMapView != null)
-                    {
+                    case WaveModelFileImporter _ when activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished:
+                        Gui.MainWindow.ProjectExplorer.TreeView.Refresh();
+                        ActiveMapView?.Map.ZoomToExtents();
+                        break;
+                    case WaveGridFileImporter _ when activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished && ActiveMapView != null:
                         ActiveMapView.Map.ZoomToExtents();
-                    }
+                        break;
                 }
+            }
 
-                if (importer is WaveGridFileImporter &&
-                    activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished && ActiveMapView != null)
-                {
-                    ActiveMapView.Map.ZoomToExtents();
-                }
+            if (sender is IWaveModel model && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
+            {
+                CloseOutputFileViews(model.WaveOutputData);
             }
 
             if (!(sender is WaveModel) || activityStatusChangedEventArgs.NewStatus != ActivityStatus.Failed)
@@ -409,7 +428,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 return;
             }
 
+
             Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        }
+
+        private void CloseOutputFileViews(IWaveOutputData outputData)
+        {
+            foreach (ReadOnlyTextFileData outputDataDiagnosticFile in outputData.DiagnosticFiles)
+            {
+                Gui.CommandHandler.RemoveAllViewsForItem(outputDataDiagnosticFile);
+            }
+
+            foreach (ReadOnlyTextFileData spectraFile in outputData.SpectraFiles)
+            {
+                Gui.CommandHandler.RemoveAllViewsForItem(spectraFile);
+            }
         }
 
         private void ConfigureWpfSettingsView(WpfSettingsView view, WaveModel waveModel)

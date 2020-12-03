@@ -5,7 +5,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Converters
 {
-    public class XmlTimeSeriesTruncater
+    public static class XmlTimeSeriesTruncater
     {
         /// <summary>
         /// Truncates the given timeseries if needed. This is based on comparing the given start time and end time with

@@ -27,7 +27,7 @@ namespace DelftTools.Hydro
                     route.Network = null;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
     }

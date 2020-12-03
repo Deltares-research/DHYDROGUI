@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -21,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
 
         private bool hasDisposed = false;
 
-        private readonly IReadOnlyDictionary<string, string> PropertyMapping =
+        private readonly IReadOnlyDictionary<string, string> propertyMapping =
             new Dictionary<string, string>()
             {
                 {nameof(GatedWeirFormula.DoorHeight), nameof(GateHeight)},
@@ -42,7 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <param name="canChooseGateOpeningDirection">
         /// if set to <c>true</c> then the gate opening direction can be set.
         /// </param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="formula"/> or
         /// <paramref name="weirPropertiesViewModel"/> is <c>null</c>.
         /// </exception>
@@ -226,11 +225,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 return;
             }
 
-            OnPropertyChanged(PropertyMapping[e.PropertyName]);
+            OnPropertyChanged(propertyMapping[e.PropertyName]);
         }
 
         private bool IsObservedProperty(string propertyName) =>
-            PropertyMapping.ContainsKey(propertyName);
+            propertyMapping.ContainsKey(propertyName);
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -239,7 +238,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// Note that this class is sealed, and no un-managed resources need to be
         /// released, as such we do not need to use an isDisposing approach.
         /// </remarks>
-        /// 
         public void Dispose()
         {
             if (hasDisposed)

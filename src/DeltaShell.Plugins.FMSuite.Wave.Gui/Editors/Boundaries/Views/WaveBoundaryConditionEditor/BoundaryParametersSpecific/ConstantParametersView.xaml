@@ -19,7 +19,7 @@
                                     Unit="m" />
         <components:LabeledValueBox Label="Period:"
                                     ValueContent="{Binding Path=Period}"
-                                    Unit="h" />
+                                    Unit="s" />
         <components:LabeledValueBox Label="Direction:"
                                     ValueContent="{Binding Path=Direction}"
                                     Unit="-" />

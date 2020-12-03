@@ -16,6 +16,7 @@ using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -44,7 +45,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     [Entity]
     public partial class WaterFlowFMModel : TimeDependentModelBase, IFileBased, IRestartModel,
                                             IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel,
-                                            IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
+                                            IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData, 
+                                            ICoupledModel
     {
         private const string HydroAreaTag = "hydro_area_tag";
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModel));
@@ -56,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// </summary>
         public WaterFlowFMModel() : base("FlowFM")
         {
-            runner = new DimrRunner(this);
+            runner = new DimrRunner(this, new DimrApiFactory());
 
             // Create sediment model data item
             SedimentModelDataItem = new SedimentModelDataItem();
@@ -364,6 +366,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private readonly Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties =
             new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
+
+        private bool disposed;
 
         public IEventedList<ISedimentFraction> SedimentFractions
         {
@@ -830,7 +834,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                            .ConvertSpatialOperation)
                                                                .ToList();
 
-                    //spatialOperations.AddRange(spatialOperation);
                     spatialOperationsLookupTable.Add(dataItem.Name, spatialOperation);
                 }
                 // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
@@ -871,22 +874,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         #region IDisposable
 
-        private bool disposing;
-
         public void Dispose()
         {
-            disposing = true;
-            // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
-            Grid = null;
-            DisposeSnapApi();
-            runner?.Dispose();
-            ClearSyncers();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            fixedWeirProperties.Values.ForEach(d => d.Dispose());
-            fixedWeirProperties.Clear();
-            BridgePillarsDataModel.ForEach(d => d.Dispose());
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                disposed = true;
+
+                // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
+                Grid = null;
+                DisposeSnapApi();
+                runner?.Dispose();
+                ClearSyncers();
+
+                fixedWeirProperties.Values.ForEach(d => d.Dispose());
+                fixedWeirProperties.Clear();
+                BridgePillarsDataModel.ForEach(d => d.Dispose());
+            }
         }
 
         #endregion
+
+        public IEnumerable<IDataItem> GetDataItemsUsedForCouplingModel(DataItemRole role)
+        {
+            return GetChildDataItemLocations(role).SelectMany(GetChildDataItems);
+        }
     }
 }

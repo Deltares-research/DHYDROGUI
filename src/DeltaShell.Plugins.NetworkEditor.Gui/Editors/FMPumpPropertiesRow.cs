@@ -72,7 +72,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
 
         public void Dispose()
         {
-            Pump = null;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Pump = null;
+            }
         }
 
         private IPump Pump
