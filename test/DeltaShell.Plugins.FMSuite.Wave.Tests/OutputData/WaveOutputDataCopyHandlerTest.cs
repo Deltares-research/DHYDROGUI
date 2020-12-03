@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NSubstitute;
 using NUnit.Framework;
@@ -134,7 +133,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 Assert.That(targetFiles, Is.Empty);
                 
                 Assert.That(logHandler.ReceivedCalls(), Has.Exactly(1).Items);
-                logHandler.Received(1).ReportWarningFormat(Arg.Any<string>(), Arg.Any<object[]>());
+                logHandler.Received(1)
+                          .ReportWarningFormat("The output source path {0} does not exist, skipping copying output data.", 
+                                               sourceInfo.FullName);
             }
         }
 
@@ -166,7 +167,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 Assert.That(targetFiles, Is.Empty);
                 
                 Assert.That(logHandler.ReceivedCalls(), Has.Exactly(1).Items);
-                logHandler.Received(1).ReportWarningFormat(Arg.Any<string>(), Arg.Any<object[]>());
+                logHandler.Received(1)
+                          .ReportWarningFormat("No .mdw path could be found in {0}, skipping copying output data.", 
+                                               sourceInfo.FullName);
             }
         }
 
@@ -207,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void CopyOutputDataTo_SourceDoesNotExist_DoesNotCopy()
+        public void CopyOutputDataTo_SourceDoesNotExist_DoesNotCopyAndLogsWarning()
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
@@ -226,7 +229,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                     CollectFileInformation(targetInfo).ToList();
 
                 Assert.That(targetFiles, Is.Empty);
-                Assert.That(logHandler.ReceivedCalls(), Is.Empty);
+                logHandler.Received(1)
+                          .ReportWarningFormat("The output source path {0} does not exist, skipping copying output data.", 
+                                               sourceInfo.FullName);
             }
         }
 

@@ -39,9 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         Func<object, object, bool> ShouldReplace { get; set; }
     }
 
-    public abstract class Feature2DImportExportBase<TFeat> : MapFeaturesImporterBase, IFileExporter,
+    public abstract class Feature2DImportExportBase<TFeature> : MapFeaturesImporterBase, IFileExporter,
                                                              IFeature2DImporterExporter
-        where TFeat : IFeature, INameable
+        where TFeature : IFeature, INameable
     {
         /// <summary>
         /// Gets the editable object associated with the import action
@@ -49,10 +49,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         public Func<object, IEditableObject> GetEditableObject { get; set; }
 
         /// <summary>
-        /// Action to perform after creating the <see cref="TFeat"/> feature
+        /// Action to perform after creating the <see cref="TFeature"/> feature
         /// (before adding features to the target)
         /// </summary>
-        public Action<object, TFeat> AfterCreateAction { get; set; }
+        public Action<object, TFeature> AfterCreateAction { get; set; }
 
         /// <summary>
         /// Gets or sets the before export action delegate.
@@ -107,15 +107,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         /// Imports the file at the specified path.
         /// </summary>
         /// <param name="path">The path.</param>
-        /// <returns>A collection of <see cref="TFeat"/> objects.</returns>
-        protected abstract IEnumerable<TFeat> Import(string path);
+        /// <returns>A collection of <see cref="TFeature"/> objects.</returns>
+        protected abstract IEnumerable<TFeature> Import(string path);
 
         /// <summary>
         /// Exports the specified features.
         /// </summary>
         /// <param name="features">The features.</param>
         /// <param name="path">The path.</param>
-        protected abstract void Export(IEnumerable<TFeat> features, string path);
+        protected abstract void Export(IEnumerable<TFeature> features, string path);
 
         [InvokeRequired]
         protected void AddOrReplace<T>(IList<T> featureList, IEnumerable<T> featuresToAdd, IEqualityComparer comparer)
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         {
             List<T> featuresToAddList = featuresToAdd.ToList();
 
-            featuresToAdd.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
+            featuresToAdd.OfType<TFeature>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
 
             GetEditableObject?.Invoke(featureList)
                              .BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         {
             get
             {
-                yield return typeof(IList<TFeat>);
+                yield return typeof(IList<TFeature>);
             }
         }
 
@@ -208,12 +208,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
                                      path
                                  };
 
-            if (target != null && !(target is IList<TFeat>))
+            if (target != null && !(target is IList<TFeature>))
             {
                 return target;
             }
 
-            IList<TFeat> featureList = target != null ? (IList<TFeat>) target : new List<TFeat>();
+            IList<TFeature> featureList = target != null ? (IList<TFeature>) target : new List<TFeature>();
 
             if (files == null)
             {
@@ -226,13 +226,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
 
                 ProgressChanged?.Invoke($"Reading file \"{Path.GetFileName(file)}\"", index, files.Length);
 
-                List<TFeat> featuresToImport = Import(file).ToList();
+                List<TFeature> featuresToImport = Import(file).ToList();
 
                 ProgressChanged?.Invoke("Transforming coordinates", 0, 0);
 
                 if (CoordinateTransformation != null)
                 {
-                    foreach (TFeat feature2D in featuresToImport)
+                    foreach (TFeature feature2D in featuresToImport)
                     {
                         feature2D.Geometry = GeometryTransform.TransformGeometry(feature2D.Geometry,
                                                                                  CoordinateTransformation
@@ -266,18 +266,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
                 return false;
             }
 
-            IList<TFeat> featureList = null;
-            if (item is TFeat)
+            IList<TFeature> featureList = null;
+            if (item is TFeature feature)
             {
                 featureList = new[]
                 {
-                    FeatureToExport((TFeat) item)
+                    FeatureToExport(feature)
                 };
             }
 
-            if (item is IList<TFeat>)
+            if (item is IList<TFeature> features)
             {
-                featureList = ((IList<TFeat>) item).Select(FeatureToExport).ToList();
+                featureList = features.Select(FeatureToExport).ToList();
             }
 
             if (featureList != null)
@@ -291,14 +291,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
             return false;
         }
 
-        private TFeat FeatureToExport(TFeat feature)
+        private TFeature FeatureToExport(TFeature feature)
         {
             if (CoordinateTransformation == null)
             {
                 return feature;
             }
 
-            var clonedFeature = (TFeat) feature.Clone();
+            var clonedFeature = (TFeature) feature.Clone();
             clonedFeature.Geometry = GeometryTransform.TransformGeometry(feature.Geometry,
                                                                          CoordinateTransformation.MathTransform);
             return clonedFeature;
@@ -306,8 +306,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
 
         public virtual IEnumerable<Type> SourceTypes()
         {
-            yield return typeof(TFeat);
-            yield return typeof(IList<TFeat>);
+            yield return typeof(TFeature);
+            yield return typeof(IList<TFeature>);
         }
 
         #endregion

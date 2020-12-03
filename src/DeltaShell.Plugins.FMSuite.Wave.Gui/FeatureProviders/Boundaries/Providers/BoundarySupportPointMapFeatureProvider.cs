@@ -131,9 +131,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
                     break;
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Move:
-                    throw new NotSupportedException($"{e.Action.ToString()} is not support.");
+                    throw new NotSupportedException($"{e.Action.ToString()} is not supported.");
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(e.Action));
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 

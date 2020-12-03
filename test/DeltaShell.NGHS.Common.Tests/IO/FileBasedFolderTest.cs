@@ -6,7 +6,6 @@ using System.Text;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.Common.Tests.IO

@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 
             if (fieldInfo == null)
             {
-                throw new ArgumentOutOfRangeException("fieldName");
+                throw new ArgumentOutOfRangeException(nameof(fieldName));
             }
 
             fieldInfo.SetValue(obj, value);

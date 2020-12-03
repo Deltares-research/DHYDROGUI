@@ -201,51 +201,58 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             {
                 int cellId = waterQualityModel.GetSegmentIndexForLocation2D(new Coordinate(obsPoint.X, obsPoint.Y));
 
-                switch (obsPoint.ObservationPointType)
+                ObservationPointType observationPointType = obsPoint.ObservationPointType;
+                SetObservationPointData(obsInformation, waterQualityModel, observationPointType, obsPoint, cellId);
+            }
+        }
+
+        private static void SetObservationPointData(IDictionary<string, IList<int>> obsInformation, WaterQualityModel waterQualityModel, 
+                                                    ObservationPointType observationPointType, WaterQualityObservationPoint obsPoint, int cellId)
+        {
+            switch (observationPointType)
+            {
+                case ObservationPointType.SinglePoint:
                 {
-                    case ObservationPointType.SinglePoint:
+                    // single points are written as
+                    // 'name' 1 segment_number
+                    obsInformation[obsPoint.Name] = new[]
                     {
-                        // single points are written as
-                        // 'name' 1 segment_number
-                        obsInformation[obsPoint.Name] = new[]
+                        waterQualityModel.GetSegmentIndexForLocation(obsPoint.Geometry.Coordinate)
+                    };
+                }
+                    break;
+                case ObservationPointType.Average:
+                {
+                    // column average points are written as
+                    // 'name' num_layers segment1 segment2 ...
+                    var cellSegments = new int[waterQualityModel.NumberOfWaqSegmentLayers];
+
+                    for (var l = 0; l < waterQualityModel.NumberOfWaqSegmentLayers; l++)
+                    {
+                        cellSegments[l] =
+                            cellId + (l * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer);
+                    }
+
+                    obsInformation[obsPoint.Name] = cellSegments;
+                }
+                    break;
+                case ObservationPointType.OneOnEachLayer:
+                {
+                    // on each layer points are written as
+                    // 'name_L1' 1 segment_number1
+                    // 'name_L2' 1 segment_number2
+                    // ...
+                    for (var l = 0; l < waterQualityModel.NumberOfWaqSegmentLayers; l++)
+                    {
+                        var obsName = $"{obsPoint.Name}_L{l + 1}";
+                        obsInformation[obsName] = new[]
                         {
-                            waterQualityModel.GetSegmentIndexForLocation(obsPoint.Geometry.Coordinate)
+                            cellId + (l * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer)
                         };
                     }
-                        break;
-                    case ObservationPointType.Average:
-                    {
-                        // column average points are written as
-                        // 'name' num_layers segment1 segment2 ...
-                        var cellSegments = new int[waterQualityModel.NumberOfWaqSegmentLayers];
-
-                        for (var l = 0; l < waterQualityModel.NumberOfWaqSegmentLayers; l++)
-                        {
-                            cellSegments[l] =
-                                cellId + (l * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer);
-                        }
-
-                        obsInformation[obsPoint.Name] = cellSegments;
-                    }
-                        break;
-                    case ObservationPointType.OneOnEachLayer:
-                    {
-                        // on each layer points are written as
-                        // 'name_L1' 1 segment_number1
-                        // 'name_L2' 1 segment_number2
-                        // ...
-                        for (var l = 0; l < waterQualityModel.NumberOfWaqSegmentLayers; l++)
-                        {
-                            string obsName = string.Format("{0}_L{1}", obsPoint.Name, l + 1);
-                            obsInformation[obsName] = new[]
-                            {
-                                cellId + (l * waterQualityModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer)
-                            };
-                        }
-                    }
-                        break;
-                    default: throw new ArgumentOutOfRangeException();
                 }
+                    break;
+                default: throw new ArgumentOutOfRangeException(nameof(observationPointType));
             }
         }
     }

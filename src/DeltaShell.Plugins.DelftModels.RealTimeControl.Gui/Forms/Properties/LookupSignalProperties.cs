@@ -68,27 +68,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             }
         }
 
-        /// <summary>
-        /// Update the column name for better user readability
-        /// add an extra [o] to avoid dupliclate names: crestlevel may set crestlevel
-        /// </summary>
-        //private void UpdateFunctionComponentName()
-        //{
-        //    if (data.RuleBases.Count == 1)
-        //    {
-        //        var rulebase = data.RuleBases[0];
-
-        //        if (output.IsConnected)
-        //        {
-        //            SetVariableName(data.Function.Components[0], output.ParameterName + " [o]");
-        //        }
-
-        //        return;
-        //    }
-
-        //    SetVariableName(data.Function.Components[0], "<output undefined>");
-        //}
-
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [ResourcesCategory(typeof(Resources), "Category_Table")]
         [ResourcesDisplayName(typeof(Resources), "Table_DisplayName")]
@@ -97,8 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         {
             get
             {
-                UpdateFunctionArgumentName(); //OMFG!!
-                //UpdateFunctionComponentName();
+                UpdateFunctionArgumentName();
 
                 return data.Function;
             }
@@ -110,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 
         /// <summary>
         /// Update the column name for better user readability
-        /// add an extra [i] to avoid dupliclate names: crestlevel may set crestlevel
+        /// add an extra [i] to avoid duplicate names: crestlevel may set crestlevel
         /// todo refactor UpdateFunctionArgumentName and UpdateFunctionComponentName
         /// </summary>
         private void UpdateFunctionArgumentName()

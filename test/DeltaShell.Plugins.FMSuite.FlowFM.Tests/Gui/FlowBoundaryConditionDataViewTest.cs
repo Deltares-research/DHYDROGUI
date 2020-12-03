@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             MethodInfo applyAstroComponentMethod = dataView.GetType().GetMethod("ApplyAstroComponentSelection", BindingFlags.Static | BindingFlags.NonPublic);
             if (applyAstroComponentMethod == null)
             {
-                Assert.Fail(string.Format("Could not find method '{0}'", "ApplyAstroComponentSelection"));
+                Assert.Fail("Could not find method '{0}'", "ApplyAstroComponentSelection");
             }
 
             var function = new Function {Name = "AstroTestFunction"};

@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                              zValues);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("bedLevelType", bedLevelType, null);
+                    throw new ArgumentOutOfRangeException(nameof(bedLevelType), bedLevelType, null);
             }
 
             // sync ModelDefinition with new Bathymetry
@@ -687,7 +687,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                 bool nodesChanged, bool cellsChanged, bool linksChanged,
                                                 bool reInterpolate)
         {
-            if (disposing)
+            if (disposed)
             {
                 return;
             }

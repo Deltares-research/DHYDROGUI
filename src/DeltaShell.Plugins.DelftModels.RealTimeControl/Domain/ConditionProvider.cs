@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
-    public class ConditionProvider
+    public static class ConditionProvider
     {
         public static IEnumerable<Type> GetAllConditions()
         {

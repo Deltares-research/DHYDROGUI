@@ -174,20 +174,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
 
             string dimensionName = function.Attributes[NcNameAttribute];
-            if (timeSeriesIdsByDimensionNameDictionary.ContainsKey(dimensionName))
+            if (!timeSeriesIdsByDimensionNameDictionary.ContainsKey(dimensionName))
             {
-                if (!cachedFeatures.TryGetValue(dimensionName, out IMultiDimensionalArray<IFeature> cachedArray) || cachedArray == null)
-                {
-                    List<IFeature> features = featuresDictionary[dimensionName].ToList();
-                    int functionSize = GetSize(function);
-                    cachedArray = new MultiDimensionalArray<IFeature>(features, functionSize);
-                    cachedFeatures[dimensionName] = cachedArray;
-                }
-
-                return (MultiDimensionalArray<T>) cachedArray;
+                // Ideally this should never happen, as it means we are querying data
+                // from the his function store, without having the type of feature
+                // initialized. Originally this threw an exception. However, due
+                // to the design of the HydroArea and FM Model, this situation can
+                // occur when we run the model with sources and sinks (at the time
+                // of writing). In order to ensure we do not get a critical error,
+                // we instead log a warning to the user. This was originally identified
+                // as part of issue D3DFMIQ-2299 and should be fixed as
+                // part of D3DFMIQ-2336.
+                log.DebugFormat("Dimension name {0} not found in this History file function store, returning empty data instead.",
+                                dimensionName);
             }
 
-            throw new ArgumentException($"Unexpected dimension name: {dimensionName}");
+            return (MultiDimensionalArray<T>)GetCachedVariableValues(dimensionName, function);
+        }
+
+        private IMultiDimensionalArray<IFeature> GetCachedVariableValues(string dimensionName,
+                                                                         IVariable function)
+        {
+            if (cachedFeatures.TryGetValue(dimensionName, out IMultiDimensionalArray<IFeature> cachedArray) && 
+                cachedArray != null)
+            {
+                return cachedArray;
+            }
+
+            int functionSize = GetSize(function);
+
+            // Note that we explicitly have to check if the dimensionName is
+            // in the featuresDictionary, as we now allow for that situation to
+            // occur (for example in the case of source and sinks). If such an 
+            // happens, then we return an empty array, which should ensure that
+            // the UI does not crash (unless it is specifically opened on the map).
+            // The current known situation in which this can occur should be fixed 
+            // as part of D3DFMIQ-2336.
+            cachedArray = featuresDictionary.TryGetValue(dimensionName, out IEnumerable<IFeature> features) ?
+                              new MultiDimensionalArray<IFeature>(features.ToList(), functionSize) :
+                              new MultiDimensionalArray<IFeature>();
+
+            cachedFeatures[dimensionName] = cachedArray;
+
+            return cachedArray;
         }
 
         private void LoadHisFileVariableNamesByDimensionToMapUsingBackWardsCompatibility(string dimensionNameForThisTimeSeries, NetCdfVariable netCdfVariable)

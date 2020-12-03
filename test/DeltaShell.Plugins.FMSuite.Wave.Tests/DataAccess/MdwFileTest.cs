@@ -6,7 +6,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
@@ -81,8 +80,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             var mdwFile = new MdwFile();
             WaveModelDefinition modelDef = mdwFile.Load(mdwPath);
 
-            WaveObstacle obs1 = modelDef.Obstacles[0];
-            WaveObstacle obs2 = modelDef.Obstacles[1];
+            WaveObstacle obs1 = modelDef.FeatureContainer.Obstacles[0];
+            WaveObstacle obs2 = modelDef.FeatureContainer.Obstacles[1];
 
             Assert.AreEqual("Obstacle 1", obs1.Name);
             Assert.AreEqual(ObstacleType.Dam, obs1.Type);
@@ -118,8 +117,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             LogHelper.SetLoggingLevel(Level.Error);
             LogHelper.ResetLogging();
 
-            WaveObstacle obs1 = modelDef.Obstacles[0];
-            WaveObstacle obs2 = modelDef.Obstacles[1];
+            WaveObstacle obs1 = modelDef.FeatureContainer.Obstacles[0];
+            WaveObstacle obs2 = modelDef.FeatureContainer.Obstacles[1];
 
             Assert.AreEqual("Obstacle 1", obs1.Name);
             Assert.AreEqual(ObstacleType.Dam, obs1.Type);
@@ -298,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
                                         .GetValueAsString());
 
-                modelDef.Obstacles.Clear();
+                modelDef.FeatureContainer.Obstacles.Clear();
 
                 // Model definition properties updated during save
                 mdwFile.SaveTo(targetPath, modelDef, true);
@@ -439,7 +438,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                                 modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
                                         .GetValueAsString());
 
-                modelDef.ObservationPoints.Clear();
+                modelDef.FeatureContainer.ObservationPoints.Clear();
 
                 // Model definition properties updated during save
                 mdwFile.SaveTo(targetPath, modelDef, true);

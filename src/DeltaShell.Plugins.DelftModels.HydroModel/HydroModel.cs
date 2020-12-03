@@ -105,12 +105,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public void Dispose()
         {
-            foreach (IDisposable activity in Activities.GetActivitiesOfType<IDisposable>())
-            {
-                activity.Dispose();
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            dimrApi?.Dispose();
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (IDisposable activity in Activities.GetActivitiesOfType<IDisposable>())
+                {
+                    activity.Dispose();
+                }
+
+                dimrApi?.Dispose();
+            }
         }
 
         #endregion
@@ -480,7 +489,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
 
                 RefreshDefaultModelWorkflows();
-                //SetDefaultActivityName((IActivity)e.Item);
                 CurrentWorkflow = Workflows.FirstOrDefault();
             }
         }
@@ -574,7 +582,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (currentWorkflow != null)
                 {
                     currentWorkflow.StatusChanged -= CurrentWorkflowOnStatusChanged;
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(dm => dm.RunsInIntegratedModel = false);
                 }
 
                 currentWorkflow = value;
@@ -582,7 +589,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (currentWorkflow != null)
                 {
                     currentWorkflow.StatusChanged += CurrentWorkflowOnStatusChanged;
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(dm => dm.RunsInIntegratedModel = true);
                 }
 
                 currentWorkFlowData = null;
@@ -818,7 +824,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                     if (dimrApi == null)
                     {
-                        throw new ArgumentNullException("Could not load the Dimr api.");
+                        throw new InvalidOperationException("Could not load the Dimr api.");
                     }
 
                     //run dimr

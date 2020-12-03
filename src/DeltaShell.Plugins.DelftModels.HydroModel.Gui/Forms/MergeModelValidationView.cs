@@ -9,6 +9,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(MergeModelValidationView));
 
-        private Stopwatch stopwatch = new Stopwatch();
+        private readonly Stopwatch stopwatch = new Stopwatch();
         private Func<object, object, ValidationReport> onMergeValidate;
         private Func<object, object, bool> onMerge;
         private bool suspend;
@@ -101,9 +102,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
             var models = data as ValidateMergeModelObjects;
 
-            string dataNameDestination = models.DestinationModel is INameable ? ((INameable) models.DestinationModel).Name : data.ToString();
-            string dataNameSource = models.SourceModel is INameable ? ((INameable) models.SourceModel).Name : data.ToString();
-            Text = string.Format("{0} Model merge with {1} validation Report", dataNameDestination, dataNameSource);
+            string dataNameDestination = models.DestinationModel is INameable ? models.DestinationModel.Name : data.ToString();
+            string dataNameSource = models.SourceModel is INameable ? models.SourceModel.Name : data.ToString();
+            Text = string.Format(Resources.MergeModelValidationView__0__Model_merge_with__1__validation_Report, dataNameDestination, dataNameSource);
         }
 
         private bool RefreshReport()
@@ -114,8 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             }
 
             stopwatch.Restart();
-            var models = Data as ValidateMergeModelObjects;
-            if (models == null)
+            if (!(Data is ValidateMergeModelObjects models))
             {
                 return true;
             }
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 Image = ValidationReportControl.GetImageForSeverity(false, validationReport.Severity());
 
                 // TextChanged triggers avalondock to update the image ;-)
-                Text = "Refreshing...";
+                Text = Resources.Refreshing;
                 SetViewText();
                 // end TextChanged
             }
@@ -200,8 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 return;
             }
 
-            var fileImporter = issue.ViewData as IFileImporter;
-            if (fileImporter != null && fileImporter.CanImportOn(issue.Subject))
+            if (issue.ViewData is IFileImporter fileImporter && fileImporter.CanImportOn(issue.Subject))
             {
                 Gui.CommandHandler.ImportOn(issue.Subject, fileImporter);
             }
@@ -222,16 +221,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 return;
             }
 
-            var models = Data as ValidateMergeModelObjects;
-            if (models == null)
+            if (!(Data is ValidateMergeModelObjects models))
             {
                 return;
             }
 
-            //models.DestinationFlowModel1D.Merge(models.SourceFlowModel1D);
             if (OnMerge(models.DestinationModel, models.SourceModel))
             {
-                label2.Text = "Merge successful";
+                label2.Text = Resources.MergeModelValidationView_Merge_successful;
             }
         }
     }

@@ -367,6 +367,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private readonly Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties =
             new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
+        private bool disposed;
+
         public IEventedList<ISedimentFraction> SedimentFractions
         {
             get => sedimentFractions;
@@ -832,7 +834,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                            .ConvertSpatialOperation)
                                                                .ToList();
 
-                    //spatialOperations.AddRange(spatialOperation);
                     spatialOperationsLookupTable.Add(dataItem.Name, spatialOperation);
                 }
                 // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
@@ -873,20 +874,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         #region IDisposable
 
-        private bool disposing;
-
         public void Dispose()
         {
-            disposing = true;
-            // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
-            Grid = null;
-            DisposeSnapApi();
-            runner?.Dispose();
-            ClearSyncers();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            fixedWeirProperties.Values.ForEach(d => d.Dispose());
-            fixedWeirProperties.Clear();
-            BridgePillarsDataModel.ForEach(d => d.Dispose());
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                disposed = true;
+
+                // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
+                Grid = null;
+                DisposeSnapApi();
+                runner?.Dispose();
+                ClearSyncers();
+
+                fixedWeirProperties.Values.ForEach(d => d.Dispose());
+                fixedWeirProperties.Clear();
+                BridgePillarsDataModel.ForEach(d => d.Dispose());
+            }
         }
 
         #endregion

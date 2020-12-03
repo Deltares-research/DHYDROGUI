@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Filters;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -11,7 +13,6 @@ using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -25,6 +26,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using SharpMapTestUtils;
 
@@ -473,6 +475,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(featureFunction, Is.Not.Null, errorMssgNoFeaturesForCoverage);
             Assert.That(featureFunction.Features, Is.Not.Null, errorMssgNoFeaturesForCoverage);
             Assert.That(featureFunction.Features, Is.Not.Empty, errorMssgNoFeaturesForCoverage);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetVariablesCore_HisFileWithUnknownDimension_DoesNotThrowException()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string fileName = "output_hisfiles\\WithSourceSinkDimension_his.nc";
+                string ncFilePath = tempDir.CopyTestDataFileToTempDirectory(fileName);
+
+                var functionStore = new FMHisFileFunctionStore(ncFilePath);
+                functionStore.DisableCaching = true;
+
+                var function = Substitute.For<IVariable>();
+                function.Attributes["ncName"] = "source_sink";
+                function.Attributes["hasVariable"] = "false";
+                var filters = new IVariableFilter[] { };
+
+                // Call 
+                IMultiDimensionalArray<IFeature> result = null;
+
+                void Call()
+                {
+                    result = functionStore.GetVariableValues<IFeature>(function, filters);
+                    IMultiDimensionalArrayView<IFeature> _ = result.Select(0, 0, 0); // Trigger LazyMultiDimensionalArrayBehaviour.
+                }
+
+                Assert.DoesNotThrow(Call);
+
+                // Assert
+                Assert.That(result, Has.Count.EqualTo(1));
+                Assert.That(result.Rank, Is.EqualTo(1));
+                Assert.That(result.Shape[0], Is.EqualTo(0));
+            }
         }
 
         private static void AddFlowBoundaryConditionsForValues(WaterFlowFMModel model)

@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                 var sequentialActivity = value as SequentialActivity;
                 if (value != null && sequentialActivity == null)
                 {
-                    throw new ArgumentException("Value must be a SequentialActivity", "value");
+                    throw new ArgumentException("Value must be a SequentialActivity", nameof(value));
                 }
 
                 base.Activity = value;

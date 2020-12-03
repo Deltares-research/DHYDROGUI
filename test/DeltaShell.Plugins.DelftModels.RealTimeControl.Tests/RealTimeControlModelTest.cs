@@ -21,7 +21,6 @@ using DeltaShell.Gui;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -1760,6 +1759,54 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenNewProjectWithRTC_WhenRunningSavingForFirstTimeRenamingRunningAndThenSavingAgain_PersistentOutputDirectoryShouldBeBasedOnNewModelNameAndOldOneShouldBeRemoved()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Given
+                var rtcModel = new RealTimeControlModel();
+                rtcModel.Name = "rtc1";
+                var frameworkSimulator = new DeltaShellFrameworkSimulator(rtcModel);
+
+                string projectDirectoryBeforeSave = Path.Combine(tempDirectory.Path, "ProjectBeforeSave_data");
+                string pathBeforeSave = Path.Combine(projectDirectoryBeforeSave, "RealTimeControlModelGUID");
+
+                string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
+                string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
+
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
+                                                  out string workingDirectoryOutputFileName, out string workingDirectoryOutputSubDirectoryName,
+                                                  out string workingDirectoryForRunning);
+
+                // When
+                frameworkSimulator.NewProject(pathBeforeSave);
+                SimulateRun(rtcModel, workingDirectoryForRunning);
+                frameworkSimulator.FirstSave(pathAfterSave);
+
+                // test precondition
+                Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
+
+                rtcModel.Name = "rtc2";
+
+                BuildUpWorkingDirectoryWithOutput(tempDirectory, rtcModel.DirectoryName,
+                                                  out string _, out string _,
+                                                  out string _);
+
+                SimulateRun(rtcModel, workingDirectoryForRunning);
+                frameworkSimulator.Save(pathAfterSave);
+                
+                // Then
+                AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
+                Assert.IsFalse(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
+                Assert.IsTrue(Directory.Exists(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, DirectoryNameConstants.OutputDirectoryName)));
+
+                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenNewProjectWithRTC_WhenRunningSavingForFirstTimeRenamingAndThenSavingAs_PersistentOutputDirectoryShouldBeBasedOnNewModelNameAndOldOneShouldStay()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -2067,6 +2114,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             workingDirectoryOutputFileName = "WorkingDirectoryOutputFile.xml";
             workingDirectoryOutputSubDirectoryName = "WorkingDirectoryOutputSubDirectory";
             workingDirectoryForRunning = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
+            FileUtils.DeleteIfExists(workingDirectoryForRunning);
 
             string workingDirectoryOutputFolder = Path.Combine(workingDirectoryForRunning, rtcModelDirectoryName);
             Directory.CreateDirectory(workingDirectoryOutputFolder);

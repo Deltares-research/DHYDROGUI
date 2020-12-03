@@ -37,9 +37,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 return SpiderWebFileFilter;
             }
 
-            if (windField is GriddedWindField)
+            if (windField is GriddedWindField field)
             {
-                switch (((GriddedWindField) windField).Quantity)
+                switch (field.Quantity)
                 {
                     case WindQuantity.VelocityX:
                         return XGridFileFilter;

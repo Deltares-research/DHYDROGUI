@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
@@ -23,6 +24,7 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
@@ -39,7 +41,6 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api;
 using SharpMap.Extensions.CoordinateSystems;
@@ -97,12 +98,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             runner = new DimrRunner(this, new DimrApiFactory());
 
+            BuildModel(creationCode, false);
+
             OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
             OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
             OutputWavmFileFunctionStores = new EventedList<WavmFileFunctionStore>();
             OutputWavhFileFunctionStores = new EventedList<WavhFileFunctionStore>();
 
-            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(), 
+            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(FeatureContainer),
                                                 new WaveOutputDataCopyHandler());
             
             WaveOutputData.DiagnosticFiles.CollectionChanged += 
@@ -113,8 +116,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavmFileFunctionStores);
             WaveOutputData.WavhFileFunctionStores.CollectionChanged +=
                 GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavhFileFunctionStores);
-
-            BuildModel(creationCode, false);
 
             ShowModelRunConsole = false;
             ValidateBeforeRun = true;
@@ -279,11 +280,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public IBoundaryContainer BoundaryContainer => ModelDefinition.BoundaryContainer;
 
-        public IEventedList<Feature2DPoint> ObservationPoints => ModelDefinition.ObservationPoints;
+        public IWaveFeatureContainer FeatureContainer => ModelDefinition.FeatureContainer;
 
-        public IEventedList<Feature2D> ObservationCrossSections => ModelDefinition.ObservationCrossSections;
-
-        public IEventedList<WaveObstacle> Obstacles => ModelDefinition.Obstacles;
         #endregion
 
         /// <summary>
@@ -701,8 +699,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public void Dispose()
         {
-            RestoreEnvironment();
-            runner?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                RestoreEnvironment();
+                runner?.Dispose();
+            }
         }
 
         public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
@@ -768,6 +775,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             yield return WaveOutputData;
+
+            foreach (ReadOnlyTextFileData diagnosticFile in WaveOutputData.DiagnosticFiles)
+            {
+                yield return diagnosticFile;
+            }
+
+            foreach (ReadOnlyTextFileData spectraFile in WaveOutputData.SpectraFiles)
+            {
+                yield return spectraFile;
+            }
+
+            foreach (WavmFileFunctionStore wavmFileFunctionStore in WaveOutputData.WavmFileFunctionStores)
+            {
+                yield return wavmFileFunctionStore;
+            }
+
+            foreach (WavhFileFunctionStore wavhFileFunctionStore in WaveOutputData.WavhFileFunctionStores)
+            {
+                yield return wavhFileFunctionStore;
+
+                foreach (IFunction function in wavhFileFunctionStore.Functions)
+                {
+                    yield return function;
+                }
+            }
         }
 
         protected override void OnInitialize()
@@ -1260,9 +1292,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ModelSaveTo(mdwFilePath, true);
         }
 
+        private string GetModelDirectoryPathFromMdwFile()
+        {
+            if (string.IsNullOrEmpty(MdwFilePath))
+            {
+                return Name;
+            }
+
+            string modelDirectoryName = Path.GetFileNameWithoutExtension(MdwFilePath);
+            var modelDirInfo = new DirectoryInfo(MdwFilePath);
+
+            while (modelDirInfo != null && modelDirInfo.Name != modelDirectoryName)
+            {
+                modelDirInfo = modelDirInfo.Parent;
+            }
+
+            return modelDirInfo?.Parent != null
+                       ? modelDirInfo.FullName
+                       : Path.GetDirectoryName(Path.GetDirectoryName(MdwFilePath)); // default behaviour if file-based repository is corrupted.
+
+        }
+
         private void OnSave()
         {
-            ModelSaveTo(MdwFile.MdwFilePath, true);
+            string modelDirectoryPath = GetModelDirectoryPathFromMdwFile();
+            string mdwSavePath = GetMdwPathFromDeltaShellPath(modelDirectoryPath);
+            bool isRenamed = mdwSavePath != MdwFilePath;
+
+            ModelSaveTo(mdwSavePath, true);
+
+            if (!isRenamed)
+            {
+                return;
+            }
+
+            FileUtils.DeleteIfExists(modelDirectoryPath);
         }
 
         private void OnCopyTo(string targetMdwFilePath)
@@ -1390,7 +1454,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private string GetMdwPathFromDeltaShellPath(string dsPath)
         {
             // dsproj_data/<model name>/<model name>.mdw
-            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, DirectoryNameConstants.InputDirectoryName, Name + ".mdw"));
+            return Path.Combine(Path.GetDirectoryName(dsPath), 
+                                Name, 
+                                DirectoryNameConstants.InputDirectoryName, 
+                                Name + FileConstants.MdwFileExtension);
         }
 
         #endregion
@@ -1399,7 +1466,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual string LibraryName => "wave";
 
-        public virtual string InputFile => Path.GetFileName(MdwFilePath);
+        public virtual string InputFile => Name + FileConstants.MdwFileExtension;
 
         public virtual string DirectoryName => "wave";
 
@@ -1419,10 +1486,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual Type ExporterType => typeof(WaveModelFileExporter);
 
-        public virtual string GetExporterPath(string directoryName)
-        {
-            return Path.Combine(directoryName, MdwFilePath == null ? Name + ".mdw" : Path.GetFileName(MdwFilePath));
-        }
+        public virtual string GetExporterPath(string directoryName) =>
+            Path.Combine(directoryName, InputFile);
 
         public virtual bool CanRunParallel => true;
 

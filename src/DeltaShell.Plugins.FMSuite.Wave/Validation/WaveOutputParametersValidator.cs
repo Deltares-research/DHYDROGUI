@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         public static ValidationReport Validate(WaveModel waveModel)
         {
             var validationIssues = new List<ValidationIssue>();
-            if (waveModel.WriteTable && !waveModel.ObservationPoints.Any())
+            if (waveModel.WriteTable && !waveModel.FeatureContainer.ObservationPoints.Any())
             {
                 validationIssues.Add(new ValidationIssue(waveModel,
                                                          ValidationSeverity.Warning,

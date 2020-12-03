@@ -182,6 +182,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
             // nothing to do here
         }
 

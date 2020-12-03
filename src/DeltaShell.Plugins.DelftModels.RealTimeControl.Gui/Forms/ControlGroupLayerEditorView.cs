@@ -35,10 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public IModel RtcModel
         {
-            get
-            {
-                return rtcModel;
-            }
+            get => rtcModel;
             set
             {
                 if (rtcModel != null)
@@ -61,10 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public object Data
         {
-            get
-            {
-                return controlGroups;
-            }
+            get => controlGroups;
             set
             {
                 if (controlGroups != null)
@@ -212,9 +206,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void OpenView(ControlGroup controlGroup)
         {
-            if (controlGroup != null && OpenViewAction != null)
+            if (controlGroup != null)
             {
-                OpenViewAction(controlGroup);
+                OpenViewAction?.Invoke(controlGroup);
             }
         }
 
@@ -248,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 
@@ -263,53 +257,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             public string Name
             {
-                get
-                {
-                    return condition.Name;
-                }
-                set
-                {
-                    condition.Name = value;
-                }
+                get => condition.Name;
+                set => condition.Name = value;
             }
 
             public string Description
             {
-                get
-                {
-                    return condition.LongName;
-                }
-                set
-                {
-                    condition.LongName = value;
-                }
+                get => condition.LongName;
+                set => condition.LongName = value;
             }
 
-            public string Input
-            {
-                get
-                {
-                    return condition.Input != null ? condition.Input.Name : " - ";
-                }
-            }
+            public string Input => condition.Input != null ? condition.Input.Name : " - ";
 
             [DisplayName("True outputs")]
-            public string TrueOutputs
-            {
-                get
-                {
-                    return GiveNameList(condition.TrueOutputs);
-                }
-            }
+            public string TrueOutputs => GiveNameList(condition.TrueOutputs);
 
             [DisplayName("False outputs")]
-            public string FalseOutputs
-            {
-                get
-                {
-                    return GiveNameList(condition.FalseOutputs);
-                }
-            }
+            public string FalseOutputs => GiveNameList(condition.FalseOutputs);
 
             public ConditionBase GetConditionBase()
             {
@@ -333,43 +297,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             public string Name
             {
-                get
-                {
-                    return rule.Name;
-                }
-                set
-                {
-                    rule.Name = value;
-                }
+                get => rule.Name;
+                set => rule.Name = value;
             }
 
             public string Description
             {
-                get
-                {
-                    return rule.LongName;
-                }
-                set
-                {
-                    rule.LongName = value;
-                }
+                get => rule.LongName;
+                set => rule.LongName = value;
             }
 
-            public string Inputs
-            {
-                get
-                {
-                    return GiveNameList(rule.Inputs);
-                }
-            }
+            public string Inputs => GiveNameList(rule.Inputs);
 
-            public string Outputs
-            {
-                get
-                {
-                    return GiveNameList(rule.Outputs);
-                }
-            }
+            public string Outputs => GiveNameList(rule.Outputs);
 
             public RuleBase GetRuleBase()
             {

@@ -99,7 +99,7 @@ namespace DeltaShell.NGHS.IO.Grid
                             zValues = uGrid.ReadZValuesAtNodesForMeshId(1);
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("location", location, null);
+                            throw new ArgumentOutOfRangeException(nameof(location), location, null);
                     }
                 }
             }
@@ -133,7 +133,7 @@ namespace DeltaShell.NGHS.IO.Grid
                                 uGrid.WriteZValuesAtNodesForMeshId(1, values);
                                 break;
                             default:
-                                throw new ArgumentOutOfRangeException("location", location, null);
+                                throw new ArgumentOutOfRangeException(nameof(location), location, null);
                         }
                     }
 

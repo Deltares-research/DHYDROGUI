@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         public WaveModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaveModel model)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaveModel nodeData)
         {
             if (firstTimeCreate)
             {
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                 firstTimeCreate = false;
             }
 
-            node.Text = model.Name;
+            node.Text = nodeData.Name;
             node.Image = WaveImage;
         }
 
@@ -64,29 +64,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             return DragOperations.Move | DragOperations.Copy;
         }
 
-        public override IEnumerable GetChildNodeObjects(WaveModel model, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(WaveModel parentNodeData, ITreeNode node)
         {
-            yield return new WaveModelTreeShortcut(GeneralFolderName, GeneralIcon, model, GeneralFolderName);
-            yield return new WaveModelTreeShortcut(AreaFolderName, AreaImage, model, null, ShortCutType.SettingsTab,
-                                                   GetArea2DItems(model));
-            yield return new WaveModelTreeShortcut(SpectralDomainName, PhysicalParametersImage, model,
+            yield return new WaveModelTreeShortcut(GeneralFolderName, GeneralIcon, parentNodeData, GeneralFolderName);
+            yield return new WaveModelTreeShortcut(AreaFolderName, AreaImage, parentNodeData, null, ShortCutType.SettingsTab,
+                                                   GetArea2DItems(parentNodeData));
+            yield return new WaveModelTreeShortcut(SpectralDomainName, PhysicalParametersImage, parentNodeData,
                                                    SpectralDomainName);
-            yield return model.OuterDomain;
-            yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, model, model.TimePointData,
+            yield return parentNodeData.OuterDomain;
+            yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, parentNodeData, parentNodeData.TimePointData,
                                                    ShortCutType.FeatureSet);
 
             yield return new WaveModelTreeShortcut(BoundaryFolderName,
                                                    BoundaryConditionsImage,
-                                                   model,
-                                                   model.BoundaryContainer.Boundaries,
+                                                   parentNodeData,
+                                                   parentNodeData.BoundaryContainer.Boundaries,
                                                    ShortCutType.FeatureSet,
-                                                   model.BoundaryContainer.Boundaries);
+                                                   parentNodeData.BoundaryContainer.Boundaries);
 
-            yield return new WaveModelTreeShortcut(PhysicalProcessesName, ProcessesImage, model, PhysicalProcessesName);
-            yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, model,
+            yield return new WaveModelTreeShortcut(PhysicalProcessesName, ProcessesImage, parentNodeData, PhysicalProcessesName);
+            yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, parentNodeData,
                                                    NumericalParametersName);
-            yield return new WaveModelTreeShortcut(OutputParametersName, OutputParametersIcon, model, "Output");
-            yield return model.WaveOutputData;
+            yield return new WaveModelTreeShortcut(OutputParametersName, OutputParametersIcon, parentNodeData, OutputParametersName);
+            yield return parentNodeData.WaveOutputData;
         }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
@@ -137,12 +137,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private static IEnumerable<object> GetArea2DItems(WaveModel model)
         {
-            yield return new WaveModelTreeShortcut(ObstacleNodeName, ObstacleImage, model, model.Obstacles,
+            yield return new WaveModelTreeShortcut(ObstacleNodeName, ObstacleImage, model, model.FeatureContainer.Obstacles,
                                                    ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(ObsPointNodeName, ObsPointImage, model, model.ObservationPoints,
+            yield return new WaveModelTreeShortcut(ObsPointNodeName, ObsPointImage, model, model.FeatureContainer.ObservationPoints,
                                                    ShortCutType.FeatureSet);
             yield return new WaveModelTreeShortcut(ObsCurveNodeName, ObsCurveImage, model,
-                                                   model.ObservationCrossSections, ShortCutType.FeatureSet);
+                                                   model.FeatureContainer.ObservationCrossSections, ShortCutType.FeatureSet);
         }
 
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaveModel model)

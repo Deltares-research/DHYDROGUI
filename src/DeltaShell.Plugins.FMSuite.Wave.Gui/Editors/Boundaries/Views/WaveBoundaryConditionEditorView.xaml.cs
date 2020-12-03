@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
     /// <summary>
     /// Interaction logic for WaveBoundaryConditionEditorView.xaml
     /// </summary>
-    public partial class WaveBoundaryConditionEditorView : UserControl, IView
+    public sealed partial class WaveBoundaryConditionEditorView : UserControl, IView
     {
         /// <summary>
         /// Creates a new <see cref="WaveBoundaryConditionEditorView"/>.

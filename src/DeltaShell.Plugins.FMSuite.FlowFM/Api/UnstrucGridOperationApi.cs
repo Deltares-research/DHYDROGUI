@@ -140,32 +140,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         public void Dispose()
         {
-            if (disposed)
-            {
-                return;
-            }
-
-            if (api != null)
-            {
-                api.Finish();
-                api.Dispose();
-                api = null;
-                Thread.Sleep(100);
-                try
-                {
-                    FileUtils.DeleteIfExists(tempPath);
-                    disposed = true;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unable to clean up temp snap directory: " + e);
-                }
-                finally
-                {
-                    // Must always ensure this happens to prevent GC deadlock on project close!
-                    GC.SuppressFinalize(this);
-                }
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public bool SnapsToGrid(IGeometry geometry)
@@ -243,6 +219,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
 
             return linkedCells;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing && api != null)
+            {
+                api.Finish();
+                api.Dispose();
+                api = null;
+                Thread.Sleep(100);
+                try
+                {
+                    FileUtils.DeleteIfExists(tempPath);
+                    disposed = true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unable to clean up temp snap directory: " + e);
+                }
+            }
         }
 
         private int[] GetLinkedCellsCore()

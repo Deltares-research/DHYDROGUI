@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
+using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
 using NSubstitute;
 using NUnit.Framework;

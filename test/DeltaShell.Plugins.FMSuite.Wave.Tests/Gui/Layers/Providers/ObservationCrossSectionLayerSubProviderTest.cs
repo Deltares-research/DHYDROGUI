@@ -18,14 +18,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             (factory) => new ObservationCrossSectionLayerSubProvider(factory);
 
         protected override IWaveModel Model { get; } = GetConfiguredModel();
-        protected override IEnumerable<Feature2D> RelevantFeature => Model.ObservationCrossSections;
+        protected override IEnumerable<Feature2D> RelevantFeature => Model.FeatureContainer.ObservationCrossSections;
 
         private static IWaveModel GetConfiguredModel()
         {
             var model = Substitute.For<IWaveModel>();
             var feature = Substitute.For<IEventedList<Feature2D>>();
 
-            model.ObservationCrossSections.Returns(feature);
+            model.FeatureContainer.ObservationCrossSections.Returns(feature);
 
             return model;
         }

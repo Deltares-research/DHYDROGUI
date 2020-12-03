@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// Class which synchronizes the updates between a <see cref="INotifyPropertyChanged"/>
     /// and <see cref="WpfGuiProperty"/>.
     /// </summary>
-    public class NotifyPropertyChangedWpfGuiPropertySynchronizer : IDisposable
+    public sealed class NotifyPropertyChangedWpfGuiPropertySynchronizer : IDisposable
     {
         private readonly INotifyPropertyChanged observable;
         private readonly List<PropertyChangedEventHandler> eventSubscribers;

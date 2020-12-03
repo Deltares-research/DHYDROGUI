@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                 var compositeActivity = value as ICompositeActivity;
                 if (value != null && compositeActivity == null)
                 {
-                    throw new ArgumentException("Value must be a ICompositeActivity", "value");
+                    throw new ArgumentException("Value must be a ICompositeActivity", nameof(value));
                 }
 
                 Text = value != null ? value.Name : "Composite activity";

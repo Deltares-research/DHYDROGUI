@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -1140,6 +1140,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         internal static string SetpointMode_Description {
             get {
                 return ResourceManager.GetString("SetpointMode_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not check if source shape is connectable with target shape..
+        /// </summary>
+        internal static string ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_with_target_shape_ {
+            get {
+                return ResourceManager.GetString("ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_wi" +
+                        "th_target_shape_", resourceCulture);
             }
         }
         

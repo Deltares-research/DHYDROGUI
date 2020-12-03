@@ -5,7 +5,6 @@ using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NSubstitute;
@@ -202,15 +201,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var nodePresenter = new WaveOutputDataNodePresenter();
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
+            var waveFeatureContainer = Substitute.For<IWaveFeatureContainer>();
 
             using (var tempDir = new TemporaryDirectory())
             {
                 string functionStorePath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
                 var wavhFileFunctionStores = new EventedList<WavhFileFunctionStore>
                 {
-                    new WavhFileFunctionStore(functionStorePath), 
-                    new WavhFileFunctionStore(functionStorePath), 
-                    new WavhFileFunctionStore(functionStorePath), 
+                    new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
+                    new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
+                    new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
                 };
                 
                 nodeData.WavhFileFunctionStores.Returns(wavhFileFunctionStores);

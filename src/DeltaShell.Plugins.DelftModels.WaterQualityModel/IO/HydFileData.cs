@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// <summary>
     /// Class storing all data read from a .hyd file.
     /// </summary>
-    public class HydFileData : Unique<long>, IHydroData, IEquatable<HydFileData>
+    public sealed class HydFileData : Unique<long>, IHydroData, IEquatable<HydFileData>
     {
         private readonly IDictionary<string, Func<string>> delwaqDataToFilePathMapping;
 

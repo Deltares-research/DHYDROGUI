@@ -8,7 +8,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 

@@ -14,13 +14,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             if (nrOfSegmentsPerLayer <= 0)
             {
-                throw new ArgumentOutOfRangeException("nrOfSegmentsPerLayer",
+                throw new ArgumentOutOfRangeException(nameof(nrOfSegmentsPerLayer),
                                                       "Cannot create attribute file data without segments.");
             }
 
             if (nrOfLayers <= 0)
             {
-                throw new ArgumentOutOfRangeException("nrOfLayers",
+                throw new ArgumentOutOfRangeException(nameof(nrOfLayers),
                                                       "Cannot create attribute file data without layers.");
             }
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 string message = string.Format("Segment index is out of range (count = {0}).",
                                                segmentEnabledData.Count);
-                throw new ArgumentOutOfRangeException("segmentIndex", segmentIndex, message);
+                throw new ArgumentOutOfRangeException(nameof(segmentIndex), segmentIndex, message);
             }
 
             return segmentEnabledData[arrayIndex];
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 string message = string.Format("Segment index is out of range (count = {0}).",
                                                segmentEnabledData.Count);
-                throw new ArgumentOutOfRangeException("segmentIndex", segmentIndex, message);
+                throw new ArgumentOutOfRangeException(nameof(segmentIndex), segmentIndex, message);
             }
 
             segmentEnabledData[arrayIndex] = boolean;

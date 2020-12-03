@@ -5,8 +5,9 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
-using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using GeoAPI.Extensions.Coverages;
@@ -54,14 +55,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Creates a new <see cref="WavhFileFunctionStore"/>.
         /// </summary>
         /// <param name="ncPath">The path to the netcdf file to read.</param>
-        public WavhFileFunctionStore(string ncPath) : base(ncPath)
+        /// <param name="featureContainer">The <see cref="IWaveFeatureContainer"/> used to match data to their corresponding features during initialization. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="featureContainer"/> is <c>null</c>.
+        /// </exception>
+        public WavhFileFunctionStore(string ncPath, IWaveFeatureContainer featureContainer) : base(ncPath)
         {
-            DisableCaching = true;
+            Ensure.NotNull(featureContainer, nameof(featureContainer));
 
+            DisableCaching = true;
 
             using (ReconnectToMapFile())
             {
-                InitializeStationFeatures();
+                InitializeStationFeatures(featureContainer.ObservationPoints);
             }
 
             foreach (IFeatureCoverage coverage in Functions.OfType<IFeatureCoverage>())
@@ -198,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             return longName != null ? $"{longName} ({variableName})" : variableName;
         }
 
-        private void InitializeStationFeatures()
+        private void InitializeStationFeatures(IEnumerable<Feature2D> features)
         {
             IList<string> stationIds = GetStationIds();
 
@@ -207,13 +213,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
                 return;
             }
 
-            double[] xs = GetNetCdfVariableIEnumerable<double>(StationKeys.xCoordinate).ToArray();
-            double[] ys = GetNetCdfVariableIEnumerable<double>(StationKeys.yCoordinate).ToArray();
+            IEnumerable<Point> points = GetStationPoints();
+            Dictionary<IGeometry, Feature2D> featureDict = features.ToDictionary(f => f.Geometry, new WaveGeometryComparer());
+            IEnumerable<(string, Point)> stationData = points.Zip(stationIds, (p, id) =>
+                                                                      new ValueTuple<string, Point>(id, p));
 
-            IEnumerable<Point> points = xs.Zip(ys, (x, y) => new Point(x, y));
-            IEnumerable<IFeature> stations = stationIds.Zip(points, CreateFeature2D);
+            foreach ((string id, Point geometry) in stationData)
+            {
+                IFeature feature = featureDict.TryGetValue(geometry, out Feature2D existingFeature)
+                                       ? existingFeature
+                                       : CreateFeature2D(id, geometry);
 
-            featuresDictionary[featureNameStations].AddRange(stations);
+                featuresDictionary[featureNameStations].Add(feature);
+            }
         }
 
         private static Feature2D CreateFeature2D(string idName, IGeometry geometry) =>
@@ -227,6 +239,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         {
             IList<string> stationIds = GetNetCdfFeatureVariableNames(StationKeys.name);
             return stationIds.Any() ? stationIds : GetNetCdfFeatureVariableNames(StationKeys.id);
+        }
+
+        private IEnumerable<Point> GetStationPoints()
+        {
+            IEnumerable<double> xs = GetNetCdfVariableIEnumerable<double>(StationKeys.xCoordinate);
+            IEnumerable<double> ys = GetNetCdfVariableIEnumerable<double>(StationKeys.yCoordinate);
+
+            return xs.Zip(ys, (x, y) => new Point(x, y));
         }
 
         private IList<string> GetNetCdfFeatureVariableNames(string variableName) =>

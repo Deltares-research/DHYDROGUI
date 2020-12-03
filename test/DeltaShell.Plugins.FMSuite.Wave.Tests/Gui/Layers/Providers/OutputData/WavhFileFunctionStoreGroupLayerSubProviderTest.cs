@@ -2,7 +2,6 @@
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
@@ -59,12 +58,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             // Setup
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var provider = new WavhFileFunctionStoreGroupLayerSubProvider(instanceCreator);
+            var featureContainer = Substitute.For<IWaveFeatureContainer>();
 
             using (var tempDir = new TemporaryDirectory())
             {
                 List<WavhFileFunctionStore> functionStores =
                     filePaths.Select(tempDir.CopyTestDataFileToTempDirectory)
-                             .Select(p => new WavhFileFunctionStore(p))
+                             .Select(p => new WavhFileFunctionStore(p, featureContainer))
                              .ToList();
 
                 // Call 
@@ -92,12 +92,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
                            .Returns(layer);
 
             var provider = new WavhFileFunctionStoreGroupLayerSubProvider(instanceCreator);
+            var featureContainer = Substitute.For<IWaveFeatureContainer>();
 
             using (var tempDir = new TemporaryDirectory())
             {
                 List<WavhFileFunctionStore> functionStores =
                     filePaths.Select(tempDir.CopyTestDataFileToTempDirectory)
-                             .Select(p => new WavhFileFunctionStore(p))
+                             .Select(p => new WavhFileFunctionStore(p, featureContainer))
                              .ToList();
 
                 // Call 
@@ -121,12 +122,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
 
             var provider = new WavhFileFunctionStoreGroupLayerSubProvider(instanceCreator);
+            var featureContainer = Substitute.For<IWaveFeatureContainer>();
 
             using (var tempDir = new TemporaryDirectory())
             {
                 List<WavhFileFunctionStore> functionStores =
                     filePaths.Select(tempDir.CopyTestDataFileToTempDirectory)
-                             .Select(p => new WavhFileFunctionStore(p))
+                             .Select(p => new WavhFileFunctionStore(p, featureContainer))
                              .ToList();
 
                 // Call 

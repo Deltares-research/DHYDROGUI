@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using DeltaShell.NGHS.IO.TestUtils;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 

@@ -21,8 +21,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// </exception>
         public ObservationCrossSectionLayerSubProvider(IWaveLayerInstanceCreator instanceCreator) : base(instanceCreator) {}
 
-        protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveModel model) =>
-            Equals(features, model.ObservationCrossSections);
+        protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveFeatureContainer featureContainer) =>
+            Equals(features, featureContainer.ObservationCrossSections);
 
         protected override ILayer CreateFeatureLayer(IWaveModel model) =>
             InstanceCreator.CreateObservationCrossSectionLayer(model);

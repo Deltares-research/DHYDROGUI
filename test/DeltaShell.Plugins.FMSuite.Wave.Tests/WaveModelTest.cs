@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
@@ -46,6 +46,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             {
                 // Assert
                 Assert.That(model.WaveOutputData, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public void Constructor_SetsCorrectFeatureContainer()
+        {
+            // Call
+            using (var model = new WaveModel())
+            {
+                // Assert
+                Assert.That(model.FeatureContainer, Is.Not.Null);
             }
         }
 
@@ -251,18 +262,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             ICoordinateTransformation fromUTM16ToWebMercator = new OgrCoordinateSystemFactory().CreateTransformation(src, target);
             ICoordinateTransformation fromWebMercatorToUTM16 = new OgrCoordinateSystemFactory().CreateTransformation(target, src);
 
-            List<Coordinate> coordinates =
-                WaveModelCoordinateConversion.GetAllModelFeatures(waveModel)
-                                             .SelectMany(f => f.Geometry.Coordinates)
-                                             .ToList();
+            List<Coordinate> coordinates = waveModel.FeatureContainer.GetAllFeatures()
+                                                    .SelectMany(f => f.Geometry.Coordinates)
+                                                    .ToList();
 
             waveModel.TransformCoordinates(fromUTM16ToWebMercator);
             waveModel.TransformCoordinates(fromWebMercatorToUTM16);
 
             List<Coordinate> coordinatesAfter =
-                WaveModelCoordinateConversion.GetAllModelFeatures(waveModel)
-                                             .SelectMany(f => f.Geometry.Coordinates)
-                                             .ToList();
+                waveModel.FeatureContainer.GetAllFeatures()
+                         .SelectMany(f => f.Geometry.Coordinates)
+                         .ToList();
 
             Assert.AreEqual(coordinatesAfter.Count, coordinates.Count);
             for (var i = 0; i < coordinates.Count; ++i)
@@ -574,6 +584,104 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             foreach (IWaveBoundary waveBoundary in boundaries)
             {
                 Assert.That(result, Has.Member(waveBoundary));
+            }
+        }
+
+        [Test]
+        public void GetDirectChildren_ContainsDiagnosticFiles()
+        {
+            // Setup
+            var diagFile1 = new ReadOnlyTextFileData("", "");
+            var diagFile2 = new ReadOnlyTextFileData("", "");
+            using (var model = new WaveModel())
+            {
+                
+                model.WaveOutputData.DiagnosticFiles.Add(diagFile1);
+                model.WaveOutputData.DiagnosticFiles.Add(diagFile2);
+
+                // Call
+                IEnumerable<object> result = model.GetDirectChildren()
+                                                  .ToList();
+
+                Assert.That(result, Has.Member(diagFile1));
+                Assert.That(result, Has.Member(diagFile2));
+            }
+        }
+
+        [Test]
+        public void GetDirectChildren_ContainsSpectraFiles()
+        {
+            // Setup
+            var spectraFile1 = new ReadOnlyTextFileData("", "");
+            var spectraFile2 = new ReadOnlyTextFileData("", "");
+            using (var model = new WaveModel())
+            {
+                
+                model.WaveOutputData.SpectraFiles.Add(spectraFile1);
+                model.WaveOutputData.SpectraFiles.Add(spectraFile2);
+
+                // Call
+                IEnumerable<object> result = model.GetDirectChildren()
+                                                  .ToList();
+
+                Assert.That(result, Has.Member(spectraFile1));
+                Assert.That(result, Has.Member(spectraFile2));
+            }
+        }
+
+        [Test]
+        public void GetDirectChildren_ContainsWavmFileFunctionStores()
+        {
+            // Setup
+            var functionStore1 = new WavmFileFunctionStore("");
+            var functionStore2 = new WavmFileFunctionStore("");
+            using (var model = new WaveModel())
+            {
+                
+                model.WaveOutputData.WavmFileFunctionStores.Add(functionStore1);
+                model.WaveOutputData.WavmFileFunctionStores.Add(functionStore2);
+
+                // Call
+                IEnumerable<object> result = model.GetDirectChildren()
+                                                  .ToList();
+
+                Assert.That(result, Has.Member(functionStore1));
+                Assert.That(result, Has.Member(functionStore2));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetDirectChildren_ContainsWavhFileFunctionStores()
+        {
+            // Setup
+            using(var tempDir = new TemporaryDirectory())
+            using (var model = new WaveModel())
+            {
+                string ncPath = tempDir.CopyTestDataFileToTempDirectory("WaveOutputDataHarvesterTest\\wavh-Waves.nc");
+                var featureContainer = Substitute.For<IWaveFeatureContainer>();
+                var functionStore1 = new WavhFileFunctionStore(ncPath, featureContainer);
+                var functionStore2 = new WavhFileFunctionStore(ncPath, featureContainer);
+                
+                model.WaveOutputData.WavhFileFunctionStores.Add(functionStore1);
+                model.WaveOutputData.WavhFileFunctionStores.Add(functionStore2);
+
+                List<IFunction> functions = model.WaveOutputData.WavhFileFunctionStores.SelectMany(s => s.Functions).ToList();
+
+                // Precondition
+                Assert.That(functions, Has.Count.EqualTo(22));
+
+                // Call
+                IEnumerable<object> result = model.GetDirectChildren()
+                                                  .ToList();
+
+                Assert.That(result, Has.Member(functionStore1));
+                Assert.That(result, Has.Member(functionStore2));
+
+                foreach (IFunction function in functions)
+                {
+                    Assert.That(result, Has.Member(function));
+                }
             }
         }
 
@@ -1234,6 +1342,105 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                     Assert.That(model.WaveOutputData.IsConnected, Is.True);
                     Assert.That(model.WaveOutputData.DataSourcePath, Is.EqualTo(outputDirInfo.FullName));
+                }
+            }
+        }
+
+        [Test]
+        [TestCase("Waves", "Waves.mdw")]
+        [TestCase("Potato", "Potato.mdw")]
+        [TestCase("", "Waves.mdw")]
+        [TestCase(null, "Waves.mdw")]
+
+        public void InputFile_MatchesModelName(string modelName, string expectedInputFile)
+        {
+            // Setup
+            using (var model = new WaveModel())
+            {
+                model.Name = modelName;
+
+                // Call
+                string result = model.InputFile;
+
+                // Assert
+                Assert.That(result, Is.EqualTo(expectedInputFile));
+            }
+        }
+
+        [Test]
+        [TestCase("Waves", "path/to/workDir", "Waves.mdw")]
+        [TestCase("Potato", "path/to/workDir", "Potato.mdw")]
+        [TestCase("", "path/to/workDir", "Waves.mdw")]
+        [TestCase(null, "path/to/workDir", "Waves.mdw")]
+        public void GetExporterPath_ReturnsExpectedPath(string modelName, 
+                                                        string dirPath, 
+                                                        string expectedInputFile)
+        {
+            // Setup
+            using (var model = new WaveModel())
+            {
+                model.Name = modelName;
+
+                // Call
+                string result = model.GetExporterPath(dirPath);
+
+                // Assert
+                string expectedExporterPath = Path.Combine(dirPath, expectedInputFile);
+                Assert.That(result, Is.EqualTo(expectedExporterPath));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenASavedModel_WhenTheModelIsRenamedAndSaved_ThenTheModelDirectoryIsUpdatedCorrectly()
+        {
+            // Setup
+            const string persistPath = "$data$WaveModel-47e9a5e9-fe4c-4528-966e-6a7b8fd97082";
+            const string relativePath = "WaveModelTest\\Waves";
+            string testPath = TestHelper.GetTestFilePath(relativePath);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string modelDirectory = tempDir.CopyDirectoryToTempDirectory(testPath);
+                string mdwPath = Path.Combine(modelDirectory, "input", "Waves.mdw");
+                DirectoryInfo initialInputDirectoryInfo = 
+                    new DirectoryInfo(mdwPath).Parent;
+                var initialOutputDirectoryInfo = 
+                    new DirectoryInfo(Path.Combine(initialInputDirectoryInfo.Parent.FullName, "output"));
+
+                IReadOnlyList<FileCompareInfo> referenceFiles =
+                    CollectFileInformation(initialInputDirectoryInfo)
+                        .Where(x => !x.Name.EndsWith(".mdw"))
+                        .Concat(CollectFileInformation(initialOutputDirectoryInfo))
+                        .ToList();
+                const string newName = "NotWaves";
+
+                using (var model = new WaveModel(mdwPath))
+                {
+                    ((IFileBased) model).Open(mdwPath);
+
+                    model.Name = newName;
+
+                    // Call
+                    // Trigger save: This mimicks the behaviour of a BeforePersist call, which passes a
+                    // string containing a hash to the path.
+                    ((IFileBased) model).Path = persistPath;
+
+                    // Assert
+                    var actualInputDirectoryInfo = 
+                        new DirectoryInfo(Path.Combine(tempDir.Path, newName, "input"));
+                    var actualOutputDirectoryInfo = 
+                        new DirectoryInfo(Path.Combine(tempDir.Path, newName, "output"));
+
+                    IReadOnlyList<FileCompareInfo> actualFiles = 
+                        CollectFileInformation(actualInputDirectoryInfo)
+                            .Where(x => !x.Name.EndsWith(".mdw"))
+                            .Concat(CollectFileInformation(actualOutputDirectoryInfo))
+                            .ToList();
+
+                    AssertContainsSameFiles(referenceFiles, actualFiles);
+                    Assert.That(File.Exists(Path.Combine(actualInputDirectoryInfo.FullName, (newName + ".mdw"))), 
+                                Is.True);
                 }
             }
         }
