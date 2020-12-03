@@ -19,7 +19,7 @@ namespace DelftTools.Hydro.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -61,86 +61,6 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Channel length must be positive. Length of channel &apos;{0}&apos; remains {1}..
-        /// </summary>
-        internal static string Channel_Length_Channel_length_must_be_positive__Length_of_channel___0___remains__1__ {
-            get {
-                return ResourceManager.GetString("Channel_Length_Channel_length_must_be_positive__Length_of_channel___0___remains__" +
-                        "1__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not add CrossSectionSection with duplicate name &apos;{0}&apos;.
-        /// </summary>
-        internal static string CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_duplicate_name___0__ {
-            get {
-                return ResourceManager.GetString("CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectio" +
-                        "nSection_with_duplicate_name___0__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not add CrossSectionSection with negative length {0} to cross section definition &apos;{1}&apos; .
-        /// </summary>
-        internal static string CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_negative_length__0__to_cross_section_definition___1___ {
-            get {
-                return ResourceManager.GetString("CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectio" +
-                        "nSection_with_negative_length__0__to_cross_section_definition___1___", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The {0} section width of cross section {1} has been changed from {2}m to {3}m.
-        /// </summary>
-        internal static string CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cross_section__1__has_been_changed_from__2_m_to__3_m {
-            get {
-                return ResourceManager.GetString("CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cro" +
-                        "ss_section__1__has_been_changed_from__2_m_to__3_m", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The {0} roughness position of cross section: &apos;{1}&apos; has been changed from {2} m to {3} m to match the flow profile.
-        /// </summary>
-        internal static string CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cross_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile {
-            get {
-                return ResourceManager.GetString("CrossSectionDefinitionYZ_RefreshSectionsWidths_The__0__roughness_position_of_cros" +
-                        "s_section____1___has_been_changed_from__2__m_to__3__m_to_match_the_flow_profile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The roughness positions of cross section &apos;{0}&apos; have been shifted by {1} [m] to match the flow profile.
-        /// </summary>
-        internal static string CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_section___0___have_been_shifted_by__1___m__to_match_the_flow_profile {
-            get {
-                return ResourceManager.GetString("CrossSectionDefinitionYZ_ShiftRoughnessPosition_The_roughness_positions_of_cross_" +
-                        "section___0___have_been_shifted_by__1___m__to_match_the_flow_profile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} Property &apos;{1}&apos; on line number is missing, &apos;{2}&apos; will be set as default.
-        /// </summary>
-        internal static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_number_is_missing____2___will_be_set_as_default {
-            get {
-                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability__0__Property___1___on_line_nu" +
-                        "mber_is_missing____2___will_be_set_as_default", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} Property {1} on line number is missing, {2} will be set as default&apos;.
-        /// </summary>
-        internal static string DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_number_is_missing___2__will_be_set_as_default_ {
-            get {
-                return ResourceManager.GetString("DelftIniPropertyValidator_CheckPropertyAvailability__0__Property__1__on_line_numb" +
-                        "er_is_missing___2__will_be_set_as_default_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap greenhouse {
@@ -157,66 +77,6 @@ namespace DelftTools.Hydro.Properties {
             get {
                 object obj = ResourceManager.GetObject("hbv", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Branch feature names must be unique, the following Branch features have been renamed:.
-        /// </summary>
-        internal static string HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_ {
-            get {
-                return ResourceManager.GetString("HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_f" +
-                        "ollowing_Branch_features_have_been_renamed_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with header {0}.
-        /// </summary>
-        internal static string ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__0_ {
-            get {
-                return ResourceManager.GetString("ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_" +
-                        "md1d_file_with_header__0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with_header {category.Name}.
-        /// </summary>
-        internal static string ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_header__category_Name_ {
-            get {
-                return ResourceManager.GetString("ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_" +
-                        "md1d_file_with_header__category_Name_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with the header {0}.
-        /// </summary>
-        internal static string ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_md1d_file_with_the_header__0_ {
-            get {
-                return ResourceManager.GetString("ModelDefinitionFileReader_SetProperties_There_is_unrecognized_data_read_from_the_" +
-                        "md1d_file_with_the_header__0_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is unrecognized data read from the md1d file with header &apos;{0}&apos;. This category has been skipped when reading..
-        /// </summary>
-        internal static string ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_WhenSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_from_the_md1d_file_with_header___0____This_category_has_been_skipped_when_reading_ {
-            get {
-                return ResourceManager.GetString("ModelDefinitionFileReaderTest_GivenDataModelWithCategoryThatHasAnUnknownHeader_Wh" +
-                        "enSettingProperties_ThenLogMessageIsReturned_There_is_unrecognized_data_read_fro" +
-                        "m_the_md1d_file_with_header___0____This_category_has_been_skipped_when_reading_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove group.
-        /// </summary>
-        internal static string NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Remove_group {
-            get {
-                return ResourceManager.GetString("NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Remove_group", resourceCulture);
             }
         }
         
