@@ -10,6 +10,6 @@ using System.Reflection;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("4.2.0.0")]
-[assembly: AssemblyFileVersion("4.2.0.0")]
-[assembly: AssemblyInformationalVersion("4.2.0.0-DEV")]
+[assembly: AssemblyVersion("4.4.0.0")]
+[assembly: AssemblyFileVersion("4.4.0.0")]
+[assembly: AssemblyInformationalVersion("4.4.0.0-DEV")]

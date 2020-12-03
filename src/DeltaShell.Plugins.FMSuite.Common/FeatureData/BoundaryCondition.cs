@@ -25,7 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         FeatureData<IEventedList<IFunction>, Feature2D>, IBoundaryCondition
     {
         private BoundaryConditionDataType dataType;
-        private IEventedList<int> dataPointIndices;
         private IEventedList<VerticalProfileDefinition> pointDepthLayerDefinitions;
 
         private bool syncing;
@@ -36,8 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         {
             dataType = type;
 
-            dataPointIndices = new EventedList<int>();
-            dataPointIndices.CollectionChanged += DataPointIndicesCollectionChanged;
+            DataPointIndices = new EventedList<int>();
+            DataPointIndices.CollectionChanged += DataPointIndicesCollectionChanged;
 
             PointData = new EventedList<IFunction>();
             PointData.CollectionChanged += PointDataCollectionChanged;
@@ -108,11 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        public IEventedList<int> DataPointIndices
-        {
-            get => dataPointIndices;
-            private set => dataPointIndices = value;
-        }
+        public IEventedList<int> DataPointIndices { get; private set; }
 
         public IEventedList<IFunction> PointData
         {
@@ -289,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
             else
             {
-                componentSuffixes.AddRange(Enumerable.Range(1, VariableDimension + 1).Select(i => "_" + i.ToString()));
+                componentSuffixes.AddRange(Enumerable.Range(1, VariableDimension + 1).Select(i => "_" + i));
             }
 
             IFunction function = new Function(VariableName);
@@ -297,93 +292,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             switch (DataType)
             {
                 case BoundaryConditionDataType.TimeSeries:
-                    function.Arguments.Add(new Variable<DateTime>("Time"));
-                    foreach (string componentSuffix in componentSuffixes)
-                    {
-                        function.Components.Add(new Variable<double>(VariableName + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
-                    }
-
+                    AddTimeSeriesFunction(function, componentSuffixes);
                     break;
-
                 case BoundaryConditionDataType.AstroComponents:
-                    function.Arguments.Add(new Variable<string>("Component", new Unit("", "-")) {IsAutoSorted = false});
-                    foreach (string componentSuffix in componentSuffixes)
-                    {
-                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
-                        function.Components.Add(new Variable<double>("Phase" + componentSuffix,
-                                                                     new Unit("degree", "deg")) {NoDataValue = double.NaN});
-                    }
-
+                    AddAstroComponentsFunction(function, componentSuffixes);
                     break;
-
                 case BoundaryConditionDataType.AstroCorrection:
-                    function.Arguments.Add(new Variable<string>("Component", new Unit("", "-")) {IsAutoSorted = false});
-                    foreach (string componentSuffix in componentSuffixes)
-                    {
-                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
-                        function.Components.Add(new Variable<double>("Phase" + componentSuffix,
-                                                                     new Unit("degree", "deg")) {NoDataValue = double.NaN});
-                        function.Components.Add(new Variable<double>("Amplitude corr." + componentSuffix, new Unit("-"))
-                        {
-                            NoDataValue = double.NaN,
-                            DefaultValue = (double) 1
-                        });
-                        function.Components.Add(new Variable<double>("Phase corr." + componentSuffix,
-                                                                     new Unit("degree", "deg"))
-                        {
-                            NoDataValue = double.NaN,
-                            DefaultValue = (double) 0
-                        });
-                    }
-
+                    AddAstroCorrectionFunction(function, componentSuffixes);
                     break;
-
                 case BoundaryConditionDataType.Harmonics:
-                    function.Arguments.Add(new Variable<double>("Frequency", new Unit("degree per hour", "deg/h")));
-                    foreach (string componentSuffix in componentSuffixes)
-                    {
-                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
-                        function.Components.Add(new Variable<double>("Phase" + componentSuffix,
-                                                                     new Unit("degree", "deg")) {NoDataValue = double.NaN});
-                    }
-
+                    AddHarmonicsFunction(function, componentSuffixes);
                     break;
-
                 case BoundaryConditionDataType.HarmonicCorrection:
-                    function.Arguments.Add(new Variable<double>("Frequency", new Unit("degree per hour", "deg/h")));
-                    foreach (string componentSuffix in componentSuffixes)
-                    {
-                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
-                        function.Components.Add(new Variable<double>("Phase" + componentSuffix,
-                                                                     new Unit("degree", "deg")) {NoDataValue = double.NaN});
-                        function.Components.Add(new Variable<double>("Amplitude corr." + componentSuffix, new Unit("-"))
-                        {
-                            NoDataValue = double.NaN,
-                            DefaultValue = (double) 1
-                        });
-                        function.Components.Add(new Variable<double>("Phase corr." + componentSuffix,
-                                                                     new Unit("degree", "deg"))
-                        {
-                            NoDataValue = double.NaN,
-                            DefaultValue = (double) 0
-                        });
-                    }
-
+                    AddHarmonicsCorrectionFunction(function, componentSuffixes);
                     break;
-
                 case BoundaryConditionDataType.Constant:
-                    foreach (string componentSuffix in componentSuffixes)
-                    {
-                        function.Components.Add(new Variable<double>(VariableName + componentSuffix, VariableUnit));
-                    }
-
+                    AddConstantFunction(componentSuffixes, function);
                     break;
-
                 case BoundaryConditionDataType.Empty:
                     break;
-
                 default:
-                    throw new ArgumentOutOfRangeException("Data type not supported");
+                    throw new InvalidOperationException("Data type not supported");
             }
 
             return function;
@@ -451,6 +380,89 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
 
             EndEdit();
+        }
+
+        private void AddConstantFunction(IEnumerable<string> componentSuffixes, IFunction function)
+        {
+            foreach (string componentSuffix in componentSuffixes)
+            {
+                function.Components.Add(new Variable<double>(VariableName + componentSuffix, VariableUnit));
+            }
+        }
+
+        private void AddHarmonicsCorrectionFunction(IFunction function, IEnumerable<string> componentSuffixes)
+        {
+            function.Arguments.Add(new Variable<double>("Frequency", new Unit("degree per hour", "deg/h")));
+            foreach (string componentSuffix in componentSuffixes)
+            {
+                function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
+                function.Components.Add(new Variable<double>("Phase" + componentSuffix,
+                                                             new Unit("degree", "deg")) {NoDataValue = double.NaN});
+                function.Components.Add(new Variable<double>("Amplitude corr." + componentSuffix, new Unit("-"))
+                {
+                    NoDataValue = double.NaN,
+                    DefaultValue = (double) 1
+                });
+                function.Components.Add(new Variable<double>("Phase corr." + componentSuffix,
+                                                             new Unit("degree", "deg"))
+                {
+                    NoDataValue = double.NaN,
+                    DefaultValue = (double) 0
+                });
+            }
+        }
+
+        private void AddHarmonicsFunction(IFunction function, IEnumerable<string> componentSuffixes)
+        {
+            function.Arguments.Add(new Variable<double>("Frequency", new Unit("degree per hour", "deg/h")));
+            foreach (string componentSuffix in componentSuffixes)
+            {
+                function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
+                function.Components.Add(new Variable<double>("Phase" + componentSuffix,
+                                                             new Unit("degree", "deg")) {NoDataValue = double.NaN});
+            }
+        }
+
+        private void AddAstroCorrectionFunction(IFunction function, IEnumerable<string> componentSuffixes)
+        {
+            function.Arguments.Add(new Variable<string>("Component", new Unit("", "-")) {IsAutoSorted = false});
+            foreach (string componentSuffix in componentSuffixes)
+            {
+                function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
+                function.Components.Add(new Variable<double>("Phase" + componentSuffix,
+                                                             new Unit("degree", "deg")) {NoDataValue = double.NaN});
+                function.Components.Add(new Variable<double>("Amplitude corr." + componentSuffix, new Unit("-"))
+                {
+                    NoDataValue = double.NaN,
+                    DefaultValue = (double) 1
+                });
+                function.Components.Add(new Variable<double>("Phase corr." + componentSuffix,
+                                                             new Unit("degree", "deg"))
+                {
+                    NoDataValue = double.NaN,
+                    DefaultValue = (double) 0
+                });
+            }
+        }
+
+        private void AddAstroComponentsFunction(IFunction function, IEnumerable<string> componentSuffixes)
+        {
+            function.Arguments.Add(new Variable<string>("Component", new Unit("", "-")) {IsAutoSorted = false});
+            foreach (string componentSuffix in componentSuffixes)
+            {
+                function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
+                function.Components.Add(new Variable<double>("Phase" + componentSuffix,
+                                                             new Unit("degree", "deg")) {NoDataValue = double.NaN});
+            }
+        }
+
+        private void AddTimeSeriesFunction(IFunction function, IEnumerable<string> componentSuffixes)
+        {
+            function.Arguments.Add(new Variable<DateTime>("Time"));
+            foreach (string componentSuffix in componentSuffixes)
+            {
+                function.Components.Add(new Variable<double>(VariableName + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
+            }
         }
 
         private IFunction CreateMultiLayerFunction(int supportPoint)

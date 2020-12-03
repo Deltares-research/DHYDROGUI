@@ -13,6 +13,24 @@ namespace DeltaShell.NGHS.IO
         private const string InputDirectoryName = "input";
         private const string OutputDirectoryName = "output";
 
+        /// <summary>
+        /// Method for retrieving the non recursive paths of files and directories
+        /// inside a directory.
+        /// </summary>
+        /// <param name="directory">
+        /// The folder in which this method is collecting paths.
+        /// </param>
+        /// <returns> All absolute paths.</returns>
+        /// <remarks> File paths inside the collected directories are not added to
+        /// the array (non recursive).</remarks>
+        public static string[] CollectNonRecursivePaths(string directory)
+        {
+            string[] files = Directory.GetFiles(directory);
+            string[] directories = Directory.GetDirectories(directory);
+
+            return files.Concat(directories).ToArray();
+        }
+
         public static void CleanPersistentDirectories(DirectoryInfo persistedDataDirectory, IHydroModel model)
         {
             if (!persistedDataDirectory.Exists)

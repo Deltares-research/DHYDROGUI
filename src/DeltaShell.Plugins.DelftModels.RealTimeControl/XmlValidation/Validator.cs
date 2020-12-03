@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
         /// <summary>
         /// Validates the XmlDocument
         /// </summary>
-        /// <param name="xmlDocumentPath">XML Document Path</param>
+        /// <param name="xmlDocumentPath">ComplexType Document Path</param>
         /// <exception cref="ValidatorException">Throws ValidatorException on failure</exception>
         public void Validate(string xmlDocumentPath)
         {
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
         /// <summary>
         /// Validates the XmlDocument
         /// </summary>
-        /// <param name="xDocument">XML Document</param>
+        /// <param name="xDocument">ComplexType Document</param>
         /// <exception cref="ValidatorException">Throws ValidatorException on failure</exception>
         public void Validate(XDocument xDocument)
         {

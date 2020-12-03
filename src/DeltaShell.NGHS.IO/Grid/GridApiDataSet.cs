@@ -39,21 +39,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public const string GRIDDLL_NAME = "io_netcdf.dll";
 
-        public static string DllDirectory
-        {
-            get
-            {
-                return Path.Combine(Path.GetDirectoryName(typeof(UGridApi).Assembly.Location), "Kernels");
-            }
-        }
+        public static string DllDirectory => Path.Combine(Path.GetDirectoryName(typeof(UGridApi).Assembly.Location), "Kernels");
 
-        public static string DllPath
-        {
-            get
-            {
-                return Path.Combine(DllDirectory, "x64", GRIDDLL_NAME);
-            }
-        }
+        public static string DllPath => Path.Combine(DllDirectory, "x64", GRIDDLL_NAME);
 
         public static class GridConstants
         {
@@ -84,12 +72,12 @@ namespace DeltaShell.NGHS.IO.Grid
             public const string NetNodeZ = "NetNode_z";
             public const string FaceZ = "face_z";
             public const string M = "m";
-            public const string DiscretisationPointIds = "node_ids";
+            public const string DiscretizationPointIds = "node_ids";
         }
 
         public static class UGridAttributeConstants
         {
-            public class LocationValues
+            public static class LocationValues
             {
                 public const string Face = "face";
                 public const string Edge = "edge";
@@ -97,7 +85,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 public const string Volume = "volume";
             }
 
-            public class Names
+            public static class Names
             {
                 public const string Location = "location";
             }

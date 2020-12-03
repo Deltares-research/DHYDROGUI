@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Reflection;

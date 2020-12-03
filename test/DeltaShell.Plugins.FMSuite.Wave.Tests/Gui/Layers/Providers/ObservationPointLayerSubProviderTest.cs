@@ -14,23 +14,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
     [TestFixture]
     public class ObservationPointLayerSubProviderTest : Feature2DLayerSubProviderTestFixture
     {
-        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
+        protected override Func<IWaveLayerInstanceCreator, ILayerSubProvider> ConstructorCall { get; } =
             (factory) => new ObservationPointLayerSubProvider(factory);
 
         protected override IWaveModel Model { get; } = GetConfiguredModel();
-        protected override IEnumerable<Feature2D> RelevantFeature => Model.ObservationPoints;
+        protected override IEnumerable<Feature2D> RelevantFeature => Model.FeatureContainer.ObservationPoints;
 
         private static IWaveModel GetConfiguredModel()
         {
             var model = Substitute.For<IWaveModel>();
             var feature = Substitute.For<IEventedList<Feature2DPoint>>();
 
-            model.ObservationPoints.Returns(feature);
+            model.FeatureContainer.ObservationPoints.Returns(feature);
 
             return model;
         }
 
-        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
-            FactoryMock.CreateObservationPointsLayer(Model);
+        protected override ILayer ExpectedCall(IWaveLayerInstanceCreator instanceCreatorMock) =>
+            instanceCreatorMock.CreateObservationPointsLayer(Model);
     }
 }

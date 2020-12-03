@@ -1,0 +1,319 @@
+screen output of swan.bat is written to this file 
+and will be overwritten everytime that swan.bat is executed 
+ECHO is off.
+SWAN batchfile executed for Delft3D 
+Using swan.bat in directory D:\D3DFMIQ-2276\D-HYDRO_review\D-HYDRO\bin\Debug\plugins\DeltaShell.Dimr\kernels\x64\swan\scripts\ 
+Using D:\D3DFMIQ-2276\D-HYDRO_review\D-HYDRO\bin\Debug\plugins\DeltaShell.Dimr\kernels\x64\swan\scripts\\..\bin\swan_omp.exe 
+Performing wave computation for: Waves.swn 
+        1 file(s) copied.
+
+ SWAN is preparing computation
+
+ Number of threads during execution of parallel region = 12
+
+ iteration    1; sweep 1
++iteration    1; sweep 2
++iteration    1; sweep 3
++iteration    1; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration    2; sweep 1
++iteration    2; sweep 2
++iteration    2; sweep 3
++iteration    2; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration    3; sweep 1
++iteration    3; sweep 2
++iteration    3; sweep 3
++iteration    3; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration    4; sweep 1
++iteration    4; sweep 2
++iteration    4; sweep 3
++iteration    4; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration    5; sweep 1
++iteration    5; sweep 2
++iteration    5; sweep 3
++iteration    5; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration    6; sweep 1
++iteration    6; sweep 2
++iteration    6; sweep 3
++iteration    6; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration    7; sweep 1
++iteration    7; sweep 2
++iteration    7; sweep 3
++iteration    7; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration    8; sweep 1
++iteration    8; sweep 2
++iteration    8; sweep 3
++iteration    8; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration    9; sweep 1
++iteration    9; sweep 2
++iteration    9; sweep 3
++iteration    9; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   10; sweep 1
++iteration   10; sweep 2
++iteration   10; sweep 3
++iteration   10; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   11; sweep 1
++iteration   11; sweep 2
++iteration   11; sweep 3
++iteration   11; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   12; sweep 1
++iteration   12; sweep 2
++iteration   12; sweep 3
++iteration   12; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   13; sweep 1
++iteration   13; sweep 2
++iteration   13; sweep 3
++iteration   13; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   14; sweep 1
++iteration   14; sweep 2
++iteration   14; sweep 3
++iteration   14; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   15; sweep 1
++iteration   15; sweep 2
++iteration   15; sweep 3
++iteration   15; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   16; sweep 1
++iteration   16; sweep 2
++iteration   16; sweep 3
++iteration   16; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   17; sweep 1
++iteration   17; sweep 2
++iteration   17; sweep 3
++iteration   17; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   18; sweep 1
++iteration   18; sweep 2
++iteration   18; sweep 3
++iteration   18; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   19; sweep 1
++iteration   19; sweep 2
++iteration   19; sweep 3
++iteration   19; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   20; sweep 1
++iteration   20; sweep 2
++iteration   20; sweep 3
++iteration   20; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   21; sweep 1
++iteration   21; sweep 2
++iteration   21; sweep 3
++iteration   21; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   22; sweep 1
++iteration   22; sweep 2
++iteration   22; sweep 3
++iteration   22; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   23; sweep 1
++iteration   23; sweep 2
++iteration   23; sweep 3
++iteration   23; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   24; sweep 1
++iteration   24; sweep 2
++iteration   24; sweep 3
++iteration   24; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   25; sweep 1
++iteration   25; sweep 2
++iteration   25; sweep 3
++iteration   25; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   26; sweep 1
++iteration   26; sweep 2
++iteration   26; sweep 3
++iteration   26; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   27; sweep 1
++iteration   27; sweep 2
++iteration   27; sweep 3
++iteration   27; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   28; sweep 1
++iteration   28; sweep 2
++iteration   28; sweep 3
++iteration   28; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   29; sweep 1
++iteration   29; sweep 2
++iteration   29; sweep 3
++iteration   29; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   30; sweep 1
++iteration   30; sweep 2
++iteration   30; sweep 3
++iteration   30; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   31; sweep 1
++iteration   31; sweep 2
++iteration   31; sweep 3
++iteration   31; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   32; sweep 1
++iteration   32; sweep 2
++iteration   32; sweep 3
++iteration   32; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   33; sweep 1
++iteration   33; sweep 2
++iteration   33; sweep 3
++iteration   33; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   34; sweep 1
++iteration   34; sweep 2
++iteration   34; sweep 3
++iteration   34; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   35; sweep 1
++iteration   35; sweep 2
++iteration   35; sweep 3
++iteration   35; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   36; sweep 1
++iteration   36; sweep 2
++iteration   36; sweep 3
++iteration   36; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   37; sweep 1
++iteration   37; sweep 2
++iteration   37; sweep 3
++iteration   37; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   38; sweep 1
++iteration   38; sweep 2
++iteration   38; sweep 3
++iteration   38; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   39; sweep 1
++iteration   39; sweep 2
++iteration   39; sweep 3
++iteration   39; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   40; sweep 1
++iteration   40; sweep 2
++iteration   40; sweep 3
++iteration   40; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   41; sweep 1
++iteration   41; sweep 2
++iteration   41; sweep 3
++iteration   41; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   42; sweep 1
++iteration   42; sweep 2
++iteration   42; sweep 3
++iteration   42; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   43; sweep 1
++iteration   43; sweep 2
++iteration   43; sweep 3
++iteration   43; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   44; sweep 1
++iteration   44; sweep 2
++iteration   44; sweep 3
++iteration   44; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   45; sweep 1
++iteration   45; sweep 2
++iteration   45; sweep 3
++iteration   45; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   46; sweep 1
++iteration   46; sweep 2
++iteration   46; sweep 3
++iteration   46; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   47; sweep 1
++iteration   47; sweep 2
++iteration   47; sweep 3
++iteration   47; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   48; sweep 1
++iteration   48; sweep 2
++iteration   48; sweep 3
++iteration   48; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   49; sweep 1
++iteration   49; sweep 2
++iteration   49; sweep 3
++iteration   49; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
+ iteration   50; sweep 1
++iteration   50; sweep 2
++iteration   50; sweep 3
++iteration   50; sweep 4
+ accuracy OK in    NaN % of wet grid points ( 98.00 % required)
+
++SWAN is processing output request    1
++SWAN is processing output request    2
++SWAN is processing output request    3
++SWAN is processing output request    4
++SWAN is processing output request    5
+        1 file(s) copied.

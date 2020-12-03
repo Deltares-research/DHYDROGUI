@@ -34,26 +34,25 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 
         public static IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractor(IFeature feature)
         {
-            if (feature is LateralSource)
+            switch (feature)
             {
-                yield return new HydroObjectToHydroLinkRelationInteractor();
-            }
-            else if (feature is INode)
-            {
-                yield return new NodeToBranchRelationInteractor();
-                yield return new HydroObjectToHydroLinkRelationInteractor();
-            }
-            else if (feature is IChannel)
-            {
-                yield return new BranchToBranchFeatureRelationInteractor<CompositeBranchStructure>();
-                yield return new BranchToBranchFeatureRelationInteractor<NetworkLocation>();
-                yield return new BranchToBranchFeatureRelationInteractor<LateralSource>();
-                yield return new BranchToBranchFeatureRelationInteractor<ObservationPoint>();
-                yield return new BranchToBranchFeatureRelationInteractor<Retention>();
-            }
-            else if (feature is ICompositeBranchStructure)
-            {
-                yield return new StructureFeatureToStructureRelationInteractor();
+                case LateralSource _:
+                    yield return new HydroObjectToHydroLinkRelationInteractor();
+                    break;
+                case INode _:
+                    yield return new NodeToBranchRelationInteractor();
+                    yield return new HydroObjectToHydroLinkRelationInteractor();
+                    break;
+                case IChannel _:
+                    yield return new BranchToBranchFeatureRelationInteractor<CompositeBranchStructure>();
+                    yield return new BranchToBranchFeatureRelationInteractor<NetworkLocation>();
+                    yield return new BranchToBranchFeatureRelationInteractor<LateralSource>();
+                    yield return new BranchToBranchFeatureRelationInteractor<ObservationPoint>();
+                    yield return new BranchToBranchFeatureRelationInteractor<Retention>();
+                    break;
+                case ICompositeBranchStructure _:
+                    yield return new StructureFeatureToStructureRelationInteractor();
+                    break;
             }
         }
 
@@ -65,15 +64,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 
             newFeature.Geometry = geometry;
 
-            if (newFeature is INameable)
+            if (newFeature is INameable nameable)
             {
-                (newFeature as INameable).Name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion) Network, newFeature);
+                nameable.Name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion) Network, newFeature);
             }
 
             IFeatureInteractor interactor = layer.FeatureEditor.CreateInteractor(layer, newFeature);
 
-            var networkFeatureInteractor = interactor as INetworkFeatureInteractor;
-            if (null != networkFeatureInteractor)
+            if (interactor is INetworkFeatureInteractor networkFeatureInteractor)
             {
                 networkFeatureInteractor.Network = Network;
             }
@@ -96,7 +94,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             }
             catch (Exception exception)
             {
-                log.Error(string.Format("Unable to add feature: {0}", exception.Message), exception);
+                log.Error($"Unable to add feature: {exception.Message}", exception);
                 if (Network.IsEditing)
                 {
                     Network.CancelEdit();
@@ -114,40 +112,36 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             var vectorLayer = layer as VectorLayer;
             VectorStyle vectorStyle = vectorLayer != null ? vectorLayer.Style : null;
 
-            if (feature is ICompositeBranchStructure)
+            switch (feature)
             {
-                featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is INode)
-            {
-                featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is IChannel)
-            {
-                featureInteractor = new ChannelInteractor(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is INetworkLocation)
-            {
-                featureInteractor = new NetworkLocationFeatureInteractor(layer, feature, vectorStyle, null);
-            }
-            else if (feature is LateralSource)
-            {
-                featureInteractor = ((LateralSource) feature).IsDiffuse
-                                        ? (IFeatureInteractor) new DiffuseLateralSourceInteractor(layer, feature, vectorStyle, Network)
-                                        : new LateralSourceInteractor(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is Retention)
-            {
-                featureInteractor = new BranchFeatureInteractor<Retention>(layer, feature, vectorStyle, Network);
-            }
-            else if (feature is ObservationPoint)
-            {
-                featureInteractor = new BranchFeatureInteractor<ObservationPoint>(layer, feature, vectorStyle, Network);
+                case ICompositeBranchStructure _:
+                    featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
+                    break;
+                case INode _:
+                    featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
+                    break;
+                case IChannel _:
+                    featureInteractor = new ChannelInteractor(layer, feature, vectorStyle, Network);
+                    break;
+                case INetworkLocation _:
+                    featureInteractor = new NetworkLocationFeatureInteractor(layer, feature, vectorStyle, null);
+                    break;
+                case LateralSource source:
+                    featureInteractor = source.IsDiffuse
+                                            ? (IFeatureInteractor) new DiffuseLateralSourceInteractor(layer, source, vectorStyle, Network)
+                                            : new LateralSourceInteractor(layer, source, vectorStyle, Network);
+                    break;
+                case Retention _:
+                    featureInteractor = new BranchFeatureInteractor<Retention>(layer, feature, vectorStyle, Network);
+                    break;
+                case ObservationPoint _:
+                    featureInteractor = new BranchFeatureInteractor<ObservationPoint>(layer, feature, vectorStyle, Network);
+                    break;
             }
 
-            if (featureInteractor is INetworkFeatureInteractor)
+            if (featureInteractor is INetworkFeatureInteractor interactor)
             {
-                ((INetworkFeatureInteractor) featureInteractor).Network = Network;
+                interactor.Network = Network;
             }
 
             return featureInteractor;

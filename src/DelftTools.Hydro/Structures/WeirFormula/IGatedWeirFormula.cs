@@ -7,12 +7,19 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     /// </summary>
     public interface IGatedWeirFormula : IWeirFormula
     {
+        /// Gate opening
+        /// <summary>
+        /// The Gate opening value
+        /// </summary>
         double GateOpening { get; set; }
 
-        // Gate.Door height (T)
+        /// Door height
+        /// <summary>
+        /// The Door height value
+        /// </summary>
         double DoorHeight { get; set; }
 
-        // Gate.Door opening width (T)
+        /// Gate.Door opening width 
         /// <summary>
         /// The direction in which the door will open.
         /// Left and right are defined by the flow direction of the gate,
@@ -20,13 +27,40 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         GateOpeningDirection HorizontalDoorOpeningDirection { get; set; }
 
+        // Horizontal opening width
+        /// <summary>
+        /// The Door Horizontal opening width 
+        /// </summary>
         double HorizontalDoorOpeningWidth { get; set; }
+
+        // Use Horizontal opening width
+        /// <summary>
+        /// Flag to enable the use of the Horizontal door opening 
+        /// </summary>
         bool UseHorizontalDoorOpeningWidthTimeSeries { get; set; }
+
+        // Horizontal door opening width Time Series (T)
+        /// <summary>
+        /// The Time series for the Horizontal door opening width
+        /// </summary>
         TimeSeries HorizontalDoorOpeningWidthTimeSeries { get; set; }
 
-        // Gate.Lower Edge Level(T)
+        /// Lower edge level
+        /// <summary>
+        /// The lower edge level value
+        /// </summary>
         double LowerEdgeLevel { get; set; }
+
+        /// Use lower edge level time series
+        /// <summary>
+        /// Flag to set the use of the Time series for the lower edge level
+        /// </summary>
         bool UseLowerEdgeLevelTimeSeries { get; set; }
+
+        /// Lower edge level Time series
+        /// <summary>
+        /// Value of the time series for the lower level edge
+        /// </summary>
         TimeSeries LowerEdgeLevelTimeSeries { get; set; }
     }
 }

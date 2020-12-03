@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                 var parallelActivity = value as ParallelActivity;
                 if (value != null && parallelActivity == null)
                 {
-                    throw new ArgumentException("Value must be a ParallelActivity", "value");
+                    throw new ArgumentException("Value must be a ParallelActivity", nameof(value));
                 }
 
                 base.Activity = value;

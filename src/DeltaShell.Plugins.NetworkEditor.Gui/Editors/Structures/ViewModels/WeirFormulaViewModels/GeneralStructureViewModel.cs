@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
 
@@ -10,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// </summary>
     /// <seealso cref="WeirViewModel"/>
     [Description("General Structure")]
-    public sealed class GeneralStructureViewModel : WeirViewModel
+    public sealed class GeneralStructureViewModel : WeirViewModel, IDisposable
     {
         private readonly GeneralStructureWeirFormula formula;
 
@@ -384,5 +385,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
 
         private static double? ToNullableValue(double value) =>
             double.IsNaN(value) ? null : (double?) value;
+
+        // Note that we do not have any unmanaged resources and the 
+        // class is sealed, as such this simple Dispose is sufficient.
+        public void Dispose()
+        {
+            GatePropertiesViewModel?.Dispose();
+        }
     }
 }

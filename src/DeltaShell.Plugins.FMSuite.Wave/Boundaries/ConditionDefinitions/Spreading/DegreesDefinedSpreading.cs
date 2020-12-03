@@ -1,5 +1,4 @@
 ﻿using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading
 {

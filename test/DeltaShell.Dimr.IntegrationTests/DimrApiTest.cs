@@ -15,7 +15,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-816
         public void GivenDimrApiWhenFinalizeThenNoExceptionThrown()
         {
-            using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
+            using (IDimrApi dimrApi = CreateDimrApi())
             {
                 try
                 {
@@ -34,7 +34,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Test]
         public void GivenDimrApiWhenInitializeThenNoExceptionThrown()
         {
-            using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
+            using (IDimrApi dimrApi = CreateDimrApi())
             {
                 try
                 {
@@ -51,7 +51,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Test]
         public void GivenDimrApiWhenSetLoggerThenNoExceptionThrown()
         {
-            using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
+            using (IDimrApi dimrApi = CreateDimrApi())
             {
                 try
                 {
@@ -68,7 +68,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-816
         public void GivenDimrApiWhenUpdateThenNoExceptionThrown()
         {
-            using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
+            using (IDimrApi dimrApi = CreateDimrApi())
             {
                 try
                 {
@@ -81,6 +81,11 @@ namespace DeltaShell.Dimr.IntegrationTests
                     Assert.Fail("Expected no exception, but got: " + ex.Message);
                 }
             }
+        }
+
+        private static IDimrApi CreateDimrApi()
+        {
+            return new DimrApiFactory().CreateNew();
         }
 
         static DimrApiTest()

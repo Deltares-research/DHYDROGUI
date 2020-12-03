@@ -21,28 +21,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
     public class GeometryPreviewMapConfigurator : IGeometryPreviewMapConfigurator
     {
         private readonly IWaveBoundaryGeometryFactory geometryFactory;
-        private readonly IWaveLayerFactory layerFactory;
+        private readonly IWaveLayerInstanceCreator layerInstanceCreator;
         private readonly ICoordinateSystem coordinateSystem;
 
         /// <summary>
         /// Creates a new <see cref="GeometryPreviewMapConfigurator"/>.
         /// </summary>
         /// <param name="geometryFactory">The geometry factory.</param>
-        /// <param name="layerFactory">The layer factory.</param>
+        /// <param name="layerInstanceCreator">The layer factory.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="geometryFactory"/> or <paramref name="layerFactory"/>
+        /// Thrown when <paramref name="geometryFactory"/> or <paramref name="layerInstanceCreator"/>
         /// is <c>null</c>.
         /// </exception>
         public GeometryPreviewMapConfigurator(IWaveBoundaryGeometryFactory geometryFactory,
-                                              IWaveLayerFactory layerFactory,
+                                              IWaveLayerInstanceCreator layerInstanceCreator,
                                               ICoordinateSystem coordinateSystem)
         {
             Ensure.NotNull(geometryFactory, nameof(geometryFactory));
-            Ensure.NotNull(layerFactory, nameof(layerFactory));
+            Ensure.NotNull(layerInstanceCreator, nameof(layerInstanceCreator));
 
             this.geometryFactory = geometryFactory;
-            this.layerFactory = layerFactory;
+            this.layerInstanceCreator = layerInstanceCreator;
             this.coordinateSystem = coordinateSystem;
         }
 
@@ -75,13 +75,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                                                 IMap map)
         {
             ILayer supportPointsLayer =
-                layerFactory.CreateSupportPointsLayer(featuresContainer.SupportPointMapFeatureProvider);
+                layerInstanceCreator.CreateSupportPointsLayer(featuresContainer.SupportPointMapFeatureProvider);
             ILayer startPointsLayer =
-                layerFactory.CreateBoundaryStartPointLayer(featuresContainer.BoundaryStartPointMapFeatureProvider);
+                layerInstanceCreator.CreateBoundaryStartPointLayer(featuresContainer.BoundaryStartPointMapFeatureProvider);
             ILayer endPointsLayer =
-                layerFactory.CreateBoundaryEndPointLayer(featuresContainer.BoundaryEndPointMapFeatureProvider);
+                layerInstanceCreator.CreateBoundaryEndPointLayer(featuresContainer.BoundaryEndPointMapFeatureProvider);
             ILayer lineLayer =
-                layerFactory.CreateBoundaryLineLayer(featuresContainer.BoundaryLineMapFeatureProvider);
+                layerInstanceCreator.CreateBoundaryLineLayer(featuresContainer.BoundaryLineMapFeatureProvider);
 
             map.Layers.AddRange(new[]
             {
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                                                        activeSupportPointBehaviour);
 
             ILayer activeSupportPointLayer =
-                layerFactory.CreateActiveSupportPointsLayer(activeSupportPointProvider);
+                layerInstanceCreator.CreateActiveSupportPointsLayer(activeSupportPointProvider);
 
             map.Layers.Add(activeSupportPointLayer);
 
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                                                        inactiveSupportPointBehaviour);
 
             ILayer inactiveSupportPointLayer =
-                layerFactory.CreateInactiveSupportPointsLayer(inactiveSupportPointProvider);
+                layerInstanceCreator.CreateInactiveSupportPointsLayer(inactiveSupportPointProvider);
 
             map.Layers.Add(inactiveSupportPointLayer);
 
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                                                        selectedSupportPointBehaviour);
 
             ILayer selectedSupportPointLayer =
-                layerFactory.CreateSelectedSupportPointLayer(selectedSupportPointProvider);
+                layerInstanceCreator.CreateSelectedSupportPointLayer(selectedSupportPointProvider);
 
             map.Layers.Add(selectedSupportPointLayer);
 

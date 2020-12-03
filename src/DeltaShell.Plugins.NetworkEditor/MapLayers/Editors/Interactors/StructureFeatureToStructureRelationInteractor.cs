@@ -40,10 +40,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             var compositeStructure = (ICompositeBranchStructure) feature;
             foreach (IStructure1D structure in compositeStructure.Structures)
             {
-                // #$# GeometryHelper.SetCoordinate(structure.Geometry, 0, newGeometry.Coordinates[0]);
                 var geometry = (IGeometry) structure.Geometry.Clone();
                 structure.Geometry = GeometryHelper.SetCoordinate(geometry, 0, newGeometry.Coordinates[0]);
-                // #$# 
             }
         }
 
@@ -75,7 +73,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             foreach (IStructure1D structure in compositeBranchStructure.Structures)
             {
-                //originalRelatedFeatures.Add(structure);
                 IStructure1D clone = CloneStructure(structure, cloneCompositeBranchStructure);
                 clonedRelatedFeatures.Add(clone);
                 addRelatedFeature?.Invoke(null /*activeRules*/, structure, clone, level);

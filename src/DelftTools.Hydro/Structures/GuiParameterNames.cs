@@ -1,6 +1,6 @@
 ﻿namespace DelftTools.Hydro.Structures
 {
-    public class GuiParameterNames
+    public static class GuiParameterNames
     {
         #region Structures
 

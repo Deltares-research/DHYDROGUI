@@ -1,9 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -27,9 +30,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             RealTimeControlModelNodePresenter nodePresenter = GetRealTimeControlModelNodePresenter();
             var model = new RealTimeControlModel()
             {
-                RestartOutput = new EventedList<RealTimeControlRestartFile>(new[]
+                RestartOutput = new EventedList<RestartFile>(new[]
                 {
-                    new RealTimeControlRestartFile()
+                    new RestartFile()
                 })
             };
 
@@ -37,10 +40,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
 
             // Assert
-            TreeFolder outputTreeFolder = childObjects.OfType<TreeFolder>().Single(f => f.Text == "Output");
+            OutputTreeFolder outputTreeFolder = childObjects.OfType<OutputTreeFolder>().Single(f => f.Text == "Output");
             TreeFolder restartFileOutputTreeFolder = outputTreeFolder.ChildItems.OfType<TreeFolder>().Single(f => f.Text == "Restart");
             Assert.That(restartFileOutputTreeFolder.Text, Is.EqualTo("Restart"));
-            Assert.That(restartFileOutputTreeFolder.ChildItems.OfType<RealTimeControlRestartFile>().Count(), Is.EqualTo(1));
+            Assert.That(restartFileOutputTreeFolder.ChildItems.OfType<RestartFile>().Count(), Is.EqualTo(1));
         }
 
         [Test]
@@ -62,6 +65,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
                 initialConditionsFolder.ChildItems.OfType<RealTimeControlRestartFile>().Single();
 
             Assert.That(inputRestartFile, Is.Not.Null);
+        }
+
+        [Test]
+        public void GetChildNodeObjects_ContainsOutputXmlOrCsvDocuments()
+        {
+            // Setup
+            RealTimeControlModelNodePresenter nodePresenter = GetRealTimeControlModelNodePresenter();
+            var model = new RealTimeControlModel();
+            model.OutputDocuments.Add(new ReadOnlyOutputTextDocument("test.xml", "test"));
+
+            // Call
+            IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
+
+            // Assert
+            OutputTreeFolder outputTreeFolder =
+                childObjects.OfType<OutputTreeFolder>().Single(f => f.Text == "Output");
+            IEnumerable<ReadOnlyOutputTextDocument> outputTextDocuments = outputTreeFolder.ChildItems.OfType<ReadOnlyOutputTextDocument>();
+
+            Assert.AreEqual(1, outputTextDocuments.Count());
         }
 
         private static RealTimeControlModelNodePresenter GetRealTimeControlModelNodePresenter()

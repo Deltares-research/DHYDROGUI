@@ -29,13 +29,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
             targetDefinition.OuterDomain = loadedDefinition.OuterDomain;
 
-            targetDefinition.ObservationPoints.AddRange(loadedDefinition.ObservationPoints);
-            targetDefinition.ObservationCrossSections.AddRange(loadedDefinition.ObservationCrossSections);
-            targetDefinition.Obstacles.AddRange(loadedDefinition.Obstacles);
-
+            TransferFeatures(targetDefinition.FeatureContainer, loadedDefinition.FeatureContainer);
             TransferProperties(targetDefinition, loadedDefinition.Properties);
             TransferTimePointData(targetDefinition.TimePointData, loadedDefinition.TimePointData);
             TransferBoundaryContainer(targetDefinition.BoundaryContainer, loadedDefinition.BoundaryContainer);
+        }
+
+        private static void TransferFeatures(IWaveFeatureContainer targetFeatureContainer, IWaveFeatureContainer loadedFeatureContainer)
+        {
+            targetFeatureContainer.ObservationPoints.AddRange(loadedFeatureContainer.ObservationPoints);
+            targetFeatureContainer.ObservationCrossSections.AddRange(loadedFeatureContainer.ObservationCrossSections);
+            targetFeatureContainer.Obstacles.AddRange(loadedFeatureContainer.Obstacles);
         }
 
         private static void TransferTimePointData(WaveInputFieldData targetTimePointData, WaveInputFieldData loadedTimePointData)

@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 case FixedWeirSchemes.Scheme9:
                     return DataColumnsForScheme6And8And0(defaultValueGroundHeight).Concat(DataColumnsScheme9());
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(scheme));
             }
         }
 

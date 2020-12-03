@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Writers
                                 writer.Write(m % MaxNrOfEntriesInRow == 0 ? Environment.NewLine : spacing);
                             }
 
-                            writer.Write(string.Format("{0,15:F8}", depthValues[index++]));
+                            writer.Write("{0,15:F8}", depthValues[index++]);
                         }
 
                         // write -999 column:
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Writers
                             writer.Write(m % MaxNrOfEntriesInRow == 0 ? Environment.NewLine : spacing);
                         }
 
-                        writer.Write(string.Format("{0,15:F8}", MissingValue));
+                        writer.Write("{0,15:F8}", MissingValue);
                     }
                 }
             }

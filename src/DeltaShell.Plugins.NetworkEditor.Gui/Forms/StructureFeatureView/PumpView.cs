@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     checkBoxDelivery.Checked = true;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("direction");
+                    throw new ArgumentOutOfRangeException(nameof(direction));
             }
 
             settingCheckBoxes = false;

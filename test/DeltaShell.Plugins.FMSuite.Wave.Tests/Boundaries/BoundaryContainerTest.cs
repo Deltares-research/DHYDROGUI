@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
     [TestFixture]
     public class BoundaryContainerTest
     {
-        private static IEnumerable<TestCaseData> UpdateGridBoundaryData
+        public static IEnumerable<TestCaseData> UpdateGridBoundaryData
         {
             get
             {

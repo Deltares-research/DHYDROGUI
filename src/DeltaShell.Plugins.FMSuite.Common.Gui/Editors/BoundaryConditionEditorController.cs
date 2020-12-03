@@ -42,6 +42,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             boundaryConditions.BoundaryConditions.Add(boundaryCondition);
         }
 
-        public virtual void Dispose() {}
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected abstract void Dispose(bool disposing);
     }
 }

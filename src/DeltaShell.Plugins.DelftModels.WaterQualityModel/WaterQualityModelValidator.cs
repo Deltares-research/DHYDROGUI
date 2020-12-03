@@ -247,7 +247,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             // 'toBeChecked' time range must be equal to 'reference' time
             if (toBeCheckedStartTime != referenceStartTime || toBeCheckedStopTime != referenceStopTime)
             {
-                //var validationMessage = Resources.WaterQualityModelValidate_CheckTimers_Period_should_be_correctly_bounded;
                 yield return new ValidationIssue(model, ValidationSeverity.Info, string.Format(
                                                      Resources
                                                          .WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_,

@@ -10,15 +10,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
     [TestFixture]
     public abstract class WaveLayerSubProviderTestFixture
     {
-        protected IWaveLayerFactory FactoryMock;
+        protected IWaveLayerInstanceCreator InstanceCreatorMock;
         protected ILayer LayerMock;
 
-        protected abstract Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; }
+        protected abstract Func<IWaveLayerInstanceCreator, ILayerSubProvider> ConstructorCall { get; }
 
         [SetUp]
         public void SetUp()
         {
-            FactoryMock = Substitute.For<IWaveLayerFactory>();
+            InstanceCreatorMock = Substitute.For<IWaveLayerInstanceCreator>();
             LayerMock = Substitute.For<ILayer>();
         }
 
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         {
             // Call || Assert
             var exception = Assert.Throws<ArgumentNullException>(() => ConstructSubProvider(null));
-            Assert.That(exception.ParamName, Is.EqualTo("factory"));
+            Assert.That(exception.ParamName, Is.EqualTo("instanceCreator"));
         }
 
         [Test]
@@ -68,14 +68,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         {
             // Setup
             ILayerSubProvider subProvider = ConstructSubProvider();
-            ExpectedCall(FactoryMock).Returns(LayerMock);
+            ExpectedCall(InstanceCreatorMock).Returns(LayerMock);
 
             // Call
             ILayer result = subProvider.CreateLayer(GetValidSourceData(), GetValidParentData());
 
             // Assert
             Assert.That(result, Is.SameAs(LayerMock));
-            ExpectedCall(FactoryMock.Received(1));
+            ExpectedCall(InstanceCreatorMock.Received(1));
         }
 
         [Test]
@@ -89,17 +89,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 
             // Assert
             Assert.That(result, Is.Null);
-            ExpectedCall(FactoryMock.DidNotReceiveWithAnyArgs());
+            ExpectedCall(InstanceCreatorMock.DidNotReceiveWithAnyArgs());
         }
 
         protected ILayerSubProvider ConstructSubProvider()
         {
-            return ConstructSubProvider(FactoryMock);
+            return ConstructSubProvider(InstanceCreatorMock);
         }
 
-        private ILayerSubProvider ConstructSubProvider(IWaveLayerFactory factory)
+        private ILayerSubProvider ConstructSubProvider(IWaveLayerInstanceCreator instanceCreator)
         {
-            return ConstructorCall.Invoke(factory);
+            return ConstructorCall.Invoke(instanceCreator);
         }
 
         protected abstract object GetValidSourceData();
@@ -108,6 +108,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         protected abstract object GetInvalidSourceData();
         protected abstract object GetInvalidParentData();
 
-        protected abstract ILayer ExpectedCall(IWaveLayerFactory FactoryMock);
+        protected abstract ILayer ExpectedCall(IWaveLayerInstanceCreator instanceCreatorMock);
     }
 }

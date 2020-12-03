@@ -82,8 +82,6 @@ namespace DelftTools.Hydro.Helpers
                 return false;
             }
 
-            //if (sourceCoordinateSystem.XML != destinationCoordinateSystem.XML) return false;
-
             return true;
         }
     }

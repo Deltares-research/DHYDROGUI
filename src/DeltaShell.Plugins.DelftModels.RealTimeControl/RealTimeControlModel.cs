@@ -18,11 +18,15 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Editing;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
@@ -44,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Project explorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, IControllingModel, IFileBased
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -54,7 +58,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private readonly IList<IDataItem> linkedDataItemsOriginalValues;
 
-        private string outputFileName = "rtcOutput.nc";
+        private string communicationRtcToFmFileName = "rtc_to_flow.nc";
+        private string communicationFmToRtcFileName = "flow_to_rtc.nc";
         private ICoordinateSystem coordinateSystem;
         private RealTimeControlOutputFileFunctionStore outputFileFunctionStore;
         private bool disposed;
@@ -90,14 +95,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             SaveStateStopTime = StopTime;
             SaveStateTimeStep = TimeStep;
 
-            RestartOutput = new EventedList<RealTimeControlRestartFile>();
+            RestartOutput = new EventedList<RestartFile>();
 
-            runner = new DimrRunner(this);
+            OutputDocuments = new EventedList<ReadOnlyOutputTextDocument>();
+
+            runner = new DimrRunner(this, new DimrApiFactory());
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
 
             if (outputFileFunctionStore != null)
             {
-                ReconnectOutputFiles(outputFileFunctionStore.Path);
+                ReconnectRtcToFmOutputFile(outputFileFunctionStore.Path);
             }
         }
 
@@ -114,6 +121,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
             }
         }
+
+        /// <summary>
+        /// Property for storing the last exported paths.
+        /// This will be used for determining which files
+        /// are input (created by the exporter) and which
+        /// files are output during the Finish step of a
+        /// run <see cref="OnFinishIntegratedModelRun"/>.
+        /// </summary>
+        public virtual string[] LastExportedPaths { get; set; } = new string[0];
 
         public virtual int LogLevel { get; set; }
 
@@ -164,7 +180,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public virtual IEventedList<RealTimeControlRestartFile> RestartOutput { get; set; }
+        /// <summary>
+        /// Gets or sets the restart output files.
+        /// </summary>
+        public virtual IEventedList<RestartFile> RestartOutput { get; set; }
+
+        /// <summary>
+        /// Gets or sets the output text documents.
+        /// </summary>
+        public virtual IEventedList<ReadOnlyOutputTextDocument> OutputDocuments { get; }
 
         //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
@@ -305,11 +329,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public override IDataItem GetDataItemByTag(string tag)
-        {
-            return base.GetDataItemByTag(tag) ?? CreateDataItemNotAvailableInPreviousVersion(tag);
-        }
-
         /// <exception cref="NotSupportedException">
         /// When a <see cref="DataItem"/> (either in this model or it's child-models) is
         /// unlinked and the <see cref="DataItem.Value"/> either does not inherit from <see cref="ICloneable"/>, is not null, or is
@@ -381,6 +400,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             return clonedModel;
+        }
+
+        IEnumerable<IDataItem> ICoupledModel.GetDataItemsUsedForCouplingModel(DataItemRole role)
+        {
+            return AllDataItems.Where(di => di.Role == role);
         }
 
         public void Dispose()
@@ -569,22 +593,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             ClearOutput();
         }
 
-        /// <summary>
-        /// Incredibly ugly construct, but this is used for backward compatibility reasons
-        /// </summary>
-        /// <param name="tag"></param>
-        private IDataItem CreateDataItemNotAvailableInPreviousVersion(string tag)
-        {
-            //TODO D3DFMIQ-2183
-            //if (tag == RestartInputStateTag || tag == UseRestartTag || tag == WriteRestartTag)
-            //{
-            //    AddRestartDataItems();
-            //    return GetDataItemByTag(tag);
-            //}
-
-            return null;
-        }
-
         [EditAction]
         private void ConnectionPointsCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
@@ -737,7 +745,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            ReconnectOutputFiles(outputFileFunctionStore.Path);
+            ReconnectRtcToFmOutputFile(outputFileFunctionStore.Path);
         }
 
         private void ModelsPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -943,15 +951,42 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void DisconnectOutput()
         {
-            if (outputFileFunctionStore == null)
+            DisconnectOutputFileFunctionStore();
+            RestartOutput.Clear();
+        }
+
+        protected override void OnClearOutput()
+        {
+            BeginEdit(new DefaultEditAction("Clearing all real time control output"));
+
+            DisconnectOutputFileFunctionStore();
+            RestartOutput.Clear();
+            ClearOutputDocuments();
+
+            EndEdit();
+            
+            MarkDirty();
+        }
+
+        private void ClearOutputDocuments()
+        {
+            foreach (ReadOnlyOutputTextDocument outputDocument in OutputDocuments)
             {
-                return;
+                outputDocument.Content = string.Empty;
             }
 
-            outputFileFunctionStore.Functions?.Clear();
-            outputFileFunctionStore.Features?.Clear();
-            outputFileFunctionStore.Close();
-            outputFileFunctionStore = null;
+            OutputDocuments.Clear();
+        }
+
+        private void DisconnectOutputFileFunctionStore()
+        {
+            if (outputFileFunctionStore != null)
+            {
+                outputFileFunctionStore.Functions?.Clear();
+                outputFileFunctionStore.Features?.Clear();
+                outputFileFunctionStore.Close();
+                outputFileFunctionStore = null;
+            }
         }
 
         public virtual void ConnectOutput(string outputPath)
@@ -967,24 +1002,67 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            string outputFilePath = Path.Combine(dirInfo.Parent.FullName, OutputFileName);
-            ReconnectOutputFiles(outputFilePath);
+            string[] newOutputFiles = Directory.GetFiles(outputPath);
+
+            if (newOutputFiles.Length == 0)
+            {
+                return;
+            }
 
             var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
-            SetRestartOutputFiles(Directory.GetFiles(Path.Combine(dirInfo.Parent.FullName, DirectoryName)).Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))));
+            IList<string> restartFiles = newOutputFiles.Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))).ToList();
+            SetRestartOutputFiles(restartFiles);
+
+            IEnumerable<string> outputDocumentFilePaths = newOutputFiles.Where(f => f.EndsWith(".xml") || f.EndsWith(".csv")).Except(restartFiles);
+            ReconnectOutputDocuments(outputDocumentFilePaths);
+
+            string rtcToFlowFilePath = Path.Combine(dirInfo.FullName, CommunicationRtcToFmFileName);
+            ReconnectRtcToFmOutputFile(rtcToFlowFilePath);
         }
 
-        private void SetRestartOutputFiles(IEnumerable<string> restartFileStrings)
+        private void ReconnectOutputDocuments(IEnumerable<string> outputDocumentFilePaths)
         {
-            IEnumerable<RealTimeControlRestartFile> outputRestartFiles =
-                restartFileStrings.Select(rfs => new RealTimeControlRestartFile(Path.GetFileName(rfs),
-                                                                                File.ReadAllText(rfs)));
-            RestartOutput = new EventedList<RealTimeControlRestartFile>(outputRestartFiles.ToList());
+            OutputDocuments.RemoveAllWhere(d => !outputDocumentFilePaths.Any(fp => fp.EndsWith(d.Name)));
+
+            foreach (string filePath in outputDocumentFilePaths)
+            {
+                string fileName = Path.GetFileName(filePath);
+
+                ReadOnlyOutputTextDocument existingTextDocument = OutputDocuments.FirstOrDefault(d => d.Name == fileName);
+
+                try
+                {
+                    string log = File.ReadAllText(filePath);
+
+                    // Replace content in the existing output documents, so that open views will be updated after a run.
+                    // Don't create always new ones, because the open views of the old ones will not be closed during a run.
+                    if (existingTextDocument != null)
+                    {
+                        existingTextDocument.Content = log;
+                    }
+                    else
+                    {
+                        var textDocument = new ReadOnlyOutputTextDocument(fileName, log);
+
+                        OutputDocuments.Add(textDocument);
+                    }
+                }
+                catch (Exception)
+                {
+                    Log.ErrorFormat("Error reading file");
+                }
+            }
         }
 
-        private void ReconnectOutputFiles(string outputFilePath)
+        private void SetRestartOutputFiles(IEnumerable<string> restartFilePaths)
         {
-            DisconnectOutput();
+            List<RestartFile> outputRestartFiles = restartFilePaths.Select(p => new RestartFile(p)).ToList();
+            RestartOutput = new EventedList<RestartFile>(outputRestartFiles);
+        }
+
+        private void ReconnectRtcToFmOutputFile(string outputFilePath)
+        {
+            DisconnectOutputFileFunctionStore();
 
             if (!File.Exists(outputFilePath))
             {
@@ -1032,7 +1110,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual string DimrModelRelativeWorkingDirectory => DirectoryName;
 
-        public virtual string DimrModelRelativeOutputDirectory => DirectoryName;
+        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -1055,10 +1133,40 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual string MpiCommunicatorString => null;
 
-        public virtual void OnFinishIntegratedModelRun(string workingDirectoryPath)
+        public virtual void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath)
         {
             // Actions, which should be done in the IDimrModel after a successful integrated model
             // run.
+            string runRtcDirectory = Path.Combine(hydroModelWorkingDirectoryPath, DirectoryName);
+
+            string[] allNonRecursivePaths = FileBasedUtils.CollectNonRecursivePaths(runRtcDirectory);
+            IList<string> allOutputPaths = allNonRecursivePaths.Where(p => !LastExportedPaths.Contains(p)).ToList();
+
+            string rtcToFlowNc = Path.Combine(hydroModelWorkingDirectoryPath, CommunicationRtcToFmFileName);
+            string fmToRtcNc = Path.Combine(hydroModelWorkingDirectoryPath, CommunicationFmToRtcFileName);
+
+            if (File.Exists(rtcToFlowNc))
+            {
+                allOutputPaths.Add(rtcToFlowNc);
+            }
+
+            if (File.Exists(fmToRtcNc))
+            {
+                allOutputPaths.Add(fmToRtcNc);
+            }
+
+            Directory.CreateDirectory(Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName));
+
+            foreach (string outputPath in allOutputPaths)
+            {
+                string outputName = Path.GetFileName(outputPath);
+                string destinationOutputPath = Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName, outputName);
+                Directory.Move(outputPath, destinationOutputPath);
+            }
+
+            currentOutputDirectoryPath = Path.Combine(runRtcDirectory, DirectoryNameConstants.OutputDirectoryName);
+
+            MarkDirty();
         }
 
         #endregion
@@ -1120,7 +1228,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public override IEnumerable<object> GetDirectChildren()
         {
-            return base.GetDirectChildren().Concat(OutputFeatureCoverages);
+            return base.GetDirectChildren().Concat(OutputFeatureCoverages).Concat(OutputDocuments);
         }
 
         /// <summary>
@@ -1364,7 +1472,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual bool CanMerge(object sourceModel)
         {
-            //return sourceModel is RealTimeControlModel;
             var rtcModel = sourceModel as RealTimeControlModel;
             if (rtcModel == null)
             {
@@ -1376,14 +1483,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual IEnumerable<IModelMerge> DependentModels => ControlledModels.OfType<IModelMerge>();
 
-        public virtual string OutputFileName
+        public virtual string CommunicationRtcToFmFileName
         {
-            get => outputFileName;
+            get => communicationRtcToFmFileName;
             set
             {
+                Ensure.NotNull(value, nameof(value));
+
                 if (!string.IsNullOrEmpty(value))
                 {
-                    outputFileName = value + ".nc";
+                    communicationRtcToFmFileName = value + ".nc";
+                }
+            }
+        }
+
+        public virtual string CommunicationFmToRtcFileName
+        {
+            get => communicationFmToRtcFileName;
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+
+                if (!string.IsNullOrEmpty(value))
+                {
+                    communicationFmToRtcFileName = value + ".nc";
                 }
             }
         }
@@ -1455,6 +1578,275 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             base.OnCleanup();
             runner.OnCleanup();
         }
+
+        #endregion
+
+        #region IFileBased
+        private bool isOpen;
+        private int dirtyCounter; // tells NHibernate we need to be saved
+        private string path;
+        private string currentOutputDirectoryPath;
+        private string persistentOutputDirectory;
+        private string oldPersistentOutputDirectory = string.Empty;
+        private bool removeSourceOutputFolder;
+
+        /// <summary>
+        /// The persistent output directory to which output files
+        /// should be copied.
+        /// </summary>
+        /// <remarks>
+        /// Can be outdated when asked due to a rename model action and
+        /// save (not outdated during save-as). Therefore
+        /// <see cref="UpdatePersistentOutputDirectoryIfNeeded"/> should be called.
+        /// </remarks>
+        protected virtual string PersistentOutputDirectory
+        {
+            get
+            {
+                UpdatePersistentOutputDirectoryIfNeeded();
+                return persistentOutputDirectory;
+            }
+            set => persistentOutputDirectory = value;
+        }
+
+        /// <summary>
+        /// Check if model has been renamed followed by a save (not a save-as).
+        /// During normal save <see cref="persistentOutputDirectory"/> contains
+        /// old model name and therefore if condition is true. Resulting in
+        /// correcting <see cref="persistentOutputDirectory"/> and removing
+        /// source folder in <see cref="CopyOutputFolderTo"/> method called from
+        /// <see cref="IFileBased.Path"/> setter. During Save As first
+        /// <see cref="IFileBased.CopyTo"/> and <see cref="IFileBased.SwitchTo"/>
+        /// will be called with an argument, which is the new path. Due to this
+        /// <see cref="persistentOutputDirectory"/> is up to date when setting
+        /// <see cref="IFileBased.Path"/> property afterwards. Resulting in unnecessary
+        /// second copy action without removal of source folder and second
+        /// <see cref="IFileBased.SwitchTo"/>. 
+        /// </summary>
+        private void UpdatePersistentOutputDirectoryIfNeeded()
+        {
+            var dirInfo = new DirectoryInfo(persistentOutputDirectory);
+            var modelDirectory = dirInfo.Parent;
+            if (modelDirectory.Name != Name)
+            {
+                removeSourceOutputFolder = true;
+                oldPersistentOutputDirectory = persistentOutputDirectory;
+                persistentOutputDirectory = Path.Combine(modelDirectory.Parent.FullName, Name, DirectoryNameConstants.OutputDirectoryName);
+            }
+        }
+
+        // Used for Import model
+        // Creating new model
+        void IFileBased.CreateNew(string path)
+        {
+            Ensure.NotNull(path, nameof(path));
+
+            PersistentOutputDirectory = GetOutputFolderFromDeltaShellPath(path);
+            this.path = path;
+            isOpen = true;
+        }
+
+        
+        void IFileBased.Close()
+        {
+            isOpen = false;
+        }
+
+        // Never called by DeltaShell Framework
+        void IFileBased.Open(string path)
+        {
+            Ensure.NotNull(path, nameof(path));
+            isOpen = true;
+        }
+
+        // Used for Save As, called by ProjectFileBasedItemRepository.
+        void IFileBased.CopyTo(string destinationPath)
+        {
+            Ensure.NotNull(destinationPath, nameof(destinationPath));
+
+            string targetOutputDirectory = GetOutputFolderFromDeltaShellPath(destinationPath);
+            CopyOutputFolderTo(targetOutputDirectory);
+        }
+
+        // Used for Open Project, called by FileBasedDataAccessListener.
+
+        // Save, called by FileBasedDataAccessListener, so
+        // dirtyCounter change needed for activating.
+
+        // Used for Save As, called by ProjectFileBasedItemRepository.
+
+        // Used for first Save As (Moving from temp folder,
+        // since project name will be adjusted during Save As,
+        // which trigger database update,
+        // which results in a second Save of files due to FileBasedDataAccessListener)
+        void IFileBased.SwitchTo(string newPath)
+        {
+            Ensure.NotNull(newPath, nameof(newPath));
+
+            string expectedOutputPath = GetOutputFolderFromDeltaShellPath(newPath);
+
+            // Open project
+            if (!isOpen)
+            {
+                isOpen = true;
+            }
+
+            // Open project, Save  As, Save
+            path = newPath;
+            PersistentOutputDirectory = expectedOutputPath;
+
+            currentOutputDirectoryPath = expectedOutputPath;
+            if (Directory.Exists(expectedOutputPath))
+            {
+                ConnectOutput(expectedOutputPath);
+            }
+        }
+
+        void IFileBased.Delete()
+        {
+            // Can be used in the future for deleting
+            // files when model has been deleted by user.
+        }
+
+        // Used for Open Project, called by FileBasedDataAccessListener.
+
+        // Save, called by FileBasedDataAccessListener, so
+        // dirtyCounter change needed for activating.
+
+        // Used for first Save As (Moving from temp folder,
+        // since project name will be adjusted during Save As,
+        // which trigger database update,
+        // which results in a second Save of files due to Data Access Listener)
+        string IFileBased.Path
+        {
+            get => path;
+            set
+            {
+                if (path == value)
+                {
+                    return;
+                }
+
+                path = value;
+
+                // isOpen check needed for saving project,
+                // otherwise during opening an export will be done.
+                if (path.StartsWith("$") && isOpen)
+                {
+                    CopyOutputFolderTo(PersistentOutputDirectory);
+                }
+            }
+        }
+
+        IEnumerable<string> IFileBased.Paths
+        {
+            get
+            {
+                yield return ((IFileBased) this).Path;
+            }
+        }
+
+        bool IFileBased.IsFileCritical => true;
+
+        bool IFileBased.IsOpen => isOpen;
+
+        bool IFileBased.CopyFromWorkingDirectory => false;
+
+        #region FileBased Helper Methods
+
+        private string GetOutputFolderFromDeltaShellPath(string filePath)
+        {
+            string projectDirectory = Path.GetDirectoryName(filePath);
+
+            Ensure.NotNull(projectDirectory, nameof(projectDirectory));
+
+            return Path.Combine(projectDirectory, Name, "output");
+        }
+
+        private void CopyOutputFolderTo(string targetDirectory)
+        {
+            if (!CanOutputBeCopied())
+            {
+                return;
+            }
+
+            if (!IsRtcOutputPresent)
+            {
+                RemoveOutputDirectory(targetDirectory);
+            }
+            else
+            {
+                var dirInfoSource = new DirectoryInfo(currentOutputDirectoryPath);
+                var dirInfoTarget = new DirectoryInfo(targetDirectory);
+
+                if (dirInfoSource.FullName == dirInfoTarget.FullName)
+                {
+                    return;
+                }
+
+                DirectoryCopy(dirInfoSource, dirInfoTarget);
+
+                if (removeSourceOutputFolder)
+                {
+                    RemoveOutputFolderInOldDirectory();
+                }
+            }
+        }
+
+        private bool CanOutputBeCopied()
+        {
+            return !string.IsNullOrEmpty(currentOutputDirectoryPath) && Directory.Exists(currentOutputDirectoryPath);
+        }
+
+        private void RemoveOutputFolderInOldDirectory()
+        {
+            DisconnectOutput();
+            FileUtils.DeleteIfExists(Directory.GetParent(oldPersistentOutputDirectory).FullName);
+            oldPersistentOutputDirectory = String.Empty;
+            removeSourceOutputFolder = false;
+        }
+
+        private static void RemoveOutputDirectory(string targetDirectory)
+        {
+            FileUtils.DeleteIfExists(targetDirectory);
+        }
+
+        /// <summary>
+        /// Gets whether the RTC model output is present.
+        /// </summary>
+        private bool IsRtcOutputPresent => outputFileFunctionStore != null || OutputDocuments.Any() || RestartOutput.Any();
+
+        private static void DirectoryCopy(DirectoryInfo sourceDir, DirectoryInfo destDir)
+        {
+            DirectoryInfo[] sourceSubDirs = sourceDir.GetDirectories();
+
+            FileUtils.CreateDirectoryIfNotExists(destDir.FullName, true);
+
+            FileInfo[] sourceFiles = sourceDir.GetFiles();
+            foreach (FileInfo file in sourceFiles)
+            {
+                string destFilePath = Path.Combine(destDir.FullName, file.Name);
+                file.CopyTo(destFilePath, true);
+            }
+
+            foreach (DirectoryInfo subDir in sourceSubDirs)
+            {
+                string newDestDirPath = Path.Combine(destDir.FullName, subDir.Name);
+                var newDestDirInfo = new DirectoryInfo(newDestDirPath);
+                DirectoryCopy(subDir, newDestDirInfo);
+            }
+        }
+
+        // Needed for NHibernate.
+        private void MarkDirty()
+        {
+            unchecked
+            {
+                dirtyCounter++;
+            }
+        }
+
+        #endregion
 
         #endregion
     }

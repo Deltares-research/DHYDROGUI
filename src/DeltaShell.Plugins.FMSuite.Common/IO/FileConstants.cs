@@ -7,8 +7,7 @@
     {
         #region Directory names
 
-        public const string InputDirectoryName = "input";
-        public const string OutputDirectoryName = "output";
+        
         public const string PrefixDelwaqDirectoryName = "DFM_DELWAQ_";
         public const string SnappedFeaturesDirectoryName = "snapped";
 
@@ -56,6 +55,7 @@
         public const string MeteoFileExtension = "_meteo" + TimFileExtension;
         public const string BoundaryExternalForcingFileExtension = "_bnd" + ExternalForcingFileExtension;
 
+        public const string MdwFileExtension = ".mdw";
         public const string SpectrumFileExtension = ".sp2";
 
         #endregion
