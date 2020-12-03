@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Functions;
@@ -10,11 +9,9 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.NetworkEditor;
-using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using SharpTestsEx;
 
@@ -25,35 +22,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     [Category(TestCategory.Slow)]
     public class NHibernateRealTimeControlIntegrationTests : NHibernateIntegrationTestBase
     {
-        [TestFixtureSetUp]
-        public override void TestFixtureSetUp()
-        {
-            base.TestFixtureSetUp();
-            factory.AddPlugin(new RealTimeControlGuiPlugin());
-            factory.AddPlugin(new NetworkEditorApplicationPlugin());
-            factory.AddPlugin(new RealTimeControlApplicationPlugin());
-            factory.AddPlugin(new CommonToolsApplicationPlugin());
-        }
-
-        [Test]
-        public void TestRtcOutputFileFunctionStoreIsPersisted()
-        {
-            var rtcModel = new RealTimeControlModel()
-            {
-                OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore
-                {
-                    Features = new List<IFeature>(),
-                    Path = @"C:\SomeDirectory\SomeFile.nc"
-                }
-            };
-
-            RealTimeControlModel retrievedEntity = SaveAndRetrieveObject(rtcModel);
-
-            Assert.IsNotNull(retrievedEntity);
-            Assert.NotNull(retrievedEntity.OutputFileFunctionStore);
-            Assert.AreEqual(rtcModel.OutputFileFunctionStore.Path, retrievedEntity.OutputFileFunctionStore.Path);
-        }
-
         [Test]
         public void SaveAndLoadProjectWithRtcModel()
         {
@@ -284,7 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             DirectionalCondition retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateDirectionalCondition(null));
             Assert.IsNotNull(retrievedEntity);
-            Assert.IsInstanceOfType(typeof(DirectionalCondition), retrievedEntity);
+            Assert.That(retrievedEntity, Is.InstanceOf<DirectionalCondition>());
             Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfConditions(RealTimeControlTestHelper.GenerateDirectionalCondition(null), retrievedEntity));
         }
 
@@ -438,6 +406,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             LookupSignal retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateLookupSignal());
             Assert.IsNotNull(retrievedEntity);
             Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfLookupSignals(RealTimeControlTestHelper.GenerateLookupSignal(), retrievedEntity));
+        }
+
+        [OneTimeSetUp]
+        public override void OneTimeSetUp()
+        {
+            base.OneTimeSetUp();
+            factory.AddPlugin(new RealTimeControlGuiPlugin());
+            factory.AddPlugin(new NetworkEditorApplicationPlugin());
+            factory.AddPlugin(new RealTimeControlApplicationPlugin());
+            factory.AddPlugin(new CommonToolsApplicationPlugin());
         }
     }
 }

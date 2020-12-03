@@ -8,7 +8,6 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
@@ -393,8 +392,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Check SedConc has generated only one Xyz File and one entry in the Ext file
                  * for SedConc but not for CustomProp.       */
                 string extWritten = File.ReadAllText(extForceFile);
-                Assert.That(extWritten, Is.StringContaining("QUANTITY=initialsedfracmysedimentName"));
-                Assert.That(extWritten, Is.StringContaining("FILENAME=mysedimentName_SedConc.xyz"));
+                Assert.That(extWritten, Does.Contain("QUANTITY=initialsedfracmysedimentName"));
+                Assert.That(extWritten, Does.Contain("FILENAME=mysedimentName_SedConc.xyz"));
                 /* Nothing related to the customProp */
                 Assert.That(extWritten, Is.Not.StringContaining("mysedimentName_IniSedThick"));
                 Assert.That(extWritten, Is.Not.StringContaining("IniSedThick"));

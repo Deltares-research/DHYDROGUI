@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using NUnit.Framework;
@@ -22,27 +21,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void TestImportItem_NoPath()
         {
             var heightImporter = new HydroAreaEmbankmentHeightImporter();
-            heightImporter.ImportItem("");
+            Assert.That(() => heightImporter.ImportItem(""), Throws.InvalidOperationException);
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void TestImportItem_NoTarget()
         {
             var heightImporter = new HydroAreaEmbankmentHeightImporter();
-            heightImporter.ImportItem(_embankmentHeightsPath);
+            Assert.That(() => heightImporter.ImportItem(_embankmentHeightsPath), Throws.InvalidOperationException);
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void TestImportItem_WrongTargetType()
         {
             var heightImporter = new HydroAreaEmbankmentHeightImporter();
-            heightImporter.ImportItem(_embankmentHeightsPath, new object());
+            Assert.That(() => heightImporter.ImportItem(_embankmentHeightsPath, new object()), Throws.InvalidOperationException);
         }
 
         [Test]

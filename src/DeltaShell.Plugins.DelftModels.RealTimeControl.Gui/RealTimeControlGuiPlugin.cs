@@ -219,7 +219,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return new RtcOutputFileFunctionStoreNodePresenter();
             yield return new ControlGroupCollectionNodePresenter {GuiPlugin = this};
             yield return new ControlGroupNodePresenter(this);
-            yield return new RealTimeControlRestartFileNodePresenter(this);
+            yield return new RealTimeControlInputRestartFileNodePresenter(this);
+            yield return new RealTimeControlOutputRestartFileNodePresenter(this);
+            yield return new ReadOnlyOutputTextDocumentNodePresenter();
+            yield return new OutputTreeFolderNodePresenter();
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -340,7 +343,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         {
             var realTimeControlModel = (RealTimeControlModel) ((ToolStripMenuItem) sender).Tag;
 
-            //var choices = new[] { emptyGroup, pidGroup, hydraulicGroup };
             string[] choices = RealTimeControlModelHelper.StandardControlGroups.ToArray();
 
             var dialog = new ListBasedDialog

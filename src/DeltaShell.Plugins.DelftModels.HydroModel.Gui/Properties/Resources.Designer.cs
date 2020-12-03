@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -179,6 +179,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties {
         internal static string HydroModelGuiPlugin_GetContextMenu_Validate___ {
             get {
                 return ResourceManager.GetString("HydroModelGuiPlugin_GetContextMenu_Validate___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Model merge with {1} validation Report.
+        /// </summary>
+        internal static string MergeModelValidationView__0__Model_merge_with__1__validation_Report {
+            get {
+                return ResourceManager.GetString("MergeModelValidationView__0__Model_merge_with__1__validation_Report", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merge successful.
+        /// </summary>
+        internal static string MergeModelValidationView_Merge_successful {
+            get {
+                return ResourceManager.GetString("MergeModelValidationView_Merge_successful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refreshing....
+        /// </summary>
+        internal static string Refreshing {
+            get {
+                return ResourceManager.GetString("Refreshing", resourceCulture);
             }
         }
         

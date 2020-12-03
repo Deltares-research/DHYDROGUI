@@ -12,7 +12,6 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
@@ -891,7 +890,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             var expectedMsgHeader =
                 $"During reading the structures file ({copyOfIniInTempFilePath}), the following warnings were reported";
-            Assert.That(msg, Is.StringStarting(expectedMsgHeader), "Expected the header of the message to be different:");
+            Assert.That(msg, Does.StartWith(expectedMsgHeader), "Expected the header of the message to be different:");
 
             List<string> subMsgs = msg.Split(new[]
             {

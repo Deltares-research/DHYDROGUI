@@ -15,16 +15,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// <summary>
         /// Creates a new <see cref="ObservationCrossSectionLayerSubProvider"/>.
         /// </summary>
-        /// <param name="factory"> The factory to create the layers with. </param>
+        /// <param name="instanceCreator"> The factory to create the layers with. </param>
         /// <exception cref="ArgumentNullException">
-        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// Throw when <paramref name="instanceCreator"/> is <c>null</c>.
         /// </exception>
-        public ObservationCrossSectionLayerSubProvider(IWaveLayerFactory factory) : base(factory) {}
+        public ObservationCrossSectionLayerSubProvider(IWaveLayerInstanceCreator instanceCreator) : base(instanceCreator) {}
 
-        protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveModel model) =>
-            Equals(features, model.ObservationCrossSections);
+        protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveFeatureContainer featureContainer) =>
+            Equals(features, featureContainer.ObservationCrossSections);
 
         protected override ILayer CreateFeatureLayer(IWaveModel model) =>
-            Factory.CreateObservationCrossSectionLayer(model);
+            InstanceCreator.CreateObservationCrossSectionLayer(model);
     }
 }

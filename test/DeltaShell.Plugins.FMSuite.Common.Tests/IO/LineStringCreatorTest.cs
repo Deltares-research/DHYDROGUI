@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+﻿using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -27,7 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Cannot create poly line with less than 2 points.")]
         public void GivenCollectionOfCoordinatesSmallerThan2_WhenCreatingLineString_ThenArgumentExceptionIsThrown()
         {
             // Given
@@ -37,7 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             };
 
             // When/Then
-            LineStringCreator.CreateLineString(coordinates);
+            Assert.That(() => LineStringCreator.CreateLineString(coordinates),
+                Throws.ArgumentException.With.Message.EqualTo("Cannot create poly line with less than 2 points."));
         }
     }
 }

@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     {
         private FlowFMApplicationPlugin plugin;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             plugin = new FlowFMApplicationPlugin();

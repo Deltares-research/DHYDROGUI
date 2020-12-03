@@ -117,9 +117,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 yield return windField;
             }
 
-            //uncomment when required:
-            //yield return Grid;
-
             yield return InitialSalinity;
             yield return Viscosity;
             yield return Diffusivity;

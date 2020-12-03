@@ -6,7 +6,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -216,12 +215,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
         }
 
-        private IEnumerable<Func<string, IList<FixedWeir>>> GetFixedWeirReadFunctions()
+        private static IEnumerable<Func<string, IList<FixedWeir>>> GetFixedWeirReadFunctions()
         {
             return GetReadFunctions<FixedWeir>();
         }
 
-        private IEnumerable<Func<string, IList<Feature2D>>> GetFeature2DReadFunctions()
+        private static IEnumerable<Func<string, IList<Feature2D>>> GetFeature2DReadFunctions()
         {
             return GetReadFunctions<Feature2D>();
         }

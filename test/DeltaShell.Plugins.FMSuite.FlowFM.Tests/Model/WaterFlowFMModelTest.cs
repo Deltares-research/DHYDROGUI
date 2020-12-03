@@ -17,6 +17,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -1159,104 +1160,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             var messageList = new List<string>
             {
-                "Exporting to mdu file",
                 "Initializing",
-                "0,00 %",
-                "00:17:59 (1,39 %)",
-                "00:10:12 (2,78 %)",
-                "00:07:13 (4,17 %)",
-                "00:05:20 (5,56 %)",
-                "00:04:14 (6,94 %)",
-                "00:03:32 (8,33 %)",
-                "00:03:00 (9,72 %)",
-                "00:02:35 (11,11 %)",
-                "00:02:16 (12,50 %)",
-                "00:02:01 (13,89 %)",
-                "00:01:48 (15,28 %)",
-                "00:01:38 (16,67 %)",
-                "00:01:29 (18,06 %)",
-                "00:01:22 (19,44 %)",
-                "00:01:15 (20,83 %)",
-                "00:01:09 (22,22 %)",
-                "00:01:04 (23,61 %)",
-                "00:01:00 (25,00 %)",
-                "00:00:56 (26,39 %)",
-                "00:00:53 (27,78 %)",
-                "00:00:50 (29,17 %)",
-                "00:00:46 (30,56 %)",
-                "00:00:44 (31,94 %)",
-                "00:00:41 (33,33 %)",
-                "00:00:39 (34,72 %)",
-                "00:00:37 (36,11 %)",
-                "00:00:35 (37,50 %)",
-                "00:00:33 (38,89 %)",
-                "00:00:31 (40,28 %)",
-                "00:00:30 (41,67 %)",
-                "00:00:28 (43,06 %)",
-                "00:00:27 (44,44 %)",
-                "00:00:25 (45,83 %)",
-                "00:00:24 (47,22 %)",
-                "00:00:23 (48,61 %)",
-                "00:00:21 (50,00 %)",
-                "00:00:20 (51,39 %)",
-                "00:00:19 (52,78 %)",
-                "00:00:18 (54,17 %)",
-                "00:00:17 (55,56 %)",
-                "00:00:16 (56,94 %)",
-                "00:00:16 (58,33 %)",
-                "00:00:15 (59,72 %)",
-                "00:00:14 (61,11 %)",
-                "00:00:13 (62,50 %)",
-                "00:00:12 (63,89 %)",
-                "00:00:12 (65,28 %)",
-                "00:00:11 (66,67 %)",
-                "00:00:10 (68,06 %)",
-                "00:00:10 (69,44 %)",
-                "00:00:09 (70,83 %)",
-                "00:00:08 (72,22 %)",
-                "00:00:08 (73,61 %)",
-                "00:00:07 (75,00 %)",
-                "00:00:07 (76,39 %)",
-                "00:00:06 (77,78 %)",
-                "00:00:06 (79,17 %)",
-                "00:00:05 (80,56 %)",
-                "00:00:05 (81,94 %)",
-                "00:00:04 (83,33 %)",
-                "00:00:04 (84,72 %)",
-                "00:00:03 (86,11 %)",
-                "00:00:03 (87,50 %)",
-                "00:00:03 (88,89 %)",
-                "00:00:02 (90,28 %)",
-                "00:00:02 (91,67 %)",
-                "00:00:01 (93,06 %)",
-                "00:00:01 (94,44 %)",
-                "00:00:01 (95,83 %)",
-                "00:00:00 (97,22 %)",
-                "00:00:00 (98,61 %)",
-                "00:00:00 (100,00 %)",
-                "Reading map file",
-                "Reading his file",
-                "Reading dia file",
-                "00:00:00 (100,00 %)"
+                "0,00%",
+                "0,00%",
+                "Initializing",
+                "0,00%",
+                "0,00%"
             };
 
             try
             {
-                var counter = 0;
-
                 var fmModel = new WaterFlowFMModel();
                 fmModel.ImportFromMdu(mduFilePath);
 
                 fmModel.ReferenceTime = fmModel.StartTime;
-                fmModel.ProgressChanged += (sender, args) =>
-                {
-                    Assert.AreEqual(fmModel.ProgressText, messageList[counter],
-                                    "Progress text when running FM model is different than expected.");
-                    counter++;
-                };
+
+                var messages = new List<string>();
+                fmModel.ProgressChanged += (sender, args) => { messages.Add(fmModel.ProgressText); };
+
                 ActivityRunner.RunActivity(fmModel);
-                counter = 0;
                 ActivityRunner.RunActivity(fmModel);
+
+                Assert.That(messages, Is.EquivalentTo(messageList));
             }
             finally
             {
@@ -1993,6 +1918,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.AreEqual(restartStopTime, retrievedRestartStopTime);
         }
 
+        [Test]
+        public void Constructor_WaterFlowFMModelShouldBeInstanceOfICoupledModel()
+        {
+            // Arrange, Act
+            var rtcModel = new WaterFlowFMModel();
+
+            // Assert
+            Assert.IsInstanceOf<ICoupledModel>(rtcModel);
+        }
+
+        [Test]
+        public void GetDataItemsUsedForCouplingModel_ForInputRoles_ShouldReturnCorrespondingDataItems()
+        {
+            // Arrange
+            var fmModel = new WaterFlowFMModel();
+            var weir = new Weir2D();
+            fmModel.Area.Weirs.Add(weir);
+
+            // Act
+            IList<IDataItem> couplingDataItems = ((ICoupledModel) fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Input).ToList();
+
+            // Assert
+            Assert.AreEqual(1, couplingDataItems.Count);
+        }
+
+        [Test]
+        public void GetDataItemsUsedForCouplingModel_ForOutputRoles_ShouldReturnCorrespondingDataItems()
+        {
+            // Arrange
+            var fmModel = new WaterFlowFMModel();
+            var observationPoint = new GroupableFeature2DPoint();
+            fmModel.Area.ObservationPoints.Add(observationPoint);
+
+            // Act
+            IList<IDataItem> couplingDataItems = ((ICoupledModel) fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Output).ToList();
+
+            // Assert
+            Assert.AreEqual(2, couplingDataItems.Count);
+        }
+
+        [Test]
+        public void GetDataItemsUsedForCouplingModel_ForNoneRoles_ShouldReturnEmptyList()
+        {
+            // Arrange
+            ICoupledModel fmModel = new WaterFlowFMModel();
+
+            // Act
+            IList<IDataItem> couplingDataItems = fmModel.GetDataItemsUsedForCouplingModel(DataItemRole.Input).ToList();
+
+            // Assert
+            CollectionAssert.IsEmpty(couplingDataItems);
+        }
+
+        [Test]
+        [TestCase(false)]
+        [TestCase(true)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ExportTo_OutputDirPropertyValue_ShouldAlwaysBeOutput(bool runsInIntegratedModel)
+        {
+            // Setup
+            using (var temp = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel {RunsInIntegratedModel = runsInIntegratedModel})
+            {
+                string targetFilePath = Path.Combine(temp.Path, "test.mdu");
+
+                // Call
+                model.ExportTo(targetFilePath);
+
+                // Assert
+                Assert.That(targetFilePath, Does.Exist);
+                string[] lines = File.ReadAllLines(targetFilePath);
+                string outputDirValue = GetPropertyValue(lines, "OutputDir");
+                Assert.That(outputDirValue, Is.EqualTo("output"));
+            }
+        }
+
         [TestCase(
             new[]
             {
@@ -2137,6 +2138,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
+        }
+
+        private static string GetPropertyValue(string[] lines, string propName)
+        {
+            string line = lines.SingleOrDefault(l => l.StartsWith(propName));
+            Assert.That(line, Is.Not.Null);
+
+            string[] fields = line.Split('=', '#');
+            Assert.That(fields, Has.Length.GreaterThan(1));
+
+            return fields[1].Trim();
         }
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)

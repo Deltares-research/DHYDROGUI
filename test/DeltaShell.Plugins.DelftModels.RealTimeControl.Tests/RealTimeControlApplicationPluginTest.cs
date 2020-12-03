@@ -13,6 +13,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     public class RealTimeControlApplicationPluginTest
     {
         [Test]
+        public void FileFormatVersion_ShouldReturnCurrentVersionNumber()
+        {
+            var applicationPlugin = new RealTimeControlApplicationPlugin();
+            Assert.AreEqual("3.8.0.0", applicationPlugin.FileFormatVersion);
+        }
+
+        [Test]
         [Category(TestCategory.Integration)]
         public void GetParentProjectItem_WhenSelectionIsCompositeActivity_ThenHelperMethodReturnsCompositeActivityAndThisWillBeUsed()
         {

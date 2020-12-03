@@ -93,10 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
                 foreach (IDataItem orphanedDataItem in orphanedDataItems)
                 {
-                    if (orphanedDataItem.Parent != null)
-                    {
-                        orphanedDataItem.Parent.Children.Remove(orphanedDataItem);
-                    }
+                    orphanedDataItem.Parent?.Children.Remove(orphanedDataItem);
                 }
 
                 var hydroModelAsTimeDependent = (ITimeDependentModel) hydroModel;

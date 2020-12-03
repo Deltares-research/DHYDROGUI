@@ -23,12 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         {
             base.Dispose(disposing);
 
-            if (disposing)
+            if (disposing && grid != null)
             {
-                if (grid != null)
-                {
-                    ((INotifyPropertyChange) grid).PropertyChanged -= OnGridPropertyChanged;
-                }
+                ((INotifyPropertyChange) grid).PropertyChanged -= OnGridPropertyChanged;
             }
         }
 

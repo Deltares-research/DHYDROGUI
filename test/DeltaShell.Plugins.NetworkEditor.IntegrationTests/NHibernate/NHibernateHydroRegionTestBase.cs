@@ -8,10 +8,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 {
     public class NHibernateHydroRegionTestBase : NHibernateIntegrationTestBase
     {
-        [TestFixtureSetUp]
-        public override void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
             factory.AddPlugin(new NetworkEditorGuiPlugin());
         }

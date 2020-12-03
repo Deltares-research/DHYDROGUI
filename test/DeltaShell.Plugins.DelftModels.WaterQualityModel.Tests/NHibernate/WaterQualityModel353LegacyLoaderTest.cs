@@ -2,8 +2,6 @@
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate;
 using NUnit.Framework;
 using Does = NUnit.Framework.Does;
@@ -46,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 legacyLoader.OnAfterProjectMigrated(project);
 
                 // Assert
-                Assert.That(explicitWorkDir, Does.Not.Exist());
+                Assert.That(explicitWorkDir, Does.Not.Exist);
             }
         }
     }

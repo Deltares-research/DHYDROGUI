@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
                     CreateFunctions("BalanceStartTime", "BalanceStopTime", "BalanceTimeStep");
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(waterQualityTimeSettingsType));
             }
         }
 
@@ -81,13 +81,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
             timeStepFunc = CreateFunction<TimeSpan>(timeSpan);
         }
 
-        private Func<Nullable<T>, T> CreateFunction<T>(string propertyName) where T : struct
+        private Func<T?, T> CreateFunction<T>(string propertyName) where T : struct
         {
             return CreateFunction(() => (T) TypeUtils.GetPropertyValue(waterQualityModelSettings, propertyName),
                                   t => TypeUtils.SetPropertyValue(waterQualityModelSettings, propertyName, t));
         }
 
-        private static Func<Nullable<T>, T> CreateFunction<T>(Func<T> getVariable, Action<T> setVariable)
+        private static Func<T?, T> CreateFunction<T>(Func<T> getVariable, Action<T> setVariable)
             where T : struct
         {
             return t =>

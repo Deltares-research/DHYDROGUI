@@ -6,7 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Dimr;
-using DeltaShell.Dimr.xsd;
+using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -239,9 +239,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 CoupleModelsByDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item);
             }
 
-            foreach (ILinkedDataItemsModel linkedModel in subModels.OfType<ILinkedDataItemsModel>())
+            foreach (IControllingModel controllingModel in subModels.OfType<IControllingModel>())
             {
-                linkedModel.CleanUpModelAfterModelCoupling();
+                controllingModel.CleanUpModelAfterModelCoupling();
             }
         }
 

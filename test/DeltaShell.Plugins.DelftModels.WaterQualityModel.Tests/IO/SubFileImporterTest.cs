@@ -54,10 +54,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Substance process library is not set")]
         public void ImporterShouldThrowOnSubstanceProcessLibraryIsNull()
         {
-            new SubFileImporter().Import(null, Path.Combine(TestHelper.GetTestDataDirectory(), "ValidWaqModels", "Eutrof_simple_sobek.sub"));
+            Assert.That(() => new SubFileImporter().Import(null, Path.Combine(TestHelper.GetTestDataDirectory(), "ValidWaqModels", "Eutrof_simple_sobek.sub")),
+                Throws.InvalidOperationException.With.Message.EqualTo("Substance process library is not set"));
         }
 
         [Test]
@@ -320,8 +320,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
         private CultureInfo originalCulture;
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             originalCulture = Thread.CurrentThread.CurrentCulture;
 
@@ -331,8 +331,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             LogHelper.ConfigureLogging(Level.Warn);
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             LogHelper.ResetLogging();
 

@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return "3.7.0.0";
+                return "3.8.0.0";
             }
         }
 
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     && !(owner is ParallelActivity)
                     && !(owner is SequentialActivity)
                     && !((ICompositeActivity) owner).Activities.OfType<RealTimeControlModel>().Any(), // Don't allow multiple realtime control models in one composite activity
-                CreateModel = owner => new RealTimeControlModel("Real-Time Control")
+                CreateModel = owner => new RealTimeControlModel("Real_Time_Control")
             };
         }
 

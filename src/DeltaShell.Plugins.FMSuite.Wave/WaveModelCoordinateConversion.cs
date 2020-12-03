@@ -94,23 +94,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             // convert features
-            foreach (IFeature feature in GetAllModelFeatures(model))
+            foreach (IFeature feature in model.FeatureContainer.GetAllFeatures())
             {
                 feature.Geometry = GeometryTransform.TransformGeometry(feature.Geometry,
                                                                        transformation.MathTransform);
             }
         }
 
-        public static IEnumerable<IFeature> GetAllModelFeatures(WaveModel model)
-        {
-            return model.ObservationPoints.OfType<IFeature>()
-                        .Concat(model.ObservationCrossSections)
-                        .Concat(model.Obstacles);
-        }
-
         private static bool CanConvertModel(WaveModel model, ICoordinateTransformation transformation)
         {
-            List<IFeature> features = GetAllModelFeatures(model).ToList();
+            List<IFeature> features = model.FeatureContainer.GetAllFeatures().ToList();
             return CoordinateSystemValidator.CanConvertByTransformation(
                 features.Select(f => f.Geometry), transformation);
         }

@@ -50,17 +50,6 @@ namespace DeltaShell.NGHS.IO.Grid
             Marshal.Copy(mesh.nodey, rc_twodnodey, 0, nodes2D);
             Marshal.Copy(mesh.nodez, rc_twodnodez, 0, nodes2D);
 
-            //Free memory
-//            Marshal.FreeCoTaskMem(mesh.nodex);
-//            Marshal.FreeCoTaskMem(mesh.nodey);
-//            Marshal.FreeCoTaskMem(mesh.nodez);
-//            Marshal.FreeCoTaskMem(mesh.edge_nodes);
-//
-//            mesh.nodex = IntPtr.Zero;
-//            mesh.nodey = IntPtr.Zero;
-//            mesh.nodez = IntPtr.Zero;
-//            mesh.edge_nodes = IntPtr.Zero;
-
             return GridApiDataSet.GridConstants.NOERR;
         }
 
@@ -93,10 +82,10 @@ namespace DeltaShell.NGHS.IO.Grid
                 // To the first element of every new dimension of the array.
                 var pIntArray = (IntPtr) (startPos + (Marshal.SizeOf(typeof(int)) * numValuesPerElement * i));
 
-                // OneDArrayOfInt will hold values ​​of one dimension of the 2D array,
+                // OneDArrayOfInt will hold values of one dimension of the 2D array,
                 var OneDArrayOfInt = new int[numValuesPerElement];
 
-                // Copy the values ​​of this dimension.
+                // Copy the values of this dimension.
                 Marshal.Copy(pIntArray, OneDArrayOfInt, 0, numValuesPerElement);
                 for (var j = 0; j < numValuesPerElement; j++)
                 {

@@ -298,7 +298,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public void Dispose()
         {
             Dispose(true);
-            // Must always ensure this happens to prevent GC deadlock on project close!
             GC.SuppressFinalize(this);
         }
 
@@ -357,7 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             Thread.Sleep(100); // wait for process to truly exit
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
             {
@@ -380,7 +379,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         ~RemoteFlexibleMeshModelApi()
         {
-            // in case someone forgets to dispose..
             Dispose(false);
         }
     }

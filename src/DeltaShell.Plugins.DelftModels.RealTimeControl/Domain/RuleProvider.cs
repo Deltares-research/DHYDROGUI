@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
-    public class RuleProvider
+    public static class RuleProvider
     {
         public static IEnumerable<Type> GetAllRules()
         {
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 return "Proxy Rule";
             }
 
-            throw new ArgumentException(@"Unsupported type", "ruleType");
+            throw new ArgumentException(@"Unsupported type", nameof(ruleType));
         }
     }
 }

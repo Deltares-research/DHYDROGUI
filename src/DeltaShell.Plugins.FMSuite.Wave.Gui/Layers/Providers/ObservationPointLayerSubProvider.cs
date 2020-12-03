@@ -15,16 +15,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// <summary>
         /// Creates a new instance of <see cref="ObservationPointLayerSubProvider"/>.
         /// </summary>
-        /// <param name="factory"> The factory to create the layers with. </param>
+        /// <param name="instanceCreator"> The factory to create the layers with. </param>
         /// <exception cref="ArgumentNullException">
-        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// Throw when <paramref name="instanceCreator"/> is <c>null</c>.
         /// </exception>
-        public ObservationPointLayerSubProvider(IWaveLayerFactory factory) : base(factory) {}
+        public ObservationPointLayerSubProvider(IWaveLayerInstanceCreator instanceCreator) : base(instanceCreator) {}
 
-        protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveModel model) =>
-            Equals(features, model.ObservationPoints);
+        protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveFeatureContainer featureContainer) =>
+            Equals(features, featureContainer.ObservationPoints);
 
         protected override ILayer CreateFeatureLayer(IWaveModel model) =>
-            Factory.CreateObservationPointsLayer(model);
+            InstanceCreator.CreateObservationPointsLayer(model);
     }
 }

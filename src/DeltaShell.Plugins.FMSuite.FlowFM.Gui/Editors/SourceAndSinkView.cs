@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             if (includeMomentumCheckBox.Checked)
             {
-                if (!(sourceAndSink.Area > 0))
+                if (sourceAndSink.Area <= 0)
                 {
                     sourceAndSink.Area = 1;
                 }

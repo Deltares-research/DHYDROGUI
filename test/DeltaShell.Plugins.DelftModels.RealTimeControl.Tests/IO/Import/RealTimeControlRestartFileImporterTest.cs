@@ -2,8 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using NUnit.Framework;
@@ -35,7 +34,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Import
             Assert.That(importer.Category, Is.EqualTo("XML"));
             Assert.That(importer.Description, Is.EqualTo(string.Empty));
             Assert.That(importer.Image, Is.Not.Null);
-            Assert.That(importer.SupportedItemTypes, Collection.OnlyContains(typeof(RealTimeControlRestartFile)));
+            CollectionContainsOnlyAssert.AssertContainsOnly(importer.SupportedItemTypes, typeof(RealTimeControlRestartFile));
+            Assert.That(importer.SupportedItemTypes, Has.Exactly(1).Matches<Type>(x => x == typeof(RealTimeControlRestartFile)));
             Assert.That(importer.CanImportOnRootLevel, Is.False);
             Assert.That(importer.FileFilter, Is.EqualTo("Real Time Control restart files|*.xml"));
             Assert.That(importer.TargetDataDirectory, Is.Null);

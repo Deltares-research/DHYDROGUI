@@ -280,6 +280,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Forcing Type &quot;Spectrum based (From file)&quot; has been selected but no file has been added..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_FilePath_cannot_be_empty {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_FilePath_cannot_be_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Model start time does not precede any of the time points of &apos;{0}&apos;.
         /// </summary>
         public static string WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_of__0__ {
@@ -503,6 +512,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred during the migration of one of the D-Waves models in this project, most likely due to two or more models sharing the same name within the project.
+        ///Please reboot the application and create a new project and import the models individually with the corresponding importers to ensure everything is in a valid state..
+        /// </summary>
+        public static string WaveDirectoryStructureMigrationHelper_MigrateFileStructure_ErrorMigrateFileStructure {
+            get {
+                return ResourceManager.GetString("WaveDirectoryStructureMigrationHelper_MigrateFileStructure_ErrorMigrateFileStruct" +
+                        "ure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Migrating &apos;{0}&apos; to 1.2.0.0.
         /// </summary>
         public static string WaveDirectoryStructureMigrationHelper_MigrateMdw_Migrating___0___to_1_2_0_0 {
@@ -548,6 +568,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_f" +
                         "alse_when_using_Spherical_Coordinate_Systems_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connecting of the model output.
+        /// </summary>
+        public static string WaveModel_Connect_model_output {
+            get {
+                return ResourceManager.GetString("WaveModel_Connect_model_output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No .mdw path could be found in {0}, skipping copying output data..
+        /// </summary>
+        public static string WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_output_data_ {
+            get {
+                return ResourceManager.GetString("WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_outp" +
+                        "ut_data_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The output source path {0} does not exist, skipping copying output data..
+        /// </summary>
+        public static string WaveModel_CopyRunDataTo_The_output_source_path__0__does_not_exist__skipping_copying_output_data_ {
+            get {
+                return ResourceManager.GetString("WaveModel_CopyRunDataTo_The_output_source_path__0__does_not_exist__skipping_copyi" +
+                        "ng_output_data_", resourceCulture);
             }
         }
         
@@ -610,6 +659,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saving of the model output.
+        /// </summary>
+        public static string WaveModel_Saving_of_the_model_output {
+            get {
+                return ResourceManager.GetString("WaveModel_Saving_of_the_model_output", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to With WaveSetup set to True parallel runs will fail, normal runs with lakes will produce unreliable values..
         /// </summary>
         public static string WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_ {
@@ -649,12 +707,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The directory at {0} does not exist, disconnecting output instead..
+        /// </summary>
+        public static string WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_output_instead_ {
+            get {
+                return ResourceManager.GetString("WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_outpu" +
+                        "t_instead_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file: {0} due to {1}..
+        /// </summary>
+        public static string WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__ {
+            get {
+                return ResourceManager.GetString("WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified {0} at {1} does not exist..
+        /// </summary>
+        public static string WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__0__at__1__does_not_exist_ {
+            get {
+                return ResourceManager.GetString("WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__" +
+                        "0__at__1__does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Option &quot;Write Tables&quot; is selected but there are no Observation Points in your model..
         /// </summary>
         public static string WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_ {
             get {
                 return ResourceManager.GetString("WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_ther" +
                         "e_are_no_Observation_Points_in_your_model_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No spectrum file has been selected..
+        /// </summary>
+        public static string WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected {
+            get {
+                return ResourceManager.GetString("WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected", resourceCulture);
             }
         }
         

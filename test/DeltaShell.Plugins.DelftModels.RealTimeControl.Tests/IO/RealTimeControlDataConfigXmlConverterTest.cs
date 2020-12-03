@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
@@ -48,11 +48,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
         [TestCase(InputId, typeof(Input))]
         [TestCase(OutputId, typeof(Output))]
-        public void GivenAnRTCTimeSeriesXMLElement_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenCollectionOfConnectionPointsIsReturned(
+        public void GivenAnRTCTimeSeriesComplexTypeElement_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenCollectionOfConnectionPointsIsReturned(
             string elementId, Type expectedConnectionPointType)
         {
             // Given
-            List<RTCTimeSeriesXML> timeSeriesElements = CreateTimeSeriesXml(elementId);
+            List<RTCTimeSeriesComplexType> timeSeriesElements = CreateTimeSeriesXml(elementId);
 
             // When
             List<ConnectionPoint> connectionPoints =
@@ -71,11 +71,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         [TestCase(OutputId + RtcXmlTag.OutputAsInput + "something")]
         [TestCase(RtcXmlTag.Delayed + OutputId)]
         [TestCase(ControlGroupName + "/" + "time_rule_name")]
-        public void GivenAnRTCTimeSeriesXMLElementWithInvalidOrWithoutValidTag_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenElementIsIgnored(
+        public void GivenAnRTCTimeSeriesComplexTypeElementWithInvalidOrWithoutValidTag_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenElementIsIgnored(
             string elementId)
         {
             // Given
-            List<RTCTimeSeriesXML> timeSeriesElements = CreateTimeSeriesXml(elementId);
+            List<RTCTimeSeriesComplexType> timeSeriesElements = CreateTimeSeriesXml(elementId);
 
             // When
             IEnumerable<ConnectionPoint> connectionPoints =
@@ -87,11 +87,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
         [TestCase(InputId)]
         [TestCase(OutputId)]
-        public void GivenAnRTCTimeSeriesXMLElementWithoutOpenExchangeItemWithId_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenElementIsIgnored(
+        public void GivenAnRTCTimeSeriesComplexTypeElementWithoutOpenExchangeItemWithId_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenElementIsIgnored(
             string elementId)
         {
             // Given
-            List<RTCTimeSeriesXML> timeSeriesElements = CreateTimeSeriesXml(elementId, true);
+            List<RTCTimeSeriesComplexType> timeSeriesElements = CreateTimeSeriesXml(elementId, true);
 
             // When
             IEnumerable<ConnectionPoint> connectionPoints =
@@ -101,14 +101,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             AssertNotNullAndEmpty(connectionPoints);
         }
 
-        private static List<RTCTimeSeriesXML> CreateTimeSeriesXml(string elementId, bool isEmpty = false)
+        private static List<RTCTimeSeriesComplexType> CreateTimeSeriesXml(string elementId, bool isEmpty = false)
         {
-            var timeSeriesElements = new List<RTCTimeSeriesXML>
+            var timeSeriesElements = new List<RTCTimeSeriesComplexType>
             {
-                new RTCTimeSeriesXML
+                new RTCTimeSeriesComplexType
                 {
                     id = elementId,
-                    OpenMIExchangeItem = new OpenMIExchangeItemXML {elementId = isEmpty ? null : "not_empty"}
+                    OpenMIExchangeItem = new OpenMIExchangeItemComplexType {elementId = isEmpty ? null : "not_empty"}
                 }
             };
             return timeSeriesElements;

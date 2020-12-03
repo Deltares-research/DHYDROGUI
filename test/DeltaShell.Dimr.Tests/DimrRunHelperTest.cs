@@ -5,7 +5,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 

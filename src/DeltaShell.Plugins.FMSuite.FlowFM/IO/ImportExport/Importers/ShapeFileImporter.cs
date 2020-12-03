@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         internal ShapeFileImporter(Func<string, ILog, IEnumerable<IFeature>> readFunc,
                                    Action<IFeature, TFeature2D, IEnumerable<TFeature2D>> afterCreateAction = null)
         {
-            this.readFunc = readFunc ?? throw new ArgumentNullException("readFunc");
+            this.readFunc = readFunc ?? throw new ArgumentNullException(nameof(readFunc));
             this.afterCreateAction = afterCreateAction;
 
             Mode = Feature2DImportExportMode.Import;

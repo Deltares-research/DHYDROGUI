@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
                     "Height of point must be in range [{0}, {1}] for {2} models, but was {3}.",
                     topLevel.ToString(CultureInfo.InvariantCulture), bottomLevel.ToString(CultureInfo.InvariantCulture),
                     GetModelType(), z);
-                throw new ArgumentOutOfRangeException("z", message);
+                throw new ArgumentOutOfRangeException(nameof(z), message);
             }
 
             int indexIn2DSpace = GetWaqSegmentIndex2D(x, y);
@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
             {
                 string message = string.Format("{0} layers should add up to ~1.0, but was adding up to {1}.", layerType,
                                                sum);
-                throw new ArgumentException(message, "relativeThicknesses");
+                throw new ArgumentException(message, nameof(relativeThicknesses));
             }
 
             sigmaLayerThicknesses = relativeThicknesses;

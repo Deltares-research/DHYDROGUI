@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
                         return;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(e));
                 }
             }
         }
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 
@@ -266,7 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     RemoveAllSedimentFractionsFromBoundaryConditionSets();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(e));
             }
         }
 
@@ -667,7 +667,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                             break;
 
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new ArgumentOutOfRangeException(nameof(e));
                     }
                 }
 
@@ -707,7 +707,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                             break;
 
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new ArgumentOutOfRangeException(nameof(e));
                     }
                 }
             }

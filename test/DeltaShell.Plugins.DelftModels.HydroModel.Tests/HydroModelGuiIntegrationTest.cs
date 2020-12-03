@@ -33,8 +33,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -82,6 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             void MainWindowShown()
             {
                 ActivityRunner.RunActivity(hydroModel);
+                Assert.AreNotEqual(ActivityStatus.Failed, hydroModel.Status);
                 gui.Selection = flow;
                 gui.CommandHandler.OpenViewForSelection(typeof(ProjectItemMapView));
                 var view = gui.DocumentViews.ActiveView as ProjectItemMapView;
@@ -191,7 +192,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     /* get the water flow fm model */
                     WaterFlowFMModel waterFlowFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.NotNull(waterFlowFmModel);
-                    Assert.That(waterFlowFmModel.Name, Is.StringContaining("FlowFM"));
+                    Assert.That(waterFlowFmModel.Name, Does.Contain("FlowFM"));
 
                     WaterFlowFMFileImporter fmImporter = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
                     Assert.IsNotNull(fmImporter);
@@ -199,7 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     WaterFlowFMModel targetFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetFmModel);
-                    Assert.That(targetFmModel.Name, Is.StringContaining(modelName));
+                    Assert.That(targetFmModel.Name, Does.Contain(modelName));
                 }
 
                 WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
@@ -228,7 +229,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 /* get the wave model */
                 WaveModel waveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
                 Assert.NotNull(waveModel);
-                Assert.That(waveModel.Name, Is.StringContaining("Waves"));
+                Assert.That(waveModel.Name, Does.Contain("Waves"));
 
                 WaveModelFileImporter waveImporter = app.FileImporters.OfType<WaveModelFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(waveImporter);
@@ -236,7 +237,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 WaveModel targetWaveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
                 Assert.IsNotNull(targetWaveModel);
-                Assert.That(targetWaveModel.Name, Is.StringContaining("te0"));
+                Assert.That(targetWaveModel.Name, Does.Contain("te0"));
             }
 
             WpfTestHelper.ShowModal(mainWindow, MainWindowShown);
@@ -393,7 +394,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     new Coordinate(99, 90),
                     new Coordinate(99, 110)
                 }),
-                CrestLevel = 2.5
+                CrestLevel = 2.5,
+                CrestWidth = 1
             });
             flow.Area.ObservationPoints.Add(new GroupableFeature2DPoint
             {

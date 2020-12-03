@@ -241,4 +241,28 @@
   <data name="WaveGuiPlugin_Boundary_Editor____0___" xml:space="preserve">
     <value>Boundary Editor ( {0} )</value>
   </data>
+  <data name="ForcingViewType_Constant_Description" xml:space="preserve">
+    <value>Parametrized (Constant)</value>
+  </data>
+  <data name="ForcingViewType_FileBased_Description" xml:space="preserve">
+    <value>Spectrum based (From file)</value>
+  </data>
+  <data name="ForcingViewType_TimeSeries_Description" xml:space="preserve">
+    <value>Parametrized (Time Series)</value>
+  </data>
+  <data name="DocumentHS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DocumentHS.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WaveOutputDataNodePresenter_Output" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="WaveOutputDataNodePresenter_Spectra" xml:space="preserve">
+    <value>Spectra</value>
+  </data>
+  <data name="WaveOutputDataNodePresenter_Map_Files" xml:space="preserve">
+    <value>Map Files</value>
+  </data>
+  <data name="WaveOutputDataNodePresenter_His_Files" xml:space="preserve">
+    <value>His Files</value>
+  </data>
 </root>

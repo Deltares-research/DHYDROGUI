@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -80,6 +80,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not parse time reference.
+        /// </summary>
+        public static string FMNetCdfFileFunctionStore_Could_not_parse_time_reference {
+            get {
+                return ResourceManager.GetString("FMNetCdfFileFunctionStore_Could_not_parse_time_reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameter {0} is not supported by our computational core and will be removed from your input file..
         /// </summary>
         public static string Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file {
@@ -96,6 +105,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
             get {
                 return ResourceManager.GetString("SnappedFeatureCollection_Calculating_the_snapped_geometry_for_feature___0___faile" +
                         "d___1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trying to generate Time series for 2D Structure: {0}, property: {1} mapped as {2}, type: {3} which is not yet supported..
+        /// </summary>
+        public static string StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_supported_ {
+            get {
+                return ResourceManager.GetString("StructureFactory_GetNotSupportedTimeSeriesMessage_Trying_to_generate_Time_series_" +
+                        "for_2D_Structure___0___property___1__mapped_as__2___type___3__which_is_not_yet_s" +
+                        "upported_", resourceCulture);
             }
         }
         
@@ -165,6 +185,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
             get {
                 return ResourceManager.GetString("StructureFile_Structure_time_series__0__will_be_written_to_the_time_series_folder" +
                         "__1__Line__2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to convert .ini structure definition &apos;{0}&apos; to actual structure..
+        /// </summary>
+        public static string StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_ {
+            get {
+                return ResourceManager.GetString("StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0__" +
+                        "_to_actual_structure_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while reading and converting 2D Structures from {0}.
+        /// </summary>
+        public static string StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_converting_2D_Structures_from__0_ {
+            get {
+                return ResourceManager.GetString("StructuresFile_ReadStructuresFileRelativeToReferenceFile_Error_while_reading_and_" +
+                        "converting_2D_Structures_from__0_", resourceCulture);
             }
         }
     }

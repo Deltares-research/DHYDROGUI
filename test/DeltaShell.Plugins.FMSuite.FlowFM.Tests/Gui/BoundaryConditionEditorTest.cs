@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Ignore] // not supported for now
+        [Ignore("Ignored.")] // not supported for now
         public void ShowWithTimeSeriesDataAndZLayers()
         {
             FlowBoundaryCondition bc = CreateBoundaryCondition(FlowBoundaryQuantityType.Velocity);
@@ -619,6 +619,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
+        }
+
+        [Test]
+        public void GivenNotSuspendedBoundaryConditionEditor_WhenResumeUpdatesAndAddData_NoExceptionThrown()
+        {
+            // Given
+            var view = new BoundaryConditionEditor
+            {
+                Data =
+                    new BoundaryConditionSet
+                    {
+                        Feature = CreateBoundaryCondition(FlowBoundaryQuantityType.Velocity).Feature,
+                        BoundaryConditions = new EventedList<IBoundaryCondition> {CreateBoundaryCondition(FlowBoundaryQuantityType.Velocity)}
+                    }
+            };
+
+            // When
+            view.ResumeUpdates();
+
+            // Then
+            Assert.DoesNotThrow(() => ((BoundaryConditionSet) view.Data).BoundaryConditions.Add(CreateBoundaryCondition(FlowBoundaryQuantityType.Velocity)));
         }
 
         private static FlowBoundaryCondition CreateBoundaryCondition(FlowBoundaryQuantityType quantity,

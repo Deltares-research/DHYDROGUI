@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -22,8 +21,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                                                    "CsvFiles",
                                                                    "dflowfm-properties.csv");
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             // trigger creation here, to make sure it's not triggered after these tests have ran.
             new WaterFlowFMModelDefinition();

@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             mocks = new MockRepository();
         }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetupFixture()
         {
             constValLookUpTable = new Dictionary<string, double>()

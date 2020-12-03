@@ -8,7 +8,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
-    public class RealTimeControlModelHelper
+    public static class RealTimeControlModelHelper
     {
         private const string EmptyGroup = "Empty group";
         private const string PidRuleGroup = "PID Rule with condition";

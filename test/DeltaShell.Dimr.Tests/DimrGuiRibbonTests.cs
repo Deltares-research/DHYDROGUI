@@ -49,7 +49,7 @@ namespace DeltaShell.Dimr.Gui.Tests
         public void TestGetRibbonControl()
         {
             var ribbon = new Ribbon();
-            Assert.That(ribbon.GetRibbonControl().GetType().Namespace, Is.StringStarting("Fluent"));
+            Assert.That(ribbon.GetRibbonControl().GetType().Namespace, Does.StartWith("Fluent"));
         }
     }
 }

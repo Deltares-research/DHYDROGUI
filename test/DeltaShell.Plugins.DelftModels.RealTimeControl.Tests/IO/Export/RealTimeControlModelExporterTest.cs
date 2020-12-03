@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 new RealTimeControlModelExporter().Export(model, tempDirectory.Path);
 
                 // Then
-                Assert.That(File.ReadAllText(Path.Combine(tempDirectory.Path, RealTimeControlXMLFiles.XmlImportState)), Is.EqualTo("file content here"));
+                Assert.That(File.ReadAllText(Path.Combine(tempDirectory.Path, RealTimeControlXmlFiles.XmlImportState)), Is.EqualTo("file content here"));
             }
         }
 
@@ -46,10 +46,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
 
                 string expectedFileContentPath = Path.Combine(tempDirectory.Path, "expected_state_import.xml");
                 RealTimeControlXmlWriter.GetStateVectorXml(tempDirectory.Path, model.ControlGroups).Save(expectedFileContentPath);
-                string exportedRestartFile = Path.Combine(tempDirectory.Path, RealTimeControlXMLFiles.XmlImportState);
+                string exportedRestartFile = Path.Combine(tempDirectory.Path, RealTimeControlXmlFiles.XmlImportState);
 
                 // Then
                 FileAssert.AreEqual(expectedFileContentPath, exportedRestartFile);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Export_ShouldSetLastExportInputFilesAndDirectoriesPathsPropertyOfModel()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                var rtcModelExporter = new RealTimeControlModelExporter();
+                var rtcModel = new RealTimeControlModel();
+
+                // Act
+                string exportDirectory = tempDirectory.Path;
+                bool result = rtcModelExporter.Export(rtcModel, exportDirectory);
+
+                // Assert
+                string[] files = Directory.GetFiles(exportDirectory);
+                string[] directories = Directory.GetDirectories(exportDirectory);
+
+                string[] allInputPaths = files.Concat(directories).ToArray();
+
+                Assert.AreEqual(allInputPaths.Length, rtcModel.LastExportedPaths.Length);
+                Assert.IsTrue(allInputPaths.Any(i=>rtcModel.LastExportedPaths.Contains(i)));
+                Assert.IsTrue(result);
             }
         }
 

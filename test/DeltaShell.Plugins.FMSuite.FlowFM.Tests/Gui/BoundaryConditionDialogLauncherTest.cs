@@ -45,13 +45,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [TestCase()]
-        [ExpectedException(typeof(ArgumentException))]
         public void GivenFlowBoundaryConditionWhenImportedWithoutOpenFileDialogThenThrowException()
         {
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries);
             var wfmodel = new WaterFlowFMModel();
 
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(null, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
+            Assert.That(() => BoundaryConditionDialogLauncher.LaunchImporterDialog(null, flowBoundaryCondition, 1, wfmodel.ReferenceTime),
+                Throws.ArgumentException);
         }
 
         [TestCase()]

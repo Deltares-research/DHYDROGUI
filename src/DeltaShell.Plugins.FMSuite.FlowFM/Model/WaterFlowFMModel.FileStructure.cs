@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -61,9 +62,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public string DelwaqOutputDirectoryPath { get; set; }
 
         public string WorkingOutputDirectoryPath =>
-            Path.Combine(WorkingDirectoryPath, DirectoryName, FileConstants.OutputDirectoryName);
+            Path.Combine(WorkingDirectoryPath, DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
-        public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, FileConstants.OutputDirectoryName);
+        public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, DirectoryNameConstants.OutputDirectoryName);
 
         public string MduSavePath => GetMduPathFromDeltaShellPath(RecursivelyGetModelDirectoryPathFromMduFile());
 
@@ -308,7 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                        : modelDir.FullName;
         }
 
-        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = FileConstants.InputDirectoryName)
+        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = DirectoryNameConstants.InputDirectoryName)
         {
             string directoryName = path != null
                                        ? Path.GetDirectoryName(path) ?? ""
@@ -366,8 +367,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public virtual string DimrExportDirectoryPath => WorkingDirectoryPath;
 
-        public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, FileConstants.InputDirectoryName);
-        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, FileConstants.OutputDirectoryName);
+        public virtual string DimrModelRelativeWorkingDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.InputDirectoryName);
+        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
         #endregion Implementation of IDimrModel
     }

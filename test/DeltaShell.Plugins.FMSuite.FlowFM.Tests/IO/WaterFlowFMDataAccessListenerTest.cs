@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private WaterFlowFMDataAccessListener dataAccessListener;
         private WaterFlowFMModel waterFlowFmModel;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             dataAccessListener = new WaterFlowFMDataAccessListener {ProjectRepository = new InMemoryProjectRepository()};
