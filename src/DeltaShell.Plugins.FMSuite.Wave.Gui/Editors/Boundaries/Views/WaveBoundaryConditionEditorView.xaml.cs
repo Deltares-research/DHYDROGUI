@@ -1,4 +1,5 @@
-﻿using DelftTools.Controls;
+﻿using System.Windows.Controls;
+using DelftTools.Controls;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
@@ -6,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
     /// <summary>
     /// Interaction logic for WaveBoundaryConditionEditorView.xaml
     /// </summary>
-    public sealed partial class WaveBoundaryConditionEditorView : IView
+    public sealed partial class WaveBoundaryConditionEditorView : UserControl, IView
     {
         /// <summary>
         /// Creates a new <see cref="WaveBoundaryConditionEditorView"/>.

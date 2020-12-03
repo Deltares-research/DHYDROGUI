@@ -302,7 +302,7 @@
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Validation\HydroModelValidatorTest.cs" />
     <Compile Include="ViewModels\HydroModelTimeSettingsViewModelTest.cs" />
-    <Compile Include="ViewModels\TimeDependentModelBaseViewModelUnitTests.cs" />
+    <Compile Include="ViewModels\TimeDependentModelViewModelTests.cs" />
     <Compile Include="WaterFlowFmModelDirectoryStructureTest.cs" />
     <Compile Include="WavesDirectoryStructureTest.cs" />
   </ItemGroup>

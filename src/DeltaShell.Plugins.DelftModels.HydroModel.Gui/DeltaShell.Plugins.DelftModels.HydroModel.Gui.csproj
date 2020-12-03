@@ -189,7 +189,7 @@
     <Compile Include="Forms\SettingsWpf\WpfSettingsViewModel.cs" />
     <Compile Include="Forms\SettingsWpf\WpfSettingsViewModelDesignInstances.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
-    <Compile Include="ViewModels\TimeDependentModelBaseViewModel.cs" />
+    <Compile Include="ViewModels\TimeDependentModelViewModel.cs" />
     <Compile Include="Views\HydroModelTimeSettingsView.xaml.cs">
       <DependentUpon>HydroModelTimeSettingsView.xaml</DependentUpon>
     </Compile>

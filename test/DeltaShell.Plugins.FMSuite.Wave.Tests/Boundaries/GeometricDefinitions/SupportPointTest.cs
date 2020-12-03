@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             void Call() => supportPoint.Distance = -1 * random.NextDouble();
             // Assert
             var exception = Assert.Throws<ArgumentOutOfRangeException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("value"));
+            Assert.That(exception.ParamName, Is.EqualTo("distance"));
         }
     }
 }
