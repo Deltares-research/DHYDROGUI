@@ -227,6 +227,10 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0.50-beta\tools\mklink
 cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0.50-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
 </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- Exclude the project from analysis -->
+    <SonarQubeExclude>true</SonarQubeExclude>
+  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

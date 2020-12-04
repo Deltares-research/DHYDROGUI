@@ -128,6 +128,10 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0.50-beta\tools\mklink
 cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0.50-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
 </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- Exclude the project from analysis -->
+    <SonarQubeExclude>true</SonarQubeExclude>
+  </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

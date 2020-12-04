@@ -126,6 +126,10 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0.50-beta\tools\mklink
 cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.6.0.50-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
 </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- Exclude the project from analysis -->
+    <SonarQubeExclude>true</SonarQubeExclude>
+  </PropertyGroup>
   <Import Project="..\..\packages\DeltaShell.Framework.1.6.0.50-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.6.0.50-beta\build\net461\DeltaShell.Framework.targets')" />
   <Import Project="..\..\packages\DeltaShell.TestProject.1.6.0.50-beta\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.1.6.0.50-beta\build\net40\DeltaShell.TestProject.targets')" />
 </Project>
