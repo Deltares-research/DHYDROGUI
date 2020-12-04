@@ -62,16 +62,6 @@ namespace DelftTools.Hydro.Structures
         TimeSeries CrestLevelTimeSeries { get; }
 
         /// <summary>
-        /// Is flow possible in the negative direction of the channel
-        /// </summary>
-        bool AllowNegativeFlow { get; set; }
-
-        /// <summary>
-        /// Is flow possible in the positive direction of the channel
-        /// </summary>
-        bool AllowPositiveFlow { get; set; }
-
-        /// <summary>
         /// The shape of the crest of the weir. This is a helper for getting/setting the ContractionCoefficient
         /// </summary>
         CrestShape CrestShape { get; set; }

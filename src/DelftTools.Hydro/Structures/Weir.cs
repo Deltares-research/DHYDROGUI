@@ -125,48 +125,6 @@ namespace DelftTools.Hydro.Structures
         /// </summary>
         public virtual bool IsRectangle => WeirFormula.IsRectangle;
 
-        public virtual bool AllowNegativeFlow
-        {
-            get
-            {
-                if (WeirFormula.HasFlowDirection)
-                {
-                    return FlowDirection == FlowDirection.Both ||
-                           FlowDirection == FlowDirection.Negative;
-                }
-
-                return false;
-            }
-            set
-            {
-                if (value != AllowNegativeFlow)
-                {
-                    UpdateFlowDirection(AllowPositiveFlow, value);
-                }
-            }
-        }
-
-        public virtual bool AllowPositiveFlow
-        {
-            get
-            {
-                if (WeirFormula.HasFlowDirection)
-                {
-                    return FlowDirection == FlowDirection.Both ||
-                           FlowDirection == FlowDirection.Positive;
-                }
-
-                return false;
-            }
-            set
-            {
-                if (value != AllowPositiveFlow)
-                {
-                    UpdateFlowDirection(value, AllowNegativeFlow);
-                }
-            }
-        }
-
         /// <summary>
         /// Shape along the branch
         /// </summary>

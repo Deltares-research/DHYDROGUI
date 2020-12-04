@@ -364,8 +364,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             bool weirPropertiesAreEqual = initialGeneralStructure.CanBeTimedependent == resultingGeneralStructure.CanBeTimedependent &&
                                           initialGeneralStructure.IsGated == resultingGeneralStructure.IsGated &&
-                                          initialGeneralStructure.AllowNegativeFlow == resultingGeneralStructure.AllowNegativeFlow &&
-                                          initialGeneralStructure.AllowPositiveFlow == resultingGeneralStructure.AllowPositiveFlow &&
                                           initialGeneralStructure.IsRectangle == resultingGeneralStructure.IsRectangle &&
                                           initialGeneralStructure.SpecifyCrestLevelAndWidthOnWeir == resultingGeneralStructure.SpecifyCrestLevelAndWidthOnWeir &&
                                           initialGeneralStructure.FormulaName == resultingGeneralStructure.FormulaName;

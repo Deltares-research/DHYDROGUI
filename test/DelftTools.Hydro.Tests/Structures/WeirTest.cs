@@ -53,7 +53,6 @@ namespace DelftTools.Hydro.Tests.Structures
                 Geometry = new Point(7, 0),
                 CrestWidth = 75,
                 CrestLevel = -3,
-                AllowNegativeFlow = true
             };
             var clonedWeir = (IWeir) weir.Clone();
 
@@ -75,7 +74,6 @@ namespace DelftTools.Hydro.Tests.Structures
                 CrestWidth = 75,
                 CrestLevel = -3,
                 Name = "Source Weir",
-                AllowNegativeFlow = true,
                 WeirFormula = new GatedWeirFormula(),
                 UseCrestLevelTimeSeries = true
             };
@@ -86,7 +84,6 @@ namespace DelftTools.Hydro.Tests.Structures
                 CrestWidth = 55,
                 CrestLevel = -1,
                 Name = "Target Weir",
-                AllowNegativeFlow = false,
                 WeirFormula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = false
             };
@@ -95,7 +92,6 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreNotEqual(sourceWeir.Name, targetWeir.Name);
             Assert.AreEqual(sourceWeir.CrestWidth, targetWeir.CrestWidth);
             Assert.AreEqual(sourceWeir.CrestLevel, targetWeir.CrestLevel);
-            Assert.AreEqual(sourceWeir.AllowNegativeFlow, targetWeir.AllowNegativeFlow);
             Assert.AreEqual(sourceWeir.WeirFormula.HasFlowDirection, targetWeir.WeirFormula.HasFlowDirection);
             Assert.AreEqual(sourceWeir.IsGated, targetWeir.IsGated);
             Assert.AreEqual(sourceWeir.CanBeTimedependent, targetWeir.CanBeTimedependent);
@@ -120,34 +116,6 @@ namespace DelftTools.Hydro.Tests.Structures
             IWeir simpleweir = new Weir("simple");
 
             Assert.IsTrue(simpleweir.IsRectangle);
-        }
-
-        [Test]
-        public void Allow()
-        {
-            IWeir simpleweir = new Weir("simple");
-
-            simpleweir.AllowNegativeFlow = true;
-            simpleweir.AllowPositiveFlow = true;
-
-            Assert.IsTrue(simpleweir.AllowNegativeFlow);
-            Assert.IsTrue(simpleweir.AllowPositiveFlow);
-
-            simpleweir.AllowPositiveFlow = false;
-
-            Assert.IsTrue(simpleweir.AllowNegativeFlow);
-            Assert.IsFalse(simpleweir.AllowPositiveFlow);
-
-            simpleweir.AllowNegativeFlow = false;
-
-            Assert.IsFalse(simpleweir.AllowNegativeFlow);
-            Assert.IsFalse(simpleweir.AllowPositiveFlow);
-
-            simpleweir.AllowNegativeFlow = true;
-            simpleweir.AllowPositiveFlow = true;
-
-            Assert.IsTrue(simpleweir.AllowNegativeFlow);
-            Assert.IsTrue(simpleweir.AllowPositiveFlow);
         }
 
         [Test]
