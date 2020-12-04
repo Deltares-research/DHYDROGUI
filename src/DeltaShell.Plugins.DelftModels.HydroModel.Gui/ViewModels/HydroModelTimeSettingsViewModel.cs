@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                 {
                     ((INotifyPropertyChanged) hydroModel).PropertyChanged -= OnModelPropertyChanged;
                     hydroModel.CollectionChanged -= OnModelCollectionChanged;
-                    List<TimeDependentModelBaseViewModel> models = Models.ToList();
+                    List<TimeDependentModelViewModel> models = Models.ToList();
                     Models.Clear();
                     models.ForEach(m => m.Dispose());
                 }
@@ -65,9 +65,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
                 SyncTimesAfterAction();
 
-                Models = new ObservableCollection<TimeDependentModelBaseViewModel>(hydroModel.Activities
+                Models = new ObservableCollection<TimeDependentModelViewModel>(hydroModel.Activities
                                                                                              .OfType<ITimeDependentModel>()
-                                                                                             .Select(m => new TimeDependentModelBaseViewModel(m)));
+                                                                                             .Select(m => new TimeDependentModelViewModel(m)));
 
                 ((INotifyPropertyChanged) hydroModel).PropertyChanged += OnModelPropertyChanged;
                 hydroModel.CollectionChanged += OnModelCollectionChanged;
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public ObservableCollection<string> ErrorTexts { get; set; }
 
-        public ObservableCollection<TimeDependentModelBaseViewModel> Models { get; set; }
+        public ObservableCollection<TimeDependentModelViewModel> Models { get; set; }
 
         public DateTime StartTime
         {
@@ -219,13 +219,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                 return;
             }
 
-            var modelToRemove = model as TimeDependentModelBaseViewModel;
+            var modelToRemove = model as TimeDependentModelViewModel;
             HydroModel.Activities.RemoveAllWhere(m => { return modelToRemove != null && m.Name == modelToRemove.Name; });
         }
 
         private bool CanRemoveModel(object model)
         {
-            var modelToRemove = model as TimeDependentModelBaseViewModel;
+            var modelToRemove = model as TimeDependentModelViewModel;
             return modelToRemove != null && HydroModel != null &&
                    HydroModel.Activities.Any(a => a.Name == modelToRemove.Name);
         }
@@ -271,10 +271,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                         return;
                     }
 
-                    Models.Add(new TimeDependentModelBaseViewModel(timeDependentModel));
+                    Models.Add(new TimeDependentModelViewModel(timeDependentModel));
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    TimeDependentModelBaseViewModel tdViewModel = Models.FirstOrDefault(m => m.Model == timeDependentModel);
+                    TimeDependentModelViewModel tdViewModel = Models.FirstOrDefault(m => m.Model == timeDependentModel);
                     if (tdViewModel == null)
                     {
                         return;
