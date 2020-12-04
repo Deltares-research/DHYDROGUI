@@ -275,7 +275,6 @@
     <Compile Include="FeatureData\SourceAndSinkTest.cs" />
     <Compile Include="FlowFMApplicationPluginTest.cs" />
     <Compile Include="FlowFMTestHelper.cs" />
-    <Compile Include="GridWizardMapToolHelperTest.cs" />
     <Compile Include="Grid\UnstructuredGridNetCdfFileWriterTest.cs" />
     <Compile Include="Gui\AstroComponentSelectionTest.cs" />
     <Compile Include="Gui\BcFileExportDialogTest.cs" />

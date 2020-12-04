@@ -321,8 +321,6 @@
     <Compile Include="Forms\WindSelectionDialog.Designer.cs">
       <DependentUpon>WindSelectionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="MapTools\GridWizardMapTool.cs" />
-    <Compile Include="MapTools\GridWizardMapToolHelper.cs" />
     <Compile Include="MapTools\MergeEmbankmentsMapTool.cs" />
     <Compile Include="NodePresenters\BoundaryConditionSetNodePresenter.cs" />
     <Compile Include="NodePresenters\Feature2DPolygonTreeViewNodePresenter.cs" />
