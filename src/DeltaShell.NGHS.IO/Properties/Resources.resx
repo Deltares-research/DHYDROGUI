@@ -378,4 +378,7 @@
   <data name="AGrid_GetValidGridApi___because_the_API_was_not_instantiated_or_Grid_not_valid_Ugrid_" xml:space="preserve">
     <value>, because the API was not instantiated or Grid not valid Ugrid.</value>
   </data>
+  <data name="degreeCelcius" xml:space="preserve">
+    <value>°C</value>
+  </data>
 </root>

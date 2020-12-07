@@ -134,6 +134,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to °C.
+        /// </summary>
+        public static string degreeCelcius {
+            get {
+                return ResourceManager.GetString("degreeCelcius", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Level: {0}. message = {1}.
         /// </summary>
         public static string GridApi_Initialize_Level_0__Message_1_ {
@@ -587,6 +596,36 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to read z-values at this location, CellEdges are not currently supported.
+        /// </summary>
+        public static string UGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_a" +
+                        "re_not_currently_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to read z-values from file: {0}, file is not UGrid convention.
+        /// </summary>
+        public static string UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_U" +
+                        "Grid_convention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to write z-values at this location, CellEdges are not currently supported.
+        /// </summary>
+        public static string UGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported {
+            get {
+                return ResourceManager.GetString("UGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges" +
+                        "_are_not_currently_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t create new network {0} with number of nodes {1}, number of branches {2}, number of geometry points {3}.
         /// </summary>
         public static string UGridNetwork_CreateNetworkInFile_Couldn_t_create_new_network__0__with_number_of_nodes__1___number_of_branches__2___number_of_geometry_points__3_ {
@@ -785,36 +824,6 @@ namespace DeltaShell.NGHS.IO.Properties {
             get {
                 return ResourceManager.GetString("UGridNetworkDiscretisation_WriteNetworkDiscretisationPoints_Couldn_t_write_the_ne" +
                         "twork_discretisation_points", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to read z-values at this location, CellEdges are not currently supported.
-        /// </summary>
-        public static string UGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported {
-            get {
-                return ResourceManager.GetString("UGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__" +
-                        "CellEdges_are_not_currently_supported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to read z-values from file: {0}, file is not UGrid convention.
-        /// </summary>
-        public static string UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention {
-            get {
-                return ResourceManager.GetString("UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___fi" +
-                        "le_is_not_UGrid_convention", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to write z-values at this location, CellEdges are not currently supported.
-        /// </summary>
-        public static string UGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported {
-            get {
-                return ResourceManager.GetString("UGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location" +
-                        "__CellEdges_are_not_currently_supported", resourceCulture);
             }
         }
         

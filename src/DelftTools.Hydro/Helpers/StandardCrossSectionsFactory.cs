@@ -493,7 +493,7 @@ namespace DelftTools.Hydro.Helpers
             double hf = YF;
 
             //--VC-------------------------------------------------------------------
-            //      Hoogte waterstand aanpassen aan coördinatensysteem :
+            //      Hoogte waterstand aanpassen aan coordinatensysteem :
             //--HV-------------------------------------------------------------------
 
             List<double> y = new List<double>();

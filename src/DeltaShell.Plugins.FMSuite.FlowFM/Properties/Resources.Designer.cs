@@ -980,6 +980,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to m³.
+        /// </summary>
+        public static string WaterFlowFMModel_GetEngineParametersForLocation_CubicMeter {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel_GetEngineParametersForLocation_CubicMeter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find log file: {0} at expected path: {1}.
         /// </summary>
         public static string WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_ {

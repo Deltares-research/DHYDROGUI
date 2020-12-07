@@ -1767,13 +1767,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             new Unit("Meter above reference level", "m AD"));
                         yield return new EngineParameter(QuantityType.Discharge, ElementSet.HBoundaries,
                             DataItemRole.Output, FunctionAttributes.StandardNames.WaterDischarge,
-                            new Unit("Cubic meter", "m³"));
+                            new Unit("Cubic meter", Resources.WaterFlowFMModel_GetEngineParametersForLocation_CubicMeter));
                         break;
                     case Model1DBoundaryNodeDataType.FlowConstant:
                     case Model1DBoundaryNodeDataType.FlowTimeSeries:
                         yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
                             DataItemRole.Input, FunctionAttributes.StandardNames.WaterDischarge,
-                            new Unit("Cubic meter", "m³"));
+                            new Unit("Cubic meter", Resources.WaterFlowFMModel_GetEngineParametersForLocation_CubicMeter));
                         yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
                             DataItemRole.Output, FunctionAttributes.StandardNames.WaterLevel,
                             new Unit("Meter above reference level", "m AD"));

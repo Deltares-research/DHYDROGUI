@@ -13,6 +13,7 @@ using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.ComponentModel;
+using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -726,7 +727,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
             TemperatureTimeSeries.Arguments[0].DefaultValue = new DateTime(2000, 1, 1);
             TemperatureTimeSeries.Arguments[0].InterpolationType = InterpolationType.Linear;
             TemperatureTimeSeries.Arguments[0].ExtrapolationType = ExtrapolationType.Constant;
-            TemperatureTimeSeries.Components.Add(new Variable<double>("Temperature", new Unit("degreesCelcius", "°C")));
+            TemperatureTimeSeries.Components.Add(new Variable<double>("Temperature", new Unit("degreesCelcius", Resources.degreeCelcius)));
             TemperatureTimeSeries.Name = "Temperature time series";
 
             //TODO: create standard name

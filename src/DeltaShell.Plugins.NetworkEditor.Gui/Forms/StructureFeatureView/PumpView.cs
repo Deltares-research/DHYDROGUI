@@ -7,6 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
@@ -227,7 +228,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             double capacity;
             if (double.TryParse(textBoxCapacity.Text, out capacity))
             {
-                lblConvertedCapacaties.Text = String.Format("(= {0:0.###} m³/min, {1:0.##} m³/h)", capacity * 60.0,
+                lblConvertedCapacaties.Text = String.Format(Resources.CapacityOfPumpInCubicMeterPerMinuteAndPerHour, capacity * 60.0,
                                                             capacity * 3600.0);
             }
             else

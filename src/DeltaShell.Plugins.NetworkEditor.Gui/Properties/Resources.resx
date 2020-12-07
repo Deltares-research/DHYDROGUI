@@ -632,4 +632,7 @@
   <data name="LeveeBreachProperties_DisplayName" xml:space="preserve">
     <value>Dambreach</value>
   </data>
+  <data name="CapacityOfPumpInCubicMeterPerMinuteAndPerHour" xml:space="preserve">
+    <value>(= {0:0.###} m³/min, {1:0.##} m³/h)</value>
+  </data>
 </root>
