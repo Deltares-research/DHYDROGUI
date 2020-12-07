@@ -51,8 +51,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     {
         #region AcceptanceModelTests
 
-        [Test]
-        [TestCaseSource(nameof(GetAcceptanceModels))]
+        //[Test]
+        //[TestCaseSource(nameof(GetAcceptanceModels))]
         public void Delft3DFM_AcceptanceModelTest(string relativeZipFilePath, string relativeMduFilePath)
         {
             // Step 1: Unzip 
