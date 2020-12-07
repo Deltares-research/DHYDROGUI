@@ -12,12 +12,14 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
+using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
@@ -156,6 +158,198 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        [Test]
+        [TestCaseSource(nameof(GetDimrXmlAcceptanceModels))]
+        public void Delft3DFM_AcceptanceModelTestUsingDimrConfigs(string absoluteDimrXmlPath)
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                Assert.IsTrue(File.Exists(absoluteDimrXmlPath), "Failed to find acceptance model test-data");
+                
+                var fileInfo = new FileInfo(absoluteDimrXmlPath);
+                tempDirectory.CopyDirectoryToTempDirectory(fileInfo.DirectoryName);
+                
+                // Step 2: using(running GUI) add correct plugins for Delft3DFM
+                using (var gui = new DeltaShellGui())
+                {
+                    //load the plugins
+                    gui.Plugins.Add(new DimrGuiPlugin());
+                    gui.Plugins.Add(new CommonToolsGuiPlugin());
+                    gui.Plugins.Add(new FlowFMGuiPlugin());
+                    gui.Plugins.Add(new WaveGuiPlugin());
+                    gui.Plugins.Add(new HydroModelGuiPlugin());
+                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                    gui.Plugins.Add(new RealTimeControlGuiPlugin());
+                    gui.Plugins.Add(new ScriptingGuiPlugin());
+                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                    gui.Plugins.Add(new ToolboxGuiPlugin());
+                    gui.Plugins.Add(new WaterQualityModelGuiPlugin());
+
+                    IApplication app = gui.Application;
+                    app.Plugins.Add(new CommonToolsApplicationPlugin());
+                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                    app.Plugins.Add(new FlowFMApplicationPlugin());
+                    app.Plugins.Add(new WaveApplicationPlugin());
+                    app.Plugins.Add(new HydroModelApplicationPlugin());
+                    app.Plugins.Add(new NetCdfApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new RealTimeControlApplicationPlugin());
+                    app.Plugins.Add(new ScriptingApplicationPlugin());
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new ToolboxApplicationPlugin());
+                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
+
+                    gui.Run();
+
+                    Action mainWindowShown = delegate
+                    {
+                        exportConfig.WorkingDirectory = app.WorkDirectory;
+                        exportConfig.OutputName = TestContext.CurrentContext.Test.Name;
+
+                        // Step 4: Import Dimr xml
+                        Assert.True(TryPerformAction(() => ImportDimrXmlAndAddToProject(app, absoluteDimrXmlPath)),
+                                    $"Failed to import model: {absoluteDimrXmlPath}");
+
+                        // Step 5: Validation of the model
+                        HydroModel rootModelOriginalDimrXml = null;
+                        Assert.True(TryPerformAction(() => GetHydroModelAndValidate(app, out rootModelOriginalDimrXml)),
+                                    $"Failed to validate model: {rootModelOriginalDimrXml.Name}");
+
+                        // Step 6: Adjust Time Settings (10 time steps)
+                        Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModelOriginalDimrXml)),
+                                    $"Failed to adjust time settings for model: {rootModelOriginalDimrXml.Name}");
+
+                        // Step 7: Run model
+                        Assert.True(TryPerformAction(() => RunIntegratedModel(rootModelOriginalDimrXml)),
+                                    $"Failed to run model: {rootModelOriginalDimrXml.Name}");
+
+                        // Step 8: Save Project As
+                        string saveFolderPath = Path.Combine(tempDirectory.Path, @"SaveTestProjectFolder");
+                        string projectPath = Path.Combine(saveFolderPath, "TestProject.dsproj");
+                        
+                        Assert.True(TryPerformAction(() => app.SaveProjectAs(projectPath)),
+                                    $"Failed to save project before running the model: {projectPath}");
+
+                        CheckPersistentFolderStructureAfterRunSave(saveFolderPath, projectPath, rootModelOriginalDimrXml, out List<DateTime> timeStampsAfterFirstSave);
+
+                        DateTime timeStampProjectFileAfterFirstSave = File.GetLastWriteTime(projectPath);
+
+                        // Step 9: Run model Again
+                        Assert.True(TryPerformAction(() => RunIntegratedModel(rootModelOriginalDimrXml)),
+                                    $"Failed to run model: {rootModelOriginalDimrXml.Name}");
+
+                        exportConfig.CurrentModelName = rootModelOriginalDimrXml.Name;
+                        AcceptanceModelExportHelper.ExportLogFilesOfIntegratedModel(exportConfig);
+
+                        // Step 10: Save Project 
+                        Assert.True(TryPerformAction(() => app.SaveProject()),
+                                    $"Failed to save the new output files of the second run: {projectPath}");
+
+                        CheckPersistentFolderStructureAfterRunSave(saveFolderPath, projectPath, rootModelOriginalDimrXml, out List<DateTime> timeStampsAfterSecondSave);
+                        CheckUpToDateFiles(projectPath, timeStampProjectFileAfterFirstSave, timeStampsAfterFirstSave, timeStampsAfterSecondSave);
+
+                        // Step 11: Dimr Export of FM model
+                        Assert.True(TryPerformAction(() => ExportDimrConfiguration(tempDirectory.Path, rootModelOriginalDimrXml)),
+                                    $"Failed to export dimr configuration for model: {rootModelOriginalDimrXml.Name}");
+
+                        // Step 12: Close Project
+                        Assert.True(TryPerformAction(() => app.CloseProject()),
+                                    $"Failed to close project after import: {projectPath}");
+
+                        app.CreateNewProject();
+
+                        // Step 13: Import Dimr xml
+                        string exportedDimrXmlPath = Path.Combine(tempDirectory.Path, "Dimr_Export", "dimr.xml");
+                        Assert.True(TryPerformAction(() => ImportDimrXmlAndAddToProject(app, exportedDimrXmlPath)),
+                                    $"Failed to import exported dimr xml file: {exportedDimrXmlPath}");
+
+                        // Step 14: Validation of the model
+                        HydroModel rootModelExportedDimrXml = null;
+                        Assert.True(TryPerformAction(() => GetHydroModelAndValidate(app, out rootModelExportedDimrXml)),
+                                    $"Failed to validate model: {rootModelExportedDimrXml.Name}");
+
+                        // Step 15: Close Project
+                        Assert.True(TryPerformAction(() => app.CloseProject()),
+                                    $"Failed to close project after import: {projectPath}");
+
+                        // Step 16: Re-Open Project
+                        Assert.True(TryPerformAction(() => app.OpenProject(projectPath)),
+                                    $"Failed to reopen project: {projectPath}");
+
+                        // Step 17: Validation of the model
+                        HydroModel rootModelOpenedProject = null;
+                        Assert.True(TryPerformAction(() => GetHydroModelAndValidate(app, out rootModelOpenedProject)),
+                                    $"Failed to validate model: {rootModelOpenedProject.Name}");
+                        
+                        // Step 18: Adjust Time Settings (10 time steps)
+                        Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModelOpenedProject)),
+                                    $"Failed to adjust time settings for model: {rootModelOpenedProject.Name}");
+
+                        // Step 19: Run model
+                        Assert.True(TryPerformAction(() => RunIntegratedModel(rootModelOpenedProject)),
+                                    $"Failed to run model: {rootModelOpenedProject.Name}");
+
+                        //// Step 20: Save Project
+                        Assert.True(TryPerformAction(() => app.SaveProject()),
+                                    $"Failed to save project after running the model: {projectPath}");
+
+                        CheckPersistentFolderStructureAfterRunSave(saveFolderPath, projectPath, rootModelOpenedProject, out List<DateTime> timeStampsOutputAfterThirdSave);
+                        CheckUpToDateFiles(projectPath, timeStampProjectFileAfterFirstSave, timeStampsAfterSecondSave, timeStampsOutputAfterThirdSave);
+
+                        // Step 21: Close Project
+                        Assert.True(TryPerformAction(() => app.CloseProject()),
+                                    $"Failed to close project after running the model: {projectPath}");
+                    };
+
+                    WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
+                }
+            }
+        }
+
+        private static void CheckUpToDateFiles(string projectPath, DateTime timeStampProjectFile, IReadOnlyList<DateTime> timeStampsAfterFirstSave, IReadOnlyList<DateTime> timeStampsAfterSecondSave)
+        {
+            DateTime timeStampProjectFile2 = File.GetLastWriteTime(projectPath);
+            Assert.AreNotEqual(timeStampProjectFile, timeStampProjectFile2);
+
+            for (int i = 0; i < timeStampsAfterFirstSave.Count; i++)
+            {
+                Assert.AreNotEqual(timeStampsAfterFirstSave[i], timeStampsAfterSecondSave[i], "After the second save the output files were not updated");
+            }
+        }
+
+        private static void CheckPersistentFolderStructureAfterRunSave(string saveFolderPath, string projectPath, ITimeDependentModel rootModel, out List<DateTime> timeStampsOutputDiagFiles)
+        {
+            string dataFolder = Path.Combine(saveFolderPath, "TestProject.dsproj_data");
+
+            CheckMainPersistentFolders(saveFolderPath, projectPath, dataFolder);
+
+            var integratedModel = (ICompositeActivity) rootModel;
+
+            CheckIntegratedModelFileStructure(dataFolder, integratedModel.Name);
+
+            timeStampsOutputDiagFiles = new List<DateTime>();
+
+            foreach (IActivity model in integratedModel.Activities)
+            {
+                var fmModel = model as WaterFlowFMModel;
+
+                if (fmModel != null)
+                {
+                    CheckFileStructureFM(dataFolder, fmModel.Name, out DateTime timeStampOutputDiagFileFM);
+                    timeStampsOutputDiagFiles.Add(timeStampOutputDiagFileFM);
+                }
+
+                var rtcModel = model as RealTimeControlModel;
+
+                if (rtcModel != null)
+                {
+                    CheckFileStructureRtc(dataFolder, rtcModel.Name, out DateTime timeStampOutputDiagFileRtc);
+                    timeStampsOutputDiagFiles.Add(timeStampOutputDiagFileRtc);
+                }
+            }
+        }
+        
         #endregion
 
         #region TestFixture
@@ -215,6 +409,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        private static IEnumerable<TestCaseData> GetDimrXmlAcceptanceModels()
+        {
+            string repoSourceFolder = AssemblyDirectory.Parent?.Parent?.FullName;
+            string acceptanceModelDirectoryPath = Path.Combine(repoSourceFolder, "AcceptanceModelsRTCFMDimrXmlBased");
+            var acceptanceModelDirectory = new DirectoryInfo(acceptanceModelDirectoryPath);
+
+            if (!acceptanceModelDirectory.Exists)
+            {
+                return Enumerable.Empty<TestCaseData>();
+            }
+
+            IEnumerable<DirectoryInfo> modelDirectories = acceptanceModelDirectory.EnumerateDirectories().Where(x=>x.Name.StartsWith("c"));
+            var testCases = new List<TestCaseData>();
+            foreach (var modelDirectory in modelDirectories)
+            {
+                FileInfo[] files = modelDirectory.GetFiles();
+
+                FileInfo dimrXml = files.FirstOrDefault(f => f.Name == "dimr.xml");
+
+                if (dimrXml != null)
+                {
+                    var testCase = new TestCaseData(dimrXml.FullName);
+                    testCase.SetName($"e105_dflowfm-drtc.f02_tutorials.{modelDirectory.Name}");
+                    testCases.Add(testCase);
+                }
+            }
+            return testCases;
+        }
         private static IEnumerable<TestCaseData> GetAcceptanceModels()
         {
             string repoSourceFolder = AssemblyDirectory.Parent?.Parent?.FullName;
@@ -313,6 +535,52 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         #region HelperFunctions
 
+        private static void CheckMainPersistentFolders(string saveFolderPath, string projectPath, string dataFolder)
+        {
+            Assert.True(Directory.Exists(saveFolderPath));
+            Assert.True(File.Exists(projectPath));
+            Assert.True(Directory.Exists(dataFolder));
+        }
+
+        private static void CheckIntegratedModelFileStructure(string dataFolder, string integratedModelName)
+        {
+            string dataFolderIntegratedModel = Path.Combine(dataFolder, integratedModelName);
+            Assert.True(Directory.Exists(dataFolderIntegratedModel));
+            string jsonFile = Path.Combine(dataFolderIntegratedModel, integratedModelName + ".json");
+            Assert.True(File.Exists(jsonFile));
+        }
+
+        private static void CheckFileStructureFM(string dataFolder, string fmModelName, out DateTime timeStampDiagFile)
+        {
+            string dataFolderFmModel = Path.Combine(dataFolder, fmModelName);
+            Assert.True(Directory.Exists(dataFolderFmModel));
+            string inputFmModel = Path.Combine(dataFolderFmModel, DirectoryNameConstants.InputDirectoryName);
+            string outputFmModel = Path.Combine(dataFolderFmModel, DirectoryNameConstants.OutputDirectoryName);
+
+            Assert.True(Directory.Exists(inputFmModel));
+            Assert.True(Directory.Exists(outputFmModel));
+
+            string mduPath = Path.Combine(inputFmModel, fmModelName + ".mdu");
+            Assert.True(File.Exists(mduPath));
+
+            string diaPath = Path.Combine(outputFmModel, fmModelName + ".dia");
+            Assert.True(File.Exists(diaPath));
+            timeStampDiagFile = File.GetLastWriteTime(diaPath);
+        }
+
+        private static void CheckFileStructureRtc(string dataFolder, string rtcModelName, out DateTime timeStampDiagFile)
+        {
+            string dataFolderRtcModel = Path.Combine(dataFolder, rtcModelName);
+            Assert.True(Directory.Exists(dataFolderRtcModel));
+
+            string outputRtcModel = Path.Combine(dataFolderRtcModel, DirectoryNameConstants.OutputDirectoryName);
+            Assert.True(Directory.Exists(outputRtcModel));
+
+            string diaPath = Path.Combine(outputRtcModel, "diag.xml");
+            Assert.True(File.Exists(diaPath));
+            timeStampDiagFile = File.GetLastWriteTime(diaPath);
+        }
+
         /// <summary>
         /// Wraps Action in a Try-Catch, returns false if Action results in an exception
         /// </summary>
@@ -367,11 +635,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 }
             }
         }
-
-        #endregion
-
-        #region CommonOperations
-
+        
         private static void UnzipModel(string relativeZipFilePath, string testCaseZipFilePath, out string testDirectory)
         {
             string zipFileName = Path.GetFileName(relativeZipFilePath);
@@ -397,6 +661,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             fmModel.ImportFromMdu(mduPath);
 
             app.Project.RootFolder.Items.Add(fmModel);
+        }
+
+        private static void ImportDimrXmlAndAddToProject(IApplication app, string dimrXmlPath)
+        {
+            var integratedModel = new HydroModel();
+            app.Project.RootFolder.Items.Add(integratedModel);
+            DHydroConfigXmlImporter importer = app.FileImporters.OfType<DHydroConfigXmlImporter>().First();
+            importer.ImportItem(dimrXmlPath, integratedModel);
+        }
+
+        private static void GetHydroModelAndValidate(IApplication app, out HydroModel hydroModel)
+        {
+            hydroModel = GetRootModel<HydroModel>(app);
+
+            // Unfortunately there is no IValidateable, so instead we handle this for each individual model type...
+            ValidationReport report = null;
+
+            report = hydroModel.Validate();
+            
+            if (report == null)
+            {
+                throw new NotImplementedException(string.Format("Unable to Validate Root Model: {0}, did you forget to add support for this model type?", hydroModel.Name));
+            }
+
+            CheckValidationErrors(report);
         }
 
         private static void GetRootModelAndValidate(IApplication app, out ITimeDependentModel timeDependentModel)
@@ -470,13 +759,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             ActivityRunner.RunActivity(activity);
 
             // Export the dia file for further manual inspection
-            AcceptanceModelExportHelper.ExportLogFile(exportConfig);
+            AcceptanceModelExportHelper.ExportLogFileOfFm(exportConfig);
 
             if (activity.Status != ActivityStatus.Cleaned)
             {
                 throw new AssertionException(
                     string.Format("Unable to complete Model run{0}Expected status: Cleaned{0}Actual status: {1}",
                                   Environment.NewLine, activity.Status.ToString()));
+            }
+        }
+
+        private void RunIntegratedModel(HydroModel hydroModel)
+        {
+            // We get the workflow that runs all models in parallel
+            ICompositeActivity workflow = hydroModel.Workflows.FirstOrDefault(w => w.Activities.Count == hydroModel.Activities.Count);
+            if (workflow == null)
+            {
+                throw new NullReferenceException("Unable to get Workflow (run all models in parallel)");
+            }
+
+            hydroModel.CurrentWorkflow = workflow;
+
+            // Run model
+            ActivityRunner.RunActivity(hydroModel);
+
+            // Export the dia file for further manual inspection
+            
+            if (hydroModel.Status != ActivityStatus.Cleaned)
+            {
+                throw new AssertionException(
+                    string.Format("Unable to complete Model run{0}Expected status: Cleaned{0}Actual status: {1}",
+                                  Environment.NewLine, hydroModel.Status.ToString()));
             }
         }
 
