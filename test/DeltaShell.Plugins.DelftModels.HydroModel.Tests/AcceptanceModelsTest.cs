@@ -160,13 +160,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         [TestCaseSource(nameof(GetDimrXmlAcceptanceModels))]
-        public void Delft3DFM_AcceptanceModelTestUsingDimrConfigs(string absoluteDimrXmlPath, bool fmModelIncluded, bool rtcModelIncluded, bool wavesModelIncluded)
+        public void Delft3DFM_AcceptanceModelTestUsingDimrConfigs(string absoluteOriginalDimrXmlPath, bool fmModelIncluded, bool rtcModelIncluded, bool wavesModelIncluded)
         {
             using (var tempDirectory = new TemporaryDirectory())
             {
-                Assert.IsTrue(File.Exists(absoluteDimrXmlPath), "Failed to find acceptance model test-data");
+                Assert.IsTrue(File.Exists(absoluteOriginalDimrXmlPath), "Failed to find acceptance model test-data");
                 
-                var fileInfo = new FileInfo(absoluteDimrXmlPath);
+                // Step 1: Copy model folder to temporary directory
+                var fileInfo = new FileInfo(absoluteOriginalDimrXmlPath);
                 tempDirectory.CopyDirectoryToTempDirectory(fileInfo.DirectoryName);
                 
                 // Step 2: using(running GUI) add correct plugins for Delft3DFM
@@ -207,104 +208,104 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         exportConfig.WorkingDirectory = app.WorkDirectory;
                         exportConfig.OutputName = TestContext.CurrentContext.Test.Name;
 
-                        // Step 4: Import Dimr xml
-                        Assert.True(TryPerformAction(() => ImportDimrXmlAndAddToProject(app, absoluteDimrXmlPath)),
-                                    $"Failed to import model: {absoluteDimrXmlPath}");
+                        // Step 3: Import Dimr xml
+                        Assert.True(TryPerformAction(() => ImportDimrXmlAndAddToProject(app, absoluteOriginalDimrXmlPath)),
+                                    $"Failed to import the original model: {absoluteOriginalDimrXmlPath}");
                         
-                        // Step 5: Validation of the model
+                        // Step 4: Validation of the model
                         HydroModel rootModelOriginalDimrXml = null;
                         Assert.True(TryPerformAction(() => GetHydroModelAndValidate(app, fmModelIncluded, rtcModelIncluded, wavesModelIncluded, out rootModelOriginalDimrXml)),
-                                    $"Failed to validate model: {rootModelOriginalDimrXml.Name}");
+                                    $"Failed to validate the original model: {rootModelOriginalDimrXml.Name}");
                         
-                        // Step 6: Adjust Time Settings (10 time steps)
+                        // Step 5: Adjust Time Settings (10 time steps)
                         Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModelOriginalDimrXml)),
-                                    $"Failed to adjust time settings for model: {rootModelOriginalDimrXml.Name}");
+                                    $"Failed to adjust time settings for the original model: {rootModelOriginalDimrXml.Name}");
 
-                        // Step 7: Run model
+                        // Step 6: Run model
                         Assert.True(TryPerformAction(() => RunIntegratedModel(rootModelOriginalDimrXml)),
-                                    $"Failed to run model: {rootModelOriginalDimrXml.Name}");
+                                    $"Failed to run the original model: {rootModelOriginalDimrXml.Name}");
                         
                         CheckIfOutputHasBeenCreated(fmModelIncluded, rtcModelIncluded, wavesModelIncluded, app, rootModelOriginalDimrXml);
                         
-                        // Step 8: Save Project As
-                        string saveFolderPath = Path.Combine(tempDirectory.Path, @"SaveTestProjectFolder");
-                        string projectPath = Path.Combine(saveFolderPath, "TestProject.dsproj");
+                        // Step 7: Save Project As
+                        string saveFolderPathWithOutput = Path.Combine(tempDirectory.Path, @"SaveTestProjectFolder");
+                        string projectPathWithOutput = Path.Combine(saveFolderPathWithOutput, "TestProject.dsproj");
                         
-                        Assert.True(TryPerformAction(() => app.SaveProjectAs(projectPath)),
-                                    $"Failed to save project before running the model: {projectPath}");
+                        Assert.True(TryPerformAction(() => app.SaveProjectAs(projectPathWithOutput)),
+                                    $"Failed to save as original project after running the model: {projectPathWithOutput}");
 
-                        CheckPersistentFolderStructureAfterRunSave(saveFolderPath, projectPath, rootModelOriginalDimrXml, fmModelIncluded, 
-                                                                   rtcModelIncluded, wavesModelIncluded, out List<DateTime> timeStampsAfterFirstSave);
+                        CheckPersistentFolderStructure(saveFolderPathWithOutput, projectPathWithOutput, rootModelOriginalDimrXml, fmModelIncluded, 
+                                                                   rtcModelIncluded, wavesModelIncluded, 7, out List<DateTime> timeStampsAfterFirstSave);
 
-                        DateTime timeStampProjectFileAfterFirstSave = File.GetLastWriteTime(projectPath);
+                        DateTime timeStampProjectFileAfterFirstSave = File.GetLastWriteTime(projectPathWithOutput);
 
-                        // Step 9: Run model Again
+                        // Step 8: Run model Again
                         Assert.True(TryPerformAction(() => RunIntegratedModel(rootModelOriginalDimrXml)),
                                     $"Failed to run model: {rootModelOriginalDimrXml.Name}");
 
                         exportConfig.CurrentModelName = rootModelOriginalDimrXml.Name;
                         AcceptanceModelExportHelper.ExportLogFilesOfIntegratedModel(exportConfig);
 
-                        // Step 10: Save Project 
+                        // Step 9: Save Project 
                         Assert.True(TryPerformAction(() => app.SaveProject()),
-                                    $"Failed to save the new output files of the second run: {projectPath}");
+                                    $"Failed to save the new output files of the second run: {projectPathWithOutput}");
 
-                        CheckPersistentFolderStructureAfterRunSave(saveFolderPath, projectPath, rootModelOriginalDimrXml, fmModelIncluded,
-                                                                   rtcModelIncluded, wavesModelIncluded, out List<DateTime> timeStampsAfterSecondSave);
-                        CheckUpToDateFiles(projectPath, timeStampProjectFileAfterFirstSave, timeStampsAfterFirstSave, timeStampsAfterSecondSave);
+                        CheckPersistentFolderStructure(saveFolderPathWithOutput, projectPathWithOutput, rootModelOriginalDimrXml, fmModelIncluded,
+                                                                   rtcModelIncluded, wavesModelIncluded, 9, out List<DateTime> timeStampsAfterSecondSave);
+                        CheckUpToDateFiles(projectPathWithOutput, timeStampProjectFileAfterFirstSave, timeStampsAfterFirstSave, timeStampsAfterSecondSave, 9);
 
-                        // Step 11: Dimr Export of FM model
+                        // Step 10: Dimr Export of FM model
                         Assert.True(TryPerformAction(() => ExportDimrConfiguration(tempDirectory.Path, rootModelOriginalDimrXml)),
                                     $"Failed to export dimr configuration for model: {rootModelOriginalDimrXml.Name}");
 
-                        // Step 12: Close Project
+                        // Step 11: Close Project
                         Assert.True(TryPerformAction(() => app.CloseProject()),
-                                    $"Failed to close project after import: {projectPath}");
+                                    $"Failed to close project after dimr import: {projectPathWithOutput}");
 
                         app.CreateNewProject();
 
-                        // Step 13: Import Dimr xml
+                        // Step 12: Import Dimr xml
                         string exportedDimrXmlPath = Path.Combine(tempDirectory.Path, "Dimr_Export", "dimr.xml");
                         Assert.True(TryPerformAction(() => ImportDimrXmlAndAddToProject(app, exportedDimrXmlPath)),
                                     $"Failed to import exported dimr xml file: {exportedDimrXmlPath}");
 
-                        // Step 14: Validation of the model
+                        // Step 13: Validation of the model
                         HydroModel rootModelExportedDimrXml = null;
                         Assert.True(TryPerformAction(() => GetHydroModelAndValidate(app, fmModelIncluded, rtcModelIncluded, wavesModelIncluded, out rootModelExportedDimrXml)),
-                                    $"Failed to validate model: {rootModelExportedDimrXml.Name}");
+                                    $"Failed to validate the imported model after creating a new dimr xml: {rootModelExportedDimrXml.Name}");
 
-                        // Step 15: Close Project
+                        // Step 14: Close Project
                         Assert.True(TryPerformAction(() => app.CloseProject()),
-                                    $"Failed to close project after import: {projectPath}");
+                                    $"Failed to close project after second import: {projectPathWithOutput}");
 
-                        // Step 16: Re-Open Project
-                        Assert.True(TryPerformAction(() => app.OpenProject(projectPath)),
-                                    $"Failed to reopen project: {projectPath}");
+                        // Step 15: Re-Open Project
+                        Assert.True(TryPerformAction(() => app.OpenProject(projectPathWithOutput)),
+                                    $"Failed to reopen project: {projectPathWithOutput}");
 
-                        // Step 17: Validation of the model
+                        // Step 16: Validation of the model
                         HydroModel rootModelOpenedProject = null;
                         Assert.True(TryPerformAction(() => GetHydroModelAndValidate(app, fmModelIncluded, rtcModelIncluded, wavesModelIncluded, out rootModelOpenedProject)),
-                                    $"Failed to validate model: {rootModelOpenedProject.Name}");
+                                    $"Failed to validate model after opening the created project: {rootModelOpenedProject.Name}");
                         
-                        // Step 18: Adjust Time Settings (10 time steps)
+                        // Step 17: Adjust Time Settings (10 time steps)
                         Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModelOpenedProject)),
-                                    $"Failed to adjust time settings for model: {rootModelOpenedProject.Name}");
+                                    $"Failed to adjust time settings for model after opening the created project: {rootModelOpenedProject.Name}");
 
-                        // Step 19: Run model
+                        // Step 18: Run model
                         Assert.True(TryPerformAction(() => RunIntegratedModel(rootModelOpenedProject)),
-                                    $"Failed to run model: {rootModelOpenedProject.Name}");
+                                    $"Failed to run model after opening the created project: {rootModelOpenedProject.Name}");
 
-                        //// Step 20: Save Project
+                        //// Step 19: Save Project
                         Assert.True(TryPerformAction(() => app.SaveProject()),
-                                    $"Failed to save project after running the model: {projectPath}");
+                                    $"Failed to save project after opening and running the model: {projectPathWithOutput}");
 
-                        CheckPersistentFolderStructureAfterRunSave(saveFolderPath, projectPath, rootModelOpenedProject, fmModelIncluded,
-                                                                   rtcModelIncluded, wavesModelIncluded, out List<DateTime> timeStampsOutputAfterThirdSave);
-                        CheckUpToDateFiles(projectPath, timeStampProjectFileAfterFirstSave, timeStampsAfterSecondSave, timeStampsOutputAfterThirdSave);
+                        CheckPersistentFolderStructure(saveFolderPathWithOutput, projectPathWithOutput, rootModelOpenedProject, fmModelIncluded,
+                                                                   rtcModelIncluded, wavesModelIncluded, 19, out List<DateTime> timeStampsOutputAfterThirdSave);
+                        CheckUpToDateFiles(projectPathWithOutput, timeStampProjectFileAfterFirstSave, timeStampsAfterSecondSave, timeStampsOutputAfterThirdSave, 19);
 
-                        // Step 21: Close Project
+                        // Step 20: Close Project
                         Assert.True(TryPerformAction(() => app.CloseProject()),
-                                    $"Failed to close project after running the model: {projectPath}");
+                                    $"Failed to close project after opening and running the model: {projectPathWithOutput}");
                     };
 
                     WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
@@ -323,38 +324,38 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 DirectoryInfo fmWorkingDirectory = subModelsWorkingDirectories.FirstOrDefault(d => d.Name == "dflowfm");
                 Assert.IsNotNull(fmWorkingDirectory);
-                Assert.IsTrue(fmWorkingDirectory.GetDirectories().Any(d => d.Name == "output"));
+                Assert.IsTrue(fmWorkingDirectory.GetDirectories().Any(d => d.Name == "output"), "Output of FM has not been created in the working directory");
             }
 
             if (rtcModelIncluded)
             {
                 DirectoryInfo rtcWorkingDirectory = subModelsWorkingDirectories.FirstOrDefault(d => d.Name == "rtc");
                 Assert.IsNotNull(rtcWorkingDirectory);
-                Assert.IsTrue(rtcWorkingDirectory.GetDirectories().Any(d => d.Name == "output"));
+                Assert.IsTrue(rtcWorkingDirectory.GetDirectories().Any(d => d.Name == "output"), "Output of RTC has not been created in the working directory");
             }
 
             if (wavesModelIncluded)
             {
                 DirectoryInfo wavesWorkingDirectory = subModelsWorkingDirectories.FirstOrDefault(d => d.Name == "wave");
                 Assert.IsNotNull(wavesWorkingDirectory);
-                Assert.IsTrue(wavesWorkingDirectory.GetDirectories().Any(d => d.Name == "output"));
+                Assert.IsTrue(wavesWorkingDirectory.GetDirectories().Any(d => d.Name == "output"), "Output of Waves has not been created in the working directory");
             }
         }
 
-        private static void CheckUpToDateFiles(string projectPath, DateTime timeStampProjectFile, IReadOnlyList<DateTime> timeStampsAfterFirstSave, IReadOnlyList<DateTime> timeStampsAfterSecondSave)
+        private static void CheckUpToDateFiles(string projectPath, DateTime timeStampProjectFile, IReadOnlyList<DateTime> timeStampsFirstOutputSet, IReadOnlyList<DateTime> timeStampsSecondOutputSet, int testStepNr)
         {
             DateTime timeStampProjectFile2 = File.GetLastWriteTime(projectPath);
-            Assert.AreNotEqual(timeStampProjectFile, timeStampProjectFile2);
+            Assert.AreNotEqual(timeStampProjectFile, timeStampProjectFile2, $"After saving in step {testStepNr} the project file was not updated");
 
-            for (int i = 0; i < timeStampsAfterFirstSave.Count; i++)
+            for (int i = 0; i < timeStampsFirstOutputSet.Count; i++)
             {
-                Assert.AreNotEqual(timeStampsAfterFirstSave[i], timeStampsAfterSecondSave[i], "After the second save the output files were not updated");
+                Assert.AreNotEqual(timeStampsFirstOutputSet[i], timeStampsSecondOutputSet[i], $"After saving in step {testStepNr} the output files were not updated");
             }
         }
 
-        private static void CheckPersistentFolderStructureAfterRunSave(string saveFolderPath, string projectPath, 
+        private static void CheckPersistentFolderStructure(string saveFolderPath, string projectPath, 
                                                                        ITimeDependentModel rootModel, bool fmModelIncluded, 
-                                                                       bool rtcModelIncluded, bool wavesModelIncluded, 
+                                                                       bool rtcModelIncluded, bool wavesModelIncluded, int testStepNr, 
                                                                        out List<DateTime> timeStampsOutputDiagFiles)
         {
             string dataFolder = Path.Combine(saveFolderPath, "TestProject.dsproj_data");
@@ -363,28 +364,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             var integratedModel = (ICompositeActivity) rootModel;
 
-            CheckIntegratedModelFileStructure(dataFolder, integratedModel.Name);
+            CheckIntegratedModelFileStructure(dataFolder, integratedModel.Name, testStepNr);
 
             timeStampsOutputDiagFiles = new List<DateTime>();
 
             if (fmModelIncluded)
             {
                 WaterFlowFMModel[] fmModels = integratedModel.Activities.OfType<WaterFlowFMModel>().ToArray();
-                CheckFileStructureFM(dataFolder, fmModels[0].Name, out DateTime timeStampOutputDiagFileFM);
+                CheckFileStructureFM(dataFolder, fmModels[0].Name, testStepNr, out DateTime timeStampOutputDiagFileFM);
                 timeStampsOutputDiagFiles.Add(timeStampOutputDiagFileFM);
             }
 
             if (rtcModelIncluded)
             {
                 RealTimeControlModel[] rtcModels = integratedModel.Activities.OfType<RealTimeControlModel>().ToArray();
-                CheckFileStructureRtc(dataFolder, rtcModels[0].Name, out DateTime timeStampOutputDiagFileRtc);
+                CheckFileStructureRtc(dataFolder, rtcModels[0].Name, testStepNr, out DateTime timeStampOutputDiagFileRtc);
                 timeStampsOutputDiagFiles.Add(timeStampOutputDiagFileRtc);
             }
 
             if (wavesModelIncluded)
             {
                 WaveModel[] wavesModels = integratedModel.Activities.OfType<WaveModel>().ToArray();
-                CheckFileStructureWaves(dataFolder, wavesModels[0].Name, out DateTime timeStampOutputDiagFileWaves);
+                CheckFileStructureWaves(dataFolder, wavesModels[0].Name, testStepNr, out DateTime timeStampOutputDiagFileWaves);
                 timeStampsOutputDiagFiles.Add(timeStampOutputDiagFileWaves);
             }
         }
@@ -586,58 +587,58 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.True(Directory.Exists(dataFolder));
         }
 
-        private static void CheckIntegratedModelFileStructure(string dataFolder, string integratedModelName)
+        private static void CheckIntegratedModelFileStructure(string dataFolder, string integratedModelName, int testStepNr)
         {
             string dataFolderIntegratedModel = Path.Combine(dataFolder, integratedModelName);
-            Assert.True(Directory.Exists(dataFolderIntegratedModel));
+            Assert.True(Directory.Exists(dataFolderIntegratedModel), $"After step {testStepNr} the model directory of the integrated model can not be found in the persistent folder");
             string jsonFile = Path.Combine(dataFolderIntegratedModel, integratedModelName + ".json");
-            Assert.True(File.Exists(jsonFile));
+            Assert.True(File.Exists(jsonFile), $"After step {testStepNr} the coupling json file of the integrated model can not be found in the persistent folder");
         }
 
-        private static void CheckFileStructureFM(string dataFolder, string fmModelName, out DateTime timeStampDiagFile)
+        private static void CheckFileStructureFM(string dataFolder, string fmModelName, int testStepNr, out DateTime timeStampDiagFile)
         {
             string dataFolderFmModel = Path.Combine(dataFolder, fmModelName);
-            Assert.True(Directory.Exists(dataFolderFmModel));
+            Assert.True(Directory.Exists(dataFolderFmModel), $"After step {testStepNr} the model directory of FM can not be found in the persistent folder.");
             string inputFmModel = Path.Combine(dataFolderFmModel, DirectoryNameConstants.InputDirectoryName);
             string outputFmModel = Path.Combine(dataFolderFmModel, DirectoryNameConstants.OutputDirectoryName);
 
-            Assert.True(Directory.Exists(inputFmModel));
-            Assert.True(Directory.Exists(outputFmModel));
+            Assert.True(Directory.Exists(inputFmModel), $"After step {testStepNr} the input directory of FM can not be found in the persistent folder.");
+            Assert.True(Directory.Exists(outputFmModel), $"After step {testStepNr} the output directory of FM can not be found in the persistent folder.");
 
             string mduPath = Path.Combine(inputFmModel, fmModelName + ".mdu");
-            Assert.True(File.Exists(mduPath));
+            Assert.True(File.Exists(mduPath), $"After step {testStepNr} the mdu file of FM can not be found in the persistent folder.");
 
             string diaPath = Path.Combine(outputFmModel, fmModelName + ".dia");
-            Assert.True(File.Exists(diaPath));
+            Assert.True(File.Exists(diaPath), $"After step {testStepNr} the diagnostic file of FM can not be found in the persistent folder.");
             timeStampDiagFile = File.GetLastWriteTime(diaPath);
         }
 
-        private static void CheckFileStructureRtc(string dataFolder, string rtcModelName, out DateTime timeStampDiagFile)
+        private static void CheckFileStructureRtc(string dataFolder, string rtcModelName, int testStepNr, out DateTime timeStampDiagFile)
         {
             string dataFolderRtcModel = Path.Combine(dataFolder, rtcModelName);
-            Assert.True(Directory.Exists(dataFolderRtcModel));
+            Assert.True(Directory.Exists(dataFolderRtcModel), $"After step {testStepNr} the model directory of RTC can not be found in the persistent folder.");
 
             string outputRtcModel = Path.Combine(dataFolderRtcModel, DirectoryNameConstants.OutputDirectoryName);
-            Assert.True(Directory.Exists(outputRtcModel));
+            Assert.True(Directory.Exists(outputRtcModel), $"After step {testStepNr} the output directory of RTC can not be found in the persistent folder.");
 
             string diaPath = Path.Combine(outputRtcModel, "diag.xml");
-            Assert.True(File.Exists(diaPath));
+            Assert.True(File.Exists(diaPath), $"After step {testStepNr} the diagnostic file of RTC can not be found in the persistent folder.");
             timeStampDiagFile = File.GetLastWriteTime(diaPath);
         }
 
-        private static void CheckFileStructureWaves(string dataFolder, string wavesModelName, out DateTime timeStampDiagFile)
+        private static void CheckFileStructureWaves(string dataFolder, string wavesModelName, int testStepNr, out DateTime timeStampDiagFile)
         {
             string dataFolderWavesModel = Path.Combine(dataFolder, wavesModelName);
-            Assert.True(Directory.Exists(dataFolderWavesModel));
+            Assert.True(Directory.Exists(dataFolderWavesModel), $"After step {testStepNr} the model directory of Waves can not be found in the persistent folder.");
 
             string inputWavesModel = Path.Combine(dataFolderWavesModel, DirectoryNameConstants.InputDirectoryName);
-            Assert.True(Directory.Exists(inputWavesModel));
+            Assert.True(Directory.Exists(inputWavesModel), $"After step {testStepNr} the input directory of Waves can not be found in the persistent folder.");
 
             var outputWavesModelDirectoryInfo = new DirectoryInfo(Path.Combine(dataFolderWavesModel, DirectoryNameConstants.OutputDirectoryName));
-            Assert.True(outputWavesModelDirectoryInfo.Exists);
+            Assert.True(outputWavesModelDirectoryInfo.Exists, $"After step {testStepNr} the output directory of Waves can not be found in the persistent folder.");
 
             FileInfo diaFile = outputWavesModelDirectoryInfo.GetFiles().First(f => f.Name.StartsWith("swn-diag."));
-            Assert.True(diaFile.Exists);
+            Assert.True(diaFile.Exists, $"After step {testStepNr} the  diagnostic file of Waves can not be found in the persistent folder.");
             timeStampDiagFile = diaFile.LastWriteTime;
         }
 
@@ -737,17 +738,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             if (fmModelIncluded)
             {
-                Assert.AreEqual(hydroModel.Activities.OfType<WaterFlowFMModel>().Count(), 1);
+                Assert.AreEqual(hydroModel.Activities.OfType<WaterFlowFMModel>().Count(), 1, "The integrated model is missing the FM model after the dimr import.");
             }
 
             if (rtcModelIncluded)
             {
-                Assert.AreEqual(hydroModel.Activities.OfType<RealTimeControlModel>().Count(), 1);
+                Assert.AreEqual(hydroModel.Activities.OfType<RealTimeControlModel>().Count(), 1, "The integrated model is missing the RTC model after the dimr import.");
             }
 
             if (wavesModelIncluded)
             {
-                Assert.AreEqual(hydroModel.Activities.OfType<WaveModel>().Count(), 1);
+                Assert.AreEqual(hydroModel.Activities.OfType<WaveModel>().Count(), 1, "The integrated model is missing the Waves model after the dimr import.");
             }
 
             ValidationReport report = hydroModel.Validate();
