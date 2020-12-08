@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     /// </summary>
     /// <seealso cref="WaveFileFunctionStoreGroupLayerSubProviderBase{WavhFileFunctionStore}" />
     public class WavhFileFunctionStoreGroupLayerSubProvider :
-        WaveFileFunctionStoreGroupLayerSubProviderBase<WavhFileFunctionStore>
+        WaveFileFunctionStoreGroupLayerSubProviderBase<IWavhFileFunctionStore>
     {
         /// <summary>
         /// Creates a new <see cref="WavhFileFunctionStoreGroupLayerSubProvider"/>.

@@ -152,12 +152,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 string mapNcPath = tempDir.CopyTestDataFileToTempDirectory(mapFilePath);
-                IEventedList<WavmFileFunctionStore> mapStores = 
-                    new EventedList<WavmFileFunctionStore> { new WavmFileFunctionStore(mapNcPath) };
+                IEventedList<IWavmFileFunctionStore> mapStores = 
+                    new EventedList<IWavmFileFunctionStore> { new WavmFileFunctionStore(mapNcPath) };
 
                 string hisNcPath = tempDir.CopyTestDataFileToTempDirectory(hisFilePath);
-                IEventedList<WavhFileFunctionStore> hisStores = 
-                    new EventedList<WavhFileFunctionStore> { new WavhFileFunctionStore(hisNcPath, featureContainer) };
+                IEventedList<IWavhFileFunctionStore> hisStores = 
+                    new EventedList<IWavhFileFunctionStore> { new WavhFileFunctionStore(hisNcPath, featureContainer) };
 
 
                 var outputData = Substitute.For<IWaveOutputData>();

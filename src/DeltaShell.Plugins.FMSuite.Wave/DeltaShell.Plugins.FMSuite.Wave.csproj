@@ -251,6 +251,8 @@
     <Compile Include="OutputData\IWaveOutputData.cs" />
     <Compile Include="OutputData\IWaveOutputDataCopyHandler.cs" />
     <Compile Include="OutputData\IWaveOutputDataHarvester.cs" />
+    <Compile Include="OutputData\IWavhFileFunctionStore.cs" />
+    <Compile Include="OutputData\IWavmFileFunctionStore.cs" />
     <Compile Include="OutputData\WaveGeometryComparer.cs" />
     <Compile Include="OutputData\WaveOutputConstants.cs" />
     <Compile Include="OutputData\WaveOutputData.cs" />

@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
 
-            nodeData.WavmFileFunctionStores.Returns(new EventedList<WavmFileFunctionStore>());
+            nodeData.WavmFileFunctionStores.Returns(new EventedList<IWavmFileFunctionStore>());
 
             // Call
             List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 string functionStorePath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavm-Waves.nc");
-                var wavmFileFunctionStores = new EventedList<WavmFileFunctionStore>
+                var wavmFileFunctionStores = new EventedList<IWavmFileFunctionStore>
                 {
                     new WavmFileFunctionStore(functionStorePath), 
                     new WavmFileFunctionStore(functionStorePath), 
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
 
-            nodeData.WavhFileFunctionStores.Returns(new EventedList<WavhFileFunctionStore>());
+            nodeData.WavhFileFunctionStores.Returns(new EventedList<IWavhFileFunctionStore>());
 
             // Call
             List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             using (var tempDir = new TemporaryDirectory())
             {
                 string functionStorePath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
-                var wavhFileFunctionStores = new EventedList<WavhFileFunctionStore>
+                var wavhFileFunctionStores = new EventedList<IWavhFileFunctionStore>
                 {
                     new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
                     new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),

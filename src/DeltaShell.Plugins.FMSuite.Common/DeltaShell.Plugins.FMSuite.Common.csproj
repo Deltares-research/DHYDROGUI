@@ -147,6 +147,7 @@
     <Compile Include="FeatureData\VerticalProfileDefinition.cs" />
     <Compile Include="FeatureData\IWindField.cs" />
     <Compile Include="FeatureData\UniformWindField.cs" />
+    <Compile Include="FunctionStores\IFMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\BackwardCompatibility\DelftIniBackwardsCompatibilityHelper.cs" />
     <Compile Include="IO\BackwardCompatibility\IDelftIniBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\FileConstants.cs" />

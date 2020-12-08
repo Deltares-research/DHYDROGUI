@@ -539,7 +539,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 waveModel.ConnectOutput(outputDirectoryInTemp);
 
                 // Assert
-                IEnumerable<WavmFileFunctionStore> functionStores = waveModel.WaveOutputData.WavmFileFunctionStores.ToList();
+                IEnumerable<IWavmFileFunctionStore> functionStores = waveModel.WaveOutputData.WavmFileFunctionStores.ToList();
                 Assert.AreEqual(2, functionStores.Count());
 
                 string[] expectedPaths =

@@ -35,8 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
         public IEventedList<ReadOnlyTextFileData> DiagnosticFiles { get; } = new EventedList<ReadOnlyTextFileData>();
         public IEventedList<ReadOnlyTextFileData> SpectraFiles { get; } = new EventedList<ReadOnlyTextFileData>();
-        public IEventedList<WavmFileFunctionStore> WavmFileFunctionStores { get; } = new EventedList<WavmFileFunctionStore>();
-        public IEventedList<WavhFileFunctionStore> WavhFileFunctionStores { get; } = new EventedList<WavhFileFunctionStore>();
+        public IEventedList<IWavmFileFunctionStore> WavmFileFunctionStores { get; } = new EventedList<IWavmFileFunctionStore>();
+        public IEventedList<IWavhFileFunctionStore> WavhFileFunctionStores { get; } = new EventedList<IWavhFileFunctionStore>();
 
         public void ConnectTo(string dataSourcePath, 
                               bool isStoredInWorkingDirectory,

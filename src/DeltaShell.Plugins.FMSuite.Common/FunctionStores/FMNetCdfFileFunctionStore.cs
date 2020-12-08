@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using DelftTools.Functions;
-using DelftTools.Utils;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
 {
-    public abstract class FMNetCdfFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase, INameable
+    public abstract class FMNetCdfFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase, IFMNetCdfFileFunctionStore
     {
         private const string timeDimensionName = "time";
 

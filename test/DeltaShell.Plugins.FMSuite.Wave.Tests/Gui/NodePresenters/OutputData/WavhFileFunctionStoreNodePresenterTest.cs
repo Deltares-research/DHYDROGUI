@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var presenter = new WavhFileFunctionStoreNodePresenter();
 
             // Assert
-            Assert.That(presenter, Is.InstanceOf<TreeViewNodePresenterBase<WavhFileFunctionStore>>());
+            Assert.That(presenter, Is.InstanceOf<TreeViewNodePresenterBase<IWavhFileFunctionStore>>());
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
                 string ncPath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavh-Waves.nc");
                 var functionStore = new WavhFileFunctionStore(ncPath, featureContainer);
 
-                model.WaveOutputData.WavhFileFunctionStores.Returns(new EventedList<WavhFileFunctionStore>
+                model.WaveOutputData.WavhFileFunctionStores.Returns(new EventedList<IWavhFileFunctionStore>
                 {
                     functionStore
                 });

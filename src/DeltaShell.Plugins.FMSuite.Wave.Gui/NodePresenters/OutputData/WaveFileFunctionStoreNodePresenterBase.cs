@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
     /// implementation node presenter for file function stores.
     /// </summary>
     /// <seealso cref="TreeViewNodePresenterBaseForPluginGui{T}" />
-    public abstract class WaveFileFunctionStoreNodePresenterBase<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : FMNetCdfFileFunctionStore
+    public abstract class WaveFileFunctionStoreNodePresenterBase<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : IFMNetCdfFileFunctionStore
     {
         private readonly Bitmap icon = new Bitmap(Resources.wave);
 

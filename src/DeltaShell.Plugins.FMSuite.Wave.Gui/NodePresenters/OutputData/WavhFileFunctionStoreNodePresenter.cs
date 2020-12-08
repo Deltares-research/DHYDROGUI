@@ -10,12 +10,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData
     /// <see cref="WavhFileFunctionStore"/> objects.
     /// </summary>
     /// <seealso cref="WaveFileFunctionStoreNodePresenterBase{WavhFileFunctionStore}" />
-    public sealed class WavhFileFunctionStoreNodePresenter : WaveFileFunctionStoreNodePresenterBase<WavhFileFunctionStore>
+    public sealed class WavhFileFunctionStoreNodePresenter : WaveFileFunctionStoreNodePresenterBase<IWavhFileFunctionStore>
     {
-        protected override bool IsContainedInModel(WavhFileFunctionStore nodeData, IWaveModel model) =>
+        protected override bool IsContainedInModel(IWavhFileFunctionStore nodeData, IWaveModel model) =>
             model.WaveOutputData.WavhFileFunctionStores.Contains(nodeData);
 
-        public override IEnumerable GetChildNodeObjects(WavhFileFunctionStore parentNodeData, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(IWavhFileFunctionStore parentNodeData, ITreeNode node)
         {
             foreach (object baseChild in base.GetChildNodeObjects(parentNodeData, node))
             {

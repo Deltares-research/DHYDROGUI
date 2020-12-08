@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         private static void DoubleClickOutputItemAndAssertLayerIsOn(WaveModel model, IGui gui, GuiPlugin guiPlugin, string itemName)
         {
             var wavmFileFunctionStoreNodePresenter = new WavmFileFunctionStoreNodePresenter() {GuiPlugin = guiPlugin};
-            WavmFileFunctionStore wavmFileFunctionStore = model.WaveOutputData.WavmFileFunctionStores.FirstOrDefault();
+            IWavmFileFunctionStore wavmFileFunctionStore = model.WaveOutputData.WavmFileFunctionStores.FirstOrDefault();
             Assert.NotNull(wavmFileFunctionStore);
 
             IDataItem outputItem =

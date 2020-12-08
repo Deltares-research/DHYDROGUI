@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
                 var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
 
                 var model = Substitute.For<IWaveModel>();
-                model.WaveOutputData.WavmFileFunctionStores.Returns(new EventedList<WavmFileFunctionStore> {store});
+                model.WaveOutputData.WavmFileFunctionStores.Returns(new EventedList<IWavmFileFunctionStore> {store});
 
                 IEnumerable<IWaveModel> GetModels() => new[]
                 {
