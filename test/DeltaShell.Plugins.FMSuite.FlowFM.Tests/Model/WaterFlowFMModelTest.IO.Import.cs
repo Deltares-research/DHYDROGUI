@@ -87,5 +87,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.That(model.RestartInput.IsEmpty);
             }
         }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAModelWithNonDefaultBedlevType_WhenTheModelIsImported_ThenModelLoadsCorrectly()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string srcTestDataPath = TestHelper.GetTestFilePath("WaterFlowFMModel.BedlevType");
+                string testDataPath = tempDir.CopyDirectoryToTempDirectory(srcTestDataPath);
+                string mduPath = Path.Combine(testDataPath, "bedlevtype_1.mdu");
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    // When | Then
+                    void Call() => model.ImportFromMdu(mduPath, true);
+                    Assert.DoesNotThrow(Call);
+                }
+            }
+        }
     }
 }
