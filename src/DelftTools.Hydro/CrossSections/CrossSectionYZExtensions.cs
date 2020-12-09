@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Utils.Editing;
+using log4net;
 
 namespace DelftTools.Hydro.CrossSections
 {
     public static class CrossSectionYZExtensions
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CrossSectionYZExtensions));
+
         public static CrossSectionDefinitionYZ SetAsRectangle(this CrossSectionDefinitionYZ crossSectionDefinitionYz, double bedLevel, double width, double height)
         {
             crossSectionDefinitionYz.YZDataTable.Clear();
@@ -24,11 +28,27 @@ namespace DelftTools.Hydro.CrossSections
                 var zwRowYLeft = zwRow.Width / 2 * -1;
                 while (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(zwRowYLeft))
                     zwRowYLeft -= 0.000001;
+                try
+                {
+                    crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRowYLeft, zwRow.Z);
+                }
+                catch (Exception e)
+                {
+                    //gulp
+                    log.Warn(e.Message);
+                }
                 var zwRowYRight = zwRow.Width / 2;
                 while (crossSectionDefinitionYz.YZDataTable.Rows.Select(r => r.Yq).Contains(zwRowYRight))
                     zwRowYRight += 0.000001;
-                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRowYLeft, zwRow.Z);
-                crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRowYRight, zwRow.Z);
+                try
+                {
+                    crossSectionDefinitionYz.YZDataTable.AddCrossSectionYZRow(zwRowYRight, zwRow.Z);
+                }
+                catch (Exception e)
+                {
+                    //gulp
+                    log.Warn(e.Message);
+                }
             }
             return crossSectionDefinitionYz;
         }
