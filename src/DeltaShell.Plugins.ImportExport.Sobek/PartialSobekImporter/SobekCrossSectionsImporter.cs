@@ -246,7 +246,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var definitionIDToDefinition = new Dictionary<string, ICrossSectionDefinition>();
 
             var definitionCount = mappings.GroupBy(m => m.DefinitionId).ToDictionaryWithErrorDetails("sobek cross section mapping", m => m.Key, m => m.Count());
-          
+            var possibleSharedMappingsWithOneRef = mappings.GroupBy(m => m.DefinitionId).Where(m => m.Count() == 1).ToDictionaryWithDuplicateWarnings("sobek shared cross section mapping shared once", m => m.Key, m => m.First().LocationId);
+
+
             foreach (var definitionMapping in sobekCrossSectionDefinitionsLookup)
             {
                 var definitionID = definitionMapping.Key;
@@ -268,7 +270,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     usageCount = 1;
                 }
 
-                if (usageCount == 1)
+
+                string sharedDefId = null;
+                if (usageCount == 1 && !possibleSharedMappingsWithOneRef.TryGetValue(definitionID, out sharedDefId) || (!string.IsNullOrEmpty(sharedDefId) && definitionCount.TryGetValue(sharedDefId, out usageCount) && usageCount < 1))
                 {
                     //make local definition
                     definitionIDToDefinition.Add(definitionMapping.Key, crossSectionDefinition);

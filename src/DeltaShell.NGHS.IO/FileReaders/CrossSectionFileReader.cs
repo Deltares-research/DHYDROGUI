@@ -48,7 +48,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             IList<ICrossSectionDefinition> crossSectionDefinitions = new List<ICrossSectionDefinition>();
             IList<ICrossSectionDefinition> crossSectionDefinitionsWithFriction = new List<ICrossSectionDefinition>();
             IList<ICrossSectionDefinition> sharedNotConnectedCrossSectionDefinitions = new List<ICrossSectionDefinition>();
-            foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name.Equals(DefinitionPropertySettings.Header, StringComparison.InvariantCultureIgnoreCase)))
+            foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name.Equals(DefinitionPropertySettings.Header, StringComparison.InvariantCultureIgnoreCase)).OrderByDescending(cat => cat.ReadProperty<bool>(DefinitionPropertySettings.IsShared.Key, true)))
             {
                 try
                 {
@@ -56,7 +56,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         csdDefinitionCategory, network, nonStructureCrossSectionDefinitions, defaultFrictionId,
                         out var hasFriction);
 
-                    if (crossSectionDefinitions.Contains(crossSectionDefinition) || crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinition.Name) != null)
+                    if (crossSectionDefinitions.Contains(crossSectionDefinition) 
+                        || ( crossSectionDefinitions.Any(csd => csd.Name.Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase)) 
+                             && !sharedNotConnectedCrossSectionDefinitions.Any( scsd => scsd.Name.Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase))))
                         throw new FileReadingException(string.Format("cross section definition with id {0} is already read, id's CAN NOT be duplicates!", crossSectionDefinition.Name));
                     
                     if (csdDefinitionCategory.ReadProperty<bool>(DefinitionPropertySettings.IsShared.Key, true))
@@ -76,96 +78,196 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     fileReadingExceptions.Add(new FileReadingException("Could not read cross section definition", fileReadingException));
                 }
             }
-
-            foreach (var crossSectionDefinition in crossSectionDefinitions)
+            var crsDefCoupledToCrossSection = new List<ICrossSectionDefinition>();
+            foreach (var csIniLocation in csIniLocations)
             {
-                try
+                var crsLocationId = csIniLocation.ReadProperty<string>(LocationRegion.Id.Key);
+                var crsLocationDefinitionId = csIniLocation.ReadProperty<string>(LocationRegion.Definition.Key);
+                if ( network.CrossSections.Any(crs => crs.Name.Equals(crsLocationId, StringComparison.InvariantCultureIgnoreCase))) continue;
+                foreach (var crossSectionDefinition in crossSectionDefinitions.Where(crsd => crsd.Name.Equals(crsLocationDefinitionId, StringComparison.InvariantCultureIgnoreCase)))
                 {
-
-                    
-                    var crossSectionLocationInfos = csIniLocations.Where(csIniLocation =>
+                    try
                     {
-                        var crossSectionLocationDefinitionId = csIniLocation.ReadProperty<string>(LocationRegion.Definition.Key);
-                        return crossSectionLocationDefinitionId == crossSectionDefinition.Name;
-                    }).ToArray();
 
-                    if (!crossSectionLocationInfos.Any())
-                    {
-                        if (sharedNotConnectedCrossSectionDefinitions.Contains(crossSectionDefinition))
+
+                        var crossSectionLocationInfos = csIniLocations.Where(location =>
+                        {
+                            var crossSectionLocationDefinitionId =
+                                location.ReadProperty<string>(LocationRegion.Definition.Key);
+                            return crossSectionLocationDefinitionId == crossSectionDefinition.Name;
+                        }).ToArray();
+
+                        if (!crossSectionLocationInfos.Any())
+                        {
+                            if (sharedNotConnectedCrossSectionDefinitions.Contains(crossSectionDefinition))
+                            {
+                                network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
+                            }
+                            else
+                            {
+                                PlaceDefinitionOnBridgeOrCulvert(crossSectionDefinition,
+                                    network.Bridges.Concat(
+                                        network.Culverts.Cast<IStructureWithCrossSectionDefinition>()));
+                            }
+
+                            continue;
+                        }
+
+                        //throw new CrossSectionReadingException(string.Format("The read cross section definition '{0}' has no location in the provided location file: {1}",crossSectionDefinition.Name, cslFilename));
+
+
+                        var crossSectionLocationInfo = crossSectionLocationInfos.Length > 1
+                            ? crossSectionLocationInfos
+                                  .FirstOrDefault(cslInfo =>
+                                      cslInfo.ReadProperty<string>(LocationRegion.Definition.Key)
+                                          .Equals(crossSectionDefinition.Name,
+                                              StringComparison.InvariantCultureIgnoreCase)
+                                      && cslInfo.ReadProperty<string>(LocationRegion.Id.Key)
+                                          .Equals(crsLocationId,
+                                              StringComparison.InvariantCultureIgnoreCase))
+                              ?? crossSectionLocationInfos.FirstOrDefault(cslInfo => cslInfo
+                                  .ReadProperty<string>(LocationRegion.Definition.Key)
+                                  .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase))
+                            : crossSectionLocationInfos.FirstOrDefault(cslInfo =>
+                                cslInfo.ReadProperty<string>(LocationRegion.Definition.Key)
+                                    .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase));
+
+
+                        if (crossSectionLocationInfo == null)
+                        {
+                            fileReadingExceptions.Add(new FileReadingException(
+                                "Could not find the location for cross section definition : " +
+                                crossSectionDefinition.Name));
+                            continue;
+                        }
+
+                        /*
+                        if (sharedNotConnectedCrossSectionDefinitions.Contains(crossSectionDefinition)
+                            || !csIniLocations.Any(loc => loc.ReadProperty<string>(LocationRegion.Definition.Key)
+                                                              .Equals(crossSectionDefinition.Name,
+                                                                  StringComparison.InvariantCultureIgnoreCase)
+                                                          && loc.ReadProperty<string>(LocationRegion.Id.Key)
+                                                              .Equals(crossSectionDefinition.Name,
+                                                                  StringComparison.InvariantCultureIgnoreCase))
+                        )
                         {
                             network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
                         }
                         else
                         {
-                            PlaceDefinitionOnBridgeOrCulvert(crossSectionDefinition,
-                                network.Bridges.Concat(network.Culverts.Cast<IStructureWithCrossSectionDefinition>()));
+                        */
+
+                        var isSharedCrossSection = crossSectionLocationInfos.Length > 1;
+                        var crossSectionDefinitionName = crossSectionDefinition.Name;
+                        var crossSection = network.CrossSections.SingleOrDefault(cs => cs.Name.Equals(crsLocationId, StringComparison.InvariantCultureIgnoreCase)) ??
+                                           network.AddCrossSection(crossSectionLocationInfo, crsLocationId, crossSectionDefinition,isSharedCrossSection);
+
+                        var hasFriction = false;
+                        if (crossSectionDefinitionsWithFriction.Contains(crossSectionDefinition) &&
+                            crossSection?.Branch is Channel)
+                        {
+                            hasFriction = true;
+                            onAddingCrossSectionWithFrictionToBranch((IChannel) crossSection.Branch);
                         }
 
-                        continue;
-                    }
-                        
-                    //throw new CrossSectionReadingException(string.Format("The read cross section definition '{0}' has no location in the provided location file: {1}",crossSectionDefinition.Name, cslFilename));
-
-
-                    var crossSectionLocationInfo = crossSectionLocationInfos.Length > 1
-                        ? crossSectionLocationInfos
-                              .FirstOrDefault(cslInfo =>
-                                  cslInfo.ReadProperty<string>(LocationRegion.Definition.Key)
-                                      .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase) 
-                                  && cslInfo.ReadProperty<string>(LocationRegion.Id.Key)
-                                      .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase)) 
-                          ?? crossSectionLocationInfos.FirstOrDefault(cslInfo => cslInfo.ReadProperty<string>(LocationRegion.Definition.Key)
-                              .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase))
-                        : crossSectionLocationInfos.FirstOrDefault(cslInfo =>
-                            cslInfo.ReadProperty<string>(LocationRegion.Definition.Key)
-                                .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase));
-
-                    
-                    if (crossSectionLocationInfo == null)
-                    {
-                        fileReadingExceptions.Add(new FileReadingException("Could not find the location for cross section definition : " + crossSectionDefinition.Name));
-                        continue;
-                    }
-
-                    var isSharedCrossSection = crossSectionLocationInfos.Length > 1;
-                    var crossSectionDefinitionName = crossSectionDefinition.Name;
-                    var crossSection = network.AddCrossSection(crossSectionLocationInfo, crossSectionDefinition, isSharedCrossSection);
-
-                    var hasFriction = false;
-                    if (crossSectionDefinitionsWithFriction.Contains(crossSectionDefinition) && crossSection?.Branch is Channel)
-                    {
-                        hasFriction = true;
-                        onAddingCrossSectionWithFrictionToBranch((IChannel) crossSection.Branch);
-                    }
-
-                    if (isSharedCrossSection)
-                    {
-                        if (crossSection != null && crossSection.Definition != null)
+                        if (isSharedCrossSection)
                         {
-                            crossSection.Definition.Name = crossSectionDefinitionName;
-                            crossSection.ShareDefinitionAndChangeToProxy();
-
-                            var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
-                            crossSection.Definition.ShiftLevel(shiftLevel);
-                        }
-
-                        foreach (var sectionLocationInfo in crossSectionLocationInfos.Except(new[] {crossSectionLocationInfo}))
-                        {
-                            var crossSectionDefinitionProxy = new CrossSectionDefinitionProxy(crossSectionDefinition);
-                            crossSectionDefinitionProxy.ShiftLevel(sectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key));
-                            crossSection = network.AddCrossSection(sectionLocationInfo, crossSectionDefinitionProxy, false);
-
-                            if (hasFriction && crossSection?.Branch is Channel)
+                            if (crossSection != null && crossSection.Definition != null &&
+                                crossSectionDefinition != null &&
+                                !crossSectionDefinition.GeometryBased) //"XYZ definitions can not be shared"
                             {
-                                onAddingCrossSectionWithFrictionToBranch((IChannel) crossSection.Branch);
+                                crossSectionDefinition.Name = crossSectionDefinitionName; 
+                                if (!network.SharedCrossSectionDefinitions.Any(scsd =>
+                                    scsd.Name.Equals(crossSectionDefinitionName,
+                                        StringComparison.InvariantCultureIgnoreCase)) && !network.SharedCrossSectionDefinitions.Contains(crossSectionDefinition))
+                                {
+                                    network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
+                                }
+
+                                var shiftLevel =
+                                    crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
+
+                                var definition = network.SharedCrossSectionDefinitions.SingleOrDefault(scsd =>
+                                    scsd.Name.Equals(crossSectionDefinitionName,
+                                        StringComparison.InvariantCultureIgnoreCase));
+                                if (definition == null)
+                                {
+                                    fileReadingExceptions.Add(new FileReadingException(
+                                        "There was no single shared cross section definition with only this name: " +
+                                        crossSectionDefinitionName));
+                                    continue;
+                                }
+
+                                crossSection.UseSharedDefinition(definition);
+                                crossSection.Definition.ShiftLevel(shiftLevel);
+
+
+                                foreach (var sectionLocationInfo in crossSectionLocationInfos.Except(new[]
+                                    {crossSectionLocationInfo}))
+                                {
+                                    var locationShift =
+                                        sectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
+                                    var locationOtherId =
+                                        sectionLocationInfo.ReadProperty<string>(LocationRegion.Id.Key);
+                                    var sharedCrossSection = network.CrossSections.SingleOrDefault(cs =>
+                                        cs.Name.Equals(locationOtherId, StringComparison.InvariantCultureIgnoreCase));
+                                    if (sharedCrossSection != null)
+                                    {
+                                        sharedCrossSection.UseSharedDefinition(definition);
+                                        sharedCrossSection.Definition.ShiftLevel(locationShift);
+                                    }
+                                    else
+                                    {
+                                        //var crossSectionDefinitionProxy = new CrossSectionDefinitionProxy(definition);
+                                        //crossSectionDefinitionProxy.ShiftLevel(locationShift);
+                                        crossSection = network.AddCrossSection(sectionLocationInfo, locationOtherId, definition, false);
+                                        definition.Name = crossSectionDefinitionName; // stupid thing
+                                        crossSection.UseSharedDefinition(definition);
+                                        crossSection.Definition.ShiftLevel(locationShift);
+                                    }
+
+                                    if (hasFriction && crossSection?.Branch is Channel)
+                                    {
+                                        onAddingCrossSectionWithFrictionToBranch((IChannel) crossSection.Branch);
+                                    }
+                                }
                             }
                         }
+                        else if (sharedNotConnectedCrossSectionDefinitions.Contains(crossSectionDefinition))
+                        {
+                            if (crossSection != null && crossSection.Definition != null)
+                            {
+                                crossSectionDefinition.Name = crossSectionDefinitionName;
+                                if (!network.SharedCrossSectionDefinitions.Any(scsd => scsd.Name.Equals(crossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase)) &&  !network.SharedCrossSectionDefinitions.Contains(crossSectionDefinition))
+                                {
+                                    network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
+                                }
+                                var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
+
+                                var definition = network.SharedCrossSectionDefinitions.SingleOrDefault(scsd => scsd.Name.Equals(crossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase));
+                                if (definition == null)
+                                {
+                                    fileReadingExceptions.Add(new FileReadingException("There was no single shared cross section definition with only this name: " + crossSectionDefinitionName));
+                                    continue;
+                                }
+                                crossSection.UseSharedDefinition(definition);
+                                crossSection.Definition.ShiftLevel(shiftLevel);
+                            }
+                        }
+                        crsDefCoupledToCrossSection.Add(crossSectionDefinition);
+                    }
+                    catch (FileReadingException fileReadingException)
+                    {
+                        fileReadingExceptions.Add(
+                            new FileReadingException("Could not read cross section location info data",
+                                fileReadingException));
                     }
                 }
-                catch (FileReadingException fileReadingException)
-                {
-                    fileReadingExceptions.Add(new FileReadingException("Could not read cross section location info data", fileReadingException));
-                }
+            }
+
+            foreach (var crossSectionDefinition in crossSectionDefinitions.Except(crsDefCoupledToCrossSection))
+            {
+                network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
             }
 
             if (fileReadingExceptions.Count > 0)
@@ -193,11 +295,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
         }
 
-        private static CrossSection AddCrossSection(this IHydroNetwork network, DelftIniCategory crossSectionLocationInfo, ICrossSectionDefinition crossSectionDefinition, bool isFirstOfSharedCrossSectionDefinitions)
+        private static CrossSection AddCrossSection(this IHydroNetwork network,
+            DelftIniCategory crossSectionLocationInfo, string crsLocationId,
+            ICrossSectionDefinition crossSectionDefinition, bool isFirstOfSharedCrossSectionDefinitions)
         {
             var branchId = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.BranchId.Key);
             var chainage = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Chainage.Key);
-            var crossSectionName = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.Id.Key);
+            var crossSectionName = crsLocationId;
 
             /*optional err message needs to be handled*/
             var crossSectionLongName = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.Name.Key, true);

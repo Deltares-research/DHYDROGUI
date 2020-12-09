@@ -43,6 +43,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             };
 
             var processedCsDefinitions = new List<string>();
+            var processedCsDef = new Dictionary<ICrossSectionDefinition, DelftIniCategory>();
             foreach (var crossSectionDefinition in crossSectionDefinitions)
             {
                 var definitionGeneratorCrossSectionDefinition = DefinitionGeneratorFactory.GetDefinitionGeneratorCrossSection(crossSectionDefinition);
@@ -59,6 +60,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
                 categories.Add(definitionRegion);
                 processedCsDefinitions.Add(csDefinitionId);
+                processedCsDef[crossSectionDefinition] = definitionRegion;
             }
 
             foreach (var sharedCrossSectionDefinition in sharedCrossSectionDefinitions)
@@ -68,7 +70,17 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 if (definitionGeneratorCrossSectionDefinition == null) continue;
 
                 var csDefinitionId = sharedCrossSectionDefinition.Name;
-                if (processedCsDefinitions.Contains(csDefinitionId)) continue;
+                if (processedCsDefinitions.Contains(csDefinitionId))
+                {
+                    var processedCrossSectionDefinition = processedCsDef.SingleOrDefault(pcsd => pcsd.Key.Name.Equals(csDefinitionId, StringComparison.InvariantCultureIgnoreCase)).Key;
+                    if (processedCrossSectionDefinition != null &&
+                        sharedCrossSectionDefinition.Equals(processedCrossSectionDefinition))
+                    {
+                        if(processedCsDef.TryGetValue(processedCrossSectionDefinition, out var category))
+                            category.AddProperty(DefinitionPropertySettings.IsShared.Key, true);
+                        continue;
+                    }
+                }
 
                 var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(
                     sharedCrossSectionDefinition,
