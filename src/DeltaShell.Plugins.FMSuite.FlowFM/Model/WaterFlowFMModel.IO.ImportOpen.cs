@@ -95,10 +95,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <remarks>
         /// Note this implementation is currently strictly required for the <see cref="LoadInputStateFromMdu"/>.
         /// In any other situation you should make use of the <see cref="NetFilePath"/> property.
-        /// Further note that the <paramref name="mduFilePath"/> is not verified and assumed to be correct.
         /// </remarks>
         private string GetNetFilePath(string mduFilePath)
         {
+            if (!File.Exists(mduFilePath))
+            {
+                return null;
+            }
+
             // We need to obtain the NetFile property value from, however because
             // we explicitly load the grid before the mdu, the NetFileProperty of
             // the model will be nul, thus we need to obtain it directly from the
@@ -128,7 +132,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FireImportProgressChanged("Reading grid", 1, TotalImportSteps);
             Grid = ReadGridFromNetFile(gridPath) ?? new UnstructuredGrid();
 
-            UnstructuredGridFileHelper.DoIfUgrid(gridPath, uGridAdapter => { bathymetryNoDataValue = uGridAdapter.uGrid.ZCoordinateFillValue; });
 
             LoadModelFromMdu(mduFilePath);
 
@@ -144,6 +147,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 SedimentFile.LoadSediments(SedFilePath, this);
             }
+
+            UnstructuredGridFileHelper.DoIfUgrid(
+                gridPath, uGridAdapter => { bathymetryNoDataValue = uGridAdapter.uGrid.ZCoordinateFillValue; });
 
             FireImportProgressChanged("Renaming sub files", 5, TotalImportSteps);
             RenameSubFilesIfApplicable();
