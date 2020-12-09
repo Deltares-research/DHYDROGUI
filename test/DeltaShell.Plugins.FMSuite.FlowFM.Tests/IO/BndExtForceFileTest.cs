@@ -814,7 +814,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             fileText = File.ReadAllText("frac1.bc");
             Assert.That(fileText, Is.StringContaining(BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1")
                                     .And.StringContaining("bound_0001")
-                                    .And.StringContaining(BcFile.BlockKey)
+                                    .And.StringContaining(new BcFile().BlockKey)
                                     .And.StringContaining(BcFile.QuantityKey)
                                     .And.StringContaining("36").And.StringContaining("18"));
         }

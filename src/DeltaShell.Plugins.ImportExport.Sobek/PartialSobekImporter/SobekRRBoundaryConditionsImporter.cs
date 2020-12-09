@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
@@ -33,13 +35,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             var rainfallRunoffModel = GetModel<RainfallRunoffModel>();
 
-            if (SetFilePath(GetFilePath(SobekFileNames.SobekCaseDescriptionFile)))
+            if (SetFilePath(GetFilePath(SobekFileNames.SobekCaseDescriptionFile)) ||
+                (File.Exists(GetFilePath("BOUND3B.3B")) && File.Exists(GetFilePath("BOUND3B.tbl"))))
             {
                 log.DebugFormat("Importing boundary conditions data ...");
-                
+                filePathBoundaryConditions = GetFilePath("BOUND3B.3B");
+                filePathBoundaryTableConditions = GetFilePath("BOUND3B.tbl");
+
                 ReadAndSetBoundaryConditions(rainfallRunoffModel);
             }
-            else if (File.Exists(GetFilePath("BoundaryConditions.bc")))
+            if (File.Exists(GetFilePath("BoundaryConditions.bc")))
             {
                 ReadAndSetBoundaryConditionsViaBC(rainfallRunoffModel);
             }
@@ -48,7 +53,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void ReadAndSetBoundaryConditionsViaBC(RainfallRunoffModel model)
         {
             ///yep... lets not do this now..
-            var bcFileReader = new BcFile();
+            var bcFileReader = new BcFile(){BlockKey = $"[{BoundaryRegion.BcBoundaryHeader}]" };
             var bcBlockDatas = bcFileReader.Read(GetFilePath("BoundaryConditions.bc"));
             var boundaryDatas = model.BoundaryData;
             foreach (var bcBlockData in bcBlockDatas)

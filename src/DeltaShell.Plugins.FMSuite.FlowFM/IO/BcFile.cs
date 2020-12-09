@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public const string Extension = ".bc";
 
-        public const string BlockKey = "[forcing]";
+        public string BlockKey = "[forcing]";
         private const string SupportPointKey = "Name";
         private const string FunctionTypeKey = "Function";
         private const string SeriesIndexKey = "FunctionIndex";
@@ -460,9 +460,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     };
         }
 
-        private static bool LineIsStartOfNewBlock(string line)
+        private bool LineIsStartOfNewBlock(string line)
         {
-            return line[0] == '[' && line.Substring(0, BlockKey.Length).ToLower().Equals(BlockKey);
+            return line[0] == '[' && line.Length >= BlockKey.Length && line.Substring(0, BlockKey.Length).Equals(BlockKey, StringComparison.InvariantCultureIgnoreCase);
         }
 
         public void Write(IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories, string file, string path)
