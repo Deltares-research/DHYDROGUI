@@ -391,7 +391,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 var outputDir = new DirectoryInfo(tempDir.Path);
 
                 // Call
-                IReadOnlyList<WavmFileFunctionStore> result = 
+                IReadOnlyList<IWavmFileFunctionStore> result = 
                     harvester.HarvestWavmFileFunctionStores(outputDir);
 
                 // Assert
@@ -491,7 +491,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 var outputDir = new DirectoryInfo(tempDir.Path);
 
                 // Call
-                IReadOnlyList<WavhFileFunctionStore> result = 
+                IReadOnlyList<IWavhFileFunctionStore> result = 
                     harvester.HarvestWavhFileFunctionStores(outputDir);
 
                 // Assert

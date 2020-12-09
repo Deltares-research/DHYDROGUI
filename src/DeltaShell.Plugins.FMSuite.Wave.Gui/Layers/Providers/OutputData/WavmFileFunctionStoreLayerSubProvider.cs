@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     /// </summary>
     /// <seealso cref="WaveFileFunctionStoreLayerSubProviderBase{WavmFileFunctionStore}" />
     public sealed class WavmFileFunctionStoreLayerSubProvider : 
-        WaveFileFunctionStoreLayerSubProviderBase<WavmFileFunctionStore>
+        WaveFileFunctionStoreLayerSubProviderBase<IWavmFileFunctionStore>
     {
         /// <summary>
         /// Creates a new <see cref="WavmFileFunctionStoreLayerSubProvider"/>.
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
             }
         }
 
-        protected override bool IsContainedInModel(WavmFileFunctionStore store, IWaveModel model) =>
+        protected override bool IsContainedInModel(IWavmFileFunctionStore store, IWaveModel model) =>
             model.WaveOutputData.WavmFileFunctionStores.Contains(store);
     }
 }

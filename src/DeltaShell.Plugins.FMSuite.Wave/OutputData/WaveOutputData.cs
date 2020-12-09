@@ -116,13 +116,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
             // Validate function stores
             WavmFileFunctionStores.RemoveAllWhere(fs => !File.Exists(Path.Combine(DataSourcePath, Path.GetFileName(fs.Path))));
-            foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFileFunctionStores)
+            foreach (IWavmFileFunctionStore wavmFileFunctionStore in WavmFileFunctionStores)
             {
                 wavmFileFunctionStore.Path = Path.Combine(DataSourcePath, Path.GetFileName(wavmFileFunctionStore.Path));
             }
 
             WavhFileFunctionStores.RemoveAllWhere(fs => !File.Exists(Path.Combine(DataSourcePath, Path.GetFileName(fs.Path))));
-            foreach (WavhFileFunctionStore wavhFileFunctionStore in WavhFileFunctionStores)
+            foreach (IWavhFileFunctionStore wavhFileFunctionStore in WavhFileFunctionStores)
             {
                 wavhFileFunctionStore.Path = Path.Combine(DataSourcePath, Path.GetFileName(wavhFileFunctionStore.Path));
             }
@@ -139,13 +139,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             DiagnosticFiles.Clear();
             SpectraFiles.Clear();
 
-            foreach (WavmFileFunctionStore store in WavmFileFunctionStores)
+            foreach (IWavmFileFunctionStore store in WavmFileFunctionStores)
             {
                 store.Close();
             }
             WavmFileFunctionStores.Clear();
 
-            foreach (WavhFileFunctionStore store in WavhFileFunctionStores)
+            foreach (IWavhFileFunctionStore store in WavhFileFunctionStores)
             {
                 store.Close();
             }

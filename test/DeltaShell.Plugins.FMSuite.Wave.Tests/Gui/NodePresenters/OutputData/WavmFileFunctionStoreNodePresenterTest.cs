@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var functionStore = Substitute.For<IWavmFileFunctionStore>();
             functionStore.Path.Returns("wavm-Waves.nc");
-            
+
             // Call
             presenter.UpdateNode(parentNode, node, functionStore);
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
+using DelftTools.Functions;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -51,12 +52,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
 
-
             var readOnlyData = new EventedList<ReadOnlyTextFileData>
             {
                 new ReadOnlyTextFileData("1.txt", "1"),
-                new ReadOnlyTextFileData("2.txt", "2"),
-
+                new ReadOnlyTextFileData("2.txt", "2")
             };
 
             nodeData.DiagnosticFiles.Returns(readOnlyData);
@@ -105,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var spectraFiles = new EventedList<ReadOnlyTextFileData>
             {
                 new ReadOnlyTextFileData("Wave.sp1", "Spooky spooky"),
-                new ReadOnlyTextFileData("Wave.sp2", "skeletons"),
+                new ReadOnlyTextFileData("Wave.sp2", "skeletons")
             };
             nodeData.SpectraFiles.Returns(spectraFiles);
 
@@ -141,7 +140,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GetChildNodeObjects_WavmFileFunctionStoresNotEmpty_ReturnsMapFilesOutputFolder()
         {
             // Setup
@@ -149,29 +147,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var node = Substitute.For<ITreeNode>();
             var nodeData = Substitute.For<IWaveOutputData>();
 
-            using (var tempDir = new TemporaryDirectory())
+            var functionStore = Substitute.For<IWavmFileFunctionStore>();
+            functionStore.Functions = new EventedList<IFunction>(new[]
             {
-                string functionStorePath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavm-Waves.nc");
-                var wavmFileFunctionStores = new EventedList<IWavmFileFunctionStore>
-                {
-                    new WavmFileFunctionStore(functionStorePath), 
-                    new WavmFileFunctionStore(functionStorePath), 
-                    new WavmFileFunctionStore(functionStorePath), 
-                };
-                
-                nodeData.WavmFileFunctionStores.Returns(wavmFileFunctionStores);
+                Substitute.For<IFunction>()
+            });
+            var wavmFileFunctionStores = new EventedList<IWavmFileFunctionStore>
+            {
+                functionStore,
+                functionStore,
+                functionStore
+            };
 
-                // Call
-                List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
-                                                   .Cast<object>().ToList();
+            nodeData.WavmFileFunctionStores.Returns(wavmFileFunctionStores);
 
-                // Assert
-                var outputFolder = result.FirstOrDefault(x => x is TreeFolder tf && tf.Text == "Map Files") as TreeFolder;
-                Assert.That(outputFolder, Is.Not.Null);
+            // Call
+            List<object> result = nodePresenter.GetChildNodeObjects(nodeData, node)
+                                               .Cast<object>().ToList();
 
-                IEnumerable<WavmFileFunctionStore> children = outputFolder.ChildItems.Cast<WavmFileFunctionStore>();
-                Assert.That(children, Is.EquivalentTo(wavmFileFunctionStores));
-            }
+            // Assert
+            var outputFolder = result.FirstOrDefault(x => x is TreeFolder tf && tf.Text == "Map Files") as TreeFolder;
+            Assert.That(outputFolder, Is.Not.Null);
+
+            IEnumerable<IWavmFileFunctionStore> children = outputFolder.ChildItems.Cast<IWavmFileFunctionStore>();
+            Assert.That(children, Is.EquivalentTo(wavmFileFunctionStores));
         }
 
         [Test]
@@ -210,9 +209,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
                 {
                     new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
                     new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
-                    new WavhFileFunctionStore(functionStorePath, waveFeatureContainer),
+                    new WavhFileFunctionStore(functionStorePath, waveFeatureContainer)
                 };
-                
+
                 nodeData.WavhFileFunctionStores.Returns(wavhFileFunctionStores);
 
                 // Call
