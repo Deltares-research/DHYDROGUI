@@ -129,9 +129,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             // The grid is read first to ensure events utilising the grid work correctly.
             string gridPath = GetNetFilePath(mduFilePath);
+
             FireImportProgressChanged("Reading grid", 1, TotalImportSteps);
             Grid = ReadGridFromNetFile(gridPath) ?? new UnstructuredGrid();
-
 
             LoadModelFromMdu(mduFilePath);
 
@@ -148,13 +148,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 SedimentFile.LoadSediments(SedFilePath, this);
             }
 
-            UnstructuredGridFileHelper.DoIfUgrid(
-                gridPath, uGridAdapter => { bathymetryNoDataValue = uGridAdapter.uGrid.ZCoordinateFillValue; });
+            UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdapter => { bathymetryNoDataValue = uGridAdapter.uGrid.ZCoordinateFillValue; });
 
-            FireImportProgressChanged("Renaming sub files", 5, TotalImportSteps);
+            FireImportProgressChanged("Renaming sub files", 6, TotalImportSteps);
             RenameSubFilesIfApplicable();
 
-            FireImportProgressChanged("Initialize input spatial data", 6, TotalImportSteps);
+            FireImportProgressChanged("Initialize input spatial data", 7, TotalImportSteps);
             InitializeUnstructuredGridCoverages();
 
             CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(NetFilePath);
@@ -184,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 sourceAndSink.PopulateFunctionValuesFromAttributes(componentSettings);
             });
 
-            FireImportProgressChanged("Reading model output", 8, TotalImportSteps);
+            FireImportProgressChanged("Reading model output", 9, TotalImportSteps);
 
             LoadRestartFile(mduFilePath);
         }
