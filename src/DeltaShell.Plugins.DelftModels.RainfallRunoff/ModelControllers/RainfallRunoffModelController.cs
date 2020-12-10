@@ -578,7 +578,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             {
                 links.Add(new ModelLink(link.Name, hydroObject, link, link.Target));
             }
-            /*else //link outside rr domain (flow), or non-existent: use string iso feature
+            else //link outside rr domain (flow), or non-existent: use string iso feature
             {
                 if (link == null) //no link defined..create fake (implicit) link and boundary
                 {
@@ -591,7 +591,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
                 var targetName = hydroObject.Name + "_boundary";
                 links.Add(new ModelLink(link.Name, hydroObject, link, targetName));
-            }*/
+            }
         }
 
         private static ILineString GetFakeLinkGeometry(IFeature feature)
