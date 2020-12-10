@@ -511,7 +511,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 var outputData = new WaveOutputData(harvester, copyHandler);
                 outputData.WavmFileFunctionStores.Add(ncStore);
 
-                IEventedList<WavmFileFunctionStore> prevWavmFiles = outputData.WavmFileFunctionStores;
+                IEventedList<IWavmFileFunctionStore> prevWavmFiles = outputData.WavmFileFunctionStores;
 
                 // Call
                 outputData.Disconnect();
@@ -539,7 +539,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 var outputData = new WaveOutputData(harvester, copyHandler);
                 outputData.WavhFileFunctionStores.Add(ncStore);
 
-                IEventedList<WavhFileFunctionStore> prevWavhFiles = outputData.WavhFileFunctionStores;
+                IEventedList<IWavhFileFunctionStore> prevWavhFiles = outputData.WavhFileFunctionStores;
 
                 // Call
                 outputData.Disconnect();

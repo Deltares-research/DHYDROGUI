@@ -10,14 +10,15 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
     [TestFixture]
     public class ContextMenuFactoryTest
     {
-        [Test]
-        public void CreateMenuFor_WithDataObjectThatHasImporter_ReturnsContextMenuStripWithImportItem()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void CreateMenuFor_WithDataObject_ReturnImportToolStripMenu_CheckEnabled(bool canImportOn)
         {
             // Arrange
             var data = Substitute.For<object>();
 
             var commandHandler = Substitute.For<IGuiCommandHandler>();
-            commandHandler.CanImportOn(data).Returns(true);
+            commandHandler.CanImportOn(data).Returns(canImportOn);
 
             var gui = Substitute.For<IGui>();
             gui.CommandHandler.Returns(commandHandler);
@@ -26,18 +27,28 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
             ContextMenuStrip menu = ContextMenuFactory.CreateMenuFor(data, gui, Substitute.For<ITreeNodePresenter>(), Substitute.For<ITreeNode>());
 
             // Assert
-            Assert.That(menu.Items, Has.Exactly(1)
-                                       .Matches<ToolStripItem>(i => i.Text.Equals("Import ...") && i.Enabled == true));
+            ToolStripItem importToolStripItem = null;
+            foreach (ToolStripItem toolStripItem in menu.Items)
+            {
+                if (toolStripItem.Text == "Import ...")
+                {
+                    importToolStripItem = toolStripItem;
+                }
+            }
+
+            Assert.IsNotNull(importToolStripItem);
+            Assert.That(importToolStripItem.Enabled, Is.EqualTo(canImportOn));
         }
 
-        [Test]
-        public void CreateMenuFor_WithDataObjectThatHasNoImporter_ReturnsContextMenuStripWithoutImportItem()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void CreateMenuFor_WithDataObject_ReturnExportToolStripMenu_CheckEnabled(bool canExportFrom)
         {
             // Arrange
             var data = Substitute.For<object>();
 
             var commandHandler = Substitute.For<IGuiCommandHandler>();
-            commandHandler.CanImportOn(data).Returns(false);
+            commandHandler.CanExportFrom(data).Returns(canExportFrom);
 
             var gui = Substitute.For<IGui>();
             gui.CommandHandler.Returns(commandHandler);
@@ -46,47 +57,17 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.NodePresenters
             ContextMenuStrip menu = ContextMenuFactory.CreateMenuFor(data, gui, Substitute.For<ITreeNodePresenter>(), Substitute.For<ITreeNode>());
 
             // Assert
-            Assert.That(menu.Items, Has.Exactly(0).Matches<ToolStripItem>(i => i.Text.Equals("Import ...")));
-        }
+            ToolStripItem importToolStripItem = null;
+            foreach (ToolStripItem toolStripItem in menu.Items)
+            {
+                if (toolStripItem.Text == "Export ...")
+                {
+                    importToolStripItem = toolStripItem;
+                }
+            }
 
-        [Test]
-        public void CreateMenuFor_WithDataObjectThatHasExporter_ReturnsContextMenuStripWithExportItem()
-        {
-            // Arrange
-            var data = Substitute.For<object>();
-
-            var commandHandler = Substitute.For<IGuiCommandHandler>();
-            commandHandler.CanExportFrom(data).Returns(true);
-
-            var gui = Substitute.For<IGui>();
-            gui.CommandHandler.Returns(commandHandler);
-
-            // Act
-            ContextMenuStrip menu = ContextMenuFactory.CreateMenuFor(data, gui, Substitute.For<ITreeNodePresenter>(), Substitute.For<ITreeNode>());
-
-            // Assert
-            Assert.That(menu.Items, Has.Exactly(1)
-                                       .Matches<ToolStripItem>(i => i.Text.Equals("Export ...") && i.Enabled == true));
-        }
-
-        [Test]
-        public void CreateMenuFor_WithDataObjectThatHasNoExporter_ReturnsContextMenuStripWithoutExportItem()
-        {
-            // Arrange
-            var data = Substitute.For<object>();
-
-            var commandHandler = Substitute.For<IGuiCommandHandler>();
-            commandHandler.CanImportOn(data).Returns(false);
-
-            var gui = Substitute.For<IGui>();
-            gui.CommandHandler.Returns(commandHandler);
-
-            // Act
-            ContextMenuStrip menu = ContextMenuFactory.CreateMenuFor(data, gui, Substitute.For<ITreeNodePresenter>(), Substitute.For<ITreeNode>());
-
-            // Assert
-            Assert.That(menu.Items, Has.Exactly(0)
-                                       .Matches<ToolStripItem>(i => i.Text.Equals("Export ...")));
+            Assert.IsNotNull(importToolStripItem);
+            Assert.That(importToolStripItem.Enabled, Is.EqualTo(canExportFrom));
         }
 
         [TestCase(true)]

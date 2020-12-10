@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// currently exist, or the <see cref="IWaveOutputData"/> is
         /// disconnected, then an empty list is returned.
         /// </remarks>
-        IEventedList<WavmFileFunctionStore> WavmFileFunctionStores { get; }
+        IEventedList<IWavmFileFunctionStore> WavmFileFunctionStores { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="WavhFileFunctionStore"/> objects.
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// currently exist, or the <see cref="IWaveOutputData"/> is
         /// disconnected, then an empty list is returned.
         /// </remarks>
-        IEventedList<WavhFileFunctionStore> WavhFileFunctionStores { get; }
+        IEventedList<IWavhFileFunctionStore> WavhFileFunctionStores { get; }
 
         /// <summary>
         /// Connects this <see cref="IWaveOutputData"/> to the specified path.

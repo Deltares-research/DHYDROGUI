@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     /// <typeparam name="T">The type of wave function store.</typeparam>
     /// <seealso cref="ILayerSubProvider" />
     public abstract class WaveFileFunctionStoreGroupLayerSubProviderBase<T> : ILayerSubProvider 
-        where T : FMNetCdfFileFunctionStore 
+        where T : IFMNetCdfFileFunctionStore 
     {
         private readonly IWaveLayerInstanceCreator instanceCreator;
 
@@ -47,9 +47,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)
         {
-            return data is IEnumerable<T> functionStores 
-                       ? functionStores.Where(x => x.Functions.Any())
-                       : Enumerable.Empty<T>();
+            return (IEnumerable<object>) (data is IEnumerable<T> functionStores 
+                                              ? functionStores.Where(x => x.Functions.Any())
+                                              : Enumerable.Empty<T>());
         }
     }
 }

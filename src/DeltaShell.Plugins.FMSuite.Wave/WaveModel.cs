@@ -102,8 +102,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
             OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
-            OutputWavmFileFunctionStores = new EventedList<WavmFileFunctionStore>();
-            OutputWavhFileFunctionStores = new EventedList<WavhFileFunctionStore>();
+            OutputWavmFileFunctionStores = new EventedList<IWavmFileFunctionStore>();
+            OutputWavhFileFunctionStores = new EventedList<IWavhFileFunctionStore>();
 
             WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(FeatureContainer),
                                                 new WaveOutputDataCopyHandler());
@@ -380,7 +380,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// to use the <see cref="WaveOutputData"/> directly.
         /// </remarks>
         [Aggregation]
-        public IEventedList<WavmFileFunctionStore> OutputWavmFileFunctionStores { get; private set; }
+        public IEventedList<IWavmFileFunctionStore> OutputWavmFileFunctionStores { get; private set; }
 
         /// <summary>
         /// Gets the output <see cref="WavhFileFunctionStore"/> objects.
@@ -393,7 +393,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// to use the <see cref="WaveOutputData"/> directly.
         /// </remarks>
         [Aggregation]
-        public IEventedList<WavhFileFunctionStore> OutputWavhFileFunctionStores { get; private set; }
+        public IEventedList<IWavhFileFunctionStore> OutputWavhFileFunctionStores { get; private set; }
 
         private static NotifyCollectionChangedEventHandler GetOutputSyncNotifyCollectionChangedEventHandler<T>(IEventedList<T> list) =>
             (sender, e) =>
@@ -786,12 +786,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 yield return spectraFile;
             }
 
-            foreach (WavmFileFunctionStore wavmFileFunctionStore in WaveOutputData.WavmFileFunctionStores)
+            foreach (IWavmFileFunctionStore wavmFileFunctionStore in WaveOutputData.WavmFileFunctionStores)
             {
                 yield return wavmFileFunctionStore;
             }
 
-            foreach (WavhFileFunctionStore wavhFileFunctionStore in WaveOutputData.WavhFileFunctionStores)
+            foreach (IWavhFileFunctionStore wavhFileFunctionStore in WaveOutputData.WavhFileFunctionStores)
             {
                 yield return wavhFileFunctionStore;
 

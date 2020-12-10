@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// in order to support wave map files.
     /// </summary>
     /// <seealso cref="FMNetCdfFileFunctionStore"/>
-    public class WavmFileFunctionStore : FMNetCdfFileFunctionStore
+    public class WavmFileFunctionStore : FMNetCdfFileFunctionStore, IWavmFileFunctionStore
     {
         private const string nSizeDimensionName = "nmax";
         private const string mSizeDimensionName = "mmax";

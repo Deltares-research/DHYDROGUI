@@ -904,17 +904,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 return;
             }
 
-            ShapeBase[] shapeBases = shapesOnGraph as ShapeBase[] ?? shapesOnGraph.ToArray();
+            ShapeBase[] shapeBases = shapesOnGraph.ToArray();
             Connector[] allConnectors = shapeBases.SelectMany(s => s.Connectors.Cast<Connector>()).ToArray();
             var owner = activeConnector.BelongsTo as ShapeBase;
 
-            if (owner is OutputItemShape)
-            {
-                return;
-            }
-
             ConnectorType activeConnectionType = GetActiveConnectionType(owner, activeConnector);
-            IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors).ToList();
+            IEnumerable<Connector> allowedConnectors = FilterAllowableConnectors(owner, activeConnectionType, allConnectors);
 
             if (!allowedConnectors.Any())
             {
@@ -927,41 +922,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private static ConnectorType GetActiveConnectionType(ShapeBase owner, Connector activeConnector)
-        {
-            ConnectorType activeConnectionType = owner is MathematicalExpressionShape ? ConvertConnectorNameToType(activeConnector.Name) : ConvertTo(activeConnector.ConnectorLocation);
-            return activeConnectionType;
-        }
-
         private static IEnumerable<Connector> FilterAllowableConnectors(ShapeBase sourceShape,
                                                                         ConnectorType sourceConnection,
                                                                         IEnumerable<Connector> availableConnectors)
         {
-            var allowedConnectors = new List<Connector>();
 
             if (sourceShape is MathematicalExpressionShape && (sourceConnection == ConnectorType.Left || sourceConnection == ConnectorType.Top))
             {
-                return allowedConnectors;
+                return Enumerable.Empty<Connector>();
             }
 
+            var allowedConnectors = new List<Connector>();
             foreach (Connector availableConnector in availableConnectors)
             {
                 var targetShape = availableConnector.BelongsTo as ShapeBase;
 
-                ConnectorType targetConnectionType = targetShape is MathematicalExpressionShape ? ConvertConnectorNameToType(availableConnector.Name) : ConvertTo(availableConnector.ConnectorLocation);
-
-                if (sourceShape == targetShape)
-                {
-                    continue;
-                }
-
-                if (ShapeConnectionsRulesController.IsConnectorSourceCompatibleWithConnectorDestination(sourceShape, targetShape, targetConnectionType))
+                ConnectorType targetConnectionType = GetActiveConnectionType(targetShape, availableConnector);
+                if (ShapeConnectionsRulesController.IsShapeCompatibleWithTarget(sourceShape, targetShape, targetConnectionType))
                 {
                     allowedConnectors.Add(availableConnector);
                 }
             }
 
             return allowedConnectors;
+        }
+
+        private static ConnectorType GetActiveConnectionType(ShapeBase owner, Connector activeConnector)
+        {
+            ConnectorType activeConnectionType = owner is MathematicalExpressionShape
+                                                     ? ConvertConnectorNameToType(activeConnector.Name)
+                                                     : ConvertTo(activeConnector.ConnectorLocation);
+            return activeConnectionType;
         }
 
         private static ConnectorType ConvertConnectorNameToType(string connectorName)

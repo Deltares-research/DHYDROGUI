@@ -6,10 +6,16 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 {
-    public class ShapeConnectionsRulesController
+    /// <summary>
+    /// Helper class to determine the connection rules between shapes.
+    /// </summary>
+    public static class ShapeConnectionsRulesController
     {
         private static readonly Dictionary<Type, IEnumerable<ConnectionRule>> connectionMapping = new Dictionary<Type, IEnumerable<ConnectionRule>>
         {
+            {
+                typeof(OutputItemShape), Enumerable.Empty<ConnectionRule>()
+            },
             {
                 typeof(InputItemShape), new[]
                 {
@@ -41,7 +47,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     new ConnectionRule(typeof(MathematicalExpressionShape), new HashSet<ConnectorType>(new[]
                     {
                         ConnectorType.Left
-                    }))
+                    })),
+                    new ConnectionRule(typeof(ConditionShape), new HashSet<ConnectorType>(new[]
+                    {
+                        ConnectorType.Left
+                    })), 
                 }
             },
             {
@@ -87,16 +97,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         };
 
         /// <summary>
-        /// Check if a connector of a specific shape is compatible with a target connector
-        /// according to a specific connectionMapping
+        /// Check if a connector of a specific shape is compatible with a target connector.
         /// </summary>
         /// <param name="source">The source object.</param>
         /// <param name="target">The target object.</param>
         /// <param name="targetConnector">The connector type of the target.</param>
-        /// <returns> </returns>
-        public static bool IsConnectorSourceCompatibleWithConnectorDestination(ShapeBase source,
-                                                                               ShapeBase target,
-                                                                               ConnectorType targetConnector)
+        /// <returns><c>true</c> if the connection is valid, <c>false</c> otherwise.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> or <paramref name="target"/> is <c>null</c>.</exception>
+        public static bool IsShapeCompatibleWithTarget(ShapeBase source, ShapeBase target, ConnectorType targetConnector)
         {
             if (source == null)
             {
@@ -106,6 +114,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             if (target == null)
             {
                 throw new ArgumentNullException(nameof(target),Resources.ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_with_target_shape_);
+            }
+
+            if (ReferenceEquals(source, target))
+            {
+                return false;
             }
 
             IEnumerable<ConnectionRule> connectionRules = connectionMapping[source.GetType()];

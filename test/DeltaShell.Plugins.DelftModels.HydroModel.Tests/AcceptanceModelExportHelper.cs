@@ -25,10 +25,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         /// <summary>
-        /// Export the log file based up on the <paramref name="config"/>.
+        /// Export the log file of stand-alone FM model based up on the <paramref name="config"/>.
         /// </summary>
         /// <param name="config"> The configuration. </param>
-        public static void ExportLogFile(AcceptanceModelExportResultConfig config)
+        public static void ExportLogFileOfFm(AcceptanceModelExportResultConfig config)
         {
             string diaPath = Path.Combine(config.WorkingDirectory,
                                           config.CurrentModelName,
@@ -45,6 +45,42 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.dia"));
 
             config.HasExportedDiagnostics = true;
+        }
+
+        /// <summary>
+        /// Export the log files of the different models inside an integrated model
+        /// based up on the <paramref name="config"/>.
+        /// </summary>
+        /// <param name="config"> The configuration. </param>
+        public static void ExportLogFilesOfIntegratedModel(AcceptanceModelExportResultConfig config)
+        {
+            string diaFolderFM = Path.Combine(config.WorkingDirectory,
+                                            config.CurrentModelName,
+                                            "dflowfm",
+                                            "output");
+            
+            var directoryInfoFMOutput = new DirectoryInfo(diaFolderFM);
+            if (directoryInfoFMOutput.Exists)
+            {
+                FileInfo[] diagFiles= directoryInfoFMOutput.GetFiles("*.dia");
+                FileUtils.CopyFile(diagFiles[0].FullName,
+                                   Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.FM.{diagFiles[0].Name}"));
+                config.HasExportedDiagnostics = true;
+            }
+
+            string diaFolderRtc = Path.Combine(config.WorkingDirectory,
+                                              config.CurrentModelName,
+                                              "rtc",
+                                              "output");
+
+            var directoryInfoRtcOutput = new DirectoryInfo(diaFolderRtc);
+            if (directoryInfoRtcOutput.Exists)
+            {
+                FileInfo[] diagFiles = directoryInfoRtcOutput.GetFiles("diag.xml");
+                FileUtils.CopyFile(diagFiles[0].FullName,
+                                   Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.RTC.{diagFiles[0].Name}"));
+                config.HasExportedDiagnostics = true;
+            }
         }
     }
 }

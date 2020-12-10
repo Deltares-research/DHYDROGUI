@@ -25,30 +25,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var presenter = new WavmFileFunctionStoreNodePresenter();
 
             // Assert
-            Assert.That(presenter, Is.InstanceOf<TreeViewNodePresenterBase<WavmFileFunctionStore>>());
+            Assert.That(presenter, Is.InstanceOf<TreeViewNodePresenterBase<IWavmFileFunctionStore>>());
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void UpdateNode_ExpectedResults()
         {
             // Setup
             var presenter = new WavmFileFunctionStoreNodePresenter();
             var parentNode = Substitute.For<ITreeNode>();
             var node = Substitute.For<ITreeNode>();
+            var functionStore = Substitute.For<IWavmFileFunctionStore>();
+            functionStore.Path.Returns("wavm-Waves.nc");
 
-            using (var tempDir = new TemporaryDirectory())
-            {
-                string ncPath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavm-Waves.nc");
-                var functionStore = new WavmFileFunctionStore(ncPath);
+            // Call
+            presenter.UpdateNode(parentNode, node, functionStore);
 
-                // Call
-                presenter.UpdateNode(parentNode, node, functionStore);
-
-                // Assert 
-                node.Received(1).Text = "wavm-Waves.nc";
-                node.Received(1).Image = Arg.Is<Bitmap>(x => x != null);
-            }
+            // Assert 
+            node.Received(1).Text = "wavm-Waves.nc";
+            node.Received(1).Image = Arg.Is<Bitmap>(x => x != null);
         }
 
         [Test]
@@ -65,10 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var guiPlugin = Substitute.For<GuiPlugin>();
             guiPlugin.Gui = gui;
 
-            var presenter = new WavmFileFunctionStoreNodePresenter
-            {
-                GuiPlugin = guiPlugin,
-            };
+            var presenter = new WavmFileFunctionStoreNodePresenter {GuiPlugin = guiPlugin};
 
             var node = Substitute.For<ITreeNode>();
 
@@ -84,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
 
                 // Assert 
                 // 27 functions in the functionStore + grid.
-                Assert.That(result.Count, Is.EqualTo(28)); 
+                Assert.That(result.Count, Is.EqualTo(28));
             }
         }
 
@@ -96,7 +88,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var model = Substitute.For<IWaveModel>();
 
             var application = Substitute.For<IApplication>();
-            application.GetAllModelsInProject().Returns(new[] { model });
+            application.GetAllModelsInProject().Returns(new[]
+            {
+                model
+            });
 
             var gui = Substitute.For<IGui>();
             gui.Application = application;
@@ -104,10 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             var guiPlugin = Substitute.For<GuiPlugin>();
             guiPlugin.Gui = gui;
 
-            var presenter = new WavmFileFunctionStoreNodePresenter
-            {
-                GuiPlugin = guiPlugin,
-            };
+            var presenter = new WavmFileFunctionStoreNodePresenter {GuiPlugin = guiPlugin};
 
             var node = Substitute.For<ITreeNode>();
 
@@ -116,10 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
                 string ncPath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavm-Waves.nc");
                 var functionStore = new WavmFileFunctionStore(ncPath);
 
-                model.WaveOutputData.WavmFileFunctionStores.Returns(new EventedList<WavmFileFunctionStore>
-                {
-                    functionStore
-                });
+                model.WaveOutputData.WavmFileFunctionStores.Returns(new EventedList<IWavmFileFunctionStore> {functionStore});
 
                 // Call
                 IList<object> result = presenter.GetChildNodeObjects(functionStore, node)
@@ -128,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
 
                 // Assert 
                 // 27 functions in the functionStore.
-                Assert.That(result.Count, Is.EqualTo(27)); 
+                Assert.That(result.Count, Is.EqualTo(27));
             }
         }
     }

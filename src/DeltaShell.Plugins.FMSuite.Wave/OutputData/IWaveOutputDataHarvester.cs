@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using DeltaShell.NGHS.Common.Logging;
 
@@ -28,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Thrown when the specified <paramref name="outputDataDirectory"/>
         /// does not exists.
         /// </exception>
-        IReadOnlyList<ReadOnlyTextFileData> HarvestDiagnosticFiles(DirectoryInfo outputDataDirectory, 
+        IReadOnlyList<ReadOnlyTextFileData> HarvestDiagnosticFiles(DirectoryInfo outputDataDirectory,
                                                                    ILogHandler logHandler = null);
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// <param name="outputDataDirectory">The output data directory.</param>
         /// <param name="logHandler">The log handler.</param>
         /// <returns>
-        /// A collection of<see cref="WavmFileFunctionStore"/> files obtained
+        /// A collection of <see cref="IWavmFileFunctionStore"/> files obtained
         /// from the specified folder.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
@@ -65,8 +64,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Thrown when the specified <paramref name="outputDataDirectory"/>
         /// does not exists.
         /// </exception>
-        IReadOnlyList<WavmFileFunctionStore> HarvestWavmFileFunctionStores(DirectoryInfo outputDataDirectory,
-                                                                           ILogHandler logHandler = null);
+        IReadOnlyList<IWavmFileFunctionStore> HarvestWavmFileFunctionStores(DirectoryInfo outputDataDirectory,
+                                                                            ILogHandler logHandler = null);
 
         /// <summary>
         /// Harvests the wave history (wavh) file function stores.
@@ -74,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// <param name="outputDataDirectory">The output data directory.</param>
         /// <param name="logHandler">The log handler.</param>
         /// <returns>
-        /// A collection of<see cref="WavhFileFunctionStore"/> files obtained
+        /// A collection of <see cref="IWavhFileFunctionStore"/> files obtained
         /// from the specified folder.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
@@ -84,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         /// Thrown when the specified <paramref name="outputDataDirectory"/>
         /// does not exists.
         /// </exception>
-        IReadOnlyList<WavhFileFunctionStore> HarvestWavhFileFunctionStores(DirectoryInfo outputDataDirectory,
-                                                                           ILogHandler logHandler = null);
+        IReadOnlyList<IWavhFileFunctionStore> HarvestWavhFileFunctionStores(DirectoryInfo outputDataDirectory,
+                                                                            ILogHandler logHandler = null);
     }
 }
