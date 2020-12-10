@@ -8,6 +8,7 @@ using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
+using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
@@ -22,7 +23,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         {
             // Setup
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
-            IEnumerable<WaveModel> GetModels() => Enumerable.Empty<WaveModel>();
+
+            IEnumerable<WaveModel> GetModels()
+            {
+                return Enumerable.Empty<WaveModel>();
+            }
 
             // Call
             var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
@@ -35,10 +40,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         public void Constructor_FactoryNull_ThrowsArgumentNullException()
         {
             // Setup
-            IEnumerable<WaveModel> GetModels() => Enumerable.Empty<WaveModel>();
+            IEnumerable<WaveModel> GetModels()
+            {
+                return Enumerable.Empty<WaveModel>();
+            }
 
             // Call | Assert
-            void Call() => new WavmFileFunctionStoreLayerSubProvider(null, GetModels);
+            void Call()
+            {
+                new WavmFileFunctionStoreLayerSubProvider(null, GetModels);
+            }
+
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             Assert.That(exception.ParamName, Is.EqualTo("instanceCreator"));
@@ -51,7 +63,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
 
             // Call | Assert
-            void Call() => new WavmFileFunctionStoreLayerSubProvider(instanceCreator, null);
+            void Call()
+            {
+                new WavmFileFunctionStoreLayerSubProvider(instanceCreator, null);
+            }
+
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             Assert.That(exception.ParamName, Is.EqualTo("getWaveModelsFunc"));
@@ -62,7 +78,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         {
             // Setup
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
-            IEnumerable<WaveModel> GetModels() => Enumerable.Empty<WaveModel>();
+
+            IEnumerable<WaveModel> GetModels()
+            {
+                return Enumerable.Empty<WaveModel>();
+            }
 
             var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
 
@@ -78,7 +98,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         {
             // Setup
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
-            IEnumerable<WaveModel> GetModels() => Enumerable.Empty<WaveModel>();
+
+            IEnumerable<WaveModel> GetModels()
+            {
+                return Enumerable.Empty<WaveModel>();
+            }
 
             var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
 
@@ -90,73 +114,80 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             Assert.That(result, Is.Empty);
         }
 
-
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GenerateChildLayerObjects_HasNoParentModel_ResultIncludesFunctionsAndGrid()
         {
             // Setup
-            const string filePath = "./WaveOutputDataHarvesterTest/wavm-Waves.nc";
-
-            using (var tempDir = new TemporaryDirectory())
+            var store = new TestWavmFileFunctionStore
             {
-                string ncPath = tempDir.CopyTestDataFileToTempDirectory(filePath);
-                var store = new WavmFileFunctionStore(ncPath);
-
-                var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
-                IEnumerable<IWaveModel> GetModels() => Enumerable.Empty<IWaveModel>();
-
-                var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
-
-                // Call
-                IList<object> result = subProvider.GenerateChildLayerObjects(store).ToList();
-
-                // Assert
-                Assert.That(result.Count, Is.EqualTo(28));
-                Assert.That(result, Contains.Item(store.Grid));
-
-                foreach (IFunction func in store.Functions)
+                Functions = new EventedList<IFunction>(new[]
                 {
-                    Assert.That(result, Contains.Item(func));
-                }
+                    Substitute.For<IFunction>(),
+                    Substitute.For<IFunction>()
+                }),
+                Grid = CurvilinearGrid.CreateDefault()
+            };
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
+
+            IEnumerable<IWaveModel> GetModels()
+            {
+                return Enumerable.Empty<IWaveModel>();
+            }
+
+            var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
+
+            // Call
+            IList<object> result = subProvider.GenerateChildLayerObjects(store).ToList();
+
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(3));
+            Assert.That(result, Contains.Item(store.Grid));
+
+            foreach (IFunction func in store.Functions)
+            {
+                Assert.That(result, Contains.Item(func));
             }
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GenerateChildLayerObjects_HasParentModel_ResultIncludesFunctions()
         {
             // Setup
-            const string filePath = "./WaveOutputDataHarvesterTest/wavm-Waves.nc";
-
-            using (var tempDir = new TemporaryDirectory())
+            var store = new TestWavmFileFunctionStore
             {
-                string ncPath = tempDir.CopyTestDataFileToTempDirectory(filePath);
-                var store = new WavmFileFunctionStore(ncPath);
+                Functions = new EventedList<IFunction>(new[]
+                {
+                    Substitute.For<IFunction>(),
+                    Substitute.For<IFunction>()
+                }),
+                Grid = CurvilinearGrid.CreateDefault()
+            };
 
-                var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
 
-                var model = Substitute.For<IWaveModel>();
-                model.WaveOutputData.WavmFileFunctionStores.Returns(new EventedList<IWavmFileFunctionStore> {store});
+            var model = Substitute.For<IWaveModel>();
+            model.WaveOutputData.WavmFileFunctionStores.Returns(new EventedList<IWavmFileFunctionStore> {store});
 
-                IEnumerable<IWaveModel> GetModels() => new[]
+            IEnumerable<IWaveModel> GetModels()
+            {
+                return new[]
                 {
                     model
                 };
+            }
 
-                var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
+            var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
 
-                // Call
-                IList<object> result = subProvider.GenerateChildLayerObjects(store).ToList();
+            // Call
+            IList<object> result = subProvider.GenerateChildLayerObjects(store).ToList();
 
-                // Assert
-                Assert.That(result.Count, Is.EqualTo(27));
-                Assert.That(result, Has.No.Member(store.Grid));
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result, Has.No.Member(store.Grid));
 
-                foreach (IFunction func in store.Functions)
-                {
-                    Assert.That(result, Contains.Item(func));
-                }
+            foreach (IFunction func in store.Functions)
+            {
+                Assert.That(result, Contains.Item(func));
             }
         }
 
@@ -165,7 +196,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         {
             // Setup
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
-            IEnumerable<WaveModel> GetModels() => Enumerable.Empty<WaveModel>();
+
+            IEnumerable<WaveModel> GetModels()
+            {
+                return Enumerable.Empty<WaveModel>();
+            }
 
             var subProvider = new WavmFileFunctionStoreLayerSubProvider(instanceCreator, GetModels);
 

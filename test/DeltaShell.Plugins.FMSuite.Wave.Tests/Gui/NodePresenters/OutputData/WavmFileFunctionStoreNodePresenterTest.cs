@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
+using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -10,6 +11,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
+using DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -81,7 +83,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GetChildNodeObjects_WavmFileFunctionStoreInModel_ExpectedResults()
         {
             // Setup
@@ -100,25 +101,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
             guiPlugin.Gui = gui;
 
             var presenter = new WavmFileFunctionStoreNodePresenter {GuiPlugin = guiPlugin};
-
             var node = Substitute.For<ITreeNode>();
 
-            using (var tempDir = new TemporaryDirectory())
+            var functionStore = new TestWavmFileFunctionStore
             {
-                string ncPath = tempDir.CopyTestDataFileToTempDirectory("./WaveOutputDataHarvesterTest/wavm-Waves.nc");
-                var functionStore = new WavmFileFunctionStore(ncPath);
+                Functions = new EventedList<IFunction>(new[]
+                {
+                    Substitute.For<IFunction>(),
+                    Substitute.For<IFunction>()
+                })
+            };
+            
+            model.WaveOutputData.WavmFileFunctionStores.Returns(new EventedList<IWavmFileFunctionStore> {functionStore});
 
-                model.WaveOutputData.WavmFileFunctionStores.Returns(new EventedList<IWavmFileFunctionStore> {functionStore});
+            // Call
+            IList<object> result = presenter.GetChildNodeObjects(functionStore, node)
+                                            .Cast<object>()
+                                            .ToList();
 
-                // Call
-                IList<object> result = presenter.GetChildNodeObjects(functionStore, node)
-                                                .Cast<object>()
-                                                .ToList();
-
-                // Assert 
-                // 27 functions in the functionStore.
-                Assert.That(result.Count, Is.EqualTo(27));
-            }
+            // Assert 
+            Assert.That(result.Count, Is.EqualTo(2));
         }
     }
 }

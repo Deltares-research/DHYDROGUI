@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
 
         public override IEnumerable<object> GenerateChildLayerObjects(object data)
         {
-            if (!(data is WavmFileFunctionStore store))
+            if (!(data is IWavmFileFunctionStore store))
             {
                 yield break;
             }
