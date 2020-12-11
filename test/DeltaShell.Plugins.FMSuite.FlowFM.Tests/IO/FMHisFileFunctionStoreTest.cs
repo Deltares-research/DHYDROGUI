@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 ActivityRunner.RunActivity(model);
 
-                FMHisFileFunctionStore store = model.OutputHisFileStore;
+                IFMHisFileFunctionStore store = model.OutputHisFileStore;
 
                 Assert.Multiple(() =>
                 {

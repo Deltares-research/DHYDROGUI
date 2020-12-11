@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public virtual IFMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
 
-        public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
+        public virtual IFMHisFileFunctionStore OutputHisFileStore { get; protected set; }
 
         public TimeSpan OutputTimeStep
         {

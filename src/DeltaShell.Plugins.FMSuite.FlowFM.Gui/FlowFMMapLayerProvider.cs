@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return groupLayer;
             }
 
-            if (data is FMHisFileFunctionStore)
+            if (data is IFMHisFileFunctionStore)
             {
                 return new GroupLayer("Output (his)")
                 {
@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return data is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
                    || data is IFMMapFileFunctionStore
-                   || data is FMHisFileFunctionStore
+                   || data is IFMHisFileFunctionStore
                    || data is IFMClassMapFileFunctionStore
                    || data is ImportedFMNetFile
                    || data is IEventedList<BoundaryConditionSet> && parentData is WaterFlowFMModel

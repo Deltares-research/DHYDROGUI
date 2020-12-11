@@ -764,7 +764,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             if (e.PropertyName.Equals(OutputHisFileStoreMemberName))
             {
-                FMHisFileFunctionStore fmHisFileFunctionStore = ((WaterFlowFMModel) sender).OutputHisFileStore;
+                IFMHisFileFunctionStore fmHisFileFunctionStore = ((WaterFlowFMModel) sender).OutputHisFileStore;
                 if (fmHisFileFunctionStore != null)
                 {
                     CloseViewDataForOutdatedStore(fmHisFileFunctionStore);
@@ -898,7 +898,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
 
         [InvokeRequired]
-        private void CloseViewDataForOutdatedStore(FMHisFileFunctionStore fmHisFileFunctionStore)
+        private void CloseViewDataForOutdatedStore(IFMHisFileFunctionStore fmHisFileFunctionStore)
         {
             List<object> datas = Gui.DocumentViews.Select(v => v.Data).ToList();
 
