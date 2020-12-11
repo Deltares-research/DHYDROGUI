@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             } while (File.Exists(path));
 
-            var item = new List<IStructure1D>();
+            var item = new List<IStructure>();
 
             var fmModel = new WaterFlowFMModel();
             var exporter = new StructuresListExporter(StructuresListType.Gates) {GetModelForList = input => fmModel};
@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 }
             }
 
-            var item = new List<IStructure1D>();
+            var item = new List<IStructure>();
 
             var fmModel = new WaterFlowFMModel();
             var exporter = new StructuresListExporter(StructuresListType.Gates) {GetModelForList = input => fmModel};
@@ -135,7 +135,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
         [TestCase(StructuresListType.Pumps, typeof(IList<IPump>), typeof(IEventedList<IPump>))]
         [TestCase(StructuresListType.Weirs, typeof(IList<IWeir>), typeof(IEventedList<IWeir>))]
-        [TestCase(StructuresListType.Gates, typeof(IList<IGate>), typeof(IEventedList<IGate>))]
         public void
             GivenStructuresListExporterOfTheSpecifiedTypeWhenSourceTypesIsCalledThenTheCorrectSourceTypesAreReturned(
                 StructuresListType t, Type listClassType, Type eventedListClassType)

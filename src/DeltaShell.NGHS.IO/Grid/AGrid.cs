@@ -121,32 +121,6 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApi.GetConvention();
         }
 
-        public int GetNumberOfNetworks()
-        {
-            if (!IsInitialized())
-            {
-                Initialize();
-            }
-
-            int numberOfNetworks;
-            int ierr = GridApi.GetNumberOfNetworks(out numberOfNetworks);
-            ThrowIfError(ierr, Resources.AGrid_Couldn_t_get_the_number_of_networks);
-            return numberOfNetworks;
-        }
-
-        public int[] GetNetworkIds()
-        {
-            if (!IsInitialized())
-            {
-                Initialize();
-            }
-
-            int[] networkIds;
-            int ierr = GridApi.GetNetworkIds(out networkIds);
-            ThrowIfError(ierr, Resources.AGrid_Couldn_t_get_the_network_ids);
-            return networkIds;
-        }
-
         public virtual void Dispose()
         {
             if (disposed)

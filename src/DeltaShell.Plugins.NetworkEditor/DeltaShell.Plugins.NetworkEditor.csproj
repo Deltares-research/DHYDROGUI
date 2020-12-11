@@ -171,24 +171,9 @@
     <Compile Include="MapLayers\HydroAreaLayerStyles.cs" />
     <Compile Include="MapLayers\CustomRenderers\EmbankmentRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\EnclosureRenderer.cs" />
-    <Compile Include="MapLayers\Editors\CatchmentFeatureEditor.cs" />
-    <Compile Include="MapLayers\Editors\DrainageBasinFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\HydroAreaFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\EmbankmentInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\LateralSourceInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\HydroNodeInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\ChannelInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\HydroLinkInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\HydroObjectToHydroLinkRelationInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\RunoffBoundaryFeatureInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\SubCatchmentRelationInteractor.cs" />
     <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\CatchmentFeatureInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\DiffuseLateralSourceInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\WasteWaterTreatmentPlantFeatureInteractor.cs" />
-    <Compile Include="MapLayers\Editors\HydroNetworkFeatureEditor.cs" />
-    <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -196,8 +181,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollection.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\StructureFeatureToStructureRelationInteractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NetworkEditorApplicationPlugin.cs" />
   </ItemGroup>

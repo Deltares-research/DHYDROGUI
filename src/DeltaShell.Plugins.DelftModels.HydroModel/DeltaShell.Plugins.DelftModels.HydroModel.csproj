@@ -79,10 +79,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ValueConverters\HydroLinksFeatureCoverageValueConverter.cs" />
-    <Compile Include="ValueConverters\HydroRegionCoverageValueConverterBase.cs" />
-    <Compile Include="ValueConverters\HydroRegionFeatureCoverageFromNetworkCoverageValueConverter.cs" />
-    <Compile Include="ValueConverters\IHydroRegionValueConverter.cs" />
     <Compile Include="HydroModelExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -207,10 +203,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ValueConverters\HydroRegionFeatureCoverageFromNetworkCoverageValueConverter.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ValueConverters\HydroRegionNetworkCoverageFromFeatureCoverageValueConverter.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CompositeHydroModelWorkFlowData.hbm.xml">

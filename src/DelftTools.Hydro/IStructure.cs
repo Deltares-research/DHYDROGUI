@@ -1,4 +1,6 @@
+using GeoAPI.Extensions.Networks;
+
 namespace DelftTools.Hydro
 {
-    public interface IStructure : IHydroObject {}
+    public interface IStructure : IBranchFeature, IHydroObject {}
 }

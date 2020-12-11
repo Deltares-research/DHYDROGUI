@@ -73,22 +73,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
                         true);
                 var hydroModel = (ICompositeActivity) Activator.CreateInstance(hydroModelType);
 
-                // move network to hydro model and relink
-                IDataItem networkDataItem = Deproxify(flowModel.DataItems.First(di => di.Value is IHydroNetwork));
-                var network = (IHydroNetwork) networkDataItem.Value;
-
-                IHydroRegion hydroRegion = hydroModel.GetAllItemsRecursive().OfType<IHydroRegion>().First();
-                hydroRegion.SubRegions.Add(network);
-
-                IDataItem hydroModelNetworkDataItem = ((IModel) hydroModel).AllDataItems.First(di => di.Value == network);
-
-                TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "LinkedTo",
-                                                   hydroModelNetworkDataItem);
-                TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "ComposedValue",
-                                                   null);
-
-                hydroModelNetworkDataItem.LinkedBy.Add(networkDataItem);
-
                 // add rtc & flow as activities
                 hydroModel.Activities.Add(rtcModel);
                 hydroModel.Activities.Add(flowModel);

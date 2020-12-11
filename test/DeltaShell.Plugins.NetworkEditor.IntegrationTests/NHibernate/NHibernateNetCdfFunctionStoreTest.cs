@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -27,8 +29,11 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
+using Rhino.Mocks;
 using SharpMap.Converters.WellKnownText;
+using SharpTestsEx;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 {
@@ -245,121 +250,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             Assert.AreEqual(0, retrievedFeatureCoverage.Features.Count);
             Assert.AreEqual(0, retrievedFeatureCoverage.FeatureVariable.Values.Count);
-
-            store.Dispose();
-        }
-
-        [Test]
-        public void ModifyingInternalCollectionInFeaturesAfterSaveShouldNotThrowException()
-        {
-            var hydroNode = new HydroNode
-            {
-                Name = "feature1",
-                Geometry = new Point(100, 100)
-            };
-            IList<IFeature> features = new List<IFeature> {hydroNode};
-
-            var coverage = new FeatureCoverage();
-
-            var store = new NetCdfFunctionStore();
-            store.CreateNew(TestHelper.GetCurrentMethodName() + ".nc");
-            store.Functions.Add(coverage);
-
-            coverage.Components.Add(new Variable<double>("value"));
-            coverage.Arguments.Add(new Variable<IFeature>("feature"));
-            coverage.Features = new EventedList<IFeature>(features);
-            coverage.FeatureVariable.SetValues(features);
-
-            IFeature feature = features[0];
-            IList<double> values = coverage.GetValues<double>(new VariableValueFilter<IFeature>(coverage.FeatureVariable, feature));
-            Assert.AreEqual(1, values.Count);
-            Assert.AreEqual(coverage.Components[0].DefaultValue, values[0]);
-
-            IList<double> allValues = coverage.GetValues<double>();
-            Assert.AreEqual(1, allValues.Count);
-
-            var valuesArray = new[]
-            {
-                1.0
-            };
-            coverage.SetValues(valuesArray);
-
-            hydroNode.Links.Add(new HydroLink(null, null)); //triggers a bubbling collection changed
-
-            //we should get here without exception
-        }
-
-       
-        [Test]
-        public void SaveAndRetrieveBranchFeatureCoverageWithNetCdf()
-        {
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            //network
-            var network = new HydroNetwork();
-
-            var node1 = new HydroNode("node1");
-            var node2 = new HydroNode("node2");
-
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-
-            var branch1 = new Channel("branch1", node1, node2) {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")};
-            var branch2 = new Channel("branch2", node1, node2) {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")};
-
-            var weir = new Weir();
-            var gate = new Gate();
-
-            branch1.BranchFeatures.Add(weir);
-            branch1.BranchFeatures.Add(gate);
-
-            network.Branches.Add(branch1);
-            network.Branches.Add(branch2);
-
-            weir.Branch = branch2;
-            weir.Network = network;
-            gate.Branch = branch2;
-            gate.Network = network;
-
-            //feature coverage
-            var featureCoverage = new FeatureCoverage("test");
-
-            var store = new NetCdfFunctionStore();
-            store.CreateNew(TestHelper.GetCurrentMethodName() + ".nc");
-            store.Functions.Add(featureCoverage);
-            featureCoverage.Features = new EventedList<IFeature>(new IBranchFeature[]
-            {
-                weir,
-                gate
-            });
-            featureCoverage.Components.Add(new Variable<double>("value"));
-            featureCoverage.Arguments.Add(new Variable<IBranchFeature>("feature")); // Pump BranchStructure Weir IStructure
-
-            featureCoverage[weir] = 2.0;
-            featureCoverage[gate] = 3.0;
-
-            projectRepository.Create(path);
-
-            //save
-            var project = new Project();
-            project.RootFolder.Add(new DataItem(network));
-            project.RootFolder.Add(new DataItem(featureCoverage, DataItemRole.Output));
-            projectRepository.SaveOrUpdate(project);
-
-            //reload
-            Project retrievedProject = projectRepository.Open(path);
-            IDataItem[] retrievedDataItems = retrievedProject.RootFolder.DataItems.ToArray();
-            var retrievedFeatureCoverage = (IFeatureCoverage) retrievedDataItems[1].Value;
-
-            //test
-            Assert.IsAssignableFrom(typeof(NetCdfFunctionStore), retrievedFeatureCoverage.Store);
-            Assert.AreEqual(2, retrievedFeatureCoverage.Features.Count);
-            Assert.AreEqual(2, retrievedFeatureCoverage.FeatureVariable.Values.Count);
-            Assert.AreEqual(retrievedFeatureCoverage.Features[0], retrievedFeatureCoverage.Arguments[0].Values[0]);
-            Assert.IsAssignableFrom(typeof(Weir), retrievedFeatureCoverage.Arguments[0].Values[0]);
-            Assert.IsAssignableFrom(typeof(Gate), retrievedFeatureCoverage.Arguments[0].Values[1]);
-            Assert.AreEqual(2.0, retrievedFeatureCoverage.Components[0].Values[0]);
-            Assert.AreEqual(3.0, retrievedFeatureCoverage.Components[0].Values[1]);
 
             store.Dispose();
         }

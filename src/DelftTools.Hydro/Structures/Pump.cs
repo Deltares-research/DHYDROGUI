@@ -1,9 +1,10 @@
 using System;
 using System.ComponentModel;
-using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
@@ -14,7 +15,7 @@ namespace DelftTools.Hydro.Structures
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
-    public class Pump : BranchStructure, IPump
+    public class Pump : BranchFeature, IPump
     {
         private bool canBeTimedependent;
         private bool useCapacityTimeSeries;
@@ -92,43 +93,6 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 11, ExportName = "ControlDir")]
         public virtual PumpControlDirection ControlDirection { get; set; }
 
-        public virtual double OffsetZ
-        {
-            get
-            {
-                double[] relevantZValues;
-                switch (ControlDirection)
-                {
-                    case PumpControlDirection.DeliverySideControl:
-                        relevantZValues = new[]
-                        {
-                            StopDelivery,
-                            StartDelivery
-                        };
-                        break;
-                    case PumpControlDirection.SuctionSideControl:
-                        relevantZValues = new[]
-                        {
-                            StartSuction,
-                            StopSuction
-                        };
-                        break;
-                    default:
-                        relevantZValues = new[]
-                        {
-                            StartSuction,
-                            StopSuction,
-                            StartDelivery,
-                            StopDelivery
-                        };
-                        break;
-                }
-
-                //return the middle between min and max
-                return (relevantZValues.Min() + relevantZValues.Max()) / 2;
-            }
-        }
-
         /// <summary>
         /// reduction table
         /// </summary>
@@ -137,8 +101,10 @@ namespace DelftTools.Hydro.Structures
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
+
             var pump = (Pump) source;
 
+            LongName = pump.LongName;
             Attributes = (IFeatureAttributeCollection) pump.Attributes.Clone();
             Capacity = pump.Capacity;
             StopDelivery = pump.StopDelivery;
@@ -159,11 +125,6 @@ namespace DelftTools.Hydro.Structures
             CapacityTimeSeries = (TimeSeries) pump.CapacityTimeSeries.Clone(true);
         }
 
-        public override StructureType GetStructureType()
-        {
-            return StructureType.Pump;
-        }
-
         [EditAction]
         private void OnCanBeTimeDependentSet()
         {
@@ -180,5 +141,24 @@ namespace DelftTools.Hydro.Structures
                 CapacityTimeSeries = null;
             }
         }
+
+        public virtual string Description { get; set; }
+
+        [DisplayName("Long name")]
+        [FeatureAttribute(Order = 1)]
+        public virtual string LongName { get; set; }
+
+        public virtual int CompareTo(Pump other)
+        {
+            return CompareTo((IBranchFeature) other);
+        }
+
+        public override int CompareTo(object obj)
+        {
+            var other = (Pump) obj;
+            return CompareTo(other);
+        }
+
+        public virtual IHydroRegion Region { get; }
     }
 }

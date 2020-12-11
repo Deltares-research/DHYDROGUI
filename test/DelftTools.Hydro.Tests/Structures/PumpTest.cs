@@ -77,7 +77,6 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(sourcePump.StartSuction, targetPump.StartSuction);
             Assert.AreEqual(sourcePump.StopSuction, targetPump.StopSuction);
             Assert.AreEqual(sourcePump.ControlDirection, targetPump.ControlDirection);
-            Assert.AreEqual(sourcePump.OffsetY, targetPump.OffsetY);
             Assert.AreEqual(sourcePump.DirectionIsPositive, targetPump.DirectionIsPositive);
             for (var i = 0; i < sourcePump.ReductionTable.Components[0].Values.Count; i++)
             {

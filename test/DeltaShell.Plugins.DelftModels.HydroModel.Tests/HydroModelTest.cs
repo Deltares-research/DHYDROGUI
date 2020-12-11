@@ -131,8 +131,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             var childModel = new SimpleHydroModel();
 
-            var network = new HydroNetwork();
-            var region = new HydroRegion {SubRegions = {network}};
+            var subRegion = new HydroArea();
+            var region = new HydroRegion {SubRegions = {subRegion}};
             var hydroModel = new HydroModel
             {
                 Region = region,
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
 
             IDataItem target = childModel.GetDataItemByValue(childModel.Region);
-            IDataItem source = hydroModel.GetDataItemByValue(network);
+            IDataItem source = hydroModel.GetDataItemByValue(subRegion);
             target.LinkTo(source);
 
             hydroModel.Activities.Clear();
@@ -779,14 +779,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             public SimpleHydroModel()
             {
-                DataItems.Add(new DataItem(new HydroNetwork(), "network", SupportedRegionType, DataItemRole.Input, "network"));
+                DataItems.Add(new DataItem(new HydroArea(), "area", SupportedRegionType, DataItemRole.Input, "area"));
             }
 
             public Type SupportedRegionType
             {
                 get
                 {
-                    return typeof(HydroNetwork);
+                    return typeof(HydroArea);
                 }
             }
 

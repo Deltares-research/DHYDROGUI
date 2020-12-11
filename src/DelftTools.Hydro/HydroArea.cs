@@ -34,7 +34,6 @@ namespace DelftTools.Hydro
         private void Initialize()
         {
             Name = "Area";
-            Links = new EventedList<HydroLink>();
 
             LandBoundaries = new EventedList<LandBoundary2D>();
             DryPoints = new EventedList<GroupablePointFeature>();
@@ -56,8 +55,6 @@ namespace DelftTools.Hydro
         #region IHydroRegion
 
         public virtual IEnumerable<IHydroObject> AllHydroObjects => Enumerable.Empty<IHydroObject>();
-
-        public virtual IEventedList<HydroLink> Links { get; set; }
 
         public override IEnumerable<object> GetDirectChildren()
         {
@@ -135,26 +132,10 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual HydroLink AddNewLink(IHydroObject source, IHydroObject target)
-        {
-            return HydroRegion.AddNewLink(source, target);
-        }
-
-        public virtual void RemoveLink(IHydroObject source, IHydroObject target)
-        {
-            HydroRegion.RemoveLink(source, target);
-        }
-
-        public virtual bool CanLinkTo(IHydroObject source, IHydroObject target)
-        {
-            return HydroRegion.CanLinkTo(source, target);
-        }
-
         public override object Clone()
         {
             var clone = (HydroArea) base.Clone();
             clone.Initialize();
-            clone.Links = new EventedList<HydroLink>(Links);
 
             return clone;
         }
