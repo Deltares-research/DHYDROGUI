@@ -12,12 +12,14 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
+using log4net;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.NGHS.IO.FunctionStores
 {
     public class ReadOnlyMapHisFileFunctionStore : IFunctionStore, IFileBased
     {
+        private static ILog Log = LogManager.GetLogger(typeof(ReadOnlyMapHisFileFunctionStore));
         private IEventedList<IFunction> functions = new EventedList<IFunction>();
         private MapHisFileMetaData metaData;
         private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
@@ -428,7 +430,15 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             {
                 if (metaData == null)
                 {
-                    metaData = MapHisFileReader.ReadMetaData(path);
+                    try
+                    {
+                        metaData = MapHisFileReader.ReadMetaData(path);
+                    }
+                    catch (Exception e)
+                    {
+                        metaData = null;
+                        Log.Error($"Could not load {path} because : {e.Message}");
+                    }
                 }
                 return metaData;
             }
