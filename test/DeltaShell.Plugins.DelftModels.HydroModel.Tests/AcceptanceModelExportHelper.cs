@@ -55,6 +55,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         /// <param name="config"> The configuration. </param>
         public static void ExportLogFilesOfIntegratedModel(AcceptanceModelExportResultConfig config)
         {
+            string modelExportSubFolder = Path.Combine(AcceptanceModelExportResultConfig.IntegratedModelsExportDirectory, config.OutputName);
+            FileUtils.CreateDirectoryIfNotExists(modelExportSubFolder, true);
+
             string diaFolderFM = Path.Combine(config.WorkingDirectory,
                                               config.CurrentModelName,
                                               "dflowfm",
@@ -68,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 if (diagFiles.Any())
                 {
                     FileUtils.CopyFile(diagFiles[0].FullName,
-                                       Path.Combine(AcceptanceModelExportResultConfig.IntegratedModelsExportDirectory, $"{config.OutputName}.FM.{diagFiles[0].Name}"));
+                                       Path.Combine(modelExportSubFolder, diagFiles[0].Name));
                     config.HasExportedDiagnostics = true;
                 }
             }
@@ -81,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             if (File.Exists(diaRtcPath))
             {
                 FileUtils.CopyFile(diaRtcPath,
-                                   Path.Combine(AcceptanceModelExportResultConfig.IntegratedModelsExportDirectory, $"{config.OutputName}.RTC.diag.xml"));
+                                   Path.Combine(modelExportSubFolder, "diag.xml"));
                 config.HasExportedDiagnostics = true;
             }
 
@@ -93,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             if (File.Exists(diaWavesPath))
             {
                 FileUtils.CopyFile(diaWavesPath,
-                                   Path.Combine(AcceptanceModelExportResultConfig.IntegratedModelsExportDirectory, $"{config.OutputName}.Waves.swn-diag.Waves"));
+                                   Path.Combine(modelExportSubFolder, "swn-diag.Waves"));
                 config.HasExportedDiagnostics = true;
             }
         }

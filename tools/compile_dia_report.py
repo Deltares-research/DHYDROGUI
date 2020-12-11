@@ -96,6 +96,19 @@ ELEMENT_TEMPLATE = """<div class="card is-fullwidth">
 </div>
 """
 
+ELEMENTFOLDER_TEMPLATE = """<div class="card is-fullwidth">
+  <header class="card-header">
+    <p class="card-header-title">{0}</p>
+      <a class="card-header-icon card-toggle">
+        <i class="fa fa-angle-down"></i>
+      </a>
+  </header>
+  <div class="card-content is-hidden"> 
+  {1} 
+  </div>
+</div>
+"""
+
 
 def format_dia_file(dia_content: str) -> str:
     """
@@ -214,7 +227,22 @@ def construct_element(header: str, content: str) -> str:
     else:
         raise ValueError('Unknown extention {} found for a diagnostic file'.format(header.split(".")[-1]))
          
+def construct_folders(path: Path) -> str:
+    """
+    Construct a formatted element for integrated model folders in which
+    diagnostic files are grouped 
+    """
+    content = []
 
+    for p in path.glob("*"):        
+        if p.is_dir():
+            raise ValueError('In {} it is not possible to have a subdirectory, called {}'.format(path, p.name))
+        else:
+            content.append(construct_element(p.name, p.read_text()))        
+            
+    return ELEMENTFOLDER_TEMPLATE.format(path.name, "\n".join(content))
+
+    
 def build_section(path: Path) -> str:
     """
     Build a single section from the specified folder containing a set of log files.
@@ -222,8 +250,14 @@ def build_section(path: Path) -> str:
     :param path: Path to the folder containing a set of log files.
     :returns: A formatted html section describing the files within the path.
     """
-    content = (construct_element(p.name, p.read_text()) for p in path.glob("*"))
+    content = []
    
+    for p in path.glob("*"):        
+        if p.is_dir():
+            content.append(construct_folders(p))
+        else:            
+            content.append(construct_element(p.name, p.read_text()))
+     
     return SECTION_TEMPLATE.format(path.name, "\n".join(content))
 
 
