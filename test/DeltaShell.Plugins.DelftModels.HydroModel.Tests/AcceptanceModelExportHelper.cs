@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using DelftTools.Utils.IO;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -16,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public static void ExportEmptyLogFile(AcceptanceModelExportResultConfig config)
         {
             string content = config.HasValidated
-                                 ? "No .dia file found for this run."
+                                 ? "No diagnostic file found for this run."
                                  : "** ERROR : Failed to validate the model, no .dia file has been produced.";
 
             File.WriteAllText(Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory,
@@ -55,30 +56,44 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public static void ExportLogFilesOfIntegratedModel(AcceptanceModelExportResultConfig config)
         {
             string diaFolderFM = Path.Combine(config.WorkingDirectory,
-                                            config.CurrentModelName,
-                                            "dflowfm",
-                                            "output");
-            
+                                              config.CurrentModelName,
+                                              "dflowfm",
+                                              "output");
+
             var directoryInfoFMOutput = new DirectoryInfo(diaFolderFM);
             if (directoryInfoFMOutput.Exists)
             {
-                FileInfo[] diagFiles= directoryInfoFMOutput.GetFiles("*.dia");
-                FileUtils.CopyFile(diagFiles[0].FullName,
-                                   Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.FM.{diagFiles[0].Name}"));
+                FileInfo[] diagFiles = directoryInfoFMOutput.GetFiles("*.dia");
+
+                if (diagFiles.Any())
+                {
+                    FileUtils.CopyFile(diagFiles[0].FullName,
+                                       Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.FM.{diagFiles[0].Name}"));
+                    config.HasExportedDiagnostics = true;
+                }
+            }
+
+            string diaRtcPath = Path.Combine(config.WorkingDirectory,
+                                             config.CurrentModelName,
+                                             "rtc",
+                                             "output", "diag.xml");
+
+            if (File.Exists(diaRtcPath))
+            {
+                FileUtils.CopyFile(diaRtcPath,
+                                   Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.RTC.diag.xml"));
                 config.HasExportedDiagnostics = true;
             }
 
-            string diaFolderRtc = Path.Combine(config.WorkingDirectory,
-                                              config.CurrentModelName,
-                                              "rtc",
-                                              "output");
+            string diaWavesPath = Path.Combine(config.WorkingDirectory,
+                                               config.CurrentModelName,
+                                               "wave",
+                                               "output", "swn-diag.Waves");
 
-            var directoryInfoRtcOutput = new DirectoryInfo(diaFolderRtc);
-            if (directoryInfoRtcOutput.Exists)
+            if (File.Exists(diaWavesPath))
             {
-                FileInfo[] diagFiles = directoryInfoRtcOutput.GetFiles("diag.xml");
-                FileUtils.CopyFile(diagFiles[0].FullName,
-                                   Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.RTC.{diagFiles[0].Name}"));
+                FileUtils.CopyFile(diaWavesPath,
+                                   Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.Waves.swn-diag.Waves"));
                 config.HasExportedDiagnostics = true;
             }
         }
