@@ -9,9 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        private FMMapFileFunctionStore outputMapFileStore;
+        private IFMMapFileFunctionStore outputMapFileStore;
 
-        public virtual FMMapFileFunctionStore OutputMapFileStore
+        public virtual IFMMapFileFunctionStore OutputMapFileStore
         {
             get => outputMapFileStore;
             protected set => outputMapFileStore = value;

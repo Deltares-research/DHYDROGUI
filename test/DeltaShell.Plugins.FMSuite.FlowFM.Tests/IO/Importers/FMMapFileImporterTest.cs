@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(importer.Category, Is.EqualTo("D-Flow FM 2D/3D"));
             Assert.That(importer.Description, Is.EqualTo(string.Empty));
             Assert.IsNotNull(importer.Image);
-            Assert.That(importer.SupportedItemTypes.Single(), Is.EqualTo(typeof(FMMapFileFunctionStore)));
+            Assert.That(importer.SupportedItemTypes.Single(), Is.EqualTo(typeof(IFMMapFileFunctionStore)));
             Assert.That(importer.OpenViewAfterImport, Is.True);
             Assert.That(importer.CanImportOn(Arg<object>.Is.Anything), Is.True);
             Assert.That(importer.CanImportOnRootLevel, Is.True);

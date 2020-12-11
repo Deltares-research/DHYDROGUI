@@ -16,7 +16,7 @@ using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {
-    public class FMMapFileFunctionStore : FMNetCdfFileFunctionStore
+    public class FMMapFileFunctionStore : FMNetCdfFileFunctionStore, IFMMapFileFunctionStore
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(FMMapFileFunctionStore));
 

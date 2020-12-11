@@ -1034,7 +1034,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
+        public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeSeries()
         {
             var model = Substitute.ForPartsOf<WaterFlowFMModel>();
             model.OutputMapFileStore.Returns(new FMMapFileFunctionStore());

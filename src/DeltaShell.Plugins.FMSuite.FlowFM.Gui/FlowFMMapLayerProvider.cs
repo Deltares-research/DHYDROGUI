@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 };
             }
 
-            if (data is FMMapFileFunctionStore)
+            if (data is IFMMapFileFunctionStore)
             {
                 var groupLayer = new GroupLayer("Output (map)")
                 {
@@ -243,7 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             return data is WaterFlowFMModel
                    || data is IGrouping<string, IFunction>
-                   || data is FMMapFileFunctionStore
+                   || data is IFMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
                    || data is IFMClassMapFileFunctionStore
                    || data is ImportedFMNetFile
@@ -377,7 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             if (data is IFMNetCdfFileFunctionStore outputStore)
             {
-                if (outputStore is FMMapFileFunctionStore fmMapFileFunctionStore)
+                if (outputStore is IFMMapFileFunctionStore fmMapFileFunctionStore)
                 {
                     foreach (object output in GetMapOutputFunctions(fmMapFileFunctionStore))
                     {
@@ -402,7 +402,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
-            // groupings currently used by FMMapFileFunctionStore (for sedimentation outputs)
+            // groupings currently used by IFMMapFileFunctionStore (for sedimentation outputs)
             if (data is IGrouping<string, IFunction> grouping)
             {
                 foreach (IFunction function in grouping)
@@ -455,7 +455,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             layer.GridColor = Color.Gray;
         }
 
-        private static IEnumerable<object> GetMapOutputFunctions(FMMapFileFunctionStore mapStore)
+        private static IEnumerable<object> GetMapOutputFunctions(IFMMapFileFunctionStore mapStore)
         {
             yield return mapStore.Grid;
 
