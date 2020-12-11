@@ -246,7 +246,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var definitionIDToDefinition = new Dictionary<string, ICrossSectionDefinition>();
 
             var definitionCount = mappings.GroupBy(m => m.DefinitionId).ToDictionaryWithErrorDetails("sobek cross section mapping", m => m.Key, m => m.Count());
-            var possibleSharedMappingsWithOneRef = mappings.GroupBy(m => m.DefinitionId).Where(m => m.Count() == 1).ToDictionaryWithDuplicateWarnings("sobek shared cross section mapping shared once", m => m.Key, m => m.First().LocationId);
+            var locationIdByDefinitionId = mappings
+                                                .GroupBy(m => m.DefinitionId)
+                                                .Where(m => m.Count() == 1)
+                                                .ToDictionaryWithDuplicateWarnings("sobek shared cross section mapping shared once", 
+                                                    m => m.Key, m => m.First().LocationId);
 
 
             foreach (var definitionMapping in sobekCrossSectionDefinitionsLookup)
@@ -269,10 +273,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     usageCount = 1;
                 }
+                /////////////////////////////////////////
+                /// make it a global / shared def if:
+                /// location id     | definition id
+                /// location1       | definition1
+                /// location2       | location1
+                ///
+                /// location1 IS JUST A NAME NOT REFERING
+                /// HERE TO the location location1 but
+                /// its own definition
+                /// ////////////////////////////////////////
 
-
-                string sharedDefId = null;
-                if (usageCount == 1 && !possibleSharedMappingsWithOneRef.TryGetValue(definitionID, out sharedDefId) || (!string.IsNullOrEmpty(sharedDefId) && definitionCount.TryGetValue(sharedDefId, out usageCount) && usageCount < 1))
+                string locationIdIsEqualToADefinitionId = null;
+                if (usageCount == 1 && !(locationIdByDefinitionId.TryGetValue(definitionID, out locationIdIsEqualToADefinitionId) && !string.IsNullOrEmpty(locationIdIsEqualToADefinitionId) && definitionCount.TryGetValue(locationIdIsEqualToADefinitionId, out usageCount) && usageCount >= 1))
                 {
                     //make local definition
                     definitionIDToDefinition.Add(definitionMapping.Key, crossSectionDefinition);
