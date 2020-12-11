@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 if (diagFiles.Any())
                 {
                     FileUtils.CopyFile(diagFiles[0].FullName,
-                                       Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.FM.{diagFiles[0].Name}"));
+                                       Path.Combine(AcceptanceModelExportResultConfig.IntegratedModelsExportDirectory, $"{config.OutputName}.FM.{diagFiles[0].Name}"));
                     config.HasExportedDiagnostics = true;
                 }
             }
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             if (File.Exists(diaRtcPath))
             {
                 FileUtils.CopyFile(diaRtcPath,
-                                   Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.RTC.diag.xml"));
+                                   Path.Combine(AcceptanceModelExportResultConfig.IntegratedModelsExportDirectory, $"{config.OutputName}.RTC.diag.xml"));
                 config.HasExportedDiagnostics = true;
             }
 
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             if (File.Exists(diaWavesPath))
             {
                 FileUtils.CopyFile(diaWavesPath,
-                                   Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory, $"{config.OutputName}.Waves.swn-diag.Waves"));
+                                   Path.Combine(AcceptanceModelExportResultConfig.IntegratedModelsExportDirectory, $"{config.OutputName}.Waves.swn-diag.Waves"));
                 config.HasExportedDiagnostics = true;
             }
         }

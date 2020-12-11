@@ -155,7 +155,7 @@ def format_waves_file(waves_content: str) -> str:
     """
     Format the specified waves file content to be placed within the diagnostic report.
 
-    :param waves_content: The xml file content to be formatted.
+    :param waves_content: The waves file content to be formatted.
     :returns: The formatted waves file content.
     """ 
     
@@ -198,8 +198,8 @@ def construct_waves_element(header: str, waves_content: str) -> str:
 
 def construct_element(header: str, content: str) -> str:
     """
-    Construct a xml element to be placed within the body of the report with 
-    the given header and content.
+    Based on the header suffix construct a formatted element to be 
+    placed within the body of the report with the given header and content.
 
     :param header: The header to be placed into the collapsable menu.
     :param xml_content: The actual content to place in the element
@@ -211,6 +211,8 @@ def construct_element(header: str, content: str) -> str:
         return construct_xml_element(header, content)
     elif header.endswith('.Waves'):
         return construct_waves_element(header, content)
+    else:
+        raise ValueError('Unknown extention {} found for a diagnostic file'.format(header.split(".")[-1]))
          
 
 def build_section(path: Path) -> str:
@@ -227,7 +229,7 @@ def build_section(path: Path) -> str:
 
 def build_report_page(src_path: Path) -> str:
     """
-    Build the report page from the specified folder containing dia files.
+    Build the report page from the specified folder containing diagnostic files.
 
     :param src_path: The base path containing the folders with actual content
     :returns: A formatted html document describing the actual report.
