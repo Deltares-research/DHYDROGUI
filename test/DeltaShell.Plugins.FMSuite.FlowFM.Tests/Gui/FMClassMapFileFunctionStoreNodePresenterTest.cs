@@ -26,7 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mocks = new MockRepository();
             var treeView = mocks.StrictMock<ITreeView>();
             const string path = "some_file_path";
-            var nodeData = new FMClassMapFileFunctionStore(path);
+            var nodeData = Substitute.For<IFMClassMapFileFunctionStore>();
+            nodeData.Path.Returns(path);
             var treeNode = new TreeNode(treeView);
             var nodePresenter = new FMClassMapFileFunctionStoreNodePresenter();
             Assert.IsNull(treeNode.Image);
