@@ -167,6 +167,7 @@
     <Compile Include="FeatureData\FixedWeirSchemes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
     <Compile Include="FeatureData\GeometryExtensions.cs" />
+    <Compile Include="FunctionStores\IFMClassMapFileFunctionStore.cs" />
     <Compile Include="IO\DataAccessBuilders\DelftIniCategoryFactory.cs" />
     <Compile Include="IO\DataAccessBuilders\ExtForceFileItemFactory.cs" />
     <Compile Include="IO\DataAccessObjects\BcBlockData.cs" />

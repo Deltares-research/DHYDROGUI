@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             protected set => outputMapFileStore = value;
         }
 
-        public virtual FMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
+        public virtual IFMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
 
         public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private bool HasOpenFunctionStores =>
             OutputMapFileStore != null || OutputHisFileStore != null || OutputClassMapFileStore != null;
 
-        private static void ClearFunctionStore(ReadOnlyNetCdfFunctionStoreBase functionStore)
+        private static void ClearFunctionStore(IReadOnlyNetCdfFunctionStoreBase functionStore)
         {
             functionStore.Functions.Clear();
             functionStore.Close();

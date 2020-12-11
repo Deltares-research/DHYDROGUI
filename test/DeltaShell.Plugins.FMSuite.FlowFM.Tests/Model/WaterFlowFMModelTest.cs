@@ -1392,7 +1392,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             var model = new WaterFlowFMModel();
             model.ConnectOutput(outputDirectoryPath);
-            FMClassMapFileFunctionStore outputClassMapFileStore = model.OutputClassMapFileStore;
+            IFMClassMapFileFunctionStore outputClassMapFileStore = model.OutputClassMapFileStore;
             Assert.NotNull(outputClassMapFileStore);
             Assert.AreEqual(filePath, outputClassMapFileStore.Path);
 
