@@ -158,6 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 {
                     ((INotifyPropertyChange) modelDefinition.Properties).PropertyChanged -=
                         OnModelDefinitionPropertyChanged;
+                    UnsubscribeFromFeatureContainer();
                 }
 
                 modelDefinition = value;
@@ -165,6 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 {
                     ((INotifyPropertyChange) modelDefinition.Properties).PropertyChanged +=
                         OnModelDefinitionPropertyChanged;
+                    SubscribeToFeatureContainer();
                 }
             }
         }
@@ -281,6 +283,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public IBoundaryContainer BoundaryContainer => ModelDefinition.BoundaryContainer;
 
         public IWaveFeatureContainer FeatureContainer => ModelDefinition.FeatureContainer;
+
+        private void SubscribeToFeatureContainer()
+        {
+            FeatureContainer.ObservationCrossSections.CollectionChanged += 
+                OnFeatureContainerCollectionChanged;
+            FeatureContainer.ObservationPoints.CollectionChanged += 
+                OnFeatureContainerCollectionChanged;
+            FeatureContainer.Obstacles.CollectionChanged += 
+                OnFeatureContainerCollectionChanged;
+        }
+
+        private void UnsubscribeFromFeatureContainer()
+        {
+            FeatureContainer.ObservationCrossSections.CollectionChanged -= 
+                OnFeatureContainerCollectionChanged;
+            FeatureContainer.ObservationPoints.CollectionChanged -= 
+                OnFeatureContainerCollectionChanged;
+            FeatureContainer.Obstacles.CollectionChanged -= 
+                OnFeatureContainerCollectionChanged;
+        }
+
+        private void OnFeatureContainerCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => MarkDirty();
 
         #endregion
 
