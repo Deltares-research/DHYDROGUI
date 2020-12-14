@@ -285,7 +285,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 /// ////////////////////////////////////////
 
                 string locationIdIsEqualToADefinitionId = null;
-                if (usageCount == 1 && !(locationIdByDefinitionId.TryGetValue(definitionID, out locationIdIsEqualToADefinitionId) && !string.IsNullOrEmpty(locationIdIsEqualToADefinitionId) && definitionCount.TryGetValue(locationIdIsEqualToADefinitionId, out usageCount) && usageCount >= 1))
+                if (usageCount == 1 && !(locationIdByDefinitionId.TryGetValue(definitionID, out locationIdIsEqualToADefinitionId) && !string.IsNullOrEmpty(locationIdIsEqualToADefinitionId) && definitionCount.TryGetValue(locationIdIsEqualToADefinitionId, out usageCount) && usageCount > 1))
                 {
                     //make local definition
                     definitionIDToDefinition.Add(definitionMapping.Key, crossSectionDefinition);

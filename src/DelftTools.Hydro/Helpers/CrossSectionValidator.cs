@@ -163,7 +163,7 @@ namespace DelftTools.Hydro.Helpers
                 return true;
             }
 
-            return crossSectionDefinition.SectionsTotalWidth() - crossSectionDefinition.FlowWidth() >= -1e-5;
+            return crossSectionDefinition.SectionsTotalWidth() - crossSectionDefinition.FlowWidth() >= -1e-4;
         }
 
         private static ICrossSectionDefinition GetUnProxiedCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition)

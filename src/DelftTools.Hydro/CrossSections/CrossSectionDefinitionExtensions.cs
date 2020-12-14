@@ -90,7 +90,7 @@ namespace DelftTools.Hydro.CrossSections
             
             var actualCrossSectionWidth = crossSectionDefinition.FlowWidth();
             var widthDifference = actualCrossSectionWidth - crossSectionDefinition.SectionsTotalWidth();
-            if (Math.Abs(widthDifference) < 1e-10) return;
+            if (Math.Abs(widthDifference) < 1e-4) return;
 
             var sectionAndIndexToAdjust = crossSectionDefinition.Sections
                 .Select((section, index) => new {section, index})
@@ -160,12 +160,12 @@ namespace DelftTools.Hydro.CrossSections
         public static void GetCrossSectionDefinitionSectionBounds(this CrossSectionDefinition definition, out double minY, out double maxY)
         {
             /*
-                 YZ - goes from 0 to Width
-                 XYZ - goes from 0 to Width
+                 YZ - goes from min x to max x
+                 XYZ - goes from min x to max x 
                  ZW - goes from 0 to +1/2 width (width factor is 2)
                  standard - goes from -1/2 width to +1/2 width
             */
-            
+
             if (definition is CrossSectionDefinitionZW)
             {
                 minY = 0.0;
@@ -181,8 +181,12 @@ namespace DelftTools.Hydro.CrossSections
             }
 
             // default (YZ & XYZ)
-            minY = 0.0;
-            maxY = definition.FlowWidth();
+
+            //minY = 0.0;
+            //maxY = definition.FlowWidth();
+            var coordinates = definition.FlowProfile.ToList();
+            minY = coordinates.Min(c => c.X);//lang verhaal waarom het x is en niet y...
+            maxY = coordinates.Max(c => c.X);
         }
 
     }

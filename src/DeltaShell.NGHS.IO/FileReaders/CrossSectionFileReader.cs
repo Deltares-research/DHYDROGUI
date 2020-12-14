@@ -159,7 +159,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
                         var isSharedCrossSection = crossSectionLocationInfos.Length > 1;
                         var crossSectionDefinitionName = crossSectionDefinition.Name;
-                        var crossSection = network.CrossSections.SingleOrDefault(cs => cs.Name.Equals(crsLocationId, StringComparison.InvariantCultureIgnoreCase)) ??
+                            var crossSection = network.CrossSections.SingleOrDefault(cs => cs.Name.Equals(crsLocationId, StringComparison.InvariantCultureIgnoreCase)) ??
                                            network.AddCrossSection(crossSectionLocationInfo, crsLocationId, crossSectionDefinition,isSharedCrossSection);
 
                         var hasFriction = false;
@@ -475,11 +475,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
                 if (sectionTypeName.Equals(defaultFrictionId))
                 {
-                    readCrossSectionDefinition.Sections.Add(new CrossSectionSection { SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network) });
+                    readCrossSectionDefinition.Sections.Add(new CrossSectionSection { SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network), MinY = readCrossSectionDefinition.Left, MaxY = readCrossSectionDefinition.Right});
                     return;
                 }
 
-                readCrossSectionDefinition.Sections.Add(new CrossSectionSection{SectionType = GetCrossSectionSectionType(sectionTypeName, network)});
+                readCrossSectionDefinition.Sections.Add(new CrossSectionSection{SectionType = GetCrossSectionSectionType(sectionTypeName, network), MinY = readCrossSectionDefinition.Left, MaxY = readCrossSectionDefinition.Right });
 
                 hasFriction = true;
             }
