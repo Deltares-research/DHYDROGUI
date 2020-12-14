@@ -1,5 +1,4 @@
 using DelftTools.Functions;
-using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
