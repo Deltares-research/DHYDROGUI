@@ -244,6 +244,11 @@ namespace DeltaShell.NGHS.IO.Tests
                 return null;
             }
 
+            public void ClearOutput(bool forceClean = false)
+            {
+                throw new NotImplementedException();
+            }
+
             public void ClearOutput() {}
 
             public IEventedList<IDataItem> DataItems { get; set; }
@@ -323,6 +328,11 @@ namespace DeltaShell.NGHS.IO.Tests
             public IDataItem GetDataItemByValue(object value)
             {
                 return null;
+            }
+
+            public void ClearOutput(bool forceClean = false)
+            {
+                throw new NotImplementedException();
             }
 
             public void ClearOutput() {}
