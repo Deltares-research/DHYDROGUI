@@ -21,8 +21,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 
             var name = category.ReadProperty<string>(StructureRegion.Id.Key);
             var bottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key);
-            var width = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition()?.Width ?? 50;
-            var height = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition()?.ZWDataTable.Min(t => t.Z) ?? 3;
+            var tabulatedCrossSectionDefinition = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition();
+            var width = tabulatedCrossSectionDefinition?.Width ?? 50;
+            var height = tabulatedCrossSectionDefinition?.ZWDataTable.Max(t => t.Z) - tabulatedCrossSectionDefinition?.ZWDataTable.Min(t => t.Z) ?? 3;
             return new Bridge
             {
                 Name = name,
@@ -32,9 +33,11 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : definition?.CrossSectionType == CrossSectionType.YZ ? BridgeType.YzProfile : BridgeType.Rectangle,
                 FlowDirection = (FlowDirection)category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key).GetEnumValueFromDisplayName(typeof(FlowDirection)),
                 BottomLevel = bottomLevel,
+                Width = width,
+                Height = height,
                 TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW 
                     ? definition as CrossSectionDefinitionZW 
-                    : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() 
+                    : tabulatedCrossSectionDefinition 
                       ?? CrossSectionDefinitionZW.CreateDefault(crossSectionDefinitionId).SetAsRectangle(bottomLevel,width,height), 
                 YZCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null 
                     ? definition.CrossSectionType == CrossSectionType.YZ  

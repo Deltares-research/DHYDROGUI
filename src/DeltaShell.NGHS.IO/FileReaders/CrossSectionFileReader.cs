@@ -267,6 +267,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             foreach (var crossSectionDefinition in crossSectionDefinitions.Except(crsDefCoupledToCrossSection))
             {
+                if(network.Culverts.Select(c => c.CrossSectionDefinition).Concat(network.Bridges.Select(c => c.CrossSectionDefinition)).Any(csd => csd.Name.Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase))) continue;
+                
                 network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
             }
 

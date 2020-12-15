@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using NUnit.Framework;
@@ -113,10 +114,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 if (Path.GetFileNameWithoutExtension(expectedFlowFmFile)
                     .Equals("crsloc", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var readCategories = new DelftIniReader().ReadDelftIniFile(expectedFlowFmFile);
-                    new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(CrossSectionRegion.IniHeader)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)), expectedFlowFmFile);
-                    readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
-                    new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(CrossSectionRegion.IniHeader)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)), actualFlowFmFile);
+                    SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, CrossSectionRegion.IniHeader, LocationRegion.Id.Key);
+                }
+                if (Path.GetFileNameWithoutExtension(expectedFlowFmFile)
+                    .Equals("crsdef", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    linesToIgnore = new[] {"    xCoordinates", "    yCoordinates", "    zCoordinates"};
+                    SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, DefinitionPropertySettings.Header, DefinitionPropertySettings.Id.Key);
                 }
                 //scrambled ini file compare... currently only doing it for _bnd.ext..
                 if (Path.GetFileNameWithoutExtension(expectedFlowFmFile)
@@ -148,6 +152,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             {
                 Assert.Fail(overallErrorMessage);
             }
+        }
+
+        private static void SortFmIniFile(string expectedFlowFmFile, string actualFlowFmFile, string iniHeader, string idKey)
+        {
+            var readCategories = new DelftIniReader().ReadDelftIniFile(expectedFlowFmFile);
+            new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(iniHeader)).OrderBy(c => c.ReadProperty<string>(idKey)), expectedFlowFmFile);
+
+            readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
+            new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(iniHeader)).OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
         }
 
         private static bool CompareFiles(
