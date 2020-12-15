@@ -277,8 +277,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
 
                 if (!isReversed || hasGlobalType)
                 {
-                    globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.FrictionType.Key));
-                    globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.FrictionValue.Key);
+                    globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.FrictionType.Key, true, Friction.Chezy));
+                    globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.FrictionValue.Key, true, 45.0d);
                 }
                 
                 roughnessSection.Name = sectionId;

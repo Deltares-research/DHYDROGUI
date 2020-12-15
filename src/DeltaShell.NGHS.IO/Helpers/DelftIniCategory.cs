@@ -232,8 +232,11 @@ namespace DeltaShell.NGHS.IO.Helpers
         {
             var iniProperty = category.Properties.FirstOrDefault(property => property.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase));
 
-            if (iniProperty != null)
-                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
+            var typeConverter = TypeDescriptor.GetConverter(typeof(T));
+            if (iniProperty != null && typeConverter.CanConvertFrom(typeof(string)) && typeConverter.IsValid(iniProperty.Value))
+            {
+                return (T) typeConverter.ConvertFromInvariantString(iniProperty.Value);
+            }
             
             if(!isOptional)
                 throw new PropertyNotFoundInFileException(String.Format("Property {0} is not found in the file", key));

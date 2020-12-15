@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -24,12 +25,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private string secondSaveProjectPath;
         private string acceptanceModelsDirectory;
 
-        private static readonly object[] AcceptanceTests =
+        public delegate int ActualCountFuncDelegate(IHydroNetwork network);
+        public static IEnumerable<TestCaseData> AcceptanceTests 
         {
-            new object[] {"Groesbeek", 722}, // TODO: Add preconditions when the model can be correctly imported
-            new object[] { "Hydamo_DBV", 0}, // TODO: Add preconditions when the model can be correctly imported
-            new object[] { "Hydamo_MoergestelBroek", 0} // TODO: Add preconditions when the model can be correctly imported
-        };
+            get
+            {
+                yield return new TestCaseData("GroekBeek2", "FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 719); // TODO: Add preconditions when the model can be correctly imported
+                yield return new TestCaseData("Hydamo_DBV", "DVB", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 601); // TODO: Add preconditions when the model can be correctly imported
+                yield return new TestCaseData("Hydamo_MoergestelBroek", "moergestels_broek", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 288); // TODO: Add preconditions when the model can be correctly imported
+            }
+        }
+        
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
@@ -62,6 +68,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         [TestCaseSource(nameof(AcceptanceTests))]
         public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
             string acceptanceModelName,
+            string acceptanceModelFileName,
+            ActualCountFuncDelegate actualCountFunc,
             int preconditionExpectedBranchFeaturesCount)
         {
             // [Given]
@@ -70,6 +78,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
                 ImportFlowFmModelAndAssertPreconditions(
                     acceptanceModelName,
+                    acceptanceModelFileName,
+                    actualCountFunc,
                     gui,
                     preconditionExpectedBranchFeaturesCount);
 
@@ -77,17 +87,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
 
                 // [Then]
-                CompareResultDataWithReferenceData(Path.Combine(firstSaveProjectPath + "_data", "FlowFM"));
+                CompareResultDataWithReferenceData(Path.Combine(firstSaveProjectPath + "_data"), acceptanceModelFileName);
             }
         }
 
         private void ImportFlowFmModelAndAssertPreconditions(
-            string acceptanceModelName, 
+            string acceptanceModelName,
+            string acceptanceModelFileName,
+            ActualCountFuncDelegate actualCountFunc,
             DeltaShellGui gui,
             int expectedBranchFeaturesCount)
         {
             var importer = new WaterFlowFMFileImporter();
-            var pathToMduFile = Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "FlowFM.mdu");
+            var pathToMduFile = Path.Combine(acceptanceModelsDirectory, acceptanceModelName, acceptanceModelFileName+".mdu");
             WaterFlowFMModel model = null;
             var errorMessages = TestHelper.GetAllRenderedMessages(() => model = importer.ImportItem(pathToMduFile) as WaterFlowFMModel, Level.Error);
 
@@ -98,12 +110,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             // [Precondition]
             var hydroNetwork = model.Network;
-            Assert.AreEqual(expectedBranchFeaturesCount, hydroNetwork.BranchFeatures.Count(), "[Precondition failure] Unexpected number of branch features");
+            Assert.AreEqual(expectedBranchFeaturesCount, actualCountFunc(hydroNetwork), "[Precondition failure] Unexpected number of branch features");
         }
 
-        private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory)
+        private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory, string acceptanceModelFileName)
         {
-            var flowFmResultFiles = Directory.GetFiles(Path.Combine(secondSaveProjectPath + "_data", "FlowFM"));
+            var flowFmResultFiles = Directory.GetFiles(Path.Combine(secondSaveProjectPath + "_data", acceptanceModelFileName));
             var flowFmReferenceFiles = Directory.GetFiles(flowFmReferenceFileDirectory);
 
             FlowFmFileComparer.Compare(flowFmReferenceFiles, flowFmResultFiles, tempDirectory);

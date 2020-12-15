@@ -6,6 +6,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.FileWriters.Network;
@@ -515,8 +516,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 }
                 else
                 {
-                    mesh.NodesTo[i] = nodeIndexLookup[branch.Target];
-                    mesh.NodesFrom[i] = nodeIndexLookup[branch.Source];
+                    mesh.NodesTo[i] = nodeIndexLookup.ContainsKey(branch.Target) ? nodeIndexLookup[branch.Target] : nodeIndexLookup.SingleOrDefault(nlu=>nlu.Key is INameable keyName && keyName.Name.Equals(branch.Target.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
+                    mesh.NodesFrom[i] = nodeIndexLookup.ContainsKey(branch.Source) ? nodeIndexLookup[branch.Source] : nodeIndexLookup.SingleOrDefault(nlu => nlu.Key is INameable keyName && keyName.Name.Equals(branch.Source.Name, StringComparison.InvariantCultureIgnoreCase)).Value;  
                 }
 
                 var coordinates = branch.Geometry?.Coordinates;
