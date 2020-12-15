@@ -1592,6 +1592,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             // run.
         }
 
+        public IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory => new List<string>();
+
         #endregion
     }
 }

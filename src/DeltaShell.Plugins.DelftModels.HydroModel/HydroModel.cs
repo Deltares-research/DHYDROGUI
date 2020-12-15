@@ -23,6 +23,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
@@ -791,11 +792,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     List<IDimrModel> dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
                                                                  .Plus(CurrentWorkflow as IDimrModel).Where(dm => dm != null)
                                                                  .ToList();
-
+                    var fileExceptions = new List<string>();
                     dimrModels.ForEach(m =>
                     {
                         m.RunsInIntegratedModel = true;
                         m.DisconnectOutput();
+                        fileExceptions.AddRange(m.FileExceptionsCleaningWorkingDirectory);
                     });
 
                     string kernelDirectories = GetKernelDirectories(dimrModels);
@@ -804,8 +806,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         return;
                     }
 
-                    FileUtils.DeleteIfExists(WorkingDirectoryPath);
-                    Directory.CreateDirectory(WorkingDirectoryPath);
+                    if (Directory.Exists(WorkingDirectoryPath))
+                    {
+                        CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(WorkingDirectoryPath, fileExceptions);
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(WorkingDirectoryPath);
+                    }
 
                     var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
                     if (!dHydroConfigXmlExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml")))

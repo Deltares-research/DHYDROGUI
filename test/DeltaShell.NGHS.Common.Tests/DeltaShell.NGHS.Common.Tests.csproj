@@ -140,6 +140,7 @@
     <Compile Include="Gui\NodePresenters\ContextMenuFactoryTest.cs" />
     <Compile Include="Gui\Restart\RestartFileContextMenuTest.cs" />
     <Compile Include="Gui\Restart\RestartFileNodePresenterTest.cs" />
+    <Compile Include="IO\CommonFileAndDirectoryActionsTest.cs" />
     <Compile Include="IO\FilesManagerTest.cs" />
     <Compile Include="IO\ModelFileImporterBaseTest.cs" />
     <Compile Include="IO\Restart\RestartFileTest.cs" />

@@ -1450,6 +1450,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
+        [Test]
+        public void FileExceptionsCleaningWorkingDirectory_ShouldAlwaysReturnEmptyCollection()
+        {
+            using (var model = new WaveModel())
+            {
+                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
+                Assert.AreEqual(fileExceptions.Count, 0);
+            }
+        }
+
         private static void AssertContainsSameFiles(IReadOnlyList<FileCompareInfo> originalFileData,
                                                     IReadOnlyList<FileCompareInfo> savedFileData)
         {

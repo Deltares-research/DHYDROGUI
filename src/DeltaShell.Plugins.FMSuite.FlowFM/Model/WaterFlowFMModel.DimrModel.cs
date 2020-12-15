@@ -209,6 +209,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             LogWarningWriteRestartModelRun();
         }
 
+        public IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory 
+        {
+            get
+            {
+                var listOfFiles = new List<string>();
+                if (CacheFile.UseCaching && cacheFile.Path.StartsWith(WorkingDirectoryPath))
+                {
+                    listOfFiles.Add(CacheFile.Path);
+                }
+                return listOfFiles;
+            }
+        }
+
         #endregion
     }
 }

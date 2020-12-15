@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -1168,6 +1169,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             MarkDirty();
         }
+
+        public virtual IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory => new List<string>();
 
         #endregion
 

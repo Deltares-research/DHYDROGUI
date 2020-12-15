@@ -362,6 +362,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.That(realTimeControlModel.OutputFileFunctionStore, Is.Null);
         }
 
+        [Test]
+        public void FileExceptionsCleaningWorkingDirectory_ShouldAlwaysReturnEmptyCollection()
+        {
+            using (var model = new RealTimeControlModel())
+            {
+                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
+                Assert.AreEqual(fileExceptions.Count, 0);
+            }
+        }
+
         private static RealTimeControlModel CreateRtcModelAndFiles(TemporaryDirectory tempDir, out string rtcFolderName, out string rtcDirectory, out string[] relevantFiles)
         {
             var model = new RealTimeControlModel();
