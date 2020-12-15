@@ -34,6 +34,14 @@
                 Value="$(var.ShowStartUpScreen)"/>
   <?endif?>
 
+  <?ifdef RealNumberFormat?>
+  <util:XmlFile Id="SetKey21$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;realNumberFormat&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.RealNumberFormat)"/>
+  <?endif?>
+
   <util:XmlFile Id="SetKey6$(var.GUICONFIGFILE)"
                 Action="setValue"
                 ElementPath="/configuration/appSettings/add[\[]@key=&quot;copyright&quot;[\]]/@value"
