@@ -714,7 +714,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        public void Initialise_WhenThereAreFileExceptionDuringClearingWorkingDirectory_ShouldNotRemoveThisFileException()
+        public void Initialise_WhenThereIsAFileExceptionDuringClearingWorkingDirectory_ShouldNotRemoveThisFileException()
         {
             // Arrange
             using (var tempDirectory = new TemporaryDirectory())
