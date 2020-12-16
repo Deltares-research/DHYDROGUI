@@ -11,12 +11,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     /// </summary>
     public class WaveFeatureContainer : IWaveFeatureContainer
     {
-        public IEventedList<Feature2DPoint> ObservationPoints { get; set; } = new EventedList<Feature2DPoint>();
+        public IEventedList<Feature2DPoint> ObservationPoints { get; } = new EventedList<Feature2DPoint>();
 
-        public IEventedList<Feature2D> ObservationCrossSections { get; set; } = new EventedList<Feature2D>();
+        public IEventedList<Feature2D> ObservationCrossSections { get; } = new EventedList<Feature2D>();
 
         public IEventedList<WaveObstacle> Obstacles { get; } = new EventedList<WaveObstacle>();
 
-        public IEnumerable<IFeature> GetAllFeatures() => ObservationPoints.Concat(ObservationCrossSections).Concat(Obstacles);
+        public IEnumerable<IFeature> GetAllFeatures()
+        {
+            return ObservationPoints.Concat(ObservationCrossSections).Concat(Obstacles);
+        }
     }
 }
