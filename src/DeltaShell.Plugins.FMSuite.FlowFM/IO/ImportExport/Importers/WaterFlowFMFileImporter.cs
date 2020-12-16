@@ -115,16 +115,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
             catch (Exception e)
             {
-                log.ErrorFormat(Resources.WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_, Name, path);
-
-                if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
-                    e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
-                {
-                    // Do not stop the current import.
-                    return null;
-                }
-
-                throw;
+                log.ErrorFormat(Resources.WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__, Name, path, e);
+                return null;
             }
         }
 
