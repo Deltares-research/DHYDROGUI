@@ -806,19 +806,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         return;
                     }
 
-                    if (Directory.Exists(WorkingDirectoryPath))
+                    PrepareWorkingDirectory(fileExceptions);
+                    
+                    if (!ExportHydroModel())
                     {
-                        CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(WorkingDirectoryPath, fileExceptions);
-                    }
-                    else
-                    {
-                        Directory.CreateDirectory(WorkingDirectoryPath);
-                    }
-
-                    var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
-                    if (!dHydroConfigXmlExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml")))
-                    {
-                        Status = ActivityStatus.Failed;
                         return;
                     }
 
@@ -860,6 +851,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             else
             {
                 CurrentWorkflow.Initialize();
+            }
+        }
+
+        private bool ExportHydroModel()
+        {
+            var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
+            if (dHydroConfigXmlExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml")))
+            {
+                return true;
+            }
+
+            Status = ActivityStatus.Failed;
+            return false;
+        }
+
+        private void PrepareWorkingDirectory(List<string> fileExceptions)
+        {
+            if (Directory.Exists(WorkingDirectoryPath))
+            {
+                CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(WorkingDirectoryPath, fileExceptions);
+            }
+            else
+            {
+                Directory.CreateDirectory(WorkingDirectoryPath);
             }
         }
 
