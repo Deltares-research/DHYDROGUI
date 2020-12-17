@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
@@ -534,7 +531,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                             {
                                 foreach (KeyValuePair<int, BcQuantityData> arg in argVariables)
                                 {
-                                    // IVariable variable = existingData.Arguments[arg.Key];
                                     IVariable variable = existingData.Arguments.ElementAtOrDefault(arg.Key);
                                     if (variable == null)
                                     {
@@ -1113,7 +1109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 default:
                     LogWarningParsePropertyFailed(dataBlock, "vertical interpolation type",
                                                   dataBlock.VerticalInterpolationType);
-                    // throw new NotSupportedException("Default interpolation is not supported.");
                     return VerticalInterpolationType.Uniform;
             }
         }
