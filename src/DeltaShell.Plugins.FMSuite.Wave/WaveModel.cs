@@ -1202,20 +1202,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private void AfterCoordinateSystemSet()
         {
             IList<IWaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain);
-            domains.ForEach(d =>
-            {
-                d.Grid.CoordinateSystem = coordinateSystem;
-                d.Bathymetry.CoordinateSystem = coordinateSystem;
 
-                if (d.Grid.CoordinateSystem != null &&
-                    d.Grid.Attributes.ContainsKey(CurvilinearGrid.CoordinateSystemKey))
+            foreach (IWaveDomainData waveDomainData in domains)
+            {
+                waveDomainData.Grid.CoordinateSystem = coordinateSystem;
+                waveDomainData.Bathymetry.CoordinateSystem = coordinateSystem;
+
+                if (waveDomainData.Grid.CoordinateSystem != null &&
+                    waveDomainData.Grid.Attributes.ContainsKey(CurvilinearGrid.CoordinateSystemKey))
                 {
-                    d.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] =
-                        d.Grid.CoordinateSystem.IsGeographic
+                    waveDomainData.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = 
+                        waveDomainData.Grid.CoordinateSystem.IsGeographic
                             ? CoordinateSystemType.Spherical
                             : CoordinateSystemType.Cartesian;
                 }
-            });
+            }
         }
 
         private void SaveBathymetries(IEnumerable<IWaveDomainData> allDomains, string projectPath)
