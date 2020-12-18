@@ -99,24 +99,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             runner = new DimrRunner(this, new DimrApiFactory());
 
             creationCode(this);
-            BuildModel(false);
 
-            OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
-            OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
-            OutputWavmFileFunctionStores = new EventedList<IWavmFileFunctionStore>();
-            OutputWavhFileFunctionStores = new EventedList<IWavhFileFunctionStore>();
+            if (!Equals(OuterDomain, ModelDefinition.OuterDomain))
+            {
+                OuterDomain = ModelDefinition.OuterDomain;
+            }
 
-            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(FeatureContainer),
-                                                new WaveOutputDataCopyHandler());
-            
-            WaveOutputData.DiagnosticFiles.CollectionChanged += 
-                GetOutputSyncNotifyCollectionChangedEventHandler(OutputDiagnosticFiles);
-            WaveOutputData.SpectraFiles.CollectionChanged +=
-                GetOutputSyncNotifyCollectionChangedEventHandler(OutputSpectraFiles);
-            WaveOutputData.WavmFileFunctionStores.CollectionChanged +=
-                GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavmFileFunctionStores);
-            WaveOutputData.WavhFileFunctionStores.CollectionChanged +=
-                GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavhFileFunctionStores);
+            if (OuterDomain?.Grid != null)
+            {
+                UpdateCoordinateSystem(OuterDomain.Grid.CoordinateSystem);
+            }
+
+            InitializeWaveOutputObjects();
 
             ShowModelRunConsole = false;
             ValidateBeforeRun = true;
@@ -138,6 +132,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 #pragma warning disable 618
             BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
 #pragma warning restore 618
+        }
+
+        private void InitializeWaveOutputObjects()
+        {
+            OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
+            OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
+            OutputWavmFileFunctionStores = new EventedList<IWavmFileFunctionStore>();
+            OutputWavhFileFunctionStores = new EventedList<IWavhFileFunctionStore>();
+
+            WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(FeatureContainer),
+                                                new WaveOutputDataCopyHandler());
+            
+            WaveOutputData.DiagnosticFiles.CollectionChanged += 
+                GetOutputSyncNotifyCollectionChangedEventHandler(OutputDiagnosticFiles);
+            WaveOutputData.SpectraFiles.CollectionChanged +=
+                GetOutputSyncNotifyCollectionChangedEventHandler(OutputSpectraFiles);
+            WaveOutputData.WavmFileFunctionStores.CollectionChanged +=
+                GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavmFileFunctionStores);
+            WaveOutputData.WavhFileFunctionStores.CollectionChanged +=
+                GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavhFileFunctionStores);
         }
 
         /// <summary>
@@ -1007,36 +1021,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             StopTime = ModelDefinition.ModelReferenceDateTime.AddDays(1);
         }
 
-        // Watch out, this method can/will be called multiple times for the same instance!!
-        private void BuildModel(bool loading)
-        {
-            if (loading && !Equals(OuterDomain, ModelDefinition.OuterDomain))
-            {
-                if (OuterDomain != null)
-                {
-                    ((INotifyPropertyChanged) OuterDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
-                }
-
-                outerDomain = ModelDefinition.OuterDomain;
-                ReplaceDataItemsForDomain(OuterDomain);
-
-                if (OuterDomain != null)
-                {
-                    ((INotifyPropertyChanged) OuterDomain).PropertyChanged += OnOuterDomainPropertyChanged;
-                    gridOperationApi = new WaveGridOperationApi(OuterDomain.Grid);
-                }
-            }
-            else if (!Equals(OuterDomain, ModelDefinition.OuterDomain))
-            {
-                OuterDomain = ModelDefinition.OuterDomain;
-            }
-
-            if (OuterDomain != null && OuterDomain.Grid != null && !loading)
-            {
-                UpdateCoordinateSystem(OuterDomain.Grid.CoordinateSystem);
-            }
-        }
-
         private static void BuildModelFromMdw(WaveModel model, string mdwFilePath)
         {
             model.MdwFile.MdwFilePath = mdwFilePath;
@@ -1340,7 +1324,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             if (MdwFile.MdwFilePath == null)
             {
                 BuildModelFromMdw(this, newMdwFilePath);
-                BuildModel(true);
+
+                if (!Equals(OuterDomain, ModelDefinition.OuterDomain))
+                {
+                    if (OuterDomain != null)
+                    {
+                        ((INotifyPropertyChanged) OuterDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
+                    }
+
+                    outerDomain = ModelDefinition.OuterDomain;
+                    ReplaceDataItemsForDomain(OuterDomain);
+
+                    if (OuterDomain != null)
+                    {
+                        ((INotifyPropertyChanged) OuterDomain).PropertyChanged += OnOuterDomainPropertyChanged;
+                        gridOperationApi = new WaveGridOperationApi(OuterDomain.Grid);
+                    }
+                }
+
                 InitializeWaveOutputData();
             }
             else
