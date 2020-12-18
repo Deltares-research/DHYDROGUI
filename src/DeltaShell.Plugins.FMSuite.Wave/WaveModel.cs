@@ -121,8 +121,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ShowModelRunConsole = false;
             ValidateBeforeRun = true;
 
-            WaveDomainHelper.GetAllDomains(outerDomain).ForEach(SyncWithModelDefaults);
-            gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
+            WaveDomainHelper.GetAllDomains(OuterDomain).ForEach(SyncWithModelDefaults);
+            gridOperationApi = new WaveGridOperationApi(OuterDomain.Grid);
 
             ((INotifyPropertyChanged) this).PropertyChanged += (s, e) => MarkDirty();
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
@@ -929,7 +929,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             if (Equals(OuterDomain, domain))
             {
-                gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
+                gridOperationApi = new WaveGridOperationApi(OuterDomain.Grid);
             }
 
             UpdateBathymetry(domain);
@@ -1012,17 +1012,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             if (loading && !Equals(OuterDomain, ModelDefinition.OuterDomain))
             {
-                if (outerDomain != null)
+                if (OuterDomain != null)
                 {
-                    ((INotifyPropertyChanged) outerDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
+                    ((INotifyPropertyChanged) OuterDomain).PropertyChanged -= OnOuterDomainPropertyChanged;
                 }
 
                 outerDomain = ModelDefinition.OuterDomain;
-                ReplaceDataItemsForDomain(outerDomain);
-                if (outerDomain != null)
+                ReplaceDataItemsForDomain(OuterDomain);
+
+                if (OuterDomain != null)
                 {
-                    ((INotifyPropertyChanged) outerDomain).PropertyChanged += OnOuterDomainPropertyChanged;
-                    gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
+                    ((INotifyPropertyChanged) OuterDomain).PropertyChanged += OnOuterDomainPropertyChanged;
+                    gridOperationApi = new WaveGridOperationApi(OuterDomain.Grid);
                 }
             }
             else if (!Equals(OuterDomain, ModelDefinition.OuterDomain))
@@ -1030,9 +1031,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 OuterDomain = ModelDefinition.OuterDomain;
             }
 
-            if (outerDomain != null && outerDomain.Grid != null && !loading)
+            if (OuterDomain != null && OuterDomain.Grid != null && !loading)
             {
-                UpdateCoordinateSystem(outerDomain.Grid.CoordinateSystem);
+                UpdateCoordinateSystem(OuterDomain.Grid.CoordinateSystem);
             }
         }
 
