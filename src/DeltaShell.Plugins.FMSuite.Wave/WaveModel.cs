@@ -98,7 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             runner = new DimrRunner(this, new DimrApiFactory());
 
-            BuildModel(creationCode, false);
+            creationCode(this);
+            BuildModel(false);
 
             OutputDiagnosticFiles = new EventedList<ReadOnlyTextFileData>();
             OutputSpectraFiles = new EventedList<ReadOnlyTextFileData>();
@@ -1006,13 +1007,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             StopTime = ModelDefinition.ModelReferenceDateTime.AddDays(1);
         }
 
-        /// <summary>
-        /// Watch out, this method can/will be called multiple times for the same instance!!
-        /// </summary>
-        /// <param name="creationCode"> </param>
-        private void BuildModel(Action<WaveModel> creationCode, bool loading)
+        // Watch out, this method can/will be called multiple times for the same instance!!
+        private void BuildModel(bool loading)
         {
-            creationCode(this);
             if (loading && !Equals(OuterDomain, ModelDefinition.OuterDomain))
             {
                 if (outerDomain != null)
@@ -1340,7 +1337,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             if (MdwFile.MdwFilePath == null)
             {
-                BuildModel(model => BuildModelFromMdw(model, newMdwFilePath), true);
+                BuildModelFromMdw(this, newMdwFilePath);
+                BuildModel(true);
                 InitializeWaveOutputData();
             }
             else
