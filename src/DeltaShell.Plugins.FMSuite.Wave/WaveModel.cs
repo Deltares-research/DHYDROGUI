@@ -87,18 +87,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public WaveModel() : this(BuildEmptyModel, false) {}
 
         /// <summary>
-        /// Creates a new <see cref="WaveModel"/> from the provided <paramref name="mdwPath"/>.
+        /// Creates a new <see cref="WaveModel"/> from the provided <paramref name="mdwFilePath"/>.
         /// </summary>
-        /// <param name="mdwPath">The path to the mdw file.</param>
+        /// <param name="mdwFilePath">The path to the mdw file.</param>
         /// <param name="connectToOutput">Whether to attempt to connect the output or not.</param>
-        public WaveModel(string mdwPath, bool connectToOutput = true) : this(model => BuildModelFromMdw(model, mdwPath), 
-                                                                             connectToOutput) {}
+        public WaveModel(string mdwFilePath, bool connectToOutput = true) :
+            this(model => BuildModelFromMdw(model, mdwFilePath),
+                 connectToOutput)
+        {
+        }
 
         private WaveModel(Action<WaveModel> creationCode, bool connectToOutput) : base("Waves")
         {
             runner = new DimrRunner(this, new DimrApiFactory());
 
             creationCode(this);
+
             SynchronizeOuterDomainWithModelDefinition();
 
             InitializeWaveOutputObjects();
@@ -908,31 +912,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         [EditAction]
         private void RemoveDataItemsForDomain(IWaveDomainData domain)
         {
-            foreach (IWaveDomainData subdomain in WaveDomainHelper.GetAllDomains(domain))
+            foreach (IWaveDomainData subDomain in WaveDomainHelper.GetAllDomains(domain))
             {
-                DataItems.RemoveAllWhere(di => Equals(subdomain.Bathymetry, di.Value));
+                DataItems.RemoveAllWhere(di => Equals(subDomain.Bathymetry, di.Value));
             }
         }
 
         [EditAction]
         private void AddDataItemsForDomain(IWaveDomainData domain)
         {
-            foreach (IWaveDomainData subdomain in WaveDomainHelper.GetAllDomains(domain))
+            foreach (IWaveDomainData subDomain in WaveDomainHelper.GetAllDomains(domain))
             {
-                DataItems.Add(new DataItem(subdomain.Bathymetry, DataItemRole.Input));
+                DataItems.Add(new DataItem(subDomain.Bathymetry, DataItemRole.Input));
             }
         }
 
         [EditAction]
         private void ReplaceDataItemsForDomain(IWaveDomainData newDomainData)
         {
-            foreach (IWaveDomainData subdomain in WaveDomainHelper.GetAllDomains(newDomainData))
+            foreach (IWaveDomainData subDomain in WaveDomainHelper.GetAllDomains(newDomainData))
             {
                 foreach (IDataItem dataItem in DataItems)
                 {
-                    if (dataItem.Name == subdomain.Bathymetry.Name)
+                    if (dataItem.Name == subDomain.Bathymetry.Name)
                     {
-                        dataItem.Value = subdomain.Bathymetry;
+                        dataItem.Value = subDomain.Bathymetry;
                     }
                 }
             }
@@ -1027,6 +1031,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private static void BuildModelFromMdw(WaveModel model, string mdwFilePath)
         {
+            Ensure.NotNull(mdwFilePath, nameof(mdwFilePath));
+
             model.MdwFile.MdwFilePath = mdwFilePath;
             model.Name = Path.GetFileNameWithoutExtension(mdwFilePath);
 
