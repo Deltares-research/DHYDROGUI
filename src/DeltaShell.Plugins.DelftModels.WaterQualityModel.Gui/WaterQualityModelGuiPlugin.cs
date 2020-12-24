@@ -410,22 +410,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             IMenuItem baseContextMenu = base.GetContextMenu(sender, data) ??
                                         new MenuItemContextMenuStripAdapter(new ContextMenuStrip());
             ContextMenuStrip contextMenuStrip = ((MenuItemContextMenuStripAdapter) baseContextMenu).ContextMenuStrip;
-
-            var waqModel = data as WaterQualityModel;
-            if (waqModel != null)
-            {
-                ToolStripItem[] items = GetModelsOfType<IHydFileModel>()
-                                        .Select(m => CreateHydFileModelMenuItem(waqModel, m)).OfType<ToolStripItem>()
-                                        .ToArray();
-
-                if (items.Any())
-                {
-                    var useHydFileFrom = new ClonableToolStripMenuItem {Text = Properties.Resources.WaterQualityModelGuiPlugin_GetContextMenu_Use_the__HYD_File_from___};
-                    useHydFileFrom.DropDownItems.AddRange(items);
-                    contextMenuStrip.Items.Add(useHydFileFrom);
-                }
-            }
-
+            
             if (data is TextDocument && GetModelsOfType<WaterQualityModel>().Any(m => Equals(m.InputFile, data)))
             {
                 var revertToOriginalTemplateMenuItem = new ClonableToolStripMenuItem
