@@ -465,7 +465,6 @@
         <ComponentRef Id="UninstallShortcutComponent" />
         <ComponentRef Id="comp_netcdf_x86" />
         <ComponentRef Id="comp_SharpMap_Extensions_gdal_x86" />
-        <ComponentRef Id="comp_Tao_OpenGL"/>
         <ComponentRef Id="comp_OpenTK"/>
 
         <Feature Id="DeltaShellX64Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
