@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -39,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                   "Integer selecting the transport formula", true),
                         new SedimentProperty<double>("CDryB", 1600, 0, true, 10000, true, "kg/m3", "Dry bed density",
                                                      false),
-                        new SedimentProperty<double>("SedDia", 0.0002, 0.000063, false, 0.002, false, "m",
+                        new SedimentProperty<double>("SedDia", 0.0002, 0.000063, false, double.MaxValue, false, "m",
                                                      "Median sediment diameter (D50)", false)
                     }
                 },
@@ -87,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                   "Integer selecting the transport formula", true),
                         new SedimentProperty<double>("CDryB", 1600, 0, true, 10000, true, "kg/m3", "Dry bed density",
                                                      false),
-                        new SedimentProperty<double>("SedDia", 0.0002, 0.000063, false, 0.002, false, "m",
+                        new SedimentProperty<double>("SedDia", 0.0002, 0.000063, false, double.MaxValue, false, "m",
                                                      "Median sediment diameter (D50)", false)
                     }
                 }
