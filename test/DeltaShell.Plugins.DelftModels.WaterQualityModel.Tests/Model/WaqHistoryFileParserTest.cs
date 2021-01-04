@@ -299,7 +299,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                                                       waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
 
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
+            Assert.That(exception.ParamName, Is.EqualTo("filePath"));
+            Assert.That(exception.Message.StartsWith("Argument 'filePath' cannot be null or empty."));
         }
 
         private static WaterQualityModel CreateWaterQualityModel1DStub(MockRepository mocks)

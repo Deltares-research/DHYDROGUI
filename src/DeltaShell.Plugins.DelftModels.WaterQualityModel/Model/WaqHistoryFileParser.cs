@@ -36,7 +36,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                                  IList<WaterQualityObservationVariableOutput> observationVariableOutputs,
                                  MonitoringOutputLevel monitoringOutputLevel)
         {
-            Ensure.NotNullOrEmpty(filePath, nameof(filePath));
+            Ensure.NotNullOrEmpty(filePath, nameof(filePath),
+                                  $"Argument '{nameof(filePath)}' cannot be null or empty.");
 
             if (monitoringOutputLevel == MonitoringOutputLevel.None || 
                 observationVariableOutputs == null ||
