@@ -27,12 +27,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// <remarks> An error message is provided if errors occur while reading data from <paramref name="filePath"/>.</remarks>
         /// <remarks>
         /// The his data from <paramref name="filePath"/> is not parsed if:
-        /// * The
-        /// <param name="monitoringOutputLevel"/>
-        /// equals "None"
-        /// * The list
-        /// <param name="observationVariableOutputs"/>
-        /// is empty
+        /// * The <paramref name="monitoringOutputLevel"/> equals <c>None</c>
+        /// * The list <paramref name="observationVariableOutputs"/> is empty
         /// </remarks>
         /// <exception cref="ArgumentNullException"> Thrown when <paramref name="filePath"/> is <c>null</c>.</exception>
         public static void Parse(string filePath,
@@ -44,7 +40,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 throw new ArgumentException($"Argument '{nameof(filePath)}' cannot be null or empty.");
             }
 
-            if (monitoringOutputLevel == MonitoringOutputLevel.None || observationVariableOutputs == null ||
+            if (monitoringOutputLevel == MonitoringOutputLevel.None || 
+                observationVariableOutputs == null ||
                 !observationVariableOutputs.Any())
             {
                 return; // No HIS file data will be present
@@ -96,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             foreach (TimeSeries timeSeries in observationVariableOutput.TimeSeriesList)
             {
-                string timeSeriesName = timeSeries.Name;
+                string timeSeriesName = timeSeries.Name.Replace(' ', '_');
                 double[] variableTimeSeriesValues = hisFileVariableData.GetValuesForKey(timeSeriesName).ToArray();
                 if (!variableTimeSeriesValues.Any() ||
                     hisFileVariableData.TimeSteps.Count() != variableTimeSeriesValues.Length)

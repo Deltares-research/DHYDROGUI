@@ -228,7 +228,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             // 1. Set up test data
             string hisFile = TestHelper.GetTestFilePath(@"BloomCase\bloom.his");
             const string outputVariableName = "ObsPoint 1";
-            const string timeSeriesName = "Fake time series";
+            const string timeSeriesName = "Fake_time_series";
             var expectedLogMsg =
                 $"Time steps are inconsistent for the data related to variable {timeSeriesName}.";
             WaterQualityModel waqModel = CreateBloomMockWaqModel(timeSeriesName, outputVariableName);
@@ -247,11 +247,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             {
                 string tempHisFile = tempDir.CopyTestDataFileToTempDirectory(hisFile);
                 Assert.That(File.Exists(tempHisFile), Is.True, "Test file was not found in temporary folder.");
-                Action call = () => WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
+                void Call() => WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
 
                 // 4. Verify final expectations.
-                TestHelper.AssertAtLeastOneLogMessagesContains(call, expectedLogMsg);
+                TestHelper.AssertAtLeastOneLogMessagesContains(Call, expectedLogMsg);
                 Assert.That(targetTimeSeries.GetValues(), Is.Empty, "Number of retrieved values does not match expectations.");
+            }
+        }
+
+        [Test]
+        public void Parse_ReadsTimeSeriesWithSpacesCorrectly()
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string sourceHisFile = TestHelper.GetTestFilePath("hisFile\\his_with_limit_chlo.nc");
+                string hisFilePath = tempDir.CopyTestDataFileToTempDirectory(sourceHisFile);
+                
+                var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>()
+                {
+                    new WaterQualityObservationVariableOutput(new []{ new DelftTools.Utils.Tuple<string, string>("Limit Chlo", "-")})
+                };
+
+                void Call() => WaqHistoryFileParser.Parse(hisFilePath, observationVariableOutputs, MonitoringOutputLevel.Points);
+
+                TestHelper.AssertLogMessagesCount(Call, 0);
             }
         }
 
