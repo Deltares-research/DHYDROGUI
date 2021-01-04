@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Functions;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -410,7 +409,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             IMenuItem baseContextMenu = base.GetContextMenu(sender, data) ??
                                         new MenuItemContextMenuStripAdapter(new ContextMenuStrip());
             ContextMenuStrip contextMenuStrip = ((MenuItemContextMenuStripAdapter) baseContextMenu).ContextMenuStrip;
-            
+
             if (data is TextDocument && GetModelsOfType<WaterQualityModel>().Any(m => Equals(m.InputFile, data)))
             {
                 var revertToOriginalTemplateMenuItem = new ClonableToolStripMenuItem
@@ -889,44 +888,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         private IEnumerable<T> GetModelsOfType<T>() where T : IModel
         {
             return Gui.Application.GetAllModelsInProject().OfType<T>();
-        }
-
-        private static ClonableToolStripMenuItem CreateHydFileModelMenuItem(
-            WaterQualityModel waqModel, IHydFileModel hydFileModel)
-        {
-            string toolTipText;
-            string hydFilePath = hydFileModel.HydFilePath;
-            string flowModelName = hydFileModel.Name;
-            var hydFileExists = false;
-
-            if (string.IsNullOrEmpty(hydFilePath))
-            {
-                toolTipText = Properties.Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_No_hyd_file_was_produced;
-            }
-            else
-            {
-                hydFileExists = File.Exists(hydFilePath);
-                toolTipText = hydFileExists
-                                  ? Properties.Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Use_hyd_file
-                                  : Properties.Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Hyd_file_is_not_present;
-            }
-
-            var hydFileModelMenuItem = new ClonableToolStripMenuItem
-            {
-                Enabled = hydFileExists,
-                ToolTipText = string.Format(toolTipText, hydFilePath),
-                Text = flowModelName
-            };
-            hydFileModelMenuItem.Click += (s, e) =>
-            {
-                var dialog = new ImportHydFileDialog(waqModel, hydFilePath);
-                dialog.SetLabelMessage(string.Format(Properties.Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_for_importing_the_hyd_file___0___from_model___1__,
-                                                     Path.GetFileName(hydFilePath), flowModelName));
-
-                dialog.ShowDialog();
-            };
-
-            return hydFileModelMenuItem;
         }
 
         private void RevertInputFileClick(object sender, EventArgs e)

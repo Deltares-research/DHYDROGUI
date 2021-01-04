@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows.Controls;
 using DelftTools.Controls;
-using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -18,7 +16,6 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualityModelWizard;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
@@ -32,7 +29,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Api;
 using SharpMap.UI.Tools;
-using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 {

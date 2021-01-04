@@ -847,15 +847,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use the .hyd File from....
-        /// </summary>
-        internal static string WaterQualityModelGuiPlugin_GetContextMenu_Use_the__HYD_File_from___ {
-            get {
-                return ResourceManager.GetString("WaterQualityModelGuiPlugin_GetContextMenu_Use_the__HYD_File_from___", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Could not find process definition files: {0}.
         /// </summary>
         internal static string WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Could_not_find_process_definition_files___0_ {

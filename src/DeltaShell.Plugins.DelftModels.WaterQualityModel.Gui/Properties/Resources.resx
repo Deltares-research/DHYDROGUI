@@ -334,9 +334,6 @@
   <data name="WaterQualityModelNodePresenter_GetContextMenu_Validate" xml:space="preserve">
     <value>Validate</value>
   </data>
-  <data name="WaterQualityModelGuiPlugin_GetContextMenu_Use_the__HYD_File_from___" xml:space="preserve">
-    <value>Use the .hyd File from...</value>
-  </data>
   <data name="WaterQualityModelGuiPlugin_GetContextMenu_Revert_to_Original_Template" xml:space="preserve">
     <value>Revert to Original Template</value>
   </data>
