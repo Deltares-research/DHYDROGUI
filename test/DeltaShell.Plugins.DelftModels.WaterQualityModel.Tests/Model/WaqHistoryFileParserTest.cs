@@ -266,11 +266,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>()
                 {
                     new WaterQualityObservationVariableOutput(new []{ new DelftTools.Utils.Tuple<string, string>("Limit Chlo", "-")})
+                    {
+                        Name = "Observation Point01"
+                    }
                 };
 
                 void Call() => WaqHistoryFileParser.Parse(hisFilePath, observationVariableOutputs, MonitoringOutputLevel.Points);
 
                 TestHelper.AssertLogMessagesCount(Call, 0);
+                Assert.That(observationVariableOutputs[0].TimeSeriesList.First().GetValues(), Is.Not.Empty);
             }
         }
 
