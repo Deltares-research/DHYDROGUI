@@ -783,43 +783,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Choose the options to use for importing the hyd file &apos;{0}&apos; from model &apos;{1}&apos;.
-        /// </summary>
-        internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_for_importing_the_hyd_file___0___from_model___1__ {
-            get {
-                return ResourceManager.GetString("WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Choose_the_options_to_use_f" +
-                        "or_importing_the_hyd_file___0___from_model___1__", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hyd file is not present at &apos;{0}&apos;..
-        /// </summary>
-        internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Hyd_file_is_not_present {
-            get {
-                return ResourceManager.GetString("WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Hyd_file_is_not_present", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No hyd file was produced. Make sure that you have run the flow model and that the hyd file has been generated..
-        /// </summary>
-        internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_No_hyd_file_was_produced {
-            get {
-                return ResourceManager.GetString("WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_No_hyd_file_was_produced", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use hyd file &apos;{0}&apos;.
-        /// </summary>
-        internal static string WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Use_hyd_file {
-            get {
-                return ResourceManager.GetString("WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_Use_hyd_file", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Generate Fractions.
         /// </summary>
         internal static string WaterQualityModelGuiPlugin_GetContextMenu_Generate_Fractions {
