@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     /// </summary>
     public static class WaqHistoryFileParser
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaqHistoryFileParser));
+        private static readonly ILog log = LogManager.GetLogger(typeof(WaqHistoryFileParser));
 
         /// <summary>
         /// Parses his file data and sets the data on the <paramref name="observationVariableOutputs"/>.
@@ -35,10 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                                  IList<WaterQualityObservationVariableOutput> observationVariableOutputs,
                                  MonitoringOutputLevel monitoringOutputLevel)
         {
-            if (string.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException($"Argument '{nameof(filePath)}' cannot be null or empty.");
-            }
+            Ensure.NotNullOrEmpty(filePath, nameof(filePath));
 
             if (monitoringOutputLevel == MonitoringOutputLevel.None || 
                 observationVariableOutputs == null ||
@@ -50,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             DelwaqHisFileData[] hisFileData = ReadHisFileData(filePath);
             if (!hisFileData.Any())
             {
-                Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file, filePath);
+                log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file, filePath);
                 return;
             }
 
@@ -70,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 case ".his":
                     return DelwaqHistoryFileReader.Read(filePath);
                 default:
-                    Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_Invalid_file_format, filePath);
+                    log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_Invalid_file_format, filePath);
                     return new DelwaqHisFileData[0];
             }
         }
@@ -83,8 +81,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 return;
             }
 
-            DelwaqHisFileData hisFileVariableData = hisFileVariableDataList
-                .FirstOrDefault(data => string.Equals(data.ObservationVariable, observationVariableOutput.Name, StringComparison.OrdinalIgnoreCase));
+            DelwaqHisFileData hisFileVariableData = 
+                hisFileVariableDataList.FirstOrDefault(data => string.Equals(data.ObservationVariable, 
+                                                                             observationVariableOutput.Name, 
+                                                                             StringComparison.OrdinalIgnoreCase));
 
             if (hisFileVariableData == null)
             {
@@ -95,10 +95,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             {
                 string timeSeriesName = timeSeries.Name.Replace(' ', '_');
                 double[] variableTimeSeriesValues = hisFileVariableData.GetValuesForKey(timeSeriesName).ToArray();
-                if (!variableTimeSeriesValues.Any() ||
-                    hisFileVariableData.TimeSteps.Count() != variableTimeSeriesValues.Length)
+
+                if (!HasConsistentTimeStepsForData(hisFileVariableData, variableTimeSeriesValues))
                 {
-                    Log.Error($"Time steps are inconsistent for the data related to variable {timeSeriesName}.");
+                    log.ErrorFormat(Resources.WaqHistoryFileParser_SetDataOnObservationVariableOutput_Time_steps_are_inconsistent_for_the_data_related_to_variable__0__, 
+                                    timeSeries.Name);
                     continue;
                 }
 
@@ -106,5 +107,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 timeSeries.SetValues(variableTimeSeriesValues);
             }
         }
+
+        private static bool HasConsistentTimeStepsForData(DelwaqHisFileData data, 
+                                                          IReadOnlyCollection<double> timeSeriesValues) =>
+            timeSeriesValues.Any() && data.TimeSteps.Count() == timeSeriesValues.Count;
     }
 }

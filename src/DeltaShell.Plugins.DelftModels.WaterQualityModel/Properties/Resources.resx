@@ -701,4 +701,7 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="SubFileImporter_Processes_Name" xml:space="preserve">
     <value>processes</value>
   </data>
+  <data name="WaqHistoryFileParser_SetDataOnObservationVariableOutput_Time_steps_are_inconsistent_for_the_data_related_to_variable__0__" xml:space="preserve">
+    <value>Time steps are inconsistent for the data related to variable {0}.</value>
+  </data>
 </root>

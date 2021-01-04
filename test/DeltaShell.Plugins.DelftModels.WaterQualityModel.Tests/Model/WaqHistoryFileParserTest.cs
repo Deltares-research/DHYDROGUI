@@ -228,7 +228,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             // 1. Set up test data
             string hisFile = TestHelper.GetTestFilePath(@"BloomCase\bloom.his");
             const string outputVariableName = "ObsPoint 1";
-            const string timeSeriesName = "Fake_time_series";
+            const string timeSeriesName = "Fake time series";
             var expectedLogMsg =
                 $"Time steps are inconsistent for the data related to variable {timeSeriesName}.";
             WaterQualityModel waqModel = CreateBloomMockWaqModel(timeSeriesName, outputVariableName);
