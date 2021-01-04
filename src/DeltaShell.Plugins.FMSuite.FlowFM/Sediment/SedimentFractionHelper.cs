@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -10,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
     {
         public static EventedList<ISedimentProperty> GetSedimentationOverAllProperties()
         {
-            return new EventedList<ISedimentProperty>()
+            return new EventedList<ISedimentProperty>
             {
                 new SedimentProperty<double>("Cref", 1600, 0, true, 9999.9999, false, "kg/m3",
                                              "Reference density for hindered settling calculations", true)
@@ -19,13 +18,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
 
         public static List<ISedimentType> GetSedimentationTypes()
         {
-            return new List<ISedimentType>()
+            return new List<ISedimentType>
             {
-                new SedimentType()
+                new SedimentType
                 {
                     Name = "Sand",
                     Key = "sand",
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true,
                                                                      "kg/m3", "Initial Concentration", true, false),
@@ -44,11 +43,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Median sediment diameter (D50)", false)
                     }
                 },
-                new SedimentType()
+                new SedimentType
                 {
                     Name = "Mud",
                     Key = "mud",
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true,
                                                                      "kg/m3", "Initial Concentration", true, false),
@@ -73,11 +72,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Settling velocity saline water", false)
                     }
                 },
-                new SedimentType()
+                new SedimentType
                 {
                     Name = "Bed-load",
                     Key = "bedload",
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, double.MaxValue, true,
                                                                      "m", "Initial sediment layer thickness at bed",
@@ -97,13 +96,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
 
         public static List<ISedimentFormulaType> GetSedimentationFormulas()
         {
-            return new List<ISedimentFormulaType>()
+            return new List<ISedimentFormulaType>
             {
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Partheniades-Krone",
                     TraFrm = -3,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("EroPar", 0.0001, 0, true, double.MaxValue, true, "kg/m²s",
                                                      "Erosion parameter", false),
@@ -133,11 +132,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      })
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Van Rijn (2007): TRANSPOR2004",
                     TraFrm = -2,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<int>("IopSus", 0, 0, false, 1, false, string.Empty,
                                                   "Option for determining suspended sediment diameter", false),
@@ -155,11 +154,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Salinity for saline settling velocity", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Van Rijn (1993)",
                     TraFrm = -1,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<int>("IopSus", 0, 0, false, 1, false, string.Empty,
                                                   "Option for determining suspended sediment diameter", false),
@@ -177,11 +176,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                    "Use Van Rijn's parabolic mixing coefficient", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Engelund-Hansen (1967)",
                     TraFrm = 1,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
@@ -189,31 +188,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Fraction transported as suspended load (0 to 1)", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Meyer-Peter-Mueller (1948)",
                     TraFrm = 2,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Swanby / Ackers-White",
                     TraFrm = 3,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "General formula",
                     TraFrm = 4,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ACal", 8, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
@@ -227,11 +226,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Critical mobility factor", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Bijker (1971)",
                     TraFrm = 5,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("CalBs", 5, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient b for shallow water", false),
@@ -251,11 +250,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Default wave period", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Van Rijn (1984)",
                     TraFrm = 7,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
@@ -267,11 +266,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Effect of mud on critical bed shear stress", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Soulsby / Van Rijn",
                     TraFrm = 11,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
@@ -281,11 +280,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Roughness height", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Soulsby",
                     TraFrm = 12,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
@@ -294,11 +293,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "D50/z0 ratio", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Ashida-Michiue (1974)",
                     TraFrm = 14,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false),
@@ -312,21 +311,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Power q", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Wilcock-Crowe (2003)",
                     TraFrm = 16,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ACal", 1, 0, true, double.MaxValue, true, "-",
                                                      "Calibration coefficient", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Gaeuman et. al. (2009) lab calibration",
                     TraFrm = 17,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ThetaC0", 0.021, 0, false, double.MaxValue, true, "-",
                                                      "Calibration coefficient theta", false),
@@ -334,11 +333,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
                                                      "Calibration coefficient alpha", false)
                     }
                 },
-                new SedimentFormulaType()
+                new SedimentFormulaType
                 {
                     Name = "Gaeuman et. al. (2009) Trinity River",
                     TraFrm = 18,
-                    Properties = new EventedList<ISedimentProperty>()
+                    Properties = new EventedList<ISedimentProperty>
                     {
                         new SedimentProperty<double>("ThetaC0", 0.03, 0, false, double.MaxValue, true, "-",
                                                      "Calibration coefficient theta", false),
