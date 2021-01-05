@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 {
     public partial class AreaStructureView : UserControl, IReusableView
     {
-        private IStructure1D structure;
+        private IStructure structure;
         private bool locked;
 
         public AreaStructureView()
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             InitializeComponent();
         }
 
-        public IStructure1D Data
+        public IStructure Data
         {
             get
             {
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
             set
             {
-                Data = (IStructure1D) value;
+                Data = (IStructure) value;
             }
         }
 

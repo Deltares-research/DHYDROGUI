@@ -10,8 +10,8 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Properties;
+using DeltaShell.NGHS.Common.IO;
 using log4net;
-
 namespace DeltaShell.Dimr
 {
     public class DimrRunner : IDisposable
@@ -300,25 +300,9 @@ namespace DeltaShell.Dimr
             FileUtils.CreateDirectoryIfNotExists(workDirectory);
             string exportDir = Path.Combine(workDirectory, model.DirectoryName);
             FileUtils.CreateDirectoryIfNotExists(exportDir);
-            ClearFolder(exportDir);
+            CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(exportDir, model.FileExceptionsCleaningWorkingDirectory);
             exporter.Export(modelObject, model.GetExporterPath(exportDir));
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
-        }
-
-        private static void ClearFolder(string folderName)
-        {
-            var dir = new DirectoryInfo(folderName);
-
-            foreach (FileInfo fi in dir.GetFiles())
-            {
-                FileUtils.DeleteIfExists(fi.FullName);
-            }
-
-            foreach (DirectoryInfo di in dir.GetDirectories())
-            {
-                ClearFolder(di.FullName);
-                FileUtils.DeleteIfExists(di.FullName);
-            }
         }
 
         // Display any warnings or errors.

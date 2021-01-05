@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         {
             get
             {
-                yield return typeof(FMHisFileFunctionStore);
+                yield return typeof(IFMHisFileFunctionStore);
             }
         }
 

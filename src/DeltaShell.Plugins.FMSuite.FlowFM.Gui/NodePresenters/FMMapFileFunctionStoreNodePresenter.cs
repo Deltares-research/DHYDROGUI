@@ -13,17 +13,17 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
-    public class FMMapFileFunctionStoreNodePresenter : TreeViewNodePresenterBaseForPluginGui<FMMapFileFunctionStore>
+    public class FMMapFileFunctionStoreNodePresenter : TreeViewNodePresenterBaseForPluginGui<IFMMapFileFunctionStore>
     {
         private static readonly IList<DataItem> DataItems = new List<DataItem>();
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, FMMapFileFunctionStore nodeData)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IFMMapFileFunctionStore nodeData)
         {
             node.Text = Path.GetFileName(nodeData.Path);
             node.Image = Resources.unstrucWater;
         }
 
-        public override IEnumerable GetChildNodeObjects(FMMapFileFunctionStore parentNodeData, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(IFMMapFileFunctionStore parentNodeData, ITreeNode node)
         {
             WaterFlowFMModel model =
                 Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>()
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             }
         }
 
-        private IDataItem WrapIntoOutputItem(object o, FMMapFileFunctionStore store, string tag)
+        private IDataItem WrapIntoOutputItem(object o, IFMMapFileFunctionStore store, string tag)
         {
             WaterFlowFMModel model =
                 Gui.Application.Project.RootFolder.Models.OfType<WaterFlowFMModel>()

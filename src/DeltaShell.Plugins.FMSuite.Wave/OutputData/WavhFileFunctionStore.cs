@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// in order to support wave history files.
     /// </summary>
     /// <seealso cref="FMNetCdfFileFunctionStore" />
-    public class WavhFileFunctionStore : FMNetCdfFileFunctionStore
+    public class WavhFileFunctionStore : FMNetCdfFileFunctionStore, IWavhFileFunctionStore
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(WavhFileFunctionStore));
         private static class StationKeys

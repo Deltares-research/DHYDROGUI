@@ -1169,6 +1169,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             MarkDirty();
         }
 
+        public virtual IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory => new List<string>();
+
         #endregion
 
         #region HandleControlGroupRenaming

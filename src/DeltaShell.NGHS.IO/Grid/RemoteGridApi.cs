@@ -82,18 +82,6 @@ namespace DeltaShell.NGHS.IO.Grid
             return api?.Initialize() ?? 0;
         }
 
-        public int GetNumberOfNetworks(out int numberOfNetworks)
-        {
-            numberOfNetworks = 0;
-            return api != null ? api.GetNumberOfNetworks(out numberOfNetworks) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-        }
-
-        public int GetNetworkIds(out int[] networkIds)
-        {
-            networkIds = new int[0];
-            return api != null ? api.GetNetworkIds(out networkIds) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-        }
-
         public int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
         {
             numberOfMesh = 0;

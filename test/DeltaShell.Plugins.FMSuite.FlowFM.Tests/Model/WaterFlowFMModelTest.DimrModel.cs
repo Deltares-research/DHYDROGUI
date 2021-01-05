@@ -14,6 +14,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net.Core;
 using NUnit.Framework;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 {
@@ -200,6 +201,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Assert
                 IEnumerable<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
                 Assert.That(warnings, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void FileExceptionsCleaningWorkingDirectory_WhenUseCachingIsTrueAndCacheFilePathSetToWorkingDirectory_ShouldReturnCacheFilePath()
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                string runMduPath = Path.Combine(model.WorkingDirectoryPath, "dflowfm", $"{model.Name}{FileConstants.MduFileExtension}");
+                model.CacheFile.UpdatePathToMduLocation(runMduPath);
+                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("true");
+
+                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
+
+                Assert.AreEqual(fileExceptions.Count, 1);
+                Assert.AreEqual(fileExceptions.First(), Path.ChangeExtension(runMduPath, FileConstants.CachingFileExtension));
+            }
+        }
+
+        [Test]
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        [TestCase(false, true)]
+        public void FileExceptionsCleaningWorkingDirectory_WhenUseCachingIsFalseAndOrCacheFilePathNotSetToWorkingDirectory_ShouldReturnNoFiles(bool cacheFileInWorkingDirectory, bool useCaching)
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                string runMduPath = Path.Combine(cacheFileInWorkingDirectory ? model.WorkingDirectoryPath : "NotWorkingDirectory", "dflowfm", $"{model.Name}{FileConstants.MduFileExtension}");
+                model.CacheFile.UpdatePathToMduLocation(runMduPath);
+                
+                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString(useCaching.ToString());
+
+                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
+
+                Assert.AreEqual(fileExceptions.Count, 0);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void OnInitialize_WhenCacheFilePathIsInWorkingDirectoryAndUseCachingTrue_ShouldNotRemoveThisCacheFileBeforeANewRunStarts()
+        {
+            // Arrange
+            using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
+            {
+                model.WorkingDirectoryPathFunc = () => Path.Combine(tempDirectory.Path);
+                string modelExportDirectoryPath = Path.Combine(model.WorkingDirectoryPath, "dflowfm");
+                Directory.CreateDirectory(modelExportDirectoryPath);
+                string runMduPath = Path.Combine(modelExportDirectoryPath, $"{model.Name}{FileConstants.MduFileExtension}");
+                
+                string cacheFilePath = Path.ChangeExtension(runMduPath, FileConstants.CachingFileExtension);
+                File.WriteAllText(cacheFilePath, "test");
+                string shouldBeClearedFilePath = Path.Combine(modelExportDirectoryPath, "test.txt");
+                File.WriteAllText(shouldBeClearedFilePath, "test");
+                
+                model.CacheFile.UpdatePathToMduLocation(runMduPath);
+                model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("true");
+
+                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(50, 50, 20, 20);
+
+                // Act
+                model.Initialize();
+
+                // Assert
+                Assert.IsFalse(File.Exists(shouldBeClearedFilePath));
+                Assert.IsTrue(File.Exists(cacheFilePath));
             }
         }
 

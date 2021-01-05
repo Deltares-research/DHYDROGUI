@@ -68,5 +68,7 @@ namespace DeltaShell.Dimr
         /// Working directory path of the integrated model.
         /// </param>
         void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath);
+
+        IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory { get; }
     }
 }

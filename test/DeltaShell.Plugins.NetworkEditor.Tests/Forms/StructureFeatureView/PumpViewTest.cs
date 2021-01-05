@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -60,24 +59,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                                                  Assert.IsFalse(checkBoxDeliverySide.Checked);
                                                  pump.ControlDirection = PumpControlDirection.DeliverySideControl;
                                                  Assert.IsTrue(checkBoxDeliverySide.Checked);
-                                             });
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void ChangingPumpDirectionToNegativeShouldUpdatePumpViewCorrectly()
-        {
-            var pump = new Pump {Branch = new Channel()};
-            var pumpView = new PumpView {Data = pump};
-
-            var radioDirectionIsNegative = (RadioButton) pumpView.Controls.Find("radioButtonNegative", true)[0];
-
-            WindowsFormsTestHelper.ShowModal(pumpView,
-                                             f =>
-                                             {
-                                                 Assert.IsFalse(radioDirectionIsNegative.Checked);
-                                                 pump.DirectionIsPositive = false;
-                                                 Assert.IsTrue(radioDirectionIsNegative.Checked);
                                              });
         }
     }

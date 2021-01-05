@@ -21,7 +21,7 @@
   <ItemGroup>
     <Folder Include="Manuals\" />
     <Folder Include="Plugins\" />
-    <Folder Include="Templates" />
+    <Folder Include="Templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DotNetFramework4Check.wxi" />
@@ -48,6 +48,8 @@
     <Content Include="PythonScripts_FeatureContent.wxi" />
     <Content Include="SharpMap.wxi" />
     <Content Include="Templates\ApplicationGUIDs.wxi" />
+    <Content Include="Templates\ApplicationGUIDs.wxi.template" />
+    <Content Include="Templates\generate_unique_guid_wxi.py" />
     <Content Include="Templates\GuiConfigXml.wxi" />
     <Content Include="Templates\PluginTemplate.wxi" />
   </ItemGroup>

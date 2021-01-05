@@ -7,6 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -539,7 +540,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 waveModel.ConnectOutput(outputDirectoryInTemp);
 
                 // Assert
-                IEnumerable<WavmFileFunctionStore> functionStores = waveModel.WaveOutputData.WavmFileFunctionStores.ToList();
+                IEnumerable<IWavmFileFunctionStore> functionStores = waveModel.WaveOutputData.WavmFileFunctionStores.ToList();
                 Assert.AreEqual(2, functionStores.Count());
 
                 string[] expectedPaths =
@@ -633,8 +634,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GetDirectChildren_ContainsWavmFileFunctionStores()
         {
             // Setup
-            var functionStore1 = new WavmFileFunctionStore("");
-            var functionStore2 = new WavmFileFunctionStore("");
+            var functionStore1 = Substitute.For<IWavmFileFunctionStore>();
+            var functionStore2 = Substitute.For<IWavmFileFunctionStore>();
             using (var model = new WaveModel())
             {
                 
@@ -651,25 +652,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GetDirectChildren_ContainsWavhFileFunctionStores()
         {
             // Setup
-            using(var tempDir = new TemporaryDirectory())
             using (var model = new WaveModel())
             {
-                string ncPath = tempDir.CopyTestDataFileToTempDirectory("WaveOutputDataHarvesterTest\\wavh-Waves.nc");
-                var featureContainer = Substitute.For<IWaveFeatureContainer>();
-                var functionStore1 = new WavhFileFunctionStore(ncPath, featureContainer);
-                var functionStore2 = new WavhFileFunctionStore(ncPath, featureContainer);
-                
+                var functionStore1 = Substitute.For<IWavhFileFunctionStore>();
+                functionStore1.Functions = new EventedList<IFunction>(new []
+                {
+                    Substitute.For<IFunction>()
+                });
+                var functionStore2 = Substitute.For<IWavhFileFunctionStore>();
+                functionStore2.Functions = new EventedList<IFunction>(new []
+                {
+                    Substitute.For<IFunction>(),
+                    Substitute.For<IFunction>()
+                });
                 model.WaveOutputData.WavhFileFunctionStores.Add(functionStore1);
                 model.WaveOutputData.WavhFileFunctionStores.Add(functionStore2);
 
                 List<IFunction> functions = model.WaveOutputData.WavhFileFunctionStores.SelectMany(s => s.Functions).ToList();
 
                 // Precondition
-                Assert.That(functions, Has.Count.EqualTo(22));
+                Assert.That(functions, Has.Count.EqualTo(3));
 
                 // Call
                 IEnumerable<object> result = model.GetDirectChildren()
@@ -1442,6 +1447,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     Assert.That(File.Exists(Path.Combine(actualInputDirectoryInfo.FullName, (newName + ".mdw"))), 
                                 Is.True);
                 }
+            }
+        }
+
+        [Test]
+        public void FileExceptionsCleaningWorkingDirectory_ShouldAlwaysReturnEmptyCollection()
+        {
+            using (var model = new WaveModel())
+            {
+                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
+                Assert.AreEqual(fileExceptions.Count, 0);
             }
         }
 

@@ -71,6 +71,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File {0}, block starting at line {1}, not possible to parse boundary data block..
+        /// </summary>
+        public static string BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___not_possible_to_parse_boundary_data_block_ {
+            get {
+                return ResourceManager.GetString("BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1" +
+                        "___not_possible_to_parse_boundary_data_block_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, block starting at line {1}: skipping boundary dataBlock of function type {2}..
+        /// </summary>
+        public static string BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___skipping_boundary_dataBlock_of_function_type__2__ {
+            get {
+                return ResourceManager.GetString("BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1" +
+                        "___skipping_boundary_dataBlock_of_function_type__2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skipped DataPoint {0} for Boundary Condition {1} could not be added as the following exception was risen during import: {2}.
+        /// </summary>
+        public static string BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Boundary_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_import___2_ {
+            get {
+                return ResourceManager.GetString("BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Bounda" +
+                        "ry_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_" +
+                        "import___2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Support point &apos;{0}&apos; contains a time zone offset, the time points will be adjusted to their equivalents in UTC..
         /// </summary>
         public static string BcFileFlowBoundaryDataBuilder_Support_point__0__contains_time_zone_offset {
@@ -1304,11 +1335,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while importing a {0} from {1}.
+        ///   Looks up a localized string similar to Error while importing a {0} from {1}: {2}.
         /// </summary>
-        public static string WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_ {
+        public static string WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__ {
             get {
-                return ResourceManager.GetString("WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_", resourceCulture);
+                return ResourceManager.GetString("WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__", resourceCulture);
             }
         }
         

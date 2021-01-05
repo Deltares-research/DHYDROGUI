@@ -51,15 +51,12 @@ namespace DelftTools.Hydro.Tests.Structures
             IWeir weir = new Weir("Weir one")
             {
                 Geometry = new Point(7, 0),
-                OffsetY = 175,
                 CrestWidth = 75,
                 CrestLevel = -3,
-                AllowNegativeFlow = true
             };
             var clonedWeir = (IWeir) weir.Clone();
 
             Assert.AreEqual(clonedWeir.Name, weir.Name);
-            Assert.AreEqual(clonedWeir.OffsetY, weir.OffsetY);
             Assert.AreEqual(clonedWeir.Geometry, weir.Geometry);
             Assert.AreEqual(clonedWeir.CrestWidth, weir.CrestWidth);
             Assert.AreEqual(clonedWeir.CrestLevel, weir.CrestLevel);
@@ -74,11 +71,9 @@ namespace DelftTools.Hydro.Tests.Structures
             IWeir sourceWeir = new Weir("Source Weir", true)
             {
                 Geometry = new Point(7, 0),
-                OffsetY = 175,
                 CrestWidth = 75,
                 CrestLevel = -3,
                 Name = "Source Weir",
-                AllowNegativeFlow = true,
                 WeirFormula = new GatedWeirFormula(),
                 UseCrestLevelTimeSeries = true
             };
@@ -86,21 +81,17 @@ namespace DelftTools.Hydro.Tests.Structures
             IWeir targetWeir = new Weir("Target Weir", false)
             {
                 Geometry = new Point(42, 0),
-                OffsetY = 571,
                 CrestWidth = 55,
                 CrestLevel = -1,
                 Name = "Target Weir",
-                AllowNegativeFlow = false,
-                WeirFormula = new FreeFormWeirFormula(),
+                WeirFormula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = false
             };
             targetWeir.CopyFrom(sourceWeir);
 
             Assert.AreNotEqual(sourceWeir.Name, targetWeir.Name);
-            Assert.AreEqual(sourceWeir.OffsetY, targetWeir.OffsetY);
             Assert.AreEqual(sourceWeir.CrestWidth, targetWeir.CrestWidth);
             Assert.AreEqual(sourceWeir.CrestLevel, targetWeir.CrestLevel);
-            Assert.AreEqual(sourceWeir.AllowNegativeFlow, targetWeir.AllowNegativeFlow);
             Assert.AreEqual(sourceWeir.WeirFormula.HasFlowDirection, targetWeir.WeirFormula.HasFlowDirection);
             Assert.AreEqual(sourceWeir.IsGated, targetWeir.IsGated);
             Assert.AreEqual(sourceWeir.CanBeTimedependent, targetWeir.CanBeTimedependent);
@@ -122,56 +113,9 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void IsRectangle()
         {
-            IWeir simpleweir = new Weir("simple") {};
-            IWeir freeformweir = new Weir("freeform") {WeirFormula = new FreeFormWeirFormula()};
-
-            Assert.IsTrue(simpleweir.IsRectangle);
-            Assert.IsFalse(freeformweir.IsRectangle);
-        }
-
-        [Test]
-        public void Allow()
-        {
             IWeir simpleweir = new Weir("simple");
 
-            simpleweir.AllowNegativeFlow = true;
-            simpleweir.AllowPositiveFlow = true;
-
-            Assert.IsTrue(simpleweir.AllowNegativeFlow);
-            Assert.IsTrue(simpleweir.AllowPositiveFlow);
-
-            simpleweir.AllowPositiveFlow = false;
-
-            Assert.IsTrue(simpleweir.AllowNegativeFlow);
-            Assert.IsFalse(simpleweir.AllowPositiveFlow);
-
-            simpleweir.AllowNegativeFlow = false;
-
-            Assert.IsFalse(simpleweir.AllowNegativeFlow);
-            Assert.IsFalse(simpleweir.AllowPositiveFlow);
-
-            simpleweir.AllowNegativeFlow = true;
-            simpleweir.AllowPositiveFlow = true;
-
-            Assert.IsTrue(simpleweir.AllowNegativeFlow);
-            Assert.IsTrue(simpleweir.AllowPositiveFlow);
-        }
-
-        [Test]
-        public void BindingTest()
-        {
-            var pierweir = new Weir("pier") {WeirFormula = new PierWeirFormula()};
-            var callCount = 0;
-
-            ((INotifyPropertyChanged) pierweir).PropertyChanged += (s, e) =>
-                //pierweir.PropertyChanged += (s, e) =>
-            {
-                callCount++;
-                Assert.AreEqual(pierweir, s);
-                Assert.AreEqual("CrestShape", e.PropertyName);
-            };
-            pierweir.CrestShape = CrestShape.Triangular;
-            Assert.AreEqual(1, callCount);
+            Assert.IsTrue(simpleweir.IsRectangle);
         }
 
         [Test]
@@ -219,17 +163,6 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void RiverWeirClone()
-        {
-            var weir = new Weir {WeirFormula = new RiverWeirFormula()};
-
-            var clonedWeir = (Weir) weir.Clone();
-
-            Assert.AreNotSame(((RiverWeirFormula) weir.WeirFormula).SubmergeReductionNeg,
-                              ((RiverWeirFormula) clonedWeir.WeirFormula).SubmergeReductionNeg);
-        }
-
-        [Test]
         public void SimpleWeirPolylineDefaultWidthTest()
         {
             var weir = new Weir()
@@ -245,10 +178,7 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(0, weir.CrestWidth);
         }
 
-        [TestCase(typeof(FreeFormWeirFormula), StructureType.UniversalWeir)]
         [TestCase(typeof(GatedWeirFormula), StructureType.Orifice)]
-        [TestCase(typeof(PierWeirFormula), StructureType.AdvancedWeir)]
-        [TestCase(typeof(RiverWeirFormula), StructureType.RiverWeir)]
         [TestCase(typeof(SimpleWeirFormula), StructureType.Weir)]
         [TestCase(typeof(GeneralStructureWeirFormula), StructureType.GeneralStructure)]
         public void GivenAWeirWithTheSpecifiedFormulaWhenGetStructureTypeIsCalledTheCorrectTypeIsReturned(Type weirFormula, StructureType expectedStructureType)

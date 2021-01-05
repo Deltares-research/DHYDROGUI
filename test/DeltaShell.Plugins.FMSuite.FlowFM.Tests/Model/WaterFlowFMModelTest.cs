@@ -1034,7 +1034,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
+        public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeSeries()
         {
             var model = Substitute.ForPartsOf<WaterFlowFMModel>();
             model.OutputMapFileStore.Returns(new FMMapFileFunctionStore());
@@ -1392,7 +1392,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             var model = new WaterFlowFMModel();
             model.ConnectOutput(outputDirectoryPath);
-            FMClassMapFileFunctionStore outputClassMapFileStore = model.OutputClassMapFileStore;
+            IFMClassMapFileFunctionStore outputClassMapFileStore = model.OutputClassMapFileStore;
             Assert.NotNull(outputClassMapFileStore);
             Assert.AreEqual(filePath, outputClassMapFileStore.Path);
 

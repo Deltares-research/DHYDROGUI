@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using DelftTools.TestUtils;
+using DelftTools.Functions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
@@ -32,37 +33,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         public void Constructor_FactoryNull_ThrowsArgumentNullException()
         {
             // Call | Assert
-            void Call() => new WaveOutputDataLayerSubProvider(null);
+            void Call()
+            {
+                new WaveOutputDataLayerSubProvider(null);
+            }
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("instanceCreator"));
-        }
-
-        public static IEnumerable<TestCaseData> CanCreateLayerForData()
-        {
-            var notOutputData = new object();
-            var notConnectedOutputData = Substitute.For<IWaveOutputData>();
-            notConnectedOutputData.IsConnected.Returns(false);
-
-            var connectedOutputData = Substitute.For<IWaveOutputData>();
-            connectedOutputData.IsConnected.Returns(true);
-
-            var parentData = new object();
-
-            yield return new TestCaseData(notConnectedOutputData, parentData, false);
-            yield return new TestCaseData(notConnectedOutputData, null,       false);
-            yield return new TestCaseData(connectedOutputData,    parentData, true);
-            yield return new TestCaseData(connectedOutputData,    null,       true);
-            yield return new TestCaseData(notOutputData,          parentData, false);
-            yield return new TestCaseData(notOutputData,          null,       false);
-            yield return new TestCaseData(null,                   parentData, false);
-            yield return new TestCaseData(null,                   null,       false);
         }
 
         [Test]
         [TestCaseSource(nameof(CanCreateLayerForData))]
-        public void CanCreateLayerFor_ExpectedResults(object sourceData, 
-                                                      object parentData, 
+        public void CanCreateLayerFor_ExpectedResults(object sourceData,
+                                                      object parentData,
                                                       bool expectedValue)
         {
             // Setup
@@ -74,12 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedValue));
-        }
-
-        private static IEnumerable<TestCaseData> CreateLayerData_ValidInput()
-        {
-            yield return new TestCaseData(new object());
-            yield return new TestCaseData(null);
         }
 
         [Test]
@@ -105,28 +82,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
             instanceCreator.Received(1).CreateWaveOutputDataLayer(outputData);
         }
 
-        private static IEnumerable<TestCaseData> CreateLayerData_InvalidInput()
-        {
-            var notOutputData = new object();
-            var notConnectedOutputData = Substitute.For<IWaveOutputData>();
-            notConnectedOutputData.IsConnected.Returns(false);
-
-            var parentData = new object();
-
-            yield return new TestCaseData(notConnectedOutputData, parentData);
-            yield return new TestCaseData(notConnectedOutputData, null);
-            yield return new TestCaseData(notOutputData,          parentData);
-            yield return new TestCaseData(notOutputData,          null);
-            yield return new TestCaseData(null,                   parentData);
-            yield return new TestCaseData(null,                   null);
-        }
-
         [Test]
         [TestCaseSource(nameof(CreateLayerData_InvalidInput))]
         public void CreateLayer_InvalidInput_ReturnsNull(object sourceData, object parentData)
         {
             // Setup
-            var instanceCreator= Substitute.For<IWaveLayerInstanceCreator>();
+            var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
 
             // Call
@@ -138,39 +99,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GenerateChildLayerObjects_ReturnsWaveOutputChildObjects()
         {
             // Setup
-            const string mapFilePath = "./WaveOutputDataHarvesterTest/wavm-Waves.nc";
-            const string hisFilePath = "./WaveOutputDataHarvesterTest/wavh-Waves.nc";
-
             var instanceCreator = Substitute.For<IWaveLayerInstanceCreator>();
             var provider = new WaveOutputDataLayerSubProvider(instanceCreator);
-            var featureContainer = Substitute.For<IWaveFeatureContainer>();
 
-            using (var tempDir = new TemporaryDirectory())
+            var wavmFileFunctionStore = Substitute.For<IWavmFileFunctionStore>();
+            wavmFileFunctionStore.Functions = new EventedList<IFunction>(new[]
             {
-                string mapNcPath = tempDir.CopyTestDataFileToTempDirectory(mapFilePath);
-                IEventedList<WavmFileFunctionStore> mapStores = 
-                    new EventedList<WavmFileFunctionStore> { new WavmFileFunctionStore(mapNcPath) };
+                Substitute.For<IFunction>()
+            });
+            IEventedList<IWavmFileFunctionStore> mapStores = new EventedList<IWavmFileFunctionStore> {wavmFileFunctionStore};
 
-                string hisNcPath = tempDir.CopyTestDataFileToTempDirectory(hisFilePath);
-                IEventedList<WavhFileFunctionStore> hisStores = 
-                    new EventedList<WavhFileFunctionStore> { new WavhFileFunctionStore(hisNcPath, featureContainer) };
+            var wavhFileFunctionStore = Substitute.For<IWavhFileFunctionStore>();
+            wavhFileFunctionStore.Functions = new EventedList<IFunction>(new[]
+            {
+                Substitute.For<IFunction>()
+            });
+            IEventedList<IWavhFileFunctionStore> hisStores = new EventedList<IWavhFileFunctionStore> {wavhFileFunctionStore};
 
+            var outputData = Substitute.For<IWaveOutputData>();
+            outputData.WavmFileFunctionStores.Returns(mapStores);
+            outputData.WavhFileFunctionStores.Returns(hisStores);
 
-                var outputData = Substitute.For<IWaveOutputData>();
-                outputData.WavmFileFunctionStores.Returns(mapStores);
-                outputData.WavhFileFunctionStores.Returns(hisStores);
+            // Call
+            IList<object> result = provider.GenerateChildLayerObjects(outputData).ToList();
 
-                // Call
-                IList<object> result = provider.GenerateChildLayerObjects(outputData).ToList();
-
-                // Assert
-                Assert.That(result, Has.Member(mapStores));
-                Assert.That(result, Has.Member(hisStores));
-            }
+            // Assert
+            Assert.That(result, Has.Member(mapStores));
+            Assert.That(result, Has.Member(hisStores));
         }
 
         [Test]
@@ -185,6 +143,49 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers.OutputData
 
             // Assert
             Assert.That(result, Is.Empty);
+        }
+
+        public static IEnumerable<TestCaseData> CanCreateLayerForData()
+        {
+            var notOutputData = new object();
+            var notConnectedOutputData = Substitute.For<IWaveOutputData>();
+            notConnectedOutputData.IsConnected.Returns(false);
+
+            var connectedOutputData = Substitute.For<IWaveOutputData>();
+            connectedOutputData.IsConnected.Returns(true);
+
+            var parentData = new object();
+
+            yield return new TestCaseData(notConnectedOutputData, parentData, false);
+            yield return new TestCaseData(notConnectedOutputData, null, false);
+            yield return new TestCaseData(connectedOutputData, parentData, true);
+            yield return new TestCaseData(connectedOutputData, null, true);
+            yield return new TestCaseData(notOutputData, parentData, false);
+            yield return new TestCaseData(notOutputData, null, false);
+            yield return new TestCaseData(null, parentData, false);
+            yield return new TestCaseData(null, null, false);
+        }
+
+        private static IEnumerable<TestCaseData> CreateLayerData_ValidInput()
+        {
+            yield return new TestCaseData(new object());
+            yield return new TestCaseData(null);
+        }
+
+        private static IEnumerable<TestCaseData> CreateLayerData_InvalidInput()
+        {
+            var notOutputData = new object();
+            var notConnectedOutputData = Substitute.For<IWaveOutputData>();
+            notConnectedOutputData.IsConnected.Returns(false);
+
+            var parentData = new object();
+
+            yield return new TestCaseData(notConnectedOutputData, parentData);
+            yield return new TestCaseData(notConnectedOutputData, null);
+            yield return new TestCaseData(notOutputData, parentData);
+            yield return new TestCaseData(notOutputData, null);
+            yield return new TestCaseData(null, parentData);
+            yield return new TestCaseData(null, null);
         }
     }
 }

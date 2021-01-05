@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
     /// Function store for Class Map Files.
     /// </summary>
     /// <seealso cref="FMNetCdfFileFunctionStore"/>
-    public class FMClassMapFileFunctionStore : FMNetCdfFileFunctionStore
+    public class FMClassMapFileFunctionStore : FMNetCdfFileFunctionStore, IFMClassMapFileFunctionStore
     {
         private const string LocationAttributeName = "location";
         private const string StandardNameAttributeName = "standard_name";

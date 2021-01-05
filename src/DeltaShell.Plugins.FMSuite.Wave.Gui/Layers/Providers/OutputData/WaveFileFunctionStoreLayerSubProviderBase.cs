@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers.OutputData
     /// <typeparam name="T">The type of wave file function store.</typeparam>
     /// <seealso cref="ILayerSubProvider" />
     public abstract class WaveFileFunctionStoreLayerSubProviderBase<T> : ILayerSubProvider 
-        where T : FMNetCdfFileFunctionStore
+        where T : IFMNetCdfFileFunctionStore
     {
         private readonly IWaveLayerInstanceCreator instanceCreator;
         private readonly Func<IEnumerable<IWaveModel>> getWaveModelsFunc;

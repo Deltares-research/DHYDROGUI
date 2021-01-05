@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         {
             // Setup
             ILayerSubProvider subProvider = ConstructSubProvider();
-            var parent = new WavmFileFunctionStore("dummy.nc");
+            var parent = Substitute.For<IWavmFileFunctionStore>();
 
             InstanceCreatorMock.CreateGridLayer(gridCoverage, null).Returns(LayerMock);
 

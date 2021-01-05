@@ -222,14 +222,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                                           .GetPropertyValue(KnownWaveProperties.LocationFile);
             if (locFile != null)
             {
-                modelDefinition.FeatureContainer.ObservationPoints = new ObsFile<Feature2DPoint>().Read(Path.Combine(mdwDir, locFile), false);
+                modelDefinition.FeatureContainer.ObservationPoints.Clear();
+                modelDefinition.FeatureContainer.ObservationPoints.AddRange(new ObsFile<Feature2DPoint>().Read(Path.Combine(mdwDir, locFile), false));
             }
 
             string curveFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)
                                             .GetPropertyValue(KnownWaveProperties.CurveFile);
             if (curveFile != null)
             {
-                modelDefinition.FeatureContainer.ObservationCrossSections = new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile)));
+                modelDefinition.FeatureContainer.ObservationCrossSections.Clear();
+                modelDefinition.FeatureContainer.ObservationCrossSections.AddRange(new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile))));
             }
 
             logHandler.LogReport();

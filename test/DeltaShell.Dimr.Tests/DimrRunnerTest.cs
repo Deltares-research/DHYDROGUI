@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Validation;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -63,6 +65,34 @@ namespace DeltaShell.Dimr.Tests
             }
         }
 
+        [Test]
+        public void OnInitialize_WhenThereIsAFileExceptionForCleaningTheWorkingDirectory_ShouldNotRemoveThisException()
+        {
+            // Arrange
+            using (var tempDir = new TemporaryDirectory())
+            {
+                var dimrApi = Substitute.For<IDimrApi>();
+                dimrApi.Finish().Returns(-1);
+                dimrApiFactory.CreateNew(Arg.Any<bool>()).Returns(dimrApi);
+
+                IDimrModel dimrModel = CreateDimrModel(tempDir);
+                string exceptionFilePath = Path.Combine(tempDir.Path, "test.txt");
+                File.WriteAllText(exceptionFilePath, "test");
+                string shouldBeRemovedFilePath = Path.Combine(tempDir.Path, "test2.txt");
+                File.WriteAllText(shouldBeRemovedFilePath, "test");
+                dimrModel.FileExceptionsCleaningWorkingDirectory.Returns(new List<string> {exceptionFilePath});
+                dimrModel.Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
+                var dimrRunner = new DimrRunner(dimrModel, dimrApiFactory);
+
+                // Act
+                dimrRunner.OnInitialize();
+
+                // Assert
+                Assert.IsFalse(File.Exists(shouldBeRemovedFilePath));
+                Assert.IsTrue(File.Exists(exceptionFilePath));
+            }
+        }
+        
         private static IDimrModel CreateDimrModel(TemporaryDirectory tempDir)
         {
             var dimrModel = Substitute.For<IDimrModel>();

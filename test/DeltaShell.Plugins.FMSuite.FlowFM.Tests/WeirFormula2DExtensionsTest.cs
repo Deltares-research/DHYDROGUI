@@ -50,12 +50,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             SimpleWeirFormula nullFormula = null;
             Assert.Throws<ArgumentNullException>(() => nullFormula.GetName2D());
         }
-
-        [Test]
-        public void GivenAFormulaNotSupportedWithinFM_WhenGetName2DIsCalled_ThenANotImplementedExceptionIsRaised()
-        {
-            var notSupportedFormula = new FreeFormWeirFormula();
-            Assert.Throws<NotImplementedException>(() => notSupportedFormula.GetName2D());
-        }
     }
 }

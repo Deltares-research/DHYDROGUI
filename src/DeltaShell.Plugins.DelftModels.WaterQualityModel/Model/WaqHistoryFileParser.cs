@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     /// </summary>
     public static class WaqHistoryFileParser
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaqHistoryFileParser));
+        private static readonly ILog log = LogManager.GetLogger(typeof(WaqHistoryFileParser));
 
         /// <summary>
         /// Parses his file data and sets the data on the <paramref name="observationVariableOutputs"/>.
@@ -27,24 +28,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// <remarks> An error message is provided if errors occur while reading data from <paramref name="filePath"/>.</remarks>
         /// <remarks>
         /// The his data from <paramref name="filePath"/> is not parsed if:
-        /// * The
-        /// <param name="monitoringOutputLevel"/>
-        /// equals "None"
-        /// * The list
-        /// <param name="observationVariableOutputs"/>
-        /// is empty
+        /// * The <paramref name="monitoringOutputLevel"/> equals <c>None</c>
+        /// * The list <paramref name="observationVariableOutputs"/> is empty
         /// </remarks>
         /// <exception cref="ArgumentNullException"> Thrown when <paramref name="filePath"/> is <c>null</c>.</exception>
         public static void Parse(string filePath,
                                  IList<WaterQualityObservationVariableOutput> observationVariableOutputs,
                                  MonitoringOutputLevel monitoringOutputLevel)
         {
-            if (string.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException($"Argument '{nameof(filePath)}' cannot be null or empty.");
-            }
+            Ensure.NotNullOrEmpty(filePath, nameof(filePath),
+                                  $"Argument '{nameof(filePath)}' cannot be null or empty.");
 
-            if (monitoringOutputLevel == MonitoringOutputLevel.None || observationVariableOutputs == null ||
+            if (monitoringOutputLevel == MonitoringOutputLevel.None || 
+                observationVariableOutputs == null ||
                 !observationVariableOutputs.Any())
             {
                 return; // No HIS file data will be present
@@ -53,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             DelwaqHisFileData[] hisFileData = ReadHisFileData(filePath);
             if (!hisFileData.Any())
             {
-                Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file, filePath);
+                log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_An_error_occurred_while_reading_file, filePath);
                 return;
             }
 
@@ -73,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 case ".his":
                     return DelwaqHistoryFileReader.Read(filePath);
                 default:
-                    Log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_Invalid_file_format, filePath);
+                    log.ErrorFormat(Resources.WaqProcessorHelper_ParseHisFileData_Invalid_file_format, filePath);
                     return new DelwaqHisFileData[0];
             }
         }
@@ -86,8 +82,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 return;
             }
 
-            DelwaqHisFileData hisFileVariableData = hisFileVariableDataList
-                .FirstOrDefault(data => string.Equals(data.ObservationVariable, observationVariableOutput.Name, StringComparison.OrdinalIgnoreCase));
+            DelwaqHisFileData hisFileVariableData = 
+                hisFileVariableDataList.FirstOrDefault(data => string.Equals(data.ObservationVariable, 
+                                                                             observationVariableOutput.Name, 
+                                                                             StringComparison.OrdinalIgnoreCase));
 
             if (hisFileVariableData == null)
             {
@@ -96,18 +94,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             foreach (TimeSeries timeSeries in observationVariableOutput.TimeSeriesList)
             {
-                string timeSeriesName = timeSeries.Name;
-                double[] variableTimeSeriesValues = hisFileVariableData.GetValuesForKey(timeSeriesName).ToArray();
-                if (!variableTimeSeriesValues.Any() ||
-                    hisFileVariableData.TimeSteps.Count() != variableTimeSeriesValues.Length)
+                double[] variableTimeSeriesValues = 
+                    GetTimeSeriesValuesFromHisFileData(timeSeries.Name,
+                                                       hisFileVariableData);
+
+                if (!HasConsistentTimeStepsForData(hisFileVariableData, 
+                                                   variableTimeSeriesValues))
                 {
-                    Log.Error($"Time steps are inconsistent for the data related to variable {timeSeriesName}.");
+                    log.ErrorFormat(Resources.WaqHistoryFileParser_SetDataOnObservationVariableOutput_Time_steps_are_inconsistent_for_the_data_related_to_variable__0__, 
+                                    timeSeries.Name);
                     continue;
                 }
 
                 timeSeries.Time.AddValues(hisFileVariableData.TimeSteps);
                 timeSeries.SetValues(variableTimeSeriesValues);
             }
+        }
+
+        private static bool HasConsistentTimeStepsForData(DelwaqHisFileData data, 
+                                                          IReadOnlyCollection<double> timeSeriesValues) =>
+            timeSeriesValues.Any() && data.TimeSteps.Count() == timeSeriesValues.Count;
+
+        private static double[] GetTimeSeriesValuesFromHisFileData(string timeSeriesName,
+                                                                   DelwaqHisFileData hisFileData)
+        {
+            double[] result = hisFileData.GetValuesForKey(timeSeriesName).ToArray();
+
+            if (result.Any())
+            {
+                return result;
+            }
+
+            // If the file was read from an .nc file, then any spaces will have
+            // been replaced with underscores. Thus we will also need to verify
+            // that no element exists with underscores.
+            string adjustedTimeSeriesName = timeSeriesName.Replace(' ', '_');
+
+            if (!string.Equals(adjustedTimeSeriesName,
+                               timeSeriesName))
+            {
+                result = hisFileData.GetValuesForKey(adjustedTimeSeriesName).ToArray();
+            }
+
+            return result;
         }
     }
 }

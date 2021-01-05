@@ -1056,7 +1056,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             var totalSteps = 5;
 
-            reportProgress("Reading properties", 1, totalSteps);
+            reportProgress("Reading properties", 2, totalSteps);
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 MduFileReader.Read(fileStream, filePath, modelDefinition);
@@ -1065,10 +1065,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var pathsRelativeToParent =
                 (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
 
-            reportProgress("Reading morphology properties", 2, totalSteps);
+            reportProgress("Reading morphology properties", 3, totalSteps);
             MorphologyFile.Read(filePath, modelDefinition);
 
-            reportProgress("Reading area features", 3, totalSteps);
+            reportProgress("Reading area features", 4, totalSteps);
             ReadAreaFeatures(filePath, modelDefinition, hydroArea);
 
             //fix for fixed weirs

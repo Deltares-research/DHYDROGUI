@@ -261,7 +261,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                 }
             });
         }
@@ -297,7 +296,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                 }
 
                 AssertFileContainsNullCoordinateSystem(path);
@@ -338,7 +336,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                 }
 
                 AssertFileContainsNullCoordinateSystem(path);
@@ -351,7 +348,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                     Assert.That(uGrid.CoordinateSystem, Is.Not.Null);
                     Assert.That(uGrid.CoordinateSystem.AuthorityCode, Is.EqualTo(newCoordinateSystem.AuthorityCode));
                 }
@@ -392,7 +388,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                     Assert.That(uGrid.CoordinateSystem, Is.Not.Null);
                     Assert.That(uGrid.CoordinateSystem.AuthorityCode, Is.EqualTo(coordinateSystem.AuthorityCode));
                 }
@@ -405,7 +400,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                     Assert.That(uGrid.CoordinateSystem, Is.Not.Null);
                     Assert.That(uGrid.CoordinateSystem.AuthorityCode, Is.EqualTo(coordinateSystem.AuthorityCode));
                 }
@@ -444,7 +438,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                 }
 
                 AssertFileContainsNullCoordinateSystem(path);
@@ -457,7 +450,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                 }
 
                 AssertFileContainsNullCoordinateSystem(path);
@@ -505,7 +497,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                     Assert.That(uGrid.CoordinateSystem, Is.Not.Null);
                     Assert.That(uGrid.CoordinateSystem.AuthorityCode, Is.EqualTo(originalCoordinateSystem.AuthorityCode));
                 }
@@ -518,7 +509,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                     Assert.That(uGrid.CoordinateSystem, Is.Not.Null);
                     Assert.That(uGrid.CoordinateSystem.AuthorityCode, Is.EqualTo(newCoordinateSystem.AuthorityCode));
                 }
@@ -583,7 +573,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                     Assert.That(uGrid.CoordinateSystem, Is.Not.Null);
                     Assert.That(uGrid.CoordinateSystem.AuthorityCode, Is.EqualTo(coordinateSystem.AuthorityCode));
                 }

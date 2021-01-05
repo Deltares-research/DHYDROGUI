@@ -16,6 +16,8 @@
         /// <summary> The delft3dfm export directory. </summary>
         public const string Delft3DfmExportDirectory = ReportFolder + @"\DELFT3D-FM";
 
+        public const string IntegratedModelsExportDirectory = ReportFolder + @"\Integrated-Models";
+
         /// <summary>
         /// Initialize a new <see cref="AcceptanceModelExportResultConfig"/> with default empty values.
         /// </summary>

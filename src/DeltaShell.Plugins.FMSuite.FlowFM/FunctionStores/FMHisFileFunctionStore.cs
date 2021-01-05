@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
     /// or be inserted from the model, to ensure the instances are
     /// exactly the same. This is required to use functionality like 'Query timeseries' etc.
     /// </summary>
-    public class FMHisFileFunctionStore : FMNetCdfFileFunctionStore
+    public class FMHisFileFunctionStore : FMNetCdfFileFunctionStore, IFMHisFileFunctionStore
     {
         private const string standardNameAttribute = "standard_name";
         private const string longNameAttribute = "long_name";

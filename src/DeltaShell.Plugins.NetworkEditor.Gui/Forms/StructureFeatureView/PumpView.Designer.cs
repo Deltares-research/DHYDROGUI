@@ -324,7 +324,6 @@
             // 
             // yOffsetTextBox
             // 
-            this.yOffsetTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.ipumpBindingSource, "OffsetY", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, null, "N3"));
             this.yOffsetTextBox.Location = new System.Drawing.Point(66, 72);
             this.yOffsetTextBox.Name = "yOffsetTextBox";
             this.yOffsetTextBox.ReadOnly = true;

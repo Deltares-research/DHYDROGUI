@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             };
             try
             {
-                structuresFile.Write(path, list.OfType<IStructure1D>());
+                structuresFile.Write(path, list.OfType<IStructure>());
                 Log.InfoFormat("Written {0} {1}.", list.Count, GetStructuresName());
                 return true;
             }
@@ -113,10 +113,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                 case StructuresListType.Weirs:
                     yield return typeof(IList<IWeir>);
                     yield return typeof(IEventedList<IWeir>);
-                    break;
-                case StructuresListType.Gates:
-                    yield return typeof(IList<IGate>);
-                    yield return typeof(IEventedList<IGate>);
                     break;
             }
         }

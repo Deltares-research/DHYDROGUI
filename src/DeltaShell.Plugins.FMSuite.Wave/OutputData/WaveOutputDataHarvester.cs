@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
     /// with which to obtain the relevant wave output files from a
     /// given directory.
     /// </summary>
-    /// <seealso cref="IWaveOutputDataHarvester" />
+    /// <seealso cref="IWaveOutputDataHarvester"/>
     public sealed class WaveOutputDataHarvester : IWaveOutputDataHarvester
     {
         private readonly IWaveFeatureContainer featureContainer;
@@ -34,26 +34,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
         }
 
         public IReadOnlyList<ReadOnlyTextFileData> HarvestDiagnosticFiles(DirectoryInfo outputDataDirectory,
-                                                                          ILogHandler logHandler = null) =>
-            HarvestTextFiles(IsDiagnosticFile, outputDataDirectory, logHandler);
+                                                                          ILogHandler logHandler = null)
+        {
+            return HarvestTextFiles(IsDiagnosticFile, outputDataDirectory, logHandler);
+        }
 
         public IReadOnlyList<ReadOnlyTextFileData> HarvestSpectraFiles(DirectoryInfo outputDataDirectory,
-                                                                       ILogHandler logHandler = null) =>
-            HarvestTextFiles(IsSpectraFile, outputDataDirectory, logHandler);
+                                                                       ILogHandler logHandler = null)
+        {
+            return HarvestTextFiles(IsSpectraFile, outputDataDirectory, logHandler);
+        }
 
-        public IReadOnlyList<WavmFileFunctionStore> HarvestWavmFileFunctionStores(DirectoryInfo outputDataDirectory,
-                                                                                  ILogHandler logHandler = null) =>
-            HarvestFiles(IsWavmFileFunctionStore, ConstructWavmFileFunctionStore, outputDataDirectory, logHandler);
+        public IReadOnlyList<IWavmFileFunctionStore> HarvestWavmFileFunctionStores(DirectoryInfo outputDataDirectory,
+                                                                                   ILogHandler logHandler = null)
+        {
+            return HarvestFiles(IsWavmFileFunctionStore, ConstructWavmFileFunctionStore, outputDataDirectory, logHandler);
+        }
 
-        public IReadOnlyList<WavhFileFunctionStore> HarvestWavhFileFunctionStores(DirectoryInfo outputDataDirectory,
-                                                                                  ILogHandler logHandler = null) =>
-            HarvestFiles(IsWavhFileFunctionStore, ConstructWavhFileFunctionStore, outputDataDirectory, logHandler);
+        public IReadOnlyList<IWavhFileFunctionStore> HarvestWavhFileFunctionStores(DirectoryInfo outputDataDirectory,
+                                                                                   ILogHandler logHandler = null)
+        {
+            return HarvestFiles(IsWavhFileFunctionStore, ConstructWavhFileFunctionStore, outputDataDirectory, logHandler);
+        }
 
         private static IReadOnlyList<ReadOnlyTextFileData> HarvestTextFiles(Func<FileInfo, bool> isRelevantFilePredicate,
                                                                             DirectoryInfo outputDataDirectory,
-                                                                            ILogHandler logHandler) =>
-            HarvestFiles(isRelevantFilePredicate, ReadTextFile, outputDataDirectory, logHandler);
-
+                                                                            ILogHandler logHandler)
+        {
+            return HarvestFiles(isRelevantFilePredicate, ReadTextFile, outputDataDirectory, logHandler);
+        }
 
         private static IReadOnlyList<T> HarvestFiles<T>(Func<FileInfo, bool> isRelevantFilePredicate,
                                                         Func<FileInfo, T> constructionFunc,
@@ -76,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
                                           e is UnauthorizedAccessException ||
                                           e is SecurityException)
                 {
-                    logHandler?.ReportWarningFormat(Resources.WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__, 
+                    logHandler?.ReportWarningFormat(Resources.WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__,
                                                     fileInfo.Name, e.Message);
                 }
             }
@@ -84,29 +93,43 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
             return result;
         }
 
-        private static ReadOnlyTextFileData ReadTextFile(FileInfo fileInfo) =>
-            new ReadOnlyTextFileData(fileInfo.Name, File.ReadAllText(fileInfo.FullName));
+        private static ReadOnlyTextFileData ReadTextFile(FileInfo fileInfo)
+        {
+            return new ReadOnlyTextFileData(fileInfo.Name, File.ReadAllText(fileInfo.FullName));
+        }
 
-        private static WavmFileFunctionStore ConstructWavmFileFunctionStore(FileInfo fileInfo) =>
-            new WavmFileFunctionStore(fileInfo.FullName);
+        private static WavmFileFunctionStore ConstructWavmFileFunctionStore(FileInfo fileInfo)
+        {
+            return new WavmFileFunctionStore(fileInfo.FullName);
+        }
 
-        private WavhFileFunctionStore ConstructWavhFileFunctionStore(FileInfo fileInfo) =>
-            new WavhFileFunctionStore(fileInfo.FullName, featureContainer);
+        private WavhFileFunctionStore ConstructWavhFileFunctionStore(FileInfo fileInfo)
+        {
+            return new WavhFileFunctionStore(fileInfo.FullName, featureContainer);
+        }
 
-        private static bool IsDiagnosticFile(FileInfo fileInfo) =>
-            fileInfo.Name == WaveOutputConstants.SwanLogFileName ||
-            fileInfo.Name.StartsWith(WaveOutputConstants.SwanDiagnosticFilePrefix);
+        private static bool IsDiagnosticFile(FileInfo fileInfo)
+        {
+            return fileInfo.Name == WaveOutputConstants.SwanLogFileName ||
+                   fileInfo.Name.StartsWith(WaveOutputConstants.SwanDiagnosticFilePrefix);
+        }
 
-        private static bool IsSpectraFile(FileInfo fileInfo) =>
-            fileInfo.Extension == WaveOutputConstants.sp1Extension ||
-            fileInfo.Extension == WaveOutputConstants.sp2Extension;
+        private static bool IsSpectraFile(FileInfo fileInfo)
+        {
+            return fileInfo.Extension == WaveOutputConstants.sp1Extension ||
+                   fileInfo.Extension == WaveOutputConstants.sp2Extension;
+        }
 
-        private static bool IsWavmFileFunctionStore(FileInfo fileInfo) =>
-            fileInfo.Name.StartsWith(WaveOutputConstants.MapFilePrefix) &&
-            fileInfo.Extension == WaveOutputConstants.ncExtension;
+        private static bool IsWavmFileFunctionStore(FileInfo fileInfo)
+        {
+            return fileInfo.Name.StartsWith(WaveOutputConstants.MapFilePrefix) &&
+                   fileInfo.Extension == WaveOutputConstants.ncExtension;
+        }
 
-        private static bool IsWavhFileFunctionStore(FileInfo fileInfo) =>
-            fileInfo.Name.StartsWith(WaveOutputConstants.HisFilePrefix) &&
-            fileInfo.Extension == WaveOutputConstants.ncExtension;
+        private static bool IsWavhFileFunctionStore(FileInfo fileInfo)
+        {
+            return fileInfo.Name.StartsWith(WaveOutputConstants.HisFilePrefix) &&
+                   fileInfo.Extension == WaveOutputConstants.ncExtension;
+        }
     }
 }

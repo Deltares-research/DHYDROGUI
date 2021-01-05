@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.NetworkEditor;
 using NUnit.Framework;
 
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
             };
 
-            var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(outputVariableTuples) {ObservationVariable = new ObservationPoint {Name = "Observation point"}};
+            var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(outputVariableTuples) {ObservationVariable = new WaterQualityObservationPoint {Name = "Observation point"}};
 
             WaterQualityObservationVariableOutput retrievedObject = SaveAndRetrieveObject(waterQualityObservationVariableOutput);
 
