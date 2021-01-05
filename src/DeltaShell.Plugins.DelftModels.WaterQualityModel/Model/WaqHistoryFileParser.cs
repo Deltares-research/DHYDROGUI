@@ -94,10 +94,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             foreach (TimeSeries timeSeries in observationVariableOutput.TimeSeriesList)
             {
-                string timeSeriesName = timeSeries.Name.Replace(' ', '_');
-                double[] variableTimeSeriesValues = hisFileVariableData.GetValuesForKey(timeSeriesName).ToArray();
+                double[] variableTimeSeriesValues = 
+                    GetTimeSeriesValuesFromHisFileData(timeSeries.Name,
+                                                       hisFileVariableData);
 
-                if (!HasConsistentTimeStepsForData(hisFileVariableData, variableTimeSeriesValues))
+                if (!HasConsistentTimeStepsForData(hisFileVariableData, 
+                                                   variableTimeSeriesValues))
                 {
                     log.ErrorFormat(Resources.WaqHistoryFileParser_SetDataOnObservationVariableOutput_Time_steps_are_inconsistent_for_the_data_related_to_variable__0__, 
                                     timeSeries.Name);
@@ -112,5 +114,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         private static bool HasConsistentTimeStepsForData(DelwaqHisFileData data, 
                                                           IReadOnlyCollection<double> timeSeriesValues) =>
             timeSeriesValues.Any() && data.TimeSteps.Count() == timeSeriesValues.Count;
+
+        private static double[] GetTimeSeriesValuesFromHisFileData(string timeSeriesName,
+                                                                   DelwaqHisFileData hisFileData)
+        {
+            double[] result = hisFileData.GetValuesForKey(timeSeriesName).ToArray();
+
+            if (result.Any())
+            {
+                return result;
+            }
+
+            // If the file was read from an .nc file, then any spaces will have
+            // been replaced with underscores. Thus we will also need to verify
+            // that no element exists with underscores.
+            string adjustedTimeSeriesName = timeSeriesName.Replace(' ', '_');
+
+            if (!string.Equals(adjustedTimeSeriesName,
+                               timeSeriesName))
+            {
+                result = hisFileData.GetValuesForKey(adjustedTimeSeriesName).ToArray();
+            }
+
+            return result;
+        }
     }
 }

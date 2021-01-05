@@ -256,11 +256,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         }
 
         [Test]
-        public void Parse_ReadsTimeSeriesWithSpacesCorrectly()
+        [Category(TestCategory.DataAccess)]
+        [TestCase("hisFile\\his_with_limit_chlo.nc")]
+        [TestCase("hisFile\\old_binary.his")]
+        public void Parse_ReadsTimeSeriesWithSpacesCorrectly(string testDataHisPath)
         {
             using (var tempDir = new TemporaryDirectory())
             {
-                string sourceHisFile = TestHelper.GetTestFilePath("hisFile\\his_with_limit_chlo.nc");
+                string sourceHisFile = TestHelper.GetTestFilePath(testDataHisPath);
                 string hisFilePath = tempDir.CopyTestDataFileToTempDirectory(sourceHisFile);
                 
                 var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>()
