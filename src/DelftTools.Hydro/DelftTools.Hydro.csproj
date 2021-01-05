@@ -248,24 +248,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="IStructure.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Structures\IWeirFormula.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Structures\Pump.hbm.xml" />
-    <EmbeddedResource Include="Structures\Weir.hbm.xml" />
-    <EmbeddedResource Include="Structures\WeirFormula\GatedWeirFormula.hbm.xml" />
-    <EmbeddedResource Include="Structures\WeirFormula\SimpleWeirFormula.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Structures\WeirFormula\GeneralStructureWeirFormula.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HydroRegion.hbm.xml">
