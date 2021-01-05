@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get
             {
-                return "1.2.0.0";
+                return "1.3.0.0";
             }
         }
 
