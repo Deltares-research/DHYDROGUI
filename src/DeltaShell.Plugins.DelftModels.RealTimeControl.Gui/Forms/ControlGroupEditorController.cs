@@ -1205,8 +1205,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             connection.LinePath = "ConditionalConnection";
             connection.LineEnd = ConnectionEnd.RightFilledArrow;
             connection.LineWeight = ConnectionWeight.Fat;
+            connection.Text = string.Empty;
 
-            if (connection.From.BelongsTo.Tag is Input || connection.To.BelongsTo.Tag is Output)
+            object from = connection.From.BelongsTo.Tag;
+            object to = connection.To.BelongsTo.Tag;
+
+            if (from is Input || to is Output)
             {
                 //  extend : NetronGraph expose pattern for DashStyle.Custom
                 //           make connection.LineWeight = ConnectionWeight.Fat work or expose pen.Width
@@ -1219,13 +1223,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 connection.LineWeight = ConnectionWeight.Fat;
             }
 
-            connection.Text = string.Empty;
-            if (connection.From.BelongsTo.Tag is IInput
-                    && connection.To.BelongsTo.Tag is MathematicalExpression mathematicalExpression)
+            if (from is IInput input && to is MathematicalExpression mathematicalExpression)
             {
-                connection.Text = mathematicalExpression.InputMapping.Single( itcm => itcm.Value.Equals(connection.From.BelongsTo.Tag as IInput)).Key.ToString();
+                connection.Text = mathematicalExpression.InputMapping.Single(kvp => kvp.Value.Equals(input)).Key.ToString();
             }
-            if (connection.From.BelongsTo.Tag is ConditionBase)
+
+            if (from is ConditionBase)
             {
                 connection.Text = ConnectionIs(connection) ? "T" : "F";
             }
