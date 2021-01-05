@@ -1,0 +1,576 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DeltaShell.Plugins.FMSuite.Common.Wind;
+using DeltaShell.Plugins.FMSuite.Wave.Validation;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
+{
+    [TestFixture]
+    public class DomainMeteoDataValidatorTest
+    {
+        [Test]
+        public void Validate_MeteoDataNull_ThrowsArgumentNullException()
+        {
+            // Call
+            TestDelegate call = () => DomainMeteoDataValidator.Validate(null);
+
+            // Assert
+            Assert.That(call, Throws.TypeOf<ArgumentNullException>()
+                                    .With.Property(nameof(ArgumentNullException.ParamName))
+                                    .EqualTo("meteoData"));
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase("    ")]
+        [TestCase(null)]
+        public void Validate_WindXY_XYVectorFilePathEmptyOrWhiteSpace_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            var meteoData = new WaveMeteoData()
+            {
+                FileType = WindDefinitionType.WindXY,
+                XYVectorFilePath = filepath,
+                HasSpiderWeb = false
+            };
+
+            // Call
+            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+            // Assert
+            const string expectedMessage = "Missing xy file.";
+            Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+            string errorMessage = errorMessages.First();
+            Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        [TestCase("InvalidFilePath")]
+        [TestCase("C:\\NonExistingFilePath.txt")]
+        public void Validate_WindXY_InvalidXYVectorFilePath_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            var meteoData = new WaveMeteoData()
+            {
+                FileType = WindDefinitionType.WindXY,
+                XYVectorFilePath = filepath,
+                HasSpiderWeb = false
+            };
+
+            // Call
+            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+            // Assert
+            const string expectedMessage = "XY file does not exist.";
+            Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+            string errorMessage = errorMessages.First();
+            Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase("    ")]
+        [TestCase(null)]
+        public void Validate_WindXY_HasSpiderWeb_SpiderWebFilePathNullOrWhitespace_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            string randomXYVectorFilePath = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXY,
+                    XYVectorFilePath = randomXYVectorFilePath,
+                    HasSpiderWeb = true,
+                    SpiderWebFilePath = filepath
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                const string expectedMessage = "Missing spiderweb file";
+                Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+                string errorMessage = errorMessages.First();
+                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            }
+            finally
+            {
+                File.Delete(randomXYVectorFilePath);
+            }
+        }
+
+        [Test]
+        [TestCase("InvalidFilePath")]
+        [TestCase("C:\\NonExistingFilePath.txt")]
+        public void Validate_WindXY_HasSpiderWeb_InvalidSpiderWebFile_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            string randomXYVectorFilePath = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXY,
+                    XYVectorFilePath = randomXYVectorFilePath,
+                    HasSpiderWeb = true,
+                    SpiderWebFilePath = filepath
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                const string expectedMessage = "Spiderweb file does not exist.";
+                Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+                string errorMessage = errorMessages.First();
+                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            }
+            finally
+            {
+                File.Delete(randomXYVectorFilePath);
+            }
+        }
+
+        [Test]
+        public void Validate_WindXY_ValidFilePath_ReturnsNoMessages()
+        {
+            // Setup
+            string randomXYVectorFilePath = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXY,
+                    XYVectorFilePath = randomXYVectorFilePath,
+                    HasSpiderWeb = false
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                Assert.That(errorMessages, Has.Count.EqualTo(0));
+            }
+            finally
+            {
+                File.Delete(randomXYVectorFilePath);
+            }
+        }
+
+        [Test]
+        public void Validate_WindXY_HasSpiderWeb_ValidFilePaths_ReturnsNoMessages()
+        {
+            // Setup
+            string randomXYVectorFilePath = Path.GetTempFileName();
+            string randomSpiderWebFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXY,
+                    XYVectorFilePath = randomXYVectorFilePath,
+                    HasSpiderWeb = true,
+                    SpiderWebFilePath = randomSpiderWebFile
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                Assert.That(errorMessages, Has.Count.EqualTo(0));
+            }
+            finally
+            {
+                File.Delete(randomXYVectorFilePath);
+                File.Delete(randomSpiderWebFile);
+            }
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase("    ")]
+        [TestCase(null)]
+        public void Validate_WindXWindY_XComponentFilePathNullOrWhitespace_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            string randomYComponentFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    XComponentFilePath = filepath,
+                    YComponentFilePath = randomYComponentFile,
+                    HasSpiderWeb = false
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                const string expectedMessage = "Missing x file.";
+                Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+                string errorMessage = errorMessages.First();
+                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            }
+            finally
+            {
+                File.Delete(randomYComponentFile);
+            }
+        }
+
+        [Test]
+        [TestCase("InvalidFilePath")]
+        [TestCase("C:\\NonExistingFilePath.txt")]
+        public void Validate_WindXWindY_InvalidXComponentFilePath_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            string randomYComponentFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    XComponentFilePath = filepath,
+                    YComponentFilePath = randomYComponentFile,
+                    HasSpiderWeb = false
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                const string expectedMessage = "X file does not exist.";
+                Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+                string errorMessage = errorMessages.First();
+                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            }
+            finally
+            {
+                File.Delete(randomYComponentFile);
+            }
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase("    ")]
+        [TestCase(null)]
+        public void Validate_WindXWindY_YComponentFilePathNullOrWhitespace_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            string randomXComponentFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    XComponentFilePath = randomXComponentFile,
+                    YComponentFilePath = filepath,
+                    HasSpiderWeb = false
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                const string expectedMessage = "Missing y file.";
+                Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+                string errorMessage = errorMessages.First();
+                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            }
+            finally
+            {
+                File.Delete(randomXComponentFile);
+            }
+        }
+
+        [Test]
+        [TestCase("InvalidFilePath")]
+        [TestCase("C:\\NonExistingFilePath.txt")]
+        public void Validate_WindXWindY_InvalidYComponentFilePath_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            string randomXComponentFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    XComponentFilePath = randomXComponentFile,
+                    YComponentFilePath = filepath,
+                    HasSpiderWeb = false
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                const string expectedMessage = "Y file does not exist.";
+                Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+                string errorMessage = errorMessages.First();
+                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            }
+            finally
+            {
+                File.Delete(randomXComponentFile);
+            }
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase("    ")]
+        [TestCase(null)]
+        public void Validate_WindXWindY_HasSpiderWeb_SpiderWebFilePathNullOrWhitespace_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            string randomXComponentFile = Path.GetTempFileName();
+            string randomYComponentFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    XComponentFilePath = randomXComponentFile,
+                    YComponentFilePath = randomYComponentFile,
+                    HasSpiderWeb = true,
+                    SpiderWebFilePath = filepath
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                const string expectedMessage = "Missing spiderweb file";
+                Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+                string errorMessage = errorMessages.First();
+                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            }
+            finally
+            {
+                File.Delete(randomXComponentFile);
+                File.Delete(randomYComponentFile);
+            }
+        }
+
+        [Test]
+        [TestCase("InvalidFilePath")]
+        [TestCase("C:\\NonExistingFilePath.txt")]
+        public void Validate_WindXWindY_HasSpiderWeb_InvalidSpiderWebFilePath_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            string randomXComponentFile = Path.GetTempFileName();
+            string randomYComponentFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    XComponentFilePath = randomXComponentFile,
+                    YComponentFilePath = randomYComponentFile,
+                    HasSpiderWeb = true,
+                    SpiderWebFilePath = filepath
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                const string expectedMessage = "Spiderweb file does not exist.";
+                Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+                string errorMessage = errorMessages.First();
+                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            }
+            finally
+            {
+                File.Delete(randomXComponentFile);
+                File.Delete(randomYComponentFile);
+            }
+        }
+
+        [Test]
+        public void Validate_WindXWindY_ValidFilePaths_ReturnsNoMessages()
+        {
+            // Setup
+            string randomXComponentFile = Path.GetTempFileName();
+            string randomYComponentFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    XComponentFilePath = randomXComponentFile,
+                    YComponentFilePath = randomYComponentFile,
+                    HasSpiderWeb = false
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                Assert.That(errorMessages, Has.Count.EqualTo(0));
+            }
+            finally
+            {
+                File.Delete(randomXComponentFile);
+                File.Delete(randomYComponentFile);
+            }
+        }
+
+        [Test]
+        public void Validate_WindXWindY_HasSpiderWeb_ValidFilePaths_ReturnsNoMessages()
+        {
+            // Setup
+            string randomXComponentFile = Path.GetTempFileName();
+            string randomYComponentFile = Path.GetTempFileName();
+            string randomSpiderWebFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    XComponentFilePath = randomXComponentFile,
+                    YComponentFilePath = randomYComponentFile,
+                    HasSpiderWeb = true,
+                    SpiderWebFilePath = randomSpiderWebFile
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                Assert.That(errorMessages, Has.Count.EqualTo(0));
+            }
+            finally
+            {
+                File.Delete(randomXComponentFile);
+                File.Delete(randomYComponentFile);
+                File.Delete(randomSpiderWebFile);
+            }
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase("    ")]
+        [TestCase(null)]
+        public void Validate_SpiderWebGrid_SpiderWebFilePathEmptyOrWhiteSpace_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            var meteoData = new WaveMeteoData()
+            {
+                FileType = WindDefinitionType.SpiderWebGrid,
+                SpiderWebFilePath = filepath,
+            };
+
+            // Call
+            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+            // Assert
+            const string expectedMessage = "Missing spiderweb file";
+            Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+            string errorMessage = errorMessages.First();
+            Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        [TestCase("InvalidFilePath")]
+        [TestCase("C:\\NonExistingFilePath.txt")]
+        public void Validate_SpiderWebGrid_InvalidSpiderWebGridFilePath_ReturnsExpectedMessage(string filepath)
+        {
+            // Setup
+            var meteoData = new WaveMeteoData()
+            {
+                FileType = WindDefinitionType.SpiderWebGrid,
+                SpiderWebFilePath = filepath
+            };
+
+            // Call
+            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+            // Assert
+            const string expectedMessage = "Spiderweb file does not exist.";
+            Assert.That(errorMessages, Has.Count.EqualTo(1));
+
+            string errorMessage = errorMessages.First();
+            Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void Validate_SpiderWebGrid_ValidFilePath_ReturnsNoMessages()
+        {
+            // Setup
+            string randomSpiderWebFile = Path.GetTempFileName();
+
+            try
+            {
+                var meteoData = new WaveMeteoData()
+                {
+                    FileType = WindDefinitionType.SpiderWebGrid,
+                    SpiderWebFilePath = randomSpiderWebFile
+                };
+
+                // Call
+                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+                // Assert
+                Assert.That(errorMessages, Has.Count.EqualTo(0));
+            }
+            finally
+            {
+                File.Delete(randomSpiderWebFile);
+            }
+        }
+
+        [Test]
+        public void Validate_WindXYP_ReturnsNoMessages()
+        {
+            // Setup
+            var meteoData = new WaveMeteoData() {FileType = WindDefinitionType.WindXYP};
+
+            // Call
+            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+
+            // Assert
+            Assert.That(errorMessages, Has.Count.EqualTo(0));
+        }
+
+        [Test]
+        public void Validate_UnsupportedWindDefinitionType_ThrowsNotSupportedException()
+        {
+            // Setup
+            var meteoData = new WaveMeteoData() {FileType = (WindDefinitionType) 80085};
+
+            // Call
+            TestDelegate call = () => DomainMeteoDataValidator.Validate(meteoData);
+
+            // Assert
+            Assert.That(call, Throws.TypeOf<NotSupportedException>());
+        }
+    }
+}

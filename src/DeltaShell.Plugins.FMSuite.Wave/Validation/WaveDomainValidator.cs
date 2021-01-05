@@ -84,6 +84,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                                                domain));
             }
 
+            if (!domain.UseGlobalMeteoData)
+            {
+                foreach (string errorMessage in DomainMeteoDataValidator.Validate(domain.MeteoData))
+                {
+                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, errorMessage, domain));
+                }
+            }
+            
             return new ValidationReport($"Domain: {domain.Name}", issues);
         }
 
