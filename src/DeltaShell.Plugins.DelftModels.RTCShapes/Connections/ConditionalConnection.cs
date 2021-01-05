@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
                            "DeltaShell.Plugins.DelftModels.RTCShapes.Connections.ConditionalConnection")]
     public class ConditionalConnection : DefaultPainter
     {
-        private readonly string[] LabelNeedsCorrection =
+        private readonly string[] labelNeedsCorrection =
         {
             "Right",
             "Bottom"
@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
             var size = g.MeasureString(Connection.Text, Connection.Font).ToSize();
             // simplied labelpainting; not in center but at start connection
 
-            if (LabelNeedsCorrection.Contains(Connection.From.Name))
+            if (labelNeedsCorrection.Contains(Connection.From.Name))
             {
                 RectangleF endPosition = Connection.To.ConnectionGrip();
                 float xCorrection = (endPosition.X - startPosition.X) / 8;
@@ -45,10 +45,10 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
             var labelRect = new RectangleF(startPosition.X, startPosition.Y, size.Width, size.Height + 1);
             if (Connection.BoxedLabel)
             {
-                var boxRexangle = new RectangleF(labelRect.X, labelRect.Y, labelRect.Width, labelRect.Height);
-                boxRexangle.Inflate(+3, +2);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 255, 231)), boxRexangle);
-                g.DrawRectangle(new Pen(Color.Black, 1), Rectangle.Round(boxRexangle));
+                var boxRectangle = new RectangleF(labelRect.X, labelRect.Y, labelRect.Width, labelRect.Height);
+                boxRectangle.Inflate(+3, +2);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 255, 231)), boxRectangle);
+                g.DrawRectangle(new Pen(Color.Black, 1), Rectangle.Round(boxRectangle));
             }
 
             g.DrawString(Connection.Text, Connection.Font, new SolidBrush(Color.Black), labelRect.X, labelRect.Y);
