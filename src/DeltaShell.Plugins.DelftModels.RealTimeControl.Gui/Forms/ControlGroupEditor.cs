@@ -202,11 +202,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     return;
                 }
 
-                if (context.ControlGroup.Name.Equals(dataItem.LinkedTo.Parent.Name))
-                {
-                    return;
-                }
-
                 bool result = inquiryHelper.InquireContinuation(Resources.RealTimeControlModelNodePresenter_OutputLocationWarningMessage);
 
                 if (!result)
