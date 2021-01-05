@@ -303,26 +303,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         public void AddInputConnectionToMathematicalExpressionAddsTagToShape()
         {
             // Given
-            var input = new Input
-            {
-                ParameterName = "p",
-                Feature = new RtcTestFeature { Name = "f" }
-            };
-            var mathematicalExpression = new MathematicalExpression();
-            controlGroup.Inputs.Add(input);
-            controlGroup.MathematicalExpressions.Add(mathematicalExpression);
-            Shape inputShape = controller.GraphControl.Shapes[0];
-            Shape mathExpression = controller.GraphControl.Shapes[1];
-            Connector mathExpressionConnector = mathExpression.Connectors[1];
-            Connector inputShapeConnector = inputShape.Connectors[0];
-            
-            // When
+            controlGroup.Inputs.Add(new Input());
+            controlGroup.MathematicalExpressions.Add(new MathematicalExpression());
+            controlGroup.MathematicalExpressions.Add(new MathematicalExpression());
+
+            Connector inputAConnector = graphControl.Shapes[0].Connectors[0];
+            Connector inputBConnector = graphControl.Shapes[1].Connectors[2];
+            Connector mathExpressionConnector = graphControl.Shapes[2].Connectors[1];
+
+            // Preconditions
+            Assert.That(inputAConnector.Name, Is.EqualTo("Bottom"));
+            Assert.That(inputBConnector.Name, Is.EqualTo("Bottom"));
             Assert.That(mathExpressionConnector.Name, Is.EqualTo("Top"));
-            Assert.That(inputShapeConnector.Name, Is.EqualTo("Bottom"));
-            controller.GraphControl.AddConnection(inputShapeConnector, mathExpressionConnector);
+
+            // When
+            graphControl.AddConnection(inputAConnector, mathExpressionConnector);
+            graphControl.AddConnection(inputBConnector, mathExpressionConnector);
 
             // Then
-            Assert.That(controller.GraphControl.Connections[0].Text, Is.EqualTo("A"));
+            Assert.That(inputAConnector.Connections[0].Text, Is.EqualTo("A"));
+            Assert.That(inputBConnector.Connections[0].Text, Is.EqualTo("B"));
         }
 
         [Test]
