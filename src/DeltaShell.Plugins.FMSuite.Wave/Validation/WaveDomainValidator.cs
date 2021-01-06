@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 foreach (string errorMessage in DomainMeteoDataValidator.Validate(domain.MeteoData))
                 {
-                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Error, errorMessage, domain));
+                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Warning, errorMessage, domain));
                 }
             }
             
