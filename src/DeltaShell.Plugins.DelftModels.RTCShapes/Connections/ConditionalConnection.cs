@@ -13,6 +13,10 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
                            "DeltaShell.Plugins.DelftModels.RTCShapes.Connections.ConditionalConnection")]
     public class ConditionalConnection : DefaultPainter
     {
+        private readonly Brush labelBrush = new SolidBrush(Color.Black);
+        private readonly Brush labelBoxBrush = new SolidBrush(Color.FromArgb(255, 255, 231));
+        private readonly Pen labelBoxPen = new Pen(Color.Black, 1);
+
         private readonly string[] labelNeedsCorrection =
         {
             "Right",
@@ -30,28 +34,41 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
         private void PaintLabel(Graphics g)
         {
             RectangleF startPosition = Connection.From.ConnectionGrip();
-            var size = g.MeasureString(Connection.Text, Connection.Font).ToSize();
-            // simplied labelpainting; not in center but at start connection
+            RectangleF endPosition = Connection.To.ConnectionGrip();
 
+            float xPos = startPosition.X;
+            float yPos = startPosition.Y;
+
+            // draw label further from connection grip
             if (labelNeedsCorrection.Contains(Connection.From.Name))
             {
-                RectangleF endPosition = Connection.To.ConnectionGrip();
-                float xCorrection = (endPosition.X - startPosition.X) / 8;
-                float yCorrection = (endPosition.Y - startPosition.Y) / 8;
-                startPosition.X += xCorrection;
-                startPosition.Y += yCorrection;
+                xPos += GetCorrection(endPosition.X, xPos);
+                yPos += GetCorrection(endPosition.Y, yPos);
             }
 
-            var labelRect = new RectangleF(startPosition.X, startPosition.Y, size.Width, size.Height + 1);
             if (Connection.BoxedLabel)
             {
-                var boxRectangle = new RectangleF(labelRect.X, labelRect.Y, labelRect.Width, labelRect.Height);
-                boxRectangle.Inflate(+3, +2);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 255, 231)), boxRectangle);
-                g.DrawRectangle(new Pen(Color.Black, 1), Rectangle.Round(boxRectangle));
+                PaintLabelBox(g, xPos, yPos);
             }
 
-            g.DrawString(Connection.Text, Connection.Font, new SolidBrush(Color.Black), labelRect.X, labelRect.Y);
+            PaintLabel(g, xPos, yPos);
         }
+
+        private void PaintLabelBox(Graphics g, float xPos, float yPos)
+        {
+            var size = g.MeasureString(Connection.Text, Connection.Font).ToSize();
+            var boxRectangle = new RectangleF(xPos, yPos, size.Width, size.Height + 1);
+            boxRectangle.Inflate(+3, +2);
+
+            g.FillRectangle(labelBoxBrush, boxRectangle);
+            g.DrawRectangle(labelBoxPen, Rectangle.Round(boxRectangle));
+        }
+
+        private void PaintLabel(Graphics g, float xPos, float yPos)
+        {
+            g.DrawString(Connection.Text, Connection.Font, labelBrush, xPos, yPos);
+        }
+
+        private static float GetCorrection(float end, float start) => (end - start) / 8;
     }
 }
