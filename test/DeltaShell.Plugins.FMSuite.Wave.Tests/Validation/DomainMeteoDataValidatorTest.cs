@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         [TestCase("")]
         [TestCase("    ")]
         [TestCase(null)]
-        public void Validate_WindXY_XYVectorFilePathEmptyOrWhiteSpace_ReturnsExpectedMessage(string filepath)
+        public void Validate_WindXY_XYVectorFilePathNullOrWhiteSpace_ReturnsExpectedMessage(string filepath)
         {
             // Setup
             var meteoData = new WaveMeteoData()
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
-            const string expectedMessage = "Missing xy file.";
+            const string expectedMessage = "Use custom wind file option is switched on but no file has been selected.";
             Assert.That(errorMessages, Has.Count.EqualTo(1));
 
             string errorMessage = errorMessages.First();
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
-            const string expectedMessage = "XY file does not exist.";
+            const string expectedMessage = "The provided custom wind file does not exist.";
             Assert.That(errorMessages, Has.Count.EqualTo(1));
 
             string errorMessage = errorMessages.First();
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                const string expectedMessage = "Missing spiderweb file";
+                const string expectedMessage = "Use spider web file option is switched on but no file has been selected.";
                 Assert.That(errorMessages, Has.Count.EqualTo(1));
 
                 string errorMessage = errorMessages.First();
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                const string expectedMessage = "Spiderweb file does not exist.";
+                const string expectedMessage = "The provided spider web file does not exist.";
                 Assert.That(errorMessages, Has.Count.EqualTo(1));
 
                 string errorMessage = errorMessages.First();
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Has.Count.EqualTo(0));
+                Assert.That(errorMessages, Is.Empty);
             }
             finally
             {
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Has.Count.EqualTo(0));
+                Assert.That(errorMessages, Is.Empty);
             }
             finally
             {
@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                const string expectedMessage = "Missing x file.";
+                const string expectedMessage = "Use custom wind file option is switched on but no x-component file has been selected.";
                 Assert.That(errorMessages, Has.Count.EqualTo(1));
 
                 string errorMessage = errorMessages.First();
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                const string expectedMessage = "X file does not exist.";
+                const string expectedMessage = "The provided x-component file does not exist.";
                 Assert.That(errorMessages, Has.Count.EqualTo(1));
 
                 string errorMessage = errorMessages.First();
@@ -290,7 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                const string expectedMessage = "Missing y file.";
+                const string expectedMessage = "Use custom wind file option is switched on but no y-component file has been selected.";
                 Assert.That(errorMessages, Has.Count.EqualTo(1));
 
                 string errorMessage = errorMessages.First();
@@ -324,7 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                const string expectedMessage = "Y file does not exist.";
+                const string expectedMessage = "The provided y-component file does not exist.";
                 Assert.That(errorMessages, Has.Count.EqualTo(1));
 
                 string errorMessage = errorMessages.First();
@@ -361,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                const string expectedMessage = "Missing spiderweb file";
+                const string expectedMessage = "Use spider web file option is switched on but no file has been selected.";
                 Assert.That(errorMessages, Has.Count.EqualTo(1));
 
                 string errorMessage = errorMessages.First();
@@ -398,7 +398,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                const string expectedMessage = "Spiderweb file does not exist.";
+                const string expectedMessage = "The provided spider web file does not exist.";
                 Assert.That(errorMessages, Has.Count.EqualTo(1));
 
                 string errorMessage = errorMessages.First();
@@ -432,7 +432,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Has.Count.EqualTo(0));
+                Assert.That(errorMessages, Is.Empty);
             }
             finally
             {
@@ -464,7 +464,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Has.Count.EqualTo(0));
+                Assert.That(errorMessages, Is.Empty);
             }
             finally
             {
@@ -491,7 +491,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
-            const string expectedMessage = "Missing spiderweb file";
+            const string expectedMessage = "Use spider web file option is switched on but no file has been selected.";
             Assert.That(errorMessages, Has.Count.EqualTo(1));
 
             string errorMessage = errorMessages.First();
@@ -514,7 +514,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
-            const string expectedMessage = "Spiderweb file does not exist.";
+            const string expectedMessage = "The provided spider web file does not exist.";
             Assert.That(errorMessages, Has.Count.EqualTo(1));
 
             string errorMessage = errorMessages.First();
@@ -539,7 +539,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Has.Count.EqualTo(0));
+                Assert.That(errorMessages, Is.Empty);
             }
             finally
             {
@@ -557,7 +557,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
-            Assert.That(errorMessages, Has.Count.EqualTo(0));
+            Assert.That(errorMessages, Is.Empty);
         }
 
         [Test]

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
@@ -17,6 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         /// </summary>
         /// <param name="meteoData">The <see cref="WaveMeteoData"/> to validate.</param>
         /// <returns>A collection of error messages. Returns an empty collection if there were no validation errors.</returns>
+        /// <exception cref="ArgumentNullException">When <paramref name="meteoData"/> is <c>null</c>.</exception>
         /// <exception cref="NotSupportedException">
         /// Thrown when an invalid <see cref="WindDefinitionType"/> is set in the <paramref name="meteoData"/>.
         /// </exception>
@@ -52,11 +54,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (string.IsNullOrWhiteSpace(meteoData.XYVectorFilePath))
             {
-                errorMessages.Add("Missing xy file.");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_file_provided);
             }
             else if (!File.Exists(meteoData.XYVectorFilePath))
             {
-                errorMessages.Add("XY file does not exist.");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_file_does_not_exist);
             }
 
             if (!meteoData.HasSpiderWeb)
@@ -66,11 +68,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (string.IsNullOrWhiteSpace(meteoData.SpiderWebFileName))
             {
-                errorMessages.Add("Missing spiderweb file");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provided);
             }
             else if (!File.Exists(meteoData.SpiderWebFilePath))
             {
-                errorMessages.Add("Spiderweb file does not exist.");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_does_not_exist);
             }
 
             return errorMessages;
@@ -82,20 +84,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (string.IsNullOrWhiteSpace(meteoData.XComponentFileName))
             {
-                errorMessages.Add("Missing x file.");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_x_component_file_provided);
             }
             else if (!File.Exists(meteoData.XComponentFilePath))
             {
-                errorMessages.Add("X file does not exist.");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_x_component_file_does_not_exist);
             }
 
             if (string.IsNullOrWhiteSpace(meteoData.YComponentFileName))
             {
-                errorMessages.Add("Missing y file.");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_y_component_file_provided);
             }
             else if (!File.Exists(meteoData.YComponentFilePath))
             {
-                errorMessages.Add("Y file does not exist.");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_y_component_file_does_not_exist);
             }
 
             if (!meteoData.HasSpiderWeb)
@@ -105,11 +107,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (string.IsNullOrWhiteSpace(meteoData.SpiderWebFileName))
             {
-                errorMessages.Add("Missing spiderweb file");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provided);
             }
             else if (!File.Exists(meteoData.SpiderWebFilePath))
             {
-                errorMessages.Add("Spiderweb file does not exist.");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_does_not_exist);
             }
 
             return errorMessages;
@@ -121,11 +123,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (string.IsNullOrWhiteSpace(meteoData.SpiderWebFileName))
             {
-                errorMessages.Add("Missing spiderweb file");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provided);
             }
             else if (!File.Exists(meteoData.SpiderWebFilePath))
             {
-                errorMessages.Add("Spiderweb file does not exist.");
+                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_does_not_exist);
             }
 
             return errorMessages;
