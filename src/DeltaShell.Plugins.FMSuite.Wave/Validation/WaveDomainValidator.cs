@@ -15,8 +15,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         private static IEnumerable<ValidationReport> ValidateAllDomains(WaveModel model)
         {
             var reportList = new List<ValidationReport> {ValidateAllDomainsShareCoordinateSystem(model)};
+            
             reportList.AddRange(WaveDomainHelper.GetAllDomains(model.OuterDomain)
-                                                .Select(ValidateDomain)
+                                                .Select((domain) => ValidateDomain(domain, model))
                                                 .ToList());
             return reportList;
         }
@@ -65,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             return false;
         }
 
-        private static ValidationReport ValidateDomain(IWaveDomainData domain)
+        private static ValidationReport ValidateDomain(IWaveDomainData domain, WaveModel model)
         {
             var issues = new List<ValidationIssue>();
 
@@ -86,9 +87,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (!domain.UseGlobalMeteoData)
             {
+                var waveValidationShortcut = new WaveValidationShortcut
+                {
+                    WaveModel = model,
+                    TabName = "Domain specific settings"
+                };
+                
                 foreach (string errorMessage in DomainMeteoDataValidator.Validate(domain.MeteoData))
                 {
-                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Warning, errorMessage, domain));
+                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Warning, errorMessage, waveValidationShortcut));
                 }
             }
             
