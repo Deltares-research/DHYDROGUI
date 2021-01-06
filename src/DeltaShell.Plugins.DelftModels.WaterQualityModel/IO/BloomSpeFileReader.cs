@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             if (!File.Exists(path))
             {
                 string message = string.Format("Not a valid file-path ({0}) specified.", path);
-                throw new ArgumentException(message, "path");
+                throw new ArgumentException(message, nameof(path));
             }
 
             using (var streamReader = new StreamReader(path))

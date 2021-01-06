@@ -53,14 +53,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void PerformDirectoryRestructuring(WaterFlowFMModel waterFlowFMModel, string oldWorkingDirPath)
         {
+            string currentOutputDirName = GetOldOutputDirectoryName(waterFlowFMModel.ModelDefinition);
+            var currentWaqOutputDirName = $"DFM_DELWAQ_{waterFlowFMModel.Name}";
+
             if (waterFlowFMModel.MduFilePath != waterFlowFMModel.MduSavePath)
             {
                 waterFlowFMModel.ExportTo(waterFlowFMModel.MduSavePath);
             }
-
-            // Move existing output
-            string currentOutputDirName = GetOldOutputDirectoryName(waterFlowFMModel.ModelDefinition);
-            var currentWaqOutputDirName = $"DFM_DELWAQ_{waterFlowFMModel.Name}";
 
             var modelDirectoryInfo = new DirectoryInfo(waterFlowFMModel.MduFilePath);
             while (modelDirectoryInfo != null && modelDirectoryInfo.Name != waterFlowFMModel.Name)

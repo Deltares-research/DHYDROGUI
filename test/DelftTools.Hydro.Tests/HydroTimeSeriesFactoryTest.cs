@@ -9,13 +9,6 @@ namespace DelftTools.Hydro.Tests
     public class HydroTimeSeriesFactoryTest
     {
         [Test]
-        public void CanCreateWaterLevelSeries()
-        {
-            TimeSeries waterLevelSeries = HydroTimeSeriesFactory.CreateWaterLevelTimeSeries();
-            Assert.AreEqual("m AD", waterLevelSeries.Components[0].Unit.Symbol);
-        }
-
-        [Test]
         public void CreateTimeSeries()
         {
             TimeSeries timeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Series name", "Component name", "unit");

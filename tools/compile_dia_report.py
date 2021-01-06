@@ -96,6 +96,19 @@ ELEMENT_TEMPLATE = """<div class="card is-fullwidth">
 </div>
 """
 
+ELEMENTFOLDER_TEMPLATE = """<div class="card is-fullwidth">
+  <header class="card-header">
+    <p class="card-header-title">{0}</p>
+      <a class="card-header-icon card-toggle">
+        <i class="fa fa-angle-down"></i>
+      </a>
+  </header>
+  <div class="card-content is-hidden"> 
+  {1} 
+  </div>
+</div>
+"""
+
 
 def format_dia_file(dia_content: str) -> str:
     """
@@ -137,6 +150,31 @@ def format_dia_file(dia_content: str) -> str:
 {}
 </pre>""".format("\n".join(lines))
 
+def format_xml_file(xml_content: str) -> str:
+    """
+    Format the specified xml file content to be placed within the diagnostic report.
+
+    :param xml_content: The xml file content to be formatted.
+    :returns: The formatted xml file content.
+    """
+    xml_content = xml_content.replace("<", "&lt;")
+    xml_content = xml_content.replace(">", "&gt;")
+
+    return """<pre>
+{}
+</pre>""".format(xml_content)
+
+def format_waves_file(waves_content: str) -> str:
+    """
+    Format the specified waves file content to be placed within the diagnostic report.
+
+    :param waves_content: The waves file content to be formatted.
+    :returns: The formatted waves file content.
+    """ 
+    
+    return """<pre>
+{}
+</pre>""".format(waves_content)
 
 def construct_dia_element(header: str, dia_content: str) -> str:
     """
@@ -149,7 +187,62 @@ def construct_dia_element(header: str, dia_content: str) -> str:
     """
     return ELEMENT_TEMPLATE.format(header, format_dia_file(dia_content))    
 
+def construct_xml_element(header: str, xml_content: str) -> str:
+    """
+    Construct a xml element to be placed within the body of the report with 
+    the given header and content.
 
+    :param header: The header to be placed into the collapsable menu.
+    :param xml_content: The actual content to place in the element
+    :returns: A formatted element that can be placed inside the body.
+    """
+    return ELEMENT_TEMPLATE.format(header, format_xml_file(xml_content)) 
+
+def construct_waves_element(header: str, waves_content: str) -> str:
+    """
+    Construct a waves element to be placed within the body of the report with 
+    the given header and content.
+
+    :param header: The header to be placed into the collapsable menu.
+    :param waves_content: The actual content to place in the element
+    :returns: A formatted element that can be placed inside the body.
+    """
+    return ELEMENT_TEMPLATE.format(header, format_waves_file(waves_content))    
+
+def construct_element(header: str, content: str) -> str:
+    """
+    Based on the header suffix construct a formatted element to be 
+    placed within the body of the report with the given header and content.
+
+    :param header: The header to be placed into the collapsable menu.
+    :param xml_content: The actual content to place in the element
+    :returns: A formatted element that can be placed inside the body.
+    """
+    if header.endswith('.dia'):
+        return construct_dia_element(header, content)
+    elif header.endswith('.xml'):
+        return construct_xml_element(header, content)
+    elif header.endswith('.Waves'):
+        return construct_waves_element(header, content)
+    else:
+        raise ValueError('Unknown extention {} found for a diagnostic file'.format(header.split(".")[-1]))
+         
+def construct_folders(path: Path) -> str:
+    """
+    Construct a formatted element for integrated model folders in which
+    diagnostic files are grouped 
+    """
+    content = []
+
+    for p in path.glob("*"):        
+        if p.is_dir():
+            raise ValueError('In {} it is not possible to have a subdirectory, called {}'.format(path, p.name))
+        else:
+            content.append(construct_element(p.name, p.read_text()))        
+            
+    return ELEMENTFOLDER_TEMPLATE.format(path.name, "\n".join(content))
+
+    
 def build_section(path: Path) -> str:
     """
     Build a single section from the specified folder containing a set of log files.
@@ -157,13 +250,20 @@ def build_section(path: Path) -> str:
     :param path: Path to the folder containing a set of log files.
     :returns: A formatted html section describing the files within the path.
     """
-    content = (construct_dia_element(p.name, p.read_text()) for p in path.glob("*"))
+    content = []
+   
+    for p in path.glob("*"):        
+        if p.is_dir():
+            content.append(construct_folders(p))
+        else:            
+            content.append(construct_element(p.name, p.read_text()))
+     
     return SECTION_TEMPLATE.format(path.name, "\n".join(content))
 
 
 def build_report_page(src_path: Path) -> str:
     """
-    Build the report page from the specified folder containing dia files.
+    Build the report page from the specified folder containing diagnostic files.
 
     :param src_path: The base path containing the folders with actual content
     :returns: A formatted html document describing the actual report.

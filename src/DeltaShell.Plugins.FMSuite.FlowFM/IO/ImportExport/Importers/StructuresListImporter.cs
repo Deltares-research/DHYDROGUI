@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 case StructuresListType.Gates:
                     return "Gates";
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new NotSupportedException($"{nameof(Type)} is not a valid {typeof(StructuresListType)}");
             }
         }
 
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     case StructuresListType.Gates:
                         return Resources.GateSmall;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new NotSupportedException($"{nameof(Type)} is not a valid {typeof(StructuresListType)}");
                 }
             }
         }
@@ -92,10 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     case StructuresListType.Weirs:
                         yield return typeof(IList<IWeir>);
                         yield return typeof(IEventedList<IWeir>);
-                        break;
-                    case StructuresListType.Gates:
-                        yield return typeof(IList<IGate>);
-                        yield return typeof(IEventedList<IGate>);
                         break;
                 }
             }
@@ -145,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     e is IOException || e is FormatException || e is OverflowException)
                 {
                     Log.Error(
-                        string.Format("An error occurred while importing structures file, import stopped; Cause: "), e);
+                        "An error occurred while importing structures file, import stopped; Cause: ", e);
                     return null;
                 }
 
@@ -167,9 +163,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     break;
                 case StructuresListType.Weirs:
                     InsertStructure<IWeir>(structures, list, ref count);
-                    break;
-                case StructuresListType.Gates:
-                    InsertStructure<IGate>(structures, list, ref count);
                     break;
             }
 

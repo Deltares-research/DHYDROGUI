@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy;
 using log4net.Core;
 using NSubstitute;
@@ -41,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
             var project = new Project();
 
             using (var temp = new TemporaryDirectory())
-            using (var model = new RealTimeControlModel {Name = "Real-Time Control"})
+            using (var model = new RealTimeControlModel {Name = "Real-Time Control (1)"})
             {
                 string dir = temp.CopyDirectoryToTempDirectory(testData);
 
@@ -56,22 +55,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Legacy
                 // Assert
                 List<string> warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
                 Assert.That(warnings, Has.Count.EqualTo(1));
-                Assert.That(warnings[0], Contains.Substring($"The D-Real Time Control model 'Real-Time Control' was migrated to the newest version. " +
+                Assert.That(warnings[0], Contains.Substring($"The D-Real Time Control model 'Real-Time Control (1)' was migrated to the newest version. " +
                                                             $"If applicable, please verify the restart file settings."));
 
                 string projectDir = Path.Combine(dir, "Project1.dsproj_data");
-                string explicitWorkingDir = Path.Combine(projectDir, "Real-Time_Control_output");
+                string explicitWorkingDir = Path.Combine(projectDir, "Real-Time_Control (1)_output");
+                string outputDir = Path.Combine(projectDir, "Real-Time Control (1)", "output");
 
                 Assert.That(projectDir, Does.Exist);
                 Assert.That(explicitWorkingDir, Does.Not.Exist);
                 Assert.That(Directory.EnumerateFiles(projectDir), Is.Empty);
+                Assert.That(outputDir, Does.Exist);
+
+                string[] restartFiles = Directory.EnumerateFiles(outputDir).ToArray();
+                for (var i = 0; i < 5; i++)
+                {
+                    Assert.That(restartFiles.Any(f => Path.GetFileName(f) == $"rtc_20200908_0{i}0000.xml"));
+                }
 
                 Assert.That(model.RestartOutput, Is.Not.Empty);
-                Assert.That(model.RestartOutput, Has.Count.EqualTo(9));
-                for (var i = 1; i < 10; i++)
-                {
-                    Assert.That(model.RestartOutput.Any(f => f.Name == $"rtc_20200908_0{i}0000.xml"));
-                }
+                Assert.That(model.RestartOutput, Has.Count.EqualTo(5));
+                Assert.That(model.RestartOutput.Select(r => r.Path), Is.EquivalentTo(restartFiles));
             }
         }
     }

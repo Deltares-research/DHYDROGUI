@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NUnit.Framework;
 
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
         }
 
         [Test]
-        public void GivenWaveModelDefinition_WhenConstructorFinished_ThenBoundaryContainerSet()
+        public void GivenWaveModelDefinition_WhenConstructorFinished_ThenPropertiesCorrectlySet()
         {
             // Given
             WaveModelDefinition Call() => new WaveModelDefinition();
@@ -79,7 +79,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             WaveModelDefinition waveModelDefinition = Call();
 
             // Then
-            Assert.IsNotNull(waveModelDefinition.BoundaryContainer);
+            Assert.That(waveModelDefinition.Properties, Is.Not.Empty);
+            Assert.That(waveModelDefinition.TimePointData, Is.Not.Null);
+            Assert.That(waveModelDefinition.FeatureContainer, Is.Not.Null);
+            Assert.That(waveModelDefinition.BoundaryContainer, Is.Not.Null);
         }
     }
 }

@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using DelftTools.Functions;
-using DelftTools.Utils;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
 {
-    public abstract class FMNetCdfFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase, INameable
+    public abstract class FMNetCdfFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase, IFMNetCdfFileFunctionStore
     {
-        private const string TimeDimensionName = "time";
+        private const string timeDimensionName = "time";
 
-        //nhib
+        /// <remarks>Needed for NHibernate</remarks>
         protected FMNetCdfFileFunctionStore() {}
 
         protected FMNetCdfFileFunctionStore(string ncPath) : base(ncPath) {}
@@ -20,12 +20,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
 
         protected override IList<string> TimeDimensionNames => new[]
         {
-            TimeDimensionName
+            timeDimensionName
         };
 
         protected override IList<string> TimeVariableNames => new[]
         {
-            GetTimeVariableName(TimeDimensionName)
+            GetTimeVariableName(timeDimensionName)
         };
 
         protected override string GetTimeVariableName(string dimName)
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
 
             if (!timeReference.StartsWith(secondsSince))
             {
-                throw new ArgumentException("Could not parse time reference");
+                throw new ArgumentException(Resources.FMNetCdfFileFunctionStore_Could_not_parse_time_reference);
             }
 
             timeReference = timeReference.Substring(secondsSince.Length);

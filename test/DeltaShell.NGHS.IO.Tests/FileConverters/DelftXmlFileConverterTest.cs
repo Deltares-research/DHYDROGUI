@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.Dimr.Xsd;
+using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.IO.FileConverters;
 using NUnit.Framework;
 using Rhino.Mocks;

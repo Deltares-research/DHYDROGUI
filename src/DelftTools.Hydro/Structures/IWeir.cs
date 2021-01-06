@@ -15,11 +15,10 @@ namespace DelftTools.Hydro.Structures
         UserDefined
     }
 
-    public interface IWeir : IStructure1D
+    public interface IWeir : IStructure
     {
         string Name { get; set; }
         string LongName { get; set; }
-        double Chainage { get; set; }
 
         /// <summary>
         /// Indicates if time dependent parameters can be used.
@@ -61,16 +60,6 @@ namespace DelftTools.Hydro.Structures
         /// Time varying crest level. Will be null when <see cref="CanBeTimedependent"/> is false.
         /// </summary>
         TimeSeries CrestLevelTimeSeries { get; }
-
-        /// <summary>
-        /// Is flow possible in the negative direction of the channel
-        /// </summary>
-        bool AllowNegativeFlow { get; set; }
-
-        /// <summary>
-        /// Is flow possible in the positive direction of the channel
-        /// </summary>
-        bool AllowPositiveFlow { get; set; }
 
         /// <summary>
         /// The shape of the crest of the weir. This is a helper for getting/setting the ContractionCoefficient

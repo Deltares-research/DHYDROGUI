@@ -5,7 +5,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTyp
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 using NSubstitute;
 using NUnit.Framework;
 

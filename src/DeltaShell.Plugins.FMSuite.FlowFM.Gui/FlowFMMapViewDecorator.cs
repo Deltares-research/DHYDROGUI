@@ -15,7 +15,7 @@ using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
-    public class FlowFMMapViewDecorator
+    public static class FlowFMMapViewDecorator
     {
         internal const string BoundaryToolName = "Boundary tool (2D)";
         internal const string SourceToolName = "Source tool (2D)";
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static readonly Bitmap SourceSinkIcon = Properties.Resources.SourceSink;
         private static readonly Bitmap SourceIcon = Properties.Resources.LateralSourceMap;
 
-        private static readonly string ModelName = typeof(WaterFlowFMModel).Name;
+        private static readonly string ModelName = nameof(WaterFlowFMModel);
 
         public static void AddMapToolsIfMissing(MapView mapView)
         {
@@ -53,9 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.BoundariesLayerName, BoundaryToolName, BoundaryIcon));
             tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceAndSinkToolName, SourceSinkIcon));
             tools.Add(new Feature2DPointTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceToolName, SourceIcon));
-            tools.Add(new GenerateEmbankmentsMapTool());
             tools.Add(new MergeEmbankmentsMapTool());
-            tools.Add(new GridWizardMapTool());
             tools.OfType<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
 
             mapView.MapControl.Tools.AddRange(tools);

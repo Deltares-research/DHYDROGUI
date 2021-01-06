@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
@@ -248,11 +247,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             {
                 string tempHisFile = tempDir.CopyTestDataFileToTempDirectory(hisFile);
                 Assert.That(File.Exists(tempHisFile), Is.True, "Test file was not found in temporary folder.");
-                Action call = () => WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
+                void Call() => WaqHistoryFileParser.Parse(tempHisFile, waqModel.ObservationVariableOutputs, MonitoringOutputLevel.Points);
 
                 // 4. Verify final expectations.
-                TestHelper.AssertAtLeastOneLogMessagesContains(call, expectedLogMsg);
+                TestHelper.AssertAtLeastOneLogMessagesContains(Call, expectedLogMsg);
                 Assert.That(targetTimeSeries.GetValues(), Is.Empty, "Number of retrieved values does not match expectations.");
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase("hisFile\\his_with_limit_chlo.nc")]
+        [TestCase("hisFile\\old_binary.his")]
+        public void Parse_ReadsTimeSeriesWithSpacesCorrectly(string testDataHisPath)
+        {
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string sourceHisFile = TestHelper.GetTestFilePath(testDataHisPath);
+                string hisFilePath = tempDir.CopyTestDataFileToTempDirectory(sourceHisFile);
+                
+                var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>()
+                {
+                    new WaterQualityObservationVariableOutput(new []{ new DelftTools.Utils.Tuple<string, string>("Limit Chlo", "-")})
+                    {
+                        Name = "Observation Point01"
+                    }
+                };
+
+                void Call() => WaqHistoryFileParser.Parse(hisFilePath, observationVariableOutputs, MonitoringOutputLevel.Points);
+
+                TestHelper.AssertLogMessagesCount(Call, 0);
+                Assert.That(observationVariableOutputs[0].TimeSeriesList.First().GetValues(), Is.Not.Empty);
             }
         }
 
@@ -277,7 +302,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                                                       waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
 
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
+            Assert.That(exception.ParamName, Is.EqualTo("filePath"));
+            Assert.That(exception.Message.StartsWith("Argument 'filePath' cannot be null or empty."));
         }
 
         private static WaterQualityModel CreateWaterQualityModel1DStub(MockRepository mocks)

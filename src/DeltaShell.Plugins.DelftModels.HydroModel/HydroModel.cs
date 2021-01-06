@@ -23,11 +23,11 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
-using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -105,12 +105,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public void Dispose()
         {
-            foreach (IDisposable activity in Activities.GetActivitiesOfType<IDisposable>())
-            {
-                activity.Dispose();
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            dimrApi?.Dispose();
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (IDisposable activity in Activities.GetActivitiesOfType<IDisposable>())
+                {
+                    activity.Dispose();
+                }
+
+                dimrApi?.Dispose();
+            }
         }
 
         #endregion
@@ -480,7 +489,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
 
                 RefreshDefaultModelWorkflows();
-                //SetDefaultActivityName((IActivity)e.Item);
                 CurrentWorkflow = Workflows.FirstOrDefault();
             }
         }
@@ -574,7 +582,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (currentWorkflow != null)
                 {
                     currentWorkflow.StatusChanged -= CurrentWorkflowOnStatusChanged;
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(dm => dm.RunsInIntegratedModel = false);
                 }
 
                 currentWorkflow = value;
@@ -582,7 +589,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 if (currentWorkflow != null)
                 {
                     currentWorkflow.StatusChanged += CurrentWorkflowOnStatusChanged;
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(dm => dm.RunsInIntegratedModel = true);
                 }
 
                 currentWorkFlowData = null;
@@ -786,11 +792,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     List<IDimrModel> dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
                                                                  .Plus(CurrentWorkflow as IDimrModel).Where(dm => dm != null)
                                                                  .ToList();
-
+                    var fileExceptions = new List<string>();
                     dimrModels.ForEach(m =>
                     {
                         m.RunsInIntegratedModel = true;
                         m.DisconnectOutput();
+                        fileExceptions.AddRange(m.FileExceptionsCleaningWorkingDirectory);
                     });
 
                     string kernelDirectories = GetKernelDirectories(dimrModels);
@@ -799,13 +806,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         return;
                     }
 
-                    FileUtils.DeleteIfExists(WorkingDirectoryPath);
-                    Directory.CreateDirectory(WorkingDirectoryPath);
-
-                    var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
-                    if (!dHydroConfigXmlExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml")))
+                    PrepareWorkingDirectory(fileExceptions);
+                    
+                    if (!ExportHydroModel())
                     {
-                        Status = ActivityStatus.Failed;
                         return;
                     }
 
@@ -814,11 +818,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     // are send from async output handlers will cause deadlock
                     bool runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
                                                HydroModelApplicationPlugin.MainThreadId;
-                    dimrApi = DimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
+                    dimrApi = dimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
 
                     if (dimrApi == null)
                     {
-                        throw new ArgumentNullException("Could not load the Dimr api.");
+                        throw new InvalidOperationException("Could not load the Dimr api.");
                     }
 
                     //run dimr
@@ -840,12 +844,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
                 catch (DimrErrorCodeException e)
                 {
-                    Console.WriteLine(e.Message);
-                    Log.ErrorFormat(e.Message);
-
-                    dimrApi?.Dispose();
-                    dimrApi = null;
-
+                    HandleDimrErrorCodeException(e);
                     throw;
                 }
             }
@@ -853,6 +852,38 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 CurrentWorkflow.Initialize();
             }
+        }
+
+        private bool ExportHydroModel()
+        {
+            var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
+            if (dHydroConfigXmlExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml")))
+            {
+                return true;
+            }
+
+            Status = ActivityStatus.Failed;
+            return false;
+        }
+
+        private void PrepareWorkingDirectory(List<string> fileExceptions)
+        {
+            if (Directory.Exists(WorkingDirectoryPath))
+            {
+                CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(WorkingDirectoryPath, fileExceptions);
+            }
+            else
+            {
+                Directory.CreateDirectory(WorkingDirectoryPath);
+            }
+        }
+
+        private void HandleDimrErrorCodeException(DimrErrorCodeException e)
+        {
+            Log.ErrorFormat(e.Message);
+
+            dimrApi?.Dispose();
+            dimrApi = null;
         }
 
         private string GetKernelDirectories(IEnumerable<IDimrModel> dimrModels)
@@ -949,19 +980,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnFinish()
         {
-            dimrApi?.Finish();
-
-            if (DoDimrRun())
+            try
             {
-                List<IDimrModel> dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
-                dimrModels.ForEach(m => m.OnFinishIntegratedModelRun(WorkingDirectoryPath));
-            }
-            else
-            {
-                if (CurrentWorkflow != null)
+                if (dimrApi != null)
                 {
-                    CurrentWorkflow.Finish();
+                    int returnCode = dimrApi.Finish();
+                    if (returnCode != 0)
+                    {
+                        throw new DimrErrorCodeException(Status, returnCode);
+                    }
                 }
+
+                if (DoDimrRun())
+                {
+                    List<IDimrModel> dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
+                    dimrModels.ForEach(m => m.OnFinishIntegratedModelRun(WorkingDirectoryPath));
+                }
+                else
+                {
+                    if (CurrentWorkflow != null)
+                    {
+                        CurrentWorkflow.Finish();
+                    }
+                }
+            }
+            catch (DimrErrorCodeException e)
+            {
+                HandleDimrErrorCodeException(e);
+                throw;
             }
         }
 
@@ -1069,8 +1115,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         #region HydroModelBuilder
 
-        private static HydroModelBuilder builder = new HydroModelBuilder();
+        private static readonly HydroModelBuilder builder = new HydroModelBuilder();
         private IDimrApi dimrApi;
+        private readonly DimrApiFactory dimrApiFactory = new DimrApiFactory();
 
         [EditAction]
         public virtual void RefreshDefaultModelWorkflows()
@@ -1245,7 +1292,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             Activities.OfType<IModel>().Plus(currentWorkflow as IModel)
                       .Where(m => m != null)
-                      .ForEach(m => m.ClearOutput());
+                      .ForEach(m => m.ClearOutput(true));
 
             RemoveOutputTextDocumentDataItem();
         }
@@ -1291,8 +1338,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             clonedHydroModel.RelinkInternalDataItemLinks(this);
             clonedHydroModel.RelinkExternalDataItemLinks(this);
 
-            RewireHydroRegionValueConverters(this, clonedHydroModel);
-
             clonedHydroModel.creating = true;
             clonedHydroModel.RefreshDefaultModelWorkflows();
             if (CurrentWorkflow != null)
@@ -1303,40 +1348,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             clonedHydroModel.creating = false;
 
             return clonedHydroModel;
-        }
-
-        private void RewireHydroRegionValueConverters(HydroModel hydroModel, HydroModel clonedHydroModel)
-        {
-            List<object> sourceItems = hydroModel.GetAllItemsRecursive().ToList();
-            List<object> clonedItems = clonedHydroModel.GetAllItemsRecursive().ToList();
-
-            List<IDataItem> sourceDataItems = sourceItems.OfType<IDataItem>().Where(di => di.ValueConverter is IHydroRegionValueConverter).ToList();
-            List<IDataItem> clonedDataItems = clonedItems.OfType<IDataItem>().Where(di => di.ValueConverter is IHydroRegionValueConverter).ToList();
-
-            if (sourceDataItems.Count != clonedDataItems.Count)
-            {
-                throw new InvalidOperationException("DataItems with HydroRegion value converters count does not match after clone");
-            }
-
-            List<IHydroRegion> sourceRegions = sourceItems.OfType<IHydroRegion>().ToList();
-            List<IHydroRegion> clonedRegions = clonedItems.OfType<IHydroRegion>().ToList();
-
-            if (sourceRegions.Count != clonedRegions.Count)
-            {
-                throw new InvalidOperationException("Number of regions does not match after clone");
-            }
-
-            for (var i = 0; i < sourceDataItems.Count; i++)
-            {
-                IDataItem source = sourceDataItems[i];
-                IDataItem clone = clonedDataItems[i];
-
-                IHydroRegion sourceRegion = ((IHydroRegionValueConverter) source.ValueConverter).HydroRegion;
-                int indexInSource = sourceRegions.IndexOf(sourceRegion);
-
-                var clonedConverter = (IHydroRegionValueConverter) clone.ValueConverter;
-                clonedConverter.HydroRegion = clonedRegions[indexInSource];
-            }
         }
 
         public override bool IsLinkAllowed(IDataItem source, IDataItem target)

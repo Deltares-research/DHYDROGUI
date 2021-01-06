@@ -1,0 +1,252 @@
+[forcing]
+Name                            = RiverBoundary01_0001
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0001
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0002
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0003
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0004
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0005
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0006
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0007
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0008
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0009
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+
+[forcing]
+Name                            = SeaBoundary01_0010
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = tracerbndIM1
+Unit                            = mg/l
+Quantity                        = tracerbndIM2
+Unit                            = mg/l
+Quantity                        = tracerbndOXY
+Unit                            = mg/l
+Quantity                        = tracerbndNH4
+Unit                            = mg/l
+Quantity                        = tracerbndNO3
+Unit                            = mg/l
+Quantity                        = tracerbndPO4
+Unit                            = mg/l
+Quantity                        = tracerbndGreen
+Unit                            = mg/l
+410227200  20.0  3.0  8.0  0.4  0.1 0.05  0.1
+410832000  20.0  3.0  8.0  0.4  0.1 0.05  0.1

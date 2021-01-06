@@ -1,16 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
-using DelftTools.Shell.Core;
+﻿using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui;
-using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
@@ -23,38 +14,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             base.OneTimeSetUp();
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
             factory.AddPlugin(new NetworkEditorGuiPlugin());
-        }
-
-        protected T SaveLoadBranchFeature<T>(T branchFeature, string projectPath) where T : BranchFeature
-        {
-            // construct a simple network
-            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-
-            IChannel channel = network.Channels.First();
-            channel.BranchFeatures.Add(branchFeature);
-            branchFeature.Branch = channel;
-            if (branchFeature is ICompositeBranchStructure)
-            {
-                var comp = branchFeature as ICompositeBranchStructure;
-                foreach (IStructure1D structure in comp.Structures)
-                {
-                    if (!channel.BranchFeatures.Contains(structure))
-                    {
-                        channel.BranchFeatures.Add(structure);
-                        structure.Branch = channel;
-                    }
-                }
-            }
-
-            IHydroNetwork retrievedNetwork = SaveLoadObject(network, projectPath);
-
-            var retrievedObject = (T) Enumerable.First(retrievedNetwork.Channels).BranchFeatures.FirstOrDefault();
-            if (retrievedObject == null)
-            {
-                Assert.Fail("Object not found. ");
-            }
-
-            return retrievedObject;
         }
 
         /// <summary>
@@ -82,17 +41,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             Project project2 = ProjectRepository.GetProject();
             return (T) ((DataItem) project2.RootFolder.Items[0]).Value;
-        }
-
-        protected static IChannel CreateChannel(INode fromNode, INode toNode)
-        {
-            var vertices = new List<Coordinate>
-            {
-                new Coordinate(1000, 1000),
-                new Coordinate(1000, 1500)
-            };
-
-            return new Channel(fromNode, toNode) {Geometry = new LineString(vertices.ToArray())};
         }
     }
 }

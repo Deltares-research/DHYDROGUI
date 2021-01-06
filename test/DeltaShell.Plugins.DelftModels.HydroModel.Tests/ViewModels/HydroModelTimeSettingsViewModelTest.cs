@@ -203,12 +203,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.That(viewModel.Models.Count, Is.EqualTo(2));
 
             // Check initial FM Model View Model
-            TimeDependentModelBaseViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == fmModelName);
+            TimeDependentModelViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == fmModelName);
             Assert.IsNotNull(fmModelViewModel);
             Assert.That(fmModelViewModel.StartTime, Is.EqualTo(initialStartTime));
 
             // Check initial RTC Model View Model
-            TimeDependentModelBaseViewModel rtcModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == rtcModelName);
+            TimeDependentModelViewModel rtcModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == rtcModelName);
             Assert.IsNotNull(rtcModelViewModel);
             Assert.That(rtcModelViewModel.StartTime, Is.EqualTo(initialStartTime));
 
@@ -249,12 +249,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.That(viewModel.Models.Count, Is.EqualTo(2));
 
             // Check initial FM Model View Model
-            TimeDependentModelBaseViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == fmModelName);
+            TimeDependentModelViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == fmModelName);
             Assert.IsNotNull(fmModelViewModel);
             Assert.That(fmModelViewModel.StopTime, Is.EqualTo(initialStopTime));
 
             // Check initial RTC Model View Model
-            TimeDependentModelBaseViewModel rtcModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == rtcModelName);
+            TimeDependentModelViewModel rtcModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == rtcModelName);
             Assert.IsNotNull(rtcModelViewModel);
             Assert.That(rtcModelViewModel.StopTime, Is.EqualTo(initialStopTime));
 
@@ -295,12 +295,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.That(viewModel.Models.Count, Is.EqualTo(2));
 
             // Check initial FM Model View Model
-            TimeDependentModelBaseViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == fmModelName);
+            TimeDependentModelViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == fmModelName);
             Assert.IsNotNull(fmModelViewModel);
             Assert.That(fmModelViewModel.TimeStep, Is.EqualTo(initialTimeStep));
 
             // Check initial RTC Model View Model
-            TimeDependentModelBaseViewModel rtcModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == rtcModelName);
+            TimeDependentModelViewModel rtcModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == rtcModelName);
             Assert.IsNotNull(rtcModelViewModel);
             Assert.That(rtcModelViewModel.TimeStep, Is.EqualTo(initialTimeStep));
 
@@ -337,7 +337,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.AreEqual(initialStartTime, viewModel.StartTime);
             Assert.AreEqual(2, viewModel.Models.Count);
 
-            TimeDependentModelBaseViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == modelName1);
+            TimeDependentModelViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == modelName1);
             if (fmModelViewModel == null)
             {
                 Assert.Fail();
@@ -385,7 +385,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.AreEqual(initialStartTime, viewModel.StartTime);
             Assert.AreEqual(2, viewModel.Models.Count);
 
-            TimeDependentModelBaseViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == modelName1);
+            TimeDependentModelViewModel fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == modelName1);
             Assert.NotNull(fmModelViewModel);
             fmModelViewModel.StopTime = newStopTime;
 
@@ -429,7 +429,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.AreEqual(initialStartTime, viewModel.StartTime);
             Assert.AreEqual(2, viewModel.Models.Count);
 
-            TimeDependentModelBaseViewModel waveModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == modelName2);
+            TimeDependentModelViewModel waveModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == modelName2);
             Assert.NotNull(waveModelViewModel);
             waveModelViewModel.TimeStep = newTimeStep;
 
@@ -705,7 +705,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             }, viewModel.Models.Select(m => m.Name).ToList());
 
             // Test whether invoking RemoveSubModel is indeed removing the specific submodel from the hydromodel
-            TimeDependentModelBaseViewModel submodelToRemove = viewModel.Models.FirstOrDefault(m => m.Name == name2);
+            TimeDependentModelViewModel submodelToRemove = viewModel.Models.FirstOrDefault(m => m.Name == name2);
             viewModel.RemoveSubmodel.Execute(submodelToRemove);
             Assert.AreEqual(1, viewModel.Models.Count);
             Assert.AreEqual(timeDependentModel1.Name, viewModel.Models.First().Name);

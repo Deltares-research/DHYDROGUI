@@ -18,6 +18,31 @@ namespace DeltaShell.NGHS.IO.Tests
     public class FileBasedUtilsTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
+        public void CollectNonRecursivePaths_ShouldReturnNonRecursivePathsInsideADirectory()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string filePath = Path.Combine(tempDirectory.Path, "file.txt");
+                string subFolderPath = Path.Combine(tempDirectory.Path, "subfolder");
+                string subFolderFilePath = Path.Combine(subFolderPath, "subfolderfile.txt");
+
+                File.WriteAllText(filePath, "file");
+                Directory.CreateDirectory(subFolderPath);
+                File.WriteAllText(subFolderFilePath, "subfolderfile");
+
+                // Act
+                string[] nonRecursivePaths = FileBasedUtils.CollectNonRecursivePaths(tempDirectory.Path);
+
+                // Assert
+                Assert.AreEqual(2, nonRecursivePaths.Length);
+                Assert.IsTrue(nonRecursivePaths.Contains(filePath));
+                Assert.IsTrue(nonRecursivePaths.Contains(subFolderPath));
+            }
+        }
+
+        [Test]
         public void TestCleanPersistentDirectories_CompositeModel()
         {
             var compositeModel = new TestCompositeActivity {Name = "CompositeModel"};
@@ -244,12 +269,7 @@ namespace DeltaShell.NGHS.IO.Tests
                 return null;
             }
 
-            public void ClearOutput(bool forceClean = false)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void ClearOutput() {}
+            public void ClearOutput(bool forceClean = false) {}
 
             public IEventedList<IDataItem> DataItems { get; set; }
             public IEnumerable<IDataItem> AllDataItems { get; }
@@ -330,12 +350,7 @@ namespace DeltaShell.NGHS.IO.Tests
                 return null;
             }
 
-            public void ClearOutput(bool forceClean = false)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void ClearOutput() {}
+            public void ClearOutput(bool forceClean = false) {}
 
             public IEventedList<IDataItem> DataItems { get; set; }
             public IEnumerable<IDataItem> AllDataItems { get; }

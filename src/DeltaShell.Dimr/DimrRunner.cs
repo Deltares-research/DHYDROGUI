@@ -8,10 +8,10 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
+using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Properties;
-using DeltaShell.Dimr.Xsd;
+using DeltaShell.NGHS.Common.IO;
 using log4net;
-
 namespace DeltaShell.Dimr
 {
     public class DimrRunner : IDisposable
@@ -27,6 +27,7 @@ namespace DeltaShell.Dimr
         };
 
         private readonly IDimrModel model;
+        private readonly IDimrApiFactory dimrApiFactory;
         protected bool runLocal;
         private bool disposed;
         private string dimrFile;
@@ -34,9 +35,10 @@ namespace DeltaShell.Dimr
         private double timeStep;
         private DateTime stopTime;
 
-        public DimrRunner(IDimrModel model)
+        public DimrRunner(IDimrModel model, IDimrApiFactory dimrApiFactory)
         {
             this.model = model;
+            this.dimrApiFactory = dimrApiFactory;
         }
 
         public IDimrApi Api { get; private set; }
@@ -58,15 +60,8 @@ namespace DeltaShell.Dimr
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                log.ErrorFormat(e.Message);
-                model.Status = ActivityStatus.Failed;
-                if (Api != null)
-                {
-                    Api.ProcessMessages();
-                    Api.Dispose();
-                    Api = null;
-                }
+                HandleException(e);
+                throw;
             }
         }
 
@@ -105,26 +100,32 @@ namespace DeltaShell.Dimr
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                log.ErrorFormat(e.Message);
-                model.Status = ActivityStatus.Failed;
-                if (Api != null)
-                {
-                    Api.ProcessMessages();
-                    Api.Dispose();
-                    Api = null;
-                }
+                HandleException(e);
+                throw;
             }
         }
 
         public void OnFinish()
         {
-            if (model.RunsInIntegratedModel)
+            if (model.RunsInIntegratedModel || Api == null)
             {
                 return;
             }
 
-            Api?.Finish();
+            try
+            {
+                int returnCode = Api.Finish();
+
+                if (returnCode != 0)
+                {
+                    throw new DimrErrorCodeException(model.Status, returnCode);
+                }
+            }
+            catch (Exception e)
+            {
+                HandleException(e);
+                throw;
+            }
         }
 
         public void OnCleanup()
@@ -232,6 +233,18 @@ namespace DeltaShell.Dimr
                                                    model.Status == ActivityStatus.Done)
                                                   && Api != null;
 
+        private void HandleException(Exception e)
+        {
+            log.ErrorFormat(e.Message);
+            model.Status = ActivityStatus.Failed;
+            if (Api != null)
+            {
+                Api.ProcessMessages();
+                Api.Dispose();
+                Api = null;
+            }
+        }
+
         private void ValidateExportAndInitialize(bool disconnectOutput)
         {
             // validate the model
@@ -258,8 +271,8 @@ namespace DeltaShell.Dimr
             dimrFile = GenerateDimrXML(model, exportPath);
 
             // initialize dimr
-            Api = DimrApiFactory.CreateNew(!runLocal);
-
+            Api = dimrApiFactory.CreateNew(!runLocal);
+            
             if (Api == null)
             {
                 throw new ArgumentNullException(Resources.DimrRunner_Could_not_load_dimr_api);
@@ -287,25 +300,9 @@ namespace DeltaShell.Dimr
             FileUtils.CreateDirectoryIfNotExists(workDirectory);
             string exportDir = Path.Combine(workDirectory, model.DirectoryName);
             FileUtils.CreateDirectoryIfNotExists(exportDir);
-            ClearFolder(exportDir);
+            CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(exportDir, model.FileExceptionsCleaningWorkingDirectory);
             exporter.Export(modelObject, model.GetExporterPath(exportDir));
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
-        }
-
-        private static void ClearFolder(string folderName)
-        {
-            var dir = new DirectoryInfo(folderName);
-
-            foreach (FileInfo fi in dir.GetFiles())
-            {
-                FileUtils.DeleteIfExists(fi.FullName);
-            }
-
-            foreach (DirectoryInfo di in dir.GetDirectories())
-            {
-                ClearFolder(di.FullName);
-                FileUtils.DeleteIfExists(di.FullName);
-            }
         }
 
         // Display any warnings or errors.

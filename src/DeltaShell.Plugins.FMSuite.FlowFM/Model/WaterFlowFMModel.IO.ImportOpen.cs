@@ -6,10 +6,12 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -60,9 +62,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// Imports data from the provided <paramref name="mduFilePath"/>.
         /// </summary>
         /// <param name="mduFilePath">The path to the mdu file.</param>
-        /// <param name="clearOutputDirectories">Whether or not output directories need to be cleared (optional).</param>
+        /// <param name="clearWaqOutputDirProperty">Whether or not WAQ output directory property needs to be cleared (optional).</param>
         /// <param name="progressChanged">A handle for notifying progress changes (optional).</param>
-        public void ImportFromMdu(string mduFilePath, bool clearOutputDirectories = false, ImportProgressChangedDelegate progressChanged = null)
+        public void ImportFromMdu(string mduFilePath, bool clearWaqOutputDirProperty = false, ImportProgressChangedDelegate progressChanged = null)
         {
             importProgressChanged = progressChanged;
 
@@ -73,9 +75,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating();
 
-            if (clearOutputDirectories)
+            if (clearWaqOutputDirProperty)
             {
-                ClearOutputDirAndWaqDirProperty();
+                ClearWaqOutputDirProperty();
             }
 
             InitializeSyncers();
@@ -83,8 +85,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             importProgressChanged = null;
         }
 
+        /// <summary>
+        /// Gets the net file path from the mdu file at <paramref name="mduFilePath"/>.
+        /// </summary>
+        /// <param name="mduFilePath">The mdu file path.</param>
+        /// <returns>
+        /// The absolute path to the net file as specified in the <paramref name="mduFilePath"/>
+        /// </returns>
+        /// <remarks>
+        /// Note this implementation is currently strictly required for the <see cref="LoadInputStateFromMdu"/>.
+        /// In any other situation you should make use of the <see cref="NetFilePath"/> property.
+        /// </remarks>
+        private string GetNetFilePath(string mduFilePath)
+        {
+            if (!File.Exists(mduFilePath))
+            {
+                return null;
+            }
+
+            // We need to obtain the NetFile property value from, however because
+            // we explicitly load the grid before the mdu, the NetFileProperty of
+            // the model will be nul, thus we need to obtain it directly from the
+            // mdu. Thus we read the mdu twice. This is undesired, and should be 
+            // refactored as part of a revised data access layer.
+            string mduFileDir = Path.GetDirectoryName(mduFilePath);
+
+            using (var fileStream = new FileStream(mduFilePath, FileMode.Open, FileAccess.Read))
+            {
+                IList<DelftIniCategory> categories = new MduDelftIniReader().ReadDelftIniFile(fileStream, filePath);
+                
+                DelftIniCategory geometryCategory = 
+                    categories.FirstOrDefault(x => x.Name.ToLowerInvariant() == "geometry");
+                DelftIniProperty netFileProperty = 
+                    geometryCategory?.Properties
+                                    .FirstOrDefault(x => x.Name.ToLowerInvariant() == KnownProperties.NetFile);
+                
+                string netFileRelativePath = netFileProperty?.Value;
+                return netFileRelativePath != null ? Path.Combine(mduFileDir, netFileRelativePath) : null;
+            }
+        }
+
         private void LoadInputStateFromMdu(string mduFilePath)
         {
+            // The grid is read first to ensure events utilising the grid work correctly.
+            string gridPath = GetNetFilePath(mduFilePath);
+
+            FireImportProgressChanged("Reading grid", 1, TotalImportSteps);
+            Grid = ReadGridFromNetFile(gridPath) ?? new UnstructuredGrid();
+
             LoadModelFromMdu(mduFilePath);
 
             SynchronizeModelDefinitions();
@@ -100,16 +148,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 SedimentFile.LoadSediments(SedFilePath, this);
             }
 
-            FireImportProgressChanged("Reading grid", 4, TotalImportSteps);
-            Grid = ReadGridFromNetFile(NetFilePath) ?? new UnstructuredGrid();
+            UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdapter => { bathymetryNoDataValue = uGridAdapter.uGrid.ZCoordinateFillValue; });
 
-            UnstructuredGridFileHelper.DoIfUgrid(NetFilePath,
-                                                 uGridAdaptor => { bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue; });
-
-            FireImportProgressChanged("Renaming sub files", 5, TotalImportSteps);
+            FireImportProgressChanged("Renaming sub files", 6, TotalImportSteps);
             RenameSubFilesIfApplicable();
 
-            FireImportProgressChanged("Initialize input spatial data", 6, TotalImportSteps);
+            FireImportProgressChanged("Initialize input spatial data", 7, TotalImportSteps);
             InitializeUnstructuredGridCoverages();
 
             CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(NetFilePath);
@@ -139,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 sourceAndSink.PopulateFunctionValuesFromAttributes(componentSettings);
             });
 
-            FireImportProgressChanged("Reading model output", 8, TotalImportSteps);
+            FireImportProgressChanged("Reading model output", 9, TotalImportSteps);
 
             LoadRestartFile(mduFilePath);
         }
@@ -217,8 +261,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 int componentValueCount =
                     coverage.Arguments.Aggregate(
                         0,
-                        (totaal, arguments) =>
-                            totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
+                        (total, arguments) =>
+                            total == 0 ? arguments.Values.Count : total * arguments.Values.Count);
 
                 IEnumerable<double> valuesToSet = xyzFile.Count != componentValueCount
                                                       ? new InterpolateOperation().InterpolateToGrid(

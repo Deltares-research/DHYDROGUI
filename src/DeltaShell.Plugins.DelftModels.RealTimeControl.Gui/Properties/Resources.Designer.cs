@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -355,6 +355,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         internal static System.Drawing.Bitmap folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_output {
+            get {
+                object obj = ResourceManager.GetObject("folder_output", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1134,6 +1144,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not check if source shape is connectable with target shape..
+        /// </summary>
+        internal static string ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_with_target_shape_ {
+            get {
+                return ResourceManager.GetString("ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_wi" +
+                        "th_target_shape_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap signal {
@@ -1191,11 +1211,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap table {
+            get {
+                object obj = ResourceManager.GetObject("table", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Table.
         /// </summary>
         internal static string Table_DisplayName {
             get {
                 return ResourceManager.GetString("Table_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap textdocument {
+            get {
+                object obj = ResourceManager.GetObject("textdocument", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

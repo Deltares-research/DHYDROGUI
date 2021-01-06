@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         private readonly IBoundaryMapFeaturesContainer container = Substitute.For<IBoundaryMapFeaturesContainer>();
         private readonly IWaveModel model = Substitute.For<IWaveModel>();
 
-        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
+        protected override Func<IWaveLayerInstanceCreator, ILayerSubProvider> ConstructorCall { get; } =
             (factory) => new BoundaryMapFeaturesContainerLayerSubProvider(factory);
 
         [Test]
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 
         protected override object GetInvalidParentData() => null;
 
-        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
-            FactoryMock.CreateBoundaryLayer(container);
+        protected override ILayer ExpectedCall(IWaveLayerInstanceCreator instanceCreatorMock) =>
+            instanceCreatorMock.CreateBoundaryLayer(container);
     }
 }

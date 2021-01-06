@@ -2,12 +2,15 @@
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
+using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -23,7 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mocks = new MockRepository();
             var treeView = mocks.StrictMock<ITreeView>();
             const string path = "some_file_path";
-            var nodeData = new FMClassMapFileFunctionStore(path);
+            var nodeData = Substitute.For<IFMClassMapFileFunctionStore>();
+            nodeData.Path.Returns(path);
             var treeNode = new TreeNode(treeView);
             var nodePresenter = new FMClassMapFileFunctionStoreNodePresenter();
             Assert.IsNull(treeNode.Image);
@@ -40,12 +44,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAClassMapFileFunctionStoreWithAFunctionAndAGrid_WhenGetChildNodeObjectsIsCalled_ThenCorrectDataItemsAreYielded()
         {
             // Given
-            var mocks = new MockRepository();
-            var store = mocks.Stub<FMClassMapFileFunctionStore>(string.Empty);
+            var store = Substitute.For<IFMClassMapFileFunctionStore>();
+            store.Functions = new EventedList<IFunction>(new List<IFunction>());
+            
             const string coverageName = "coverage_name";
             var function = new UnstructuredGridCellCoverage(new UnstructuredGrid(), true) {Name = coverageName};
             store.Functions.Add(function);
-            var guiPlugin = mocks.Stub<GuiPlugin>();
+            var guiPlugin = Substitute.For<GuiPlugin>();
             var nodePresenter = new FMClassMapFileFunctionStoreNodePresenter {GuiPlugin = guiPlugin};
 
             // When

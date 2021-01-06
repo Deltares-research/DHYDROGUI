@@ -438,7 +438,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ThinDam2D, ThinDam2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IWeir, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IPump, Feature2D>>();
-            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IGate, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<SourceAndSink, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<BoundaryConditionSet, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<BridgePillar, BridgePillar>>();
@@ -764,7 +763,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             if (e.PropertyName.Equals(OutputHisFileStoreMemberName))
             {
-                FMHisFileFunctionStore fmHisFileFunctionStore = ((WaterFlowFMModel) sender).OutputHisFileStore;
+                IFMHisFileFunctionStore fmHisFileFunctionStore = ((WaterFlowFMModel) sender).OutputHisFileStore;
                 if (fmHisFileFunctionStore != null)
                 {
                     CloseViewDataForOutdatedStore(fmHisFileFunctionStore);
@@ -898,7 +897,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
 
         [InvokeRequired]
-        private void CloseViewDataForOutdatedStore(FMHisFileFunctionStore fmHisFileFunctionStore)
+        private void CloseViewDataForOutdatedStore(IFMHisFileFunctionStore fmHisFileFunctionStore)
         {
             List<object> datas = Gui.DocumentViews.Select(v => v.Data).ToList();
 

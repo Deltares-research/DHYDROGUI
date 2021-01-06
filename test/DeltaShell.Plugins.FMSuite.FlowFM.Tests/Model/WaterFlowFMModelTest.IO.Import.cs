@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DHYDRO.TestModels.DFlowFM;
 using log4net.Core;
@@ -86,6 +85,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.That(TestHelper.GetAllRenderedMessages(Call, Level.Warn), Is.Empty);
                 Assert.That(model.UseRestart, Is.False);
                 Assert.That(model.RestartInput.IsEmpty);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAModelWithNonDefaultBedlevType_WhenTheModelIsImported_ThenModelLoadsCorrectly()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string srcTestDataPath = TestHelper.GetTestFilePath("WaterFlowFMModel.BedlevType");
+                string testDataPath = tempDir.CopyDirectoryToTempDirectory(srcTestDataPath);
+                string mduPath = Path.Combine(testDataPath, "bedlevtype_1.mdu");
+
+                using (var model = new WaterFlowFMModel())
+                {
+                    // When | Then
+                    void Call() => model.ImportFromMdu(mduPath, true);
+                    Assert.DoesNotThrow(Call);
+                }
             }
         }
     }

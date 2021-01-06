@@ -7,9 +7,8 @@ using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess;
 using log4net;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 {
@@ -61,19 +60,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             Dependencies.CompileEnabledDependencies(Properties);
             Dependencies.CompileVisibleDependencies(Properties);
 
-            Obstacles = new EventedList<WaveObstacle>();
             TimePointData = new WaveInputFieldData();
-            ObservationPoints = new EventedList<Feature2DPoint>();
-            ObservationCrossSections = new EventedList<Feature2D>();
             BoundaryContainer = new BoundaryContainer();
         }
 
         public IEventedList<WaveModelProperty> Properties { get; set; }
         public ModelPropertySchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
         public IWaveDomainData OuterDomain { get; set; }
-        public IEventedList<WaveObstacle> Obstacles { get; set; }
-        public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
-        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
+
+        /// <summary>
+        /// Gets the feature container.
+        /// </summary>
+        public IWaveFeatureContainer FeatureContainer { get; } = new WaveFeatureContainer();
 
         public string ObstaclePolylineFile { get; set; }
 

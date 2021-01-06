@@ -123,9 +123,6 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
         public void GivenALogHandlerWithLogMessagesOfAllSeverities_WhenLogReportIsCalled_ThenAlwaysOneReportForEachSeverityIsCreated()
         {
             // Given
-            const string errorHeader = "During some_activity the following errors were reported:";
-            const string warningHeader = "During some_activity the following warnings were reported:";
-            const string infoHeader = "During some_activity the following infos were reported:";
             const string infoMessage1 = "info_message1";
             const string infoMessage2 = "info_message2";
             const string warningMessage1 = "warning_message1";
@@ -143,13 +140,15 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             Assert.AreEqual(6, logHandler.LogMessagesTable.Count,
                             "Exactly 6 log messages were expected to be collected by the log handler.");
 
+            // When
             void LogReportAction() => logHandler.LogReport();
 
-            // When, Then
-            TestHelper.AssertLogMessagesCount(LogReportAction, 3);
-            TestHelper.AssertLogMessageIsGenerated(LogReportAction, CreateExpectedLogMessage(errorHeader, errorMessage1, errorMessage2));
-            TestHelper.AssertLogMessageIsGenerated(LogReportAction, CreateExpectedLogMessage(warningHeader, warningMessage1, warningMessage2));
-            TestHelper.AssertLogMessageIsGenerated(LogReportAction, CreateExpectedLogMessage(infoHeader, infoMessage1, infoMessage2));
+            // Then
+            string[] messages = TestHelper.GetAllRenderedMessages(LogReportAction).ToArray();
+            Assert.That(messages[0], Is.EqualTo(CreateExpectedLogMessage("During some_activity the following errors were reported:", errorMessage1, errorMessage2)));
+            Assert.That(messages[1], Is.EqualTo(CreateExpectedLogMessage("During some_activity the following warnings were reported:", warningMessage1, warningMessage2)));
+            Assert.That(messages[2], Is.EqualTo(CreateExpectedLogMessage("During some_activity the following infos were reported:", infoMessage1, infoMessage2)));
+            Assert.That(logHandler.LogMessagesTable, Is.Empty);
         }
 
         public void AssertMessageWithCorrectSeverity(string message, LogSeverity logSeverity)

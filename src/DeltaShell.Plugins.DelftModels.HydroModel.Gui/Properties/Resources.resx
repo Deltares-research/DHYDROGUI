@@ -166,4 +166,13 @@
   <data name="WpfGuiProperty_this_This_value_must_be_between__0__and__1_" xml:space="preserve">
     <value>This value must be between {0} and {1}</value>
   </data>
+  <data name="MergeModelValidationView__0__Model_merge_with__1__validation_Report" xml:space="preserve">
+    <value>{0} Model merge with {1} validation Report</value>
+  </data>
+  <data name="Refreshing" xml:space="preserve">
+    <value>Refreshing...</value>
+  </data>
+  <data name="MergeModelValidationView_Merge_successful" xml:space="preserve">
+    <value>Merge successful</value>
+  </data>
 </root>

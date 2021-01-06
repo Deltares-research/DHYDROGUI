@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
     /// <summary>
     /// Interaction logic for ModelFeatureCoordinateDataView.xaml
     /// </summary>
-    public partial class ModelFeatureCoordinateDataView : UserControl, IReusableView
+    public sealed partial class ModelFeatureCoordinateDataView : UserControl, IReusableView
     {
         private bool locked;
 

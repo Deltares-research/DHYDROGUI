@@ -4,6 +4,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 {
     public class WaveModelPropertyDefinition : ModelPropertyDefinition {}
 
+    /// <summary>
+    /// <see cref="KnownWaveCategories"/> defines the known and up to date
+    /// categories in the .mdw file of a wave model.
+    /// </summary>
     public static class KnownWaveCategories
     {
         public const string GeneralCategory = "General";
@@ -13,14 +17,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string OutputCategory = "Output";
         public const string DomainCategory = "Domain";
         public const string ObstacleCategory = "Obstacle";
-        public const string ObstacleFileInfoCategory = "ObstacleFileInformation";
         public const string NumericsCategory = "Numerics";
 
         public const string GuiOnlyCategory = "GUIOnly";
     }
 
+    /// <summary>
+    /// <see cref="KnownWaveProperties"/> defines the known and up to date
+    /// properties in the .mdw file of a wave model.
+    /// </summary>
     public static class KnownWaveProperties
     {
+        public const string FlowFile = "FlowFile";
+        public const string FlowMudFile = "FlowMudFile";
+
         public const string Time = "Time";
         public const string TimeStep = "TimeStep";
         public const string StartTime = "StartTime";
@@ -99,5 +109,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string OverallSpecFile = "OverallSpecfile";
 
         #endregion
+
+        #region Wave domain
+
+        public const string Grid = "Grid";
+        public const string BedLevelGrid = "BedLevelGrid";
+        public const string BedLevel = "BedLevel";
+
+        #endregion
+    }
+
+    /// <summary>
+    /// <see cref="KnownWaveObsCategories"/> defines the known and up to date
+    /// categories in the .obs file of a wave model.
+    /// </summary>
+    public static class KnownWaveObsCategories
+    {
+        public const string ObstacleFileInformation = "ObstacleFileInformation";
+
+    }
+
+    /// <summary>
+    /// <see cref="KnownWaveObsProperties"/> defines the known and up to date
+    /// properties in the .obs file of a wave model.
+    /// </summary>
+    public static class KnownWaveObsProperties
+    {
+        public const string PolylineFile = "PolylineFile";
     }
 }

@@ -224,11 +224,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
             }
 
             waterQualityModelSettingsWorkDirectory = (string) propertyInfo.GetGetMethod().Invoke(waqModelSettings,
-                                                                                                 new object[]
-                                                                                                     {});
-
-            // do we need to set the workdirectory?
-            //HandleRelativeProjectDataDirectoryPath<WaterQualityModelSettings>(entity, state, propertyNames, settingsWorkDirectoryPropertyName);
+                                                                                                 new object[] {});
         }
 
         private void HandleAfterPersistDataTableManager(object entity, object[] state, string[] propertyNames)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Filters;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -10,10 +12,8 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.NetCdf;
-using DeltaShell.NGHS.IO.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
@@ -26,6 +26,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using SharpMapTestUtils;
 
@@ -44,64 +45,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenFMHisFileWithPump_WhenCreatingFunctionStore_ThenFunctionsDoesNotContainIntegerFunction_pump_actual_stage()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Arrange
-                string hisFilePathTemp = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(TestHelper.GetTestFilePath(@"output_hisfiles\D3DFMIQ-2084.nc"));
-                NetCdfFile netCdfFile = null;
-
-                // Check precondition
-                try
-                {
-                    netCdfFile = NetCdfFile.OpenExisting(hisFilePathTemp, false);
-                    NetCdfVariable variablePumpActualStage = netCdfFile.GetVariableByName("pump_actual_stage");
-                    Assert.That(variablePumpActualStage, Is.Not.Null);
-                    NetCdfDataType type = netCdfFile.GetVariableDataType(variablePumpActualStage);
-                    Assert.That(type, Is.EqualTo(NetCdfDataType.NcInteger));
-                }
-                finally
-                {
-                    netCdfFile?.Close();
-                }
-
-                // Act
-                var store = new FMHisFileFunctionStore(hisFilePathTemp);
-
-                // Assert
-                Assert.That(store.Functions.Select(f => f.Name).ToArray(), Has.No.Member("Actual stage of pump (pump_actual_stage)"));
-            }
-        }
-        
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [TestCase(@"output_hisfiles\FlowFMWithTimeZones_his.nc", "Monday, 01 January 2001 00:00:00")]
-        [TestCase(@"output_hisfiles\FlowFMWithoutTimeZones_his.nc", "Wednesday, 09 January 2008 00:00:00")]
-        public void OpenHisFileWithOrWithoutTimeZones_ShouldSetReferenceDateInFunctionsCorrectly(string hisFilePath, string expectedReferenceDate)
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Arrange
-                string hisFilePathTemp = tempDirectory.CopyTestDataFileToTempDirectory(TestHelper.GetTestFilePath(hisFilePath));
-
-                // Act
-                var store = new FMHisFileFunctionStore(hisFilePathTemp);
-
-                // Assert
-                Assert.IsInstanceOf<FMNetCdfFileFunctionStore>(store);
-
-                string retrievedReferenceDate = ((ICoverage) store.Functions.First()).Time.Attributes["ncRefDate"];
-                Assert.AreEqual(expectedReferenceDate, retrievedReferenceDate);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenFMOutputHisFileWithPumpAndWeirAndStationsAndGateAndGeneralStructureWhenCreatingStoreThenFunctionsCorrectlyInitialized()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\D3DFMIQ-2084.nc"));
-            Assert.AreEqual(73, store.Functions.Count);
+            Assert.AreEqual(74, store.Functions.Count);
             var pumpFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_structure_discharge");
             Assert.That(pumpFunction, Is.Not.Null);
             Assert.AreEqual(289, pumpFunction.GetValues().Count);
@@ -131,6 +78,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(289, generalStructureFunction.GetValues().Count);
             Assert.AreEqual(289, generalStructureFunction.Time.Values.Count);
             Assert.AreEqual(1, generalStructureFunction.Arguments[1].Values.Count);
+        }
+
+        [Test]
+        public void GivenNewCreatedFMModelWith2dGridAndPumpAndWeirAndStationsAndGateAndGeneralStructureAndCrossSection2DWhenModelRanThenFunctionsCorrectlyInitialized()
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                InitializeModelWith10By10Grid(model);
+
+                InitializeModelWithStructuresUsedWithHisOutput(model);
+
+                AddFlowBoundaryConditionsForValues(model);
+
+                ActivityRunner.RunActivity(model);
+
+                IFMHisFileFunctionStore store = model.OutputHisFileStore;
+
+                Assert.Multiple(() =>
+                {
+                    Assert.AreEqual(79, store.Functions.Count);
+                    var pumpFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_s1up");
+                    Assert.That(pumpFunction, Is.Not.Null);
+                    Assert.AreEqual(5, pumpFunction.GetValues().Count);
+                    Assert.AreEqual(5, pumpFunction.Time.Values.Count);
+                    Assert.AreEqual(1, pumpFunction.Arguments[1].Values.Count);
+                    Assert.That(pumpFunction[DateTime.Today.AddHours(6)], Is.EqualTo(-1.91341121130216).Within(0.000001));
+
+                    var weirFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "weirgen_discharge");
+                    Assert.That(weirFunction, Is.Not.Null);
+                    Assert.AreEqual(5, weirFunction.GetValues().Count);
+                    Assert.AreEqual(5, weirFunction.Time.Values.Count);
+                    Assert.AreEqual(1, weirFunction.Arguments[1].Values.Count);
+                    Assert.That(weirFunction[DateTime.Today.AddHours(12)], Is.EqualTo(-13.7743508783153).Within(0.000001));
+
+                    var stationFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
+                    Assert.That(stationFunction, Is.Not.Null);
+                    Assert.AreEqual(5 * 2, stationFunction.GetValues().Count);
+                    Assert.AreEqual(5, stationFunction.Time.Values.Count);
+                    Assert.AreEqual(2, stationFunction.Arguments[1].Values.Count);
+                    Assert.That(stationFunction[DateTime.Today.AddHours(6), model.Area.ObservationPoints.First()], Is.EqualTo(-1.91341120421632).Within(0.000001));
+                    Assert.That(stationFunction[DateTime.Today.AddHours(12), model.Area.ObservationPoints.Last()], Is.EqualTo(215.88595516168).Within(0.000001));
+
+                    var gateFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "gategen_s1up");
+                    Assert.That(gateFunction, Is.Not.Null);
+                    Assert.AreEqual(5, gateFunction.GetValues().Count);
+                    Assert.AreEqual(5, gateFunction.Time.Values.Count);
+                    Assert.AreEqual(1, gateFunction.Arguments[1].Values.Count);
+                    Assert.That(gateFunction[DateTime.Today.AddHours(6)], Is.EqualTo(-1.9134112053529).Within(0.000001));
+
+                    var generalStructureFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "general_structure_s1up");
+                    Assert.That(generalStructureFunction, Is.Not.Null);
+                    Assert.AreEqual(5, generalStructureFunction.GetValues().Count);
+                    Assert.AreEqual(5, generalStructureFunction.Time.Values.Count);
+                    Assert.AreEqual(1, generalStructureFunction.Arguments[1].Values.Count);
+                    Assert.That(gateFunction[DateTime.Today.AddHours(6)], Is.EqualTo(-1.91341120296137).Within(0.000001));
+
+                    var crossSection2DFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge");
+                    Assert.That(crossSection2DFunction, Is.Not.Null);
+                    Assert.AreEqual(5, crossSection2DFunction.GetValues().Count);
+                    Assert.AreEqual(5, crossSection2DFunction.Time.Values.Count);
+                    Assert.AreEqual(1, crossSection2DFunction.Arguments[1].Values.Count);
+                    Assert.That(crossSection2DFunction[DateTime.Today.AddHours(12)], Is.EqualTo(1.87241903310696).Within(0.000001));
+                });
+            }
         }
 
         [Test]
@@ -199,6 +210,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IFunction timeSeriesForPoint = waterLevelFunction.GetTimeSeries(waterLevelFunction.Features.Skip(1).First());
             Assert.AreEqual(388, timeSeriesForPoint.GetValues().Count);
             Assert.AreEqual(0.1957, (double) timeSeriesForPoint.GetValues()[50], 0.001);
+            Assert.AreEqual(new DateTime(1999, 12, 16), waterLevelFunction.Time.Values.First());
+            Assert.AreEqual("(POR)", waterLevelFunction.Arguments[1].Values.OfType<Feature2D>().First().Name);
+            Assert.AreEqual("(POR)", waterLevelFunction.Features.OfType<Feature2D>().First().Name);
+            Assert.AreEqual(1.5d, (double) waterLevelFunction.Components[0].Values[0], 0.001);
+            Assert.AreEqual("m", waterLevelFunction.Components[0].Unit.Symbol);
+            Assert.AreEqual(new Point(new Coordinate(502049, 4205261)), waterLevelFunction.Features.OfType<Feature2D>().First().Geometry);
         }
 
         [Test]
@@ -344,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 model.ImportFromMdu(localMduFilePath);
 
-                var weir = new Weir2D("weir1", true)
+                var weir = new Weir2D("weir1")
                 {
                     Geometry = new LineString(new[]
                     {
@@ -360,7 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
                 model.Area.Weirs.Add(weir);
 
-                var gate = new Weir2D("weir2", true)
+                var gate = new Weir2D("weir2")
                 {
                     Geometry = new LineString(new[]
                     {
@@ -436,7 +453,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FMHisFileFunctionStore functionStore = null;
 
             // 2. Set initial expectations
-            Action<string> testAction = (filePath) => functionStore = new FMHisFileFunctionStore(filePath);
+            Action<string> testAction = filePath => functionStore = new FMHisFileFunctionStore(filePath);
 
             // 3. Create function store.
             using (var temporaryDirectory = new TemporaryDirectory())
@@ -458,6 +475,158 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(featureFunction, Is.Not.Null, errorMssgNoFeaturesForCoverage);
             Assert.That(featureFunction.Features, Is.Not.Null, errorMssgNoFeaturesForCoverage);
             Assert.That(featureFunction.Features, Is.Not.Empty, errorMssgNoFeaturesForCoverage);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GetVariablesCore_HisFileWithUnknownDimension_DoesNotThrowException()
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            {
+                const string fileName = "output_hisfiles\\WithSourceSinkDimension_his.nc";
+                string ncFilePath = tempDir.CopyTestDataFileToTempDirectory(fileName);
+
+                var functionStore = new FMHisFileFunctionStore(ncFilePath);
+                functionStore.DisableCaching = true;
+
+                var function = Substitute.For<IVariable>();
+                function.Attributes["ncName"] = "source_sink";
+                function.Attributes["hasVariable"] = "false";
+                var filters = new IVariableFilter[] { };
+
+                // Call 
+                IMultiDimensionalArray<IFeature> result = null;
+
+                void Call()
+                {
+                    result = functionStore.GetVariableValues<IFeature>(function, filters);
+                    IMultiDimensionalArrayView<IFeature> _ = result.Select(0, 0, 0); // Trigger LazyMultiDimensionalArrayBehaviour.
+                }
+
+                Assert.DoesNotThrow(Call);
+
+                // Assert
+                Assert.That(result, Has.Count.EqualTo(1));
+                Assert.That(result.Rank, Is.EqualTo(1));
+                Assert.That(result.Shape[0], Is.EqualTo(0));
+            }
+        }
+
+        private static void AddFlowBoundaryConditionsForValues(WaterFlowFMModel model)
+        {
+            var feature = new Feature2D
+            {
+                Name = "Boundary1",
+                Geometry =
+                    new LineString(new[]
+                    {
+                        new Coordinate(model.GridExtent.MinX, model.GridExtent.MaxY),
+                        new Coordinate(model.GridExtent.MaxX, model.GridExtent.MaxY)
+                    })
+            };
+
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge,
+                                                                  BoundaryConditionDataType.TimeSeries) {Feature = feature};
+
+            flowBoundaryCondition.AddPoint(0);
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[]
+            {
+                model.StartTime,
+                model.StopTime
+            });
+            flowBoundaryCondition.PointData[0][model.StartTime] = -2d;
+            flowBoundaryCondition.PointData[0][model.StopTime] = 6d;
+
+            var set = new BoundaryConditionSet {Feature = feature};
+            set.BoundaryConditions.Add(flowBoundaryCondition);
+            model.BoundaryConditionSets.Add(set);
+        }
+
+        private static void InitializeModelWithStructuresUsedWithHisOutput(WaterFlowFMModel model)
+        {
+            model.Area.ObservationPoints.Add(new GroupableFeature2DPoint
+            {
+                Name = "ObservationPoint01",
+                Geometry = new Point(model.GridExtent.MinX + 1, model.GridExtent.MinY + 5)
+            });
+            model.Area.ObservationPoints.Add(new GroupableFeature2DPoint
+            {
+                Name = "ObservationPoint02",
+                Geometry = new Point(model.GridExtent.MaxX - 1, model.GridExtent.MinY + 5)
+            });
+            model.Area.Weirs.Add(new Weir2D("structure01")
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(model.GridExtent.MinX + 1, model.GridExtent.MinY + 4),
+                    new Coordinate(model.GridExtent.MinX + 2, model.GridExtent.MinY + 4)
+                })
+            });
+            model.Area.Weirs.Add(new Weir2D("structure02")
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(model.GridExtent.MinX + 3, model.GridExtent.MinY + 4),
+                    new Coordinate(model.GridExtent.MinX + 4, model.GridExtent.MinY + 4)
+                }),
+                WeirFormula = new GatedWeirFormula()
+            });
+            model.Area.Weirs.Add(new Weir2D("structure03")
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(model.GridExtent.MinX + 5, model.GridExtent.MinY + 4),
+                    new Coordinate(model.GridExtent.MinX + 6, model.GridExtent.MinY + 4)
+                }),
+                WeirFormula = new GeneralStructureWeirFormula
+                {
+                    HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
+                    WidthStructureCentre = 0.5d,
+                    WidthStructureLeftSide = 0.2,
+                    WidthStructureRightSide = 1.0,
+                    WidthLeftSideOfStructure = 1.0,
+                    WidthRightSideOfStructure = 1.0,
+                }
+            });
+            model.Area.Pumps.Add(new Pump2D("pump01")
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(model.GridExtent.MinX + 6, model.GridExtent.MinY + 5),
+                    new Coordinate(model.GridExtent.MinX + 7, model.GridExtent.MinY + 5)
+                })
+            });
+            model.Area.ObservationCrossSections.Add(new ObservationCrossSection2D
+            {
+                Name = "ObservationCrossSection2D_1",
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(model.GridExtent.MinX + 8, model.GridExtent.MinY + 4),
+                    new Coordinate(model.GridExtent.MinX + 9, model.GridExtent.MinY + 4)
+                })
+            });
+        }
+
+        private static void InitializeModelWith10By10Grid(WaterFlowFMModel model)
+        {
+            var dtUserTimeSpan = new TimeSpan(0, 6, 0, 0, 0);
+            model.TimeStep = dtUserTimeSpan;
+            model.ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value = false;
+            model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = new TimeSpan(0, 6, 0, 0);
+            model.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = new TimeSpan(0, 6, 0, 0);
+            model.ModelDefinition.GetModelProperty(KnownProperties.DtMax).Value = 60 * 60 * 6 * 1d;
+
+            model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = DateTime.Today;
+            model.StartTime = DateTime.Today;
+            model.StopTime = DateTime.Today.AddDays(1);
+
+            string tempMduFilePath = Path.Combine(FileUtils.CreateTempDirectory(), model.Name + ".mdu");
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 1, 1);
+            grid.Vertices.ForEach(v => v.Z = -2);
+            model.Grid = grid;
+            model.ExportTo(tempMduFilePath);
+            model.ReloadGrid();
         }
     }
 }

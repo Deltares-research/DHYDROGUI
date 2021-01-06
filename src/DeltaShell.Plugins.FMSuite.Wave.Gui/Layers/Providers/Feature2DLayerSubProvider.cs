@@ -16,21 +16,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// <summary>
         /// Creates a new <see cref="Feature2DLayerSubProvider"/>.
         /// </summary>
-        /// <param name="factory">The factory.</param>
+        /// <param name="instanceCreator">The factory.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// Throw when <paramref name="instanceCreator"/> is <c>null</c>.
         /// </exception>
-        protected Feature2DLayerSubProvider(IWaveLayerFactory factory)
+        protected Feature2DLayerSubProvider(IWaveLayerInstanceCreator instanceCreator)
         {
-            Ensure.NotNull(factory, nameof(factory));
-            Factory = factory;
+            Ensure.NotNull(instanceCreator, nameof(instanceCreator));
+            InstanceCreator = instanceCreator;
         }
 
         public bool CanCreateLayerFor(object sourceData, object parentData)
         {
             return sourceData is IEnumerable<Feature2D> features &&
                    parentData is IWaveModel model &&
-                   IsCorrectFeatureSet(features, model);
+                   IsCorrectFeatureSet(features, model.FeatureContainer);
         }
 
         public ILayer CreateLayer(object sourceData, object parentData)
@@ -48,19 +48,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// <summary>
         /// Gets the factory.
         /// </summary>
-        protected IWaveLayerFactory Factory { get; }
+        protected IWaveLayerInstanceCreator InstanceCreator { get; }
 
         /// <summary>
         /// Determines whether the provided features match the condition to
         /// create a <see cref="ILayer"/> of.
         /// </summary>
         /// <param name="features">The features.</param>
-        /// <param name="model">The model.</param>
+        /// <param name="featureContainer">The feature container of the model.</param>
         /// <returns>
         /// <c>true</c> if a layer can be created by this <see cref="Feature2DLayerSubProvider"/>;
         /// <c>false</c> otherwise.
         /// </returns>
-        protected abstract bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveModel model);
+        protected abstract bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveFeatureContainer featureContainer);
 
         /// <summary>
         /// Creates the actual <see cref="ILayer"/>.

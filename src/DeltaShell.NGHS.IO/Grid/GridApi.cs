@@ -50,17 +50,6 @@ namespace DeltaShell.NGHS.IO.Grid
             Marshal.Copy(mesh.nodey, rc_twodnodey, 0, nodes2D);
             Marshal.Copy(mesh.nodez, rc_twodnodez, 0, nodes2D);
 
-            //Free memory
-//            Marshal.FreeCoTaskMem(mesh.nodex);
-//            Marshal.FreeCoTaskMem(mesh.nodey);
-//            Marshal.FreeCoTaskMem(mesh.nodez);
-//            Marshal.FreeCoTaskMem(mesh.edge_nodes);
-//
-//            mesh.nodex = IntPtr.Zero;
-//            mesh.nodey = IntPtr.Zero;
-//            mesh.nodez = IntPtr.Zero;
-//            mesh.edge_nodes = IntPtr.Zero;
-
             return GridApiDataSet.GridConstants.NOERR;
         }
 
@@ -93,10 +82,10 @@ namespace DeltaShell.NGHS.IO.Grid
                 // To the first element of every new dimension of the array.
                 var pIntArray = (IntPtr) (startPos + (Marshal.SizeOf(typeof(int)) * numValuesPerElement * i));
 
-                // OneDArrayOfInt will hold values ​​of one dimension of the 2D array,
+                // OneDArrayOfInt will hold values of one dimension of the 2D array,
                 var OneDArrayOfInt = new int[numValuesPerElement];
 
-                // Copy the values ​​of this dimension.
+                // Copy the values of this dimension.
                 Marshal.Copy(pIntArray, OneDArrayOfInt, 0, numValuesPerElement);
                 for (var j = 0; j < numValuesPerElement; j++)
                 {
@@ -297,33 +286,6 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public int GetNumberOfNetworks(out int numberOfNetworks)
-        {
-            numberOfNetworks = 0;
-
-            if (!Initialized)
-            {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-
-            try
-            {
-                var nNetworks = 0;
-                int ierr = wrapper.GetNumberOfNetworks(ioncId, ref nNetworks);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                numberOfNetworks = nNetworks;
-                return GridApiDataSet.GridConstants.NOERR;
-            }
-            catch
-            {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-        }
-
         public int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh)
         {
             numberOfMesh = 0;
@@ -347,64 +309,6 @@ namespace DeltaShell.NGHS.IO.Grid
             catch
             {
                 ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-
-            return ierr;
-        }
-
-        public int GetNetworkIds(out int[] networkIds)
-        {
-            networkIds = new int[0];
-            var numberOfNetworks = 0;
-            IntPtr networkIdsPtr = IntPtr.Zero;
-            int ierr;
-
-            try
-            {
-                ierr = GetNumberOfNetworks(out numberOfNetworks);
-            }
-            catch
-            {
-                ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-
-            if (ierr != GridApiDataSet.GridConstants.NOERR)
-            {
-                return ierr;
-            }
-
-            if (!Initialized)
-            {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-
-            if (numberOfNetworks != 0)
-            {
-                networkIdsPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * numberOfNetworks);
-            }
-
-            try
-            {
-                ierr = wrapper.GetNetworkIds(ioncId, ref networkIdsPtr, numberOfNetworks);
-                if (ierr == GridApiDataSet.GridConstants.NOERR)
-                {
-                    networkIds = new int[numberOfNetworks];
-                    Marshal.Copy(networkIdsPtr, networkIds, 0, numberOfNetworks);
-                    return GridApiDataSet.GridConstants.NOERR;
-                }
-            }
-            catch
-            {
-                ierr = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-            finally
-            {
-                if (networkIdsPtr != IntPtr.Zero)
-                {
-                    Marshal.FreeCoTaskMem(networkIdsPtr);
-                }
-
-                networkIdsPtr = IntPtr.Zero;
             }
 
             return ierr;

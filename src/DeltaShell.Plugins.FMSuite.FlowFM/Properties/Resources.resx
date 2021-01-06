@@ -643,7 +643,22 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModelTimersValidator_Model_start_time_precedes_reference_time" xml:space="preserve">
     <value>Model start time precedes reference time</value>
   </data>
-  <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_" xml:space="preserve">
-    <value>Error while importing a {0} from {1}</value>
+  <data name="WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__" xml:space="preserve">
+    <value>Error while importing a {0} from {1}: {2}</value>
+  </data>
+  <data name="FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features" xml:space="preserve">
+    <value>Old his output found, please run the model again. (cannot map {0} to input or generated features)</value>
+  </data>
+  <data name="FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_feature_geometry_" xml:space="preserve">
+    <value>Old his output found, please run the model again. (cannot map {0} to input or generated feature geometry)</value>
+  </data>
+  <data name="BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Boundary_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_import___2_" xml:space="preserve">
+    <value>Skipped DataPoint {0} for Boundary Condition {1} could not be added as the following exception was risen during import: {2}</value>
+  </data>
+  <data name="BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___skipping_boundary_dataBlock_of_function_type__2__" xml:space="preserve">
+    <value>File {0}, block starting at line {1}: skipping boundary dataBlock of function type {2}.</value>
+  </data>
+  <data name="BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___not_possible_to_parse_boundary_data_block_" xml:space="preserve">
+    <value>File {0}, block starting at line {1}, not possible to parse boundary data block.</value>
   </data>
 </root>

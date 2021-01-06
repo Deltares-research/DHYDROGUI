@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -67,6 +67,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("area2d", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, block starting at line {1}, not possible to parse boundary data block..
+        /// </summary>
+        public static string BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___not_possible_to_parse_boundary_data_block_ {
+            get {
+                return ResourceManager.GetString("BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1" +
+                        "___not_possible_to_parse_boundary_data_block_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, block starting at line {1}: skipping boundary dataBlock of function type {2}..
+        /// </summary>
+        public static string BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___skipping_boundary_dataBlock_of_function_type__2__ {
+            get {
+                return ResourceManager.GetString("BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1" +
+                        "___skipping_boundary_dataBlock_of_function_type__2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skipped DataPoint {0} for Boundary Condition {1} could not be added as the following exception was risen during import: {2}.
+        /// </summary>
+        public static string BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Boundary_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_import___2_ {
+            get {
+                return ResourceManager.GetString("BcFileFlowBoundaryDataBuilder_InsertBoundaryData_Skipped_DataPoint__0__for_Bounda" +
+                        "ry_Condition__1__could_not_be_added_as_the_following_exception_was_risen_during_" +
+                        "import___2_", resourceCulture);
             }
         }
         
@@ -229,6 +260,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string FlowFMApplicationPlugin_Description {
             get {
                 return ResourceManager.GetString("FlowFMApplicationPlugin_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old his output found, please run the model again. (cannot map {0} to input or generated feature geometry).
+        /// </summary>
+        public static string FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_feature_geometry_ {
+            get {
+                return ResourceManager.GetString("FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_" +
+                        "feature_geometry_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old his output found, please run the model again. (cannot map {0} to input or generated features).
+        /// </summary>
+        public static string FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_features {
+            get {
+                return ResourceManager.GetString("FMHisFileFunctionStore_Old_his_output_found_Cannot_map__0__to_input_or_generated_" +
+                        "features", resourceCulture);
             }
         }
         
@@ -1284,11 +1335,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while importing a {0} from {1}.
+        ///   Looks up a localized string similar to Error while importing a {0} from {1}: {2}.
         /// </summary>
-        public static string WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_ {
+        public static string WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__ {
             get {
-                return ResourceManager.GetString("WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1_", resourceCulture);
+                return ResourceManager.GetString("WaterFlowFMFileImporter_ImportItem_Error_while_importing_a__0__from__1__2__", resourceCulture);
             }
         }
         

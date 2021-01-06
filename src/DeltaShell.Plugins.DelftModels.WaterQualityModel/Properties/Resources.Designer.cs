@@ -406,6 +406,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Time steps are inconsistent for the data related to variable {0}..
+        /// </summary>
+        public static string WaqHistoryFileParser_SetDataOnObservationVariableOutput_Time_steps_are_inconsistent_for_the_data_related_to_variable__0__ {
+            get {
+                return ResourceManager.GetString("WaqHistoryFileParser_SetDataOnObservationVariableOutput_Time_steps_are_inconsiste" +
+                        "nt_for_the_data_related_to_variable__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grid file was not found at {0}..
         /// </summary>
         public static string WaqInitializationDataVerifier_Grid_file_was_not_found {

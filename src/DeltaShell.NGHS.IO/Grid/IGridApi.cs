@@ -74,10 +74,6 @@ namespace DeltaShell.NGHS.IO.Grid
 
         int Initialize();
 
-        int GetNumberOfNetworks(out int numberOfNetworks);
-
-        int GetNetworkIds(out int[] networkIds);
-
         int GetNumberOfMeshByType(UGridMeshType meshType, out int numberOfMesh);
 
         int GetMeshIdsByMeshType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds);

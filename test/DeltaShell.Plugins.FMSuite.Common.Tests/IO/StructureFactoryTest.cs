@@ -127,7 +127,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsTrue(pump.CanBeTimedependent);
             Assert.IsNull(pump.LongName);
             Assert.IsNull(pump.Branch);
-            Assert.IsNaN(pump.Chainage);
             Assert.AreEqual(new Point(680, 360), pump.Geometry);
             Assert.IsFalse(pump.UseCapacityTimeSeries);
             Assert.AreEqual(2.0, pump.Capacity);
@@ -151,7 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsTrue(pump.CanBeTimedependent);
             Assert.IsNull(pump.LongName);
             Assert.IsNull(pump.Branch);
-            Assert.IsNaN(pump.Chainage);
             Assert.AreEqual(new LineString(new[]
             {
                 new Coordinate(1, 2),
@@ -181,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenTypeIsWeir()
         {
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            IStructure1D result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            IStructure result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
             Assert.IsTrue(result is IWeir);
         }
 
@@ -189,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenWeirFormulaIsAGeneralStructureWeirFormula()
         {
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            IStructure1D result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            IStructure result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
             Assert.IsTrue(result is IWeir);
 
             var weir = (Weir) result;
@@ -221,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
                 }
 
-                IStructure1D resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+                IStructure resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
                 var weir = resultingStructure as Weir;
                 Assert.NotNull(weir);
 
@@ -236,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
             generalStructure.AddProperty(KnownGeneralStructureProperties.ExtraResistance.GetDescription(), typeof(double), "0.0");
 
-            IStructure1D resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            IStructure resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
             var weir = resultingStructure as Weir;
             Assert.NotNull(weir);
 
@@ -309,7 +307,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsTrue(weir.CanBeTimedependent);
             Assert.IsNull(weir.LongName);
             Assert.IsNull(weir.Branch);
-            Assert.IsNaN(weir.Chainage);
             Assert.AreEqual(new Point(680, 360), weir.Geometry);
             Assert.IsFalse(weir.UseCrestLevelTimeSeries);
             Assert.AreEqual(2.0, weir.CrestLevel);
@@ -339,7 +336,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsTrue(weir.CanBeTimedependent);
             Assert.IsNull(weir.LongName);
             Assert.IsNull(weir.Branch);
-            Assert.IsNaN(weir.Chainage);
             Assert.AreEqual(new Point(680, 360), weir.Geometry);
             Assert.AreEqual(23.5, weir.CrestWidth);
             Assert.IsTrue(weir.UseCrestLevelTimeSeries);
@@ -383,7 +379,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual("Gate01", gate.Name);
             Assert.IsNull(gate.LongName);
             Assert.IsNull(gate.Branch);
-            Assert.IsNaN(gate.Chainage);
             Assert.AreEqual(new Point(500, 360), gate.Geometry);
             Assert.IsFalse(gate.UseCrestLevelTimeSeries);
             Assert.AreEqual(2.0, gate.CrestLevel);
@@ -429,7 +424,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual("Gate02", gate.Name);
             Assert.IsNull(gate.LongName);
             Assert.IsNull(gate.Branch);
-            Assert.IsNaN(gate.Chainage);
             Assert.AreEqual(new LineString(new[]
                             {
                                 new Coordinate(1, 2),
@@ -476,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Structure2D simpleWeirPrecursor = ComposeSimpleWeir(isConstCrestLevel);
 
             // When
-            IStructure1D result = StructureFactory.CreateStructure(simpleWeirPrecursor, structuresPath, refDate);
+            IStructure result = StructureFactory.CreateStructure(simpleWeirPrecursor, structuresPath, refDate);
 
             // Then
             VerifySimpleWeir(result, isConstCrestLevel);
@@ -506,7 +500,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                                               isConstHorizontalOpeningWidth);
 
             // When
-            IStructure1D result = StructureFactory.CreateStructure(gatedWeirPrecursor, structuresPath, refDate);
+            IStructure result = StructureFactory.CreateStructure(gatedWeirPrecursor, structuresPath, refDate);
 
             // Then
             VerifyGatedWeir(result, isConstCrestLevel, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
@@ -564,7 +558,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                                                             isConstHorizontalOpeningWidth);
 
             // When
-            IStructure1D result = StructureFactory.CreateStructure(generalStructurePrecursor, structuresPath, refDate);
+            IStructure result = StructureFactory.CreateStructure(generalStructurePrecursor, structuresPath, refDate);
 
             // Then
             VerifyGeneralStructure(result, isConstCrestLevel, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
@@ -713,7 +707,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         #region VerifyStructure
 
-        private void VerifySimpleWeir(IStructure1D structure, bool isConstCrestLevel)
+        private void VerifySimpleWeir(IStructure structure, bool isConstCrestLevel)
         {
             var weir = structure as Weir2D;
 
@@ -726,7 +720,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.That(weirFormula.LateralContraction, Is.EqualTo(constValLookUpTable[KnownStructureProperties.LateralContractionCoefficient]));
         }
 
-        private void VerifyGatedWeir(IStructure1D structure,
+        private void VerifyGatedWeir(IStructure structure,
                                      bool isConstCrestLevel,
                                      bool isConstLowerEdgeLevel,
                                      bool isConstHorizontalOpeningWidth)
@@ -737,7 +731,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             VerifyGated(weir, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
         }
 
-        private void VerifyGeneralStructure(IStructure1D structure,
+        private void VerifyGeneralStructure(IStructure structure,
                                             bool isConstCrestLevel,
                                             bool isConstLowerEdgeLevel,
                                             bool isConstHorizontalOpeningWidth)

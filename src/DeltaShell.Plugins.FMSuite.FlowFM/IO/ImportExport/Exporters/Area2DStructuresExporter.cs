@@ -74,8 +74,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             };
             try
             {
-                IEnumerable<IStructure1D> structures =
-                    targetHydroArea.Weirs.Cast<IStructure1D>().Concat(targetHydroArea.Pumps);
+                IEnumerable<IStructure> structures =
+                    targetHydroArea.Weirs.Cast<IStructure>().Concat(targetHydroArea.Pumps);
                 structuresFile.Write(path, structures);
                 //TODO
                 Log.InfoFormat("Written {0} structures (Pumps: {1}; Weir structures: {2};).",
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                 if (e is ArgumentException || e is UnauthorizedAccessException || e is DirectoryNotFoundException ||
                     e is PathTooLongException || e is IOException || e is SecurityException)
                 {
-                    Log.Error(string.Format("An error occurred while exporting structures, export stopped; Cause: "),
+                    Log.Error("An error occurred while exporting structures, export stopped; Cause: ",
                               e);
                     return false;
                 }

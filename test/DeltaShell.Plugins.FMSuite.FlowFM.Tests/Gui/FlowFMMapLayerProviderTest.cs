@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
@@ -28,7 +29,9 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Api.Layers;
@@ -187,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             // Given
             var mapLayerProvider = new FlowFMMapLayerProvider();
-            var fmClassMapFileFunctionStore = new FMClassMapFileFunctionStore(string.Empty);
+            var fmClassMapFileFunctionStore = Substitute.For<IFMClassMapFileFunctionStore>();
 
             // When
             ILayer layer = mapLayerProvider.CreateLayer(fmClassMapFileFunctionStore, null);
@@ -204,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             // Given
             var mapLayerProvider = new FlowFMMapLayerProvider();
-            var fmClassMapFileFunctionStore = new FMClassMapFileFunctionStore(string.Empty);
+            var fmClassMapFileFunctionStore = Substitute.For<IFMClassMapFileFunctionStore>();
 
             // When
             bool result = mapLayerProvider.CanCreateLayerFor(fmClassMapFileFunctionStore, null);
@@ -225,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             var model = new WaterFlowFMModel();
             model.ConnectOutput(outputDirectoryPath);
-            FMClassMapFileFunctionStore outputClassMapFileStore = model.OutputClassMapFileStore;
+            IFMClassMapFileFunctionStore outputClassMapFileStore = model.OutputClassMapFileStore;
             Assert.NotNull(outputClassMapFileStore);
             Assert.AreEqual(filePath, outputClassMapFileStore.Path);
 
@@ -235,22 +238,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             object[] childLayerObjects = mapLayerProvider.ChildLayerObjects(model).ToArray();
 
             // Then
-            FMClassMapFileFunctionStore classMapFileFunctionStoreLayer = childLayerObjects.OfType<FMClassMapFileFunctionStore>().SingleOrDefault();
+            IFMClassMapFileFunctionStore classMapFileFunctionStoreLayer = childLayerObjects.OfType<IFMClassMapFileFunctionStore>().SingleOrDefault();
             Assert.IsNotNull(classMapFileFunctionStoreLayer);
             Assert.AreSame(classMapFileFunctionStoreLayer, outputClassMapFileStore);
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenAFlowFmMapLayerProviderAndAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionsAndGridAreReturned()
         {
             // Given
-            string testDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
-            string outputDirectoryPath = Path.Combine(testDirectoryPath, "output");
-            string filePath = Path.Combine(outputDirectoryPath, "FlowFM_clm.nc");
-            Assert.IsTrue(File.Exists(filePath));
-
-            var classMapFileStore = new FMClassMapFileFunctionStore(filePath);
+            var classMapFileStore = Substitute.For<IFMClassMapFileFunctionStore>();
+            classMapFileStore.Functions = new EventedList<IFunction>(new []
+            {
+                Substitute.For<IFunction>(),
+                Substitute.For<IFunction>()
+            });
+            classMapFileStore.Grid.Returns(new UnstructuredGrid());
             Assert.NotNull(classMapFileStore);
             Assert.IsNotEmpty(classMapFileStore.Functions);
             Assert.IsNotNull(classMapFileStore.Grid);

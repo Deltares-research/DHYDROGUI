@@ -51,16 +51,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
                 new WaveObstacle()
             };
             var loadedDefinition = new WaveModelDefinition();
-            loadedDefinition.Obstacles.AddRange(waveObstacles);
+            loadedDefinition.FeatureContainer.Obstacles.AddRange(waveObstacles);
 
             // Precondition
-            Assert.That(targetDefinition.Obstacles, Is.Empty);
+            Assert.That(targetDefinition.FeatureContainer.Obstacles, Is.Empty);
 
             // When
             WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
 
             // Then
-            CollectionAssert.AreEqual(loadedDefinition.Obstacles, targetDefinition.Obstacles);
+            CollectionAssert.AreEqual(loadedDefinition.FeatureContainer.Obstacles, targetDefinition.FeatureContainer.Obstacles);
         }
 
         [Test]
@@ -75,16 +75,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
                 new Feature2DPoint()
             };
             var loadedDefinition = new WaveModelDefinition();
-            loadedDefinition.ObservationPoints.AddRange(observationPoints);
+            loadedDefinition.FeatureContainer.ObservationPoints.AddRange(observationPoints);
 
             // Precondition
-            Assert.That(targetDefinition.ObservationPoints, Is.Empty);
+            Assert.That(targetDefinition.FeatureContainer.ObservationPoints, Is.Empty);
 
             // When
             WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
 
             // Then
-            CollectionAssert.AreEqual(loadedDefinition.ObservationPoints, targetDefinition.ObservationPoints);
+            CollectionAssert.AreEqual(loadedDefinition.FeatureContainer.ObservationPoints, targetDefinition.FeatureContainer.ObservationPoints);
         }
 
         [Test]
@@ -99,16 +99,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
                 new Feature2D()
             };
             var loadedDefinition = new WaveModelDefinition();
-            loadedDefinition.ObservationCrossSections.AddRange(crossSections);
+            loadedDefinition.FeatureContainer.ObservationCrossSections.AddRange(crossSections);
 
             // Precondition
-            Assert.That(targetDefinition.ObservationPoints, Is.Empty);
+            Assert.That(targetDefinition.FeatureContainer.ObservationPoints, Is.Empty);
 
             // When
             WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
 
             // Then
-            CollectionAssert.AreEqual(loadedDefinition.ObservationCrossSections, targetDefinition.ObservationCrossSections);
+            CollectionAssert.AreEqual(loadedDefinition.FeatureContainer.ObservationCrossSections, targetDefinition.FeatureContainer.ObservationCrossSections);
         }
 
         [Test]

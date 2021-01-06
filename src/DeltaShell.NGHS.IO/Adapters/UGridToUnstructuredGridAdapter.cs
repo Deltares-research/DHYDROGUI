@@ -76,7 +76,16 @@ namespace DeltaShell.NGHS.IO.Adapters
 
         public void Dispose()
         {
-            uGrid?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                uGrid?.Dispose();
+            }
         }
 
         private static void CreateCells(UnstructuredGrid grid)

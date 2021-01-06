@@ -64,9 +64,11 @@ namespace DeltaShell.Dimr
         /// <summary>
         /// Actions, which should be done in the IDimrModel after a successful integrated model run.
         /// </summary>
-        /// <param name="workingDirectoryPath">
+        /// <param name="hydroModelWorkingDirectoryPath">
         /// Working directory path of the integrated model.
         /// </param>
-        void OnFinishIntegratedModelRun(string workingDirectoryPath);
+        void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath);
+
+        IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory { get; }
     }
 }

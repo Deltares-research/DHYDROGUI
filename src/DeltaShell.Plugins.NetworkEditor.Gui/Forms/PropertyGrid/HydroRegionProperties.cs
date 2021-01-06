@@ -39,17 +39,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             }
         }
 
-        [DisplayName("Links")]
-        [Category("General")]
-        [PropertyOrder(1)]
-        public int Links
-        {
-            get
-            {
-                return data.Links.Count();
-            }
-        }
-
         [DisplayName("Total regions")]
         [Category("General")]
         [PropertyOrder(1)]

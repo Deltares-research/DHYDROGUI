@@ -340,4 +340,29 @@
   <data name="WavePropertiesValidator_Validate_No_spectrum_file_has_been_selected" xml:space="preserve">
     <value>No spectrum file has been selected.</value>
   </data>
+  <data name="WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__0__at__1__does_not_exist_" xml:space="preserve">
+    <value>The specified {0} at {1} does not exist.</value>
+  </data>
+  <data name="WaveModel_Connect_model_output" xml:space="preserve">
+    <value>Connecting of the model output</value>
+  </data>
+  <data name="WaveModel_Saving_of_the_model_output" xml:space="preserve">
+    <value>Saving of the model output</value>
+  </data>
+  <data name="WaveOutputData_ConnectTo_The_directory_at__0__does_not_exist__disconnecting_output_instead_" xml:space="preserve">
+    <value>The directory at {0} does not exist, disconnecting output instead.</value>
+  </data>
+  <data name="WaveOutputDataHarvester_Could_not_read_file___0__due_to__1__" xml:space="preserve">
+    <value>Could not read file: {0} due to {1}.</value>
+  </data>
+  <data name="WaveModel_CopyRunDataTo_The_output_source_path__0__does_not_exist__skipping_copying_output_data_" xml:space="preserve">
+    <value>The output source path {0} does not exist, skipping copying output data.</value>
+  </data>
+  <data name="WaveModel_CopyRunDataTo_No__mdw_path_could_be_found_in__0___skipping_copying_output_data_" xml:space="preserve">
+    <value>No .mdw path could be found in {0}, skipping copying output data.</value>
+  </data>
+  <data name="WaveDirectoryStructureMigrationHelper_MigrateFileStructure_ErrorMigrateFileStructure" xml:space="preserve">
+    <value>An error occurred during the migration of one of the D-Waves models in this project, most likely due to two or more models sharing the same name within the project.
+Please reboot the application and create a new project and import the models individually with the corresponding importers to ensure everything is in a valid state.</value>
+  </data>
 </root>

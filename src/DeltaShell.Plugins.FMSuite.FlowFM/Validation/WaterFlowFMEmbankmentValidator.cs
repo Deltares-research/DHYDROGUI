@@ -20,21 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             var issues = new List<ValidationIssue>();
 
-            IEnumerable<IChannel> channels = GetChannels(model.Area);
             IEventedList<Embankment> embankments = model.Area.Embankments;
-
-            // Check for Intersections between Channels and Embankments
-            List<IChannel> intersectingChannels =
-                channels.Where(c => embankments.Any(b => b.Geometry.Intersects(c.Geometry))).ToList();
-            if (intersectingChannels.Count != 0)
-            {
-                foreach (IChannel channel in intersectingChannels)
-                {
-                    issues.Add(new ValidationIssue(model.GetDataItemByValue(model.Area), ValidationSeverity.Error,
-                                                   string.Format("Channel {0} intersects with the embankments",
-                                                                 channel.Name)));
-                }
-            }
 
             // Check for Intersections between Embankments
             List<Embankment> intersectingEmbankments = embankments
@@ -90,11 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
 
             return new ValidationReport("Embankment definitions", issues);
-        }
-
-        private static IEnumerable<IChannel> GetChannels(IHydroRegion region)
-        {
-            return GetTopRegion(region).AllRegions.OfType<HydroNetwork>().SelectMany(n => n.Channels);
         }
 
         private static IRegion GetTopRegion(IRegion region)

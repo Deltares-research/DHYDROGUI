@@ -97,6 +97,8 @@ namespace DeltaShell.NGHS.Common.Logging
             {
                 log.Info(CreateReport(infoMessages, "infos"));
             }
+
+            LogMessagesTable.Clear();
         }
 
         private string CreateReport(IEnumerable<string> messages, string logSeverity)

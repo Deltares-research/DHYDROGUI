@@ -85,8 +85,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 TopologyRulesEnabled = true;
             }
 
-            //log.DebugFormat("Mouse down");
-
             if (e.Button != MouseButtons.Right)
             {
                 return;

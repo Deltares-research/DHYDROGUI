@@ -9,17 +9,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        private FMMapFileFunctionStore outputMapFileStore;
+        private IFMMapFileFunctionStore outputMapFileStore;
 
-        public virtual FMMapFileFunctionStore OutputMapFileStore
+        public virtual IFMMapFileFunctionStore OutputMapFileStore
         {
             get => outputMapFileStore;
             protected set => outputMapFileStore = value;
         }
 
-        public virtual FMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
+        public virtual IFMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
 
-        public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
+        public virtual IFMHisFileFunctionStore OutputHisFileStore { get; protected set; }
 
         public TimeSpan OutputTimeStep
         {
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private bool HasOpenFunctionStores =>
             OutputMapFileStore != null || OutputHisFileStore != null || OutputClassMapFileStore != null;
 
-        private static void ClearFunctionStore(ReadOnlyNetCdfFunctionStoreBase functionStore)
+        private static void ClearFunctionStore(IReadOnlyNetCdfFunctionStoreBase functionStore)
         {
             functionStore.Functions.Clear();
             functionStore.Close();

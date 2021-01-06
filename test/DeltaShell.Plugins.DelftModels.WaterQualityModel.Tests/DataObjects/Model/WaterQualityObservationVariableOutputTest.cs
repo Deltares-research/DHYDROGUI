@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Model
@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
             {
                 new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
                 new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
-            }) {ObservationVariable = new ObservationPoint {Name = "O1"}};
+            }) {ObservationVariable = new WaterQualityObservationPoint {Name = "O1"}};
 
             Assert.AreEqual("O1", waterQualityObservationVariableOutput.Name);
             Assert.AreEqual("O1", waterQualityObservationVariableOutput.ToString());
@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
             {
                 new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
                 new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
-            }) {ObservationVariable = new ObservationPoint {Name = "O1"}};
+            }) {ObservationVariable = new WaterQualityObservationPoint {Name = "O1"}};
 
             var clone = waterQualityObservationVariableOutput.Clone() as WaterQualityObservationVariableOutput;
 

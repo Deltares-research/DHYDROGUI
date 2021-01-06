@@ -5,7 +5,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
-    public class ControlGroupHelper
+    public static class ControlGroupHelper
     {
         /// <summary>
         /// Returns all input items that are connected via mathematical

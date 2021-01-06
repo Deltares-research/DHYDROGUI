@@ -266,7 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
             {
                 if (str == null)
                 {
-                    throw new ArgumentNullException("str");
+                    throw new ArgumentNullException(nameof(str));
                 }
 
                 string trimmedString = str.Replace('d', 'e').Trim();

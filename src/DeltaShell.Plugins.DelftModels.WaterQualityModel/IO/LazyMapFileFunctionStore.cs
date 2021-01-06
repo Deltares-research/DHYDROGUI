@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Get data from the DelwaqOutputFile by using the function store.
         /// </summary>
-        /// <param name="function"> Determines which parameter is needed from the delwaq output file </param>
+        /// <param name="variable"> Determines which parameter is needed from the delwaq output file </param>
         /// <param name="filters"> Determines which data for the parameter is filtered out </param>
         /// <returns>
         /// An IMultiDimensionalArray of double values.
@@ -128,20 +128,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// - Required parameter is dependent and there are no filters for time and location given.
         /// - Required parameter is independent and type is not DateTime.
         /// </exception>
-        public IMultiDimensionalArray GetVariableValues(IVariable function, params IVariableFilter[] filters)
+        public IMultiDimensionalArray GetVariableValues(IVariable variable, params IVariableFilter[] filters)
         {
-            Type type = function.ValueType;
+            Type type = variable.ValueType;
             if (!HasValidMapFile)
             {
                 return CreateEmptyArrayForType(type);
             }
 
-            if (function.IsIndependent)
+            if (variable.IsIndependent)
             {
-                return GetArgumentValues(function, filters);
+                return GetArgumentValues(variable, filters);
             }
 
-            IVariable timeVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
+            IVariable timeVariable = variable.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
 
             if (type != typeof(double) || timeVariable == null ||
                 filters.OfType<IVariableValueFilter>().Any(f => f.Values.Count > 1))
@@ -149,18 +149,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 throw new NotImplementedException();
             }
 
-            if (string.IsNullOrEmpty(function.Name))
+            if (string.IsNullOrEmpty(variable.Name))
             {
                 return CreateEmptyArrayForType(type);
             }
 
-            IVariable locationIndexVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(int));
+            IVariable locationIndexVariable = variable.Arguments.FirstOrDefault(a => a.ValueType == typeof(int));
 
             List<double> data = null;
 
             if (locationIndexVariable != null)
             {
-                data = GetTimeDataForSpecificLocation(function, filters);
+                data = GetTimeDataForSpecificLocation(variable, filters);
             }
 
             if (data == null)
@@ -168,13 +168,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 return new MultiDimentionalArrayAdapter<double>(new List<double>());
             }
 
-            UpdateMinMax(data, function.Name, (double) (function.NoDataValue ?? 0.0));
+            UpdateMinMax(data, variable.Name, (double) (variable.NoDataValue ?? 0.0));
             return new MultiDimentionalArrayAdapter<double>(data);
         }
 
-        public IMultiDimensionalArray<T> GetVariableValues<T>(IVariable function, params IVariableFilter[] filters)
+        public IMultiDimensionalArray<T> GetVariableValues<T>(IVariable variable, params IVariableFilter[] filters)
         {
-            return (IMultiDimensionalArray<T>) GetVariableValues(function, filters);
+            return (IMultiDimensionalArray<T>) GetVariableValues(variable, filters);
         }
 
         public T GetMaxValue<T>(IVariable variable)
@@ -365,7 +365,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         #region Unsupported functions
 
-        public void SetVariableValues<T>(IVariable function, IEnumerable<T> values, params IVariableFilter[] filters)
+        public void SetVariableValues<T>(IVariable variable, IEnumerable<T> values, params IVariableFilter[] filters)
         {
             throw new NotSupportedException("Function store is readonly");
         }

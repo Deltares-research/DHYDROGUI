@@ -6,8 +6,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class FileConstantsTest
     {
-        [TestCase(FileConstants.InputDirectoryName, "input")]
-        [TestCase(FileConstants.OutputDirectoryName, "output")]
         [TestCase(FileConstants.PrefixDelwaqDirectoryName, "DFM_DELWAQ_")]
         [TestCase(FileConstants.SnappedFeaturesDirectoryName, "snapped")]
         [TestCase(FileConstants.PliFileExtension, ".pli")]

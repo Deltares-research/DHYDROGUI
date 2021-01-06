@@ -190,7 +190,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
         public void WriteManyFeaturesWithColumnsAndLocationNames()
@@ -227,7 +226,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
         public void ReadManyFeaturesWithColumnsAndLocationNames()

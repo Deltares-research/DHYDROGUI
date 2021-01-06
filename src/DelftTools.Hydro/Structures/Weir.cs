@@ -4,11 +4,13 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro.Structures
 {
     [Entity(FireOnCollectionChange = false)]
-    public class Weir : BranchStructure, IWeir
+    public class Weir : BranchFeature, IWeir
     {
         private IWeirFormula weirFormula;
         private double crestLevel;
@@ -32,7 +34,6 @@ namespace DelftTools.Hydro.Structures
             Name = name;
             CrestWidth = 0.0;
             CrestLevel = 0.0;
-            OffsetY = 0;
             FlowDirection = FlowDirection.Both;
             CrestShape = CrestShape.Sharp;
             CanBeTimedependent = allowTimeVaryingData;
@@ -61,11 +62,6 @@ namespace DelftTools.Hydro.Structures
                 if (weirFormula is GeneralStructureWeirFormula)
                 {
                     return (weirFormula as GeneralStructureWeirFormula).WidthStructureCentre;
-                }
-
-                if (weirFormula is FreeFormWeirFormula)
-                {
-                    return (weirFormula as FreeFormWeirFormula).CrestWidth;
                 }
 
                 return crestWidth;
@@ -102,11 +98,6 @@ namespace DelftTools.Hydro.Structures
                     return (weirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre;
                 }
 
-                if (weirFormula is FreeFormWeirFormula)
-                {
-                    return (weirFormula as FreeFormWeirFormula).CrestLevel;
-                }
-
                 return crestLevel;
             }
             set
@@ -134,48 +125,6 @@ namespace DelftTools.Hydro.Structures
         /// </summary>
         public virtual bool IsRectangle => WeirFormula.IsRectangle;
 
-        public virtual bool AllowNegativeFlow
-        {
-            get
-            {
-                if (WeirFormula.HasFlowDirection)
-                {
-                    return FlowDirection == FlowDirection.Both ||
-                           FlowDirection == FlowDirection.Negative;
-                }
-
-                return false;
-            }
-            set
-            {
-                if (value != AllowNegativeFlow)
-                {
-                    UpdateFlowDirection(AllowPositiveFlow, value);
-                }
-            }
-        }
-
-        public virtual bool AllowPositiveFlow
-        {
-            get
-            {
-                if (WeirFormula.HasFlowDirection)
-                {
-                    return FlowDirection == FlowDirection.Both ||
-                           FlowDirection == FlowDirection.Positive;
-                }
-
-                return false;
-            }
-            set
-            {
-                if (value != AllowPositiveFlow)
-                {
-                    UpdateFlowDirection(value, AllowNegativeFlow);
-                }
-            }
-        }
-
         /// <summary>
         /// Shape along the branch
         /// </summary>
@@ -186,12 +135,13 @@ namespace DelftTools.Hydro.Structures
         public virtual FlowDirection FlowDirection { get; set; }
 
         public virtual bool SpecifyCrestLevelAndWidthOnWeir =>
-            !(weirFormula is GeneralStructureWeirFormula || weirFormula is FreeFormWeirFormula);
+            !(weirFormula is GeneralStructureWeirFormula);
 
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
             var copyFrom = (Weir) source;
+            LongName = copyFrom.LongName;
             CrestWidth = copyFrom.CrestWidth;
             CrestLevel = copyFrom.CrestLevel;
             CrestShape = copyFrom.CrestShape;
@@ -210,26 +160,11 @@ namespace DelftTools.Hydro.Structures
             CrestLevelTimeSeries = (TimeSeries) copyFrom.CrestLevelTimeSeries.Clone(true);
         }
 
-        public override StructureType GetStructureType()
+        public virtual StructureType GetStructureType()
         {
-            if (weirFormula is FreeFormWeirFormula)
-            {
-                return StructureType.UniversalWeir;
-            }
-
             if (weirFormula is GatedWeirFormula)
             {
                 return StructureType.Orifice;
-            }
-
-            if (weirFormula is PierWeirFormula)
-            {
-                return StructureType.AdvancedWeir;
-            }
-
-            if (weirFormula is RiverWeirFormula)
-            {
-                return StructureType.RiverWeir;
             }
 
             if (weirFormula is SimpleWeirFormula)
@@ -301,5 +236,24 @@ namespace DelftTools.Hydro.Structures
                            ? FlowDirection.Negative
                            : FlowDirection.None;
         }
+
+        public virtual string Description { get; set; }
+
+        [DisplayName("Long name")]
+        [FeatureAttribute(Order = 1)]
+        public virtual string LongName { get; set; }
+
+        public virtual int CompareTo(Weir other)
+        {
+            return CompareTo((IBranchFeature) other);
+        }
+
+        public override int CompareTo(object obj)
+        {
+            var other = (Weir) obj;
+            return CompareTo(other);
+        }
+
+        public virtual IHydroRegion Region { get; }
     }
 }
