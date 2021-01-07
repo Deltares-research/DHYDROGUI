@@ -783,6 +783,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnInitialize()
         {
+            OnProgressChanged();
+            
             ValidationReport validationReport = Validate();
             if (validationReport.ErrorCount > 0)
             {
