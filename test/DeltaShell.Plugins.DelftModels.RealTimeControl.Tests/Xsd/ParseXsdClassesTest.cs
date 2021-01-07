@@ -1,118 +1,54 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xsd
 {
     [TestFixture]
     public class ParseXsdClassesTest
     {
-        private const string Directory = @"XsdClassesXml";
-        private ILogHandler logHandler;
-        private DelftConfigXmlFileParser delftConfigXmlParser;
-
-        [SetUp]
-        public void SetUp()
+        public static IEnumerable<TestCaseData> GetReadingXmlObjectData()
         {
-            logHandler = MockRepository.GenerateMock<ILogHandler>();
-            delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
-        }
+            object ReadFunc<T>(DelftConfigXmlFileParser configParser, string path) where T : class => 
+                configParser.Read<T>(path);
 
-        [TearDown]
-        public void TearDown()
-        {
-            logHandler.VerifyAllExpectations();
+            yield return new TestCaseData("timeseries_import.xml", 
+                                          (Func<DelftConfigXmlFileParser, string, object>) ReadFunc<TimeSeriesCollectionComplexType>);
+            yield return new TestCaseData("rtcToolsConfig.xml", 
+                                          (Func<DelftConfigXmlFileParser, string, object>) ReadFunc<RtcToolsConfigComplexType>);
+            yield return new TestCaseData("rtcRuntimeConfig.xml", 
+                                          (Func<DelftConfigXmlFileParser, string, object>) ReadFunc<RtcRuntimeConfigComplexType>);
+            yield return new TestCaseData("rtcDataConfig.xml", 
+                                          (Func<DelftConfigXmlFileParser, string, object>) ReadFunc<RTCDataConfigComplexType>);
 
-            logHandler = null;
-            delftConfigXmlParser = null;
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadingTimeSeriesImportXmlFilesDoesNotThrown()
+        [TestCaseSource(nameof(GetReadingXmlObjectData))]
+        public void ReadingXmlObject_DoesNotThrowException(string fileName,
+                                                           Func<DelftConfigXmlFileParser, string, object> readFunc)
         {
-            // Given
-            const string fileName = "timeseries_import.xml";
-            string path = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), Directory, fileName));
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
+
+            const string directory = "XsdClassesXml";
+            string path = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), directory, fileName));
+
             Assert.True(File.Exists(path), $"File path '{path}' should exist.");
 
-            SetExpectationReportedInfoMessageLogHandler(fileName);
+            // Call 
+            object dataAccessModel = readFunc(delftConfigXmlParser, path);
 
-            // When
-            var dataAccessModel = delftConfigXmlParser.Read<TimeSeriesCollectionComplexType>(path);
-
-            // Then
+            // Assert
             Assert.NotNull(dataAccessModel);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadingToolsConfigXmlFilesDoesNotThrow()
-        {
-            // Given
-            const string fileName = "rtcToolsConfig.xml";
-            string path = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), Directory, fileName));
-            Assert.True(File.Exists(path), $"File path '{path}' should exist.");
-
-            SetExpectationReportedInfoMessageLogHandler(fileName);
-
-            // When
-            var dataAccessModel = delftConfigXmlParser.Read<RtcToolsConfigComplexType>(path);
-
-            // Then
-            Assert.NotNull(dataAccessModel);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadingRuntimeConfigXmlFilesDoesNotThrow()
-        {
-            // Given
-            const string fileName = "rtcRuntimeConfig.xml";
-            string path = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), Directory, fileName));
-            Assert.True(File.Exists(path), $"File path '{path}' should exist.");
-
-            SetExpectationReportedInfoMessageLogHandler(fileName);
-
-            // When
-            var dataAccessModel = delftConfigXmlParser.Read<RtcRuntimeConfigComplexType>(path);
-
-            // Then
-            Assert.NotNull(dataAccessModel);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadingDataConfigXmlFilesDoesNotThrow()
-        {
-            // Given
-            const string fileName = "rtcDataConfig.xml";
-            string path = Path.GetFullPath(Path.Combine(TestHelper.GetTestDataDirectory(), Directory, fileName));
-            Assert.True(File.Exists(path), $"File path '{path}' should exist.");
-
-            SetExpectationReportedInfoMessageLogHandler(fileName);
-
-            // When
-            var dataAccessModel = delftConfigXmlParser.Read<RTCDataConfigComplexType>(path);
-
-            // Then
-            Assert.NotNull(dataAccessModel);
-        }
-
-        private void SetExpectationReportedInfoMessageLogHandler(string fileName)
-        {
-            var attributeString = "Attribute: \"xsi:schemaLocation\"";
-
-            string argExpectation = Arg<string>.Matches(arg => arg.Contains(fileName) && arg.Contains(attributeString));
-
-            logHandler.Expect(obj => obj.ReportInfo(argExpectation))
-                      .Repeat.Once().Message(
-                          "ReportInfo method was not called with an argument containing all of the following strings: " +
-                          $"\"{attributeString}\" \"{fileName}\"");
+            Assert.That(logHandler.ReceivedCalls(), Is.Empty);
         }
     }
 }
