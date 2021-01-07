@@ -446,6 +446,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Validation\DomainMeteoDataValidatorTest.cs" />
+    <Compile Include="Validation\DomainSpecificValidationShortcutTest.cs" />
     <Compile Include="Validation\WaveBoundariesValidatorTest.cs" />
     <Compile Include="Validation\WaveCouplingValidatorTest.cs" />
     <Compile Include="Validation\WaveDomainValidatorTest.cs" />
