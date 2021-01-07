@@ -299,6 +299,101 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
+        public void AddInputConnectionToMathematicalExpressionAddsTagToShape()
+        {
+            // Given
+            controlGroup.Inputs.Add(new Input());
+            controlGroup.MathematicalExpressions.Add(new MathematicalExpression());
+            controlGroup.MathematicalExpressions.Add(new MathematicalExpression());
+
+            Connector inputAConnector = graphControl.Shapes[0].Connectors[0];
+            Connector inputBConnector = graphControl.Shapes[1].Connectors[2];
+            Connector mathExpressionConnector = graphControl.Shapes[2].Connectors[1];
+
+            // Preconditions
+            Assert.That(inputAConnector.Name, Is.EqualTo("Bottom"));
+            Assert.That(inputBConnector.Name, Is.EqualTo("Bottom"));
+            Assert.That(mathExpressionConnector.Name, Is.EqualTo("Top"));
+
+            // When
+            graphControl.AddConnection(inputAConnector, mathExpressionConnector);
+            graphControl.AddConnection(inputBConnector, mathExpressionConnector);
+
+            // Then
+            Assert.That(inputAConnector.Connections[0].Text, Is.EqualTo("A"));
+            Assert.That(inputBConnector.Connections[0].Text, Is.EqualTo("B"));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void AddConditionToMathematicalExpressionDoesNotThrowException()
+        {
+            // Given
+            var condition = new StandardCondition();
+            var mathematicalExpression = new MathematicalExpression();
+            controlGroup.Conditions.Add(condition);
+            controlGroup.MathematicalExpressions.Add(mathematicalExpression);
+            Shape conditionShape = controller.GraphControl.Shapes[0];
+            Shape mathExpression = controller.GraphControl.Shapes[1];
+
+            // When
+            Connector mathExpressionConnector = mathExpression.Connectors[0];
+            Connector conditionShapeConnector = conditionShape.Connectors[3];
+            Assert.That(mathExpressionConnector.Name, Is.EqualTo("Left"));
+            Assert.That(conditionShapeConnector.Name, Is.EqualTo("Bottom"));
+            TestDelegate testAction = () => controller.GraphControl.AddConnection(conditionShapeConnector, mathExpressionConnector);
+
+            // Then
+            Assert.That(testAction, Throws.Nothing);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void RemovingExistingConnectionFromMathematicalExpressionReshufflesTags()
+        {
+            // Given
+            var firstInput = new Input
+            {
+                ParameterName = "p",
+                Feature = new RtcTestFeature { Name = "f" }
+            };
+            var secondInput = new Input
+            {
+                ParameterName = "p",
+                Feature = new RtcTestFeature { Name = "f" }
+            };
+            var mathematicalExpression = new MathematicalExpression();
+            controlGroup.Inputs.Add(firstInput);
+            controlGroup.Inputs.Add(secondInput);
+            controlGroup.MathematicalExpressions.Add(mathematicalExpression);
+            Shape firstInputShape = controller.GraphControl.Shapes[0];
+            Shape secondInputShape = controller.GraphControl.Shapes[1];
+            Shape mathExpression = controller.GraphControl.Shapes[2];
+
+            // With
+            Assert.That(mathExpression.Connectors[1].Name, Is.EqualTo("Top"));
+            Assert.That(firstInputShape.Connectors[0].Name, Is.EqualTo("Bottom"));
+            Assert.That(secondInputShape.Connectors[0].Name, Is.EqualTo("Bottom"));
+            controller.GraphControl.AddConnection(firstInputShape.Connectors[0], mathExpression.Connectors[1]);
+            controller.GraphControl.AddConnection(secondInputShape.Connectors[0], mathExpression.Connectors[1]);
+
+            Assert.That(controller.GraphControl.Connections.Count, Is.EqualTo(2));
+            Connection firstConnection = controller.GraphControl.Connections[0];
+            Assert.That(firstConnection.From.BelongsTo, Is.EqualTo(firstInputShape));
+            Assert.That(firstConnection.Text, Is.EqualTo("A"));
+            Assert.That(controller.GraphControl.Connections[1].Text, Is.EqualTo("B"));
+            
+            // When
+            controller.GraphControl.Connections.Remove(firstConnection);
+
+            // Then
+            Assert.That(controller.GraphControl.Connections.Count, Is.EqualTo(1));
+            Assert.That(controller.GraphControl.Connections[0].Text, Is.EqualTo("B"));
+            Assert.That(controller.GraphControl.Connections[0].From.BelongsTo, Is.EqualTo(secondInputShape));
+        }
+
+        [Test]
         public void RemovingControlGroupFromControllerCleansGraphControl()
         {
             controlGroup.Rules.Add(new PIDRule());

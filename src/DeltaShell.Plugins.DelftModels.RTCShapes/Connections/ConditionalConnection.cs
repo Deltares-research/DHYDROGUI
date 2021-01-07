@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Linq;
 using Netron.GraphLib;
 using Netron.GraphLib.Attributes;
 
@@ -12,6 +13,16 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
                            "DeltaShell.Plugins.DelftModels.RTCShapes.Connections.ConditionalConnection")]
     public class ConditionalConnection : DefaultPainter
     {
+        private readonly Brush labelBrush = new SolidBrush(Color.Black);
+        private readonly Brush labelBoxBrush = new SolidBrush(Color.FromArgb(255, 255, 231));
+        private readonly Pen labelBoxPen = new Pen(Color.Black, 1);
+
+        private readonly string[] labelNeedsCorrection =
+        {
+            "Right",
+            "Bottom"
+        };
+
         public ConditionalConnection(Connection connection) : base(connection) {}
 
         public override void Paint(Graphics g)
@@ -20,33 +31,44 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
             PaintLabel(g);
         }
 
-        protected void PaintLabel(Graphics g)
+        private void PaintLabel(Graphics g)
         {
             RectangleF startPosition = Connection.From.ConnectionGrip();
-            var size = g.MeasureString(Connection.Text, Connection.Font).ToSize();
-            // simplied labelpainting; not in center but at start connection
-            if (Connection.From.Name == "Right")
+            RectangleF endPosition = Connection.To.ConnectionGrip();
+
+            float xPos = startPosition.X;
+            float yPos = startPosition.Y;
+
+            // draw label further from connection grip
+            if (labelNeedsCorrection.Contains(Connection.From.Name))
             {
-                startPosition.X += size.Height;
-                startPosition.Y -= size.Height;
+                xPos += GetCorrection(endPosition.X, xPos);
+                yPos += GetCorrection(endPosition.Y, yPos);
             }
 
-            if (Connection.From.Name == "Bottom")
-            {
-                startPosition.X += size.Height;
-                startPosition.Y += size.Height;
-            }
-
-            var labelRect = new RectangleF(startPosition.X, startPosition.Y, size.Width, size.Height + 1);
             if (Connection.BoxedLabel)
             {
-                var boxRexangle = new RectangleF(labelRect.X, labelRect.Y, labelRect.Width, labelRect.Height);
-                boxRexangle.Inflate(+3, +2);
-                g.FillRectangle(new SolidBrush(Color.FromArgb(255, 255, 231)), boxRexangle);
-                g.DrawRectangle(new Pen(Color.Black, 1), Rectangle.Round(boxRexangle));
+                PaintLabelBox(g, xPos, yPos);
             }
 
-            g.DrawString(Connection.Text, Connection.Font, new SolidBrush(Color.Black), labelRect.X, labelRect.Y);
+            PaintLabel(g, xPos, yPos);
         }
+
+        private void PaintLabelBox(Graphics g, float xPos, float yPos)
+        {
+            var size = g.MeasureString(Connection.Text, Connection.Font).ToSize();
+            var boxRectangle = new RectangleF(xPos, yPos, size.Width, size.Height + 1);
+            boxRectangle.Inflate(+3, +2);
+
+            g.FillRectangle(labelBoxBrush, boxRectangle);
+            g.DrawRectangle(labelBoxPen, Rectangle.Round(boxRectangle));
+        }
+
+        private void PaintLabel(Graphics g, float xPos, float yPos)
+        {
+            g.DrawString(Connection.Text, Connection.Font, labelBrush, xPos, yPos);
+        }
+
+        private static float GetCorrection(float end, float start) => (end - start) / 8;
     }
 }
