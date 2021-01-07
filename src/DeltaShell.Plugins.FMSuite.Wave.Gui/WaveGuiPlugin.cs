@@ -22,6 +22,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
@@ -278,7 +279,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 },
                 AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.WaveModel)
             };
+            
+            yield return new ViewInfo<DomainSpecificValidationShortcut, WaveModel, WpfSettingsView>
+            {
+                Description = "Wave settings",
+                GetViewName = (v, o) => o.Name + _wavesSettings,
+                GetViewData = o => o.WaveModel,
+                OnActivateView = (v, o) =>
+                {
+                    var shortcut = o as DomainSpecificValidationShortcut;
+                    if (shortcut == null)
+                    {
+                        return;
+                    }
 
+                    v.EnsureVisible(shortcut.TabName);
+                    SetSelectedDomain(v, shortcut.SelectedDomainData);
+                },
+                AfterCreate = (v, o) =>
+                {
+                    ConfigureWpfSettingsView(v, o.WaveModel);
+                }
+            };
+            
             yield return new ViewInfo<WaveModel, ValidationView>
             {
                 Description = "Validation Report",
@@ -463,6 +486,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             view.SetSynchronizedProperties(propertiesToSynchronize);
             view.GetChangedPropertyName = (sender, propertyName) =>
                 (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+            
+        }
+
+        private void SetSelectedDomain(WpfSettingsView view, IWaveDomainData domain)
+        {
+            ObservableCollection<WpfGuiCategory> wpfGuiCategories = view.SettingsCategories;
+            
+            WpfGuiCategory domainSpecificSettings = 
+                wpfGuiCategories.Single(c => string.Equals(
+                                            c.CategoryName,
+                                            Properties.Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings));
+
+            if (!(domainSpecificSettings.CustomControl.DataContext is MainDomainSpecificDataViewModel viewModel))
+            {
+                return;
+            }
+            
+            viewModel.SelectedViewModel = viewModel.DomainSpecificDataViewModelsList.FirstOrDefault(
+                vm => string.Equals(vm.DomainName ,domain.Name));
         }
     }
 }

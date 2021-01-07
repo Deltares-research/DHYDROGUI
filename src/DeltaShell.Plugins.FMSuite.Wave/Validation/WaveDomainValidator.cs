@@ -87,11 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (!domain.UseGlobalMeteoData)
             {
-                var waveValidationShortcut = new WaveValidationShortcut
-                {
-                    WaveModel = model,
-                    TabName = "Domain specific settings"
-                };
+                var waveValidationShortcut = new DomainSpecificValidationShortcut(model, domain);
                 
                 foreach (string errorMessage in DomainMeteoDataValidator.Validate(domain.MeteoData))
                 {
