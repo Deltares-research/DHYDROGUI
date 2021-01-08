@@ -89,6 +89,7 @@
     <Compile Include="drtc_xsd\rtcRuntimeConfig.cs">
       <DependentUpon>rtcRuntimeConfig.xsd</DependentUpon>
     </Compile>
+    <Compile Include="drtc_xsd\rtcRuntimeConfig.custom.cs" />
     <Compile Include="IDimrApi.cs" />
     <Compile Include="IDimrApiFactory.cs" />
     <Compile Include="IDimrModel.cs" />
