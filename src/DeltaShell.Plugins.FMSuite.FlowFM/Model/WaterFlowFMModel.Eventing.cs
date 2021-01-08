@@ -190,11 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     }
 
                     sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
-
-                    if (e.PropertyName == "CurrentFormulaType")
-                    {
-                        sedimentFraction.SetTransportFormulaInCurrentSedimentType();
-                    }
+                    sedimentFraction.SetTransportFormulaInCurrentSedimentType();
                 }
 
                 return;
