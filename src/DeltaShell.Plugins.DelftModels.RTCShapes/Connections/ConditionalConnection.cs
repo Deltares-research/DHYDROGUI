@@ -54,6 +54,11 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
             PaintLabel(g, xPos, yPos);
         }
 
+        private void PaintLabel(Graphics g, float xPos, float yPos)
+        {
+            g.DrawString(Connection.Text, Connection.Font, labelBrush, xPos, yPos);
+        }
+
         private void PaintLabelBox(Graphics g, float xPos, float yPos)
         {
             var size = g.MeasureString(Connection.Text, Connection.Font).ToSize();
@@ -62,11 +67,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Connections
 
             g.FillRectangle(labelBoxBrush, boxRectangle);
             g.DrawRectangle(labelBoxPen, Rectangle.Round(boxRectangle));
-        }
-
-        private void PaintLabel(Graphics g, float xPos, float yPos)
-        {
-            g.DrawString(Connection.Text, Connection.Font, labelBrush, xPos, yPos);
         }
 
         private static float GetCorrection(float end, float start) => (end - start) / 8;
