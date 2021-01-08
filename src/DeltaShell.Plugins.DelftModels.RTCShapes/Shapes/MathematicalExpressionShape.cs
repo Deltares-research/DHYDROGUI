@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using Netron.GraphLib;
 using Netron.GraphLib.Attributes;
@@ -13,6 +14,14 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
         "Mathematical expression")]
     public class MathematicalExpressionShape : ShapeBase
     {
+        public IEnumerable<Connection> GetTopConnectors()
+        {
+            foreach (Connection topNodeConnection in TopNode.Connections)
+            {
+                yield return topNodeConnection;
+            }
+        }
+
         public override PointF ConnectionPoint(Connector c)
         {
             if (c == TopNode)
@@ -87,6 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             {
                 AllowNewConnectionsFrom = allowFrom,
                 AllowNewConnectionsTo = allowTo,
+                ShowLabel = true
             };
         }
     }
