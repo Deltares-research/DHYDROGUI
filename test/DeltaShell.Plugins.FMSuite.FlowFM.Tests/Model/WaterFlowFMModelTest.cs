@@ -15,6 +15,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
@@ -2178,6 +2179,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                            "Something else is linked to the DataItem of the structure instead of the RTC component");
 
             return model;
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void SedimentFractionPropertyChanged_SetSedimentFractionType_UpdatesUnderlyingFormula()
+        {
+            // Setup
+            var sedimentFraction = new SedimentFraction();
+
+            // Change the current formula to the last one, such that it has a
+            // different TraFrm than the default.
+            sedimentFraction.CurrentFormulaType = 
+                sedimentFraction.SupportedFormulaTypes.Last(); 
+
+            var fractionList = new EventedList<ISedimentFraction> { sedimentFraction };
+            ISedimentType newSedimentType = sedimentFraction.AvailableSedimentTypes.Last();
+
+            using (var model = new WaterFlowFMModel())
+            {
+                model.SedimentFractions = fractionList;
+
+                // Call
+                // Change the sediment type, this should update the underlying TraFrm.
+                sedimentFraction.CurrentSedimentType = newSedimentType;
+
+                // Assert
+                var traFrmProperty = 
+                    sedimentFraction.CurrentSedimentType
+                                    .Properties
+                                    .FirstOrDefault(x => x.Name.ToLowerInvariant() == "trafrm") 
+                        as SedimentProperty<int>;
+
+                Assert.That(traFrmProperty, Is.Not.Null);
+                Assert.That(traFrmProperty.Value, Is.EqualTo(sedimentFraction.CurrentFormulaType.TraFrm));
+            }
         }
     }
 }
