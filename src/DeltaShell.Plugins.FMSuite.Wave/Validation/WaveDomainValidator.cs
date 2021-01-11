@@ -87,11 +87,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             if (!domain.UseGlobalMeteoData)
             {
-                var waveValidationShortcut = new DomainSpecificValidationShortcut(model, domain);
+                var validationShortcut = new DomainSpecificValidationShortcut(model, domain);
                 
-                foreach (string errorMessage in DomainMeteoDataValidator.Validate(domain.MeteoData))
+                foreach (string validationMessage in DomainMeteoDataValidator.Validate(domain.MeteoData))
                 {
-                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Warning, errorMessage, waveValidationShortcut));
+                    issues.Add(new ValidationIssue(domain, ValidationSeverity.Warning, validationMessage, validationShortcut));
                 }
             }
             

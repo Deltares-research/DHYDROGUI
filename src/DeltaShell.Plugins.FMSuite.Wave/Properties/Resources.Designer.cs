@@ -321,6 +321,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Domain specific settings.
+        /// </summary>
+        public static string Wave_Domain_specific_settings {
+            get {
+                return ResourceManager.GetString("Wave_Domain_specific_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boundary condition contains internal geometry points. These points will be discarded upon saving, exporting or running.
         /// </summary>
         public static string WaveBoundariesValidator_Validate_Boundary_condition_contains_internal_geometry_points {

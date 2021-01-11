@@ -38,6 +38,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                         .EqualTo("selectedDomainData"));
             }
         }
+        
+        [Test]
+        public void Constructor_WithArguments_ExpectedValues()
+        {
+            // Setup
+            var domainData = Substitute.For<IWaveDomainData>();
+            using (var model = new WaveModel())
+            {
+                // Call
+                var shortcut = new DomainSpecificValidationShortcut(model, domainData);
+
+                // Assert
+                Assert.That(shortcut.WaveModel, Is.SameAs(model));
+                Assert.That(shortcut.SelectedDomainData, Is.SameAs(domainData));
+            }
+        }
 
         [Test]
         public void TabName_Always_ReturnsExpectedValue()

@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         /// Validates the provided <see cref="WaveMeteoData"/>.
         /// </summary>
         /// <param name="meteoData">The <see cref="WaveMeteoData"/> to validate.</param>
-        /// <returns>A collection of error messages. Returns an empty collection if there were no validation errors.</returns>
+        /// <returns>A collection of validation messages. Returns an empty collection if there were no validation messages.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="meteoData"/> is <c>null</c>.</exception>
         /// <exception cref="NotSupportedException">
         /// Thrown when an invalid <see cref="WindDefinitionType"/> is set in the <paramref name="meteoData"/>.
@@ -26,18 +26,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             Ensure.NotNull(meteoData, nameof(meteoData));
 
-            var errorMessages = new List<string>();
+            var validationMessages = new List<string>();
 
             switch (meteoData.FileType)
             {
                 case WindDefinitionType.WindXY:
-                    errorMessages.AddRange(ValidateWindXY(meteoData));
+                    validationMessages.AddRange(ValidateWindXY(meteoData));
                     break;
                 case WindDefinitionType.WindXWindY:
-                    errorMessages.AddRange(ValidateWindXWindY(meteoData));
+                    validationMessages.AddRange(ValidateWindXWindY(meteoData));
                     break;
                 case WindDefinitionType.SpiderWebGrid:
-                    errorMessages.AddRange(ValidateSpiderWebGrid(meteoData));
+                    validationMessages.AddRange(ValidateSpiderWebGrid(meteoData));
                     break;
                 case WindDefinitionType.WindXYP:
                     break;
@@ -45,92 +45,74 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     throw new NotSupportedException();
             }
 
-            return errorMessages;
+            return validationMessages;
         }
 
         private static IEnumerable<string> ValidateWindXY(WaveMeteoData meteoData)
         {
-            var errorMessages = new Collection<string>();
+            var validationMessages = new List<string>();
 
             if (string.IsNullOrWhiteSpace(meteoData.XYVectorFilePath))
             {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_file_provided);
+                validationMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_file_provided);
             }
             else if (!File.Exists(meteoData.XYVectorFilePath))
             {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_file_does_not_exist);
+                validationMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_file_does_not_exist);
             }
 
-            if (!meteoData.HasSpiderWeb)
+            if (meteoData.HasSpiderWeb)
             {
-                return errorMessages;
+                validationMessages.AddRange(ValidateSpiderWebGrid(meteoData));
             }
 
-            if (string.IsNullOrWhiteSpace(meteoData.SpiderWebFileName))
-            {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provided);
-            }
-            else if (!File.Exists(meteoData.SpiderWebFilePath))
-            {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_does_not_exist);
-            }
-
-            return errorMessages;
+            return validationMessages;
         }
 
         private static IEnumerable<string> ValidateWindXWindY(WaveMeteoData meteoData)
         {
-            var errorMessages = new Collection<string>();
+            var validationMessages = new List<string>();
 
             if (string.IsNullOrWhiteSpace(meteoData.XComponentFileName))
             {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_x_component_file_provided);
+                validationMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_x_component_file_provided);
             }
             else if (!File.Exists(meteoData.XComponentFilePath))
             {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_x_component_file_does_not_exist);
+                validationMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_x_component_file_does_not_exist);
             }
 
             if (string.IsNullOrWhiteSpace(meteoData.YComponentFileName))
             {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_y_component_file_provided);
+                validationMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_y_component_file_provided);
             }
             else if (!File.Exists(meteoData.YComponentFilePath))
             {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_y_component_file_does_not_exist);
+                validationMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_y_component_file_does_not_exist);
             }
 
-            if (!meteoData.HasSpiderWeb)
+            if (meteoData.HasSpiderWeb)
             {
-                return errorMessages;
+                validationMessages.AddRange(ValidateSpiderWebGrid(meteoData));
             }
 
-            if (string.IsNullOrWhiteSpace(meteoData.SpiderWebFileName))
-            {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provided);
-            }
-            else if (!File.Exists(meteoData.SpiderWebFilePath))
-            {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_does_not_exist);
-            }
-
-            return errorMessages;
+            return validationMessages;
         }
 
         private static IEnumerable<string> ValidateSpiderWebGrid(WaveMeteoData meteoData)
         {
-            var errorMessages = new Collection<string>();
+            var validationMessages = new Collection<string>();
 
             if (string.IsNullOrWhiteSpace(meteoData.SpiderWebFileName))
             {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provided);
+                validationMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provided);
             }
             else if (!File.Exists(meteoData.SpiderWebFilePath))
             {
-                errorMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_does_not_exist);
+                validationMessages.Add(Resources.DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_does_not_exist);
             }
 
-            return errorMessages;
+            return validationMessages;
         }
     }
 }

@@ -184,9 +184,6 @@
   <data name="WaveSettingsHelper_GetWaveSettings_Coupling_time_step" xml:space="preserve">
     <value>Coupling time step</value>
   </data>
-  <data name="WaveSettingsHelper_GetWaveSettings_Domain_specific_settings" xml:space="preserve">
-    <value>Domain specific settings</value>
-  </data>
   <data name="WaveSettingsHelper_GetWaveSettings_When_enabled__domain_specific_data_can_be_filled_in" xml:space="preserve">
     <value>When enabled, domain specific data can be filled in</value>
   </data>

@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 ValidationReport report = WaveDomainValidator.Validate(model);
 
                 // Assert
-                ValidationReport subReport = report.SubReports.FirstOrDefault(r => r.Category.Equals("Domain: Outer"));
+                ValidationReport subReport = report.SubReports.SingleOrDefault(r => r.Category.Equals("Domain: Outer"));
                 Assert.That(subReport, Is.Not.Null);
 
                 IEnumerable<ValidationIssue> issues = subReport.Issues;

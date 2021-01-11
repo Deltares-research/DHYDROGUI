@@ -486,7 +486,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             view.SetSynchronizedProperties(propertiesToSynchronize);
             view.GetChangedPropertyName = (sender, propertyName) =>
                 (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
-            
         }
 
         private void SetSelectedDomain(WpfSettingsView view, IWaveDomainData domain)
@@ -496,15 +495,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             WpfGuiCategory domainSpecificSettings = 
                 wpfGuiCategories.Single(c => string.Equals(
                                             c.CategoryName,
-                                            Properties.Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings));
+                                            Wave.Properties.Resources.Wave_Domain_specific_settings));
 
-            if (!(domainSpecificSettings.CustomControl.DataContext is MainDomainSpecificDataViewModel viewModel))
+            if (domainSpecificSettings.CustomControl.DataContext is MainDomainSpecificDataViewModel viewModel)
             {
-                return;
+                viewModel.SelectedViewModel = viewModel.DomainSpecificDataViewModelsList.FirstOrDefault(
+                    vm => string.Equals(vm.DomainName ,domain.Name));
             }
-            
-            viewModel.SelectedViewModel = viewModel.DomainSpecificDataViewModelsList.FirstOrDefault(
-                vm => string.Equals(vm.DomainName ,domain.Name));
         }
     }
 }

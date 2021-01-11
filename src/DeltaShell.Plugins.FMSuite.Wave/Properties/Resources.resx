@@ -389,4 +389,7 @@ Please reboot the application and create a new project and import the models ind
   <data name="DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_y_component_file_does_not_exist" xml:space="preserve">
     <value>The provided y-component file does not exist.</value>
   </data>
+  <data name="Wave_Domain_specific_settings" xml:space="preserve">
+    <value>Domain specific settings</value>
+  </data>
 </root>

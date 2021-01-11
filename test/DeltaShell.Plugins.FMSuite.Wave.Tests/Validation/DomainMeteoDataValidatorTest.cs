@@ -24,9 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase("")]
-        [TestCase("    ")]
-        [TestCase(null)]
+        [TestCaseSource(nameof(GetNullOrWhitespaceCases))]
         public void Validate_WindXY_XYVectorFilePathNullOrWhiteSpace_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -38,19 +36,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             };
 
             // Call
-            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+            IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
             const string expectedMessage = "Use custom wind file option is switched on but no file has been selected.";
-            Assert.That(errorMessages, Has.Count.EqualTo(1));
+            Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-            string errorMessage = errorMessages.First();
-            Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            string validationMessage = validationMessages.First();
+            Assert.That(validationMessage, Is.EqualTo(expectedMessage));
         }
 
         [Test]
-        [TestCase("InvalidFilePath")]
-        [TestCase("C:\\NonExistingFilePath.txt")]
+        [TestCaseSource(nameof(GetInvalidFilePathCases))]
         public void Validate_WindXY_InvalidXYVectorFilePath_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -62,20 +59,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             };
 
             // Call
-            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+            IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
             const string expectedMessage = "The provided custom wind file does not exist.";
-            Assert.That(errorMessages, Has.Count.EqualTo(1));
+            Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-            string errorMessage = errorMessages.First();
-            Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            string validationMessage = validationMessages.First();
+            Assert.That(validationMessage, Is.EqualTo(expectedMessage));
         }
 
         [Test]
-        [TestCase("")]
-        [TestCase("    ")]
-        [TestCase(null)]
+        [TestCaseSource(nameof(GetNullOrWhitespaceCases))]
         public void Validate_WindXY_HasSpiderWeb_SpiderWebFilePathNullOrWhitespace_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -92,14 +87,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
                 const string expectedMessage = "Use spider web file option is switched on but no file has been selected.";
-                Assert.That(errorMessages, Has.Count.EqualTo(1));
+                Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-                string errorMessage = errorMessages.First();
-                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+                string validationMessage = validationMessages.First();
+                Assert.That(validationMessage, Is.EqualTo(expectedMessage));
             }
             finally
             {
@@ -108,8 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase("InvalidFilePath")]
-        [TestCase("C:\\NonExistingFilePath.txt")]
+        [TestCaseSource(nameof(GetInvalidFilePathCases))]
         public void Validate_WindXY_HasSpiderWeb_InvalidSpiderWebFile_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -126,14 +120,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
                 const string expectedMessage = "The provided spider web file does not exist.";
-                Assert.That(errorMessages, Has.Count.EqualTo(1));
+                Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-                string errorMessage = errorMessages.First();
-                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+                string validationMessage = validationMessages.First();
+                Assert.That(validationMessage, Is.EqualTo(expectedMessage));
             }
             finally
             {
@@ -157,10 +151,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Is.Empty);
+                Assert.That(validationMessages, Is.Empty);
             }
             finally
             {
@@ -186,10 +180,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Is.Empty);
+                Assert.That(validationMessages, Is.Empty);
             }
             finally
             {
@@ -199,9 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase("")]
-        [TestCase("    ")]
-        [TestCase(null)]
+        [TestCaseSource(nameof(GetNullOrWhitespaceCases))]
         public void Validate_WindXWindY_XComponentFilePathNullOrWhitespace_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -218,14 +210,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
                 const string expectedMessage = "Use custom wind file option is switched on but no x-component file has been selected.";
-                Assert.That(errorMessages, Has.Count.EqualTo(1));
+                Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-                string errorMessage = errorMessages.First();
-                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+                string validationMessage = validationMessages.First();
+                Assert.That(validationMessage, Is.EqualTo(expectedMessage));
             }
             finally
             {
@@ -234,8 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase("InvalidFilePath")]
-        [TestCase("C:\\NonExistingFilePath.txt")]
+        [TestCaseSource(nameof(GetInvalidFilePathCases))]
         public void Validate_WindXWindY_InvalidXComponentFilePath_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -252,14 +243,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
                 const string expectedMessage = "The provided x-component file does not exist.";
-                Assert.That(errorMessages, Has.Count.EqualTo(1));
+                Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-                string errorMessage = errorMessages.First();
-                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+                string validationMessage = validationMessages.First();
+                Assert.That(validationMessage, Is.EqualTo(expectedMessage));
             }
             finally
             {
@@ -268,9 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase("")]
-        [TestCase("    ")]
-        [TestCase(null)]
+        [TestCaseSource(nameof(GetNullOrWhitespaceCases))]
         public void Validate_WindXWindY_YComponentFilePathNullOrWhitespace_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -287,14 +276,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
                 const string expectedMessage = "Use custom wind file option is switched on but no y-component file has been selected.";
-                Assert.That(errorMessages, Has.Count.EqualTo(1));
+                Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-                string errorMessage = errorMessages.First();
-                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+                string validationMessage = validationMessages.First();
+                Assert.That(validationMessage, Is.EqualTo(expectedMessage));
             }
             finally
             {
@@ -303,8 +292,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase("InvalidFilePath")]
-        [TestCase("C:\\NonExistingFilePath.txt")]
+        [TestCaseSource(nameof(GetInvalidFilePathCases))]
         public void Validate_WindXWindY_InvalidYComponentFilePath_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -321,14 +309,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
                 const string expectedMessage = "The provided y-component file does not exist.";
-                Assert.That(errorMessages, Has.Count.EqualTo(1));
+                Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-                string errorMessage = errorMessages.First();
-                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+                string validationMessage = validationMessages.First();
+                Assert.That(validationMessage, Is.EqualTo(expectedMessage));
             }
             finally
             {
@@ -337,9 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase("")]
-        [TestCase("    ")]
-        [TestCase(null)]
+        [TestCaseSource(nameof(GetNullOrWhitespaceCases))]
         public void Validate_WindXWindY_HasSpiderWeb_SpiderWebFilePathNullOrWhitespace_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -358,14 +344,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
                 const string expectedMessage = "Use spider web file option is switched on but no file has been selected.";
-                Assert.That(errorMessages, Has.Count.EqualTo(1));
+                Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-                string errorMessage = errorMessages.First();
-                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+                string validationMessage = validationMessages.First();
+                Assert.That(validationMessage, Is.EqualTo(expectedMessage));
             }
             finally
             {
@@ -375,8 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase("InvalidFilePath")]
-        [TestCase("C:\\NonExistingFilePath.txt")]
+        [TestCaseSource(nameof(GetInvalidFilePathCases))]
         public void Validate_WindXWindY_HasSpiderWeb_InvalidSpiderWebFilePath_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -395,14 +380,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
                 const string expectedMessage = "The provided spider web file does not exist.";
-                Assert.That(errorMessages, Has.Count.EqualTo(1));
+                Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-                string errorMessage = errorMessages.First();
-                Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+                string validationMessage = validationMessages.First();
+                Assert.That(validationMessage, Is.EqualTo(expectedMessage));
             }
             finally
             {
@@ -429,10 +414,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Is.Empty);
+                Assert.That(validationMessages, Is.Empty);
             }
             finally
             {
@@ -461,10 +446,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Is.Empty);
+                Assert.That(validationMessages, Is.Empty);
             }
             finally
             {
@@ -475,9 +460,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase("")]
-        [TestCase("    ")]
-        [TestCase(null)]
+        [TestCaseSource(nameof(GetNullOrWhitespaceCases))]
         public void Validate_SpiderWebGrid_SpiderWebFilePathEmptyOrWhiteSpace_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -488,19 +471,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             };
 
             // Call
-            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+            IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
             const string expectedMessage = "Use spider web file option is switched on but no file has been selected.";
-            Assert.That(errorMessages, Has.Count.EqualTo(1));
+            Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-            string errorMessage = errorMessages.First();
-            Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            string validationMessage = validationMessages.First();
+            Assert.That(validationMessage, Is.EqualTo(expectedMessage));
         }
 
         [Test]
-        [TestCase("InvalidFilePath")]
-        [TestCase("C:\\NonExistingFilePath.txt")]
+        [TestCaseSource(nameof(GetInvalidFilePathCases))]
         public void Validate_SpiderWebGrid_InvalidSpiderWebGridFilePath_ReturnsExpectedMessage(string filepath)
         {
             // Setup
@@ -511,14 +493,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             };
 
             // Call
-            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+            IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
             const string expectedMessage = "The provided spider web file does not exist.";
-            Assert.That(errorMessages, Has.Count.EqualTo(1));
+            Assert.That(validationMessages, Has.Count.EqualTo(1));
 
-            string errorMessage = errorMessages.First();
-            Assert.That(errorMessage, Is.EqualTo(expectedMessage));
+            string validationMessage = validationMessages.First();
+            Assert.That(validationMessage, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -536,10 +518,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                 };
 
                 // Call
-                IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+                IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
                 // Assert
-                Assert.That(errorMessages, Is.Empty);
+                Assert.That(validationMessages, Is.Empty);
             }
             finally
             {
@@ -554,10 +536,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var meteoData = new WaveMeteoData() {FileType = WindDefinitionType.WindXYP};
 
             // Call
-            IEnumerable<string> errorMessages = DomainMeteoDataValidator.Validate(meteoData);
+            IEnumerable<string> validationMessages = DomainMeteoDataValidator.Validate(meteoData);
 
             // Assert
-            Assert.That(errorMessages, Is.Empty);
+            Assert.That(validationMessages, Is.Empty);
         }
 
         [Test]
@@ -571,6 +553,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Assert
             Assert.That(call, Throws.TypeOf<NotSupportedException>());
+        }
+        
+        private static IEnumerable<string> GetNullOrWhitespaceCases()
+        {
+            yield return null;
+            yield return "";
+            yield return "    ";
+        }
+        
+        private static IEnumerable<string> GetInvalidFilePathCases()
+        {
+            yield return "InvalidFilePath";
+            yield return "C:\\NonExistingFilePath.txt";
         }
     }
 }
