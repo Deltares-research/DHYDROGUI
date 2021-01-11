@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             var treeShortCut = parentNodeData as FmModelTreeShortcut;
             if (treeShortCut != null)
             {
-                boundaryConditionSets = treeShortCut.Data as IList<BoundaryConditionSet>;
+                boundaryConditionSets = treeShortCut.Value as IList<BoundaryConditionSet>;
                 if (boundaryConditionSets != null)
                 {
                     return boundaryConditionSets.Remove(nodeData);

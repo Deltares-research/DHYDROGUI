@@ -17,16 +17,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         /// <param name="text">The text.</param>
         /// <param name="image">The image.</param>
         /// <param name="model">The model.</param>
-        /// <param name="data">The data.</param>
+        /// <param name="value">The data values.</param>
         /// <param name="shortCutType">Short type of the cut.</param>
         /// <param name="childObjects">The child objects.</param>
         public WaveModelTreeShortcut(string text,
                                      Bitmap image,
                                      WaveModel model,
-                                     object data,
+                                     object value,
                                      ShortCutType shortCutType = ShortCutType.SettingsTab,
                                      IEnumerable<object> childObjects = null)
-            : base(text, image, model, data, shortCutType, childObjects) {}
+            : base(text, image, model, value, shortCutType, childObjects) {}
 
         /// <summary>
         /// Gets the wave model.

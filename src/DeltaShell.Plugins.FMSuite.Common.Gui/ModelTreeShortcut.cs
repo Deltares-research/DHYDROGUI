@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui
 {
-    public abstract class ModelTreeShortcut
+    public abstract class ModelTreeShortcut : IHasChildValue
     {
-        protected ModelTreeShortcut(string text, Bitmap image, IModel model, object data, ShortCutType shortCutType = ShortCutType.SettingsTab, IEnumerable<object> childObjects = null)
+        protected ModelTreeShortcut(string text, Bitmap image, IModel model, object value, ShortCutType shortCutType = ShortCutType.SettingsTab, IEnumerable<object> childObjects = null)
         {
             Text = text;
             Image = image;
             Model = model;
-            Data = data;
+            Value = value;
             ChildObjects = childObjects;
             ShortCutType = shortCutType;
         }
@@ -19,32 +20,32 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
         /// <summary>
         /// Text to show for the node
         /// </summary>
-        public string Text { get; private set; }
+        public string Text { get; }
 
         /// <summary>
         /// Image to show for the node
         /// </summary>
-        public Bitmap Image { get; private set; }
+        public Bitmap Image { get; }
 
         /// <summary>
         /// Model that this shortcut belongs to
         /// </summary>
-        public IModel Model { get; private set; }
-
-        /// <summary>
-        /// Data of the shortcut (object being wrapped)
-        /// ShortCutType.SettingsTab = > name of the tab
-        /// </summary>
-        public object Data { get; private set; }
+        public IModel Model { get; }
 
         /// <summary>
         /// Sub-shortcuts for this shortcut
         /// </summary>
-        public IEnumerable<object> ChildObjects { get; private set; }
+        public IEnumerable<object> ChildObjects { get; }
 
         /// <summary>
         /// Type of shortcut
         /// </summary>
-        public ShortCutType ShortCutType { get; private set; }
+        public ShortCutType ShortCutType { get; }
+
+        /// <summary>
+        /// Data value of the shortcut (object being wrapped)
+        /// ShortCutType.SettingsTab = > name of the tab
+        /// </summary>
+        public object Value { get; set; }
     }
 }

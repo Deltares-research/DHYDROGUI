@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         return;
                     }
 
-                    v.EnsureVisible(shortcut.Data);
+                    v.EnsureVisible(shortcut.Value);
                 },
                 AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.FlowFmModel)
             };
@@ -339,7 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return allBoundarySetsViewInfo;
 
-            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(allBoundarySetsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(allBoundarySetsViewInfo, o => o.Value, o => o.ShortCutType == ShortCutType.FeatureSet);
 
             yield return FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Boundaries", m => m.Boundaries, () => Gui);
 
@@ -508,7 +508,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private object GetPipesFromSourcesAndSinks(FmModelTreeShortcut treeShortCut)
         {
-            var sourcesAndSinks = treeShortCut.Data as IEventedList<SourceAndSink>;
+            var sourcesAndSinks = treeShortCut.Value as IEventedList<SourceAndSink>;
             if (sourcesAndSinks == null)
             {
                 return null;
