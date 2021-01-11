@@ -5,7 +5,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui
 {
-    public abstract class ModelTreeShortcut : IHasChildValue
+    public abstract class ModelTreeShortcut : IValueContainer
     {
         protected ModelTreeShortcut(string text, Bitmap image, IModel model, object value, ShortCutType shortCutType = ShortCutType.SettingsTab, IEnumerable<object> childObjects = null)
         {
