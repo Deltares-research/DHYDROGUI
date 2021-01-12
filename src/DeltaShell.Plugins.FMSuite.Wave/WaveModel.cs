@@ -24,6 +24,7 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;

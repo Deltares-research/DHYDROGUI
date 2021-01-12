@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NSubstitute;
 using NUnit.Framework;

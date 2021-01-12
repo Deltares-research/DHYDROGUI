@@ -13,6 +13,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
@@ -290,18 +291,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     v.OnValidate = d => new WaveModelValidator().Validate(d as WaveModel, d as WaveModel);
                 }
             };
-
-            yield return new ViewInfo<ReadOnlyTextFileData, ReadOnlyTextFileViewModel, TextDocumentView>
-            {
-                Description = "Text File",
-                GetViewName = (v, o) => o.Name,
-                GetViewData = o => new ReadOnlyTextFileViewModel(o),
-                ViewDataContainsData = (v, o) =>
-                    v.Data is ReadOnlyTextFileViewModel viewModel && viewModel.Data.Equals(o),
-                CloseForData = (v, o) =>
-                    v.Data is ReadOnlyTextFileViewModel viewModel && viewModel.Data.Equals(o),
-            };
-
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
@@ -325,7 +314,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
             yield return new WaveOutputDataNodePresenter { GuiPlugin = this};
-            yield return new ReadOnlyTextFileDataNodePresenter {GuiPlugin = this};
         }
 
         public override void OnActiveViewChanged(IView view)

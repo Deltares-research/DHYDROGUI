@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 

@@ -59,6 +59,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.213-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.213-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+    </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.213-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
@@ -256,7 +259,6 @@
     <Compile Include="OutputData\WaveGeometryComparer.cs" />
     <Compile Include="OutputData\WaveOutputConstants.cs" />
     <Compile Include="OutputData\WaveOutputData.cs" />
-    <Compile Include="OutputData\ReadOnlyTextFileData.cs" />
     <Compile Include="OutputData\WaveOutputDataCopyHandler.cs" />
     <Compile Include="OutputData\WaveOutputDataHarvester.cs" />
     <Compile Include="OutputData\WavhFileFunctionStore.cs" />

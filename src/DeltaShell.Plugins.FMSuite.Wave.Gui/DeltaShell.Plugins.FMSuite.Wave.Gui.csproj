@@ -353,7 +353,6 @@
     <Compile Include="Layers\WaveLayerInstanceCreator.cs" />
     <Compile Include="Layers\WaveMapLayerProviderFactory.cs" />
     <Compile Include="MapTools\GroupedLayerFeature2DLineTool.cs" />
-    <Compile Include="NodePresenters\OutputData\ReadOnlyTextFileDataNodePresenter.cs" />
     <Compile Include="NodePresenters\OutputData\WaveFileFunctionStoreNodePresenterBase.cs" />
     <Compile Include="NodePresenters\OutputData\WaveOutputDataNodePresenter.cs" />
     <Compile Include="NodePresenters\OutputData\WavhFileFunctionStoreNodePresenter.cs" />
@@ -369,7 +368,6 @@
     </Compile>
     <Compile Include="NodePresenters\WaveModelNodePresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadOnlyTextFileViewModel.cs" />
     <Compile Include="Ribbon\Ribbon.xaml.cs">
       <DependentUpon>Ribbon.xaml</DependentUpon>
     </Compile>

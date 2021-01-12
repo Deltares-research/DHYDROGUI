@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.Plugins.CommonTools;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 {

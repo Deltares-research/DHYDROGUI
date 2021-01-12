@@ -4,6 +4,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
