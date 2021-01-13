@@ -106,7 +106,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodePresenters\RtcOutputFileFunctionStoreNodePresenter.cs" />
-    <Compile Include="NodePresenters\ReadOnlyOutputTextDocumentNodePresenter.cs" />
     <Compile Include="OutputTreeFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\PluginInfo.cs" />

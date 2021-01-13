@@ -246,8 +246,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 for (var i = 0; i < 5; i++)
                 {
-                    model.OutputDocuments.Add(new ReadOnlyOutputTextDocument($"test{i}.csv", ""));
-                    model.OutputDocuments.Add(new ReadOnlyOutputTextDocument($"test{i}.xml", ""));
+                    model.OutputDocuments.Add(new ReadOnlyTextFileData($"test{i}.csv", ""));
+                    model.OutputDocuments.Add(new ReadOnlyTextFileData($"test{i}.xml", ""));
                 }
 
                 // Act
@@ -337,7 +337,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // Setup
             var realTimeControlModel = new RealTimeControlModel();
-            realTimeControlModel.OutputDocuments.Add(new ReadOnlyOutputTextDocument("filename", "content"));
+            realTimeControlModel.OutputDocuments.Add(new ReadOnlyTextFileData("filename", "content"));
 
             // Call
             realTimeControlModel.ClearOutput(true);
@@ -389,12 +389,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
         private static void ChecksForOutputXmlOrCsvDocuments(RealTimeControlModel model, string[] relevantFiles)
         {
-            ReadOnlyOutputTextDocument[] textDocuments = model.OutputDocuments.ToArray();
+            ReadOnlyTextFileData[] textDocuments = model.OutputDocuments.ToArray();
             Assert.That(textDocuments, Has.Length.EqualTo(10));
 
             for (var i = 0; i < relevantFiles.Length; i++)
             {
-                Assert.That(textDocuments[i].Name, Is.EqualTo(Path.GetFileName(relevantFiles[i])));
+                Assert.That(textDocuments[i].DocumentName, Is.EqualTo(Path.GetFileName(relevantFiles[i])));
                 Assert.That(textDocuments[i].Content, Is.EqualTo($"file {i}"));
             }
         }
@@ -1884,7 +1884,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.NewProject(pathBeforeSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
 
-                ReadOnlyOutputTextDocument[] outputDocumentsBeforeClear = rtcModel.OutputDocuments.ToArray();
+                ReadOnlyTextFileData[] outputDocumentsBeforeClear = rtcModel.OutputDocuments.ToArray();
                 
                 rtcModel.ClearOutput(true);
                 frameworkSimulator.FirstSave(pathAfterSave);
