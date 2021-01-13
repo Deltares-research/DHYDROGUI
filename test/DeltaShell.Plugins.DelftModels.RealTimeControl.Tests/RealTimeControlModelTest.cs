@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Functions;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -23,6 +22,7 @@ using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
@@ -246,8 +246,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 for (var i = 0; i < 5; i++)
                 {
-                    model.OutputDocuments.Add(new ReadOnlyTextFileData($"test{i}.csv", ""));
-                    model.OutputDocuments.Add(new ReadOnlyTextFileData($"test{i}.xml", ""));
+                    model.OutputDocuments.Add(new ReadOnlyTextFileData($"test{i}.csv", "", ReadOnlyTextFileDataType.Default));
+                    model.OutputDocuments.Add(new ReadOnlyTextFileData($"test{i}.xml", "", ReadOnlyTextFileDataType.Default));
                 }
 
                 // Act
@@ -337,7 +337,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // Setup
             var realTimeControlModel = new RealTimeControlModel();
-            realTimeControlModel.OutputDocuments.Add(new ReadOnlyTextFileData("filename", "content"));
+            realTimeControlModel.OutputDocuments.Add(new ReadOnlyTextFileData("filename", "content", ReadOnlyTextFileDataType.Default));
 
             // Call
             realTimeControlModel.ClearOutput(true);

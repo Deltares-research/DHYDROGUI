@@ -5,7 +5,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
-using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             // Setup
             RealTimeControlModelNodePresenter nodePresenter = GetRealTimeControlModelNodePresenter();
             var model = new RealTimeControlModel();
-            model.OutputDocuments.Add(new ReadOnlyTextFileData("test.xml", "test"));
+            model.OutputDocuments.Add(new ReadOnlyTextFileData("test.xml", "test", ReadOnlyTextFileDataType.Default));
 
             // Call
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);

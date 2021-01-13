@@ -28,7 +28,7 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
@@ -1031,7 +1031,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             try
             {
-                return new ReadOnlyTextFileData(textFileInfo.Name, File.ReadAllText(textFileInfo.FullName));
+                return new ReadOnlyTextFileData(textFileInfo.Name, File.ReadAllText(textFileInfo.FullName), ReadOnlyTextFileDataType.Default);
             }
             catch (Exception e)
             {

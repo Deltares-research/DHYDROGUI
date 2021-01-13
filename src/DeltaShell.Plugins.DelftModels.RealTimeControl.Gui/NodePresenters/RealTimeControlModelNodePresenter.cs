@@ -10,7 +10,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
-using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 using GeoAPI.Extensions.Coverages;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
