@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         protected override void OpenGridEditor(WaveModelTreeShortcut shortcut)
         {
             WaveModel waveModel = shortcut.WaveModel;
-            var o = shortcut.Data as CurvilinearGrid;
+            var o = shortcut.Value as CurvilinearGrid;
             if (waveModel == null || !o.IsEditable)
             {
                 return;

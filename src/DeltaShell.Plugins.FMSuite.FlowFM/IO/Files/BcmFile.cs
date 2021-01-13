@@ -55,14 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     if (line.StartsWith(BlockKey))
                     {
-                        line = GetNextLine();
-                    }
-
-                    if (line.StartsWith(LocationKey))
-                    {
-                        string[] splitHeader = SplitString(line);
-                        string boundaryName = splitHeader.Length == 2 ? splitHeader[1] : "BoundaryName";
-                        BcmBlockData block = ReadDataBlock(out line, boundaryName);
+                        BcmBlockData block = ReadDataBlock(out line);
                         if (block != null)
                         {
                             yield return block;
@@ -235,10 +228,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private BcmBlockData ReadDataBlock(out string line, string blockName)
+        private BcmBlockData ReadDataBlock(out string line)
         {
             string contentsValue = null;
-            string locationValue = blockName;
+            string locationValue = null;
             const string timeFunctionValue = "timeseries"; //time-function
             var referenceTimeValue = new DateTime();       //with the timeUnitValue helps determine the time reference and time steps for each entry.
             string interpolationValue = null;              //timeInterpolationType
@@ -253,6 +246,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 if (split.Length < 2)
                 {
                     break;
+                }
+
+                if (split[0] == LocationKey)
+                {
+                    locationValue = split.Length == 2 ? split[1] : "BoundaryName";
                 }
 
                 if (split[0] == ParameterKey)
@@ -329,7 +327,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
             }
 
-            if (blockName == null || !quantityDataList.Any()) //FunctionType cannot be null! but for now we are hardcoding it.
+            if (locationValue == null || !quantityDataList.Any()) //FunctionType cannot be null! but for now we are hardcoding it.
             {
                 return null;
             }
@@ -337,7 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return new BcmBlockData
             {
                 FilePath = InputFilePath,
-                SupportPoint = blockName,
+                SupportPoint = locationValue,
                 FunctionType = contentsValue, //Forced, for the moment we did not receive the format of the bcm file and we do not know what to map this to.
                 TimeInterpolationType = interpolationValue,
                 Location = locationValue,

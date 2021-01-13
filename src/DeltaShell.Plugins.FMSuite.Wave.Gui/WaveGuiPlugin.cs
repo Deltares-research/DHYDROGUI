@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, IWaveModel>(
                     "Observation Points (Waves)", m => m.FeatureContainer.ObservationPoints, () => Gui);
             yield return obsPointViewInfo;
-            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsPointViewInfo, o => o.Data,
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsPointViewInfo, o => o.Value,
                                                                        o => o.ShortCutType == ShortCutType.FeatureSet);
 
             yield return ViewInfoWrapper<Feature2DPoint>.Create(obsPointViewInfo,
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     m => m.FeatureContainer.ObservationCrossSections,
                     () => Gui);
             yield return obsCrossSectionViewInfo;
-            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsCrossSectionViewInfo, o => o.Data,
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsCrossSectionViewInfo, o => o.Value,
                                                                        o => o.ShortCutType == ShortCutType.FeatureSet);
 
             yield return ViewInfoWrapper<Feature2D>.Create(obsCrossSectionViewInfo,
@@ -175,8 +175,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             };
             yield return timePointViewInfo;
             ViewInfo fromTreeShortcut = ViewInfoWrapper<WaveModelTreeShortcut>.Create(
-                timePointViewInfo, o => o.Data,
-                o => o.Data is WaveInputFieldData && o.ShortCutType == ShortCutType.FeatureSet);
+                timePointViewInfo, o => o.Value,
+                o => o.Value is WaveInputFieldData && o.ShortCutType == ShortCutType.FeatureSet);
             fromTreeShortcut.CloseForData = (v, o) => o.Equals(v.Data);
 
             yield return fromTreeShortcut;
@@ -240,8 +240,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 return model != null ? model.FeatureContainer.Obstacles : null;
             });
             yield return ViewInfoWrapper<Feature2D>.Create(obstacleViewInfo, FindObstaclesForFeature, IsModelObstacle);
-            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obstacleViewInfo, o => o.Data,
-                                                                       o => o.WaveModel.FeatureContainer.Obstacles.Equals(o.Data) &&
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obstacleViewInfo, o => o.Value,
+                                                                       o => o.WaveModel.FeatureContainer.Obstacles.Equals(o.Value) &&
                                                                             o.ShortCutType == ShortCutType.FeatureSet);
 
             yield return new ViewInfo<WaveModelTreeShortcut, WaveModel, WpfSettingsView>
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                         return;
                     }
 
-                    v.EnsureVisible(shortcut.Data);
+                    v.EnsureVisible(shortcut.Value);
                 },
                 AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.WaveModel)
             };

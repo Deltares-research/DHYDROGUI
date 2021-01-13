@@ -1157,6 +1157,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             object from = connection.From.BelongsTo.Tag;
             object to = connection.To.BelongsTo.Tag;
             Disconnect(from, to);
+
+            // Because of the 'reshuffling' happening inside the mathematical expression, we need to rename the connector tags as well.
+            if (connection.To.BelongsTo is MathematicalExpressionShape mes)
+            {
+                foreach (Netron.GraphLib.Connection topConnector in mes.GetTopConnectors())
+                {
+                    IInput belongsToInput = (topConnector.From.BelongsTo.Tag as IInput);
+                    MathematicalExpression matExpression = (mes.Tag as MathematicalExpression);
+                    if (matExpression == null || belongsToInput == from)
+                        continue;
+                    topConnector.Text = matExpression.InputMapping.Single( itcm => itcm.Value.Equals(belongsToInput)).Key.ToString();
+                    topConnector.Invalidate();
+                }
+            }
             return true;
         }
 
@@ -1191,8 +1205,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             connection.LinePath = "ConditionalConnection";
             connection.LineEnd = ConnectionEnd.RightFilledArrow;
             connection.LineWeight = ConnectionWeight.Fat;
+            connection.Text = string.Empty;
 
-            if (connection.From.BelongsTo.Tag is Input || connection.To.BelongsTo.Tag is Output)
+            object from = connection.From.BelongsTo.Tag;
+            object to = connection.To.BelongsTo.Tag;
+
+            if (from is Input || to is Output)
             {
                 //  extend : NetronGraph expose pattern for DashStyle.Custom
                 //           make connection.LineWeight = ConnectionWeight.Fat work or expose pen.Width
@@ -1205,8 +1223,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 connection.LineWeight = ConnectionWeight.Fat;
             }
 
-            connection.Text = "";
-            if (connection.From.BelongsTo.Tag is ConditionBase)
+            if (from is IInput input && to is MathematicalExpression mathematicalExpression)
+            {
+                connection.Text = mathematicalExpression.InputMapping.Single(kvp => kvp.Value.Equals(input)).Key.ToString();
+            }
+
+            if (from is ConditionBase)
             {
                 connection.Text = ConnectionIs(connection) ? "T" : "F";
             }
