@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// NotifyPropertyChange attribute should not be necessary because base class
     /// already has it applied. Project explorer does not function correctly when left out.
     /// </summary>
-    [Entity(FireOnCollectionChange = false)]
+    [Entity]
     public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, IControllingModel, IFileBased
     {
         public const string InputPostFix = ".input";
@@ -97,9 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             SaveStateStopTime = StopTime;
             SaveStateTimeStep = TimeStep;
 
-            RestartOutput = new EventedList<RestartFile>();
-
-            OutputDocuments = new EventedList<ReadOnlyTextFileData>();
+            InitializeOutputData();
 
             runner = new DimrRunner(this, new DimrApiFactory());
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
@@ -108,6 +106,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 ReconnectRtcToFmOutputFile(outputFileFunctionStore.Path);
             }
+        }
+
+        private void InitializeOutputData()
+        {
+            RestartOutput = new EventedList<RestartFile>();
+            OutputDocuments = new EventedList<ReadOnlyTextFileData>();
         }
 
         public virtual RealTimeControlOutputFileFunctionStore OutputFileFunctionStore
@@ -190,7 +194,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <summary>
         /// Gets or sets the output text documents.
         /// </summary>
-        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; }
+        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; set; }
 
         //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
