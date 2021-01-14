@@ -1894,8 +1894,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 Assert.That(((IFileBased) rtcModel).IsOpen);
                 Assert.That(rtcModel.OutputDocuments.Count, Is.EqualTo(0));
-                
-                Assert.That(outputDocumentsBeforeClear.Single().Content, Is.Empty);
             }
         }
         
