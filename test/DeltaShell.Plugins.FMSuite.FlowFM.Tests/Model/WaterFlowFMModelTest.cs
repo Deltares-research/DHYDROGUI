@@ -2215,5 +2215,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.That(traFrmProperty.Value, Is.EqualTo(sedimentFraction.CurrentFormulaType.TraFrm));
             }
         }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void AddTracer_CorrectTracerCoverageIsAdded()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
+                model.DataItems.Add(new DataItem(coverage, "Some Tracer"));
+
+                // When
+                model.TracerDefinitions.Add("Some Tracer");
+
+                // Then
+                Assert.That(model.InitialTracers.Single(), Is.SameAs(coverage));
+                Assert.That(coverage.Grid, Is.SameAs(model.Grid));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void AddSedimentFraction_CorrectSedimentFractionCoverageIsAdded()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
+                model.DataItems.Add(new DataItem(coverage, "Some Sediment Fraction_SedConc"));
+
+                // When
+                model.SedimentFractions.Add(new SedimentFraction {Name = "Some Sediment Fraction"});
+
+                // Then
+                Assert.That(model.InitialFractions.Single(), Is.SameAs(coverage));
+                Assert.That(coverage.Grid, Is.SameAs(model.Grid));
+            }
+        }
     }
 }
