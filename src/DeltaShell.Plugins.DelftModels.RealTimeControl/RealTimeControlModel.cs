@@ -1031,7 +1031,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             try
             {
-                return new ReadOnlyTextFileData(textFileInfo.Name, File.ReadAllText(textFileInfo.FullName), ReadOnlyTextFileDataType.Default);
+                return new ReadOnlyTextFileData(textFileInfo.Name, 
+                                                File.ReadAllText(textFileInfo.FullName), 
+                                                GetReadOnlyTextFileDataType(textFileInfo));
             }
             catch (Exception e)
             {
@@ -1041,6 +1043,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             return null;
+        }
+
+        private static ReadOnlyTextFileDataType GetReadOnlyTextFileDataType(FileInfo fileInfo)
+        {
+            switch (fileInfo.Extension)
+            {
+                case ".xml":
+                    return ReadOnlyTextFileDataType.Xml;
+                case ".csv":
+                    return ReadOnlyTextFileDataType.Table;
+                default:
+                    return ReadOnlyTextFileDataType.Default;
+            }
         }
 
         private void SetRestartOutputFiles(IEnumerable<string> restartFilePaths)
