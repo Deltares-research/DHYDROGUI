@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace DeltaShell.NGHS.Common.Tests.IO
 {
     [TestFixture]
-    public class CommonFileAndDirectoryActionsTest
+    public class CommonFileSystemActionsTest
     {
         [Test]
         public void ClearFolderWithFileExceptions_WhenThereAreNoExceptions_ShouldClearMainFolder()
@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 string testFolder = Path.Combine(tempDirectory.Path, "test");
                 Directory.CreateDirectory(testFolder);
                 File.WriteAllText(Path.Combine(testFolder, "test.txt"), "test");
-                CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(testFolder, new List<string>());
+                CommonFileSystemActions.ClearFolderWithFileExceptions(testFolder, new List<string>());
 
                 var dirInfoTestFolder = new DirectoryInfo(testFolder);
                 Assert.AreEqual(dirInfoTestFolder.GetFiles().Length, 0);
@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 File.WriteAllText(filePath, "test");
                 string filePath2 = Path.Combine(testFolder, "test2.txt");
                 File.WriteAllText(filePath2, "test");
-                CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(testFolder, new List<string>{ filePath });
+                CommonFileSystemActions.ClearFolderWithFileExceptions(testFolder, new List<string>{ filePath });
 
                 var dirInfoTestFolder = new DirectoryInfo(testFolder);
                 FileInfo[] retrievedFilesAfterCleanup = dirInfoTestFolder.GetFiles();
@@ -59,7 +59,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 File.WriteAllText(filePath, "test");
                 string filePath2 = Path.Combine(subTestFolderPath, "test2.txt");
                 File.WriteAllText(filePath2, "test");
-                CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(testFolderPath, new List<string>());
+                CommonFileSystemActions.ClearFolderWithFileExceptions(testFolderPath, new List<string>());
 
                 Assert.IsFalse(Directory.Exists(subTestFolderPath));
                 var dirInfoSubTestFolder = new DirectoryInfo(testFolderPath);
@@ -84,7 +84,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 File.WriteAllText(filePath, "test");
                 string filePath2 = Path.Combine(subTestFolderPath, "test2.txt");
                 File.WriteAllText(filePath2, "test");
-                CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(testFolderPath, new List<string> { filePath });
+                CommonFileSystemActions.ClearFolderWithFileExceptions(testFolderPath, new List<string> { filePath });
 
                 Assert.IsTrue(Directory.Exists(subTestFolderPath));
                 var dirInfoSubTestFolder = new DirectoryInfo(subTestFolderPath);

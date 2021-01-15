@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DeltaShell.NGHS.Common.IO
 {
-    public static class CommonFileAndDirectoryActions
+    public static class CommonFileSystemActions
     {
         public static bool ClearFolderWithFileExceptions(string folderPath, IReadOnlyCollection<string> fileExceptions)
         {
