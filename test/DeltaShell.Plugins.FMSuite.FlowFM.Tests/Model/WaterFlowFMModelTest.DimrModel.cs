@@ -215,8 +215,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
 
-                Assert.AreEqual(fileExceptions.Count, 1);
-                Assert.AreEqual(fileExceptions.First(), Path.ChangeExtension(runMduPath, FileConstants.CachingFileExtension));
+                string[] expectedFileExceptions = {Path.ChangeExtension(runMduPath, FileConstants.CachingFileExtension)};
+                Assert.That(fileExceptions, Is.EquivalentTo(expectedFileExceptions));
             }
         }
 
@@ -226,16 +226,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [TestCase(false, true)]
         public void FileExceptionsCleaningWorkingDirectory_WhenUseCachingIsFalseAndOrCacheFilePathNotSetToWorkingDirectory_ShouldReturnNoFiles(bool cacheFileInWorkingDirectory, bool useCaching)
         {
+            // Setup
             using (var model = new WaterFlowFMModel())
             {
-                string runMduPath = Path.Combine(cacheFileInWorkingDirectory ? model.WorkingDirectoryPath : "NotWorkingDirectory", "dflowfm", $"{model.Name}{FileConstants.MduFileExtension}");
+                string workingDir = cacheFileInWorkingDirectory ? model.WorkingDirectoryPath : "NotWorkingDirectory";
+                string runMduPath = Path.Combine(workingDir, "dflowfm", $"{model.Name}{FileConstants.MduFileExtension}");
                 model.CacheFile.UpdatePathToMduLocation(runMduPath);
                 
                 model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString(useCaching.ToString());
 
-                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
-
-                Assert.AreEqual(fileExceptions.Count, 0);
+                // Call | Assert
+                Assert.That(model.FileExceptionsCleaningWorkingDirectory, Is.Empty);
             }
         }
 
@@ -260,7 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 model.CacheFile.UpdatePathToMduLocation(runMduPath);
                 model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("true");
 
-                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(50, 50, 20, 20);
+                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 20, 20);
 
                 // Act
                 model.Initialize();
