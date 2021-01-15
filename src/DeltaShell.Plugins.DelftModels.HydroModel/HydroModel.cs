@@ -793,12 +793,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                                                  .Plus(CurrentWorkflow as IDimrModel).Where(dm => dm != null)
                                                                  .ToList();
                     var fileExceptions = new List<string>();
-                    dimrModels.ForEach(m =>
+
+                    foreach (IDimrModel m in dimrModels)
                     {
                         m.RunsInIntegratedModel = true;
                         m.DisconnectOutput();
                         fileExceptions.AddRange(m.FileExceptionsCleaningWorkingDirectory);
-                    });
+                    }
 
                     string kernelDirectories = GetKernelDirectories(dimrModels);
                     if (kernelDirectories == null)
@@ -810,6 +811,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     
                     if (!ExportHydroModel())
                     {
+                        Status = ActivityStatus.Failed;
                         return;
                     }
 
@@ -854,17 +856,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        private bool ExportHydroModel()
-        {
-            var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
-            if (dHydroConfigXmlExporter.Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml")))
-            {
-                return true;
-            }
-
-            Status = ActivityStatus.Failed;
-            return false;
-        }
+        private bool ExportHydroModel() => 
+            new DHydroConfigXmlExporter().Export(this, Path.Combine(WorkingDirectoryPath, "dimr.xml"));
 
         private void PrepareWorkingDirectory(List<string> fileExceptions)
         {
