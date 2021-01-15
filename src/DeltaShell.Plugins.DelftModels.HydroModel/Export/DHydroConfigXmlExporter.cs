@@ -208,7 +208,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             {
                 if (hydroModel.CurrentWorkflow == null)
                 {
-                    Log.ErrorFormat("Could not get valid DIMR items from object of type {0}", item.GetType());
                     return Enumerable.Empty<IDimrModel>();
                 }
 

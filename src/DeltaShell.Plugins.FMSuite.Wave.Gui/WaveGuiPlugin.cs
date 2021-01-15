@@ -441,9 +441,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
             }
 
-            if (sender is IWaveModel model && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
+            if (sender is IModel model && 
+                activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
             {
-                CloseOutputFileViews(model.WaveOutputData);
+                CloseWaveModelOutput(model);
             }
 
             if (!(sender is WaveModel) || activityStatusChangedEventArgs.NewStatus != ActivityStatus.Failed)
@@ -453,6 +454,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
 
             Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        }
+
+        private void CloseWaveModelOutput(IModel model)
+        {
+            switch (model)
+            {
+                case IWaveModel waveModel:
+                    CloseOutputFileViews(waveModel.WaveOutputData);
+                    break;
+                case ICompositeActivity compositeActivity:
+                    compositeActivity.Activities.OfType<IWaveModel>()
+                                     .Select(x => x.WaveOutputData)
+                                     .ForEach(CloseOutputFileViews);
+                    break;
+            }
         }
 
         private void CloseOutputFileViews(IWaveOutputData outputData)
