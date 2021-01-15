@@ -2224,6 +2224,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             using (var model = new WaterFlowFMModel())
             {
                 var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
+                coverage.Components[0].NoDataValue = -999d;
+
                 model.DataItems.Add(new DataItem(coverage, "Some Tracer"));
 
                 // When
@@ -2243,6 +2245,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             using (var model = new WaterFlowFMModel())
             {
                 var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
+                coverage.Components[0].NoDataValue = -999d;
+
                 model.DataItems.Add(new DataItem(coverage, "Some Sediment Fraction_SedConc"));
 
                 // When
