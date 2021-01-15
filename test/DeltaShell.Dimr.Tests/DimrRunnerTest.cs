@@ -66,6 +66,7 @@ namespace DeltaShell.Dimr.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OnInitialize_WhenThereIsAFileExceptionForCleaningTheWorkingDirectory_ShouldNotRemoveThisException()
         {
             // Arrange
