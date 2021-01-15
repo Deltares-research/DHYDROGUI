@@ -67,7 +67,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         public override IEnumerable GetChildNodeObjects(WaveModel parentNodeData, ITreeNode node)
         {
             yield return new WaveModelTreeShortcut(GeneralFolderName, GeneralIcon, parentNodeData, GeneralFolderName);
-            yield return new TreeFolder(GetArea2DItems(parentNodeData), AreaFolderName, FolderImageType.None);
+            yield return new WaveModelTreeShortcut(AreaFolderName, AreaImage, parentNodeData, AreaFolderName, ShortCutType.SettingsTab,
+                                                   GetArea2DItems(parentNodeData));
             yield return new WaveModelTreeShortcut(SpectralDomainName, PhysicalParametersImage, parentNodeData,
                                                    SpectralDomainName);
             yield return parentNodeData.OuterDomain;
