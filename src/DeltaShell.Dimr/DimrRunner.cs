@@ -302,7 +302,7 @@ namespace DeltaShell.Dimr
             string exportDir = Path.Combine(workDirectory, model.DirectoryName);
             FileUtils.CreateDirectoryIfNotExists(exportDir);
             CommonFileSystemActions.ClearFolder(exportDir, 
-                                                new HashSet<string>(model.FileExceptionsCleaningWorkingDirectory));
+                                                new HashSet<string>(model.IgnoredFilePathsWhenCleaningWorkingDirectory));
             exporter.Export(modelObject, model.GetExporterPath(exportDir));
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
         }

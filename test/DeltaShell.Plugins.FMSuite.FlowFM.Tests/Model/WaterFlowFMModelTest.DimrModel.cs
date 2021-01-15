@@ -213,10 +213,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 model.CacheFile.UpdatePathToMduLocation(runMduPath);
                 model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString("true");
 
-                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
+                ISet<string> ignoredFilePaths = model.IgnoredFilePathsWhenCleaningWorkingDirectory;
 
                 string[] expectedFileExceptions = {Path.ChangeExtension(runMduPath, FileConstants.CachingFileExtension)};
-                Assert.That(fileExceptions, Is.EquivalentTo(expectedFileExceptions));
+                Assert.That(ignoredFilePaths, Is.EquivalentTo(expectedFileExceptions));
             }
         }
 
@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).SetValueAsString(useCaching.ToString());
 
                 // Call | Assert
-                Assert.That(model.FileExceptionsCleaningWorkingDirectory, Is.Empty);
+                Assert.That(model.IgnoredFilePathsWhenCleaningWorkingDirectory, Is.Empty);
             }
         }
 

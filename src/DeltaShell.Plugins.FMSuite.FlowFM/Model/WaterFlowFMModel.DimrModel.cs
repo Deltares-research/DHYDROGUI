@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             LogWarningWriteRestartModelRun();
         }
 
-        public IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory =>
+        public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory =>
             CacheFile.UseCaching && CacheFile.Path.StartsWith(WorkingDirectoryPath)
                 ? new HashSet<string> {CacheFile.Path}
                 : new HashSet<string>();

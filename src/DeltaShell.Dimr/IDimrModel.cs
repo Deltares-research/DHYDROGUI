@@ -151,6 +151,6 @@ namespace DeltaShell.Dimr
         /// <value>
         /// The file exceptions cleaning working directory.
         /// </value>
-        IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory { get; }
+        ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory { get; }
     }
 }

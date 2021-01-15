@@ -768,7 +768,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             activity.DirectoryName.Returns(modelDirectoryName);
 
-            activity.FileExceptionsCleaningWorkingDirectory.Returns(fileException != null ? new List<string> {fileException} : new List<string>());
+            activity.IgnoredFilePathsWhenCleaningWorkingDirectory
+                    .Returns(fileException != null 
+                                 ? new HashSet<string> {fileException} 
+                                 : new HashSet<string>());
 
             var workflow = new SequentialActivity { Activities = { activity } };
 

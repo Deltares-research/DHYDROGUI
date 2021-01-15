@@ -367,7 +367,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             using (var model = new RealTimeControlModel())
             {
-                Assert.That(model.FileExceptionsCleaningWorkingDirectory, Is.Empty);
+                Assert.That(model.IgnoredFilePathsWhenCleaningWorkingDirectory, Is.Empty);
             }
         }
 

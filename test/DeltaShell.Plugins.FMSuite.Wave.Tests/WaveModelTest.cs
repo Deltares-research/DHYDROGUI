@@ -1455,7 +1455,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var model = new WaveModel())
             {
-                Assert.That(model.FileExceptionsCleaningWorkingDirectory, Is.Empty);
+                Assert.That(model.IgnoredFilePathsWhenCleaningWorkingDirectory, Is.Empty);
             }
         }
 

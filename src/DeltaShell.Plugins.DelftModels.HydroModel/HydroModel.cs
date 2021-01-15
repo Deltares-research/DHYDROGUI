@@ -798,7 +798,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     {
                         m.RunsInIntegratedModel = true;
                         m.DisconnectOutput();
-                        fileExceptions.AddRange(m.FileExceptionsCleaningWorkingDirectory);
+                        fileExceptions.AddRange(m.IgnoredFilePathsWhenCleaningWorkingDirectory);
                     }
 
                     string kernelDirectories = GetKernelDirectories(dimrModels);
