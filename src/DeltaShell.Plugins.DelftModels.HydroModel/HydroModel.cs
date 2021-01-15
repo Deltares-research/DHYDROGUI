@@ -870,7 +870,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (Directory.Exists(WorkingDirectoryPath))
             {
-                CommonFileSystemActions.ClearFolderWithFileExceptions(WorkingDirectoryPath, fileExceptions);
+                CommonFileSystemActions.ClearFolderWithFileExceptions(WorkingDirectoryPath, 
+                                                                      new HashSet<string>(fileExceptions));
             }
             else
             {

@@ -8,89 +8,107 @@ using NUnit.Framework;
 namespace DeltaShell.NGHS.Common.Tests.IO
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class CommonFileSystemActionsTest
     {
         [Test]
         public void ClearFolderWithFileExceptions_WhenThereAreNoExceptions_ShouldClearMainFolder()
         {
+            // Setup
             using (var tempDirectory = new TemporaryDirectory())
             {
-                string testFolder = Path.Combine(tempDirectory.Path, "test");
-                Directory.CreateDirectory(testFolder);
-                File.WriteAllText(Path.Combine(testFolder, "test.txt"), "test");
-                CommonFileSystemActions.ClearFolderWithFileExceptions(testFolder, new List<string>());
+                File.WriteAllText(Path.Combine(tempDirectory.Path, "test.txt"), "test");
 
-                var dirInfoTestFolder = new DirectoryInfo(testFolder);
-                Assert.AreEqual(dirInfoTestFolder.GetFiles().Length, 0);
+                // Call
+                CommonFileSystemActions.ClearFolderWithFileExceptions(tempDirectory.Path, 
+                                                                      new HashSet<string>());
+
+                // Assert
+                var dirInfoTestFolder = new DirectoryInfo(tempDirectory.Path);
+                Assert.That(dirInfoTestFolder.GetFiles(), Is.Empty);
             }
         }
 
         [Test]
         public void ClearFolderWithFileExceptions_WhenThereAreExceptionsInMainFolder_ShouldNotClearMainFolder()
         {
+            // Setup
             using (var tempDirectory = new TemporaryDirectory())
             {
-                string testFolder = Path.Combine(tempDirectory.Path, "test");
-                Directory.CreateDirectory(testFolder);
-                string filePath = Path.Combine(testFolder, "test.txt");
+                string filePath = Path.Combine(tempDirectory.Path, "test.txt");
                 File.WriteAllText(filePath, "test");
-                string filePath2 = Path.Combine(testFolder, "test2.txt");
-                File.WriteAllText(filePath2, "test");
-                CommonFileSystemActions.ClearFolderWithFileExceptions(testFolder, new List<string>{ filePath });
 
-                var dirInfoTestFolder = new DirectoryInfo(testFolder);
+                string filePath2 = Path.Combine(tempDirectory.Path, "test2.txt");
+                File.WriteAllText(filePath2, "test");
+
+                // Call
+                CommonFileSystemActions.ClearFolderWithFileExceptions(
+                    tempDirectory.Path, 
+                    new HashSet<string>{ filePath });
+
+                // Assert
+                var dirInfoTestFolder = new DirectoryInfo(tempDirectory.Path);
                 FileInfo[] retrievedFilesAfterCleanup = dirInfoTestFolder.GetFiles();
-                Assert.AreEqual(retrievedFilesAfterCleanup.Length, 1);
-                Assert.AreEqual(filePath, retrievedFilesAfterCleanup.First().FullName);
+
+                Assert.That(retrievedFilesAfterCleanup.Length, Is.EqualTo(1));
+                Assert.That(retrievedFilesAfterCleanup.Single().FullName, 
+                            Is.EqualTo(filePath));
             }
         }
 
         [Test]
         public void ClearFolderWithFileExceptions_WhenThereAreNoExceptionsInSubFolder_ShouldClearMainIncludingRemoveSubFolder()
         {
+            // Setup
             using (var tempDirectory = new TemporaryDirectory())
             {
-                string testFolderPath = Path.Combine(tempDirectory.Path, "test");
-                Directory.CreateDirectory(testFolderPath);
-                string subTestFolderPath = Path.Combine(testFolderPath, "test");
+                string subTestFolderPath = Path.Combine(tempDirectory.Path, "test");
                 Directory.CreateDirectory(subTestFolderPath);
 
                 string filePath = Path.Combine(subTestFolderPath, "test.txt");
                 File.WriteAllText(filePath, "test");
                 string filePath2 = Path.Combine(subTestFolderPath, "test2.txt");
                 File.WriteAllText(filePath2, "test");
-                CommonFileSystemActions.ClearFolderWithFileExceptions(testFolderPath, new List<string>());
 
-                Assert.IsFalse(Directory.Exists(subTestFolderPath));
-                var dirInfoSubTestFolder = new DirectoryInfo(testFolderPath);
-                FileInfo[] retrievedFilesAfterCleanup = dirInfoSubTestFolder.GetFiles();
-                DirectoryInfo[] retrievedDirectoriesAfterCleanup = dirInfoSubTestFolder.GetDirectories();
-                Assert.AreEqual(retrievedFilesAfterCleanup.Length, 0);
-                Assert.AreEqual(retrievedDirectoriesAfterCleanup.Length, 0);
+                // Call
+                CommonFileSystemActions.ClearFolderWithFileExceptions(tempDirectory.Path, new HashSet<string>());
+
+                // Assert
+                Assert.That(Directory.Exists(subTestFolderPath), Is.False);
+
+                var dirInfoTestFolder = new DirectoryInfo(tempDirectory.Path);
+
+                Assert.That(dirInfoTestFolder.EnumerateFiles(), Is.Empty);
+                Assert.That(dirInfoTestFolder.EnumerateDirectories(), Is.Empty);
             }
         }
 
         [Test]
         public void ClearFolderWithFileExceptions_WhenThereAreExceptionsInSubFolder_ShouldNotClearMainAndSubFolder()
         {
+            // Setup
             using (var tempDirectory = new TemporaryDirectory())
             {
-                string testFolderPath = Path.Combine(tempDirectory.Path, "test");
-                Directory.CreateDirectory(testFolderPath);
-                string subTestFolderPath = Path.Combine(testFolderPath, "test");
+                string subTestFolderPath = Path.Combine(tempDirectory.Path, "test");
                 Directory.CreateDirectory(subTestFolderPath);
 
                 string filePath = Path.Combine(subTestFolderPath, "test.txt");
                 File.WriteAllText(filePath, "test");
                 string filePath2 = Path.Combine(subTestFolderPath, "test2.txt");
                 File.WriteAllText(filePath2, "test");
-                CommonFileSystemActions.ClearFolderWithFileExceptions(testFolderPath, new List<string> { filePath });
 
-                Assert.IsTrue(Directory.Exists(subTestFolderPath));
+                // Call
+                CommonFileSystemActions.ClearFolderWithFileExceptions(tempDirectory.Path, new HashSet<string> { filePath });
+
+                // Assert
                 var dirInfoSubTestFolder = new DirectoryInfo(subTestFolderPath);
+
+                Assert.That(dirInfoSubTestFolder.Exists, Is.True);
+
                 FileInfo[] retrievedFilesAfterCleanup = dirInfoSubTestFolder.GetFiles();
-                Assert.AreEqual(retrievedFilesAfterCleanup.Length, 1);
-                Assert.AreEqual(filePath, retrievedFilesAfterCleanup.First().FullName);
+
+                Assert.That(retrievedFilesAfterCleanup.Length, Is.EqualTo(1));
+                Assert.That(retrievedFilesAfterCleanup.Single().FullName, Is.EqualTo(filePath));
             }
         }
     }
