@@ -14,22 +14,26 @@ namespace DeltaShell.NGHS.Common.IO
     {
         /// <summary>
         /// Clears any files and subsequent empty subfolders of the folder at <paramref name="folderPath"/>
-        /// except for the files defined in the <paramref name="fileExceptions"/>.
+        /// except for the files defined in the <paramref name="filteredFilePathsSet"/>.
         /// </summary>
         /// <param name="folderPath">The folder path.</param>
-        /// <param name="fileExceptions">The file exceptions.</param>
+        /// <param name="filteredFilePathsSet">The set of (absolute) file paths which should be ignored when cleaning the folder.</param>
         /// <remarks>
         /// If <paramref name="folderPath"/> nothing is done.
-        /// If <paramref name="fileExceptions"/> no file exceptions are taken into account.
+        /// If <paramref name="filteredFilePathsSet"/> no file exceptions are taken into account.
+        ///
+        /// <paramref name="filteredFilePathsSet"/> is expected to contain absolute paths, relative paths are
+        /// not supported, and will be deleted regardless. Any absolute path that is encountered in the provided
+        /// <paramref name="folderPath"/> is ignored and will not be deleted.
         /// </remarks>
-        public static void ClearFolderWithFileExceptions(string folderPath, ISet<string> fileExceptions)
+        public static void ClearFolder(string folderPath, ISet<string> filteredFilePathsSet)
         {
             if (folderPath == null) return;
-            fileExceptions = fileExceptions ?? new HashSet<string>();
+            filteredFilePathsSet = filteredFilePathsSet ?? new HashSet<string>();
 
             var dirInfo = new DirectoryInfo(folderPath);
 
-            RemoveFiles(dirInfo, fileExceptions);
+            RemoveFiles(dirInfo, filteredFilePathsSet);
             RemoveEmptySubDirectories(dirInfo);
         }
 

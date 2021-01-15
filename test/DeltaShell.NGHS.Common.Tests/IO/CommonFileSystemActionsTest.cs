@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
     public class CommonFileSystemActionsTest
     {
         [Test]
-        public void ClearFolderWithFileExceptions_WhenThereAreNoExceptions_ShouldClearMainFolder()
+        public void ClearFolder_WhenThereAreNoFilteredFiles_ShouldClearMainFolder()
         {
             // Setup
             using (var tempDirectory = new TemporaryDirectory())
@@ -20,8 +20,8 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 File.WriteAllText(Path.Combine(tempDirectory.Path, "test.txt"), "test");
 
                 // Call
-                CommonFileSystemActions.ClearFolderWithFileExceptions(tempDirectory.Path, 
-                                                                      new HashSet<string>());
+                CommonFileSystemActions.ClearFolder(tempDirectory.Path, 
+                                                    new HashSet<string>());
 
                 // Assert
                 var dirInfoTestFolder = new DirectoryInfo(tempDirectory.Path);
@@ -30,7 +30,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
         }
 
         [Test]
-        public void ClearFolderWithFileExceptions_WhenThereAreExceptionsInMainFolder_ShouldNotClearMainFolder()
+        public void ClearFolder_WhenThereAreExceptionsInMainFolder_ShouldNotClearMainFolder()
         {
             // Setup
             using (var tempDirectory = new TemporaryDirectory())
@@ -42,9 +42,8 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 File.WriteAllText(filePath2, "test");
 
                 // Call
-                CommonFileSystemActions.ClearFolderWithFileExceptions(
-                    tempDirectory.Path, 
-                    new HashSet<string>{ filePath });
+                CommonFileSystemActions.ClearFolder(tempDirectory.Path, 
+                                                    new HashSet<string>{ filePath });
 
                 // Assert
                 var dirInfoTestFolder = new DirectoryInfo(tempDirectory.Path);
@@ -57,7 +56,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
         }
 
         [Test]
-        public void ClearFolderWithFileExceptions_WhenThereAreNoExceptionsInSubFolder_ShouldClearMainIncludingRemoveSubFolder()
+        public void ClearFolder_WhenThereAreNoExceptionsInSubFolder_ShouldClearMainIncludingRemoveSubFolder()
         {
             // Setup
             using (var tempDirectory = new TemporaryDirectory())
@@ -71,7 +70,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 File.WriteAllText(filePath2, "test");
 
                 // Call
-                CommonFileSystemActions.ClearFolderWithFileExceptions(tempDirectory.Path, new HashSet<string>());
+                CommonFileSystemActions.ClearFolder(tempDirectory.Path, new HashSet<string>());
 
                 // Assert
                 Assert.That(Directory.Exists(subTestFolderPath), Is.False);
@@ -84,7 +83,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
         }
 
         [Test]
-        public void ClearFolderWithFileExceptions_WhenThereAreExceptionsInSubFolder_ShouldNotClearMainAndSubFolder()
+        public void ClearFolder_WhenThereAreExceptionsInSubFolder_ShouldNotClearMainAndSubFolder()
         {
             // Setup
             using (var tempDirectory = new TemporaryDirectory())
@@ -98,7 +97,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 File.WriteAllText(filePath2, "test");
 
                 // Call
-                CommonFileSystemActions.ClearFolderWithFileExceptions(tempDirectory.Path, new HashSet<string> { filePath });
+                CommonFileSystemActions.ClearFolder(tempDirectory.Path, new HashSet<string> { filePath });
 
                 // Assert
                 var dirInfoSubTestFolder = new DirectoryInfo(subTestFolderPath);

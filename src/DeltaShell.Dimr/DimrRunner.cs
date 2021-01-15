@@ -301,8 +301,8 @@ namespace DeltaShell.Dimr
             FileUtils.CreateDirectoryIfNotExists(workDirectory);
             string exportDir = Path.Combine(workDirectory, model.DirectoryName);
             FileUtils.CreateDirectoryIfNotExists(exportDir);
-            CommonFileSystemActions.ClearFolderWithFileExceptions(exportDir, 
-                                                                  new HashSet<string>(model.FileExceptionsCleaningWorkingDirectory));
+            CommonFileSystemActions.ClearFolder(exportDir, 
+                                                new HashSet<string>(model.FileExceptionsCleaningWorkingDirectory));
             exporter.Export(modelObject, model.GetExporterPath(exportDir));
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
         }
