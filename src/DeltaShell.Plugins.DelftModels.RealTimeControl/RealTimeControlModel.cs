@@ -190,6 +190,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// </summary>
         public virtual IEventedList<ReadOnlyOutputTextDocument> OutputDocuments { get; }
 
+        public override bool CanRun => false;
+
         //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
         public override DateTime StartTime
@@ -396,7 +398,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             if (outputFileFunctionStore != null && File.Exists(outputFileFunctionStore.Path))
             {
-                clonedModel.OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore() {Path = outputFileFunctionStore.Path};
+                clonedModel.OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore {Path = outputFileFunctionStore.Path};
             }
 
             return clonedModel;
@@ -964,7 +966,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             ClearOutputDocuments();
 
             EndEdit();
-            
+
             MarkDirty();
         }
 
@@ -1070,7 +1072,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             List<IFeature> features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
-            outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
+            outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore
             {
                 Features = features,
                 CoordinateSystem = CoordinateSystem,
@@ -1584,6 +1586,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         #endregion
 
         #region IFileBased
+
         private bool isOpen;
         private int dirtyCounter; // tells NHibernate we need to be saved
         private string path;
@@ -1623,12 +1626,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <see cref="persistentOutputDirectory"/> is up to date when setting
         /// <see cref="IFileBased.Path"/> property afterwards. Resulting in unnecessary
         /// second copy action without removal of source folder and second
-        /// <see cref="IFileBased.SwitchTo"/>. 
+        /// <see cref="IFileBased.SwitchTo"/>.
         /// </summary>
         private void UpdatePersistentOutputDirectoryIfNeeded()
         {
             var dirInfo = new DirectoryInfo(persistentOutputDirectory);
-            var modelDirectory = dirInfo.Parent;
+            DirectoryInfo modelDirectory = dirInfo.Parent;
             if (modelDirectory.Name != Name)
             {
                 removeSourceOutputFolder = true;
@@ -1648,7 +1651,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             isOpen = true;
         }
 
-        
         void IFileBased.Close()
         {
             isOpen = false;
@@ -1804,7 +1806,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             DisconnectOutput();
             FileUtils.DeleteIfExists(Directory.GetParent(oldPersistentOutputDirectory).FullName);
-            oldPersistentOutputDirectory = String.Empty;
+            oldPersistentOutputDirectory = string.Empty;
             removeSourceOutputFolder = false;
         }
 

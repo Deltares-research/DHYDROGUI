@@ -75,6 +75,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         #endregion
 
         [Test]
+        public void GivenRealTimeControlModel_ThenCanRunIsFalse()
+        {
+            Assert.That(new RealTimeControlModel().CanRun, Is.False);
+        }
+        
+        [Test]
         public void DimrModelRelativeOutputDirectory_ShouldReturnDirectoryNamePlusOutputDirectoryName()
         {
             var model = new RealTimeControlModel();
