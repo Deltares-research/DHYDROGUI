@@ -26,6 +26,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -554,57 +555,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             foreach (IGrouping<Type, UnstructuredGridCoverage> coverageGrouping in coverageByType)
             {
-                Coordinate[] coordinates = null;
-
                 foreach (UnstructuredGridCoverage coverage in coverageGrouping)
                 {
-                    if (coverage.IsTimeDependent)
-                    {
-                        throw new NotSupportedException(
-                            "Converting time dependent spatial data to samples is not supported");
-                    }
-
-                    var component = coverage.Components[0] as IVariable<double>;
-                    if (component == null)
-                    {
-                        throw new NotSupportedException(
-                            "Converting a non-double valued coverage component to a point cloud is not supported");
-                    }
-
-                    IMultiDimensionalArray<double> values = component.Values;
-                    var noDataValue = (double?) component.NoDataValue;
-
-                    var pointCloud = new PointCloud();
-                    var i = 0;
-                    foreach (double v in values) // using enumerable next is faster than using index (for loop)
-                    {
-                        if (noDataValue.HasValue && v == noDataValue.Value)
-                        {
-                            i++;
-                            continue;
-                        }
-
-                        if (coordinates == null)
-                        {
-                            coordinates = coverage.Coordinates.ToArray();
-
-                            if (coordinates.Length != values.Count)
-                            {
-                                throw new InvalidOperationException(
-                                    "Spatial data is not consistent: number of coordinate does not match number of values");
-                            }
-                        }
-
-                        Coordinate coord = coordinates[i];
-                        pointCloud.PointValues.Add(new PointValue
-                        {
-                            X = coord.X,
-                            Y = coord.Y,
-                            Value = v
-                        });
-                        i++;
-                    }
-
+                    IPointCloud pointCloud = coverage.ToPointCloud(skipMissingValues: true);
                     if (pointCloud.PointValues.Count == 0)
                     {
                         continue;
