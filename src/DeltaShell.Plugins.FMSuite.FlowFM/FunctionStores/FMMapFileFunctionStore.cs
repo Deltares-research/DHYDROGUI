@@ -152,12 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return;
             }
 
-            NetCdfVariable netcdfVariable =
-                netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
-            if (netcdfVariable == null)
-            {
-                throw new Exception("Missing NetCdf name");
-            }
+            NetCdfVariable netcdfVariable = GetNetcdfVariable(function);
 
             List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
 
@@ -196,6 +191,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
+        /// <summary>
+        /// Gets the NetCdf variable based on the function.
+        /// </summary>
+        /// <param name="function">The <see cref="IVariable"/> to get the NetCdf variable for.</param>
+        /// <returns>The <see cref="NetCdfVariable"/> corresponding with the <paramref name="function"/>.</returns>
+        /// <exception cref="Exception">Thrown when the <paramref name="function"/> does not have a name.</exception>
+        private NetCdfVariable GetNetcdfVariable(IVariable function)
+        {
+            NetCdfVariable netcdfVariable = netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
+            if (netcdfVariable == null)
+            {
+                throw new Exception("Missing NetCdf name");
+            }
+
+            return netcdfVariable;
+        }
+        
         /// <summary>
         /// Gets an indicator whether the <see cref="IVariable"/> is a coverage function.
         /// </summary>
@@ -423,43 +435,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             return GridApiDataSet.DataSetConventions.CONV_NULL;
         }
 
-        private void InitializeCoverage(IFunction coverage, string secondDimensionName, string variableName,
-                                        string unitSymbol, string refDate,
-                                        IEnumerable<Tuple<string, string>> secondDimensionAdditionalAttributes = null)
+        /// <summary>
+        /// Initializes a coverage with a two dimensions.
+        /// </summary>
+        /// <param name="function">The function to initialize the coverage for.</param>
+        /// <param name="secondDimensionName">The name of the second dimension.</param>
+        /// <param name="variableName">The name of the variable to initialize the coverage for.</param>
+        /// <param name="unitSymbol">The symbol of the variable.</param>
+        /// <param name="refDate">The reference date.</param>
+        private void InitializeCoverage(IFunction function, string secondDimensionName, string variableName,
+                                        string unitSymbol, string refDate)
         {
-            coverage.Store = this;
+            function.Store = this;
 
-            IVariable timeDimension = coverage.Arguments[0];
+            IVariable timeDimension = function.Arguments[0];
             timeDimension.Name = "Time";
             timeDimension.Attributes[NcNameAttribute] = TimeVariableNames[0];
             timeDimension.Attributes[NcUseVariableSizeAttribute] = "true";
             timeDimension.Attributes[NcRefDateAttribute] = refDate;
             timeDimension.IsEditable = false;
 
-            IVariable secondDimension = coverage.Arguments[1];
-            secondDimension.Name = secondDimensionName;
-            secondDimension.Attributes[NcNameAttribute] = secondDimensionName;
-            secondDimension.Attributes[NcUseVariableSizeAttribute] = "false";
+            InitializeAdditionalDimension(function.Arguments[1], secondDimensionName);
 
-            // Allowing us to add additional attributes (e.g. sedimentation related)
-            if (secondDimensionAdditionalAttributes != null)
-            {
-                foreach (Tuple<string, string> secondDimensionAdditionalAttribute in secondDimensionAdditionalAttributes
-                )
-                {
-                    if (string.IsNullOrEmpty(secondDimensionAdditionalAttribute.Item1))
-                    {
-                        continue;
-                    }
-
-                    coverage.Attributes[secondDimensionAdditionalAttribute.Item1] =
-                        secondDimensionAdditionalAttribute.Item2;
-                }
-            }
-
-            secondDimension.IsEditable = false;
-
-            IVariable coverageComponent = coverage.Components[0];
+            IVariable coverageComponent = function.Components[0];
             coverageComponent.Name = variableName;
             coverageComponent.Attributes[NcNameAttribute] = variableName;
             coverageComponent.Attributes[NcUseVariableSizeAttribute] = "true";
@@ -467,7 +465,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             coverageComponent.IsEditable = false;
             coverageComponent.Unit = new Unit(unitSymbol, unitSymbol);
 
-            coverage.IsEditable = false;
+            function.IsEditable = false;
+        }
+
+        
+        /// <summary>
+        /// Initializes an additional dimension for a <see cref="IVariable"/>.
+        /// </summary>
+        /// <param name="variable">The variable to initialize an additional dimension for.</param>
+        /// <param name="additionalDimensionName">The name of the additional dimension.</param>
+        private static void InitializeAdditionalDimension(IVariable variable, string additionalDimensionName)
+        {
+            variable.Name = additionalDimensionName;
+            variable.Attributes[NcNameAttribute] = additionalDimensionName;
+            variable.Attributes[NcUseVariableSizeAttribute] = "false";
+
+            variable.IsEditable = false;
+        }
+
+        /// <summary>
+        /// Adds attributes to an additional dimension for a <see cref="IFunction"/>.
+        /// </summary>
+        /// <param name="function">The function to add the additional dimension for.</param>
+        /// <param name="secondDimensionAdditionalAttributes">The collection of <see cref="Tuple"/> of attributes to add.</param>
+        private static void AddAdditionalDimensionAttributes(IFunction function, IEnumerable<System.Tuple<string, string>> secondDimensionAdditionalAttributes)
+        {
+            // Allowing us to add additional attributes
+            if (secondDimensionAdditionalAttributes != null)
+            {
+                foreach (System.Tuple<string, string> secondDimensionAdditionalAttribute in secondDimensionAdditionalAttributes)
+                {
+                    if (string.IsNullOrEmpty(secondDimensionAdditionalAttribute.Item1))
+                    {
+                        continue;
+                    }
+
+                    function.Attributes[secondDimensionAdditionalAttribute.Item1] =
+                        secondDimensionAdditionalAttribute.Item2;
+                }
+            }
         }
 
         private int[] InsertItem(int[] original, int index, int value)
@@ -578,13 +614,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 UnstructuredGridCoverage sedCoverage = CreateCoverage(location, coverageLongName, index);
                 if (sedCoverage != null)
                 {
-                    string secondDimensionName =
-                        netCdfFile.GetDimensionName(sedimentDimensionIndex != 1 ? dimensions[1] : dimensions[2]);
-                    InitializeCoverage(sedCoverage, secondDimensionName, netCdfVariableName, unitSymbol,
-                                       timeDependentVariable.ReferenceDate, new[]
-                                       {
-                                           new Tuple<string, string>(SedIndexAttributeName, index.ToString())
-                                       });
+                    string secondDimensionName = netCdfFile.GetDimensionName(sedimentDimensionIndex != 1 ? dimensions[1] : dimensions[2]);
+                    InitializeCoverage(sedCoverage, secondDimensionName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate);
+                    AddAdditionalDimensionAttributes(sedCoverage, new []
+                    {
+                        new System.Tuple<string,string>(SedIndexAttributeName, index.ToString())
+                    });
                 }
 
                 yield return sedCoverage;
