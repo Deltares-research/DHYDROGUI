@@ -64,6 +64,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// </summary>
         public virtual bool CopyFromWorkingDirectory { get; }
 
+        public override bool CanRun => Models.Any() && Models.Any(m => m.CanRun);
+
         #endregion
 
         #region Constructor and dispose
