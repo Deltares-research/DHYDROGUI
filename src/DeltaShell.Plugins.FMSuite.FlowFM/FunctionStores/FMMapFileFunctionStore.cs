@@ -583,10 +583,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 //Process variable as three dimensional time dependent variable
                 int sedimentDimensionIndex = Math.Max(sedTotVarIndex, sedSusVarIndex);
-                foreach (UnstructuredGridCoverage unstructuredGridCoverage in
-                    ProcessThreeDimensionalTimeDependentVariable(timeDependentVariable, dimensions,
-                                                                 sedimentDimensionIndex, location, coverageLongName,
-                                                                 netCdfVariableName, unitSymbol))
+                var dimensionName = netCdfFile.GetDimensionName(sedimentDimensionIndex != 1 ? dimensions[1] : dimensions[2]);
+                foreach (UnstructuredGridCoverage unstructuredGridCoverage in ProcessThreeDimensionalTimeDependentVariable(timeDependentVariable, dimensions[sedimentDimensionIndex],
+                                                                                                                           dimensionName, location, coverageLongName,
+                                                                                                                           netCdfVariableName, unitSymbol))
                 {
                     yield return unstructuredGridCoverage;
                 }
@@ -616,27 +616,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             yield return coverage;
         }
 
-        private IEnumerable<UnstructuredGridCoverage> ProcessThreeDimensionalTimeDependentVariable(
-            NetCdfVariableInfo timeDependentVariable, IList<NetCdfDimension> dimensions, int sedimentDimensionIndex,
-            string location, string coverageLongName, string netCdfVariableName, string unitSymbol)
+        private IEnumerable<UnstructuredGridCoverage> ProcessThreeDimensionalTimeDependentVariable(NetCdfVariableInfo timeDependentVariable, NetCdfDimension dimension, string secondDimensionName,
+                                                                                                   string location, string coverageLongName, string netCdfVariableName, string unitSymbol)
         {
-            int numberOfSedLayers = netCdfFile.GetDimensionLength(dimensions[sedimentDimensionIndex]);
+            // Get the number of entries along a dimension
+            int dimensionLength = netCdfFile.GetDimensionLength(dimension);
 
-            for (var index = 0; index < numberOfSedLayers; index++)
+            for (var index = 0; index < dimensionLength; index++)
             {
                 // TODO : Replace index with values (i.e. sediment names) - this is not currently available in the map file
-                UnstructuredGridCoverage sedCoverage = CreateCoverage(location, coverageLongName, index);
-                if (sedCoverage != null)
+                UnstructuredGridCoverage coverage = CreateCoverage(location, coverageLongName, index);
+                if (coverage != null)
                 {
-                    string secondDimensionName = netCdfFile.GetDimensionName(sedimentDimensionIndex != 1 ? dimensions[1] : dimensions[2]);
-                    InitializeTwoDimensionalCoverage(sedCoverage, secondDimensionName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate);
-                    AddAdditionalDimensionAttributes(sedCoverage, new[]
+                    InitializeTwoDimensionalCoverage(coverage, secondDimensionName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate);
+                    AddAdditionalDimensionAttributes(coverage, new[]
                     {
                         new Tuple<string, string>(SedIndexAttributeName, index.ToString())
                     });
                 }
 
-                yield return sedCoverage;
+                yield return coverage;
             }
         }
 
