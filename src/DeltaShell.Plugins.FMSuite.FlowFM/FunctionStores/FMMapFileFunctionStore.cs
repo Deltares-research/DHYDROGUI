@@ -147,28 +147,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         {
             base.GetShapeAndOrigin(function, filters, out shape, out origin, out stride);
 
-            if (function.IsIndependent)
+            if (function.IsIndependent || !IsCoverageFunction(function))
             {
                 return;
-            }
-
-            IFunction coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
-
-            if (coverage == null)
-            {
-                coverage = Functions.FirstOrDefault(f => f == function);
-
-                if (coverage == null || !coverage.Attributes.ContainsKey(SedIndexAttributeName))
-                {
-                    return;
-                }
-            }
-            else
-            {
-                if (!coverage.Attributes.ContainsKey(SedIndexAttributeName))
-                {
-                    return;
-                }
             }
 
             NetCdfVariable netcdfVariable =
@@ -190,6 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
 
             var sedIndex = 0;
+            IFunction coverage = GetCoverageFunction(function);
             if (!int.TryParse(coverage.Attributes[SedIndexAttributeName], out sedIndex))
             {
                 throw new Exception("Sediment Index is not of integer type");
@@ -214,11 +196,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
+        /// <summary>
+        /// Gets an indicator whether the <see cref="IVariable"/> is a coverage function.
+        /// </summary>
+        /// <param name="function">The <see cref="IVariable"/> to determine whether it is a coverage function.</param>
+        /// <returns><c>true</c> if it is a coverage function, <c>false</c> otherwise.</returns>
+        private bool IsCoverageFunction(IVariable function)
+        {
+            IFunction coverage = GetCoverageFunction(function);
+            return coverage != null && coverage.Attributes.ContainsKey(SedIndexAttributeName);
+        }
+
+        /// <summary>
+        /// Function to determine whether the coverage function is a component.
+        /// </summary>
+        /// <param name="coverageFunction">The function to determine for.</param>
+        /// <returns><c>true</c> if the function is a component, <c>false</c> otherwise.</returns>
+        private bool IsCoverageFunctionComponent(IVariable coverageFunction)
+        {
+            return GetCoverageFunction(coverageFunction) != null 
+                   && Functions.Any(f => f.Components.Contains(coverageFunction));
+        }
+
+        /// <summary>
+        /// Gets the coverage function from an <see cref="IVariable"/>.
+        /// </summary>
+        /// <param name="function">The <see cref="IVariable"/> to get the coverage function for.</param>
+        /// <returns>An <see cref="IFunction"/> if the variable is a coverage function, <c>null</c> otherwise.</returns>
+        private IFunction GetCoverageFunction(IVariable function)
+        {
+            // Check if the function is a  component to determine whether it is a coverage function
+            IFunction coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
+            
+            // If the coverage is null, check if the function itself is a coverage function
+            if (coverage == null)
+            {
+                coverage = Functions.FirstOrDefault(f => f == function);
+            }
+
+            return coverage;
+        }
+
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(
             IVariable function, IVariableFilter[] filters)
         {
-            if (function.Attributes[NcUseVariableSizeAttribute] == "false"
-            ) // has no explicit variable (for example nFlowElem, which is only a dimension)
+            if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable (for example nFlowElem, which is only a dimension)
             {
                 int size = GetSize(function);
                 return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), new[]
@@ -227,36 +249,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 });
             }
 
-            //if this is a component find the coverage in Functions and apply filter
-            if (!function.IsIndependent)
+            // Find the coverage and apply filter
+            if (!function.IsIndependent && IsCoverageFunction(function))
             {
-                // is component or coverage
-                IFunction coverage =
-                    Functions.FirstOrDefault(f => f.Components.Contains(function)); // check if function is component
-                if (coverage == null)
+                IFunction coverage = GetCoverageFunction(function);
+                if (coverage != null)
                 {
-                    coverage = Functions.FirstOrDefault(f => f == function); //check if function is coverage
-
-                    if (coverage != null)
-                    {
-                        // is coverage
-                        //check if there are multidimensional sedimentnames
-                        var indexOfSedimentToRender = string.Empty;
-                        if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
-                        {
-                            int nIndex = -1;
-                            if (int.TryParse(indexOfSedimentToRender, out nIndex))
-                            {
-                                var filter = new VariableIndexFilter(function.Components[0], 0);
-                                Array.Resize(ref filters, filters.Length + 1);
-                                filters[filters.Length - 1] = filter;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    // is component
+                    // is coverage
                     //check if there are multidimensional sedimentnames
                     var indexOfSedimentToRender = string.Empty;
                     if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
@@ -264,7 +263,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         int nIndex = -1;
                         if (int.TryParse(indexOfSedimentToRender, out nIndex))
                         {
-                            var filter = new VariableIndexFilter(function, 0);
+                            var variableToFilter = IsCoverageFunctionComponent(function)
+                                               ? function
+                                               : function.Components[0];
+                            
+                            var filter = new VariableIndexFilter(variableToFilter, 0);
                             Array.Resize(ref filters, filters.Length + 1);
                             filters[filters.Length - 1] = filter;
                         }
