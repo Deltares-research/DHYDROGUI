@@ -61,6 +61,7 @@
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.218-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.218-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
