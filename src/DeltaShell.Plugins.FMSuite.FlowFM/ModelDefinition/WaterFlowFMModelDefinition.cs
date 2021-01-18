@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
@@ -27,7 +27,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -493,6 +492,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 var spatialOperationValueConverter = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
                 if (spatialOperationValueConverter.SpatialOperationSet.Operations.All(SupportedByExtForceFile))
                 {
+                    SpatialOperations[dataItem.Name] = new List<ISpatialOperation>();
+
+                    var originalCoverage = (UnstructuredGridCoverage) spatialOperationValueConverter.OriginalValue;
+                    IPointCloud samples = originalCoverage.ToPointCloud(skipMissingValues: true);
+                    if (samples.PointValues.Any())
+                    {
+                        AddSamplesOperation samplesOperation = CreateSamplesOperation(samples, originalCoverage.Name);
+                        SpatialOperations[dataItem.Name].Add(samplesOperation);
+                    }
+
                     // put in everything except spatial operation sets,
                     // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
                     List<ISpatialOperation> spatialOperations = spatialOperationValueConverter
@@ -501,7 +510,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                                                 .Select(ConvertSpatialOperation)
                                                                 .ToList();
 
-                    SpatialOperations.Add(dataItem.Name, spatialOperations);
+                    SpatialOperations[dataItem.Name].AddRange(spatialOperations);
                 }
                 // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
                 else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
@@ -522,9 +531,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                         continue;
                     }
 
-                    var newOperation = new AddSamplesOperation(false) {Name = spatialOperationValueConverter.SpatialOperationSet.Name};
-                    newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
-                                              new PointCloudFeatureProvider {PointCloud = coverage.ToPointCloud(0, true)});
+                    AddSamplesOperation newOperation = CreateSamplesOperation(coverage.ToPointCloud(0, true), 
+                                                                              spatialOperationValueConverter.SpatialOperationSet.Name);
 
                     if (SpatialOperations.ContainsKey(dataItem.Name))
                     {
@@ -563,10 +571,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                         continue;
                     }
 
-                    var pointCloudFeatureProvider = new PointCloudFeatureProvider {PointCloud = pointCloud};
-
-                    var newOperation = new AddSamplesOperation(false) {Name = coverage.Name};
-                    newOperation.SetInputData(AddSamplesOperation.SamplesInputName, pointCloudFeatureProvider);
+                    AddSamplesOperation samplesOperation = CreateSamplesOperation(pointCloud, coverage.Name);
 
                     if (SpatialOperations.ContainsKey(dataItemNameLookup[coverage]))
                     {
@@ -579,11 +584,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     {
                         SpatialOperations.Add(dataItemNameLookup[coverage], new[]
                         {
-                            newOperation
+                            samplesOperation
                         });
                     }
                 }
             }
+        }
+
+        private static AddSamplesOperation CreateSamplesOperation(IPointCloud pointCloud, string name)
+        {
+            var featureProvider = new PointCloudFeatureProvider {PointCloud = pointCloud};
+
+            var operation = new AddSamplesOperation(false) {Name = name};
+            operation.SetInputData(AddSamplesOperation.SamplesInputName, featureProvider);
+
+            return operation;
         }
 
         public static bool SupportedByExtForceFile(ISpatialOperation operation)
