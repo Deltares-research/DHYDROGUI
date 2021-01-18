@@ -189,12 +189,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <summary>
         /// Gets or sets the restart output files.
         /// </summary>
-        public virtual IEventedList<RestartFile> RestartOutput { get; set; }
+        public virtual IEventedList<RestartFile> RestartOutput { get; protected set; }
 
         /// <summary>
         /// Gets or sets the output text documents.
         /// </summary>
-        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; set; }
+        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; protected set; }
 
         //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
