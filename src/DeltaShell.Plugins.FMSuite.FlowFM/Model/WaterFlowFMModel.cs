@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
                 else
                 {
-                    unstrGridCellCoverage.LoadGrid(grid, true);
+                    unstrGridCellCoverage.Grid = Grid;
                     if (!initialCoverages.Contains(unstrGridCellCoverage))
                     {
                         initialCoverages.Add(unstrGridCellCoverage);
