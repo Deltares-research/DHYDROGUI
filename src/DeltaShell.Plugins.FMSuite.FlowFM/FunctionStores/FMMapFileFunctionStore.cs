@@ -623,6 +623,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return ProcessThreeDimensionalTimeDependentSedimentVariable(timeDependentVariable, dimensions, location, coverageLongName, netCdfVariableName, unitSymbol);
             }
 
+            if (dimensionNameList.Contains(NBedLayersName))
+            {
+                return ProcessThreeDimensionalTimeDependentBedLayersVariable(timeDependentVariable, dimensions, location, coverageLongName, netCdfVariableName, unitSymbol);
+            }
+
             return Enumerable.Empty<UnstructuredGridCoverage>();
         }
 
@@ -641,6 +646,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             int sedimentDimensionIndex = Math.Max(sedTotVarIndex, sedSusVarIndex);
             string dimensionName = netCdfFile.GetDimensionName(sedimentDimensionIndex != 1 ? dimensions[1] : dimensions[2]);
             foreach (UnstructuredGridCoverage unstructuredGridCoverage in ProcessThreeDimensionalTimeDependentVariable(timeDependentVariable, dimensions[sedimentDimensionIndex],
+                                                                                                                       dimensionName, location, coverageLongName,
+                                                                                                                       netCdfVariableName, unitSymbol, new[]
+                                                                                                                       {
+                                                                                                                           SedIndexAttributeName
+                                                                                                                       }))
+            {
+                yield return unstructuredGridCoverage;
+            }
+        }
+
+        private IEnumerable<UnstructuredGridCoverage> ProcessThreeDimensionalTimeDependentBedLayersVariable(NetCdfVariableInfo timeDependentVariable,
+                                                                                                            IReadOnlyList<NetCdfDimension> dimensions,
+                                                                                                            string location,
+                                                                                                            string coverageLongName,
+                                                                                                            string netCdfVariableName,
+                                                                                                            string unitSymbol)
+        {
+            List<string> dimensionNameList = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
+            int nBedLayersIndex = dimensionNameList.IndexOf(NBedLayersName);
+
+            string dimensionName = netCdfFile.GetDimensionName(nBedLayersIndex != 1 ? dimensions[1] : dimensions[2]);
+            foreach (UnstructuredGridCoverage unstructuredGridCoverage in ProcessThreeDimensionalTimeDependentVariable(timeDependentVariable, dimensions[nBedLayersIndex],
                                                                                                                        dimensionName, location, coverageLongName,
                                                                                                                        netCdfVariableName, unitSymbol, new[]
                                                                                                                        {
@@ -684,6 +711,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private const string NSedSusName = "nSedSus";
         private const string NSedTotName = "nSedTot";
+        private const string NBedLayersName = "nBedLayers";
         private const string VelocityCoverageName = "velocity (ucx + ucy)";
         private const string NFlowElemName = "nFlowElem";
         private const string NFlowLinkName = "nFlowLink";
