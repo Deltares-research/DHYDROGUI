@@ -191,64 +191,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
-        /// <summary>
-        /// Gets the NetCdf variable based on the function.
-        /// </summary>
-        /// <param name="function">The <see cref="IVariable"/> to get the NetCdf variable for.</param>
-        /// <returns>The <see cref="NetCdfVariable"/> corresponding with the <paramref name="function"/>.</returns>
-        /// <exception cref="Exception">Thrown when the <paramref name="function"/> does not have a name.</exception>
-        private NetCdfVariable GetNetcdfVariable(IVariable function)
-        {
-            NetCdfVariable netcdfVariable = netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
-            if (netcdfVariable == null)
-            {
-                throw new Exception("Missing NetCdf name");
-            }
-
-            return netcdfVariable;
-        }
-        
-        /// <summary>
-        /// Gets an indicator whether the <see cref="IVariable"/> is a coverage function.
-        /// </summary>
-        /// <param name="function">The <see cref="IVariable"/> to determine whether it is a coverage function.</param>
-        /// <returns><c>true</c> if it is a coverage function, <c>false</c> otherwise.</returns>
-        private bool IsCoverageFunction(IVariable function)
-        {
-            IFunction coverage = GetCoverageFunction(function);
-            return coverage != null && coverage.Attributes.ContainsKey(SedIndexAttributeName);
-        }
-
-        /// <summary>
-        /// Function to determine whether the coverage function is a component.
-        /// </summary>
-        /// <param name="coverageFunction">The function to determine for.</param>
-        /// <returns><c>true</c> if the function is a component, <c>false</c> otherwise.</returns>
-        private bool IsCoverageFunctionComponent(IVariable coverageFunction)
-        {
-            return GetCoverageFunction(coverageFunction) != null 
-                   && Functions.Any(f => f.Components.Contains(coverageFunction));
-        }
-
-        /// <summary>
-        /// Gets the coverage function from an <see cref="IVariable"/>.
-        /// </summary>
-        /// <param name="function">The <see cref="IVariable"/> to get the coverage function for.</param>
-        /// <returns>An <see cref="IFunction"/> if the variable is a coverage function, <c>null</c> otherwise.</returns>
-        private IFunction GetCoverageFunction(IVariable function)
-        {
-            // Check if the function is a  component to determine whether it is a coverage function
-            IFunction coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
-            
-            // If the coverage is null, check if the function itself is a coverage function
-            if (coverage == null)
-            {
-                coverage = Functions.FirstOrDefault(f => f == function);
-            }
-
-            return coverage;
-        }
-
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(
             IVariable function, IVariableFilter[] filters)
         {
@@ -275,10 +217,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         int nIndex = -1;
                         if (int.TryParse(indexOfSedimentToRender, out nIndex))
                         {
-                            var variableToFilter = IsCoverageFunctionComponent(function)
-                                               ? function
-                                               : function.Components[0];
-                            
+                            IVariable variableToFilter = IsCoverageFunctionComponent(function)
+                                                             ? function
+                                                             : function.Components[0];
+
                             var filter = new VariableIndexFilter(variableToFilter, 0);
                             Array.Resize(ref filters, filters.Length + 1);
                             filters[filters.Length - 1] = filter;
@@ -297,6 +239,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 int functionSize = GetSize(function);
                 return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]), functionSize);
             }
+        }
+
+        /// <summary>
+        /// Gets the NetCdf variable based on the function.
+        /// </summary>
+        /// <param name="function">The <see cref="IVariable"/> to get the NetCdf variable for.</param>
+        /// <returns>The <see cref="NetCdfVariable"/> corresponding with the <paramref name="function"/>.</returns>
+        /// <exception cref="Exception">Thrown when the <paramref name="function"/> does not have a name.</exception>
+        private NetCdfVariable GetNetcdfVariable(IVariable function)
+        {
+            NetCdfVariable netcdfVariable = netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
+            if (netcdfVariable == null)
+            {
+                throw new Exception("Missing NetCdf name");
+            }
+
+            return netcdfVariable;
+        }
+
+        /// <summary>
+        /// Gets an indicator whether the <see cref="IVariable"/> is a coverage function.
+        /// </summary>
+        /// <param name="function">The <see cref="IVariable"/> to determine whether it is a coverage function.</param>
+        /// <returns><c>true</c> if it is a coverage function, <c>false</c> otherwise.</returns>
+        private bool IsCoverageFunction(IVariable function)
+        {
+            IFunction coverage = GetCoverageFunction(function);
+            return coverage != null && coverage.Attributes.ContainsKey(SedIndexAttributeName);
+        }
+
+        /// <summary>
+        /// Function to determine whether the coverage function is a component.
+        /// </summary>
+        /// <param name="coverageFunction">The function to determine for.</param>
+        /// <returns><c>true</c> if the function is a component, <c>false</c> otherwise.</returns>
+        private bool IsCoverageFunctionComponent(IVariable coverageFunction)
+        {
+            return GetCoverageFunction(coverageFunction) != null
+                   && Functions.Any(f => f.Components.Contains(coverageFunction));
+        }
+
+        /// <summary>
+        /// Gets the coverage function from an <see cref="IVariable"/>.
+        /// </summary>
+        /// <param name="function">The <see cref="IVariable"/> to get the coverage function for.</param>
+        /// <returns>An <see cref="IFunction"/> if the variable is a coverage function, <c>null</c> otherwise.</returns>
+        private IFunction GetCoverageFunction(IVariable function)
+        {
+            // Check if the function is a  component to determine whether it is a coverage function
+            IFunction coverage = Functions.FirstOrDefault(f => f.Components.Contains(function));
+
+            // If the coverage is null, check if the function itself is a coverage function
+            if (coverage == null)
+            {
+                coverage = Functions.FirstOrDefault(f => f == function);
+            }
+
+            return coverage;
         }
 
         private List<UnstructuredGridCoverage> GetFunctions(IEnumerable<NetCdfVariableInfo> dataVariables,
@@ -362,8 +362,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             coverage.Components[1].Attributes[NcUseVariableSizeAttribute] = "true";
             coverage.Components[1].IsEditable = false;
 
-            InitializeCoverage(coverage, ucxCoverage.Arguments[1].Name, ucxCoverage.Components[0].Name, "m/s",
-                               ucxCoverage.Arguments[0].Attributes[NcRefDateAttribute]);
+            InitializeTwoDimensionalCoverage(coverage, ucxCoverage.Arguments[1].Name, ucxCoverage.Components[0].Name, "m/s",
+                                             ucxCoverage.Arguments[0].Attributes[NcRefDateAttribute]);
 
             return coverage;
         }
@@ -377,11 +377,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 // UGrid standard
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Face:
-                    return new UnstructuredGridCellCoverage(Grid, true) {Name = coverageName};
+                    return new UnstructuredGridCellCoverage(Grid, true)
+                    {
+                        Name = coverageName
+                    };
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Edge:
-                    return new UnstructuredGridEdgeCoverage(Grid, true) {Name = coverageName};
+                    return new UnstructuredGridEdgeCoverage(Grid, true)
+                    {
+                        Name = coverageName
+                    };
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Node:
-                    return new UnstructuredGridVertexCoverage(Grid, true) {Name = coverageName};
+                    return new UnstructuredGridVertexCoverage(Grid, true)
+                    {
+                        Name = coverageName
+                    };
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Volume:
                     log.WarnFormat(
                         Resources.FMMapFileFunctionStore_CreateCoverage_CannotCreateSpatialDataOnVolumeLocation,
@@ -390,9 +399,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
                 // backwards compatibility
                 case NFlowElemName:
-                    return new UnstructuredGridCellCoverage(Grid, true) {Name = coverageName};
+                    return new UnstructuredGridCellCoverage(Grid, true)
+                    {
+                        Name = coverageName
+                    };
                 case NFlowLinkName:
-                    return new UnstructuredGridFlowLinkCoverage(Grid, true) {Name = coverageName};
+                    return new UnstructuredGridFlowLinkCoverage(Grid, true)
+                    {
+                        Name = coverageName
+                    };
                 case NNetLinkName:
                 case NFlowElemBndName:
                     log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_NetlinkDimensionCurrentyNotSupported,
@@ -443,8 +458,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <param name="variableName">The name of the variable to initialize the coverage for.</param>
         /// <param name="unitSymbol">The symbol of the variable.</param>
         /// <param name="refDate">The reference date.</param>
-        private void InitializeCoverage(IFunction function, string secondDimensionName, string variableName,
-                                        string unitSymbol, string refDate)
+        private void InitializeTwoDimensionalCoverage(IFunction function, string secondDimensionName, string variableName,
+                                                      string unitSymbol, string refDate)
         {
             function.Store = this;
 
@@ -468,7 +483,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             function.IsEditable = false;
         }
 
-        
         /// <summary>
         /// Initializes an additional dimension for a <see cref="IVariable"/>.
         /// </summary>
@@ -488,12 +502,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// </summary>
         /// <param name="function">The function to add the additional dimension for.</param>
         /// <param name="secondDimensionAdditionalAttributes">The collection of <see cref="Tuple"/> of attributes to add.</param>
-        private static void AddAdditionalDimensionAttributes(IFunction function, IEnumerable<System.Tuple<string, string>> secondDimensionAdditionalAttributes)
+        private static void AddAdditionalDimensionAttributes(IFunction function, IEnumerable<Tuple<string, string>> secondDimensionAdditionalAttributes)
         {
             // Allowing us to add additional attributes
             if (secondDimensionAdditionalAttributes != null)
             {
-                foreach (System.Tuple<string, string> secondDimensionAdditionalAttribute in secondDimensionAdditionalAttributes)
+                foreach (Tuple<string, string> secondDimensionAdditionalAttribute in secondDimensionAdditionalAttributes)
                 {
                     if (string.IsNullOrEmpty(secondDimensionAdditionalAttribute.Item1))
                     {
@@ -584,8 +598,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             if (coverage != null)
             {
-                InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unitSymbol,
-                                   timeDependentVariable.ReferenceDate);
+                InitializeTwoDimensionalCoverage(coverage, secondDimensionName, netCdfVariableName, unitSymbol,
+                                                 timeDependentVariable.ReferenceDate);
             }
 
             string standardName =
@@ -615,10 +629,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 if (sedCoverage != null)
                 {
                     string secondDimensionName = netCdfFile.GetDimensionName(sedimentDimensionIndex != 1 ? dimensions[1] : dimensions[2]);
-                    InitializeCoverage(sedCoverage, secondDimensionName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate);
-                    AddAdditionalDimensionAttributes(sedCoverage, new []
+                    InitializeTwoDimensionalCoverage(sedCoverage, secondDimensionName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate);
+                    AddAdditionalDimensionAttributes(sedCoverage, new[]
                     {
-                        new System.Tuple<string,string>(SedIndexAttributeName, index.ToString())
+                        new Tuple<string, string>(SedIndexAttributeName, index.ToString())
                     });
                 }
 
