@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 throw new Exception("Sediment Index is not of integer type");
             }
 
-            int dimensionIndex = Math.Max(sedTotVarIndex, sedSusVarIndex);
+            int dimensionIndex = GetThirdDimensionIndex(dimensions);
             var sedShape = 1;
             int sedOrigin = sedIndex;
             var sedStride = 1;
@@ -191,6 +191,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
+
+        /// <summary>
+        /// Gets the index of the third dimension in a collection of <see cref="NetCdfDimension"/>.
+        /// </summary>
+        /// <param name="dimensions">The collection of <see cref="NetCdfDimension"/> to retrieve the index of the third dimension from.</param>
+        /// <returns>The index of the third dimension.</returns>
+        /// <exception cref="Exception">Thrown when the third dimension could not be found.</exception>
+        private int GetThirdDimensionIndex(IEnumerable<NetCdfDimension> dimensions)
+        {
+            var dimensionIndex = -1;
+            string[] dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToArray();
+            if (dimensionNames.Contains(NSedSusName) || dimensionNames.Contains(NSedTotName))
+            {
+                dimensionIndex = GetSedimentDimensionIndex(dimensions);
+            }
+
+            if (dimensionNames.Contains(NBedLayersName))
+            {
+                dimensionIndex = GetBedLayersDimensionIndex(dimensions);
+            }
+
+            if (dimensionIndex < 0)
+            {
+                throw new Exception("Dimension Index could not be determined.");
+            }
+
+            return dimensionIndex;
+        }
+        
+        private int GetBedLayersDimensionIndex(IEnumerable<NetCdfDimension> dimensions)
+        {
+            return GetDimensionIndex(dimensions, NBedLayersName);
+        }
+        
+        private int GetSedimentDimensionIndex(IEnumerable<NetCdfDimension> dimensions)
+        {
+            int sedSusVarIndex = GetDimensionIndex(dimensions, NSedSusName);
+            int sedTotVarIndex = GetDimensionIndex(dimensions, NSedTotName);
+            
+            int dimensionIndex = Math.Max(sedTotVarIndex, sedSusVarIndex);
+
+            return dimensionIndex;
+        }
+        
+        /// <summary>
+        /// Gets the index of a specific dimension name.
+        /// </summary>
+        /// <param name="dimensions">The collection of <see cref="NetCdfDimension"/> dimensions to retrieve the index from.</param>
+        /// <param name="dimensionName">The name of the dimension to retrieve the index for.</param>
+        /// <returns>The index of the <paramref name="dimensionName"/> in <paramref name="dimensions"/>, -1 if it could not be found.</returns>
+        private int GetDimensionIndex(IEnumerable<NetCdfDimension> dimensions, string dimensionName)
+        {
+            List<string> dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
+            return dimensionNames.IndexOf(dimensionName);
+        }
+        
         protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(
             IVariable function, IVariableFilter[] filters)
         {
@@ -617,13 +673,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                                                                                                    string netCdfVariableName,
                                                                                                    string unitSymbol)
         {
-            string[] dimensionNameList = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToArray();
-            if (dimensionNameList.Contains(NSedSusName) || dimensionNameList.Contains(NSedTotName))
+            string[] dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToArray();
+            if (dimensionNames.Contains(NSedSusName) || dimensionNames.Contains(NSedTotName))
             {
                 return ProcessThreeDimensionalTimeDependentSedimentVariable(timeDependentVariable, dimensions, location, coverageLongName, netCdfVariableName, unitSymbol);
             }
 
-            if (dimensionNameList.Contains(NBedLayersName))
+            if (dimensionNames.Contains(NBedLayersName))
             {
                 return ProcessThreeDimensionalTimeDependentBedLayersVariable(timeDependentVariable, dimensions, location, coverageLongName, netCdfVariableName, unitSymbol);
             }
