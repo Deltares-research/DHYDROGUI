@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
@@ -112,7 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
                 var model = new RealTimeControlModel();
                 node.Parent.Parent.Tag.Returns(model);
                 model.RestartInput = new RealTimeControlRestartFile();
-                model.RestartOutput = new EventedList<RestartFile>(new[]
+                model.RestartOutput.AddRange(new[]
                 {
                     new RestartFile(temp.CreateFile("restart_a.file", "content a")),
                     new RestartFile(temp.CreateFile("restart_b.file", "content b")),

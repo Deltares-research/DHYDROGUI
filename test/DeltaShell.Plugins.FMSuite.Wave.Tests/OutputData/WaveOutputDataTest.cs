@@ -4,6 +4,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NSubstitute;
 using NUnit.Framework;
@@ -122,13 +123,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 var harvester = Substitute.For<IWaveOutputDataHarvester>();
                 var logHandler = Substitute.For<ILogHandler>();
 
-                var diagFiles = new List<ReadOnlyTextFileData> { new ReadOnlyTextFileData("name", "content")};
+                var diagFiles = new List<ReadOnlyTextFileData> { new ReadOnlyTextFileData("name", "content", ReadOnlyTextFileDataType.Default)};
 
                 harvester.HarvestDiagnosticFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
                                                  logHandler)
                          .Returns(diagFiles);
 
-                var spectraFiles = new List<ReadOnlyTextFileData> { new ReadOnlyTextFileData("name", "content") };
+                var spectraFiles = new List<ReadOnlyTextFileData> { new ReadOnlyTextFileData("name", "content", ReadOnlyTextFileDataType.Default) };
                 harvester.HarvestSpectraFiles(Arg.Is<DirectoryInfo>(x => x.FullName == dataSourcePath),
                                               logHandler)
                          .Returns(spectraFiles);
@@ -313,12 +314,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
 
                 const string diagFileName = "diag.txt";
                 tempDir.CreateFile(Path.Combine(targetDirectoryName, diagFileName));
-                var diagFile = new ReadOnlyTextFileData(diagFileName, "");
+                var diagFile = new ReadOnlyTextFileData(diagFileName, "", ReadOnlyTextFileDataType.Default);
                 outputData.DiagnosticFiles.Add(diagFile);
 
                 const string spectraFileName = "spectra.txt";
                 tempDir.CreateFile(Path.Combine(targetDirectoryName, spectraFileName));
-                var spectraFile = new ReadOnlyTextFileData(spectraFileName, "");
+                var spectraFile = new ReadOnlyTextFileData(spectraFileName, "", ReadOnlyTextFileDataType.Default);
                 outputData.SpectraFiles.Add(spectraFile);
 
                 // Call
@@ -388,8 +389,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                 var ncWavhStore = new WavhFileFunctionStore(ncWavhPath, featureContainer);
                 outputData.WavhFileFunctionStores.Add(ncWavhStore);
 
-                outputData.DiagnosticFiles.Add(new ReadOnlyTextFileData("", ""));
-                outputData.SpectraFiles.Add(new ReadOnlyTextFileData("", ""));
+                outputData.DiagnosticFiles.Add(new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default));
+                outputData.SpectraFiles.Add(new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default));
 
                 // Call
                 outputData.SwitchTo(dataTargetPath, logHandler);
@@ -464,7 +465,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             var harvester = Substitute.For<IWaveOutputDataHarvester>();
 
             var outputData = new WaveOutputData(harvester, copyHandler);
-            outputData.DiagnosticFiles.Add(new ReadOnlyTextFileData("test", "content"));
+            outputData.DiagnosticFiles.Add(new ReadOnlyTextFileData("test", "content", ReadOnlyTextFileDataType.Default));
 
             IEventedList<ReadOnlyTextFileData> prevDiagnosticFiles = outputData.DiagnosticFiles;
 
@@ -483,7 +484,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
             var harvester = Substitute.For<IWaveOutputDataHarvester>();
 
             var outputData = new WaveOutputData(harvester, copyHandler);
-            outputData.SpectraFiles.Add(new ReadOnlyTextFileData("test", "content"));
+            outputData.SpectraFiles.Add(new ReadOnlyTextFileData("test", "content", ReadOnlyTextFileDataType.Default));
 
             IEventedList<ReadOnlyTextFileData> prevSpectraFiles = outputData.SpectraFiles;
 

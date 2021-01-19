@@ -26,7 +26,9 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
@@ -47,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// NotifyPropertyChange attribute should not be necessary because base class
     /// already has it applied. Project explorer does not function correctly when left out.
     /// </summary>
-    [Entity(FireOnCollectionChange = false)]
+    [Entity]
     public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, IControllingModel, IFileBased
     {
         public const string InputPostFix = ".input";
@@ -95,9 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             SaveStateStopTime = StopTime;
             SaveStateTimeStep = TimeStep;
 
-            RestartOutput = new EventedList<RestartFile>();
-
-            OutputDocuments = new EventedList<ReadOnlyOutputTextDocument>();
+            InitializeOutputData();
 
             runner = new DimrRunner(this, new DimrApiFactory());
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
@@ -106,6 +106,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 ReconnectRtcToFmOutputFile(outputFileFunctionStore.Path);
             }
+        }
+
+        private void InitializeOutputData()
+        {
+            RestartOutput = new EventedList<RestartFile>();
+            OutputDocuments = new EventedList<ReadOnlyTextFileData>();
         }
 
         public virtual RealTimeControlOutputFileFunctionStore OutputFileFunctionStore
@@ -183,12 +189,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <summary>
         /// Gets or sets the restart output files.
         /// </summary>
-        public virtual IEventedList<RestartFile> RestartOutput { get; set; }
+        public virtual IEventedList<RestartFile> RestartOutput { get; protected set; }
 
         /// <summary>
         /// Gets or sets the output text documents.
         /// </summary>
-        public virtual IEventedList<ReadOnlyOutputTextDocument> OutputDocuments { get; }
+        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; protected set; }
 
         public override bool CanRun => false;
 
@@ -970,15 +976,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             MarkDirty();
         }
 
-        private void ClearOutputDocuments()
-        {
-            foreach (ReadOnlyOutputTextDocument outputDocument in OutputDocuments)
-            {
-                outputDocument.Content = string.Empty;
-            }
-
-            OutputDocuments.Clear();
-        }
+        private void ClearOutputDocuments() => OutputDocuments.Clear();
 
         private void DisconnectOutputFileFunctionStore()
         {
@@ -1024,35 +1022,45 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void ReconnectOutputDocuments(IEnumerable<string> outputDocumentFilePaths)
         {
-            OutputDocuments.RemoveAllWhere(d => !outputDocumentFilePaths.Any(fp => fp.EndsWith(d.Name)));
+            ClearOutputDocuments();
 
-            foreach (string filePath in outputDocumentFilePaths)
+            var logHandler = new LogHandler("Reconnecting output documents", Log);
+            OutputDocuments.AddRange(outputDocumentFilePaths
+                                                            .Select(p => ReadTextDocument(p, logHandler))
+                                                            .Where(x => x != null));
+            logHandler.LogReport();
+        }
+
+        private static ReadOnlyTextFileData ReadTextDocument(string textFilePath, ILogHandler logHandler)
+        {
+            var textFileInfo = new FileInfo(textFilePath);
+
+            try
             {
-                string fileName = Path.GetFileName(filePath);
+                return new ReadOnlyTextFileData(textFileInfo.Name, 
+                                                File.ReadAllText(textFileInfo.FullName), 
+                                                GetReadOnlyTextFileDataType(textFileInfo));
+            }
+            catch (Exception e)
+            {
+                logHandler.ReportErrorFormat("Error while reading {0}: {1}", 
+                                             textFileInfo.FullName, 
+                                             e.Message);
+            }
 
-                ReadOnlyOutputTextDocument existingTextDocument = OutputDocuments.FirstOrDefault(d => d.Name == fileName);
+            return null;
+        }
 
-                try
-                {
-                    string log = File.ReadAllText(filePath);
-
-                    // Replace content in the existing output documents, so that open views will be updated after a run.
-                    // Don't create always new ones, because the open views of the old ones will not be closed during a run.
-                    if (existingTextDocument != null)
-                    {
-                        existingTextDocument.Content = log;
-                    }
-                    else
-                    {
-                        var textDocument = new ReadOnlyOutputTextDocument(fileName, log);
-
-                        OutputDocuments.Add(textDocument);
-                    }
-                }
-                catch (Exception)
-                {
-                    Log.ErrorFormat("Error reading file");
-                }
+        private static ReadOnlyTextFileDataType GetReadOnlyTextFileDataType(FileInfo fileInfo)
+        {
+            switch (fileInfo.Extension)
+            {
+                case ".xml":
+                    return ReadOnlyTextFileDataType.Xml;
+                case ".csv":
+                    return ReadOnlyTextFileDataType.Table;
+                default:
+                    return ReadOnlyTextFileDataType.Default;
             }
         }
 
