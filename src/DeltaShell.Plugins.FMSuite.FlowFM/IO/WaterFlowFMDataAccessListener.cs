@@ -128,10 +128,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (dataItem.ValueConverter is SpatialOperationSetValueConverter spatialOperationSetValueConverter)
             {
                 var coverage = (ICoverage) spatialOperationSetValueConverter.OriginalValue;
-                IMultiDimensionalArray<double> originalValues = coverage.Components[0].GetValues<double>();
+                List<double> originalValues = coverage.Components[0].GetValues<double>().ToList();
 
                 spatialOperationSetValueConverter.ConvertedValue = value;
-                coverage.Clear();
+
+                ((ICoverage) spatialOperationSetValueConverter.OriginalValue).SetValues(originalValues);
 
                 // only do this when there are values or you will get an ArgumentException.
                 // This happens when only a point cloud is loaded and there was no grid (TOOLS-21425)
