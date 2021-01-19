@@ -107,20 +107,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             using (ReconnectToMapFile())
             {
-                NetCdfVariable netcdfVariable =
-                    netCdfFile.GetVariableByName(variable.Components[0].Attributes[NcNameAttribute]);
-                if (netcdfVariable == null)
-                {
-                    throw new Exception("Missing NetCdf name");
-                }
+                NetCdfVariable netcdfVariable = GetNetcdfVariable(variable);
 
                 List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
                 List<string> dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
 
                 int sedSusVarIndex = dimensionNames.IndexOf(NSedSusName);
                 int sedTotVarIndex = dimensionNames.IndexOf(NSedTotName);
+                int nBedLayersVarIndex = dimensionNames.IndexOf(NBedLayersName);
 
-                if ((sedSusVarIndex != -1 || sedTotVarIndex != -1) && dimensions.Count != 3)
+                if ((sedSusVarIndex != -1 || sedTotVarIndex != -1 || nBedLayersVarIndex != -1) && dimensions.Count != 3)
                 {
                     throw new Exception("Number of expected dimensions was 3");
                 }
@@ -132,6 +128,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 else if (sedTotVarIndex >= 0)
                 {
                     netcdfVariableDimensionLength = netCdfFile.GetDimensionLength(NSedTotName);
+                }
+                else if (nBedLayersVarIndex >= 0)
+                {
+                    netcdfVariableDimensionLength = netCdfFile.GetDimensionLength(NBedLayersName);
                 }
                 else
                 {
