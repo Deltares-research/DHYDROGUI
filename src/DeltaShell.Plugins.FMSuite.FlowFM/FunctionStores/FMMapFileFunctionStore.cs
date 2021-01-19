@@ -108,35 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             using (ReconnectToMapFile())
             {
                 NetCdfVariable netcdfVariable = GetNetcdfVariable(variable);
-
                 List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
-                List<string> dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToList();
-
-                int sedSusVarIndex = dimensionNames.IndexOf(NSedSusName);
-                int sedTotVarIndex = dimensionNames.IndexOf(NSedTotName);
-                int nBedLayersVarIndex = dimensionNames.IndexOf(NBedLayersName);
-
-                if ((sedSusVarIndex != -1 || sedTotVarIndex != -1 || nBedLayersVarIndex != -1) && dimensions.Count != 3)
-                {
-                    throw new Exception("Number of expected dimensions was 3");
-                }
-
-                if (sedSusVarIndex >= 0)
-                {
-                    netcdfVariableDimensionLength = netCdfFile.GetDimensionLength(NSedSusName);
-                }
-                else if (sedTotVarIndex >= 0)
-                {
-                    netcdfVariableDimensionLength = netCdfFile.GetDimensionLength(NSedTotName);
-                }
-                else if (nBedLayersVarIndex >= 0)
-                {
-                    netcdfVariableDimensionLength = netCdfFile.GetDimensionLength(NBedLayersName);
-                }
-                else
-                {
-                    return variableValuesCount;
-                }
+                netcdfVariableDimensionLength = GetDimensionScalingFactor(dimensions);
             }
 
             return variableValuesCount / netcdfVariableDimensionLength;
@@ -186,6 +159,80 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
+        /// <summary>
+        /// Gets the scaling factor along additional dimensions.
+        /// </summary>
+        /// <param name="dimensions">The collection of <see cref="NetCdfDimension"/> to determine the scaling factor for.</param>
+        /// <returns>An integer representing the scaling factor along the axes of the collection of dimensions.</returns>
+        private int GetDimensionScalingFactor(IEnumerable<NetCdfDimension> dimensions)
+        {
+            var scalingFactor = 1;
+            if (dimensions.Count() == 3)
+            {
+                scalingFactor = GetThreeDimensionalScalingFactor(dimensions);
+            }
+            
+            return scalingFactor;
+        }
+
+        /// <summary>
+        /// Gets the scaling factor along a third dimensional axis.
+        /// </summary>
+        /// <param name="dimensions">The collection of <see cref="NetCdfDimension"/> to determine the scaling factor for.</param>
+        /// <returns>An integer representing the scaling factor along the third dimension.</returns>
+        /// <exception cref="Exception">Thrown when the scaling factor could not be determined.</exception>
+        private int GetThreeDimensionalScalingFactor(IEnumerable<NetCdfDimension> dimensions)
+        {
+            string[] dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToArray();
+            if (HasSedimentDimensions(dimensions))
+            {
+                return GetSedimentDimensionScalingFactor(dimensionNames);
+            }
+
+            if (HasBedLayerDimensions(dimensions))
+            {
+                return GetBedLayerScalingFactor(dimensionNames);
+            }
+
+            throw new Exception($"Scaling factor could not be determined. Supported dimensions: {NSedSusName}, {NSedTotName}, {NBedLayersName}");
+        }
+
+        /// <summary>
+        /// Gets the dimensional scaling factor for NetCdf variables with sediment layer related dimensions.  
+        /// </summary>
+        /// <param name="dimensionNames">The names of the dimensions that are present.</param>
+        /// <returns>A scaling factor along the sediment related dimension.</returns>
+        /// <exception cref="Exception">Thrown when the scaling factor could not be determined.</exception>
+        private int GetSedimentDimensionScalingFactor(IEnumerable<string> dimensionNames)
+        {
+            if (dimensionNames.Contains(NSedSusName))
+            {
+                return netCdfFile.GetDimensionLength(NSedSusName);
+            }
+            
+            if (dimensionNames.Contains(NSedTotName))
+            {
+                return netCdfFile.GetDimensionLength(NSedTotName);
+            }
+
+            throw new Exception("Sediment related dimension not present.");
+        }
+        
+        /// <summary>
+        /// Gets the dimensional scaling factor for NetCdf variables with bed layer dimensions.  
+        /// </summary>
+        /// <param name="dimensionNames">The names of the dimensions that are present.</param>
+        /// <returns>A scaling factor along the bed layer related dimension.</returns>
+        /// <exception cref="Exception">Thrown when the scaling factor could not be determined.</exception>
+        private int GetBedLayerScalingFactor(IEnumerable<string> dimensionNames)
+        {
+            if (dimensionNames.Contains(NBedLayersName))
+            {
+                return netCdfFile.GetDimensionLength(NBedLayersName);
+            }
+            
+            throw new Exception("Bed layer related dimension not present.");
+        }
 
         /// <summary>
         /// Gets the index of the third dimension in a collection of <see cref="NetCdfDimension"/>.
