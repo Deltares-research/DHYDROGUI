@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -43,9 +44,17 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, IFileBased, IRestartModel,
-                                            IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel,
-                                            IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData, 
+    public partial class WaterFlowFMModel : TimeDependentModelBase, 
+                                            IFileBased, 
+                                            IRestartModel,
+                                            IHasCoordinateSystem, 
+                                            IGridOperationApi, 
+                                            IDisposable, 
+                                            IHydroModel,
+                                            IHydFileModel, 
+                                            IDimrModel, 
+                                            IWaterFlowFMModel, 
+                                            ISedimentModelData, 
                                             ICoupledModel
     {
         private const string HydroAreaTag = "hydro_area_tag";
@@ -904,6 +913,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public IEnumerable<IDataItem> GetDataItemsUsedForCouplingModel(DataItemRole role)
         {
             return GetChildDataItemLocations(role).SelectMany(GetChildDataItems);
+        }
+
+        private static readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
+        {
+            {"levelcenter", KnownStructureProperties.CrestLevel},
+            {"sill_level", KnownStructureProperties.CrestLevel},
+            {"crest_level", KnownStructureProperties.CrestLevel},
+            {"gateheight", KnownStructureProperties.GateLowerEdgeLevel},
+            {"lower_edge_level", KnownStructureProperties.GateLowerEdgeLevel},
+            {"door_opening_width", KnownStructureProperties.GateOpeningWidth},
+            {"opening_width", KnownStructureProperties.GateOpeningWidth}
+        };
+
+        public string GetUpToDateDataItemName(string oldDataItemName)
+        {
+            string[] partsTargetName = oldDataItemName.Split('.');
+
+            if (partsTargetName.Length <= 1 || 
+                !backwardsCompatibilityMapping.TryGetValue(partsTargetName.Last(), out string newName))
+            {
+                return oldDataItemName;
+            }
+
+            partsTargetName[partsTargetName.Length - 1] = newName;
+            return string.Join(".", partsTargetName);
         }
     }
 }

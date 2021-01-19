@@ -407,6 +407,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return AllDataItems.Where(di => di.Role == role);
         }
 
+        public virtual string GetUpToDateDataItemName(string oldDataItemName) => oldDataItemName;
+
         public void Dispose()
         {
             Dispose(true);
