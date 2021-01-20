@@ -140,7 +140,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         Name = name1,
                         Geometry = LineStringCreator.CreateLineString(points1)
                     };
-                    feature1.InitializeAttributes();
                     return feature1;
                 },
                 EqualityComparer = new GroupableFeatureComparer<FixedWeir>(),

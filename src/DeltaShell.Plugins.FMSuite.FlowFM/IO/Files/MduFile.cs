@@ -923,7 +923,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         Name = name,
                         Geometry = LineStringCreator.CreateLineString(points)
                     };
-                    feature.InitializeAttributes();
                     return feature;
                 };
             }
