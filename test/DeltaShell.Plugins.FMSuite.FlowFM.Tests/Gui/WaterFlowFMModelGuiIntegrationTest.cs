@@ -687,7 +687,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.Wpf)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-1486
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_CloseProject_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
@@ -702,7 +701,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.Wpf)]
-        [Category(TestCategory.Jira)] // D3DFMIQ-1486
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_DeleteModel_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
