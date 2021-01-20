@@ -18,10 +18,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
-using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
-using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
 
@@ -46,8 +43,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             LoadInputStateFromMdu(mduFilePath);
             LoadOutputStateFromMdu(mduFilePath);
-
-            ImportSpatialOperationsAfterLoading();
 
             InitializeSyncers();
         }
@@ -232,47 +227,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
 
             RestartInput = new RestartFile(restartFilePath);
-        }
-
-        public void ImportSpatialOperationsAfterLoading()
-        {
-            foreach (KeyValuePair<string, IList<ISpatialOperation>> spatialOperation in ModelDefinition
-                .SpatialOperations)
-            {
-                string dataItemName = spatialOperation.Key;
-                IList<ISpatialOperation> spatialOperationList = spatialOperation.Value;
-                IDataItem dataItem = DataItems.FirstOrDefault(di => di.Name == dataItemName);
-
-                // when only one operation is found and it has the same name as when you would generate it from saving,
-                // it will not override the operations found in the database. Assuming that we are loading a dsproj file.
-                // Goes wrong when you change the file name of the quantity and you only have one quantity.
-                if (spatialOperationList.Count != 1 || !(spatialOperationList[0] is ImportSamplesOperation) ||
-                    dataItem == null || dataItem.ValueConverter != null ||
-                    !(dataItem.Value is UnstructuredGridCoverage))
-                {
-                    continue;
-                }
-
-                var samplesOperation = (ImportSamplesOperation) spatialOperationList[0];
-                var coverage = (UnstructuredGridCoverage) dataItem.Value;
-                List<IPointValue> xyzFile = XyzFile.Read(samplesOperation.FilePath).ToList();
-
-                int componentValueCount =
-                    coverage.Arguments.Aggregate(
-                        0,
-                        (total, arguments) =>
-                            total == 0 ? arguments.Values.Count : total * arguments.Values.Count);
-
-                IEnumerable<double> valuesToSet = xyzFile.Count != componentValueCount
-                                                      ? new InterpolateOperation().InterpolateToGrid(
-                                                          xyzFile, coverage, coverage.Grid)
-                                                      : xyzFile.Select(p => p.Value);
-
-                if (valuesToSet.Any())
-                {
-                    coverage.SetValues(valuesToSet);
-                }
-            }
         }
 
         private void ImportSpatialOperationsAfterCreating()

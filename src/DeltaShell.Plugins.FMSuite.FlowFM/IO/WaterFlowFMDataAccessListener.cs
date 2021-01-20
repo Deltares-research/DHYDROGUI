@@ -5,6 +5,7 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -114,39 +115,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static bool SynchronizeDataItemValue(WaterFlowFMModel model, string name, object value)
+        private static void SynchronizeGrid(WaterFlowFMModel model, string name)
         {
-            IDataItem dataItem = GetDataItemByName(model.DataItems, name);
-
-            if (dataItem == null)
+            IDataItem dataItem = model.DataItems.GetByName(name);
+            if (!(dataItem.ValueConverter is SpatialOperationSetValueConverter spatialOperationSetValueConverter))
             {
-                return false;
+                return;
             }
 
-            if (dataItem.ValueConverter is SpatialOperationSetValueConverter spatialOperationSetValueConverter)
-            {
-                var coverage = (ICoverage) spatialOperationSetValueConverter.OriginalValue;
-                List<double> originalValues = coverage.Components[0].GetValues<double>().ToList();
-
-                spatialOperationSetValueConverter.ConvertedValue = value;
-
-                ((ICoverage) spatialOperationSetValueConverter.OriginalValue).SetValues(originalValues);
-
-                // only do this when there are values or you will get an ArgumentException.
-                // This happens when only a point cloud is loaded and there was no grid (TOOLS-21425)
-                if (originalValues.Any(v => !Equals(v, coverage.Components[0].NoDataValue)) && model.Grid.FlowLinks.Count == originalValues.Count)
-                {
-                    coverage.SetValues(originalValues);
-                }
-
-                spatialOperationSetValueConverter.SpatialOperationSet.SetDirty();
-            }
-            else
-            {
-                dataItem.Value = value;
-            }
-
-            return true;
+            ((UnstructuredGridCoverage) spatialOperationSetValueConverter.OriginalValue).Grid = model.Grid;
+            spatialOperationSetValueConverter.SpatialOperationSet.SetDirty();
         }
 
         private static void LoadSpatialData(WaterFlowFMModel waterFlowFMModel)
@@ -154,32 +132,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // we do not want to import the spatial operations since the converted (z-) values are read from the net file
             ClearSpatialOperations(waterFlowFMModel, WaterFlowFMModelDefinition.BathymetryDataItemName);
 
-            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.BathymetryDataItemName,
-                                     waterFlowFMModel.Bathymetry);
-            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.RoughnessDataItemName,
-                                     waterFlowFMModel.Roughness);
-            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName,
-                                     waterFlowFMModel.InitialWaterLevel);
-            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.ViscosityDataItemName,
-                                     waterFlowFMModel.Viscosity);
-            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.DiffusivityDataItemName,
-                                     waterFlowFMModel.Diffusivity);
-            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InitialTemperatureDataItemName,
-                                     waterFlowFMModel.InitialTemperature);
-            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InitialSalinityDataItemName,
-                                     waterFlowFMModel.InitialSalinity);
+            SynchronizeGrid(waterFlowFMModel, WaterFlowFMModelDefinition.BathymetryDataItemName);
+            SynchronizeGrid(waterFlowFMModel, WaterFlowFMModelDefinition.RoughnessDataItemName);
+            SynchronizeGrid(waterFlowFMModel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
+            SynchronizeGrid(waterFlowFMModel, WaterFlowFMModelDefinition.ViscosityDataItemName);
+            SynchronizeGrid(waterFlowFMModel, WaterFlowFMModelDefinition.DiffusivityDataItemName);
+            SynchronizeGrid(waterFlowFMModel, WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
+            SynchronizeGrid(waterFlowFMModel, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
 
             foreach (UnstructuredGridCellCoverage tracer in waterFlowFMModel.InitialTracers)
             {
-                SynchronizeDataItemValue(waterFlowFMModel, tracer.Name, tracer);
+                SynchronizeGrid(waterFlowFMModel, tracer.Name);
             }
 
             foreach (UnstructuredGridCellCoverage fraction in waterFlowFMModel.InitialFractions)
             {
-                SynchronizeDataItemValue(waterFlowFMModel, fraction.Name, fraction);
+                SynchronizeGrid(waterFlowFMModel, fraction.Name);
             }
-
-            waterFlowFMModel.ImportSpatialOperationsAfterLoading();
 
             // update intermediate results in operation stack after loading project:
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Roughness);
