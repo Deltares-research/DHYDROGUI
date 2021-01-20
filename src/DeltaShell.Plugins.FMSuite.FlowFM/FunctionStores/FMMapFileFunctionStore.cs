@@ -126,42 +126,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
 
             NetCdfVariable netcdfVariable = GetNetcdfVariable(function);
-
             List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
-            if (dimensions.Count == 4)
+            if (dimensions.Count == 3)
             {
-                return; // Temporarily do nothing with 4D cases.
+                SetThreeDimensionalProperties(function, dimensions, filters, ref shape, ref origin, ref stride);
             }
-
-            if (HasSedimentDimensions(dimensions) && dimensions.Count != 3)
+            else if (dimensions.Count == 4)
             {
-                throw new Exception("Number of dimensions is wrong");
+                SetFourDimensionalFilters(function, dimensions, filters, ref shape, ref origin, ref stride);
             }
+        }
 
-            var sedIndex = 0;
-            IFunction coverage = GetCoverageFunction(function);
-            if (!int.TryParse(coverage.Attributes[SedIndexAttributeName], out sedIndex))
-            {
-                throw new Exception("Sediment Index is not of integer type");
-            }
-
+        private void SetThreeDimensionalProperties(IVariable function,
+                                                   IEnumerable<NetCdfDimension> dimensions,
+                                                   IReadOnlyCollection<IVariableFilter> filters,
+                                                   ref int[] shape,
+                                                   ref int[] origin,
+                                                   ref int[] stride)
+        {
             int dimensionIndex = GetThirdDimensionIndex(dimensions);
-            var sedShape = 1;
-            int sedOrigin = sedIndex;
-            var sedStride = 1;
+            int originValue = GetOrigin(function, SedIndexAttributeName);
+            SetShapeAndOriginProperties(filters, dimensionIndex, originValue, ref shape, ref origin, ref stride);
+        }
 
-            if (filters.Length == 0)
+        private void SetFourDimensionalFilters(IVariable function,
+                                               IEnumerable<NetCdfDimension> dimensions,
+                                               IReadOnlyCollection<IVariableFilter> filters,
+                                               ref int[] shape,
+                                               ref int[] origin,
+                                               ref int[] stride)
+        {
+            int primaryDimensionIndex = GetBedLayersDimensionIndex(dimensions);
+            int originValueAlongBedLayer = GetOrigin(function, "PrimaryAxis");
+            SetShapeAndOriginProperties(filters, primaryDimensionIndex, originValueAlongBedLayer, ref shape, ref origin, ref stride);
+
+            int secondaryDimensionIndex = GetSedimentDimensionIndex(dimensions);
+            int originValueAlongSediments = GetOrigin(function, "SecondaryAxis");
+            SetShapeAndOriginProperties(filters, secondaryDimensionIndex, originValueAlongSediments, ref shape, ref origin, ref stride);
+        }
+
+        private void SetShapeAndOriginProperties(IReadOnlyCollection<IVariableFilter> filters, int dimensionIndex, int originValue, 
+                                                 ref int[] shape, ref int[] origin, ref int[] stride)
+        {
+            const int shapeValue = 1;
+            const int strideValue = 1;
+
+            if (filters.Count == 0)
             {
-                shape[dimensionIndex] = sedShape;
-                origin[dimensionIndex] = sedOrigin;
-                stride[dimensionIndex] = sedStride;
+                shape[dimensionIndex] = shapeValue;
+                origin[dimensionIndex] = originValue;
+                stride[dimensionIndex] = strideValue;
             }
             else
             {
-                shape = InsertItem(shape, dimensionIndex, sedShape);
-                origin = InsertItem(origin, dimensionIndex, sedOrigin);
-                stride = InsertItem(stride, dimensionIndex, sedStride);
+                shape = InsertItem(shape, dimensionIndex, shapeValue);
+                origin = InsertItem(origin, dimensionIndex, originValue);
+                stride = InsertItem(stride, dimensionIndex, strideValue);
             }
+        }
+
+        /// <summary>
+        /// Gets the origin based on an <see cref="IVariable"/> and the attribute name of where the 
+        /// </summary>
+        /// <param name="function">The function to retrieve the origin for.</param>
+        /// <param name="attributeName">The attribute name to retrieve the origin from.</param>
+        /// <returns>An integer representing the origin.</returns>
+        /// <exception cref="Exception">Thrown when the origin could not be determined.</exception>
+        private int GetOrigin(IVariable function, string attributeName)
+        {
+            var origin = 0;
+            IFunction coverage = GetCoverageFunction(function);
+            if (!int.TryParse(coverage.Attributes[attributeName], out origin))
+            {
+                throw new Exception("Index is not of integer type");
+            }
+
+            return origin;
         }
 
         /// <summary>
@@ -254,7 +294,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             if (HasBedLayerDimensions(dimensions))
             {
-                return  GetBedLayersDimensionIndex(dimensions);
+                return GetBedLayersDimensionIndex(dimensions);
             }
 
             throw new Exception("Dimension Index could not be determined.");
