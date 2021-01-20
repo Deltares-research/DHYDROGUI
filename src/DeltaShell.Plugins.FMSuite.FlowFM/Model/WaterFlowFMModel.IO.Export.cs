@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -74,7 +76,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         .OfType<ISpatiallyVaryingSedimentProperty>()
                                                                         .Where(p => p.IsSpatiallyVarying))
                                                               .Select(p => p.SpatiallyVaryingName).ToList());
-                ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions, spatVarSedPropNames);
+                List<IDataItem> spatialDataItems = GetSpatialCoverages()
+                                                   .Select(c => DataItems.FirstOrDefault(di => di.Value == c))
+                                                   .ToList();
+                ModelDefinition.SelectSpatialOperations(spatialDataItems, TracerDefinitions, spatVarSedPropNames);
+
                 ModelDefinition.Bathymetry = Bathymetry;
             }
 
@@ -127,6 +133,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void RestoreAreaDataColumns()
         {
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
+        }
+
+        private IEnumerable<ICoverage> GetSpatialCoverages()
+        {
+            yield return Bathymetry;
+            yield return InitialWaterLevel;
+
+            foreach (ICoverage cov in InitialSalinity.Coverages)
+            {
+                yield return cov;
+            }
+
+            yield return InitialTemperature;
+            yield return Roughness;
+            yield return Viscosity;
+            yield return Diffusivity;
+
+            foreach (var coverage in InitialTracers)
+            {
+                yield return coverage;
+            }
+
+            foreach (var coverage in InitialFractions)
+            {
+                yield return coverage;
+            }
         }
 
         #region Implementation of IDimrModel

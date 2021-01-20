@@ -455,7 +455,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             HeatFluxModel.Type = (HeatFluxModelType) (int) GetModelProperty(KnownProperties.Temperature).Value;
         }
 
-        public void SelectSpatialOperations(IEnumerable<IDataItem> dataItems, IEnumerable<string> tracerDefinitions,
+        /// <summary>
+        /// Collects the spatial operations needed to be written for each spatial data item.
+        /// The spatial operations will be added to the <see cref="SpatialOperations"/>.
+        /// For each data item the original values will be written to the xyz file as samples.
+        /// </summary>
+        /// <param name="dataItems">The data items with the initial spatial coverages.</param>
+        /// <param name="tracerDefinitions"> The tracers. </param>
+        /// <param name="spatiallyVaryingSedimentDefinitions"> The sediment fractions. </param>
+        public void SelectSpatialOperations(IList<IDataItem> dataItems, IEnumerable<string> tracerDefinitions,
                                             IEnumerable<string> spatiallyVaryingSedimentDefinitions = null)
         {
             InitialTracerNames.Clear();
@@ -470,22 +478,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             SpatialOperations.Clear();
 
-            IEnumerable<string> combinedSpatialDataItemNames = SpatialDataItemNames
-                                                               .Concat(InitialTracerNames)
-                                                               .Concat(InitialSpatiallyVaryingSedimentPropertyNames);
-
-            IDataItem[] dataItemsFound = combinedSpatialDataItemNames
-                                         .SelectMany(n => dataItems.Where(di => di.Name.StartsWith(n)))
-                                         .Distinct().ToArray();
-
-            IDataItem[] dataItemsWithConverter = dataItemsFound
+            IDataItem[] dataItemsWithConverter = dataItems
                                                  .Where(d => d.ValueConverter is SpatialOperationSetValueConverter)
                                                  .ToArray();
 
             IEnumerable<string> dataItemWithConverterNames = dataItemsWithConverter.Select(di => di.Name);
-            IDataItem[] dataItemsWithOutConverter = dataItemsFound.Except(dataItemsWithConverter)
-                                                                  .Where(di => !dataItemWithConverterNames.Contains(di.Name))
-                                                                  .ToArray();
+            IDataItem[] dataItemsWithOutConverter = dataItems.Except(dataItemsWithConverter)
+                                                             .Where(di => !dataItemWithConverterNames.Contains(di.Name))
+                                                             .ToArray();
 
             foreach (IDataItem dataItem in dataItemsWithConverter)
             {
