@@ -38,6 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <param name="mduFilePath">The path to the mdu file.</param>
         public void LoadFromMdu(string mduFilePath)
         {
+            UpdateDataItems();
             ClearSyncers();
             TracerDefinitions.Clear();
 
@@ -67,9 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             TracerDefinitions.Clear();
 
             InitializeUnstructuredGridCoverages();
-
             LoadInputStateFromMdu(mduFilePath);
-            AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating();
 
             if (clearWaqOutputDirProperty)
