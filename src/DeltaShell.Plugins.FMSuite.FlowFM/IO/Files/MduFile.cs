@@ -949,7 +949,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             var feature = new BridgePillar {Name = name};
             feature.Geometry = LineStringCreator.CreateLineString(points);
-            feature.InitializeAttributes();
             return feature;
         }
 
