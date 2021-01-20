@@ -688,7 +688,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                                                                                                                            location,
                                                                                                                            coverageLongName,
                                                                                                                            netCdfVariableName,
-                                                                                                                           unitSymbol).ToArray();
+                                                                                                                           unitSymbol);
                 foreach (UnstructuredGridCoverage unstructuredGridCoverage in fourDimensionVariables)
                 {
                     yield return unstructuredGridCoverage;
@@ -743,7 +743,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return ProcessFourDimensionalTimeDependentVariable(timeDependentVariable,
                                                                    primaryAxis,
                                                                    secondAxis,
-                                                                   string.Empty,
                                                                    dimensionName,
                                                                    location,
                                                                    coverageLongName,
@@ -890,8 +889,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// </summary>
         /// <param name="timeDependentVariable">The <see cref="NetCdfVariableInfo"/>  to process.</param>
         /// <param name="dimension">The dimension to process along to.</param>
-        /// <param name="dimensionName">The name of the third dimensional axis to create the collection of
-        /// <see cref="UnstructuredGridCoverage"/> for.</param>
+        /// <param name="surfaceName">The name of the surfaces for each entry along the <paramref name="dimension"/>.</param>
         /// <param name="location">The name of the location which is processed.</param>
         /// <param name="coverageLongName">The long name of the <paramref name="timeDependentVariable"/>.</param>
         /// <param name="netCdfVariableName">The name of the variable.</param>
@@ -900,7 +898,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <returns>A collection of <see cref="UnstructuredGridCoverage"/> along the third axis.</returns>
         private IEnumerable<UnstructuredGridCoverage> ProcessThreeDimensionalTimeDependentVariable(NetCdfVariableInfo timeDependentVariable,
                                                                                                    NetCdfDimension dimension,
-                                                                                                   string dimensionName,
+                                                                                                   string surfaceName,
                                                                                                    string location,
                                                                                                    string coverageLongName,
                                                                                                    string netCdfVariableName,
@@ -912,11 +910,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             for (var index = 0; index < dimensionLength; index++)
             {
                 // TODO : Replace index with values (i.e. sediment names) - this is not currently available in the map file
-                UnstructuredGridCoverage coverage = CreateCoverage(location, coverageLongName, index);
+                string coverageName = $"{coverageLongName} ({index})";
+                UnstructuredGridCoverage coverage = CreateCoverage(location, coverageName);
                 if (coverage != null)
                 {
-                    InitializeTwoDimensionalCoverage(coverage, dimensionName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate);
-
+                    InitializeTwoDimensionalCoverage(coverage, surfaceName, netCdfVariableName, unitSymbol, timeDependentVariable.ReferenceDate);
                     Tuple<string, string>[] additionalAttributes = additionalAttributeNames.Select(attributeName => new Tuple<string, string>(attributeName, index.ToString()))
                                                                                            .ToArray();
                     AddAdditionalDimensionAttributes(coverage, additionalAttributes);
@@ -929,8 +927,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private IEnumerable<UnstructuredGridCoverage> ProcessFourDimensionalTimeDependentVariable(NetCdfVariableInfo timeDependentVariable,
                                                                                                   NetCdfDimension firstDimension,
                                                                                                   NetCdfDimension secondDimension,
-                                                                                                  string firstDimensionName,
-                                                                                                  string secondDimensionName,
+                                                                                                  string surfaceName,
                                                                                                   string location,
                                                                                                   string coverageLongName,
                                                                                                   string netCdfVariableName,
@@ -941,12 +938,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             int dimensionLength = netCdfFile.GetDimensionLength(firstDimension);
             for (var index = 0; index < dimensionLength; index++)
             {
-                var coverageName = $"{coverageLongName} ({index})";
+                string coverageName = $"{coverageLongName} ({index}),";
 
                 IEnumerable<UnstructuredGridCoverage> coverageAlongSideSecondAxis =
                     ProcessThreeDimensionalTimeDependentVariable(timeDependentVariable,
                                                                  secondDimension,
-                                                                 secondDimensionName,
+                                                                 surfaceName,
                                                                  location,
                                                                  coverageName,
                                                                  netCdfVariableName,
