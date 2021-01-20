@@ -120,7 +120,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         {
             base.GetShapeAndOrigin(function, filters, out shape, out origin, out stride);
 
-            if (function.IsIndependent || !IsCoverageFunction(function))
+            var coverageFunction = GetCoverageFunction(function);
+            if (function.IsIndependent || coverageFunction == null)
             {
                 return;
             }
@@ -338,31 +339,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
 
             // Find the coverage and apply filter
-            if (!function.IsIndependent && IsCoverageFunction(function))
+            NetCdfVariable netcdfVariable = GetNetcdfVariable(function);
+            IFunction coverage = GetCoverageFunction(function);
+            if (coverage != null && !function.IsIndependent && netCdfFile.GetDimensions(netcdfVariable).Count() == 3)
             {
-                IFunction coverage = GetCoverageFunction(function);
-                if (coverage != null)
-                {
-                    // is coverage
-                    //check if there are multidimensional sedimentnames
-                    var indexOfSedimentToRender = string.Empty;
-                    if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
-                    {
-                        int nIndex = -1;
-                        if (int.TryParse(indexOfSedimentToRender, out nIndex))
-                        {
-                            IVariable variableToFilter = IsCoverageFunctionComponent(function)
-                                                             ? function
-                                                             : function.Components[0];
-
-                            var filter = new VariableIndexFilter(variableToFilter, 0);
-                            Array.Resize(ref filters, filters.Length + 1);
-                            filters[filters.Length - 1] = filter;
-                        }
-                    }
-                }
+                // Create filters in case the variable is multidimensional
+                filters = CreateFilters(function, filters);
             }
-
+            
             try
             {
                 return base.GetVariableValuesCore<T>(function, filters);
@@ -373,6 +357,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 int functionSize = GetSize(function);
                 return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]), functionSize);
             }
+        }
+
+        private IVariableFilter[] CreateFilters(IVariable function, IVariableFilter[] filters)
+        {
+            IVariable variableToFilter = IsCoverageFunctionComponent(function)
+                                             ? function
+                                             : function.Components[0];
+
+            var filter = new VariableIndexFilter(variableToFilter, 0);
+            Array.Resize(ref filters, filters.Length + 1);
+            filters[filters.Length - 1] = filter;
+
+            return filters;
         }
 
         /// <summary>
