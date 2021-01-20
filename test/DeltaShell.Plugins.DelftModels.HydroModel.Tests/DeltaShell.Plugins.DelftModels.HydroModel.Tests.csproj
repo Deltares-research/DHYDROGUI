@@ -288,6 +288,7 @@
     <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelGuiPluginTest.cs" />
+    <Compile Include="HydroModelIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />
     <Compile Include="HydroModelWaveIntegrationTest.cs" />
     <Compile Include="Import\RtcXmlDirectoryLookupTest.cs" />
