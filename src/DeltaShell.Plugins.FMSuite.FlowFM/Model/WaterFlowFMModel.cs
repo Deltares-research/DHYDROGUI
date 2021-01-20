@@ -274,7 +274,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             AddOrRenameDataItem(Viscosity, WaterFlowFMModelDefinition.ViscosityDataItemName);
             AddOrRenameDataItem(Diffusivity, WaterFlowFMModelDefinition.DiffusivityDataItemName);
             AddOrRenameDataItem(InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
-            AddOrRenameDataItems(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
+            AddOrRenameDataItem(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
             AddOrRenameTracerDataItems();
             AddOrRenameFractionDataItems();
         }
@@ -322,18 +322,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private IDataItem GetDataItemByName(string dataItemName)
         {
             return AllDataItems.FirstOrDefault(di => di.Name == dataItemName);
-        }
-
-        private void AddOrRenameDataItems(CoverageDepthLayersList coverageDepthLayersList, string name)
-        {
-            var i = 1;
-            bool uniform = coverageDepthLayersList.VerticalProfile.Type == VerticalProfileType.Uniform;
-
-            foreach (ICoverage coverage in coverageDepthLayersList.Coverages)
-            {
-                string numberedName = uniform ? name : name + "_" + i++;
-                AddOrRenameDataItem(coverage, numberedName);
-            }
         }
 
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)

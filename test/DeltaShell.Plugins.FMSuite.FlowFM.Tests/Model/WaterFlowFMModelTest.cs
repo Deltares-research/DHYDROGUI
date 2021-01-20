@@ -469,25 +469,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        public void AddInitialSalinityTest()
-        {
-            // this test checks for SpatialDataLayersChanged() in WaterFlowFMModel.
-            var model = new WaterFlowFMModel();
-
-            Assert.AreEqual(1, model.InitialSalinity.Coverages.Count);
-            IDataItem originalDataItem = model.GetDataItemByValue(model.InitialSalinity.Coverages[0]);
-            string originalName = originalDataItem.Name;
-
-            model.InitialSalinity.VerticalProfile = new VerticalProfileDefinition(VerticalProfileType.TopBottom);
-
-            Assert.AreEqual(2, model.InitialSalinity.Coverages.Count);
-            Assert.IsNotNull(model.GetDataItemByValue(model.InitialSalinity.Coverages[1]));
-            // check if a data item was created
-
-            Assert.AreNotEqual(originalName, model.GetDataItemByValue(model.InitialSalinity.Coverages[0]).Name);
-        }
-
-        [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
         [NUnit.Framework.Category(TestCategory.Slow)]
         public void TransformCoordinateSystemTest()

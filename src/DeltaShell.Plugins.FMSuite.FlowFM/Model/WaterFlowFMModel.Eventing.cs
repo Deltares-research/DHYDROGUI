@@ -590,18 +590,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         #region Spatial data
 
-        private void SpatialDataLayersChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (Equals(sender, InitialSalinity.Coverages))
-            {
-                AddOrRenameDataItems(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
-            }
-            else
-            {
-                throw new ArgumentException("Unexpected layered spatial data: " + e.GetRemovedOrAddedItem());
-            }
-        }
-
         private void SpatialDataTracersChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (Equals(sender, InitialTracers))

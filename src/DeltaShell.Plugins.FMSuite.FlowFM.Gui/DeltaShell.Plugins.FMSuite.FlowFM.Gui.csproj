@@ -174,7 +174,6 @@
     </Compile>
     <Compile Include="BoundaryDataMapSymbols.cs" />
     <Compile Include="Editors\BoundaryConditionExtensions.cs" />
-    <Compile Include="Editors\Buttons\EditCoverageLayersButton.cs" />
     <Compile Include="Editors\Buttons\EditDepthLayersButton.cs" />
     <Compile Include="Editors\FlowBoundaryConditionPointData.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRow.cs" />

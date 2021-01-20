@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
@@ -151,17 +149,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return true;
         }
 
-        private static bool SynchronizeDataItemValues(WaterFlowFMModel model, string baseName,
-                                                      CoverageDepthLayersList coverageDepthLayersList)
-        {
-            if (coverageDepthLayersList.Coverages.Count == 1)
-            {
-                return SynchronizeDataItemValue(model, baseName, coverageDepthLayersList.Coverages.First());
-            }
-
-            return !coverageDepthLayersList.Coverages.Where((t, i) => !SynchronizeDataItemValue(model, baseName + "_" + (i + 1), t)).Any();
-        }
-
         private static void LoadSpatialData(WaterFlowFMModel waterFlowFMModel)
         {
             // we do not want to import the spatial operations since the converted (z-) values are read from the net file
@@ -179,8 +166,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                      waterFlowFMModel.Diffusivity);
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InitialTemperatureDataItemName,
                                      waterFlowFMModel.InitialTemperature);
-            SynchronizeDataItemValues(waterFlowFMModel, WaterFlowFMModelDefinition.InitialSalinityDataItemName,
-                                      waterFlowFMModel.InitialSalinity);
+            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InitialSalinityDataItemName,
+                                     waterFlowFMModel.InitialSalinity);
 
             foreach (UnstructuredGridCellCoverage tracer in waterFlowFMModel.InitialTracers)
             {
@@ -200,10 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Viscosity);
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Diffusivity);
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.InitialTemperature);
-            foreach (ICoverage cov in waterFlowFMModel.InitialSalinity.Coverages)
-            {
-                ExecuteOperations(waterFlowFMModel, cov);
-            }
+            ExecuteOperations(waterFlowFMModel, waterFlowFMModel.InitialSalinity);
 
             foreach (UnstructuredGridCellCoverage tracer in waterFlowFMModel.InitialTracers)
             {

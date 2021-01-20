@@ -139,12 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             yield return Bathymetry;
             yield return InitialWaterLevel;
-
-            foreach (ICoverage cov in InitialSalinity.Coverages)
-            {
-                yield return cov;
-            }
-
+            yield return InitialSalinity;
             yield return InitialTemperature;
             yield return Roughness;
             yield return Viscosity;

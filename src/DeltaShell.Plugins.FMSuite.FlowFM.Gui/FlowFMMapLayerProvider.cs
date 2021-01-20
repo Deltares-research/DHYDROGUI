@@ -330,10 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                 if (model.UseSalinity)
                 {
-                    foreach (ICoverage coverage in model.InitialSalinity.Coverages)
-                    {
-                        yield return coverage;
-                    }
+                    yield return model.InitialSalinity;
                 }
 
                 foreach (UnstructuredGridCellCoverage tracer in model.InitialTracers)

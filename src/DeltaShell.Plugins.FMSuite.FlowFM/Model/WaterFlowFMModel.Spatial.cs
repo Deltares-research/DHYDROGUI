@@ -11,12 +11,10 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -32,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public UnstructuredGridCoverage Bathymetry { get; private set; }
         public UnstructuredGridCellCoverage InitialWaterLevel { get; private set; }
-        public CoverageDepthLayersList InitialSalinity { get; private set; }
+        public UnstructuredGridCellCoverage InitialSalinity { get; private set; }
         public UnstructuredGridCellCoverage InitialTemperature { get; private set; }
         public UnstructuredGridFlowLinkCoverage Roughness { get; private set; }
         public UnstructuredGridFlowLinkCoverage Viscosity { get; private set; }
@@ -385,12 +383,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             InitialWaterLevel =
                 CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
-            InitialSalinity = new CoverageDepthLayersList(s => CreateUnstructuredGridCellCoverage(s, Grid))
-            {
-                Name = WaterFlowFMModelDefinition.InitialSalinityDataItemName,
-                VerticalProfile = new VerticalProfileDefinition(VerticalProfileType.Uniform)
-            };
-            InitialSalinity.Coverages.CollectionChanged += SpatialDataLayersChanged;
+            InitialSalinity = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Grid);
             InitialTracers = new EventedList<UnstructuredGridCellCoverage>();
             InitialTracers.CollectionChanged += SpatialDataTracersChanged;
             InitialTemperature =
@@ -481,24 +474,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Diffusivity, g => Diffusivity = g);
             UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialTemperature,
                                g => InitialTemperature = g);
-
-            if (InitialSalinity != null)
-            {
-                CoverageDepthLayersList initialSalinity = InitialSalinity;
-                InitialSalinity = null; // prevent events
-                try
-                {
-                    foreach (ICoverage salinityLayer in initialSalinity.Coverages)
-                    {
-                        UpdateQuantityAfterGridSet(salinityLayer as UnstructuredGridCoverage, newGrid, nodesChanged,
-                                                   cellsChanged, linksChanged);
-                    }
-                }
-                finally
-                {
-                    InitialSalinity = initialSalinity;
-                }
-            }
+            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialSalinity,
+                               g => InitialSalinity = g);
 
             if (InitialTracers != null)
             {

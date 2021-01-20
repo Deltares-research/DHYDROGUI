@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             if (model.UseSalinity)
             {
-                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Resources.salt, model, model.InitialSalinity.Coverages[0], ShortCutType.SpatialCoverage);
+                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Resources.salt, model, model.InitialSalinity, ShortCutType.SpatialCoverage);
             }
 
             if (model.HeatFluxModelType != HeatFluxModelType.None)
