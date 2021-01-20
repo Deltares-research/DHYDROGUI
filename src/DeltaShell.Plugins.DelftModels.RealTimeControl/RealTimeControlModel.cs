@@ -1179,7 +1179,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             MarkDirty();
         }
 
-        public virtual IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory => new List<string>();
+        public virtual ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory => 
+            new HashSet<string>();
 
         #endregion
 

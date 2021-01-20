@@ -373,8 +373,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             using (var model = new RealTimeControlModel())
             {
-                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
-                Assert.AreEqual(fileExceptions.Count, 0);
+                Assert.That(model.IgnoredFilePathsWhenCleaningWorkingDirectory, Is.Empty);
             }
         }
 
