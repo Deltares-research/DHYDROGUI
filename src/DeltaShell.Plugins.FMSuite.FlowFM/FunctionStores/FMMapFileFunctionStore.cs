@@ -247,23 +247,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <exception cref="Exception">Thrown when the third dimension could not be found.</exception>
         private int GetThirdDimensionIndex(IEnumerable<NetCdfDimension> dimensions)
         {
-            var dimensionIndex = -1;
             if (HasSedimentDimensions(dimensions))
             {
-                dimensionIndex = GetSedimentDimensionIndex(dimensions);
+                return GetSedimentDimensionIndex(dimensions);
             }
 
             if (HasBedLayerDimensions(dimensions))
             {
-                dimensionIndex = GetBedLayersDimensionIndex(dimensions);
+                return  GetBedLayersDimensionIndex(dimensions);
             }
 
-            if (dimensionIndex < 0)
-            {
-                throw new Exception("Dimension Index could not be determined.");
-            }
-
-            return dimensionIndex;
+            throw new Exception("Dimension Index could not be determined.");
         }
 
         private int GetBedLayersDimensionIndex(IEnumerable<NetCdfDimension> dimensions)
@@ -276,9 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             int sedSusVarIndex = GetDimensionIndex(dimensions, NSedSusName);
             int sedTotVarIndex = GetDimensionIndex(dimensions, NSedTotName);
 
-            int dimensionIndex = Math.Max(sedTotVarIndex, sedSusVarIndex);
-
-            return dimensionIndex;
+            return Math.Max(sedTotVarIndex, sedSusVarIndex);
         }
 
         /// <summary>
