@@ -183,6 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Slow)]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-1486
         public void CheckEventLeaksThroughDataItemAfterModelRun()
         {
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
