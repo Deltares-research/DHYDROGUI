@@ -1,20 +1,8 @@
 using System;
-using System.ComponentModel;
 using DelftTools.Functions;
 
 namespace DelftTools.Hydro.Structures
 {
-    public enum CrestShape
-    {
-        Sharp,
-        Round,
-        Triangular,
-        Broad,
-
-        [Description("User defined")]
-        UserDefined
-    }
-
     public interface IWeir : IStructure
     {
         string Name { get; set; }

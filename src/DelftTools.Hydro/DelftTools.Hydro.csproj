@@ -171,6 +171,7 @@
     <Compile Include="IStructure.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Structures\BridgePillar.cs" />
+    <Compile Include="Structures\CrestShape.cs" />
     <Compile Include="Structures\FixedWeir.cs" />
     <Compile Include="Helpers\ActivitiesExtensions.cs" />
     <Compile Include="Helpers\ActivityExtensions.cs" />
