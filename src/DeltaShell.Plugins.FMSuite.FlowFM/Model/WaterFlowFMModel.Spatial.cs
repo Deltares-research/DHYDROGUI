@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
@@ -28,13 +29,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private UnstructuredGrid grid;
         private double bathymetryNoDataValue;
 
-        public UnstructuredGridCoverage Bathymetry { get; private set; }
-        public UnstructuredGridCellCoverage InitialWaterLevel { get; private set; }
-        public UnstructuredGridCellCoverage InitialSalinity { get; private set; }
-        public UnstructuredGridCellCoverage InitialTemperature { get; private set; }
-        public UnstructuredGridFlowLinkCoverage Roughness { get; private set; }
-        public UnstructuredGridFlowLinkCoverage Viscosity { get; private set; }
-        public UnstructuredGridFlowLinkCoverage Diffusivity { get; private set; }
+        public UnstructuredGridCoverage Bathymetry
+        {
+            get => (UnstructuredGridCoverage) BathymetryDataItem.Value;
+            private set => BathymetryDataItem.Value = value;
+        }
+
+        public UnstructuredGridCellCoverage InitialWaterLevel
+        {
+            get => (UnstructuredGridCellCoverage) InitialWaterLevelDataItem.Value;
+            private set => InitialWaterLevelDataItem.Value = value;
+        }
+
+        public UnstructuredGridCellCoverage InitialSalinity
+        {
+            get => (UnstructuredGridCellCoverage) InitialSalinityDataItem.Value;
+            private set => InitialSalinityDataItem.Value = value;
+        }
+
+        public UnstructuredGridCellCoverage InitialTemperature
+        {
+            get => (UnstructuredGridCellCoverage) InitialTemperatureDataItem.Value;
+            private set => InitialTemperatureDataItem.Value = value;
+        }
+
+        public UnstructuredGridFlowLinkCoverage Roughness
+        {
+            get => (UnstructuredGridFlowLinkCoverage) RoughnessDataItem.Value;
+            private set => RoughnessDataItem.Value = value;
+        }
+
+        public UnstructuredGridFlowLinkCoverage Viscosity
+        {
+            get => (UnstructuredGridFlowLinkCoverage) ViscosityDataItem.Value;
+            private set => ViscosityDataItem.Value = value;
+        }
+
+        public UnstructuredGridFlowLinkCoverage Diffusivity
+        {
+            get => (UnstructuredGridFlowLinkCoverage) DiffusivityDataItem.Value;
+            private set => DiffusivityDataItem.Value = value;
+        }
+
         public IEventedList<UnstructuredGridCellCoverage> InitialTracers { get; private set; }
         public IEventedList<UnstructuredGridCellCoverage> InitialFractions { get; private set; }
 
@@ -249,6 +285,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     Resources
                         .WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_to_new_BedLevel_Data);
             }
+        }
+
+        private IDataItem BathymetryDataItem => GetDataItem<UnstructuredGridCoverage>(WaterFlowFMModelDefinition.BathymetryDataItemName);
+        private IDataItem InitialWaterLevelDataItem => GetDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
+        private IDataItem InitialSalinityDataItem => GetDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialSalinityDataItemName);
+        private IDataItem InitialTemperatureDataItem => GetDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
+        private IDataItem RoughnessDataItem => GetDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.RoughnessDataItemName);
+        private IDataItem ViscosityDataItem => GetDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.ViscosityDataItemName);
+        private IDataItem DiffusivityDataItem => GetDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.DiffusivityDataItemName);
+
+        private IDataItem GetDataItem<T>(string name)
+        {
+            IDataItem di = AllDataItems.GetByName(name);
+            if (di != null)
+            {
+                return di;
+            }
+
+            di = new DataItem(null, name, typeof(T), DataItemRole.Input, string.Empty);
+            DataItems.Add(di);
+
+            return di;
         }
 
         private static IList<FlowLink> GenerateFlowLinksForEdges(UnstructuredGrid grid)
