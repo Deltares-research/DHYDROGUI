@@ -411,17 +411,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         }
 
         /// <summary>
-        /// Gets an indicator whether the <see cref="IVariable"/> is a coverage function.
-        /// </summary>
-        /// <param name="function">The <see cref="IVariable"/> to determine whether it is a coverage function.</param>
-        /// <returns><c>true</c> if it is a coverage function, <c>false</c> otherwise.</returns>
-        private bool IsCoverageFunction(IVariable function)
-        {
-            IFunction coverage = GetCoverageFunction(function);
-            return coverage != null && coverage.Attributes.ContainsKey(SedIndexAttributeName);
-        }
-
-        /// <summary>
         /// Function to determine whether the coverage function is a component.
         /// </summary>
         /// <param name="coverageFunction">The function to determine for.</param>
