@@ -60,8 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
             else
             {
-                log.Warn(Resources
-                             .FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set);
+                log.Warn(Resources.FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set);
             }
         }
 
@@ -134,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
             else if (dimensions.Count == 4)
             {
-                SetFourDimensionalFilters(function, dimensions, filters, ref shape, ref origin, ref stride);
+                SetFourDimensionalProperties(function, dimensions, filters, ref shape, ref origin, ref stride);
             }
         }
 
@@ -150,12 +149,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             SetShapeAndOriginProperties(filters, dimensionIndex, originValue, ref shape, ref origin, ref stride);
         }
 
-        private void SetFourDimensionalFilters(IVariable function,
-                                               IEnumerable<NetCdfDimension> dimensions,
-                                               IReadOnlyCollection<IVariableFilter> filters,
-                                               ref int[] shape,
-                                               ref int[] origin,
-                                               ref int[] stride)
+        private void SetFourDimensionalProperties(IVariable function,
+                                                  IEnumerable<NetCdfDimension> dimensions,
+                                                  IReadOnlyCollection<IVariableFilter> filters,
+                                                  ref int[] shape,
+                                                  ref int[] origin,
+                                                  ref int[] stride)
         {
             int primaryDimensionIndex = GetBedLayersDimensionIndex(dimensions);
             int originValueAlongBedLayer = GetOrigin(function, "PrimaryAxis");
@@ -166,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             SetShapeAndOriginProperties(filters, secondaryDimensionIndex, originValueAlongSediments, ref shape, ref origin, ref stride);
         }
 
-        private void SetShapeAndOriginProperties(IReadOnlyCollection<IVariableFilter> filters, int dimensionIndex, int originValue, 
+        private void SetShapeAndOriginProperties(IReadOnlyCollection<IVariableFilter> filters, int dimensionIndex, int originValue,
                                                  ref int[] shape, ref int[] origin, ref int[] stride)
         {
             const int shapeValue = 1;
@@ -218,6 +217,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 scalingFactor = GetThreeDimensionalScalingFactor(dimensions);
             }
 
+            if (dimensions.Count() == 4)
+            {
+                scalingFactor = GetFourDimensionalScalingFactor(dimensions);
+            }
+
             return scalingFactor;
         }
 
@@ -238,6 +242,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             if (HasBedLayerDimensions(dimensions))
             {
                 return GetBedLayerScalingFactor(dimensionNames);
+            }
+
+            throw new Exception($"Scaling factor could not be determined. Supported dimensions: {NSedSusName}, {NSedTotName}, {NBedLayersName}");
+        }
+
+        /// <summary>
+        /// Gets the scaling factor along a third and fourth dimensional axis.
+        /// </summary>
+        /// <param name="dimensions">The collection of <see cref="NetCdfDimension"/> to determine the scaling factor for.</param>
+        /// <returns>An integer representing the scaling factor along the third and fourth dimension.</returns>
+        /// <exception cref="Exception">Thrown when the scaling factor could not be determined.</exception>
+        private int GetFourDimensionalScalingFactor(IEnumerable<NetCdfDimension> dimensions)
+        {
+            string[] dimensionNames = dimensions.Select(d => netCdfFile.GetDimensionName(d)).ToArray();
+            if (HasSedimentDimensions(dimensions) && HasBedLayerDimensions(dimensions))
+            {
+                return GetSedimentDimensionScalingFactor(dimensionNames) * GetBedLayerScalingFactor(dimensionNames);
             }
 
             throw new Exception($"Scaling factor could not be determined. Supported dimensions: {NSedSusName}, {NSedTotName}, {NBedLayersName}");
