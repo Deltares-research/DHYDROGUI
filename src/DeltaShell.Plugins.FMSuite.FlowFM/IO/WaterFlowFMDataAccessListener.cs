@@ -151,21 +151,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             // update intermediate results in operation stack after loading project:
-            ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Roughness);
-            ExecuteOperations(waterFlowFMModel, waterFlowFMModel.InitialWaterLevel);
-            ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Viscosity);
-            ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Diffusivity);
-            ExecuteOperations(waterFlowFMModel, waterFlowFMModel.InitialTemperature);
-            ExecuteOperations(waterFlowFMModel, waterFlowFMModel.InitialSalinity);
+            ExecuteOperations(waterFlowFMModel.DataItems.GetByName(WaterFlowFMModelDefinition.RoughnessDataItemName));
+            ExecuteOperations(waterFlowFMModel.DataItems.GetByName(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName));
+            ExecuteOperations(waterFlowFMModel.DataItems.GetByName(WaterFlowFMModelDefinition.ViscosityDataItemName));
+            ExecuteOperations(waterFlowFMModel.DataItems.GetByName(WaterFlowFMModelDefinition.DiffusivityDataItemName));
+            ExecuteOperations(waterFlowFMModel.DataItems.GetByName(WaterFlowFMModelDefinition.InitialTemperatureDataItemName));
+            ExecuteOperations(waterFlowFMModel.DataItems.GetByName(WaterFlowFMModelDefinition.InitialSalinityDataItemName));
 
             foreach (UnstructuredGridCellCoverage tracer in waterFlowFMModel.InitialTracers)
             {
-                ExecuteOperations(waterFlowFMModel, tracer);
+                ExecuteOperations(waterFlowFMModel.GetDataItemByValue(tracer));
             }
 
             foreach (UnstructuredGridCellCoverage fraction in waterFlowFMModel.InitialFractions)
             {
-                ExecuteOperations(waterFlowFMModel, fraction);
+                ExecuteOperations(waterFlowFMModel.GetDataItemByValue(fraction));
             }
         }
 
@@ -184,15 +184,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void ExecuteOperations(IModel model, ICoverage coverage)
+        private static void ExecuteOperations(IDataItem dataItem)
         {
-            IDataItem di = model.GetDataItemByValue(coverage);
-            if (di == null)
+            if (dataItem == null)
             {
                 return;
             }
 
-            var sosvc = di.ValueConverter as CoverageSpatialOperationValueConverter;
+            var sosvc = dataItem.ValueConverter as CoverageSpatialOperationValueConverter;
             if (sosvc == null || !sosvc.SpatialOperationSet.Dirty)
             {
                 return;
