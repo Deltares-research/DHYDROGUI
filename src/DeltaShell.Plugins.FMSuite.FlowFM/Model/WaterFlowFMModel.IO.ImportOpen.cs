@@ -71,6 +71,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ClearSyncers();
             TracerDefinitions.Clear();
 
+            InitializeUnstructuredGridCoverages();
+
             LoadInputStateFromMdu(mduFilePath);
             AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating();
@@ -152,9 +154,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             FireImportProgressChanged("Renaming sub files", 6, TotalImportSteps);
             RenameSubFilesIfApplicable();
-
-            FireImportProgressChanged("Initialize input spatial data", 7, TotalImportSteps);
-            InitializeUnstructuredGridCoverages();
 
             CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(NetFilePath);
 
