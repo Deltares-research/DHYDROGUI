@@ -391,6 +391,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /*  Test    */
                 UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
 
+                fmModel.Grid = grid;
+
                 /*SedThick coverage*/
                 var covSedThick = new UnstructuredGridCellCoverage(grid, false);
                 covSedThick[0] = 0.1;

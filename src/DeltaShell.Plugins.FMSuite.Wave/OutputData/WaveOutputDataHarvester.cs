@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
@@ -95,7 +96,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.OutputData
 
         private static ReadOnlyTextFileData ReadTextFile(FileInfo fileInfo)
         {
-            return new ReadOnlyTextFileData(fileInfo.Name, File.ReadAllText(fileInfo.FullName));
+            return new ReadOnlyTextFileData(fileInfo.Name, 
+                                            File.ReadAllText(fileInfo.FullName), 
+                                            ReadOnlyTextFileDataType.Default);
         }
 
         private static WavmFileFunctionStore ConstructWavmFileFunctionStore(FileInfo fileInfo)
