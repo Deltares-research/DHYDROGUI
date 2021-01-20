@@ -91,9 +91,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             Grid = new UnstructuredGrid();
 
             InitializeUnstructuredGridCoverages();
-
-            AddSpatialDataItems();
-
             RenameSubFilesIfApplicable();
 
             InitializeSyncers();
