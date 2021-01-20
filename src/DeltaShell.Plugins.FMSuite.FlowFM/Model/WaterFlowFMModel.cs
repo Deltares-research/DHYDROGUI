@@ -90,6 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             Grid = new UnstructuredGrid();
 
+            LoadBathymetry();
             InitializeUnstructuredGridCoverages();
             RenameSubFilesIfApplicable();
 

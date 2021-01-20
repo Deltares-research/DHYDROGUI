@@ -402,6 +402,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void InitializeUnstructuredGridCoverages()
         {
+            InitialWaterLevel =
+                CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
+            InitialSalinity = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Grid);
+            InitialTracers = new EventedList<UnstructuredGridCellCoverage>();
+            InitialTracers.CollectionChanged += SpatialDataTracersChanged;
+            InitialTemperature =
+                CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Grid);
+            Viscosity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.ViscosityDataItemName, Grid);
+            Diffusivity =
+                CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.DiffusivityDataItemName, Grid);
+            Roughness = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.RoughnessDataItemName, Grid);
+            InitialFractions = new EventedList<UnstructuredGridCellCoverage>();
+            InitialFractions.CollectionChanged += SpatialDataFractionsChanged;
+        }
+
+        private void LoadBathymetry()
+        {
             var bedLevelLocationsForUnstructuredGridCellCoverage = new List<UnstructuredGridFileHelper.BedLevelLocation>
             {
                 UnstructuredGridFileHelper.BedLevelLocation.Faces,
@@ -438,20 +455,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 // sync ModelDefinition with new Bathymetry
                 ModelDefinition.Bathymetry = Bathymetry;
             }
-
-            InitialWaterLevel =
-                CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
-            InitialSalinity = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Grid);
-            InitialTracers = new EventedList<UnstructuredGridCellCoverage>();
-            InitialTracers.CollectionChanged += SpatialDataTracersChanged;
-            InitialTemperature =
-                CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Grid);
-            Viscosity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.ViscosityDataItemName, Grid);
-            Diffusivity =
-                CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.DiffusivityDataItemName, Grid);
-            Roughness = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.RoughnessDataItemName, Grid);
-            InitialFractions = new EventedList<UnstructuredGridCellCoverage>();
-            InitialFractions.CollectionChanged += SpatialDataFractionsChanged;
         }
 
         private double[] GetZValuesFromNetFile(UnstructuredGridFileHelper.BedLevelLocation bedLevelType)
