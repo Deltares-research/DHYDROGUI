@@ -171,6 +171,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
+        /// <summary>
+        /// Sets the shape, origin and stride properties based on the input arguments for a three dimensional variable.
+        /// </summary>
+        /// <param name="function">The <see cref="IVariable{T}"/> to base the properties for.</param>
+        /// <param name="dimensions">The dimensions to base the properties on.</param>
+        /// <param name="filters">The filters to apply on the <paramref name="function"/>.</param>
+        /// <param name="shape">The array to set the shape values for.</param>
+        /// <param name="origin">The array to set the origin values for.</param>
+        /// <param name="stride">The array to set the shape values for.</param>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item>The shape describes how the data is structured in each dimension. (Generally the number of elements across every dimension)</item> 
+        /// <item>The origin describes where to start looking for the the data in each dimension. (Generally value 1 across the dimensions,
+        /// and value n being the corresponding slice along the third dimensional axis)</item> 
+        /// <item>The stride describes the offset from each looked up value in each dimension (generally value 1 across all dimensions)</item> 
+        /// </list>
+        /// </remarks>
         private void SetThreeDimensionalProperties(IVariable function,
                                                    IEnumerable<NetCdfDimension> dimensions,
                                                    IReadOnlyCollection<IVariableFilter> filters,
@@ -183,6 +200,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             SetShapeAndOriginProperties(filters, dimensionIndex, originValue, ref shape, ref origin, ref stride);
         }
 
+        /// <summary>
+        /// Sets the shape, origin and stride properties based on the input arguments for a four dimensional variable.
+        /// </summary>
+        /// <param name="function">The <see cref="IVariable{T}"/> to base the properties for.</param>
+        /// <param name="dimensions">The dimensions to base the properties on.</param>
+        /// <param name="filters">The filters to apply on the <paramref name="function"/>.</param>
+        /// <param name="shape">The array to set the shape values for.</param>
+        /// <param name="origin">The array to set the origin values for.</param>
+        /// <param name="stride">The array to set the shape values for.</param>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item>The shape describes how the data is structured in each dimension. (Generally the number of elements across every dimension)</item> 
+        /// <item>The origin describes where to start looking for the the data in each dimension. (Generally value 1 across the dimensions,
+        /// and value n being the corresponding slice along the third dimensional axis and m being the corresponding slice along the fourth dimensional axis)</item> 
+        /// <item>The stride describes the offset from each looked up value in each dimension (generally value 1 across all dimensions)</item> 
+        /// </list>
+        /// </remarks>
         private void SetFourDimensionalProperties(IVariable function,
                                                   IEnumerable<NetCdfDimension> dimensions,
                                                   IReadOnlyCollection<IVariableFilter> filters,
@@ -199,6 +233,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             SetShapeAndOriginProperties(filters, primaryDimensionIndex, originValueAlongBedLayer, ref shape, ref origin, ref stride);
         }
 
+        /// <summary>
+        /// Sets the shape, origin and stride properties based on the input arguments.
+        /// </summary>
+        /// <param name="function">The <see cref="IVariable{T}"/> to base the properties for.</param>
+        /// <param name="filters">The filters to apply.</param>
+        /// <param name="dimensionIndex">The index of the dimension to set the shape, origin and the stride value for.</param>
+        /// <param name="originValue">The value to set for the origin at the <paramref name="dimensionIndex"/>.</param>
+        /// <param name="shape">The array to set the shape values for.</param>
+        /// <param name="origin">The array to set the origin values for.</param>
+        /// <param name="stride">The array to set the shape values for.</param>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item>The shape describes how the data is structured in each dimension. (Generally the number of elements across every dimension)</item> 
+        /// <item>The origin describes where to start looking for the the data in each dimension. (Generally value 1 across the dimensions,
+        /// and value n being the corresponding slice along the third dimensional axis)</item> 
+        /// <item>The stride describes the offset from each looked up value in each dimension (generally value 1 across all dimensions)</item> 
+        /// </list>
+        /// </remarks>
         private void SetShapeAndOriginProperties(IReadOnlyCollection<IVariableFilter> filters, int dimensionIndex, int originValue,
                                                  ref int[] shape, ref int[] origin, ref int[] stride)
         {
