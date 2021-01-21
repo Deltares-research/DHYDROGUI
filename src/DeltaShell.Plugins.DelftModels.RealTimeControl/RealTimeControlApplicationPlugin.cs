@@ -23,52 +23,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(RealTimeControlApplicationPlugin));
 
-        public override string Name
-        {
-            get
-            {
-                return "Real-Time Control";
-            }
-        }
+        public override string Name => "Real-Time Control";
 
-        public override string DisplayName
-        {
-            get
-            {
-                return "D-Real Time Control Plugin";
-            }
-        }
+        public override string DisplayName => "D-Real Time Control Plugin";
 
-        public override string Description
-        {
-            get
-            {
-                return Properties.Resources.RealTimeControlApplicationPlugin_Description;
-            }
-        }
+        public override string Description => 
+            Properties.Resources.RealTimeControlApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get
-            {
-                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
-            }
-        }
+        public override string Version => 
+            AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion
-        {
-            get
-            {
-                return "3.8.0.0";
-            }
-        }
+        public override string FileFormatVersion => "3.8.0.0";
 
         public override IApplication Application
         {
-            get
-            {
-                return base.Application;
-            }
+            get => base.Application;
             set
             {
                 if (Application != null)
@@ -129,7 +98,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             yield return new RtcDataAccessListener();
         }
 
-        private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+        private IEnumerable<RealTimeControlModel> GetRealTimeControlModels() => 
+            Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
 
         private void HybridProjectRepositoryOnProjectOpening(object sender, ProjectOpeningEventArgs e)
         {

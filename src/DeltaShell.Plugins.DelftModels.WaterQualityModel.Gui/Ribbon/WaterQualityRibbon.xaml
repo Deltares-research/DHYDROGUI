@@ -26,7 +26,9 @@
                                SizeDefinition="Middle,Small,Small"
                                fluent:KeyTip.Keys="FG" />
             </fluent:RibbonGroupBox>
+        </fluent:RibbonTabItem>
 
+        <fluent:RibbonTabItem Header="Spatial Operations">
             <fluent:RibbonGroupBox Header="Spatial Operations" x:Name="SpatialOperationsGroup" fluent:KeyTip.Keys="SO">
                 <fluent:Button x:Name="ButtonSetLabel" Header="Set Label" ToolTip="Set label" Icon="/DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;component\Resources\price-tag.png" Click="ButtonSetLabel_Click" SizeDefinition="Middle,Small,Small" fluent:KeyTip.Keys="SL" />
                 <fluent:Button x:Name="ButtonOverwriteLabel" Header="Overwrite Label" ToolTip="Overwrite label" Icon="/DeltaShell.Plugins.SharpMapGis.Gui;component\Resources\marker.png" Click="ButtonOverwriteLabel_Click" SizeDefinition="Middle,Small,Small" fluent:KeyTip.Keys="OL" />

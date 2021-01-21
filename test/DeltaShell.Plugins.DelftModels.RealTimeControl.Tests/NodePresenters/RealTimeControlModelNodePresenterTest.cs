@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
@@ -28,13 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
         {
             // Setup
             RealTimeControlModelNodePresenter nodePresenter = GetRealTimeControlModelNodePresenter();
-            var model = new RealTimeControlModel()
-            {
-                RestartOutput = new EventedList<RestartFile>(new[]
-                {
-                    new RestartFile()
-                })
-            };
+            var model = new RealTimeControlModel();
+
+            model.RestartOutput.Add(new RestartFile());
 
             // Call
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
@@ -73,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             // Setup
             RealTimeControlModelNodePresenter nodePresenter = GetRealTimeControlModelNodePresenter();
             var model = new RealTimeControlModel();
-            model.OutputDocuments.Add(new ReadOnlyOutputTextDocument("test.xml", "test"));
+            model.OutputDocuments.Add(new ReadOnlyTextFileData("test.xml", "test", ReadOnlyTextFileDataType.Default));
 
             // Call
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
@@ -81,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             // Assert
             OutputTreeFolder outputTreeFolder =
                 childObjects.OfType<OutputTreeFolder>().Single(f => f.Text == "Output");
-            IEnumerable<ReadOnlyOutputTextDocument> outputTextDocuments = outputTreeFolder.ChildItems.OfType<ReadOnlyOutputTextDocument>();
+            IEnumerable<ReadOnlyTextFileData> outputTextDocuments = outputTreeFolder.ChildItems.OfType<ReadOnlyTextFileData>();
 
             Assert.AreEqual(1, outputTextDocuments.Count());
         }

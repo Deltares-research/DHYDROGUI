@@ -206,21 +206,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             }
         }
 
-        [Test]
-        public void GetViewInfoObjects_ContainsTextFileViewInfo()
-        {
-            // Setup
-            using (var plugin = new WaveGuiPlugin())
-            {
-                // Call
-                IEnumerable<ViewInfo> viewInfos = plugin.GetViewInfoObjects();
-
-                // Assert
-                ViewInfo relevantViewInfo = viewInfos.FirstOrDefault(x => x.Description == "Text File");
-                Assert.That(relevantViewInfo, Is.Not.Null);
-            }
-        }
-
         public static IEnumerable<TestCaseData> GetProjectTreeVieNodePresenterData()
         {
             bool IsPresenterPredicate<T>(ITreeNodePresenter np) => np is T;
@@ -229,7 +214,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WavmFileFunctionStoreNodePresenter>);
             yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WavhFileFunctionStoreNodePresenter>);
             yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<WaveOutputDataNodePresenter>);
-            yield return new TestCaseData((Func<ITreeNodePresenter, bool>) IsPresenterPredicate<ReadOnlyTextFileDataNodePresenter>);
         }
 
         [Test]
