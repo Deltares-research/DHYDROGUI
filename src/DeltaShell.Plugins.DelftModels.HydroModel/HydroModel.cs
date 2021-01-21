@@ -11,7 +11,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
@@ -817,40 +816,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnCleanup()
         {
-            if (dimrApi != null)
-            {
-                try
-                {
-                    dimrApi.Dispose();
-                    dimrApi = null;
-                }
-                catch (Exception e)
-
-                {
-                    Log.Debug(e.Message);
-                }
-            }
-
+            CleanUpDimrApi();
             if (DoDimrRun())
             {
-                var validPath = ExplicitWorkingDirectory;
-                if (!Directory.Exists(validPath)) return;
-                
                 var dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
-                dimrModels.ForEach(m => m.RunsInIntegratedModel = false);
+                dimrModels.ForEach(m => m.Cleanup());
 
-                foreach (var dimrModel in dimrModels)
-                {
-                    var outputDirectory = Path.Combine(validPath, dimrModel.DirectoryName);
-                    dimrModel.ConnectOutput(outputDirectory);
-                }
-                var CurrentWorkflowIsDimr = CurrentWorkflow as IDimrModel;
-                if (CurrentWorkflowIsDimr != null)
-                {
-                    CurrentWorkflowIsDimr.ConnectOutput(validPath);
-                    CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
-                }
-                DimrRunner.ConnectDimrRunLogFile(this);
             }
             else
             {
@@ -869,6 +840,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 if (CurrentWorkflow != null) CurrentWorkflow.Finish();
             }
+            CleanUpDimrApi();
+            if (DoDimrRun())
+            {
+                var validPath = ExplicitWorkingDirectory;
+                if (!Directory.Exists(validPath)) return;
+
+                var dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
+                dimrModels.ForEach(m => m.RunsInIntegratedModel = false);
+
+                foreach (var dimrModel in dimrModels)
+                {
+                    var outputDirectory = Path.Combine(validPath, dimrModel.DirectoryName);
+                    dimrModel.ConnectOutput(outputDirectory);
+                }
+                var CurrentWorkflowIsDimr = CurrentWorkflow as IDimrModel;
+                if (CurrentWorkflowIsDimr != null)
+                {
+                    CurrentWorkflowIsDimr.ConnectOutput(validPath);
+                    CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
+                }
+                DimrRunner.ConnectDimrRunLogFile(this);
+            }
+        }
+
+        private void CleanUpDimrApi()
+        {
+            if (dimrApi == null) return;
+            try
+            {
+                dimrApi?.Dispose();
+            }
+            catch (Exception e)
+            {
+                Log.Debug(e.Message);
+            }
+
+            dimrApi = null;
+            Thread.Sleep(200);
+            GC.SuppressFinalize(this);
         }
 
         #endregion

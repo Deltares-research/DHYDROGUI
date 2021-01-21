@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using BasicModelInterface;
 using DelftTools.Utils.Remoting;
@@ -18,7 +19,13 @@ namespace DeltaShell.Dimr
             // DeltaShell is 32bit, however we still want to take advantage of the 64bit dimr.dll if the system can use it, 
             // so we need to start the 64bit worker. This works as long as the data send over the Api border 
             // is not bit dependent, eg IntPtr and the like.
-            RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
+            if (!RemotingTypeConverters.RegisteredConverters.OfType<LoggerToProtoConverter>().Any())
+            {
+                lock (RemotingTypeConverters.RegisteredConverters)
+                {
+                    RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
+                }
+            }
             api = RemoteInstanceContainer.CreateInstance<IDimrApi, DimrApi>(true);
             SetLoggingLevel("feedbackLevel", DimrApiDataSet.FeedbackLevel);
             SetLoggingLevel("debugLevel", DimrApiDataSet.LogFileLevel);

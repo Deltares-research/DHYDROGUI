@@ -30,6 +30,8 @@ namespace DeltaShell.NGHS.IO.Grid
         public const int IdsSize = 40;
         private static string lastCheckedUGridPath;
         private static bool lastCheckedUGridPathResult;
+        private static Dictionary<UGridMeshType, int> numberOfMeshByType;
+        private static int numberOfNetworks = -1;
 
         public enum BedLevelLocation
         {
@@ -127,15 +129,16 @@ namespace DeltaShell.NGHS.IO.Grid
             using (var api = CreateUGridApi())
             {
                 api.Open(path, OpenMode.Appending);
-                
-                if (!api.IsUGridFile())
+
+                if (api.IsUGridFile())
                 {
-                    NetFile.WriteZValues(path, values);
+                    WriteZValuesWithApi(api, location, values, path);
                     return;
                 }
 
-                WriteZValuesWithApi(api, location, values, path);
             }
+            NetFile.WriteZValues(path, values);
+                    
         }
 
         /// <summary>
@@ -156,10 +159,10 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 api.Open(path);
 
-                return !api.IsUGridFile()
-                    ? NetFile.ReadCoordinateSystem(path)
-                    : GetCoordinateSystemFromApi(api);
+                if (api.IsUGridFile())
+                    return GetCoordinateSystemFromApi(api);
             }
+            return NetFile.ReadCoordinateSystem(path);
         }
 
         /// <summary>
@@ -231,24 +234,23 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 api.Open(path);
 
-                if (!api.IsUGridFile())
+                if (api.IsUGridFile())
                 {
-                    Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
-                    return loadFlowLinksAndCells
-                        ? NetFileImporter.ImportModelGrid(path)
-                        : NetFileImporter.ImportGrid(path);
-                }
+                    var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
+                    if (meshIds2d.Length == 0)
+                    {
+                        return null;
+                    }
 
-                var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
-                if (meshIds2d.Length == 0) 
-                {
-                    return null;
+                    var unstructuredGrid = api.GetMesh2D(meshIds2d[0]).CreateUnstructuredGrid();
+                    unstructuredGrid.CoordinateSystem = GetCoordinateSystemFromApi(api);
+                    return unstructuredGrid;
                 }
-                
-                var unstructuredGrid = api.GetMesh2D(meshIds2d[0]).CreateUnstructuredGrid();
-                unstructuredGrid.CoordinateSystem = GetCoordinateSystemFromApi(api);
-                return unstructuredGrid;
             }
+            Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
+            return loadFlowLinksAndCells
+                ? NetFileImporter.ImportModelGrid(path)
+                : NetFileImporter.ImportGrid(path);
         }
 
         /// <summary>
@@ -476,30 +478,30 @@ namespace DeltaShell.NGHS.IO.Grid
 
             using (var api = CreateUGridApi())
             {
-                if (!api.IsUGridFile())
-                {
-                    NetFile.RewriteGridCoordinates(path, unstructuredGrid);
-                    return;
-                }
-
-                var xValues = new double[unstructuredGrid.Vertices.Count];
-                var yValues = new double[unstructuredGrid.Vertices.Count];
-                
-                for (int i = 0; i < unstructuredGrid.Vertices.Count; i++)
-                {
-                    var vertex = unstructuredGrid.Vertices[i];
-                    xValues[i] = vertex.X;
-                    yValues[i] = vertex.Y;
-                }
-
                 api.Open(path, OpenMode.Appending);
 
-                var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
-                if (meshIds.Length != 0)
+                if (api.IsUGridFile())
                 {
-                    api.ResetMeshVerticesCoordinates(meshIds[0], xValues, yValues);
+                    var xValues = new double[unstructuredGrid.Vertices.Count];
+                    var yValues = new double[unstructuredGrid.Vertices.Count];
+
+                    for (int i = 0; i < unstructuredGrid.Vertices.Count; i++)
+                    {
+                        var vertex = unstructuredGrid.Vertices[i];
+                        xValues[i] = vertex.X;
+                        yValues[i] = vertex.Y;
+                    }
+                    
+                    var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
+                    if (meshIds.Length != 0)
+                    {
+                        api.ResetMeshVerticesCoordinates(meshIds[0], xValues, yValues);
+                    }
+                    return;
                 }
             }
+            NetFile.RewriteGridCoordinates(path, unstructuredGrid);
+
         }
 
         /// <summary>
@@ -514,10 +516,13 @@ namespace DeltaShell.NGHS.IO.Grid
                 return 0;
             }
 
+            if (lastCheckedUGridPath == path && numberOfNetworks >= 0) return numberOfNetworks;
+
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
-                return api.GetNumberOfNetworks();
+                numberOfNetworks = api.GetNumberOfNetworks();
+                return numberOfNetworks;
             }
         }
 
@@ -532,11 +537,17 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 return 0;
             }
+            if(numberOfMeshByType == null) numberOfMeshByType = new Dictionary<UGridMeshType, int>();
+            if (lastCheckedUGridPath == path && numberOfMeshByType.TryGetValue(UGridMeshType.Mesh1D, out var nrOf1DMesh))
+            {
+                return nrOf1DMesh;
+            }
 
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
-                return api.GetNumberOfMeshByType(UGridMeshType.Mesh1D);
+                numberOfMeshByType[UGridMeshType.Mesh1D] = api.GetNumberOfMeshByType(UGridMeshType.Mesh1D);
+                return numberOfMeshByType[UGridMeshType.Mesh1D];
             }
         }
 

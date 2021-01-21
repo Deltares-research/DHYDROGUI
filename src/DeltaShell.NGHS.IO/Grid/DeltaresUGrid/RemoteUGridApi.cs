@@ -1,4 +1,6 @@
-﻿using DelftTools.Utils.Remoting;
+﻿using System;
+using System.Diagnostics;
+using DelftTools.Utils.Remoting;
 using Deltares.UGrid.Api;
 
 namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
@@ -20,7 +22,15 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         {
             if (RemoteInstanceContainer.IsProcessAlive(api))
             {
-                api?.Dispose();
+                try
+                {
+                    api?.Dispose();
+                }
+                catch
+                {
+                    //Debugger.Launch();
+                    //gulp
+                }
             }
             
             RemoteInstanceContainer.RemoveInstance(api);
