@@ -248,21 +248,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             AddToInitialCoverages(InitialFractions, spatiallyVaryingName);
         }
 
-        private void UpdateDataItems()
-        {
-            // Backwards compatibility
-            // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
-            BathymetryDataItem.ValueType = typeof(UnstructuredGridCoverage);
-        }
-
-        private void AddOrRenameTracerDataItems()
-        {
-            foreach (UnstructuredGridCellCoverage initialTracer in InitialTracers)
-            {
-                AddOrRenameDataItem(initialTracer, initialTracer.Name);
-            }
-        }
-
         private void AddOrRenameFractionDataItems()
         {
             foreach (UnstructuredGridCellCoverage initialFraction in InitialFractions)

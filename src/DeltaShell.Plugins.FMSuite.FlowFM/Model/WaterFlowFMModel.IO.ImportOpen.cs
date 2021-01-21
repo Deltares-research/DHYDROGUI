@@ -38,7 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <param name="mduFilePath">The path to the mdu file.</param>
         public void LoadFromMdu(string mduFilePath)
         {
-            UpdateDataItems();
             ClearSyncers();
             TracerDefinitions.Clear();
 

@@ -34,7 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public UnstructuredGridCoverage Bathymetry
         {
             get => (UnstructuredGridCoverage) BathymetryDataItem?.Value;
-            private set => SetDataItem(WaterFlowFMModelDefinition.BathymetryDataItemName, value);
+            private set
+            {
+                SetDataItem(WaterFlowFMModelDefinition.BathymetryDataItemName, value);
+                BathymetryDataItem.ValueType = typeof(UnstructuredGridCoverage);
+            }
         }
 
         public UnstructuredGridCellCoverage InitialWaterLevel
