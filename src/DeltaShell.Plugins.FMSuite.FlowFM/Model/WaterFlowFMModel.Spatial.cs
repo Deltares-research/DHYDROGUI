@@ -12,10 +12,8 @@ using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
@@ -538,23 +536,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void UpdateSpatialDataAfterGridSet(UnstructuredGrid newGrid, bool nodesChanged, bool cellsChanged,
                                                    bool linksChanged)
         {
-            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Bathymetry, g => Bathymetry = g);
-            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialWaterLevel,
-                               g => InitialWaterLevel = g);
-            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Roughness, g => Roughness = g);
-            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Viscosity, g => Viscosity = g);
-            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Diffusivity, g => Diffusivity = g);
-            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialTemperature,
-                               g => InitialTemperature = g);
-            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialSalinity,
-                               g => InitialSalinity = g);
+            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, BathymetryDataItem);
+            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialWaterLevelDataItem);
+            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, RoughnessDataItem);
+            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, ViscosityDataItem);
+            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, DiffusivityDataItem);
+            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialTemperatureDataItem);
+            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialSalinityDataItem);
 
-            if (InitialTracers != null)
+            foreach (var tracerDataItem in TracerDataItems)
             {
-                foreach (UnstructuredGridCellCoverage tracer in InitialTracers)
-                {
-                    UpdateQuantityAfterGridSet(tracer, newGrid, nodesChanged, cellsChanged, linksChanged);
-                }
+                UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, tracerDataItem);
             }
 
             if (InitialFractions != null)
@@ -562,9 +554,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 IEventedList<UnstructuredGridCellCoverage> initialFracts = InitialFractions;
                 try
                 {
-                    foreach (UnstructuredGridCellCoverage fraction in initialFracts)
+                    foreach (IDataItem fraction in initialFracts.Select(f=>dataItems.GetByName(f.Name)))
                     {
-                        UpdateQuantityAfterGridSet(fraction, newGrid, nodesChanged, cellsChanged, linksChanged);
+                        UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, fraction);
                     }
                 }
                 finally
@@ -574,44 +566,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        private void UpdateCoverageGrid<T>(UnstructuredGrid newGrid, bool nodesChanged, bool cellsChanged,
-                                           bool linksChanged, T coverage, Action<T> setCoverage)
-            where T : UnstructuredGridCoverage
+        private void UpdateCoverageGrid(UnstructuredGrid newGrid,
+                                        bool nodesChanged, bool cellsChanged, bool linksChanged, IDataItem dataItem)
         {
+            var coverage = (UnstructuredGridCoverage) dataItem?.Value;
             if (coverage == null)
             {
                 return;
             }
 
-            T coverageref = coverage; // prevents events
-            setCoverage(null);
-            try
-            {
-                UpdateQuantityAfterGridSet(coverageref, newGrid, nodesChanged, cellsChanged, linksChanged);
-            }
-            finally
-            {
-                setCoverage(coverage);
-            }
-        }
-
-        private void UpdateQuantityAfterGridSet(UnstructuredGridCoverage coverage, UnstructuredGrid newGrid,
-                                                bool nodesChanged, bool cellsChanged, bool linksChanged)
-        {
-            if (coverage == null)
-            {
-                return;
-            }
-
-            IDataItem dataItem = DataItems.FirstOrDefault(di => Equals(di.Value, coverage));
-            SpatialOperationSetValueConverter valueConverter = null;
-
-            if (dataItem != null)
-            {
-                valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
-            }
-
-            if (valueConverter != null && valueConverter.SpatialOperationSet.Operations.Any())
+            var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
+            if (valueConverter?.SpatialOperationSet.Operations.Any() == true)
             {
                 dataItem.ValueConverter = null;
                 dataItem.Value = null;
@@ -647,10 +612,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
             else
             {
-                if (dataItem != null)
-                {
-                    dataItem.Value = null;
-                }
+                dataItem.Value = null;
 
                 try
                 {
@@ -658,10 +620,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
                 finally
                 {
-                    if (dataItem != null)
-                    {
-                        dataItem.Value = coverage;
-                    }
+                    dataItem.Value = coverage;
                 }
             }
         }
