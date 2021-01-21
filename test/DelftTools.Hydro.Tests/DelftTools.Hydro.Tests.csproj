@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Area\Objects\PumpTest.cs" />
     <Compile Include="GroupableFeatureComparerTest.cs" />
     <Compile Include="GroupableFeatureExtensionsTest.cs" />
     <Compile Include="GroupablePointFeatureTest.cs" />
@@ -196,6 +197,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
