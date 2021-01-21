@@ -158,6 +158,8 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
+    <Compile Include="Area\Objects\IPump.cs" />
+    <Compile Include="Area\Objects\Pump.cs" />
     <Compile Include="Embankment.cs" />
     <Compile Include="GroupableFeature2D.cs" />
     <Compile Include="GroupableFeature2DPoint.cs" />
@@ -271,6 +273,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Embankment.hbm.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
