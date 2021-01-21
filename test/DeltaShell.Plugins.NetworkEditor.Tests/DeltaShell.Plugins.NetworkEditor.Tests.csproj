@@ -239,7 +239,6 @@
     <Compile Include="Forms\GridProperties\FeatureCoveragePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\HydroRegionPropertiesTest.cs" />
     <Compile Include="Gui\Converters\EmptyDoubleValueConverterTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\StructureViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatedWeirViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModelTest.cs" />
@@ -272,7 +271,6 @@
     <Compile Include="NetworkEditorMapLayerProviderTest.cs" />
     <Compile Include="NetworkEditorPluginTest.cs" />
     <Compile Include="TestClassSetup.cs" />
-    <Compile Include="Forms\StructureFeatureView\PumpViewTest.cs" />
     <Compile Include="NetworkEditorGuiPluginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
