@@ -33,19 +33,6 @@ namespace DelftTools.Hydro.Area.Objects
             CapacityTimeSeries = capacityTimeSeries;
         }
 
-        public object Clone()
-        {
-            return new Pump((TimeSeries) CapacityTimeSeries.Clone())
-            {
-                GroupName = GroupName,
-                Geometry = (IGeometry) Geometry.Clone(),
-                Attributes = (IFeatureAttributeCollection) Attributes.Clone(),
-                Name = Name,
-                IsDefaultGroup = IsDefaultGroup,
-                UseCapacityTimeSeries = UseCapacityTimeSeries,
-                Capacity = Capacity,
-            };
-        }
         public IGeometry Geometry { get; set; }
 
         [DisplayName("Group name")]
@@ -73,5 +60,19 @@ namespace DelftTools.Hydro.Area.Objects
 
         [NoNotifyPropertyChange]
         public IFeatureAttributeCollection Attributes { get; set; }
+
+        public object Clone()
+        {
+            return new Pump((TimeSeries) CapacityTimeSeries.Clone())
+            {
+                GroupName = GroupName,
+                Geometry = (IGeometry) Geometry.Clone(),
+                Attributes = (IFeatureAttributeCollection) Attributes.Clone(),
+                Name = Name,
+                IsDefaultGroup = IsDefaultGroup,
+                UseCapacityTimeSeries = UseCapacityTimeSeries,
+                Capacity = Capacity,
+            };
+        }
     }
 }
