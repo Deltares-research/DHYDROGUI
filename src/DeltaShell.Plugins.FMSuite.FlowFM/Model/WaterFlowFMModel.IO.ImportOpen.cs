@@ -68,8 +68,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             TracerDefinitions.Clear();
 
             LoadInputStateFromMdu(mduFilePath);
-            InitializeUnstructuredGridCoverages();
-            ImportSpatialOperationsAfterCreating();
 
             if (clearWaqOutputDirProperty)
             {
@@ -149,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FireImportProgressChanged("Renaming sub files", 6, TotalImportSteps);
             RenameSubFilesIfApplicable();
 
-            LoadBathymetry();
+            InitializeUnstructuredGridCoverages();
 
             CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(NetFilePath);
 
@@ -181,6 +179,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FireImportProgressChanged("Reading model output", 9, TotalImportSteps);
 
             LoadRestartFile(mduFilePath);
+
+            ImportSpatialOperationsAfterCreating();
         }
 
         private string RetrieveOutputDirectory(string mduFilePath)
