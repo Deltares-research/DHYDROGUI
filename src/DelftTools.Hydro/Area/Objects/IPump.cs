@@ -1,5 +1,4 @@
 ﻿using DelftTools.Functions;
-using DelftTools.Utils;
 
 namespace DelftTools.Hydro.Area.Objects
 {
@@ -10,7 +9,7 @@ namespace DelftTools.Hydro.Area.Objects
     /// Deriving classes of <see cref="IPump"/> are expected to have
     /// a <see cref="Utils.Aop.EntityAttribute"/>.
     /// </remarks>
-    public interface IPump : INameable, IGroupableFeature
+    public interface IPump : IStructureObject
     {
         /// <summary>
         /// If true, <see cref="CapacityTimeSeries"/> is used. Otherwise <see cref="Capacity"/> is used.

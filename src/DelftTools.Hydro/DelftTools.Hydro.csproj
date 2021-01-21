@@ -159,6 +159,7 @@
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="Area\Objects\IPump.cs" />
+    <Compile Include="Area\Objects\IStructureObject.cs" />
     <Compile Include="Area\Objects\Pump.cs" />
     <Compile Include="Embankment.cs" />
     <Compile Include="GroupableFeature2D.cs" />
@@ -198,14 +199,11 @@
     </Compile>
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\GateOpeningDirection.cs" />
-    <Compile Include="Structures\IPump.cs" />
     <Compile Include="Structures\IWeir.cs" />
     <Compile Include="Structures\IWeirFormula.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownGeneralStructureProperties.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownStructureProperties.cs" />
     <Compile Include="Structures\GuiParameterNames.cs" />
-    <Compile Include="Structures\Pump.cs" />
-    <Compile Include="Structures\Pump2D.cs" />
     <Compile Include="Structures\PumpControlDirection.cs" />
     <Compile Include="Structures\Weir.cs" />
     <Compile Include="Structures\Weir2D.cs" />
