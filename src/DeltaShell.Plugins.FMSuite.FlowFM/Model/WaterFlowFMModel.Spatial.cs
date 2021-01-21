@@ -12,8 +12,10 @@ using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
@@ -71,7 +73,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             private set => SetDataItem(WaterFlowFMModelDefinition.DiffusivityDataItemName, value);
         }
 
-        public IEventedList<UnstructuredGridCellCoverage> InitialTracers { get; private set; }
+        public IEnumerable<UnstructuredGridCellCoverage> InitialTracers => TracerDataItems.Select(d => d.Value).Cast<UnstructuredGridCellCoverage>();
+
         public IEventedList<UnstructuredGridCellCoverage> InitialFractions { get; private set; }
 
         public Envelope GridExtent { get; private set; }
@@ -292,6 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private IDataItem RoughnessDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.RoughnessDataItemName);
         private IDataItem ViscosityDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.ViscosityDataItemName);
         private IDataItem DiffusivityDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.DiffusivityDataItemName);
+        private IEnumerable<IDataItem> TracerDataItems => TracerDefinitions.Select(t => DataItems.GetByName(t)).Where(d => d != null);
 
         private void SetDataItem(string name, object value)
         {
@@ -410,8 +414,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             InitialWaterLevel =
                 CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
             InitialSalinity = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Grid);
-            InitialTracers = new EventedList<UnstructuredGridCellCoverage>();
-            InitialTracers.CollectionChanged += SpatialDataTracersChanged;
             InitialTemperature =
                 CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Grid);
             Viscosity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.ViscosityDataItemName, Grid);
@@ -545,18 +547,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (InitialTracers != null)
             {
-                IEventedList<UnstructuredGridCellCoverage> initialTracers = InitialTracers;
-                InitialTracers = null; // prevents events
-                try
+                foreach (UnstructuredGridCellCoverage tracer in InitialTracers)
                 {
-                    foreach (UnstructuredGridCellCoverage tracer in initialTracers)
-                    {
-                        UpdateQuantityAfterGridSet(tracer, newGrid, nodesChanged, cellsChanged, linksChanged);
-                    }
-                }
-                finally
-                {
-                    InitialTracers = initialTracers;
+                    UpdateQuantityAfterGridSet(tracer, newGrid, nodesChanged, cellsChanged, linksChanged);
                 }
             }
 

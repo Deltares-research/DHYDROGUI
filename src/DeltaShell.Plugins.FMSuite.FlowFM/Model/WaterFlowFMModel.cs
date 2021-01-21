@@ -248,11 +248,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             AddToInitialCoverages(InitialFractions, spatiallyVaryingName);
         }
 
-        private void AddToInitialTracers(string spatiallyVaryingName)
-        {
-            AddToInitialCoverages(InitialTracers, spatiallyVaryingName);
-        }
-
         private void UpdateDataItems()
         {
             // Backwards compatibility

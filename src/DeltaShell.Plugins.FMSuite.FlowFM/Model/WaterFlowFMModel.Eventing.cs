@@ -10,8 +10,10 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -106,57 +108,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            object removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var name = (string) removedOrAddedItem;
+            var name = (string) e.GetRemovedOrAddedItem();
+
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    AddToInitialTracers(name);
+                    OnTracerAdded(name);
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    // sync the initial tracers
-                    InitialTracers.RemoveAllWhere(tr => tr.Name == name);
-
-                    // remove all boundary conditions with that tracer name
-                    foreach (BoundaryConditionSet set in BoundaryConditionSets)
-                    {
-                        set.BoundaryConditions.RemoveAllWhere(bc =>
-                        {
-                            var flowCondition = bc as FlowBoundaryCondition;
-
-                            if (flowCondition != null &&
-                                flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer &&
-                                Equals(flowCondition.TracerName, removedOrAddedItem))
-                            {
-                                return true;
-                            }
-
-                            return false;
-                        });
-                    }
-
+                    OnTracerRemoved(name);
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    // can't rename yet
-                    throw new NotImplementedException("Renaming of tracer definitions is not yet supported");
+                    throw new NotSupportedException("Renaming of tracer definitions is not yet supported");
                 case NotifyCollectionChangedAction.Reset:
-                    // sync the initial tracers
-                    InitialTracers.Clear();
-
-                    // remove all tracer boundary conditions
-                    foreach (BoundaryConditionSet set in BoundaryConditionSets)
-                    {
-                        set.BoundaryConditions.RemoveAllWhere(bc =>
-                        {
-                            var flowCondition = bc as FlowBoundaryCondition;
-                            return flowCondition != null &&
-                                   flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer;
-                        });
-                    }
-
-                    break;
+                    throw new NotSupportedException($"{nameof(EventedList<string>)} does not support ${NotifyCollectionChangedAction.Reset}");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(e));
+            }
+        }
+
+        private void OnTracerAdded(string name)
+        {
+            SetDataItem(name, CreateUnstructuredGridCellCoverage(name, Grid));
+        }
+
+        private void OnTracerRemoved(string name)
+        {
+            IDataItem dataItem = DataItems.GetByName(name);
+            DataItems.Remove(dataItem);
+
+            foreach (BoundaryConditionSet set in BoundaryConditionSets)
+            {
+                set.BoundaryConditions.RemoveAllWhere(bc => bc is FlowBoundaryCondition flowCondition &&
+                                                            flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer &&
+                                                            Equals(flowCondition.TracerName, name));
             }
         }
 
@@ -589,18 +574,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         #region Spatial data
-
-        private void SpatialDataTracersChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (Equals(sender, InitialTracers))
-            {
-                AddOrRenameTracerDataItems();
-            }
-            else
-            {
-                throw new ArgumentException("Unexpected layered spatial data: " + e.GetRemovedOrAddedItem());
-            }
-        }
 
         private void SpatialDataFractionsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
