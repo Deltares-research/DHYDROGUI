@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Area\Objects\PumpTest.cs" />
+    <Compile Include="Area\Objects\StructureTest.cs" />
     <Compile Include="GroupableFeatureComparerTest.cs" />
     <Compile Include="GroupableFeatureExtensionsTest.cs" />
     <Compile Include="GroupablePointFeatureTest.cs" />
