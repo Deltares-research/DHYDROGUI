@@ -2201,17 +2201,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var model = new WaterFlowFMModel())
             {
-                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
-                coverage.Components[0].NoDataValue = -999d;
-
-                model.DataItems.Add(new DataItem(coverage, "Some Tracer"));
-
                 // When
                 model.TracerDefinitions.Add("Some Tracer");
 
                 // Then
-                Assert.That(model.InitialTracers.Single(), Is.SameAs(coverage));
-                Assert.That(coverage.Grid, Is.SameAs(model.Grid));
+                UnstructuredGridCellCoverage tracerCoverage = model.InitialTracers.Single();
+                Assert.That(tracerCoverage.Name, Is.EqualTo("Some Tracer"));
+                Assert.That(tracerCoverage.Grid, Is.SameAs(model.Grid));
             }
         }
 
