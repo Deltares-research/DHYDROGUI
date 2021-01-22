@@ -20,6 +20,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -1752,7 +1753,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAModelWithADataItem_WhenAddingNewTracerWithSameName_ThenValueOfThisDataItemIsSetAndNoExtraDataItemIsCreated()
+        public void GivenAModelWithADataItem_WhenAddingNewTracerWithSameName_ThenTheOriginalDataItemIsRemovedAndANewDataItemIsCreated()
         {
             // Given
             const string tracerName = "tracer";
@@ -1769,7 +1770,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 model.TracerDefinitions.Add(tracerName);
 
                 // Then
-                Assert.That(dataItem.Value, Is.SameAs(model.InitialTracers.Single()),
+                Assert.That(model.AllDataItems, Does.Not.Contain(dataItem));
+                IDataItem newDataItem = model.AllDataItems.GetByName(tracerName);
+                Assert.That(newDataItem, Is.Not.Null);
+                Assert.That(newDataItem.Value, Is.SameAs(model.InitialTracers.Single()),
                             "Value of data item was not as expected.");
                 Assert.That(model.DataItems.Count, Is.EqualTo(dataItemCountBefore),
                             "No data items should have been added.");
