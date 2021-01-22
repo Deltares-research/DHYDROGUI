@@ -155,6 +155,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 }
             };
 
+            yield return new ViewInfo<IStructure, AreaStructureView>()
+            {
+                Description = "Structure Editor"
+            };
+
             yield return CreateAreaStructureCollectionViewInfo<Pump2D>(HydroAreaLayerNames.PumpsPluralName);
             yield return CreateAreaStructureCollectionViewInfo<Weir2D>(HydroAreaLayerNames.WeirsPluralName);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.LandBoundaries);
