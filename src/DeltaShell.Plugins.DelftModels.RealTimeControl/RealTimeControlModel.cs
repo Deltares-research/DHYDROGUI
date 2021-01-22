@@ -597,7 +597,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [EditAction]
         private void OnRemoveModel()
         {
-            OutputIsEmpty = false; // hack to make ClearOutput fire appropriately. 
             ClearOutput();
         }
 
@@ -1018,6 +1017,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             string rtcToFlowFilePath = Path.Combine(dirInfo.FullName, CommunicationRtcToFmFileName);
             ReconnectRtcToFmOutputFile(rtcToFlowFilePath);
+
+            OutputIsEmpty = false;
         }
 
         private void ReconnectOutputDocuments(IEnumerable<string> outputDocumentFilePaths)
