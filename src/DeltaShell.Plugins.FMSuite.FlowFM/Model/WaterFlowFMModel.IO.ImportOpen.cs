@@ -120,6 +120,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void LoadInputStateFromMdu(string mduFilePath)
         {
+            InitializeUnstructuredGridCoverages();
+
             // The grid is read first to ensure events utilising the grid work correctly.
             string gridPath = GetNetFilePath(mduFilePath);
 
@@ -145,8 +147,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             FireImportProgressChanged("Renaming sub files", 6, TotalImportSteps);
             RenameSubFilesIfApplicable();
-
-            InitializeUnstructuredGridCoverages();
 
             CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(NetFilePath);
 
