@@ -177,12 +177,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => restartInput;
             set
             {
-                if (value == null)
+                if (value == null || restartInput == value)
                 {
                     return;
                 }
 
                 restartInput = value;
+                
+                MarkOutputOutOfSync();
             }
         }
 
