@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void LoadInputStateFromMdu(string mduFilePath)
         {
-            InitializeUnstructuredGridCoverages();
+            SetSpatialDataItems();
 
             // The grid is read first to ensure events utilising the grid work correctly.
             string gridPath = GetNetFilePath(mduFilePath);
@@ -149,6 +149,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             RenameSubFilesIfApplicable();
 
             CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(NetFilePath);
+
+            SetSpatialCoverages();
 
             // read depth layer definition
             DepthLayerDefinition = ModelDefinition.Kmx == 0

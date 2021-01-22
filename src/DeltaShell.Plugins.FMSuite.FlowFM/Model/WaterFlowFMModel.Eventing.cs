@@ -129,7 +129,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void OnTracerAdded(string name)
         {
-            SetDataItem(name, CreateUnstructuredGridCellCoverage(name, Grid));
+            IDataItem dataItem = AddInputDataItem<UnstructuredGridCellCoverage>(name);
+            dataItem.Value = CreateUnstructuredGridCellCoverage(name, Grid);
         }
 
         private void OnTracerRemoved(string name)

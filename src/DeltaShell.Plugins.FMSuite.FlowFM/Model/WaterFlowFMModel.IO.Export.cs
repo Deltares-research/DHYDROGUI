@@ -80,8 +80,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                    .Select(c => DataItems.FirstOrDefault(di => di.Value == c))
                                                    .ToList();
                 ModelDefinition.SelectSpatialOperations(spatialDataItems, TracerDefinitions, spatVarSedPropNames);
-
-                ModelDefinition.Bathymetry = Bathymetry;
             }
 
             InitializeAreaDataColumns();
