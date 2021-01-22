@@ -2048,7 +2048,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             bedLevelTypeProperty.SetValueAsString(((int) bedLevelLocation).ToString());
 
             // execution
-            TypeUtils.CallPrivateMethod(fmModel, "InitializeUnstructuredGridCoverages");
+            TypeUtils.CallPrivateMethod(fmModel, "SetSpatialCoverages");
 
             // check result
             Assert.AreEqual(coverageType, fmModel.Bathymetry.GetType());
