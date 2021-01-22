@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
@@ -39,8 +38,6 @@ namespace DelftTools.Hydro.Area.Objects
 
         public IFeatureAttributeCollection Attributes { get; set; }
 
-        [DisplayName("Group name")]
-        [FeatureAttribute(Order = 1)]
         public string GroupName
         {
             get => groupName;
@@ -49,22 +46,15 @@ namespace DelftTools.Hydro.Area.Objects
 
         public bool IsDefaultGroup { get; set; } = false;
 
-        [DisplayName("Name")]
-        [FeatureAttribute(Order = 2)]
         public string Name { get; set; } = "Structure";
 
         /// <summary>
         /// Gets the name of the formula.
         /// </summary>
-        [ReadOnly(true)]
-        [DisplayName("Formula")]
-        [FeatureAttribute(Order = 3)]
         public string FormulaName => Formula?.Name;
 
         public IWeirFormula Formula { get; set; }
 
-        [DisplayName("Crest Width")]
-        [FeatureAttribute(Order = 4)]
         public double CrestWidth
         {
             get => Formula is GeneralStructureWeirFormula formula 
@@ -83,8 +73,6 @@ namespace DelftTools.Hydro.Area.Objects
 
         public bool UseCrestLevelTimeSeries { get; set; }
 
-        [DisplayName("Crest Level")]
-        [FeatureAttribute(Order = 4)]
         public double CrestLevel
         {
             get => Formula is GeneralStructureWeirFormula formula
@@ -101,8 +89,7 @@ namespace DelftTools.Hydro.Area.Objects
             }
         }
 
-        [DisplayName("Use Crest Level Time Series")]
-        [FeatureAttribute(Order = 5)]
+        
         public TimeSeries CrestLevelTimeSeries { get; }
 
         public object Clone()

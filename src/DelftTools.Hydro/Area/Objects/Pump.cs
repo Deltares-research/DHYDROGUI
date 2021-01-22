@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
@@ -35,8 +34,6 @@ namespace DelftTools.Hydro.Area.Objects
 
         public IGeometry Geometry { get; set; }
 
-        [DisplayName("Group name")]
-        [FeatureAttribute(Order = 1)]
         public string GroupName
         {
             get => groupName;
@@ -45,15 +42,11 @@ namespace DelftTools.Hydro.Area.Objects
 
         public bool IsDefaultGroup { get; set; } = false;
 
-        [DisplayName("Name")]
-        [FeatureAttribute(Order = 2)]
 
         public string Name { get; set; } = "Pump";
 
         public bool UseCapacityTimeSeries { get; set; } = false;
 
-        [DisplayName("Capacity")]
-        [FeatureAttribute(Order = 3)]
         public double Capacity { get; set; }
 
         public TimeSeries CapacityTimeSeries { get; }
