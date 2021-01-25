@@ -933,14 +933,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ImportFromMdu(mduPath);
 
             // update model definition (called during export)
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             IDictionary<string, IList<ISpatialOperation>> mduSpatialOperations = model.ModelDefinition.SpatialOperations;
             Assert.AreEqual(3, mduSpatialOperations.Count);
 
             // retrieve value converter for InitialWaterLevel dataitem
             SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                model.GetDataItemByValue(model.InitialWaterLevel), model.InitialWaterLevel.Name);
+                model.AllDataItems.First(d=>d.Value == model.InitialWaterLevel), model.InitialWaterLevel.Name);
 
             // Generate samples to add
             var samples = new AddSamplesOperation(false);
@@ -988,7 +988,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(samples));
 
             // update model definition (called during export)
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             // assert that the incomplete spatial operation has not been added
             Assert.AreEqual(3, mduSpatialOperations.Count);
@@ -1000,7 +1000,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(interpolateOperation));
 
             // update model definition (called during export)
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             // assert that the complete spatial operation has now been added
             Assert.AreEqual(4, mduSpatialOperations.Count);

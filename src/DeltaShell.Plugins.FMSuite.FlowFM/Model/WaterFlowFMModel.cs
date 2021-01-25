@@ -717,7 +717,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             IDataItem[] dataItemsFound = SedimentModelDataItem
                                          .SpacialVariableNames
                                          .SelectMany(
-                                             spaceVarName => DataItems.Where(di => di.Name.Equals(spaceVarName)))
+                                             spaceVarName => AllDataItems.Where(di => di.Name.Equals(spaceVarName)))
                                          .ToArray();
             List<IDataItem> dataItemsWithConverter =
                 dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();
