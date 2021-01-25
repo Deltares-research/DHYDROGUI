@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.DelftIniObjects;
@@ -120,8 +121,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void LoadInputStateFromMdu(string mduFilePath)
         {
-            SetSpatialDataItems();
-
             // The grid is read first to ensure events utilising the grid work correctly.
             string gridPath = GetNetFilePath(mduFilePath);
 
@@ -240,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 string dataItemName = spatialOperation.Key;
                 IList<ISpatialOperation> spatialOperationList = spatialOperation.Value;
-                IDataItem dataItem = DataItems.FirstOrDefault(di => di.Name == dataItemName);
+                IDataItem dataItem = spatialDataItems.FirstOrDefault(di => di.Name == dataItemName);
 
                 if (!spatialOperationList.Any())
                 {
@@ -282,6 +281,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     {
                         valueConverter.SpatialOperationSet.AddOperation(operation);
                     }
+                }
+
+                bool eventBubblingEnabled = EventSettings.BubblingEnabled;
+                try
+                {
+                    EventSettings.BubblingEnabled = true;
+                    valueConverter.SpatialOperationSet.Execute();
+                }
+                finally
+                {
+                    EventSettings.BubblingEnabled = eventBubblingEnabled;
                 }
             }
         }

@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             get
             {
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v));
+                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(spatialDataItems);
             }
         }
 
@@ -117,14 +117,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 yield return windField;
             }
 
-            yield return InitialSalinity;
-            yield return Viscosity;
-            yield return Diffusivity;
-            yield return Roughness;
-            yield return InitialWaterLevel;
-            yield return InitialTemperature;
-            yield return InitialTracers;
-            yield return InitialFractions;
+            foreach (var spatialDataItem in spatialDataItems)
+            {
+                yield return spatialDataItem;
+            }
 
             yield return RestartInput;
 

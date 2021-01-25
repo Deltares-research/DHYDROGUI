@@ -76,9 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         .OfType<ISpatiallyVaryingSedimentProperty>()
                                                                         .Where(p => p.IsSpatiallyVarying))
                                                               .Select(p => p.SpatiallyVaryingName).ToList());
-                List<IDataItem> spatialDataItems = GetSpatialCoverages()
-                                                   .Select(c => DataItems.FirstOrDefault(di => di.Name == c.Name))
-                                                   .ToList();
+
                 ModelDefinition.SelectSpatialOperations(spatialDataItems, TracerDefinitions, spatVarSedPropNames);
             }
 
@@ -131,27 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void RestoreAreaDataColumns()
         {
             MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
-        }
-
-        private IEnumerable<ICoverage> GetSpatialCoverages()
-        {
-            yield return Bathymetry;
-            yield return InitialWaterLevel;
-            yield return InitialSalinity;
-            yield return InitialTemperature;
-            yield return Roughness;
-            yield return Viscosity;
-            yield return Diffusivity;
-
-            foreach (var coverage in InitialTracers)
-            {
-                yield return coverage;
-            }
-
-            foreach (var coverage in InitialFractions)
-            {
-                yield return coverage;
-            }
         }
 
         #region Implementation of IDimrModel

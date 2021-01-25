@@ -26,19 +26,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
+        private readonly IList<IDataItem> spatialDataItems = new List<IDataItem>();
         private UnstructuredGrid grid;
         private double bathymetryNoDataValue;
 
         public UnstructuredGridCoverage Bathymetry
         {
-            get => (UnstructuredGridCoverage) BathymetryDataItem?.Value;
+            get => (UnstructuredGridCoverage) BathymetryDataItem.Value;
             private set
             {
-                if (BathymetryDataItem == null)
-                {
-                    AddInputDataItem<UnstructuredGridCoverage>(WaterFlowFMModelDefinition.BathymetryDataItemName);
-                }
-
                 BathymetryDataItem.Value = value;
                 ModelDefinition.Bathymetry = Bathymetry;
             }
@@ -46,86 +42,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public UnstructuredGridCellCoverage InitialWaterLevel
         {
-            get => (UnstructuredGridCellCoverage) InitialWaterLevelDataItem?.Value;
-            private set
-            {
-                if (InitialWaterLevelDataItem == null)
-                {
-                    AddInputDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
-                }
-
-                InitialWaterLevelDataItem.Value = value;
-            }
+            get => (UnstructuredGridCellCoverage) InitialWaterLevelDataItem.Value;
+            private set => InitialWaterLevelDataItem.Value = value;
         }
 
         public UnstructuredGridCellCoverage InitialSalinity
         {
-            get => (UnstructuredGridCellCoverage) InitialSalinityDataItem?.Value;
-            private set
-            {
-                if (InitialSalinityDataItem == null)
-                {
-                    AddInputDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialSalinityDataItemName);
-                }
-
-                InitialSalinityDataItem.Value = value;
-            }
+            get => (UnstructuredGridCellCoverage) InitialSalinityDataItem.Value;
+            private set => InitialSalinityDataItem.Value = value;
         }
 
         public UnstructuredGridCellCoverage InitialTemperature
         {
-            get => (UnstructuredGridCellCoverage) InitialTemperatureDataItem?.Value;
-            private set
-            {
-                if (InitialTemperatureDataItem == null)
-                {
-                    AddInputDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
-                }
-
-                InitialTemperatureDataItem.Value = value;
-            }
+            get => (UnstructuredGridCellCoverage) InitialTemperatureDataItem.Value;
+            private set => InitialTemperatureDataItem.Value = value;
         }
 
         public UnstructuredGridFlowLinkCoverage Roughness
         {
-            get => (UnstructuredGridFlowLinkCoverage) RoughnessDataItem?.Value;
-            private set
-            {
-                if (RoughnessDataItem == null)
-                {
-                    AddInputDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.RoughnessDataItemName);
-                }
-
-                RoughnessDataItem.Value = value;
-            }
+            get => (UnstructuredGridFlowLinkCoverage) RoughnessDataItem.Value;
+            private set => RoughnessDataItem.Value = value;
         }
 
         public UnstructuredGridFlowLinkCoverage Viscosity
         {
-            get => (UnstructuredGridFlowLinkCoverage) ViscosityDataItem?.Value;
-            private set
-            {
-                if (ViscosityDataItem == null)
-                {
-                    AddInputDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.ViscosityDataItemName);
-                }
-
-                ViscosityDataItem.Value = value;
-            }
+            get => (UnstructuredGridFlowLinkCoverage) ViscosityDataItem.Value;
+            private set => ViscosityDataItem.Value = value;
         }
 
         public UnstructuredGridFlowLinkCoverage Diffusivity
         {
-            get => (UnstructuredGridFlowLinkCoverage) DiffusivityDataItem?.Value;
-            private set
-            {
-                if (DiffusivityDataItem == null)
-                {
-                    AddInputDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.DiffusivityDataItemName);
-                }
-
-                DiffusivityDataItem.Value = value;
-            }
+            get => (UnstructuredGridFlowLinkCoverage) DiffusivityDataItem.Value;
+            private set => DiffusivityDataItem.Value = value;
         }
 
         public IEnumerable<UnstructuredGridCellCoverage> InitialTracers => TracerDataItems.Select(d => d.Value).Cast<UnstructuredGridCellCoverage>();
@@ -175,6 +123,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     UpdateSpatialDataAfterGridSet(grid, false, false, false);
                 }
             }
+        }
+
+        public void AddSpatialDataItems()
+        {
+            AddEmptyDataItem<UnstructuredGridCoverage>(WaterFlowFMModelDefinition.BathymetryDataItemName);
+            AddEmptyDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
+            AddEmptyDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialSalinityDataItemName);
+            AddEmptyDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
+            AddEmptyDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.ViscosityDataItemName);
+            AddEmptyDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.DiffusivityDataItemName);
+            AddEmptyDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.RoughnessDataItemName);
         }
 
         public void RefreshGridExtents()
@@ -339,40 +298,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        private IDataItem BathymetryDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.BathymetryDataItemName);
-        private IDataItem InitialWaterLevelDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
-        private IDataItem InitialSalinityDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.InitialSalinityDataItemName);
-        private IDataItem InitialTemperatureDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
-        private IDataItem RoughnessDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.RoughnessDataItemName);
-        private IDataItem ViscosityDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.ViscosityDataItemName);
-        private IDataItem DiffusivityDataItem => DataItems.GetByName(WaterFlowFMModelDefinition.DiffusivityDataItemName);
-        private IEnumerable<IDataItem> TracerDataItems => TracerDefinitions.Select(t => DataItems.GetByName(t)).Where(d => d != null);
+        private IDataItem BathymetryDataItem => spatialDataItems.GetByName(WaterFlowFMModelDefinition.BathymetryDataItemName);
+        private IDataItem InitialWaterLevelDataItem => spatialDataItems.GetByName(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
+        private IDataItem InitialSalinityDataItem => spatialDataItems.GetByName(WaterFlowFMModelDefinition.InitialSalinityDataItemName);
+        private IDataItem InitialTemperatureDataItem => spatialDataItems.GetByName(WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
+        private IDataItem RoughnessDataItem => spatialDataItems.GetByName(WaterFlowFMModelDefinition.RoughnessDataItemName);
+        private IDataItem ViscosityDataItem => spatialDataItems.GetByName(WaterFlowFMModelDefinition.ViscosityDataItemName);
+        private IDataItem DiffusivityDataItem => spatialDataItems.GetByName(WaterFlowFMModelDefinition.DiffusivityDataItemName);
+        private IEnumerable<IDataItem> TracerDataItems => TracerDefinitions.Select(t => spatialDataItems.GetByName(t)).Where(d => d != null);
 
-        private void SetSpatialDataItems()
+        private IDataItem AddEmptyDataItem<T>(string name)
         {
-            AddInputDataItem<UnstructuredGridCoverage>(WaterFlowFMModelDefinition.BathymetryDataItemName);
-            AddInputDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
-            AddInputDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialSalinityDataItemName);
-            AddInputDataItem<UnstructuredGridCellCoverage>(WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
-            AddInputDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.ViscosityDataItemName);
-            AddInputDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.DiffusivityDataItemName);
-            AddInputDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.RoughnessDataItemName);
-        }
-
-        private IDataItem AddInputDataItem<T>(string name)
-        {
-            var dataItem = new DataItem(null, name, typeof(T), DataItemRole.Input, string.Empty);
-
-            IDataItem original = DataItems.GetByName(name);
-            int i = DataItems.IndexOf(original);
-            if (i != -1)
-            {
-                DataItems[i] = dataItem;
-            }
-            else
-            {
-                DataItems.Add(dataItem);
-            }
+            var dataItem = new DataItem(null, name, typeof(T), DataItemRole.Input, string.Empty) {Owner = this};
+            spatialDataItems.Add(dataItem);
 
             return dataItem;
         }
