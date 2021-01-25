@@ -78,7 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public IEnumerable<UnstructuredGridCellCoverage> InitialTracers => TracerDataItems.Select(d => d.Value).Cast<UnstructuredGridCellCoverage>();
 
-        public IEventedList<UnstructuredGridCellCoverage> InitialFractions { get; private set; }
+        public IEnumerable<UnstructuredGridCellCoverage> InitialFractions => FractionDataItems.Select(d => d.Value).Cast<UnstructuredGridCellCoverage>();
+
         public Envelope GridExtent { get; private set; }
 
         public UnstructuredGrid Grid
@@ -306,6 +307,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private IDataItem ViscosityDataItem => spatialDataItems.GetByName(WaterFlowFMModelDefinition.ViscosityDataItemName);
         private IDataItem DiffusivityDataItem => spatialDataItems.GetByName(WaterFlowFMModelDefinition.DiffusivityDataItemName);
         private IEnumerable<IDataItem> TracerDataItems => TracerDefinitions.Select(t => spatialDataItems.GetByName(t)).Where(d => d != null);
+        private IEnumerable<IDataItem> FractionDataItems => SedimentFractions.SelectMany(s => s.GetAllActiveSpatiallyVaryingPropertyNames())
+                                                                             .Select(t => spatialDataItems.GetByName(t));
 
         private IDataItem AddEmptyDataItem<T>(string name)
         {
@@ -415,8 +418,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             Viscosity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.ViscosityDataItemName, Grid);
             Diffusivity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.DiffusivityDataItemName, Grid);
             Roughness = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.RoughnessDataItemName, Grid);
-            InitialFractions = new EventedList<UnstructuredGridCellCoverage>();
-            InitialFractions.CollectionChanged += SpatialDataFractionsChanged;
         }
 
         private void LoadBathymetry()
@@ -539,20 +540,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, tracerDataItem);
             }
 
-            if (InitialFractions != null)
+            foreach (IDataItem fractionDataItem in FractionDataItems)
             {
-                IEventedList<UnstructuredGridCellCoverage> initialFracts = InitialFractions;
-                try
-                {
-                    foreach (IDataItem fraction in initialFracts.Select(f => dataItems.GetByName(f.Name)))
-                    {
-                        UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, fraction);
-                    }
-                }
-                finally
-                {
-                    InitialFractions = initialFracts;
-                }
+                UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, fractionDataItem);
             }
         }
 

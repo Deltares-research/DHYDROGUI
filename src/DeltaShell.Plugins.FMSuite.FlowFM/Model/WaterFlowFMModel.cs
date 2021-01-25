@@ -246,44 +246,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void AddToInitialFractions(string spatiallyVaryingName)
         {
-            AddToInitialCoverages(InitialFractions, spatiallyVaryingName);
-        }
-
-        private void AddOrRenameFractionDataItems()
-        {
-            foreach (UnstructuredGridCellCoverage initialFraction in InitialFractions)
-            {
-                AddOrRenameDataItem(initialFraction, initialFraction.Name);
-            }
-        }
-
-        private void AddOrRenameDataItem(ICoverage coverage, string name)
-        {
-            IDataItem existingDataItemByValue = GetDataItemByValue(coverage);
-            IDataItem existingDataItemByName = GetDataItemByName(name);
-
-            if (existingDataItemByValue != null && existingDataItemByName != null)
+            if (spatialDataItems.Select(d => d.Name).Contains(spatiallyVaryingName))
             {
                 return;
             }
 
-            if (existingDataItemByValue != null)
-            {
-                existingDataItemByValue.Name = name;
-            }
-            else if (existingDataItemByName != null)
-            {
-                existingDataItemByName.Value = coverage;
-            }
-            else
-            {
-                DataItems.Add(new DataItem(coverage, name) {Role = DataItemRole.Input});
-            }
-        }
-
-        private IDataItem GetDataItemByName(string dataItemName)
-        {
-            return AllDataItems.FirstOrDefault(di => di.Name == dataItemName);
+            IDataItem di = AddEmptyDataItem<UnstructuredGridCellCoverage>(spatiallyVaryingName);
+            di.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
         }
 
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)

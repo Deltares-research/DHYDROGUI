@@ -182,10 +182,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             List<string> activeSpatiallyVarying = fraction.GetAllActiveSpatiallyVaryingPropertyNames();
             List<string> spatiallyVarying = fraction.GetAllSpatiallyVaryingPropertyNames();
 
-            InitialFractions.RemoveAllWhere(
-                fr => spatiallyVarying.Contains(fr.Name) && 
-                      !activeSpatiallyVarying.Contains(fr.Name));
-       
+            spatialDataItems.RemoveAllWhere(fr => spatiallyVarying.Contains(fr.Name) &&
+                                                  !activeSpatiallyVarying.Contains(fr.Name));
+
             foreach (string layerName in activeSpatiallyVarying)
             {
                 AddToInitialFractions(layerName);
@@ -209,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
             else
             {
-                InitialFractions.RemoveAllWhere(tr => tr.Name.Equals(prop.SpatiallyVaryingName));
+                spatialDataItems.RemoveAllWhere(tr => tr.Name.Equals(prop.SpatiallyVaryingName));
             }
         }
 
@@ -242,11 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 case NotifyCollectionChangedAction.Remove:
                     // sync the initial fractions
                     List<string> layersToRemove = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
-                    InitialFractions.RemoveAllWhere(ifs => layersToRemove.Contains(ifs.Name));
-
-                    // Remove dataItems for coverages related to Removed Fraction
-                    DataItems.RemoveAllWhere(di => di.Value is UnstructuredGridCoverage &&
-                                                   layersToRemove.Contains(di.Name));
+                    spatialDataItems.RemoveAllWhere(ifs => layersToRemove.Contains(ifs.Name));
                     RemoveSedimentFractionFromBoundaryConditionSets(name);
 
                     SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Remove(sedimentFraction.Name));
@@ -254,11 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 case NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
                 case NotifyCollectionChangedAction.Reset:
-                    // sync the initial fractions
-                    InitialFractions.Clear();
-
-                    RemoveAllSedimentFractionsFromBoundaryConditionSets();
-                    break;
+                    throw new NotSupportedException($"{nameof(EventedList<string>)} does not support ${NotifyCollectionChangedAction.Reset}");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(e));
             }
@@ -489,10 +480,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             foreach (string layerName in sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames())
             {
-                if (InitialFractions.FirstOrDefault(fr => fr.Name.Equals(layerName)) == null)
-                {
-                    AddToInitialFractions(layerName);
-                }
+                AddToInitialFractions(layerName);
             }
         }
 
@@ -573,25 +561,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             WindFields = ModelDefinition.WindFields;
             UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
         }
-
-        #region Spatial data
-
-        private void SpatialDataFractionsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (Equals(sender, InitialFractions))
-            {
-                AddOrRenameFractionDataItems();
-
-                // Invoke property changed, so Gui can update
-                InitialCoverageSetChanged = true;
-            }
-            else
-            {
-                throw new ArgumentException("Unexpected layered spatial data: " + e.GetRemovedOrAddedItem());
-            }
-        }
-
-        #endregion
 
         #region Coupling
 
