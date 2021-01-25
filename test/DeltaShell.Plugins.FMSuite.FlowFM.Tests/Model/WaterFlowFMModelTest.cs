@@ -919,7 +919,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
 
-            IValueConverter valueConverter = model.GetDataItemByValue(model.Roughness).ValueConverter;
+            IValueConverter valueConverter = model.AllDataItems.First(d => d.Value == model.Roughness).ValueConverter;
             var spatialOperationValueConverter = valueConverter as SpatialOperationSetValueConverter;
 
             Assert.IsNotNull(spatialOperationValueConverter);
@@ -1749,35 +1749,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             pathsRelativeToParent = model.ModelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).GetValueAsString();
             // Then
             Assert.AreEqual("1", pathsRelativeToParent, "The property for PathsRelativeToParent is {0} instead of 1. This is incorrect, because it should change to 1 during an export", pathsRelativeToParent);
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAModelWithADataItem_WhenAddingNewTracerWithSameName_ThenTheOriginalDataItemIsRemovedAndANewDataItemIsCreated()
-        {
-            // Given
-            const string tracerName = "tracer";
-            var dataItem = new DataItem(null, tracerName, typeof(UnstructuredGridCellCoverage), DataItemRole.Input, "");
-            using (var model = new WaterFlowFMModel())
-            {
-                model.DataItems.Add(dataItem);
-                int dataItemCountBefore = model.DataItems.Count;
-
-                // Pre-condition
-                Assert.That(dataItem.Value, Is.Null);
-
-                // When
-                model.TracerDefinitions.Add(tracerName);
-
-                // Then
-                Assert.That(model.AllDataItems, Does.Not.Contain(dataItem));
-                IDataItem newDataItem = model.AllDataItems.GetByName(tracerName);
-                Assert.That(newDataItem, Is.Not.Null);
-                Assert.That(newDataItem.Value, Is.SameAs(model.InitialTracers.Single()),
-                            "Value of data item was not as expected.");
-                Assert.That(model.DataItems.Count, Is.EqualTo(dataItemCountBefore),
-                            "No data items should have been added.");
-            }
         }
 
         [Test]
