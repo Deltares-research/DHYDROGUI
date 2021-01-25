@@ -1059,7 +1059,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // create a spatial operation set on bathymetry
             SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                model.GetDataItemByValue(model.Viscosity), model.Viscosity.Name);
+                model.AllDataItems.First(d => d.Value == model.Viscosity), model.Viscosity.Name);
 
             // add an unsupported operation (erase for example)
             var polygons = new[]
@@ -1081,7 +1081,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             eraseOperation.SetInputData(SpatialOperation.MaskInputName, mask);
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(eraseOperation));
 
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             IList<ISpatialOperation> viscosityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.Viscosity.Name).Value;
 
