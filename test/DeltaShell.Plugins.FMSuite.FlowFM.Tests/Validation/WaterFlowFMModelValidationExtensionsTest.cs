@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             CreateSedimentFraction(thickProp, fmModel);
 
-            var coverage = (UnstructuredGridCoverage) fmModel.DataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
+            var coverage = (UnstructuredGridCoverage) fmModel.AllDataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
             coverage.SetValues(new[]
             {
                 1.0,
@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             CreateSedimentFraction(thickProp, fmModel);
 
-            var coverage = (UnstructuredGridCoverage) fmModel.DataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
+            var coverage = (UnstructuredGridCoverage) fmModel.AllDataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
             coverage.SetValues(new[]
             {
                 -999.0,
