@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         .Where(p => p.IsSpatiallyVarying))
                                                               .Select(p => p.SpatiallyVaryingName).ToList());
                 List<IDataItem> spatialDataItems = GetSpatialCoverages()
-                                                   .Select(c => DataItems.FirstOrDefault(di => di.Value == c))
+                                                   .Select(c => DataItems.FirstOrDefault(di => di.Name == c.Name))
                                                    .ToList();
                 ModelDefinition.SelectSpatialOperations(spatialDataItems, TracerDefinitions, spatVarSedPropNames);
 
