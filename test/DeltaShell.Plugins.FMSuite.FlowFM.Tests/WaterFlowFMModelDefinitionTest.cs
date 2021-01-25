@@ -34,12 +34,14 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -1003,6 +1005,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // assert that the complete spatial operation has now been added
             Assert.AreEqual(4, mduSpatialOperations.Count);
             Assert.IsTrue(mduSpatialOperations.Any(o => o.Key == model.InitialWaterLevel.Name));
+        }
+
+        [Test]
+        public void SelectSpatialOperations_DataItemHasValueConverter_CreatedAddSamplesOperationForOriginalValue()
+        {
+            // Setup
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 1, 1);
+
+            var originalCoverage = new UnstructuredGridCellCoverage(grid, false);
+            originalCoverage.Components[0].NoDataValue = -999d;
+            originalCoverage.SetValues(new[]
+            {
+                1d,
+                2d,
+                3d
+            });
+
+            var setValueOperation = new SetValueOperation();
+            var valueConverter = Substitute.For<SpatialOperationSetValueConverter>();
+            valueConverter.OriginalValue = originalCoverage;
+            valueConverter.SpatialOperationSet.Operations.Returns(new EventedList<ISpatialOperation> {setValueOperation});
+
+            var dataItem = new DataItem(new UnstructuredGridCellCoverage(grid, false), "Some spatial coverage") {ValueConverter = valueConverter};
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Call
+            modelDefinition.SelectSpatialOperations(new List<IDataItem> {dataItem}, Enumerable.Empty<string>());
+
+            // Assert
+            IList<ISpatialOperation> spatialOperations = modelDefinition.SpatialOperations["Some spatial coverage"];
+            Assert.That(spatialOperations, Has.Count.EqualTo(2));
+            Assert.That(spatialOperations[0], Is.TypeOf<AddSamplesOperation>());
+            Assert.That(spatialOperations[1], Is.SameAs(setValueOperation));
         }
 
         [Test]
