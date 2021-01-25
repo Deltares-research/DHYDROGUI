@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                                               .ToList();
             IDataItem[] dataItemsFound = spaciallyVaryingPropertyNames
                                          .SelectMany(spaceVarName =>
-                                                         model.DataItems.Where(di => di.Name.Equals(spaceVarName)))
+                                                         model.AllDataItems.Where(di => di.Name.Equals(spaceVarName)))
                                          .ToArray();
             List<IDataItem> dataItemsWithConverter = dataItemsFound
                                                      .Where(d => d.ValueConverter is SpatialOperationSetValueConverter)
