@@ -167,7 +167,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual bool UseRestart => !RestartInput.IsEmpty;
 
-        public virtual bool WriteRestart { get; set; }
+        public virtual bool WriteRestart
+        {
+            get => writeRestart;
+            set
+            {
+                if (value == writeRestart)
+                {
+                    return;
+                }
+                
+                writeRestart = value;
+                MarkOutputOutOfSync();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the input restart file.
@@ -177,12 +190,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => restartInput;
             set
             {
-                if (value == null)
+                if (value == null || restartInput == value)
                 {
                     return;
                 }
 
                 restartInput = value;
+                
+                MarkOutputOutOfSync();
             }
         }
 
@@ -212,6 +227,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 // This base model setting is made to make the base logic right
                 base.StartTime = value;
+                MarkOutputOutOfSync();
             }
         }
 
@@ -228,6 +244,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 // This base model setting is made to make the base logic right
                 base.StopTime = value;
+                MarkOutputOutOfSync();
             }
         }
 
@@ -244,6 +261,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 // This base model setting is made to make the base logic right
                 base.TimeStep = value;
+                MarkOutputOutOfSync();
             }
         }
 
@@ -597,7 +615,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [EditAction]
         private void OnRemoveModel()
         {
-            OutputIsEmpty = false; // hack to make ClearOutput fire appropriately. 
             ClearOutput();
         }
 
@@ -673,6 +690,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                         if (controlGroupDataItem != null)
                         {
+                            SuspendClearOutputOnInputChange = true;
+
                             foreach (IDataItem dataItem in controlGroupDataItem.Children)
                             {
                                 dataItem.Unlink();
@@ -680,6 +699,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                             controlGroupDataItem.Children.Clear();
                             DataItems.Remove(controlGroupDataItem);
+                            
+                            SuspendClearOutputOnInputChange = false;
                         }
 
                         break;
@@ -704,7 +725,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 AddConnectionDataItem(controlGroupDataItem, output, DataItemRole.Output);
             }
 
+            SuspendClearOutputOnInputChange = true;
             DataItems.Add(controlGroupDataItem);
+            SuspendClearOutputOnInputChange = false;
         }
 
         private static void AddConnectionDataItem(IDataItem controlGroupDataItem, ConnectionPoint connectionPoint, DataItemRole role)
@@ -1018,6 +1041,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             string rtcToFlowFilePath = Path.Combine(dirInfo.FullName, CommunicationRtcToFmFileName);
             ReconnectRtcToFmOutputFile(rtcToFlowFilePath);
+
+            OutputIsEmpty = false;
         }
 
         private void ReconnectOutputDocuments(IEnumerable<string> outputDocumentFilePaths)
@@ -1603,6 +1628,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private string persistentOutputDirectory;
         private string oldPersistentOutputDirectory = string.Empty;
         private bool removeSourceOutputFolder;
+        private bool writeRestart;
 
         /// <summary>
         /// The persistent output directory to which output files

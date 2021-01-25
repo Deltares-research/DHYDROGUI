@@ -67,6 +67,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     continue;
                 }
 
+                SuspendModelOutputEvents(sourceModel);
+                SuspendModelOutputEvents(targetModel);
+
                 List<IDataItem> sourceItems = GetDataItemsUsedForCouplingModel(sourceModel, DataItemRole.Output).ToList();
                 List<IDataItem> targetItems = GetDataItemsUsedForCouplingModel(targetModel, DataItemRole.Input).ToList();
 
@@ -91,7 +94,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     // link:
                     targetItem.LinkTo(sourceItem);
                 }
+
+                UnsuspendModelOutputEvents(sourceModel);
+                UnsuspendModelOutputEvents(targetModel);
             }
+        }
+
+        private static void SuspendModelOutputEvents(IModel model)
+        {
+            model.SuspendClearOutputOnInputChange = true;
+            model.SuspendMarkOutputOutOfSyncOnInputChange = true;
+        }
+
+        private static void UnsuspendModelOutputEvents(IModel model)
+        {
+            model.SuspendClearOutputOnInputChange = false;
+            model.SuspendMarkOutputOutOfSyncOnInputChange = false;
         }
 
         /// <summary>
@@ -209,6 +227,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                                                          IReadOnlyDictionary<IDataItem, string> dataItemNameMapping,
                                                                          Func<IDataItem, IDataItem> getDataItemFunc)
         {
+            SuspendModelOutputEvents(inputModel);
+            SuspendModelOutputEvents(outputModel);
+
             var modelExchange = new ModelExchangeInfo(outputModel, inputModel);
 
             IEnumerable<IDataItem> inputDataItems = GetDataItemsUsedForCouplingModel(inputModel, DataItemRole.Input);
@@ -228,6 +249,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 // it from appearing as its default value during saving.
                 RestoreDataItemName(dataItemNameMapping, dataItemToRestore);
             }
+
+            UnsuspendModelOutputEvents(inputModel);
+            UnsuspendModelOutputEvents(outputModel);
 
             return modelExchange;
         }
