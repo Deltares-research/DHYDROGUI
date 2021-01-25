@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                                                              .Select(p => p.SpatiallyVaryingName);
 
             IEnumerable<IDataItem> sedimentThicknessDataItems = spatiallyVaryingSedimentPropertyNames
-                                                                .Select(n => model.DataItems.FirstOrDefault(
+                                                                .Select(n => model.AllDataItems.FirstOrDefault(
                                                                             di => di.Name == n &&
                                                                                   di.Name.Contains(tag)))
                                                                 .Where(di => di != null);
