@@ -2193,16 +2193,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var model = new WaterFlowFMModel())
             {
-                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
-                coverage.Components[0].NoDataValue = -999d;
-
-                model.DataItems.Add(new DataItem(coverage, "Some Sediment Fraction_SedConc"));
-
                 // When
                 model.SedimentFractions.Add(new SedimentFraction {Name = "Some Sediment Fraction"});
 
                 // Then
-                Assert.That(model.InitialFractions.Single(), Is.SameAs(coverage));
+                UnstructuredGridCellCoverage coverage = model.InitialFractions.Single();
+                Assert.That(coverage.Name, Is.EqualTo("Some Sediment Fraction_SedConc"));
                 Assert.That(coverage.Grid, Is.SameAs(model.Grid));
             }
         }
