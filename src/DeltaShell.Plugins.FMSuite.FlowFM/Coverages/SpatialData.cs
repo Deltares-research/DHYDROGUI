@@ -165,9 +165,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
         private static IEnumerable<ImportSamplesOperation> GetImportSamplesOperations(IDataItem dataItem)
         {
-            var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
-            return valueConverter?.SpatialOperationSet.GetOperationsRecursive().OfType<ImportSamplesOperation>() ??
-                   Enumerable.Empty<ImportSamplesOperation>();
+            if (dataItem.ValueConverter is SpatialOperationSetValueConverter converter)
+            {
+                foreach (ImportSamplesOperation operation in converter.SpatialOperationSet.GetOperationsRecursive()
+                                                                      .OfType<ImportSamplesOperation>())
+                {
+                    yield return operation;
+                }
+            }
         }
 
         private static void RemoveDataItem(ICollection<IDataItem> dataItems, string name)
