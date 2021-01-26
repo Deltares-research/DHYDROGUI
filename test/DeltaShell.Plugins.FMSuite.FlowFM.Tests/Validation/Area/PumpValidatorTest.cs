@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 using GeoAPI.Geometries;
@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var envelope = new Envelope(0, 4, 0, 4);
-            var pump = new Pump2D
+            var pump = new Pump
             {
                 Name = "myPump",
                 Geometry = new LineString(new[]
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                     new Coordinate(2, 2)
                 })
             };
-            var pumps = new List<Pump2D> {pump};
+            var pumps = new List<IPump> {pump};
 
             // When
             IEnumerable<ValidationIssue> validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var envelope = new Envelope(0, 4, 0, 4);
-            var pump = new Pump2D
+            var pump = new Pump
             {
                 Name = "myPump",
                 // Pump geometry is far outside of grid extent
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                     new Coordinate(20, 20)
                 })
             };
-            var pumps = new List<Pump2D> {pump};
+            var pumps = new List<IPump> {pump};
 
             // When
             IEnumerable<ValidationIssue> validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             // Given
             var envelope = new Envelope(0, 4, 0, 4);
-            var pump = new Pump2D
+            var pump = new Pump
             {
                 Name = "myPump",
                 Geometry = new LineString(new[]
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 }),
                 Capacity = -2.0
             };
-            var pumps = new List<Pump2D> {pump};
+            var pumps = new List<IPump> {pump};
 
             // When
             IEnumerable<ValidationIssue> validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
@@ -94,38 +94,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 
             var expectedMessage =
                 $"pump '{pump.Name}': Capacity must be greater than or equal to 0.";
-            Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
-        }
-
-        [Test]
-        public void GivenPumpWithStartSuctionLevelThatIsSmallerThanStopSuctionLevel_WhenValidating_ThenValidationErrorIsReturned()
-        {
-            // Given
-            var envelope = new Envelope(0, 4, 0, 4);
-            var pump = new Pump2D
-            {
-                Name = "myPump",
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(1, 1),
-                    new Coordinate(2, 2)
-                }),
-                ControlDirection = PumpControlDirection.SuctionSideControl,
-                StartSuction = 1.0,
-                StopSuction = 2.0
-            };
-            var pumps = new List<Pump2D> {pump};
-
-            // When
-            IEnumerable<ValidationIssue> validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
-
-            // Then
-            ValidationIssue[] validationWarnings =
-                validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
-            Assert.That(validationWarnings.Length, Is.EqualTo(1));
-
-            var expectedMessage =
-                $"pump '{pump.Name}': Suction start level must be greater than or equal to suction stop level.";
             Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
         }
     }

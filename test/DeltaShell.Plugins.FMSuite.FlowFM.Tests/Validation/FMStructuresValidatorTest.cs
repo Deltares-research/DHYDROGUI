@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Validation;
@@ -24,9 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingASingleWeirWhichDoesNotContainCrestLevelTimeSeriesValuesWhileUsingCrestLevelTimeSeriesWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = new SimpleWeirFormula(),
+                Formula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = true,
                 CrestWidth = 1.0
             };
@@ -50,9 +51,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingASingleWeirWhereTheCrestLevelTimeSeriesValuesAreSmallerThanTheModelTimeSeriesWhileUsingCrestLevelTimeSeriesWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = new SimpleWeirFormula(),
+                Formula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = true,
                 CrestWidth = 1.0
             };
@@ -83,9 +84,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingASingleWeirWithANegativeLateralContractionWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = new SimpleWeirFormula {LateralContraction = -1.0},
+                Formula = new SimpleWeirFormula {LateralContraction = -1.0},
                 CrestWidth = 1.0
             };
 
@@ -109,9 +110,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingAGatedWeirWithANegativeDoorHeightWhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = new GatedWeirFormula {DoorHeight = -1.0},
+                Formula = new GatedWeirFormula {DoorHeight = -1.0},
                 CrestWidth = 1.0
             };
 
@@ -135,9 +136,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             // Given
             var formula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
 
@@ -169,9 +170,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             // Given
             var formula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
 
@@ -201,9 +202,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             // Given
             var formula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
@@ -226,9 +227,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             // Given
             var formula = new GatedWeirFormula(true) {HorizontalDoorOpeningWidth = -1.0};
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
@@ -251,9 +252,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             // Given
             var formula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true};
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
 
@@ -283,9 +284,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             // Given
             var formula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true};
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
@@ -307,9 +308,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenAWaterFlowFMModelContainingASingleWeirWhichHasACrestWidthOfZero_WhenValidateIsCalledThenTheCorrectIssueIsAdded()
         {
             // Given
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = new SimpleWeirFormula(),
+                Formula = new SimpleWeirFormula(),
                 UseCrestLevelTimeSeries = false,
                 CrestWidth = 0.0
             };
@@ -321,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"Crest Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
+            var expectedIssue = $"Crest Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -339,9 +340,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthLeftSideOfStructure = 1.0,
                 WidthRightSideOfStructure = 1.0
             };
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
@@ -369,9 +370,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthLeftSideOfStructure = 1.0,
                 WidthRightSideOfStructure = 1.0
             };
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
@@ -383,7 +384,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Upstream 2 Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
+                $"Upstream 2 Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -401,9 +402,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthLeftSideOfStructure = -1.0,
                 WidthRightSideOfStructure = 1.0
             };
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
@@ -415,7 +416,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Upstream 1 Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
+                $"Upstream 1 Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -433,9 +434,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthLeftSideOfStructure = 1.0,
                 WidthRightSideOfStructure = 1.0
             };
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
@@ -447,7 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Downstream 1 Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
+                $"Downstream 1 Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -465,9 +466,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 WidthLeftSideOfStructure = 1.0,
                 WidthRightSideOfStructure = -1.0
             };
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = 1.0
             };
             model.Area.Weirs.Add(weir);
@@ -479,7 +480,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Downstream 2 Width for '{weir.Name}' structure type: {weir.WeirFormula.GetName2D()}, must be greater than 0.";
+                $"Downstream 2 Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
