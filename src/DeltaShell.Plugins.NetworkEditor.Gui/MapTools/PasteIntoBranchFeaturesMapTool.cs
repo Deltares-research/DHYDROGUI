@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using SharpMap.Api.Layers;

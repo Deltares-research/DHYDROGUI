@@ -5,7 +5,7 @@ using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using NUnit.Framework;
 
-namespace DeltaShell.Sobek.Readers.Tests.Readers
+namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
 {
     [TestFixture]
     public class SobekRRNodeReaderTest

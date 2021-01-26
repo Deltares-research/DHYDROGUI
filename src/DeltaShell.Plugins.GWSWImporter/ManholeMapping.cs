@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public static class ManholeMapping
     {

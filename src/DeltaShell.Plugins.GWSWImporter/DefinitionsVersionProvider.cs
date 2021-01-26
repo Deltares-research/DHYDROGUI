@@ -2,7 +2,7 @@
 using System.IO;
 using log4net;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     /// <summary>
     /// Class which provides which version of the definitions should be used.

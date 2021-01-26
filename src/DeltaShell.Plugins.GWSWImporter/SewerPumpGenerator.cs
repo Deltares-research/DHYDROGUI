@@ -3,7 +3,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class SewerPumpGenerator : IGwswFeatureGenerator<ISewerFeature>
     {

@@ -1,4 +1,4 @@
-﻿namespace DeltaShell.Plugins.ImportExport.Gwsw
+﻿namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class GwswFeatureFactory
     {

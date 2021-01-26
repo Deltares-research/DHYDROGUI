@@ -32,7 +32,7 @@ using System;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable InconsistentNaming
 
-namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Annotations
+namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties
 {
   /// <summary>
   /// Indicates that the value of the marked element could be <c>null</c> sometimes,

@@ -16,7 +16,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     public class WaterFlowFMTestHelper
     {

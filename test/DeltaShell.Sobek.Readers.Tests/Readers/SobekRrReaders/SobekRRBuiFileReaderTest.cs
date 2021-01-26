@@ -8,7 +8,7 @@ using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 using NUnit.Framework;
 
-namespace DeltaShell.Sobek.Readers.Tests.Readers
+namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]

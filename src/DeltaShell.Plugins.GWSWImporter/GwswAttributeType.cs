@@ -4,7 +4,7 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     /// <summary>
     /// GwswAttributeType with attributes to organize the GWSW import

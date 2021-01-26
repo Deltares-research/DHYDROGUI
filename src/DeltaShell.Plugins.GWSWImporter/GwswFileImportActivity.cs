@@ -14,7 +14,7 @@ using DelftTools.Utils.Csv.Importer;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class GwswFileImportActivity : Activity
     {

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Shell.Core;
-using DeltaShell.Plugins.ImportExport.GWSW;
 using Mono.Addins;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     [Extension(typeof(IPlugin))]
     public class GWSWImporterApplicationPlugin : ApplicationPlugin

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
-using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using NUnit.Framework;
 

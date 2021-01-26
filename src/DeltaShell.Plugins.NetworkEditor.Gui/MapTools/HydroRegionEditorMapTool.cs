@@ -14,6 +14,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;

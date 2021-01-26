@@ -5,6 +5,7 @@ using DelftTools.Controls;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -12,7 +13,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
 
-namespace DeltaShell.Dimr.Gui.Tests
+namespace DeltaShell.Dimr.Tests
 {
     [TestFixture, Apartment(ApartmentState.STA)]
     public class DimrGuiPluginTests
@@ -27,7 +28,7 @@ namespace DeltaShell.Dimr.Gui.Tests
                 gui.Run();
                 Assert.AreEqual(dimrGuiPlugin, DimrGuiPlugin.Instance);
                 Assert.AreEqual("Dimr (UI)", DimrGuiPlugin.Instance.Name);
-                Assert.AreEqual(Properties.Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
+                Assert.AreEqual(Gui.Properties.Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
                 Assert.IsTrue(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace.StartsWith("DeltaShell.Dimr.Gui"));
             }
             Assert.IsNull(DimrGuiPlugin.Instance);

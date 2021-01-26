@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.ImportExport.GWSW.ViewModels;
 using DeltaShell.Plugins.ImportExport.GWSW.Views;
 using NUnit.Framework;

@@ -4,9 +4,8 @@ using System.Globalization;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 
-namespace DeltaShell.NGHS.IO
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class BcmFile : BcFile
     {       

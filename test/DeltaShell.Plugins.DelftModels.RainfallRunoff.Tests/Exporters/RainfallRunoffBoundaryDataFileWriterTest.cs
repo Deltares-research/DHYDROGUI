@@ -8,12 +8,11 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Boundary
+namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 {
     [TestFixture]
     class RainfallRunoffBoundaryDataFileWriterTest

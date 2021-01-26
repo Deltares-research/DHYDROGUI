@@ -1,9 +1,8 @@
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DeltaShell.Plugins.ImportExport.GWSW;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class SewerOrificeGenerator : IGwswFeatureGenerator<ISewerFeature>
     {

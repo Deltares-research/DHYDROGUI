@@ -3,7 +3,6 @@ using System.Globalization;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 using NUnit.Framework;
 

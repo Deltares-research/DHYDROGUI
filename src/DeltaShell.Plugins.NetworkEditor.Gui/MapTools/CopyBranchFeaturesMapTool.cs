@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Hydro;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using SharpMap.UI.Tools;

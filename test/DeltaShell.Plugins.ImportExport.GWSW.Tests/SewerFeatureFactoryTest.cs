@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using NUnit.Framework;

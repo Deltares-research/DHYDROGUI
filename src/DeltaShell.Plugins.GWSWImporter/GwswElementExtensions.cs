@@ -5,7 +5,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     /// <summary>
     /// GwswElementExtensions can be for validating and checking types of a GwswAttribute

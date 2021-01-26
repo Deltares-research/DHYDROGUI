@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     /// <summary>
     /// Importer for GWSW files

@@ -3,7 +3,7 @@ using System.Linq;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
-namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
+namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation.Polder
 {
     public class GreenhouseDataValidator : IValidator<RainfallRunoffModel, IEnumerable<GreenhouseData>>
     {

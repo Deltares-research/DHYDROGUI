@@ -1,10 +1,9 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
-using DeltaShell.Plugins.ImportExport.GWSW;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 using NetTopologySuite.Geometries;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public abstract class ASewerCompartmentGenerator : IGwswFeatureGenerator<ISewerFeature>
     {

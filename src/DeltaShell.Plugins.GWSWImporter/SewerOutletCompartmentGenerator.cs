@@ -1,7 +1,7 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class SewerOutletCompartmentGenerator : ASewerCompartmentGenerator
     {

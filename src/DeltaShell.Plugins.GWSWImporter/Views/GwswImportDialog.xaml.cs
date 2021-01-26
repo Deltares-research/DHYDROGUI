@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DeltaShell.Plugins.ImportExport.Gwsw;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Views

@@ -5,7 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
-namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
+namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation.Polder
 {
     public class PavedDataValidator : IValidator<RainfallRunoffModel, IEnumerable<PavedData>>
     {

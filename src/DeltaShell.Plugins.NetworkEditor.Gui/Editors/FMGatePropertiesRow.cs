@@ -4,7 +4,7 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using GeoAPI.Extensions.Networks;
 
-namespace DeltaShell.Plugins.HydroNetworkEditor.Gui.Editors
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
 {
     public class FMGatePropertiesRow : GatePropertiesRow
     {

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DeltaShell.Plugins.ImportExport.GWSW;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class GwswNwrwSurfaceDataGenerator : IGwswFeatureGenerator<INwrwFeature>
     {

@@ -3,7 +3,7 @@ using DeltaShell.Plugins.ImportExport.GWSW.ViewModels;
 using DeltaShell.Plugins.ImportExport.GWSW.Views;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
+namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
 {
     [TestFixture]
     public class DelimeterSelectorTest

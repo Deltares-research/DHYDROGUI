@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using DeltaShell.NGHS.IO.Grid.GridGeomApi;
 
-namespace General.tests
+namespace DeltaShell.NGHS.IO.TestUtils
 {
     //this class wraps the single library functions
     public class GridGeomLibWrapper

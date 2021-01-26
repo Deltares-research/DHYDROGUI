@@ -4,7 +4,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
+namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Importers
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]

@@ -2,7 +2,6 @@
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;

@@ -9,7 +9,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
 using log4net;
 
-namespace DeltaShell.Plugins.ImportExport.Gwsw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class GwswElementGenerationActivity<T> : Activity
     {

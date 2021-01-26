@@ -2,7 +2,7 @@
 using System.IO;
 using DelftTools.Utils.Interop;
 
-namespace General.tests
+namespace DeltaShell.NGHS.IO.TestUtils
 {
     public static class GridTestHelper
     {

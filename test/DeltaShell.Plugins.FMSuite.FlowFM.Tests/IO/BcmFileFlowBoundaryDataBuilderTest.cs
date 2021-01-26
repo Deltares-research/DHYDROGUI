@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -9,103 +8,106 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
-[TestFixture]
-public class BcmFileFlowBoundaryDataBuilderTest
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
-    [Test]
-    [Category(TestCategory.DataAccess)]
-    public void ImportMorphologyBedLoadBoundaryConditions()
+    [TestFixture]
+    public class BcmFileFlowBoundaryDataBuilderTest
     {
-        var filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLoadTransport.bcm");
-        var fileReader = new BcmFile();
-        var dataBlocks = fileReader.Read(filePath).ToList();
-
-        var feature = new Feature2D
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportMorphologyBedLoadBoundaryConditions()
         {
-            Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1)}),
-            Name = "Boundary01"
-        };
+            var filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLoadTransport.bcm");
+            var fileReader = new BcmFile();
+            var dataBlocks = fileReader.Read(filePath).ToList();
 
-        var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var feature = new Feature2D
+            {
+                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1)}),
+                Name = "Boundary01"
+            };
 
-        var builder = new BcmFileFlowBoundaryDataBuilder();
+            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
 
-        builder.InsertBoundaryData(new[] {boundaryConditionSet}, dataBlocks.ElementAt(0));
+            var builder = new BcmFileFlowBoundaryDataBuilder();
 
-        Assert.AreEqual(1, boundaryConditionSet.BoundaryConditions.Count);
+            builder.InsertBoundaryData(new[] {boundaryConditionSet}, dataBlocks.ElementAt(0));
 
-        var boundaryCondition = boundaryConditionSet.BoundaryConditions.FirstOrDefault() as FlowBoundaryCondition;
+            Assert.AreEqual(1, boundaryConditionSet.BoundaryConditions.Count);
 
-        Assert.IsNotNull(boundaryCondition);
-        Assert.AreEqual(BoundaryConditionDataType.TimeSeries, boundaryCondition.DataType);
-        Assert.AreEqual(FlowBoundaryQuantityType.MorphologyBedLoadTransport, boundaryCondition.FlowQuantity);
-    }
+            var boundaryCondition = boundaryConditionSet.BoundaryConditions.FirstOrDefault() as FlowBoundaryCondition;
 
-    [Test]
-    [Category(TestCategory.DataAccess)]
-    public void ImportMorphologyBedLevelPrescribedBoundaryConditions()
-    {
-        var filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelPrescribed.bcm");
-        var fileReader = new BcmFile();
-        var dataBlocks = fileReader.Read(filePath).ToList();
+            Assert.IsNotNull(boundaryCondition);
+            Assert.AreEqual(BoundaryConditionDataType.TimeSeries, boundaryCondition.DataType);
+            Assert.AreEqual(FlowBoundaryQuantityType.MorphologyBedLoadTransport, boundaryCondition.FlowQuantity);
+        }
 
-        var feature = new Feature2D
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportMorphologyBedLevelPrescribedBoundaryConditions()
         {
-            Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1) }),
-            Name = "Boundary01"
-        };
+            var filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelPrescribed.bcm");
+            var fileReader = new BcmFile();
+            var dataBlocks = fileReader.Read(filePath).ToList();
 
-        var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
+            var feature = new Feature2D
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1) }),
+                Name = "Boundary01"
+            };
 
-        var builder = new BcmFileFlowBoundaryDataBuilder();
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
-        builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks.ElementAt(0));
+            var builder = new BcmFileFlowBoundaryDataBuilder();
 
-        Assert.AreEqual(1, boundaryConditionSet.BoundaryConditions.Count);
+            builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks.ElementAt(0));
 
-        var boundaryCondition = boundaryConditionSet.BoundaryConditions.FirstOrDefault() as FlowBoundaryCondition;
+            Assert.AreEqual(1, boundaryConditionSet.BoundaryConditions.Count);
 
-        Assert.IsNotNull(boundaryCondition);
-        Assert.AreEqual(BoundaryConditionDataType.TimeSeries, boundaryCondition.DataType);
-        Assert.AreEqual(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, boundaryCondition.FlowQuantity);
-    }
+            var boundaryCondition = boundaryConditionSet.BoundaryConditions.FirstOrDefault() as FlowBoundaryCondition;
 
-    [Test]
-    [Category(TestCategory.DataAccess)]
-    public void ImportMorphologyBedLevelChangedPrescribedBoundaryConditions()
-    {
-        var filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelChangePrescribed.bcm");
-        var fileReader = new BcmFile();
-        var dataBlocks = fileReader.Read(filePath).ToList();
+            Assert.IsNotNull(boundaryCondition);
+            Assert.AreEqual(BoundaryConditionDataType.TimeSeries, boundaryCondition.DataType);
+            Assert.AreEqual(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, boundaryCondition.FlowQuantity);
+        }
 
-        var feature = new Feature2D
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportMorphologyBedLevelChangedPrescribedBoundaryConditions()
         {
-            Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1) }),
-            Name = "Boundary01"
-        };
+            var filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelChangePrescribed.bcm");
+            var fileReader = new BcmFile();
+            var dataBlocks = fileReader.Read(filePath).ToList();
 
-        var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
+            var feature = new Feature2D
+            {
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(0, 1) }),
+                Name = "Boundary01"
+            };
 
-        var builder = new BcmFileFlowBoundaryDataBuilder();
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
-        builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks.ElementAt(0));
+            var builder = new BcmFileFlowBoundaryDataBuilder();
 
-        Assert.AreEqual(1, boundaryConditionSet.BoundaryConditions.Count);
+            builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks.ElementAt(0));
 
-        var boundaryCondition = boundaryConditionSet.BoundaryConditions.FirstOrDefault() as FlowBoundaryCondition;
+            Assert.AreEqual(1, boundaryConditionSet.BoundaryConditions.Count);
 
-        Assert.IsNotNull(boundaryCondition);
-        Assert.AreEqual(BoundaryConditionDataType.TimeSeries, boundaryCondition.DataType);
-        Assert.AreEqual(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, boundaryCondition.FlowQuantity);
-    }
+            var boundaryCondition = boundaryConditionSet.BoundaryConditions.FirstOrDefault() as FlowBoundaryCondition;
 
-    [Test]
-    public void GetBcmBlockDataTest()
-    {
-        var bcmBlockData = new BcmBlockData();
-        Assert.NotNull( bcmBlockData );
-        Assert.NotNull( bcmBlockData.Quantities );
-        Assert.IsEmpty( bcmBlockData.Quantities );
+            Assert.IsNotNull(boundaryCondition);
+            Assert.AreEqual(BoundaryConditionDataType.TimeSeries, boundaryCondition.DataType);
+            Assert.AreEqual(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, boundaryCondition.FlowQuantity);
+        }
+
+        [Test]
+        public void GetBcmBlockDataTest()
+        {
+            var bcmBlockData = new BcmBlockData();
+            Assert.NotNull( bcmBlockData );
+            Assert.NotNull( bcmBlockData.Quantities );
+            Assert.IsEmpty( bcmBlockData.Quantities );
+        }
     }
 }
 
