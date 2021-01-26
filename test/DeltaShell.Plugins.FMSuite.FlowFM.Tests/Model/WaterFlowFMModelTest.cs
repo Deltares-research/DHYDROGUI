@@ -21,6 +21,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -384,24 +385,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [Test]
         public void CheckSedimentPropertyEventPropagatesToModel()
         {
-            var model = new WaterFlowFMModel();
-            model.ModelDefinition.UseMorphologySediment = true;
+            // Setup
+            var model = new WaterFlowFMModel {ModelDefinition = {UseMorphologySediment = true}};
             var sedFrac = new SedimentFraction {Name = "testFrac"};
             model.SedimentFractions.Add(sedFrac);
 
-            var modelCount = 0;
-            ((INotifyPropertyChanged) model).PropertyChanged += (s, e) => modelCount++;
-            var sedFracCount = 0;
-            ((INotifyPropertyChanged) sedFrac).PropertyChanged += (s, e) => sedFracCount++;
-
             ISpatiallyVaryingSedimentProperty prop = sedFrac.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().First();
-            prop.IsSpatiallyVarying = true;
 
-            Assert.AreEqual(1, sedFracCount);
+            // Call
+            void Call() => prop.IsSpatiallyVarying = true;
 
-            // TODO: Set the assertion value to 3 when initial condition is supported in ext-files (DELFT3DFM-996)
-            //Assert.AreEqual(3, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
-            Assert.AreEqual(1, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
+            // Assert
+            const string propertyName = nameof(ISpatiallyVaryingSedimentProperty.IsSpatiallyVarying);
+            model.AssertPropertyChangedFired(Call, 1, propertyName);
+            ((INotifyPropertyChanged) sedFrac).AssertPropertyChangedFired(Call, 1, propertyName);
         }
 
         [Test]

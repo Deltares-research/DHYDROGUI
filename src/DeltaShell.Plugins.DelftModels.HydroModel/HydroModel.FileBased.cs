@@ -76,6 +76,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 return;
             }
+                
+            SuspendModelOutputEvents(sourceModel as IModel);
+            SuspendModelOutputEvents(targetModel as IModel);
 
             foreach (ModelExchange modelExchange in info.Exchanges)
             {
@@ -84,6 +87,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                                targetItems,
                                                targetModel);
             }
+
+           UnsuspendModelOutputEvents(sourceModel as IModel);
+           UnsuspendModelOutputEvents(targetModel as IModel);
         }
 
         private static void RelinkDataItemsInModelExchange(ModelExchange exchange, 
@@ -112,6 +118,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private ICoupledModel GetCoupledModel(string modelName) =>
             Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), modelName)) as ICoupledModel;
+
+        private static void SuspendModelOutputEvents(IModel model)
+        {
+            model.SuspendClearOutputOnInputChange = true;
+            model.SuspendMarkOutputOutOfSyncOnInputChange = true;
+        }
+
+        private static void UnsuspendModelOutputEvents(IModel model)
+        {
+            model.SuspendClearOutputOnInputChange = false;
+            model.SuspendMarkOutputOutOfSyncOnInputChange = false;
+        }
 
         /// <summary>
         /// Load links when building model from file
@@ -228,6 +246,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                                                          IReadOnlyDictionary<IDataItem, string> dataItemNameMapping,
                                                                          Func<IDataItem, IDataItem> getDataItemFunc)
         {
+            SuspendModelOutputEvents(inputModel);
+            SuspendModelOutputEvents(outputModel);
+
             var modelExchange = new ModelExchangeInfo(outputModel, inputModel);
 
             IEnumerable<IDataItem> inputDataItems = GetDataItemsUsedForCouplingModel(inputModel, DataItemRole.Input);
@@ -247,6 +268,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 // it from appearing as its default value during saving.
                 RestoreDataItemName(dataItemNameMapping, dataItemToRestore);
             }
+
+            UnsuspendModelOutputEvents(inputModel);
+            UnsuspendModelOutputEvents(outputModel);
 
             return modelExchange;
         }

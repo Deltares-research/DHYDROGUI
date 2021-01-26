@@ -278,6 +278,8 @@ namespace DeltaShell.NGHS.IO.Tests
             public bool IsCopyable { get; }
             public bool OutputOutOfSync { get; set; }
             public bool SuspendClearOutputOnInputChange { get; set; }
+            public bool SuspendMarkOutputOutOfSyncOnInputChange { get; set; }
+            public bool CanRun { get; }
             public IHydroRegion Region { get; }
 
             #endregion
@@ -359,6 +361,8 @@ namespace DeltaShell.NGHS.IO.Tests
             public bool IsCopyable { get; }
             public bool OutputOutOfSync { get; set; }
             public bool SuspendClearOutputOnInputChange { get; set; }
+            public bool SuspendMarkOutputOutOfSyncOnInputChange { get; set; }
+            public bool CanRun { get; }
             public IHydroRegion Region { get; }
 
             #endregion
