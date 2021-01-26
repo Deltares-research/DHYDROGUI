@@ -387,7 +387,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 /* get the water flow fm model */
                 var waterFlowFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.NotNull(waterFlowFmModel);
-                Assert.That(waterFlowFmModel.Name, Is.StringContaining("FlowFM"));
+                Assert.IsTrue(waterFlowFmModel.Name.StartsWith("FlowFM"));
 
                 var fmImporter = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(fmImporter);
@@ -395,7 +395,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 var targetFmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(targetFmModel);
-                Assert.That(targetFmModel.Name, Is.StringContaining("har"));
+                Assert.IsTrue(targetFmModel.Name.StartsWith("har"));
             };
             WpfTestHelper.ShowModal((MainWindow)gui.MainWindow, mainWindowShown);
         }

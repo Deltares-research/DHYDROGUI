@@ -73,7 +73,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        [ExpectedException(typeof(FileReadingException))]
         public void TestNetworkAndGridReaderGivesExpectedException()
         {
             // Setup network data
@@ -97,7 +96,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             // Read to model
             IHydroNetwork readNetwork = new HydroNetwork();
             IDiscretization readDiscretization = new Discretization();
-            NetworkAndGridReader.ReadFile(FileWriterTestHelper.ModelFileNames.Network, readNetwork, readDiscretization);
+
+            Assert.Throws<FileReadingException>(() => NetworkAndGridReader.ReadFile(FileWriterTestHelper.ModelFileNames.Network, readNetwork, readDiscretization));
         }
     }
 }

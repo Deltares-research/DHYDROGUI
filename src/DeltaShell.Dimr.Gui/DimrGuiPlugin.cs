@@ -89,11 +89,14 @@ namespace DeltaShell.Dimr.Gui
             get { return new Ribbon(); }
         }
         
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(disposing);
 
-            Instance = null;
+            if (disposing)
+            {
+                Instance = null;
+            }
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()

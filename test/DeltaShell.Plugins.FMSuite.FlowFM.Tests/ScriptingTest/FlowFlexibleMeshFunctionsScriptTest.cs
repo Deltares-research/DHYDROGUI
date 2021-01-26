@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
     [TestFixture]
     public class FlowFlexibleMeshFunctionsScriptTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixture()
         {
             var standardLibPath = @"plugins\DeltaShell.Plugins.Scripting\Lib";
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
             ScriptHost.AdditionalSearchPaths.Add(sitePackagesPath);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             ScriptHost.AdditionalSearchPaths.Clear();

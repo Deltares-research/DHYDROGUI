@@ -16,7 +16,7 @@ using SharpTestsEx;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
 {
     [TestFixture]
-    [Ignore] //converter was made explicit; tests no longer match
+    [Ignore("converter was made explicit; tests no longer match")]
     public class HydroLinksFeatureCoverageValueConverterTest
     {
         private static readonly WKTReader wktReader = new WKTReader();

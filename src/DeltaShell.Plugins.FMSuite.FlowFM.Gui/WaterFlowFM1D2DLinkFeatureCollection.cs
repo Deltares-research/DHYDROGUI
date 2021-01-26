@@ -42,10 +42,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
 
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             model = null;
-            base.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

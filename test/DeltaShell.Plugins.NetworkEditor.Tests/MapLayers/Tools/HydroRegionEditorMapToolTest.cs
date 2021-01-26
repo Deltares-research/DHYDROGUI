@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             Assert.AreEqual(0, network.CrossSections.Count());
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void AddCrossSectionWithGeometryThatDoesNotOverlapWithBranch()
         {
             //CrossSection.ApplyDefaultValues() uses different component types in assignment hence error.
@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
             // Add a second cross section but do not place it at a branch
             // expect exception, geometry doesn't fit, can't find branch
-            crossSectionLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING(150 45, 150 55)")); 
+            Assert.Throws<ArgumentException>(()=> crossSectionLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING(150 45, 150 55)"))); 
         }
 
         [Test]

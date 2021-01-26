@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         };
 
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             acceptanceModelsDirectory = TestHelper.GetTestFilePath(@"AcceptanceModels\SOBEK2");

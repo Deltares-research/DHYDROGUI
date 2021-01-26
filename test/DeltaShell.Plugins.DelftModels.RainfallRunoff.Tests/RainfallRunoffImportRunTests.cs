@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         private ICompositeActivity composite;
         private RainfallRunoffModel rrModel;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             TestHelper.SetDeltaresLicenseToEnvironmentVariable();

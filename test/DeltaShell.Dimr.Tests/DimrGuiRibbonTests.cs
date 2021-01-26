@@ -1,20 +1,13 @@
 ﻿using System.Linq;
+using System.Threading;
 using DelftTools.Utils.Reflection;
 using Fluent;
 using NUnit.Framework;
+using Ribbon = DeltaShell.Dimr.Gui.Ribbon;
 
-namespace DeltaShell.Dimr.Gui.Tests
+namespace DeltaShell.Dimr.Tests
 {
-    public class TestDimrGuiPlugin : DimrGuiPlugin
-    {
-        public bool TestValue { get; set; }
-
-        public override bool IsOnlyDimrModelSelected
-        {
-            get { return TestValue; }
-        }
-}
-    [TestFixture()]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class DimrGuiRibbonTests
     {
         [Test()]
@@ -43,7 +36,7 @@ namespace DeltaShell.Dimr.Gui.Tests
         public void TestGetRibbonControl()
         {
             var ribbon = new Ribbon();
-            Assert.That(ribbon.GetRibbonControl().GetType().Namespace, Is.StringStarting("Fluent"));
+            Assert.IsTrue(ribbon.GetRibbonControl().GetType().Namespace.StartsWith("Fluent"));
         }
     }
 }

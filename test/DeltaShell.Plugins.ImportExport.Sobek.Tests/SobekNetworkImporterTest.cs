@@ -500,14 +500,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
 
             var pump = network.Structures.Where(s => s.Name == "158").First(); // river pump id != def id
-            Assert.IsInstanceOfType(typeof(Pump), pump);
+            Assert.IsInstanceOf<Pump>(pump);
             
             /*
              river weirs are not yet implemented in kernel
             var weir = network.Structures.Where(s => s.Name == "123").First(); // river weir id != def id
             Assert.IsInstanceOfType(typeof(Weir), weir);*/
             var bridge = network.Structures.Where(s => s.Name == "65").First(); // bridge == def id
-            Assert.IsInstanceOfType(typeof(Bridge), bridge);
+            Assert.IsInstanceOf<Bridge>(bridge);
         }
 
         /// <summary>

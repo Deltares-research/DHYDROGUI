@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             return Enum.GetValues(enumType).OfType<Enum>().OrderBy(o => o.ToString()).ToList();
         }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             // trigger creation here, to make sure it's not triggered after these tests have ran.

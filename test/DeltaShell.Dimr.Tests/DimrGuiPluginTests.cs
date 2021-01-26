@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Controls;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -13,7 +14,7 @@ using SharpMap;
 
 namespace DeltaShell.Dimr.Gui.Tests
 {
-    [TestFixture()]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class DimrGuiPluginTests
     {
         [Test()]
@@ -27,7 +28,7 @@ namespace DeltaShell.Dimr.Gui.Tests
                 Assert.AreEqual(dimrGuiPlugin, DimrGuiPlugin.Instance);
                 Assert.AreEqual("Dimr (UI)", DimrGuiPlugin.Instance.Name);
                 Assert.AreEqual(Properties.Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
-                Assert.That(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace, Is.StringStarting("DeltaShell.Dimr.Gui"));
+                Assert.IsTrue(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace.StartsWith("DeltaShell.Dimr.Gui"));
             }
             Assert.IsNull(DimrGuiPlugin.Instance);
         }

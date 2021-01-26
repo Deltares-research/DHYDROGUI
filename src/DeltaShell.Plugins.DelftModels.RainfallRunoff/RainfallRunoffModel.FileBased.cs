@@ -61,6 +61,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             get { return false; }
         }
         public virtual bool CopyFromWorkingDirectory { get; }
+
+        public bool UseRestart { get; set; }
+
+        public bool WriteRestart { get; set; }
     }
 
 }

@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelDefinition
             Assert.IsNotNull(spatiallyVaryingProperty);
             Assert.AreEqual("SedConc", spatiallyVaryingProperty.Name);
             Assert.IsNotNull(spatiallyVaryingProperty.SpatiallyVaryingName);
-            Assert.That(spatiallyVaryingProperty.SpatiallyVaryingName, Is.StringMatching("MyName_SedConc"));
+            Assert.AreEqual(spatiallyVaryingProperty.SpatiallyVaryingName,"MyName_SedConc");
         }
 
         [Test]

@@ -130,12 +130,10 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void PolderCannotHaveSacramentoSubCatchment()
         {
             var catchment = new Catchment {CatchmentType = CatchmentType.Polder};
-
-            catchment.AddSubCatchment(CatchmentType.Sacramento);
+            Assert.Throws<InvalidOperationException>(() => catchment.AddSubCatchment(CatchmentType.Sacramento));
         }
 
         [Test]

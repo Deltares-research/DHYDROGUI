@@ -12,7 +12,6 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Units;
 using DelftTools.Units.Generics;
 using DelftTools.Utils;
@@ -45,7 +44,7 @@ using NetTopologySuite.Extensions.Coverages;
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
     [Entity(FireOnCollectionChange=false)]
-    public partial class RainfallRunoffModel : TimeDependentModelBase, IRainfallRunoffAreaUnitManager, IRainfallRunoffModel, IDimrStateAwareModel, IDisposable, IDimrModel
+    public partial class RainfallRunoffModel : TimeDependentModelBase, IRainfallRunoffAreaUnitManager, IRainfallRunoffModel, IDisposable
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModel));
         private readonly DimrRunner runner;
@@ -214,16 +213,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return base.IsLinkAllowed(source, target);
         }
 
-        public override bool IsDataItemActive(IDataItem dataItem)
-        {
-            if (dataItem.ValueType == typeof (RRInitialConditionsWrapper))
-            {
-                return !UseRestart;
-            }
-            return base.IsDataItemActive(dataItem);
-        }
-
-        public RainfallRunoffModelFixedFiles FixedFiles { get; set; }
+       public RainfallRunoffModelFixedFiles FixedFiles { get; set; }
 
         public virtual IFeatureCoverage BoundaryDischarge
         {
@@ -636,6 +626,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         public bool FileBasedModelIsLoaded { get; set; } = false;
+        
+        public string ExplicitWorkingDirectory { get; set; }
 
         public bool IsActivityOfEnumType(ModelType type)
         {
@@ -881,16 +873,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public Func<IEnumerable<object>> GetRainfallRunoffMDEData { get; set; } = Enumerable.Empty<object>;
 
-        public override bool CanCopy(IDataItem item)
-        {
-            if (item.Value is FileBasedRestartState)
-            {
-                return true;
-            }
-
-            return base.CanCopy(item);
-        }
-
         public override DelftTools.Shell.Core.IProjectItem DeepClone()
         {
             var clone = (RainfallRunoffModel) base.DeepClone();
@@ -963,32 +945,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         #region IStateAwareModelEngine
 
-        private ModelFileBasedStateHandler modelStateHandler;
         protected virtual bool ClearingOutput { get; set; }
         private IEventedList<RunoffBoundaryData> boundaryData;
         private IEventedList<string> meteoStations;
         private IEventedList<string> temperatureStations; 
         private static readonly int[] SupportedMetaDataVersions = new[] { 1 };
-
-        IModelState IStateAwareModelEngine.GetCopyOfCurrentState()
-        {
-            return ModelStateHandler.GetState();
-        }
-
-        void IStateAwareModelEngine.SetState(IModelState modelState)
-        {
-            ModelStateHandler.FeedStateToModel(modelState);
-        }
-
-        void IStateAwareModelEngine.ReleaseState(IModelState modelState)
-        {
-            ModelStateHandler.ReleaseState(modelState);
-        }
-
-        IModelState IStateAwareModelEngine.CreateStateFromFile(string persistentStateFilePath)
-        {
-            return ModelStateHandler.CreateStateFromFile(Name, persistentStateFilePath);
-        }
 
         #region Save State: Time Range
 
@@ -1015,33 +976,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 }
             }
         }
-
-        void IStateAwareModelEngine.SaveStateToFile(IModelState modelState, string persistentStateFilePath)
-        {
-            modelState.MetaData = new ModelStateMetaData
-            {
-                ModelTypeId = "RainfallRunoffModel",
-                Version = SupportedMetaDataVersions.Last(),
-                Attributes = GetMetaDataRequirements(SupportedMetaDataVersions.Last())
-            };
-            ModelStateHandler.SaveStateToFile(modelState, persistentStateFilePath);
-        }
-
-        public virtual void ValidateInputState(out IEnumerable<string> errors, out IEnumerable<string> warnings)
-        {
-            try
-            {
-                var modelState = (ModelStateFilesImpl)ModelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
-                errors = ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions, GetMetaDataRequirements, "RainfallRunoffModel");
-                warnings = Enumerable.Empty<string>();
-            }
-            catch (ArgumentException e)
-            {
-                errors = new[] {e.Message};
-                warnings = Enumerable.Empty<string>();
-            }
-        }
-
+        
         private Dictionary<string, string> GetMetaDataRequirements(int version)
         {
             if (version == 1)
@@ -1094,21 +1029,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             throw new NotImplementedException(String.Format("Meta data version {0} for model type {1} is not supported",
                                                             version, "RainfallRunoffModel"));
-        }
-
-        internal ModelFileBasedStateHandler ModelStateHandler
-        {
-            get
-            {
-                if (modelStateHandler == null)
-                {
-                    IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames = new List<DelftTools.Utils.Tuple<string, string>>();
-                    //as defined in 'fixed' Sobek_3b.fnm (in RainfallRunoffModelEngine project)
-                    outAndInFileNames.Add(new DelftTools.Utils.Tuple<string, string>("RSRR_OUT", "RSRR_IN")); 
-                    modelStateHandler = new ModelFileBasedStateHandler(Name, outAndInFileNames);
-                }
-                return modelStateHandler;
-            }
         }
 
         #endregion
@@ -1371,38 +1291,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         #endregion
-
-        #region Implementation of IDimrStateAwareModel
-
-        public virtual void PrepareRestart()
-        {
-            ClearStatesIfRequired();
-        }
-
-        public virtual void WriteRestartFiles()
-        {
-            WriteRestartIfRequired(false);
-        }
-
-        public virtual void FinalizeRestart()
-        {
-            WriteRestartIfRequired(true);
-        }
-
-        #endregion
     }
 
     public interface IRainfallRunoffModel : IHydroModel, IDimrModel
     {
-        DateTime CurrentTime { get; }
-        
         DateTime StartTime { get; }
         
-        IFeatureCoverage InputWaterLevel { get; }
-        
         bool CapSim { get; }
-
-        CatchmentModelData GetCatchmentModelData(Catchment c);
 
         IEventedList<RunoffBoundaryData> BoundaryData { get; }
         IDrainageBasin Basin { get; set; }

@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
                 Assert.That(a.ElementAt(0), Is.EqualTo(20.0).Within(0.01));
                 Assert.That(a.ElementAt(1), Is.EqualTo(10.0).Within(0.01));
                 Assert.That(a.ElementAt(2), Is.EqualTo(5.0).Within(0.01));
-                Assert.That(f.Name, Is.StringStarting("HarmonicTestFunction"));
+                Assert.IsTrue(f.Name.StartsWith("HarmonicTestFunction"));
 
                 return true;
             };
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
                 Assert.That(a.ElementAt(0), Is.EqualTo(30.0).Within(0.01));
                 Assert.That(a.ElementAt(1), Is.EqualTo(15.0).Within(0.01));
                 Assert.That(a.ElementAt(2), Is.EqualTo(7.5).Within(0.01));
-                Assert.That(f.Name, Is.StringStarting("HarmonicTestFunction"));
+                Assert.IsTrue(f.Name.StartsWith("HarmonicTestFunction"));
 
                 return true;
             };
@@ -105,8 +105,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
                 Assert.That(a.ElementAt(0), Is.EqualTo(40.0).Within(0.01));
                 Assert.That(a.ElementAt(1), Is.EqualTo(20.0).Within(0.01));
                 Assert.That(a.ElementAt(2), Is.EqualTo(10.0).Within(0.01));
-                Assert.That(f.Name, Is.StringStarting("HarmonicTestFunction"));
-
+                Assert.IsTrue(f.Name.StartsWith("HarmonicTestFunction"));
+                
                 return true;
             };
             mocks.ReplayAll();

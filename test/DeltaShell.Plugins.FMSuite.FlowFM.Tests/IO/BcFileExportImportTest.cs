@@ -397,7 +397,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists("sedimentConcentration.bc"));
 
             var fileText = File.ReadAllText("sedimentConcentration.bc");
-            Assert.That(fileText, Is.StringContaining(BcFileFlowBoundaryDataBuilder.ConcentrationAtBound+"frac1").And.StringContaining("L1_0001").And.StringContaining(new BcFile().BlockKey).And.StringContaining(new BcFile().BlockKey).And.StringContaining(BcFile.QuantityKey));
+            Assert.IsTrue(fileText.Contains(BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1") &&
+                          fileText.Contains("L1_0001") &&
+                          fileText.Contains(new BcFile().BlockKey) &&
+                          fileText.Contains(BcFile.QuantityKey));
             //Import
             var importer = new BcFileImporter
             {

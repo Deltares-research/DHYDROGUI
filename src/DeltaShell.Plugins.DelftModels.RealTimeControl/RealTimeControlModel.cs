@@ -14,7 +14,6 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
-using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -41,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Projectexplorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange=false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -161,11 +160,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <param name="tag"></param>
         private IDataItem CreateDataItemNotAvailableInPreviousVersion(string tag)
         {
-            if (tag == RestartInputStateTag || tag == UseRestartTag || tag == WriteRestartTag)
-            {
-                AddRestartDataItems();
-                return GetDataItemByTag(tag);
-            }
             return null;
         }
 
@@ -734,14 +728,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        public override bool CanCopy(IDataItem item)
-        {
-            if (item.Value is FileBasedRestartState)
-            {
-                return true;
-            }
-            return base.CanCopy(item);
-        }
         ///<exception cref="NotSupportedException">When a <see cref="DataItem"/> (either in this model or it's child-models) is unlinked and the <see cref="DataItem.Value"/> either does not inherit from <see cref="ICloneable"/>, is not null, or is not a value type.</exception>
         ///<exception cref="InvalidOperationException">
         /// When attempting to perform deep clone a <see cref="DataItemSet"/> (either in this model or it's child-models) for which a <see cref="IDataItem"/>s <see cref="IDataItem.Owner"/> is not the data item set.</exception>
@@ -924,6 +910,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         private bool suspendUpdateFeatureAndParameter;
+        private IFeature lastRelinkedFeature;
 
         /// <summary>
         /// Update Feature, ParameterName and UnitName in ConnectionPoint based on information on the other side.
@@ -1030,139 +1017,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return false;
         }
 
-        #region State Aware Model
-
-        private ModelFileBasedStateHandler modelStateHandler;
-        private IFeature lastRelinkedFeature;
-        private static readonly int[] SupportedMetaDataVersions = new[] { 1 };
-        protected virtual Queue<DateTime> outputWriteTimesQueue { get; set; }
-
-        IModelState IStateAwareModelEngine.GetCopyOfCurrentState()
-        {
-            var currentState = ModelStateHandler.GetState();
-            var filename = "rtc_" + CurrentTime.ToString("yyyyMMdd") + "_" + CurrentTime.ToString("HHmmss")+".xml";
-            if(File.Exists(Path.Combine(ExplicitWorkingDirectory, filename)))
-                ((ModelStateFilesImpl)currentState).AddFile(filename,RealTimeControlXMLFiles.XmlImportState);
-            return currentState;
-        }
-
-        void IStateAwareModelEngine.SetState(IModelState modelState)
-        {
-            ModelStateHandler.FeedStateToModel(modelState);
-        }
-
-        void IStateAwareModelEngine.ReleaseState(IModelState modelState)
-        {
-            ModelStateHandler.ReleaseState(modelState);
-        }
-
-        IModelState IStateAwareModelEngine.CreateStateFromFile(string persistentStateFilePath)
-        {
-            return ModelStateHandler.CreateStateFromFile(Name, persistentStateFilePath);
-        }
-
-        #region Save State: Time Range
-
-        public virtual bool UseSaveStateTimeRange { get; set; }
-
-        public virtual DateTime SaveStateStartTime { get; set; }
-
-        public virtual DateTime SaveStateStopTime { get; set; }
-
-        public virtual TimeSpan SaveStateTimeStep { get; set; }
-
-        #endregion
-
-        public virtual IEnumerable<DateTime> GetRestartWriteTimes()
-        {
-            if (UseSaveStateTimeRange)
-            {
-                var time = SaveStateStartTime;
-                while (time <= SaveStateStopTime)
-                {
-                    yield return time;
-
-                    time += SaveStateTimeStep;
-                }
-            }
-        }
-
-        void IStateAwareModelEngine.SaveStateToFile(IModelState modelState, string persistentStateFilePath)
-        {
-            modelState.MetaData = new ModelStateMetaData
-            {
-                ModelTypeId = "RealTimeControlModel",
-                Version = SupportedMetaDataVersions.Last(),
-                Attributes = GetMetaDataRequirements(SupportedMetaDataVersions.Last())
-            };
-            ModelStateHandler.SaveStateToFile(modelState, persistentStateFilePath);
-        }
-
-        public virtual void ValidateInputState(out IEnumerable<string> errors, out IEnumerable<string> warnings)
-        {
-            try
-            {
-                var modelState = (ModelStateFilesImpl)ModelStateHandler.CreateStateFromFile("validate", RestartInput.Path);
-                errors = ModelStateValidator.ValidateInputState(modelState, SupportedMetaDataVersions, GetMetaDataRequirements, "RealTimeControlModel");
-                warnings = Enumerable.Empty<string>();
-            }
-            catch (ArgumentException e)
-            {
-                errors = new[] { e.Message };
-                warnings = Enumerable.Empty<string>();
-            }
-        }
-
-        private Dictionary<string, string> GetMetaDataRequirements(int version)
-        {
-            if (version == 1)
-            {
-                var ruleTypesPerControlGroup = "";
-                foreach (var controlGroup in ControlGroups.OrderBy(cg => cg.Name))
-                {
-                    ruleTypesPerControlGroup += controlGroup.Rules.Aggregate("(", (current, rule) => current + rule.GetType().Name + ",");
-                    ruleTypesPerControlGroup += "),";
-                }
-
-                var conditionTypesPerControlGroup = "";
-                foreach (var controlGroup in ControlGroups.OrderBy(cg => cg.Name))
-                {
-                    conditionTypesPerControlGroup += controlGroup.Conditions.Aggregate("(", (current, condition) => current + condition.GetType().Name + ",");
-                    conditionTypesPerControlGroup += "),";
-                }
-                return new Dictionary<string, string>
-                    {
-                        {"NrOfControlGroups", ControlGroups.Count.ToString(CultureInfo.InvariantCulture)},
-                        {"NrOfRulesPerControlGroups", ControlGroups.OrderBy(cg => cg.Name)
-                                     .Select(cg => cg.Rules.Count)
-                                     .Aggregate("", (current, rulesCount) => current + rulesCount+ ",")},
-                        {"RuleTypesPerControlGroup", ruleTypesPerControlGroup},
-                        {"NrOfConditionsPerControlGroups", ControlGroups.OrderBy(cg => cg.Name)
-                                     .Select(cg => cg.Conditions.Count)
-                                     .Aggregate("", (current, conditionsCount) => current + conditionsCount + ",")},
-                        {"ConditionTypesPerControlGroup", conditionTypesPerControlGroup},
-                    };
-            }
-
-            throw new NotImplementedException(string.Format("Meta data version {0} for model type {1} is not supported",
-                                                            version, "RealTimeControlModel"));
-        }
-
-        public virtual ModelFileBasedStateHandler ModelStateHandler
-        {
-            get
-            {
-                if (modelStateHandler == null)
-                {
-                    IList<DelftTools.Utils.Tuple<string, string>> outAndInFileNames = new List<DelftTools.Utils.Tuple<string, string>>();
-                    modelStateHandler = new ModelFileBasedStateHandler(Name, outAndInFileNames);
-                }
-                return modelStateHandler;
-            }
-        }
-
-        #endregion
-        
         #region IModelMerge
         public virtual ValidationReport ValidateMerge(IModelMerge sourceModel)
         {
@@ -1330,7 +1184,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             if (RunsInIntegratedModel)
             {
-                ModelStateHandler.ModelWorkingDirectory = ExplicitWorkingDirectory;
                 return;
             }
 
@@ -1367,7 +1220,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             linkedDataItemsOriginalValues.Clear();
 
             SuspendClearOutputOnInputChange = false;
-            outputWriteTimesQueue = null;
 
             // Clear the explicit value converter lookup if relevant
             if (explicitValueConverterLookupItems != null)
@@ -1380,32 +1232,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
         #endregion
 
-        #region Implementation of IDimrStateAwareModel
-
-        public virtual void PrepareRestart()
-        {
-            ModelStateHandler.ModelWorkingDirectory = ExplicitWorkingDirectory;
-            if (UseRestart)
-            {
-                if (RestartInput.IsEmpty)
-                {
-                    throw new InvalidOperationException("Cannot use restart; restart empty!");
-                }
-                ModelStateHandler.FeedStateToModel(ModelStateHandler.CreateStateFromFile(Name, RestartInput.Path));
-            }
-            ClearStatesIfRequired();
-        }
-
-        public virtual void WriteRestartFiles()
-        {
-            WriteRestartIfRequired(false);
-        }
-
-        public virtual void FinalizeRestart()
-        {
-            WriteRestartIfRequired(true);
-        }
-
-        #endregion
+        public virtual string ExplicitWorkingDirectory { get; set; }
     }
 }

@@ -82,8 +82,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 waterFlowFMModel.TimeStep = sobekCaseSettings.TimeStep;
                 waterFlowFMModel.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
                 
-                waterFlowFMModel.SaveStateStartTime = waterFlowFMModel.StartTime;
-                waterFlowFMModel.SaveStateStopTime = waterFlowFMModel.StopTime;
                 waterFlowFMModel.OutputTimeStep = waterFlowFMModel.OutputTimeStep;
 
                 path = GetFilePath("DEFRUN.2");

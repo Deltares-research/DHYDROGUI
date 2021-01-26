@@ -15,6 +15,7 @@ using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
+using TemporaryDirectory = DeltaShell.NGHS.IO.TestUtils.TemporaryDirectory;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -403,7 +404,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string expectedMsg = string.Format("While reading variable {0} from the file {1} an error was encountered: {2}",
                                                    compName, mapFileName, ""); // we ignore the actual error message, and just test for the beginning of the message.
-                Assert.That(msgs[0], Is.StringStarting(expectedMsg), "Expected a different msg:");
+                Assert.IsTrue(msgs[0].StartsWith(expectedMsg), "Expected a different msg:");
             }
         }
 

@@ -76,44 +76,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
                         Name = "Greenhouse",
                         Type = RRInitialConditionsWrapper.InitialConditionsType.Greenhouse,
                     }, DataItemRole.Input) { Owner = model };
-
-            yield return model.GetDataItemByValue(model.RestartInput);
         }
 
         private IEnumerable GetOutputItems(RainfallRunoffModel model)
         {
-            yield return GetRestartFolder(model);
-
-            foreach (var outputDataItem in model.DataItems.Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output &&
-                !IsOutputRestartFile(di)))
+            foreach (var outputDataItem in model.DataItems.Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output))
             {
                 yield return model.GetDataItemByValue(outputDataItem.Value);
             }
 
-            foreach (var outputDataItem in model.OutputDataItems.Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output &&
-                !IsOutputRestartFile(di)))
+            foreach (var outputDataItem in model.OutputDataItems.Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output))
             {
                 yield return outputDataItem;
             }
-        }
-
-        private static object GetRestartFolder(RainfallRunoffModel data)
-        {
-            return new TreeFolder(data, GetRestartStates(data), "States", FolderImageType.None);
-        }
-
-        private static IEnumerable GetRestartStates(RainfallRunoffModel data)
-        {
-            var restartStates = data.DataItems.Where(IsOutputRestartFile);
-            foreach (var restartState in restartStates)
-            {
-                yield return restartState;
-            }
-        }
-
-        private static bool IsOutputRestartFile(IDataItem dataItem)
-        {
-            return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
         }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)

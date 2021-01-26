@@ -34,7 +34,7 @@ using SharpMap.Extensions.CoordinateSystems;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
     [ExcludeFromCodeCoverage]
-    [Ignore]
+    [Ignore("Needs to be checked")]
     [TestFixture]
     public class WaterFlowFmModelDirectoryStructureTest
     {
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private const string NoordzeeModelProjectDirName = "NoordzeeModel";
         private const string TrachytopesModelProjectDirName = "TrachytopesModel";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             // Get TestData Directory
@@ -1979,7 +1979,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 AssertEqualDirectoryStructure(s, ref sourceDirStructure, ref targetDirStructure);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             DeleteTestDirectories();

@@ -36,10 +36,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return this;
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
-            FmModel = null;
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                FmModel = null;
+            }
         }
 
         private void FmModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)

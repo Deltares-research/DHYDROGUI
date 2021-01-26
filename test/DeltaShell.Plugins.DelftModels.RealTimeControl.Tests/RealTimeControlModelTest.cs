@@ -608,18 +608,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
         }
         
-        [Test]
-        public void TestGetMetaDataRequirementsIsImplementedForAllSupportedVersions()
-        {
-            var model = new RealTimeControlModel();
-            var allSupportedVersions = TypeUtils.GetStaticField<int[]>(typeof(RealTimeControlModel), "SupportedMetaDataVersions");
-
-            foreach (var version in allSupportedVersions)
-            {
-                Assert.DoesNotThrow(() => TypeUtils.CallPrivateMethod(model, "GetMetaDataRequirements", version));
-            }
-        }
-
         # endregion
 
         # region ControlledTestModel

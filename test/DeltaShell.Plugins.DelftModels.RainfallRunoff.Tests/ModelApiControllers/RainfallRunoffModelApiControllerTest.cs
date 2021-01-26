@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
     {
         private RainfallRunoffModel model;
         
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void AssemblySetUp()
         {
             TestHelper.SetDeltaresLicenseToEnvironmentVariable();

@@ -10,14 +10,14 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
     [TestFixture]
     public class SobekWaqReaderHelperTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.ConfigureLogging();
             LogHelper.SetLoggingLevel(Level.Warn);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             LogHelper.ResetLogging();
@@ -45,12 +45,15 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no valid time step was found")]
         public void ParseTimeStepThrowsWhenNoTimeStepWasFound()
         {
             const string timeStepText = "text";
-
-            SobekWaqReaderHelper.ParseTimeStep(timeStepText, "YYDDHHMMSS");
+            var error = Assert.Throws<FormatException>(() =>
+            {
+                SobekWaqReaderHelper.ParseTimeStep(timeStepText, "YYDDHHMMSS");
+            });
+            Assert.AreEqual("no valid time step was found", error.Message);
+            
         }
 
         [Test]

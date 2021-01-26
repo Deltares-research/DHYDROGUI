@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
     [Category(TestCategory.Slow)]
     public class FlexibleMeshModelDllTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetMapCoordinateSystemFactory()
         {
             if(Map.CoordinateSystemFactory == null)

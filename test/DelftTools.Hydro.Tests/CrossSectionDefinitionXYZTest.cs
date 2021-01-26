@@ -68,11 +68,11 @@ namespace DelftTools.Hydro.Tests
 
             var geometry1 = new LineString(coordinates.ToArray());
             coordinates.Insert(2, new Coordinate(3, 2, -2));
-            var geometry2 = new LineString(coordinates.Select(c=>c.Clone() as Coordinate).ToArray()); //full clone
+            var geometry2 = new LineString(coordinates.Select(c=>c.Copy()).ToArray()); //full clone
             coordinates.RemoveAt(1);
-            var geometry3 = new LineString(coordinates.Select(c => c.Clone() as Coordinate).ToArray());
-            coordinates = coordinates.Select(c => new Coordinate(c.X+10, c.Y, c.Z)).OfType<Coordinate>().ToList();
-            var geometry4 = new LineString(coordinates.Select(c => c.Clone() as Coordinate).ToArray());
+            var geometry3 = new LineString(coordinates.Select(c => c.Copy()).ToArray());
+            coordinates = coordinates.Select(c => new Coordinate(c.X+10, c.Y, c.Z)).ToList();
+            var geometry4 = new LineString(coordinates.Select(c => c.Copy()).ToArray());
 
             crossSection.Geometry = geometry1;
             const int count = 4; //define some storage
@@ -113,7 +113,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException), ExpectedMessage = "Cannot add / delete rows from XYZ Cross Section")]
         public void AddToDataTableFails()
         {
             var crossSection = new CrossSectionDefinitionXYZ
@@ -127,7 +126,8 @@ namespace DelftTools.Hydro.Tests
                         })
                 };
 
-            crossSection.XYZDataTable.AddCrossSectionXYZRow(3, 0, 0);
+            var error = Assert.Throws<NotSupportedException>(() => crossSection.XYZDataTable.AddCrossSectionXYZRow(3, 0, 0));
+            Assert.AreEqual("Cannot add / delete rows from XYZ Cross Section", error.Message);
         }
 
         [Test]

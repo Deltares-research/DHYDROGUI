@@ -139,12 +139,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 {
                     xDocument.Root.Add(GetXmlForLoggingOptions(logLevel));
                 }
-                // check if we want to write restart files
-                if (realTimeControlModel.UseSaveStateTimeRange && realTimeControlModel.WriteRestart)
-                {
-                    xDocument.Root.Add(GetXmlRestartStateFromModel(realTimeControlModel));
-                }
-
             }
 
             xmlValidator.Validate(xDocument);
@@ -400,15 +394,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             periodElement.Add(userDefinedElement);
 
             return periodElement;
-        }
-        private static XElement GetXmlRestartStateFromModel(RealTimeControlModel realTimeControlModel)
-        {
-            var restartStateFromModel = new XElement(Fns + "stateFiles");
-            restartStateFromModel.Add(DateTimeToXElement("startDate", realTimeControlModel.SaveStateStartTime));
-            restartStateFromModel.Add(DateTimeToXElement("endDate", realTimeControlModel.SaveStateStopTime));
-            restartStateFromModel.Add(TimeStepToXml(Fns, realTimeControlModel.SaveStateTimeStep, "stateTimeStep", true));
-            
-            return restartStateFromModel;
         }
 
         private static XElement GetXmlForLimitedMemoryOption(bool limitMemory)

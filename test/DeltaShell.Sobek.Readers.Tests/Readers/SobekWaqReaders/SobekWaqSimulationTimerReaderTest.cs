@@ -63,7 +63,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no valid data was found")]
         public void ReadSimulationTimerFromSobek212ThrowsOnMismatchingFileFormat()
         {
             const string simulationTimerText = "  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock\r\n" +
@@ -72,18 +71,21 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
                                                "           1998/01/01-01:00:00 ; simulation end time\r\n" +
                                                "                             0 ; timestep constant\r\n"; // Time step value line is missing
 
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no valid data was found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no system clock format was found")]
         public void ReadSimulationTimerFromSobek212ThrowsOnMismatchingSystemClockFormat()
         {
             const string simulationTimerText = "  86400     DDHHMMSS DDHHMMSS  ; system clock\r\n" + // Invalid system clock format
@@ -92,19 +94,21 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
                                                "           1998/01/01-01:00:00 ; simulation end time\r\n" +
                                                "                             0 ; timestep constant\r\n" +
                                                "                     000010018 ; simulation timestep\r\n";
-
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no system clock format was found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no start time was found")]
         public void ReadSimulationTimerFromSobek212ThrowsOnMismatchingStartTimeFormat()
         {
             const string simulationTimerText = "  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock\r\n" +
@@ -113,19 +117,21 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
                                                "           1998/01/01-01:00:00 ; simulation end time\r\n" +
                                                "                             0 ; timestep constant\r\n" +
                                                "                     000010018 ; simulation timestep\r\n";
-
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no start time was found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no stop time was found")]
         public void ReadSimulationTimerFromSobek212ThrowsOnMismatchingStopTimeFormat()
         {
             const string simulationTimerText = "  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock\r\n" +
@@ -134,19 +140,21 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
                                                "                    1998/01/01 ; simulation end time\r\n" + // Invalid stop time format
                                                "                             0 ; timestep constant\r\n" +
                                                "                     000010018 ; simulation timestep\r\n";
-
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no stop time was found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no time step was found")]
         public void ReadSimulationTimerFromSobek212ThrowsOnTimeStepFormat()
         {
             const string simulationTimerText = "  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock\r\n" +
@@ -155,15 +163,19 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
                                                "           1998/01/01-01:00:00 ; simulation end time\r\n" +
                                                "                             0 ; timestep constant\r\n" +
                                                "                               ; simulation timestep\r\n"; // Invalid time step format
+            var error = Assert.Throws<FormatException>(() =>
+            {
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no time step was found", error.Message);
 
-            try
-            {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqSimulationTimerReader), "ParseSimulationTimerFromSobek212", new[] { simulationTimerText });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
         }
 
         # endregion

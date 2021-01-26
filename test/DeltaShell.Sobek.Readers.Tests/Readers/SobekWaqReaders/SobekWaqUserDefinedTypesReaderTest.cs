@@ -53,115 +53,139 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "Section [User Node Types] was not found")]
         public void ReadUserDefinedTypeDefinitionsFromSobek212MissingNodeSection()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutNodeSection(), true });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutNodeSection(), true });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("Section [User Node Types] was not found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "Section [User Branch Types] was not found")]
         public void ReadUserDefinedTypeDefinitionsFromSobek212MissingBranchSection()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutBranchSection(), false });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutBranchSection(), false });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("Section [User Branch Types] was not found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "'Number of Types=' was not found in section [User Node Types]")]
         public void ReadUserDefinedTypeDefinitionsFromSobek212MissingNumberOfTypes()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutNumberOfTypesInNodeSection(), true });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutNumberOfTypesInNodeSection(), true });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("'Number of Types=' was not found in section [User Node Types]", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "'1 ID=' was not found in section [User Node Types]")]
         public void ReadUserDefinedTypeDefinitionsFromSobek212MissingId()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutIdInNodeSection(), true });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutIdInNodeSection(), true });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("'1 ID=' was not found in section [User Node Types]", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "'1 Boundary 1=' was not found in section [User Node Types]")]
         public void ReadUserDefinedTypeDefinitionsFromSobek212MissingFractionType()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutFractionTypeInNodeSection(), true });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutFractionTypeInNodeSection(), true });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("'1 Boundary 1=' was not found in section [User Node Types]", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "'2 SurfaceWaterType=' was not found in section [User Branch Types]")]
         public void ReadUserDefinedTypeDefinitionsFromSobek212MissingSurfaceWaterType()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutSurfaceWaterTypeInBranchSection(), false });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutSurfaceWaterTypeInBranchSection(), false });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("'2 SurfaceWaterType=' was not found in section [User Branch Types]", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "'2 Number of boundaries=' was not found in section [User Branch Types]")]
         public void ReadUserDefinedTypeDefinitionsFromSobek212MissingNumberOfBoundaries()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutNumberOfBoundariesInBranchSection(), false });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutNumberOfBoundariesInBranchSection(), false });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("'2 Number of boundaries=' was not found in section [User Branch Types]", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "'2 Boundary 1=' was not found in section [User Branch Types]")]
         public void ReadUserDefinedTypeDefinitionsFromSobek212MissingFractionTypeInBranchSection()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutFractionTypeInBranchSection(), false });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqUserDefinedTypesReader), "ParseUserTypes", new object[] { GetTestFileWithoutFractionTypeInBranchSection(), false });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("'2 Boundary 1=' was not found in section [User Branch Types]", error.Message);
         }
 
         private static string GetValidTestFile()

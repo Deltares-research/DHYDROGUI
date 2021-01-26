@@ -22,11 +22,12 @@ namespace DeltaShell.NGHS.IO.Tests.Helpers
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Tried to replace a space in the name with '_', but an item with name 'sediment_1' is already present")]
         public void ReplacesSpacesInStringExceptionTest()
         {
             var names = new string[] { "sediment 1", "sediment_1" };
-            names.ReplaceSpacesInString();
+
+            var error = Assert.Throws<ArgumentException>(()=> names.ReplaceSpacesInString());
+            Assert.AreEqual("Tried to replace a space in the name with '_', but an item with name 'sediment_1' is already present", error.Message);
         }
     }
 }

@@ -120,19 +120,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         private IEnumerable GetInputItems(RealTimeControlModel rtcModel)
         {
-            yield return new TreeFolder(rtcModel, GetInitialConditions(rtcModel), "Initial Conditions", FolderImageType.None);
             yield return rtcModel.ControlGroups;
-        }
-
-        private IEnumerable GetInitialConditions(RealTimeControlModel rtcModel)
-        {
-            yield return rtcModel.GetDataItemByValue(rtcModel.RestartInput);
         }
 
         private static IEnumerable GetOutputItems(RealTimeControlModel model)
         {
-            yield return GetRestartFolder(model);
-
             foreach (var outputFeatureCoverage in model.OutputFeatureCoverages)
             {
                 yield return outputFeatureCoverage;
@@ -144,25 +136,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             {
                 yield return logItem;
             }
-        }
-
-        private static object GetRestartFolder(RealTimeControlModel model)
-        {
-            return new TreeFolder(model, GetRestartStates(model), "States", FolderImageType.None);
-        }
-
-        private static IEnumerable GetRestartStates(RealTimeControlModel model)
-        {
-            var restartStates = model.DataItems.Where(IsOutputRestartFile);
-            foreach (var restartState in restartStates)
-            {
-                yield return restartState;
-            }
-        }
-
-        private static bool IsOutputRestartFile(IDataItem dataItem)
-        {
-            return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
         }
 
         protected override bool CanRemove(RealTimeControlModel nodeData)

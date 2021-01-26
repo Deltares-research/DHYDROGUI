@@ -176,8 +176,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var data = boundCond.GetDataAtPoint(0);
             Assert.AreEqual(23, data.GetValues<double>().Count);
         }
-        [Test()]
-        [ExpectedException(typeof(ArgumentException))]
+
+        [Test]
         public void TestImportItemOnObjectThrowArgumentException()
         {
             var filePath = TestHelper.GetTestFilePath(@"BcmFiles\MorphologyBedLevelPrescribed.bcm");
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             };
             
             var myobject = new object();
-            importer.ImportItem(filePath, myobject);
+            Assert.Throws<ArgumentException>(() => importer.ImportItem(filePath, myobject));
         }
     }
 }

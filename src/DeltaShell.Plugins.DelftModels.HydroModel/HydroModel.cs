@@ -666,11 +666,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     {
                         Status = ActivityStatus.Done;
                     }
-                    if (Status != ActivityStatus.Done)
-                    {
-                        currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>().ForEach(m => m.WriteRestartFiles());
-                    }
-
                 }
                 catch (Exception e)
                 {
@@ -759,7 +754,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(m => m.CurrentTime = CurrentTime);
                 OnProgressChanged();
-                currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>().ForEach(m => m.PrepareRestart());
             }
             else
             {
@@ -834,7 +828,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             if (DoDimrRun() && dimrApi != null)
             {
                 dimrApi.Finish();
-                currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>().ForEach(m => m.FinalizeRestart());
             }
             else
             {
@@ -860,7 +853,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     CurrentWorkflowIsDimr.ConnectOutput(validPath);
                     CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
                 }
-                DimrRunner.ConnectDimrRunLogFile(this);
+                DimrRunner.ConnectDimrRunLogFile((IWorkDirectoryModel) this);
             }
         }
 
@@ -918,7 +911,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        public virtual Type SupportedRegionType { get { return typeof(HydroRegion); } }
+        public virtual string ExplicitWorkingDirectory { get; set; }
 
         [EditAction]
         private void OnHydroRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

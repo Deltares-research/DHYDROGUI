@@ -8,14 +8,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
     [TestFixture]
     public class WaterFlowModel1DBoundaryNodeDataBuilderTest
     {
-        private WaterFlowModel1DBoundaryNodeDataBuilder builder;
-
-        [TestFixtureSetUp]
-        public void FixtureSetup()
-        {
-            builder = new WaterFlowModel1DBoundaryNodeDataBuilder();
-        }
-
         [Test]
         public void TestQh()
         {

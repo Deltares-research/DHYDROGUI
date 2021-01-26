@@ -26,13 +26,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
         {
             return CompositeStructureViewDataBuilder.GetCompositeStructureViewDataForStructure(structure);
         }
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.ConfigureLogging();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             LogHelper.ResetLogging();

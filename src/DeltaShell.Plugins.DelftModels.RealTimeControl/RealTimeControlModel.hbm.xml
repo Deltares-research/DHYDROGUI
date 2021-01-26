@@ -15,10 +15,6 @@
       </list>
       <property name="LimitMemory" column="limit_memory"/>
       
-      <property name="UseSaveStateTimeRange" />
-      <property name="SaveStateStartTime" />
-      <property name="SaveStateStopTime" />
-      <property name="SaveStateTimeStep" />
       <property name="CoordinateSystem" column="coordinate_system" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis"/>
       <many-to-one name="OutputFileFunctionStore" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.RealTimeControlOutputFileFunctionStore, DeltaShell.Plugins.DelftModels.RealTimeControl"/>
     </joined-subclass>

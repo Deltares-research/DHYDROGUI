@@ -1,11 +1,12 @@
 ﻿using System;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Validation;
 
 namespace DeltaShell.Dimr
 {
-    public interface IDimrModel : IModel
+    public interface IDimrModel : IWorkDirectoryModel
     {
         string LibraryName { get; }
 

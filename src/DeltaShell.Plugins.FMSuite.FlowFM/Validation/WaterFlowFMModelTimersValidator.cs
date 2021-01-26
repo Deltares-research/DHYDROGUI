@@ -51,11 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Model start time should be the same as reference time when running in parallel with other models", new FmValidationShortcut { FlowFmModel = model as WaterFlowFMModel, TabName = "Time Frame" });
             }
 
-            if (waterFlowFmModel.WriteRestart && waterFlowFmModel.SaveStateTimeStep.Ticks == 0)
-            {
-                yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, "Restart time interval should be strictly positive if write restart is true");
-            }
-
             var issues = new[]
                 {
                     CreateMultipleOfModelTimeStepIssue(waterFlowFmModel, GuiProperties.HisOutputDeltaT, "His output"),

@@ -22,11 +22,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.XmlValidation
             Assert.IsTrue(validator.IsValid(@"XmlValidation\XMLTest.xml"));
         }
 
-        [Test, ExpectedException(typeof(XmlException))]
+        [Test]
         public void TestThatXmlIsInvalidatedBySuppliedSchemaThrowsException()
         {
-            var validator = new Validator(new List<string> {@"XmlValidation\XMLValidationTest.xsd"});
-            validator.Validate(@"XmlValidation\XMLTestFail.xml");
+            var validator = new Validator(new List<string> { @"XmlValidation\XMLValidationTest.xsd" });
+
+            Assert.Throws<XmlException>(() =>
+            {
+                validator.Validate(@"XmlValidation\XMLTestFail.xml");
+            });
         }
 
         [Test]

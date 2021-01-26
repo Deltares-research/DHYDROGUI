@@ -12,14 +12,14 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
     [Category(TestCategory.DataAccess)]
     public class SobekWaqBoundaryConditionsReaderTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.ConfigureLogging();
             LogHelper.SetLoggingLevel(Level.Info);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             LogHelper.ResetLogging();

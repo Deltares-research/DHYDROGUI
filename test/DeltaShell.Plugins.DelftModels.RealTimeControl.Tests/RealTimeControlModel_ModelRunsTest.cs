@@ -2930,38 +2930,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var stateExportFile = Path.Combine(rtcRunDir, RealTimeControlXMLFiles.XmlExportState);
             Assert.IsTrue(File.Exists(stateExportFile));
         }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        public void RealTimeControlModelCanProduceStateFiles()
-        {
-            var rtcRunDir = Path.Combine(Environment.CurrentDirectory, "realTimeControlModelCanProduceStateFile");
-            FileUtils.DeleteIfExists(rtcRunDir);
-            Directory.CreateDirectory(rtcRunDir);
-            Assert.IsTrue(Directory.Exists(rtcRunDir));
-
-            ControlledTestModel controlledModel;
-            RealTimeControlModel realTimeControlModel;
-
-            RealTimeControlTestHelper.SetupControlledTestModel(out controlledModel, out realTimeControlModel);
-            RealTimeControlTestHelper.SetupHydraulicRuleControlGroup(controlledModel, realTimeControlModel, true);
-            realTimeControlModel.ExplicitWorkingDirectory = rtcRunDir;
-
-            // Setup model to generate statefiles            
-            realTimeControlModel.WriteRestart = true;
-            realTimeControlModel.UseSaveStateTimeRange = true; // Use below fields (otherwise state is only written at end of run)
-            realTimeControlModel.SaveStateStartTime = realTimeControlModel.StartTime;
-            realTimeControlModel.SaveStateStopTime = realTimeControlModel.StopTime;
-            realTimeControlModel.SaveStateTimeStep = realTimeControlModel.TimeStep;
-
-            // Run the models
-            ActivityRunner.RunActivity(controlledModel);
-            ActivityRunner.RunActivity(realTimeControlModel);
-
-            Assert.AreEqual(6, realTimeControlModel.GetRestartOutputStates().Count());
-        }
-
         #endregion
-
     }
 }

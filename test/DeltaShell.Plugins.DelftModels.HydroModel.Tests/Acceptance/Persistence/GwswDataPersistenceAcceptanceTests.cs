@@ -3,6 +3,7 @@ using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using NUnit.Framework;
+using System.Threading;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             //new object[] {"Eindhoven", 16529, 16131} Hangs on buildserver because of timeout
         };
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             acceptanceModelsDirectory = TestHelper.GetTestFilePath(@"AcceptanceModels\GWSW");

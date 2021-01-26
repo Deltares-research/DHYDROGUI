@@ -78,10 +78,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), UserMessage = "Value must be a ParallelActivity")]
         public void ThrowWhenAssigningIncompatibleActivity()
         {
-            var shape = new ParallelActivityShape(null) {Activity = ActivityShapeTestHelper.CreateSimpleActivity()};
+            var error = Assert.Throws<ArgumentException>(() =>
+            {
+                var shape = new ParallelActivityShape(null) { Activity = ActivityShapeTestHelper.CreateSimpleActivity() };
+            });
+            Assert.AreEqual("Value must be a ParallelActivity", error.Message);
         }
     }
 }

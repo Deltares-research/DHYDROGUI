@@ -58,10 +58,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.TimeStep = new TimeSpan(0, 0, 30);
             model.OutputTimeStep = new TimeSpan(0, 0, 30);
 
-            model.SaveStateStartTime = model.StartTime;
-            model.SaveStateStopTime = model.StopTime;
-            model.SaveStateTimeStep = model.OutputTimeStep;
-
             // set boundary conditions
 
             var boundaryInFlow = new Feature2D { Name = "left", Geometry = new LineString(new[] { new Coordinate(0, 5), new Coordinate(0, 0) }) };

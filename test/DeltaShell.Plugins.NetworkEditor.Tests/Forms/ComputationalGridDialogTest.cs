@@ -17,13 +17,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
         private static bool CGWUseFixedLength = false;
         private static double CGWFixedLength = 100;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.ConfigureLogging();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             LogHelper.ResetLogging();

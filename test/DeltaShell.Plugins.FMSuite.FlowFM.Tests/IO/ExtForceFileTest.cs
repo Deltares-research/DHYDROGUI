@@ -430,8 +430,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Check SedConc has generated only one Xyz File and one entry in the Ext file
                  * for SedConc but not for CustomProp.       */
                 var extWritten = File.ReadAllText(extForceFile);
-                Assert.That(extWritten, Is.StringContaining("QUANTITY=initialsedfracmysedimentName"));
-                Assert.That(extWritten, Is.StringContaining("FILENAME=mysedimentName_SedConc.xyz"));
+                Assert.That(extWritten.Contains("QUANTITY=initialsedfracmysedimentName"));
+                Assert.That(extWritten.Contains("FILENAME=mysedimentName_SedConc.xyz"));
                 /* Nothing related to the customProp */
                 Assert.That(extWritten, Is.Not.StringContaining("mysedimentName_IniSedThick"));
                 Assert.That(extWritten, Is.Not.StringContaining("IniSedThick"));

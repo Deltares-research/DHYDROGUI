@@ -393,12 +393,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             }
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            ClearNetworkFeatures();
-
-            Network = null;
-            base.Dispose();
+            if (disposing)
+            {
+                ClearNetworkFeatures();
+                Network = null;
+            }
+            
+            base.Dispose(disposing);
         }
     }
 }

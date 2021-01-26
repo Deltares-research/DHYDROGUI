@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var betaWarningIssue = morReport.GetAllIssuesRecursive().FirstOrDefault(i => i.Severity == ValidationSeverity.Warning);
             Assert.IsNotNull(betaWarningIssue);
 
-            Assert.That(betaWarningIssue.Message, Is.StringContaining("Morphology is beta version"));
+            Assert.That(betaWarningIssue.Message.Contains("Morphology is beta version"));
         }
 
         [Test]

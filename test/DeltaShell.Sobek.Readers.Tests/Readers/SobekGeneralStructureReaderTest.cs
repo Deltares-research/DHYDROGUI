@@ -9,7 +9,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
     {
         private SobekGeneralStructureReader reader;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             reader = new SobekGeneralStructureReader(SobekType.Unknown);

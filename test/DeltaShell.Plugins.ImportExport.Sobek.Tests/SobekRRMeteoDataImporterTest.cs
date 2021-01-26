@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             }
         }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             ImportTholenCase29(); //takes time!

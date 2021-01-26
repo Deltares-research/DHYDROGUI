@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 
         // TODO: tried to un-mute these tests, still having trouble when running on build server (better luck next time)
 
-        [Test, RequiresMTA, Timeout(MaxTimeOut)]
+        [Test, Apartment(ApartmentState.MTA), Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
         [Category("ToCheck")]
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 RgfGridEditor.OpenGrid(model.NetFilePath));
         }
 
-        [Test, RequiresMTA, Timeout(MaxTimeOut)]
+        [Test, Apartment(ApartmentState.MTA), Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
         [Category("ToCheck")]
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 RgfGridEditor.OpenGrid(model.NetFilePath, true, new string[0]));
         }
 
-        [Test, RequiresMTA, Timeout(MaxTimeOut)]
+        [Test, Apartment(ApartmentState.MTA), Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
         [Category("ToCheck")]
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 RgfGridEditor.OpenGrid(model.NetFilePath, false, new[] {TestHelper.GetTestFilePath(@"harlingen\Harlingen_haven.ldb")}));
         }
 
-        [Test, RequiresMTA]
+        [Test, Apartment(ApartmentState.MTA)]
         [Category(TestCategory.Slow)]
         public void GeneratePolygonsForEmbankments()
         {
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             Assert.AreEqual(12, grid.Edges.Count); // 12 new rows. 
         }
 
-        [Test, RequiresMTA]
+        [Test, Apartment(ApartmentState.MTA)]
         [Category(TestCategory.Slow)]
         public void GenerateAnExtraGrid()
         {

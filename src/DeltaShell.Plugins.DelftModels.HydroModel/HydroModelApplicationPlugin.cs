@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -9,6 +11,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
@@ -70,6 +73,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaving -= ApplicationProjectSaving;
                     Application.ProjectSaved -= ApplicationProjectSavedOrFailed;
                     Application.ProjectSaveFailed -= ApplicationProjectSavedOrFailed;
+
+                    Application.HybridProjectRepository.ProjectOpened -= HybridProjectRepository_ProjectOpened;
+                    Application.HybridProjectRepository.ProjectSaving -= HybridProjectRepository_ProjectOpened;
                 }
                 
                 base.Application = value;
@@ -80,7 +86,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaving += ApplicationProjectSaving;
                     Application.ProjectSaveFailed += ApplicationProjectSavedOrFailed;
                     Application.ProjectSaved += ApplicationProjectSavedOrFailed;
-                    //Application.ProjectDataDirectory
+
+                    Application.HybridProjectRepository.ProjectOpened += HybridProjectRepository_ProjectOpened;
+                    Application.HybridProjectRepository.ProjectSaving += HybridProjectRepository_ProjectOpened;
                 }
             }
         }
@@ -225,6 +233,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new DHydroConfigXmlExporter();
+        }
+
+        private void HybridProjectRepository_ProjectOpened(object sender, EventArgs e)
+        {
+            if (Application.ProjectDataDirectory == null) return;
+
+            // CreateWorkingDirectories (old DeltaShell logic)
+            if (FileUtils.PathIsRelative(Application.ProjectDataDirectory))
+            {
+                throw new InvalidDataException("ProjectDataDirectory should be absolute path");
+            }
+
+            foreach (var m in Application.Project.GetAllItemsRecursive().OfType<IWorkDirectoryModel>())
+            {
+                var explicitWorkingDirectory = Application.ProjectDataDirectory + Path.DirectorySeparatorChar +
+                                               m.Name.Replace(' ', '_') + "_output";
+
+                m.ExplicitWorkingDirectory = explicitWorkingDirectory;
+                FileUtils.CreateDirectoryIfNotExists(explicitWorkingDirectory);
+            }
         }
 
         private void InitializeModelBuilder()

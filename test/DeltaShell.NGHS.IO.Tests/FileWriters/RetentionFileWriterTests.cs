@@ -226,7 +226,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         }
 
         [Test]
-        [ExpectedException(typeof(FileWritingException))]
         public void TestRetentionFileWriterThrowsErrorBecauseOfWrongInterpolationType()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1, true);
@@ -250,11 +249,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                     Data = data
                 },
             };
-            RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions);
+
+            Assert.Throws<FileWritingException>(() =>
+                RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions));
         }
 
         [Test]
-        [ExpectedException(typeof(FileWritingException))]
         public void TestRetentionFileWriterThrowsErrorBecauseOfWrongLevelsType()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1, true);
@@ -278,11 +278,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                     Data = data
                 },
             };
-            RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions);
+
+            Assert.Throws<FileWritingException>(() =>
+                RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions));
         }
 
         [Test]
-        [ExpectedException(typeof(FileWritingException))]
         public void TestRetentionFileWriterThrowsErrorBecauseOfWrongStorageType()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1, true);
@@ -306,7 +307,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                     Data = data
                 },
             };
-            RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions);
+
+            Assert.Throws<FileWritingException>(() =>
+                RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions));
         }
 
 

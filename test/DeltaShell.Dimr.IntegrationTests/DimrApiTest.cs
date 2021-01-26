@@ -46,7 +46,8 @@ namespace DeltaShell.Dimr.IntegrationTests
                 }
             }
         }
-        [Ignore]
+
+        [Ignore("Needs to be checked")]
         [Test]
         [Category("ToCheck")]
         public void GivenDimrApiWhenUpdateThenNoExceptionThrown()
@@ -65,7 +66,8 @@ namespace DeltaShell.Dimr.IntegrationTests
                 }
             }
         }
-        [Ignore]
+
+        [Ignore("Needs to be checked")]
         [Test]
         [Category("ToCheck")]
         public void GivenDimrApiWhenFinalizeThenNoExceptionThrown()

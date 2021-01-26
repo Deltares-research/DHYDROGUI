@@ -628,6 +628,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             return null;
         }
 
+        public void ClearOutput(bool forceClean = false)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual void ClearOutput()
         {
             linkCoverages = new List<FeatureCoverage>();
@@ -640,8 +645,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public virtual object Owner { get; set; }
         public virtual bool IsCopyable { get { return false; } }
         public virtual bool OutputOutOfSync { get; set; }
+        public IHydroRegion Region { get; }
+        public bool FileBasedModelIsLoaded { get; }
         public virtual string ExplicitWorkingDirectory { get; set; }
         public virtual bool SuspendClearOutputOnInputChange { get; set; }
+        public bool SuspendMarkOutputOutOfSyncOnInputChange { get; set; }
+        public bool CanRun { get; }
 
         #endregion
     }

@@ -83,10 +83,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 MorphologyFile.Save(morFile, modelDefinition);
                 var morWritten = File.ReadAllText(morFile);
-                Assert.That(morWritten, Is.StringContaining(MorphologyFile.GeneralHeader));
-                Assert.That(morWritten, Is.StringContaining(MorphologyFile.Header));
-                Assert.That(morWritten, Is.StringContaining("myprop"));
-                Assert.That(morWritten, Is.StringContaining("801"));
+                Assert.IsTrue(morWritten.Contains(MorphologyFile.GeneralHeader));
+                Assert.IsTrue(morWritten.Contains(MorphologyFile.Header));
+                Assert.IsTrue(morWritten.Contains("myprop"));
+                Assert.IsTrue(morWritten.Contains("801"));
             }
             finally
             {
@@ -134,18 +134,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 MorphologyFile.Save(morFile, modelDefinition);
 
                 var morWritten = File.ReadAllText(morFile);
-                Assert.That(morWritten, Is.StringContaining("[" + MorphologyFile.GeneralHeader + "]"));
-                Assert.That(morWritten, Is.StringContaining("[" + MorphologyFile.Header + "]"));
-                Assert.That(morWritten, Is.StringContaining("myprop"));
-                Assert.That(morWritten, Is.StringContaining("801"));
-                Assert.That(morWritten, Is.StringContaining(MorphologyFile.BcFile));
-                Assert.That(morWritten, Is.StringContaining(modelDefinition.ModelName + BcmFile.Extension));
-                Assert.That(morWritten, Is.StringContaining(modelDefinition.ModelName + BcmFile.Extension));
-                Assert.That(morWritten, Is.StringContaining("[" + MorphologyFile.BoundaryHeader + "]"));
-                Assert.That(morWritten, Is.StringContaining(MorphologyFile.BoundaryName));
-                Assert.That(morWritten, Is.StringContaining(boundary.Name));
-                Assert.That(morWritten, Is.StringContaining(MorphologyFile.BoundaryBedCondition));
-                Assert.That(morWritten, Is.StringContaining("= " + (int)BoundaryConditionQuantityTypeConverter.ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)));
+                Assert.IsTrue(morWritten.Contains("[" + MorphologyFile.GeneralHeader + "]"));
+                Assert.IsTrue(morWritten.Contains("[" + MorphologyFile.Header + "]"));
+                Assert.IsTrue(morWritten.Contains("myprop"));
+                Assert.IsTrue(morWritten.Contains("801"));
+                Assert.IsTrue(morWritten.Contains(MorphologyFile.BcFile));
+                Assert.IsTrue(morWritten.Contains(modelDefinition.ModelName + BcmFile.Extension));
+                Assert.IsTrue(morWritten.Contains(modelDefinition.ModelName + BcmFile.Extension));
+                Assert.IsTrue(morWritten.Contains("[" + MorphologyFile.BoundaryHeader + "]"));
+                Assert.IsTrue(morWritten.Contains(MorphologyFile.BoundaryName));
+                Assert.IsTrue(morWritten.Contains(boundary.Name));
+                Assert.IsTrue(morWritten.Contains(MorphologyFile.BoundaryBedCondition));
+                Assert.IsTrue(morWritten.Contains("= " + (int)BoundaryConditionQuantityTypeConverter.ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)));
 
 
             }

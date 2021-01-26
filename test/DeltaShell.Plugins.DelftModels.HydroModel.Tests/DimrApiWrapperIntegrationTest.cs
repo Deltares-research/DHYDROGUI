@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [Category(TestCategory.Integration)]
     public class DimrApiWrapperIntegrationTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixture()
         {
             LogHelper.ConfigureLogging(Level.Error);
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             ScriptHost.AdditionalSearchPaths.Clear();

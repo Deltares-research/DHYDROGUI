@@ -133,27 +133,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void DoNotSupportNoneExtrapolation()
         {
-            new TimeRule
+            Assert.Throws<ArgumentException>(() => new TimeRule
             {
                 Name = "test",
                 InterpolationOptionsTime = InterpolationType.Linear,
                 Periodicity = ExtrapolationType.None
-            };
+            });
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void DoNotSupportLinearExtrapolation()
         {
-            new TimeRule
+            Assert.Throws<ArgumentException>(() =>
             {
-                Name = "test",
-                InterpolationOptionsTime = InterpolationType.Linear,
-                Periodicity = ExtrapolationType.Linear
-            };
+                new TimeRule
+                {
+                    Name = "test",
+                    InterpolationOptionsTime = InterpolationType.Linear,
+                    Periodicity = ExtrapolationType.Linear
+                };
+            });
         }
     }
 

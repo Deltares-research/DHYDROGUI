@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
-        [Ignore] // no priority
+        [Ignore("no priority")] 
         [Category(TestCategory.WorkInProgress)] // See TOOLS-20091
         public void Conveyance2DOutOfRangeYieldsValidationError()
         {

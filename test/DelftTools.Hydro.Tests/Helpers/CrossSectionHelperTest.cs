@@ -69,7 +69,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             IGeometry geometry = CrossSectionHelper.CreatePerpendicularGeometry(branchGeometry, 30, 30);
             // The expected length of the geometry is the maximum of the totalwidth
             Assert.AreEqual(30.0, geometry.Length, 1.0e-6);
-            Assert.IsInstanceOfType(typeof(LineString), geometry);
+            Assert.IsInstanceOf<LineString>(geometry);
             Assert.AreEqual(2, geometry.Coordinates.Length);
         }
 

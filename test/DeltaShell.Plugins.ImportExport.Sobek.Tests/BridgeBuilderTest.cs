@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
     [TestFixture]
     public class BridgeBuilderTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             BuildBridgeWithBedLevelTest206b(); // remove overhead from test timings

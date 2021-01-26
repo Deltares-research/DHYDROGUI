@@ -25,10 +25,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
     [Category(TestCategory.Slow)]
     public class NHibernateRealTimeControlIntegrationTests : NHibernateIntegrationTestBase
     {
-        [TestFixtureSetUp]
-        public override void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
             factory.AddPlugin(new RealTimeControlGuiPlugin());
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
             factory.AddPlugin(new RealTimeControlApplicationPlugin());
@@ -53,27 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.NotNull(retrievedEntity.OutputFileFunctionStore);
             Assert.AreEqual(rtcModel.OutputFileFunctionStore.Path, retrievedEntity.OutputFileFunctionStore.Path);
         }
-
-        [Test]
-        public void SaveAndLoadProjectWithRtcModel()
-        {
-            var rtcModel = new RealTimeControlModel("testingRTCModel")
-                {
-                    UseSaveStateTimeRange = true,
-                    SaveStateStartTime = new DateTime(2012, 1, 1),
-                    SaveStateTimeStep = new TimeSpan(1, 0, 0),
-                    SaveStateStopTime = new DateTime(2012, 1, 3)
-                };
-
-            var retrievedEntity = SaveAndRetrieveObject(rtcModel);
-
-            Assert.IsNotNull(retrievedEntity);
-            Assert.AreEqual(rtcModel.UseSaveStateTimeRange, retrievedEntity.UseSaveStateTimeRange);
-            Assert.AreEqual(rtcModel.SaveStateStartTime, retrievedEntity.SaveStateStartTime);
-            Assert.AreEqual(rtcModel.SaveStateTimeStep, retrievedEntity.SaveStateTimeStep);
-            Assert.AreEqual(rtcModel.SaveStateStopTime, retrievedEntity.SaveStateStopTime);
-        }
-
+        
         [Test]
         public void SaveAndLoadProjectWithRtcModelControlGroup()
         {
@@ -284,7 +264,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             var retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateDirectionalCondition(null));
             Assert.IsNotNull(retrievedEntity);
-            Assert.IsInstanceOfType(typeof(DirectionalCondition), retrievedEntity);
+            Assert.IsInstanceOf<DirectionalCondition>(retrievedEntity);
             Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfConditions(RealTimeControlTestHelper.GenerateDirectionalCondition(null), retrievedEntity));
         }
 

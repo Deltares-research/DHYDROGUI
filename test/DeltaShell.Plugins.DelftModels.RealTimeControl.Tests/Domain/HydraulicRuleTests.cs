@@ -245,14 +245,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void DoNotSupportNoneInterpolation()
         {
-            new HydraulicRule()
+            Assert.Throws<ArgumentException>(() =>
             {
-                Name = "test",
-                Interpolation = InterpolationType.None
-            };
+                new HydraulicRule
+                {
+                    Name = "test",
+                    Interpolation = InterpolationType.None
+                };
+            });
         }
 
     }

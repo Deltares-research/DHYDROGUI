@@ -190,12 +190,13 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException),ExpectedMessage = "XYZ definitions can not be shared")]
         public void CrossSectionWithXYZDefinitionCanNotShareDefiniton()
         {
             var crossSectionDefinitionXYZ = new CrossSectionDefinitionXYZ();
             var crossSection = new CrossSection(crossSectionDefinitionXYZ);
-            crossSection.ShareDefinitionAndChangeToProxy();
+
+            var error = Assert.Throws<InvalidOperationException>(() => crossSection.ShareDefinitionAndChangeToProxy());
+            Assert.AreEqual("XYZ definitions can not be shared", error.Message);
         }
 
         [Test]

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         private INetworkCoverage route;
         private NetworkLocation location1, location2;
         private ICrossSection cs1, cs2;
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetup()
         {
             // create network
@@ -70,18 +70,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void BuilderThrowsExceptionWhenRouteIsNull()
         {
-            Route route = null;
-            BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(route);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                Route route = null;
+                BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(route);
+            });
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void BuilderThrowsExceptionWhenNetworkIsEmpty()
         {
-            BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(new NetworkCoverage());
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(new NetworkCoverage());
+            });
         }
 
         [Test]

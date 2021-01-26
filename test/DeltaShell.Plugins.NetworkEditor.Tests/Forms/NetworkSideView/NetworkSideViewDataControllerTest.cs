@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
     [TestFixture]
     public class NetworkSideViewDataControllerTest
     {
-        [Test, ExpectedException(ExpectedException = typeof(InvalidOperationException), ExpectedMessage = "Network of added spatial data does not match network of the route.")]
+        [Test]
         public void TestAddingCoverageWithoutNetwork()
         {
             var route = new Route {Network = new HydroNetwork()};
@@ -26,27 +26,39 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             var networkCoverage = new NetworkCoverage("Coverage", true);
             Assert.IsNull(networkCoverage.Network);
 
-            dataController.AddRenderedCoverage(networkCoverage);
+            var error = Assert.Throws<InvalidOperationException>(() =>
+            {
+                dataController.AddRenderedCoverage(networkCoverage);
+            });
+            Assert.AreEqual("Network of added spatial data does not match network of the route.", error.Message);
         }
 
-        [Test, ExpectedException(ExpectedException = typeof(InvalidOperationException), ExpectedMessage = "Network of added spatial data does not match network of the route.")]
+        [Test]
         public void TestAddingCoverageWithDifferentNetwork()
         {
             var route = new Route { Network = new HydroNetwork() };
             var dataController = new NetworkSideViewDataController(route, null, null);
             var networkCoverage = new NetworkCoverage("Coverage", true) {Network = new HydroNetwork()};
-            
-            dataController.AddRenderedCoverage(networkCoverage);
+
+            var error = Assert.Throws<InvalidOperationException>(() =>
+            {
+                dataController.AddRenderedCoverage(networkCoverage);
+            });
+            Assert.AreEqual("Network of added spatial data does not match network of the route.", error.Message);
         }
 
-        [Test, ExpectedException(ExpectedException = typeof(InvalidOperationException), ExpectedMessage = "Network spatial data not known in sideview data.")]
+        [Test]
         public void TestAddingCoverageThatIsNotInAllNetworkCoverages()
         {
             var hydroNetwork = new HydroNetwork();
             var dataController = new NetworkSideViewDataController(new Route { Network = hydroNetwork }, null, null);
             var networkCoverage = new NetworkCoverage("Coverage", true) { Network = hydroNetwork };
 
-            dataController.AddRenderedCoverage(networkCoverage);
+            var error = Assert.Throws<InvalidOperationException>(() =>
+            {
+                dataController.AddRenderedCoverage(networkCoverage);
+            });
+            Assert.AreEqual("Network spatial data not known in sideview data.", error.Message);
         }
 
         [Test]

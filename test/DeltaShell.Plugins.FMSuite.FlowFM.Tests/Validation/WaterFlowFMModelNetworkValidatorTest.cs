@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreSame(testCaseData.ExpectedSubject(hydroNetwork), issue.Subject);
         }
 
-        private IEnumerable<InvalidCompartmentTestCaseData> InvalidCompartmentTestCaseSource
+        private static IEnumerable<InvalidCompartmentTestCaseData> InvalidCompartmentTestCaseSource
         {
             get
             {

@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
     [Category(TestCategory.Slow)]
     public class BoundaryConditionIntegrationTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetMapCoordinateSystemFactory()
         {
             if (Map.CoordinateSystemFactory == null)

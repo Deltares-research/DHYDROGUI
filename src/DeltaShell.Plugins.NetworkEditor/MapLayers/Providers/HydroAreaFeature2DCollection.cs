@@ -53,9 +53,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             }
         }
         
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(disposing);
             Area2D = null;
         }
 

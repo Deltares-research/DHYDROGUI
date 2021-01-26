@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         private MeteoDataExporter exporter;
         private RainfallRunoffModel rainfallRunoffModel;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void setup()
         {
             exporter = new MeteoDataExporter();

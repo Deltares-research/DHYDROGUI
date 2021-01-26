@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         }
 
         [Test]
-        [Ignore]
+        [Ignore("Needs to be checked")]
         [Category("ToCheck")]
         public void SideViewFunctionCanGoAndComeBack()
         {

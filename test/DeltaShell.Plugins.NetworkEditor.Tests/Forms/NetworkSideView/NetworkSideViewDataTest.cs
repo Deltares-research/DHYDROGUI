@@ -273,14 +273,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
                                                  });
         }
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void AddingCoverageOfWrongNetworkThrowsException()
         {
             var data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
 
             var newCoverage = new NetworkCoverage {Network = new Network()};
             //should throw an exception since the network does not match the network of the route
-            data.AddRenderedCoverage(newCoverage);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                data.AddRenderedCoverage(newCoverage);
+            });
         }
 
         [Test]

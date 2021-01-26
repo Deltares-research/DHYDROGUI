@@ -50,7 +50,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Z must be unique.")]
         public void ZConstraintWorksAfterLevelShift()
         {
             var crossSection = new CrossSectionDefinitionZW();
@@ -63,8 +62,8 @@ namespace DelftTools.Hydro.Tests
             crossSection.ShiftLevel(0);
 
             //change the first row to 6..this should cause a constraint exception
-            crossSection.ZWDataTable[0].Z = 6;
-
+            var error = Assert.Throws<ArgumentException>(()=> crossSection.ZWDataTable[0].Z = 6);
+            Assert.AreEqual("Z must be unique.", error.Message);
         }
 
         [Test]
@@ -89,16 +88,15 @@ namespace DelftTools.Hydro.Tests
         }
         
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Storage Width cannot exceed Total Width.")]
         public void StorageWidthMustBeLessThanNormalWidthAdd()
         {
             var crossSection = new CrossSectionDefinitionZW();
 
-            crossSection.ZWDataTable.AddCrossSectionZWRow(20, 200, 400); //exception
+            var error = Assert.Throws<ArgumentException>(() => crossSection.ZWDataTable.AddCrossSectionZWRow(20, 200, 400));
+            Assert.AreEqual("Storage Width cannot exceed Total Width.", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Storage Width cannot exceed Total Width.")]
         public void StorageWidthMustBeLessThanNormalWidthEdit()
         {
             var crossSection = new CrossSectionDefinitionZW();
@@ -108,7 +106,8 @@ namespace DelftTools.Hydro.Tests
             crossSection.ZWDataTable.AddCrossSectionZWRow(15, 150, 40);
             crossSection.ZWDataTable.AddCrossSectionZWRow(10, 100, 40);
 
-            crossSection.ZWDataTable[1].StorageWidth = 300.0; //exception
+            var error = Assert.Throws<ArgumentException>(() => crossSection.ZWDataTable[1].StorageWidth = 300.0);
+            Assert.AreEqual("Storage Width cannot exceed Total Width.", error.Message);
         }
 
         [Test]

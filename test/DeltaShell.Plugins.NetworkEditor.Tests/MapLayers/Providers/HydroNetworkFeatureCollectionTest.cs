@@ -14,16 +14,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
     public class HydroNetworkFeatureCollectionTest
     {
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Type 'System.Int32' is not a IFeature.")]
         public void ThrowExceptionWithImpossibleFeatureType()
         {
-            var channelFeatureCollection = new HydroNetworkFeatureCollection
-                                              {
-                                                  
-                                                  FeatureType = typeof(int)
-                                              };
-            
+            var error = Assert.Throws<ArgumentException>(() =>
+            {
+                var channelFeatureCollection = new HydroNetworkFeatureCollection
+                {
+                    FeatureType = typeof(int)
+                };
+            });
+            Assert.AreEqual("Type 'System.Int32' is not a IFeature.", error.Message);
         }
+
         [Test]
         public void AssertThatCompartmentsOnNetworkAreEquivalentButNotSameAsCompartmentsFromManholeOfTypeCompartment()
         {
@@ -185,7 +187,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException))]
         public void GivenPumpHydroNetworkFeatureCollection_WhenInsertingPumpInFeatureCollection_ThenNotSupportedExceptionIsThrown()
         {
             var network = new HydroNetwork();
@@ -194,7 +195,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
 
             Assert.That(network.Pumps.Count, Is.EqualTo(1));
-            hydroNodeFeatureCollection.Features.Insert(0, new Pump());
+            Assert.Throws<NotSupportedException>(() => hydroNodeFeatureCollection.Features.Insert(0, new Pump()));
         }
 
         #endregion
@@ -228,7 +229,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException))]
         public void GivenPumpHydroNetworkFeatureCollection_WhenReplacingPumpInFeatureCollection_ThenNotSupportedExceptionIsThrown()
         {
             var network = new HydroNetwork();
@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
 
             Assert.That(network.Pumps.Count, Is.EqualTo(1));
-            hydroNodeFeatureCollection.Features[0] = new Pump("ReplacingPump");
+            Assert.Throws<NotSupportedException>(() => hydroNodeFeatureCollection.Features[0] = new Pump("ReplacingPump"));
         }
 
         #endregion

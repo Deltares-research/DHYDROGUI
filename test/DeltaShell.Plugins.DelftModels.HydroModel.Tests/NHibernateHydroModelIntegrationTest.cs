@@ -25,9 +25,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [Category(TestCategory.Slow)]
     public class NHibernateHydroModelIntegrationTest : NHibernateIntegrationTestBase
     {
-        public override void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public override void OneTimeSetUp()
         {
-            base.TestFixtureSetUp();
+            base.OneTimeSetUp();
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
             factory.AddPlugin(new HydroModelApplicationPlugin());
             factory.AddPlugin(new RainfallRunoffApplicationPlugin());

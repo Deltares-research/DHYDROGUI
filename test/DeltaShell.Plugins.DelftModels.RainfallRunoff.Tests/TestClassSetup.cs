@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
     [SetUpFixture]
     public class TestClassSetup
     {
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDownWpfGuiAndWorkerThread()
         {
             // Ensure shut down of background thread to ensure no COM errors are thrown.

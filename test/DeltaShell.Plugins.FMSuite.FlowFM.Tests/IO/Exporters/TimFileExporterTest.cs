@@ -23,13 +23,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         private TimFileExporter exporter;
         private string tempDir;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetupFixture()
         {
             tempDir = FileUtils.CreateTempDirectory();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TeardownFixture()
         {
             FileUtils.DeleteIfExists(tempDir);

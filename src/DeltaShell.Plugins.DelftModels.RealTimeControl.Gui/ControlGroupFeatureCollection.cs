@@ -121,12 +121,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            EditableObjectRefresh = null;
+            if (disposing)
+            {
+                EditableObjectRefresh = null;
+                controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
+            }
 
-            controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
-            base.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

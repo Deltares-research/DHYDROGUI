@@ -27,17 +27,22 @@ namespace DelftTools.Hydro.Tests
             Assert.AreEqual(0, profile.Count());
             Assert.AreEqual(0, flowProfile.Count());
         }
-        
+
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Y' must be unique.")]
         public void AddNonUniqueTable()
         {
             var crossSection = new CrossSectionDefinitionYZ();
-            crossSection.BeginEdit(new DefaultEditAction("Set YZ data"));
-            crossSection.YZDataTable.AddCrossSectionYZRow(0.0, 1.0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0);
-            crossSection.EndEdit();
+
+            var error = Assert.Throws<ArgumentException>(() =>
+            {
+                crossSection.BeginEdit(new DefaultEditAction("Set YZ data"));
+                crossSection.YZDataTable.AddCrossSectionYZRow(0.0, 1.0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0);
+                crossSection.EndEdit();
+            });
+
+            Assert.AreEqual("Y' must be unique.", error.Message);
         }
 
         [Test]
@@ -50,7 +55,7 @@ namespace DelftTools.Hydro.Tests
                                     Geometry = new LineString(new []{new Coordinate(0,0),new Coordinate(100,0)})
                                 };
             
-            var geometry = crossSection.GetGeometry(new CrossSection {Branch = branch, Chainage = 20.0});
+            var geometry = crossSection.GetGeometry(new CrossSection (new CrossSectionDefinitionXYZ()) {Branch = branch, Chainage = 20.0});
             Assert.AreEqual(new Point(20,0),geometry);
         }
 

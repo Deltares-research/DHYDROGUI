@@ -56,12 +56,13 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         }
 
         [Test]
-        [ExpectedException(typeof(IniException))]
         public void ReadCorruptFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SW_max_1.lit\3\NETWORK.TP");
-
-            var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SW_max_1.lit\3\NETWORK.TP"); 
+            Assert.Throws<IniException>(() =>
+            {
+                var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+            });
         }
 
         [Test]

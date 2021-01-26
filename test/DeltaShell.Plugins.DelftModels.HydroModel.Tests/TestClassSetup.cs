@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [SetUpFixture]
     public class TestClassSetup
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void RetrieveApplicationOnceInOrderToCorrectlyInstantiateResourceDictionaries()
         {
             // Ensure calls to ...
@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var application = Application.Current;
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDownWpfGuiAndWorkerThread()
         {
             // Ensure shut down of background thread to ensure no COM errors are thrown.

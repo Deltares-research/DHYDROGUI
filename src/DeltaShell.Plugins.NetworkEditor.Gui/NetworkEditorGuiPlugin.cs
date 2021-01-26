@@ -803,18 +803,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            if (hydroRegionTreeView != null)
+            
+            if (disposing && hydroRegionTreeView != null)
             {
                 ((IView)hydroRegionTreeView).Data = null;
                 hydroRegionTreeView.Dispose();
                 hydroRegionTreeView = null;
             }
-            
-            base.Dispose();
 
-            Instance = null;
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                Instance = null;
+            }
         }
 
         public override IMenuItem GetContextMenu(object sender, object data)

@@ -544,7 +544,6 @@ src/DeltaShell.Dimr/DimrExe.cs -text
 src/DeltaShell.Dimr/DimrRunner.cs -text
 src/DeltaShell.Dimr/IDimrApi.cs -text
 src/DeltaShell.Dimr/IDimrModel.cs -text
-src/DeltaShell.Dimr/IDimrStateAwareModel.cs -text
 src/DeltaShell.Dimr/LoggerToProtoConverter.cs -text
 src/DeltaShell.Dimr/Properties/AssemblyInfo.cs.svn -text
 src/DeltaShell.Dimr/RemoteDimrApi.cs -text
@@ -1007,6 +1006,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/DataRows/IDataRow.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/DataRows/IDataRowProvider.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/DataRows/RainfallRunoffDataRow.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/DataRows/RainfallRunoffDataRowProviderFactory.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/DataRows/WeakEventHandler.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.csproj -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Importers/ImportPolderWizardDialog.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Importers/LandUseMappingControl.Designer.cs -text
@@ -1960,7 +1960,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/BoundaryDataImporterBase.cs -
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/CmpFileImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/FMHisFileImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/FMMapFileImporter.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/FMRstFileImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/FlowFMNetFileImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/GisToFeature2DImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/GwswAttribute.cs -text
@@ -2088,7 +2087,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFmModelValidationExten
 src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMDataAccessListener.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMFeatureValueConverter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMModel.Network.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMModel.Restart.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMModel.Spatial.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMModel.hbm.xml -text
@@ -3266,6 +3264,7 @@ test/DeltaShell.Dimr.Tests/DimrGuiPluginTests.cs -text
 test/DeltaShell.Dimr.Tests/DimrGuiRibbonTests.cs -text
 test/DeltaShell.Dimr.Tests/DimrSystemsTests.cs -text
 test/DeltaShell.Dimr.Tests/Properties/AssemblyInfo.cs -text
+test/DeltaShell.Dimr.Tests/TestDimrGuiPlugin.cs -text
 test/DeltaShell.Dimr.Tests/ViewModels/DIMRConfigRibbonViewModelTests.cs -text
 test/DeltaShell.Dimr.Tests/packages.config -text
 test/DeltaShell.Dimr.Tests/test-data/structures_all_types/001.ext -text
@@ -4861,8 +4860,6 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMImportExportTest.cs -tex
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelCoordinateConversionTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelDefinitionTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelNetworkTest.cs -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelRestartIntegrationTest.cs -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelRestartTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelSedimentFractionsIntegrationTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelSedimentFractionsTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelTest.cs -text

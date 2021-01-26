@@ -281,17 +281,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "Invalid placement of string value 'V' on line 3 in file", MatchType = MessageMatch.StartsWith)]
         public void GivenPliFileWithStringValueInTheWrongColumn_WhenReading_ThenExceptionIsThrown()
         {
-            ReadPliFile("HydroAreaCollection/IncorrectFormatForFixedWeir_fxw.pli");
+            var error = Assert.Throws<FormatException>(() =>
+            {
+                ReadPliFile("HydroAreaCollection/IncorrectFormatForFixedWeir_fxw.pli");
+            });
+            Assert.IsTrue(error.Message.StartsWith("Invalid placement of string value 'V' on line 3 in file"));
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "Invalid point row (expected 9 columns, but was 11) on line 3 in file", MatchType = MessageMatch.StartsWith)]
         public void GivenFeature2DWithLowerColumnCountInPliFile_WhenReading_ThenExceptionIsThrown()
         {
-            ReadPliFile("HydroAreaCollection/WrongColumnCountDefinedForWeir_fxw.pli");
+            var error = Assert.Throws<FormatException>(() =>
+            {
+                ReadPliFile("HydroAreaCollection/WrongColumnCountDefinedForWeir_fxw.pli");
+            });
+            Assert.IsTrue(error.Message.StartsWith("Invalid point row (expected 9 columns, but was 11) on line 3 in file"));
         }
 
         [Test]

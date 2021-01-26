@@ -11,13 +11,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Export
         private IHydroNetwork hydroNetwork;
         private const string TestOutputDirectoryName = "./HydroRegionShapeFileExporterTestOutput";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             Directory.CreateDirectory(TestOutputDirectoryName);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             if (Directory.Exists(TestOutputDirectoryName))

@@ -55,13 +55,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         #region TestFixture
         private static string TestFixtureDirectory = string.Empty;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             TestFixtureDirectory = FileUtils.CreateTempDirectory();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             FileUtils.DeleteIfExists(TestFixtureDirectory);

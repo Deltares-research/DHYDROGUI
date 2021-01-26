@@ -63,45 +63,54 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no valid data was found")]
         public void ReadUserDefinedNodeTypeIdsFromSobek212InvalidFile()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNetworkNetterReader), "ParseNodeTypeIds", new[] { GetInvalidTestFile() });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNetworkNetterReader), "ParseNodeTypeIds", new[] { GetInvalidTestFile() });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no valid data was found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no valid data was found")]
         public void ReadUserDefinedBranchTypeIdsFromSobek212InvalidFile()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNetworkNetterReader), "ParseBranchTypeIds", new[] { GetInvalidTestFile() });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNetworkNetterReader), "ParseBranchTypeIds", new[] { GetInvalidTestFile() });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no valid data was found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no valid data was found")]
         public void ReadReachesFromSobek212InvalidFile()
         {
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNetworkNetterReader), "ParseReachIds", new[] { GetInValidReachTestFile() });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNetworkNetterReader), "ParseReachIds", new[] { GetInvalidTestFile() });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no valid data was found", error.Message);
         }
 
         private static string GetTestFile()

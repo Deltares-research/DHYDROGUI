@@ -158,13 +158,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             Assert.AreEqual(1, network.Bridges.Count());
             var bridge = network.Structures.Where(s => s.Name == "4").First(); // river bridge id != def id
-            Assert.IsInstanceOfType(typeof(Bridge), bridge);
+            Assert.IsInstanceOf<Bridge>(bridge);
             Assert.AreEqual(BridgeFrictionType.Manning, ((Bridge)bridge).FrictionType);
             Assert.AreEqual(0.022, ((Bridge)bridge).Friction);
 
             Assert.AreEqual(1, network.Culverts.Count());
             var culvert = network.Structures.Where(s => s.Name == "5").First(); // river culvert id != def id
-            Assert.IsInstanceOfType(typeof(Culvert), culvert);
+            Assert.IsInstanceOf<Culvert>(culvert);
             Assert.AreEqual(CulvertFrictionType.StricklerKs, ((Culvert)culvert).FrictionType);
             Assert.AreEqual(35, ((Culvert)culvert).Friction);
         }

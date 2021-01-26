@@ -198,14 +198,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void DoNotSupportNoneInterpolation()
         {
-            new LookupSignal()
+            Assert.Throws<ArgumentException>(() =>
             {
-                Name = "test",
-                Interpolation = InterpolationType.None
-            };
+                new LookupSignal()
+                {
+                    Name = "test",
+                    Interpolation = InterpolationType.None
+                };
+            });
         }
 
 

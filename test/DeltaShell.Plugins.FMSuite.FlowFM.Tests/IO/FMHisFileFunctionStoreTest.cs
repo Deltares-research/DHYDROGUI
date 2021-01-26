@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class FMHisFileFunctionStoreTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetMapCoordinateSystemFactory()
         {
             if (Map.CoordinateSystemFactory == null)

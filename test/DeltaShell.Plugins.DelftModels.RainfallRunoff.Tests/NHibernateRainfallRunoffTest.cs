@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         private NHibernateProjectRepository projectRepository;
         private NHibernateProjectRepositoryFactory factory;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.SetLoggingLevel(Level.Off);

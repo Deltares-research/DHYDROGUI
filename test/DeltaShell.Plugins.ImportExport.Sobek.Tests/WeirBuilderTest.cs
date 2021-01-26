@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
     {
         private WeirBuilder builder;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetup()
         {
             builder = new WeirBuilder(new Dictionary<string, SobekCrossSectionDefinition>());
@@ -292,7 +292,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Weir actualWeir = weirs.FirstOrDefault(); 
             IWeirFormula actualWeirFormula = actualWeir.WeirFormula;
             Type expectedType = typeof (PierWeirFormula);
-            Assert.IsInstanceOfType(expectedType, actualWeirFormula);
+            Assert.IsInstanceOf(expectedType, actualWeirFormula);
         }
 
         [Test]
@@ -314,7 +314,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             
             IWeirFormula actualWeirFormula = actualWeir.WeirFormula;
             Type expectedType = typeof(FreeFormWeirFormula);
-            Assert.IsInstanceOfType(expectedType, actualWeirFormula);
+            Assert.IsInstanceOf(expectedType, actualWeirFormula);
         }
 
         [Test]
@@ -396,7 +396,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Weir actualWeir = weirs.FirstOrDefault(); 
             IWeirFormula actualWeirFormula = actualWeir.WeirFormula;
             Type expectedType = typeof(SimpleWeirFormula);
-            Assert.IsInstanceOfType(expectedType, actualWeirFormula);
+            Assert.IsInstanceOf(expectedType, actualWeirFormula);
         }
 
         [Test]

@@ -9,7 +9,7 @@ namespace DeltaShell.NGHS.Common.Gui.Tests
     [SetUpFixture]
     public class TestClassSetup
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void RetrieveApplicationOnceInOrderToCorrectlyInstantiateResourceDictionaries()
         {
             // Ensure calls to ...
@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.Common.Gui.Tests
             Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDownWpfGuiAndWorkerThread()
         {
             // Ensure shut down of background thread to ensure no COM errors are thrown.

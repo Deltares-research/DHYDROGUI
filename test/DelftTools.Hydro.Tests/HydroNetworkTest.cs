@@ -10,13 +10,11 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.UndoRedo.DataTable;
 using GeoAPI.Geometries;
-using log4net;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpTestsEx;
 
 namespace DelftTools.Hydro.Tests
@@ -24,17 +22,14 @@ namespace DelftTools.Hydro.Tests
     [TestFixture]
     public class HydroNetworkTest
     {
-        private static readonly MockRepository mocks = new MockRepository();
-        private static readonly ILog log = LogManager.GetLogger(typeof (HydroNetworkTest));
-
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.ConfigureLogging();
             LogHelper.SetLoggingLevel(Level.Info);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             LogHelper.ResetLogging();

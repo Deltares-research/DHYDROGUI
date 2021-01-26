@@ -48,9 +48,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             OnCoordinateSystemChanged();
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(disposing);
             ComplexFeature = null;
         }
     }

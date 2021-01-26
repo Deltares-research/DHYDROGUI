@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                                               };
         // In progress
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void FixtureSetup()
         {
             presenter = new CompositeStructureViewPresenter();            
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 //            Assert.AreSame(gui.Selection, presenter.View.SelectedStructure);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void FixtureTearDown()
         {
 

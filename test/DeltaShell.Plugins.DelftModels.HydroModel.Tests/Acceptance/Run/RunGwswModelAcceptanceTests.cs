@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             //new object[] {"Eindhoven", 16529, 16131}
         };
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             acceptanceModelsDirectory = TestHelper.GetTestFilePath(@"AcceptanceModels\GWSW");

@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         private NHibernateProjectRepository projectRepository;
         private NHibernateProjectRepositoryFactory factory;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.SetLoggingLevel(Level.Off);
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             factory.AddPlugin(new CommonToolsApplicationPlugin());
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
         }

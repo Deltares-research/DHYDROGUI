@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -347,7 +348,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.WindowsForms), Apartment(ApartmentState.STA)]
         public void CreateNewModelWithRuralAndUrbanNetworkConnectedCheckAfterSaveLoadTheyAreStillConnectedAndYouCanOpenPipeViewInTheGui()
         {
             using (var gui = new DeltaShellGui())

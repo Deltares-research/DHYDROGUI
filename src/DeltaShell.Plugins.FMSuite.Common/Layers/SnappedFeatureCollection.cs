@@ -347,12 +347,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             return new Pen(Color.FromArgb(alpha, originalPen.Color), originalPen.Width);
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            Layer = null;
-            OriginalFeatures = null;
+            if (disposing)
+            {
+                Layer = null;
+                OriginalFeatures = null;
+            }
 
-            base.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

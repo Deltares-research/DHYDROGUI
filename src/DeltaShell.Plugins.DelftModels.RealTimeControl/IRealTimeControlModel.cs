@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Generic;
@@ -9,7 +10,7 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
-    public interface IRealTimeControlModel : ITimeDependentModel, IEditableObject
+    public interface IRealTimeControlModel : ITimeDependentModel, IWorkDirectoryModel, IEditableObject
     {
         IEventedList<ControlGroup> ControlGroups { get; set; }
 

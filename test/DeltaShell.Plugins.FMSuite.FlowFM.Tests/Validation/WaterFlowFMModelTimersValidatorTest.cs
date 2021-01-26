@@ -209,27 +209,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             }
         }
 
-        [Test]
-        public void ValidatingWaterFlowFMModelRestartIntervalFailsTest()
-        {
-            using (var model = CreateWaterFlowFMModelWithValidTimers())
-            {
-                // arrange
-                model.WriteRestart = true;
-                model.SaveStateTimeStep = TimeSpan.Zero;
-                var validator = new WaterFlowFMModelTimersValidator();
-
-                // act
-                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
-                var issue = issues[0];
-
-                // assert
-                Assert.AreEqual(1, issues.Length);
-                Assert.AreEqual("Restart time interval should be strictly positive if write restart is true", issue.Message);
-                Assert.AreEqual(ValidationSeverity.Error, issue.Severity);
-            }
-        }
-
         private WaterFlowFMModel CreateWaterFlowFMModelWithValidTimers()
         {
             return new WaterFlowFMModel();

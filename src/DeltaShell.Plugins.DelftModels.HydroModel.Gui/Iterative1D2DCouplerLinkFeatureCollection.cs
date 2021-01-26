@@ -46,10 +46,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             CoordinateSystem = coupler.CoordinateSystem;
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             Coupler = null;
-            base.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

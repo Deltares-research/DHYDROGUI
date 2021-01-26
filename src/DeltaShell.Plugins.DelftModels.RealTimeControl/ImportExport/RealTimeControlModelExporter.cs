@@ -37,15 +37,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                         realTimeControlModel.ControlGroups, realTimeControlModel.TimeStep);
 
                     WriteEngineXmlFiles(realTimeControlModel, directory);
-                    if (realTimeControlModel.UseRestart)
-                    {
-                        ZipFileUtils.Extract(realTimeControlModel.RestartInput.Path, directory);
-                    }
-                    else
-                    {
-                        RealTimeControlXmlWriter.GetStateVectorXml(directory, realTimeControlModel.ControlGroups)
+                    RealTimeControlXmlWriter.GetStateVectorXml(directory, realTimeControlModel.ControlGroups)
                             .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
-                    }
                 }
                 catch (Exception e)
                 {
@@ -87,35 +80,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             var xsdPath = DimrApiDataSet.RtcToolsDllPath;
             RealTimeControlXmlWriter.GetRuntimeXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcRuntimeConfigxsd)) ?  path : xsdPath, model, model.LimitMemory, model.LogLevel)
                 .Save(path + RealTimeControlXMLFiles.XmlRuntime);
-            RealTimeControlXmlWriter.GetToolsConfigXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcToolsConfigXsd)) ? path : xsdPath, model.ControlGroups, model.WriteRestart || model.UseRestart)
+            RealTimeControlXmlWriter.GetToolsConfigXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.RtcToolsConfigXsd)) ? path : xsdPath, model.ControlGroups, false)
                 .Save(path + RealTimeControlXMLFiles.XmlTools);
 
-            if (model.UseRestart)
-            {
-                // export target directory may be another than the model working directory, so store the latter
-                string modelWorkingDirectory;
-                try
-                {
-                    modelWorkingDirectory = model.ModelStateHandler.ModelWorkingDirectory;
-                }
-                catch
-                {
-                    // model working directory was not set (yet)
-                    modelWorkingDirectory = null;
-                }
-                model.ModelStateHandler.ModelWorkingDirectory = path;
-                model.ModelStateHandler.FeedStateToModel(model.ModelStateHandler.CreateStateFromFile(model.Name, model.RestartInput.Path));
-
-                if (modelWorkingDirectory != null)
-                {
-                    // there was a model working directory set, restore it
-                    model.ModelStateHandler.ModelWorkingDirectory = modelWorkingDirectory;
-                }
-            }
-            else
-            {
-                RealTimeControlXmlWriter.GetStateVectorXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.TreeVectorxsd)) ? path : xsdPath, model.ControlGroups).Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
-            }
+            
+            RealTimeControlXmlWriter.GetStateVectorXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.TreeVectorxsd)) ? path : xsdPath, model.ControlGroups).Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
+            
             var timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(File.Exists(Path.Combine(path, RealTimeControlXmlWriter.PiTimeseriesxsd)) ? path : xsdPath, model, model.ControlGroups);
             if (timeSeriesDoc != null)
             {

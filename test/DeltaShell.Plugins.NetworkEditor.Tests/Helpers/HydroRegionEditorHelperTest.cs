@@ -76,23 +76,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void MoveStartNode2SameLocationTest()
         {
             // First add branch and implictly 2 nodes
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
             var node = (INode)nodeLayer.DataSource.Features[0];
-            HydroRegionEditorHelper.MoveNodeTo(node, 100, 0);
+            Assert.Throws<ArgumentException>(() => HydroRegionEditorHelper.MoveNodeTo(node, 100, 0));
+
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void MoveEndNode2SameLocationTest()
         {
             // First add branch and implictly 2 nodes
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
             var node = (INode)nodeLayer.DataSource.Features[1];
-            HydroRegionEditorHelper.MoveNodeTo(node, 0, 0);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                HydroRegionEditorHelper.MoveNodeTo(node, 0, 0);
+            });
         }
 
         [Test]

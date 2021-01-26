@@ -119,7 +119,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new StructuresListImporter(StructuresListType.Gates) { GetModelForList = GetModelForCollection };
             yield return new FMMapFileImporter();
             yield return new FMHisFileImporter();
-            yield return new FMRstFileImporter {GetFMModelForRestartState = GetFMModelForRestartState};
             yield return new BcFileImporter();
             yield return new BcFile1DImporter();
             yield return new BcmFileImporter();
@@ -387,13 +386,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return Application?.Project?.RootFolder.GetAllModelsRecursive()
                 .OfType<WaterFlowFMModel>()
                 .FirstOrDefault(m => listSelectors.Any(s => Equals(s(m.Area),target)));
-        }
-
-        private WaterFlowFMModel GetFMModelForRestartState(FileBasedRestartState fileBasedRestartState)
-        {
-            return
-                Application.GetAllModelsInProject().OfType<WaterFlowFMModel>()
-                    .FirstOrDefault(m => Equals(m.RestartInput, fileBasedRestartState));
         }
 
         public override IEnumerable<IFileExporter> GetFileExporters()

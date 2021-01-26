@@ -203,11 +203,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void ReadTimFile_HandlesNullFunction()
         {
             var fileReader = new TimFile();
-            fileReader.Read(string.Empty, null, DateTime.MinValue);
+            Assert.Throws<ArgumentException>(() => { fileReader.Read(string.Empty, null, DateTime.MinValue); });
         }
 
         [Test]

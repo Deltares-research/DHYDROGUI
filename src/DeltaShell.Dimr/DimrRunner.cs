@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -322,7 +323,7 @@ namespace DeltaShell.Dimr
             }
         }
 
-        public static void ConnectDimrRunLogFile(IModel model)
+        public static void ConnectDimrRunLogFile(IWorkDirectoryModel model)
         {
             var completeDimrLogFilename = Path.Combine(model.ExplicitWorkingDirectory, DIMR_RUN_LOGFILE_NAME);
             if (!File.Exists(completeDimrLogFilename)) return;

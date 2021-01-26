@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var folder = new Folder();
             var hydroNetwork = (HydroNetwork)dataItemInfo.CreateData(folder);
-            Assert.That(hydroNetwork.Name, Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network));
+            Assert.IsTrue(hydroNetwork.Name.StartsWith(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network));
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var folder = new Folder();
             var basin = (IDrainageBasin)dataItemInfo.CreateData(folder);
-            Assert.That(basin.Name, Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin));
+            Assert.IsTrue(basin.Name.StartsWith(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin));
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var hydroRegion = new HydroRegion();
             var basin = (IDrainageBasin)dataItemInfo.CreateData(hydroRegion);
-            Assert.That(basin.Name, Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin));
+            Assert.IsTrue(basin.Name.StartsWith(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin));
             Assert.That(hydroRegion.SubRegions[0], Is.EqualTo(basin));
         }
 
@@ -299,8 +299,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.IsNotNull(hydroRegionDataItemInfo);
             var region = new HydroRegion();
             var hydroRegion = (HydroRegion) hydroRegionDataItemInfo.CreateData(region);
-            Assert.That(hydroRegion.Name,
-                Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Region));
+            Assert.IsTrue(hydroRegion.Name.StartsWith(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Region));
             Assert.That(hydroRegion.SubRegions.Count, Is.EqualTo(2));
             Assert.That(hydroRegion.SubRegions[0].Name,
                 Is.EqualTo(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network));

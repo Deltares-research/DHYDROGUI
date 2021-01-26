@@ -82,8 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var temperatureProperty = model.ModelDefinition.GetModelProperty(KnownProperties.Temperature);
             //Create a grid
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            model.UseRestart = true;
-
+            
             //Validate model
             var report = model.Validate();
             salinityProperty.Value = true;

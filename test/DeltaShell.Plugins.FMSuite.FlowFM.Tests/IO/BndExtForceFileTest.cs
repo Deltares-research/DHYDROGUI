@@ -801,10 +801,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.IsTrue(File.Exists(extFileName));
             var fileText = File.ReadAllText(extFileName);
-            Assert.That(fileText, Is.StringContaining(BndExtForceFile.BoundaryBlockKey)
-                                    .And.StringContaining(BndExtForceFile.QuantityKey + "=" + BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1")
-                                    .And.StringContaining(BndExtForceFile.LocationFileKey + "=" + "L1.pli")
-                                    .And.StringContaining(BndExtForceFile.ForcingFileKey + "=" + "frac1.bc"));
+            Assert.IsTrue(fileText.Contains(BndExtForceFile.BoundaryBlockKey) && 
+                          fileText.Contains(BndExtForceFile.QuantityKey + "=" + BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1") &&
+                          fileText.Contains(BndExtForceFile.LocationFileKey + "=" + "L1.pli") &&
+                          fileText.Contains(BndExtForceFile.ForcingFileKey + "=" + "frac1.bc"));
 
             //check to see if only 2 boundaries are written
             Assert.AreEqual(2, new Regex(Regex.Escape(BndExtForceFile.BoundaryBlockKey)).Matches(fileText).Count);
@@ -812,11 +812,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(File.Exists("frac1.bc"));
 
             fileText = File.ReadAllText("frac1.bc");
-            Assert.That(fileText, Is.StringContaining(BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1")
-                                    .And.StringContaining("bound_0001")
-                                    .And.StringContaining(new BcFile().BlockKey)
-                                    .And.StringContaining(BcFile.QuantityKey)
-                                    .And.StringContaining("36").And.StringContaining("18"));
+            Assert.IsTrue(fileText.Contains(BcFileFlowBoundaryDataBuilder.ConcentrationAtBound + "frac1") &&
+                          fileText.Contains("bound_0001") &&
+                          fileText.Contains(new BcFile().BlockKey) &&
+                          fileText.Contains(BcFile.QuantityKey) &&
+                          fileText.Contains("36") &&
+                          fileText.Contains("18"));
         }
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -872,7 +873,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
             };
-            Assert.IsNullOrEmpty(firstBoundary.Name);
+            Assert.IsTrue(string.IsNullOrEmpty(firstBoundary.Name));
 
             var bcSet = new BoundaryConditionSet { Feature = firstBoundary };
             var resultingItems = bndExtForceFile.WriteBndExtForceFileSubFiles(string.Empty, new List<BoundaryConditionSet>{ bcSet}, DateTime.Today);
@@ -903,7 +904,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
             };
-            Assert.IsNullOrEmpty(secondBoundary.Name);
+            Assert.IsTrue(string.IsNullOrEmpty(secondBoundary.Name));
 
             var bcSetOne = new BoundaryConditionSet { Feature = firstBoundary };
             var bcSetTwo = new BoundaryConditionSet { Feature = secondBoundary };

@@ -228,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 Assert.That(File.Exists(outputFilePath), Is.True);
 
                 // Assert output is correct
-                var filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath, null);
+                var filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath);
                 Assert.That(filesInExportedZip.Count, Is.EqualTo(2));
                 Assert.That(filesInExportedZip.Contains(ncFileName));
                 Assert.That(filesInExportedZip.Contains(ncGeomFileName));
@@ -307,7 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 // Assert output is correct
                 var outputNcFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}(3).nc";
 
-                var filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath, null);
+                var filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath);
                 Assert.That(filesInExportedZip.Count, Is.EqualTo(2));
                 Assert.That(filesInExportedZip.Contains(outputNcFileName));
                 Assert.That(filesInExportedZip.Contains(ncGeomFileName));
@@ -327,7 +327,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
 
         [Test]
-        [ExpectedException(typeof(NotImplementedException))]
         public void GivenAGeometryZipExporterAndAValidUnstructuredGridAndAValidFilePathWithoutGridToModelSetWhenExportIsCalledWithThisGridAndPathThenFalseIsReturned()
         {
             var mocks = new MockRepository();
@@ -336,7 +335,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             mocks.ReplayAll();
 
-            exporter.Export(gridMock, Arg<string>.Is.Anything);
+            Assert.Throws<NotImplementedException>(() =>
+            {
+                exporter.Export(gridMock, Arg<string>.Is.Anything);
+            });
         }
 
     }

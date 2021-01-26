@@ -186,14 +186,15 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Negative flow is not allowed for siphons")]
         public void InValidFlowForSiphonThrowsException()
         {
             var culvert = new Culvert();
             Assert.IsTrue(culvert.AllowNegativeFlow);
             culvert.CulvertType = CulvertType.Siphon;
             Assert.IsFalse(culvert.AllowNegativeFlow);
-            culvert.FlowDirection = FlowDirection.Both;
+
+            var error = Assert.Throws<ArgumentException>(() => culvert.FlowDirection = FlowDirection.Both);
+            Assert.AreEqual("Negative flow is not allowed for siphons", error.Message);
         }
     }
 

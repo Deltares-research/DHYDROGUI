@@ -194,7 +194,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private IEnumerable GetOutputItems(WaterFlowFMModel model)
         {
-            yield return new TreeFolder(model, GetRestartStates(model), "States", FolderImageType.None);
             var dimrLogDataItem = model.GetDataItems<TextDocument>(DataItemRole.Output).FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
             if (dimrLogDataItem != null) yield return dimrLogDataItem;
 
@@ -239,14 +238,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         }
 
         private static readonly IList<DataItem> DataItems = new List<DataItem>();
-
-        private static IEnumerable GetRestartStates(WaterFlowFMModel data)
-        {
-            var restartStates =
-                data.DataItems.Where(
-                    dataItem => dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output);
-            return restartStates;
-        }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {

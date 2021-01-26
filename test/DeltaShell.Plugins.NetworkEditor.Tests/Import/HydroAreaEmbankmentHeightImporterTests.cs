@@ -22,27 +22,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
         public void TestImportItem_NoPath()
         {
             var heightImporter = new HydroAreaEmbankmentHeightImporter();
-            heightImporter.ImportItem("");
+            Assert.Throws<InvalidOperationException>(() => heightImporter.ImportItem(""));
         }
         
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void TestImportItem_NoTarget()
         {
             var heightImporter = new HydroAreaEmbankmentHeightImporter();
-            heightImporter.ImportItem(_embankmentHeightsPath);
+            Assert.Throws<InvalidOperationException>(() => heightImporter.ImportItem(_embankmentHeightsPath));
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void TestImportItem_WrongTargetType()
         {
             var heightImporter = new HydroAreaEmbankmentHeightImporter();
-            heightImporter.ImportItem(_embankmentHeightsPath, new object());
+            Assert.Throws<InvalidOperationException>(() => heightImporter.ImportItem(_embankmentHeightsPath, new object()));
         }
         
         [Test]

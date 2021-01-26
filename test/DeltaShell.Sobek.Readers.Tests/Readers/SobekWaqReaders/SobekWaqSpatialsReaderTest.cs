@@ -10,14 +10,14 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
     [TestFixture]
     public class SobekWaqSpatialsReaderTest
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.ConfigureLogging();
             LogHelper.SetLoggingLevel(Level.Warn);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             LogHelper.ResetLogging();

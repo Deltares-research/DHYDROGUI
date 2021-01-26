@@ -71,7 +71,7 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, IDimrStateAwareModel, IFileBased, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
+    public partial class WaterFlowFMModel : TimeDependentModelBase, IFileBased, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
         private readonly DimrRunner runner;
@@ -640,7 +640,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             FireImportProgressChanged(this, "Reading model output", 8, TotalImportSteps);
 
-            LoadRestartFile(mduFilePath);
             ReconnectOutputFiles(Path.GetDirectoryName(mduFilePath));
             RefreshBoundaryConditions1DDataItemSet();
         }
@@ -2445,8 +2444,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             FireImportProgressChanged(this, "Loading restart", 2, TotalImportSteps);
-            LoadRestartInfo(mduFilePath);
-
+            
             // sync the heat flux model, because events are off during reading
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
         }
@@ -4176,11 +4174,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             base.OnProgressChanged();
         }
 
-        public void SetModelStateHandlerModelWorkingDirectory(string modelExplicitWorkingDirectory)
-        {
-            ModelStateHandler.ModelWorkingDirectory = modelExplicitWorkingDirectory;
-        }
-
         private void OnWaterFlowFm1D2DLinkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is Link1D2D & e.PropertyName.Equals("Geometry"))
@@ -4209,5 +4202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 FileUtils.CopyFile(sourcePath, targetPath);
             }
         }
+
+        public string ExplicitWorkingDirectory { get; set; }
     }
 }

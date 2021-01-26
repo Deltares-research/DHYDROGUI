@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
             var viewModel = new GwswImportDialogViewModel();
             Assert.IsNotNull(viewModel);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
-            Assert.IsNullOrEmpty(viewModel.SelectedFeatureFilePath);
+            Assert.IsTrue(string.IsNullOrEmpty(viewModel.SelectedFeatureFilePath));
 
             viewModel.OnAddCustomFeatureFile.Execute(null);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any());

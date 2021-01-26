@@ -9,7 +9,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
     {
         private SobekOrificeReader reader;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetup()
         {
             reader = new SobekOrificeReader();

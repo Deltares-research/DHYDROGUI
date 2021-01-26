@@ -16,13 +16,13 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRBuiFileReaderTest));
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.ConfigureLogging();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             LogHelper.ResetLogging();

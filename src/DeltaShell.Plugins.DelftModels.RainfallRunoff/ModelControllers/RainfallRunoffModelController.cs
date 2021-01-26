@@ -448,16 +448,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                 Writer.AddIniOption("TimeSettings", "EvaporationFromHrs", model.EvaporationStartActivePeriod.ToString(CultureInfo.InvariantCulture));
                 Writer.AddIniOption("TimeSettings", "EvaporationToHrs", model.EvaporationEndActivePeriod.ToString(CultureInfo.InvariantCulture));
 
-                var stateHandler = model.ModelStateHandler;
-                stateHandler.ModelWorkingDirectory = workingDirectory;
-                if (model.UseRestart)
-                {
-                    if (model.RestartInput.IsEmpty)
-                    {
-                        throw new InvalidOperationException("Cannot use restart; restart empty!");
-                    }
-                    stateHandler.FeedStateToModel(stateHandler.CreateStateFromFile(model.Name, model.RestartInput.Path));
-                }
                 Writer.AddIniOption("Options", "RestartIn", model.UseRestart ? "1" : "0");
                 Writer.AddIniOption("Options", "RestartOut", model.WriteRestart ? "1" : "0");
                 Writer.AddIniOption("Options", "RestartFileEachTimestep", model.UseSaveStateTimeRange ? "1" : "0");

@@ -1118,23 +1118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(model.DisableFlowNodeRenumbering);
         }
 
-        [Test]
-        public void StateInfoRetreivesTheSameNameAndZipPathTest()
-        {
-            try
-            {
-                var stateInfo = new StateInfo("StateName", "ZipPath");
-                Assert.That(stateInfo.Name, Is.EqualTo("StateName"));
-                Assert.That(stateInfo.ZipPath, Is.EqualTo("ZipPath"));
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Creation of a StateInfo object should not fail. Exception thrown: {0}.", e.Message);
-            }
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.WorkInProgress)]
+        [Test, Category(TestCategory.WorkInProgress)]
         public void Generate1D2DLinksAutomaticallyWhenExistsBoth1D2DGrids()
         {
             var model = new WaterFlowFMModel();
@@ -1151,7 +1135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
         
         [TestCase(LinkGeneratingType.EmbeddedOneToOne)]
-        [TestCase(LinkGeneratingType.EmbeddedOneToMany, Ignore = true, IgnoreReason = "Buizen hebben iets van een mask nodig want zijn dicht en kunnen niet halverwege uit stromen naar een grid! Tjitske en ArthurvD weten meer")]
+        [TestCase(LinkGeneratingType.EmbeddedOneToMany, IgnoreReason = "Buizen hebben iets van een mask nodig want zijn dicht en kunnen niet halverwege uit stromen naar een grid! Tjitske en ArthurvD weten meer")]
         public void Generate1D2DLinksAutomaticallyWhenExistsBoth1DUrban2DGrids(LinkGeneratingType linkType)
         {
             var model = new WaterFlowFMModel();
@@ -1356,7 +1340,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(model.NetworkDiscretization.Locations.Values.Count, Is.EqualTo(2));
         }
         [TestCase(LinkGeneratingType.EmbeddedOneToOne)]
-        [TestCase(LinkGeneratingType.EmbeddedOneToMany, Ignore = true, IgnoreReason = "Snap ik echt helemaal niks van...")]
+        [TestCase(LinkGeneratingType.EmbeddedOneToMany, IgnoreReason = "Snap ik echt helemaal niks van...")]
         public void Generate1D2DLinksAutomaticallyWhenExistsBoth1DRural2DGrids(LinkGeneratingType linkType)
         {
             var model = new WaterFlowFMModel();
@@ -2109,8 +2093,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Name, Is.EqualTo(FmMeteoComponent.Precipitation.ToString()));
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].InterpolationType, Is.EqualTo(InterpolationType.Linear));
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].ExtrapolationType, Is.EqualTo(ExtrapolationType.None));
-                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Unit.Name, Is.StringContaining("millimeters per day"));
-                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Unit.Symbol, Is.StringContaining("mm day-1"));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Unit.Name.Contains("millimeters per day"));
+                Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Unit.Symbol.Contains("mm day-1"));
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values.Count, Is.EqualTo(3));
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[0], Is.EqualTo(clone.Data.Components[0].Values[0]));
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[1], Is.EqualTo(clone.Data.Components[0].Values[1]));

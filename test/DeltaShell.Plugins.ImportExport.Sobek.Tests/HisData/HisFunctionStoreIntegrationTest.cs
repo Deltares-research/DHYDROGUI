@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
         private NHibernateProjectRepository projectRepository;
         private NHibernateProjectRepositoryFactory factory;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             LogHelper.SetLoggingLevel(Level.Off);
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
         }

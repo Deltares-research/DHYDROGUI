@@ -200,16 +200,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Test */
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
                 var sedWritten = File.ReadAllText(sedFile);
-                Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader)); 
-                Assert.That(sedWritten, Is.StringContaining(SedimentFile.OverallHeader)); 
-                Assert.That(sedWritten, Is.StringContaining(SedimentFile.Header)); 
-                Assert.That(sedWritten, Is.StringContaining("MyIntProp")); 
-                Assert.That(sedWritten, Is.StringContaining("MyBoolProp")); 
-                Assert.That(sedWritten, Is.StringContaining("MyDoubleProp")); 
-                Assert.That(sedWritten, Is.StringContaining("MyOverallProp")); 
-                Assert.That(sedWritten, Is.StringContaining("TraFrm")); 
-                Assert.That(sedWritten, Is.StringContaining("MySedimentName")); 
-                Assert.That(sedWritten, Is.StringContaining("MySedType")); 
+                Assert.IsTrue(sedWritten.Contains(SedimentFile.GeneralHeader)); 
+                Assert.IsTrue(sedWritten.Contains(SedimentFile.OverallHeader)); 
+                Assert.IsTrue(sedWritten.Contains(SedimentFile.Header)); 
+                Assert.IsTrue(sedWritten.Contains("MyIntProp")); 
+                Assert.IsTrue(sedWritten.Contains("MyBoolProp")); 
+                Assert.IsTrue(sedWritten.Contains("MyDoubleProp")); 
+                Assert.IsTrue(sedWritten.Contains("MyOverallProp")); 
+                Assert.IsTrue(sedWritten.Contains("TraFrm")); 
+                Assert.IsTrue(sedWritten.Contains("MySedimentName")); 
+                Assert.IsTrue(sedWritten.Contains("MySedType")); 
             }
             finally
             {
@@ -328,13 +328,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var loadedOverallProp = model.SedimentOverallProperties.FirstOrDefault() as ISedimentProperty<double>;
                 Assert.IsNotNull(loadedOverallProp);
-                Assert.That(loadedOverallProp.Name, Is.StringContaining("Cref")); 
+                Assert.That(loadedOverallProp.Name.Contains("Cref")); 
                 Assert.That(loadedOverallProp.Value, Is.EqualTo(80.1).Within(0.01));
 
                 var loadedSedimentFraction = model.SedimentFractions.FirstOrDefault();
                 Assert.IsNotNull(loadedSedimentFraction);
-                Assert.That(loadedSedimentFraction.Name, Is.StringContaining("MySedimentName"));
-                Assert.That(loadedSedimentFraction.CurrentSedimentType.Key, Is.StringContaining("sand"));
+                Assert.That(loadedSedimentFraction.Name.Contains("MySedimentName"));
+                Assert.That(loadedSedimentFraction.CurrentSedimentType.Key.Contains("sand"));
 
                 var loadedFormulaProp = loadedSedimentFraction.CurrentSedimentType.Properties.FirstOrDefault(st => st.Name == "TraFrm") as ISedimentProperty<int>;
                 Assert.IsNotNull(loadedFormulaProp);
@@ -465,14 +465,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
 
                 var sedWritten = File.ReadAllText(sedFile);
-                Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
+                Assert.That(sedWritten.Contains(SedimentFile.GeneralHeader));
                 Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
-                Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
+                Assert.That(sedWritten.Contains("#mysedimentName#"));
                 Assert.That(sedWritten, Is.Not.StringContaining("#mysedimentName_SedConc#"));
                 Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
 
-                Assert.That(sedWritten, Is.StringContaining("IniSedThick"));
-                Assert.That(sedWritten, Is.StringContaining("#mysedimentName_IniSedThick.xyz#"));
+                Assert.That(sedWritten.Contains("IniSedThick"));
+                Assert.That(sedWritten.Contains("#mysedimentName_IniSedThick.xyz#"));
                 Assert.That(sedWritten, Is.Not.StringContaining("80.1"));
 
                 Assert.IsFalse(File.Exists(generatedXyzFile));
@@ -663,11 +663,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
                 
                 var sedWritten = File.ReadAllText(sedFile);
-                Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
-                Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
-                Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
-                Assert.That(sedWritten, Is.Not.StringContaining("#mysedimentName_SedConc#"));
-                Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
+                Assert.That(sedWritten.Contains(SedimentFile.GeneralHeader));
+                Assert.That(sedWritten, Is.Not.Contains("SedConc"));
+                Assert.That(sedWritten.Contains("#mysedimentName#"));
+                Assert.That(sedWritten, Is.Not.Contains("#mysedimentName_SedConc#"));
+                Assert.That(sedWritten, Is.Not.Contains("12.3"));
 
                 /* 
                  * SedimentFile.Save(sedFile, fmModel);
@@ -849,16 +849,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var modelDefinition = fmModel.ModelDefinition;
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
                 var sedWritten = File.ReadAllText(sedFile);
-                Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
-                Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
+                Assert.That(sedWritten.Contains(SedimentFile.GeneralHeader));
+                Assert.That(sedWritten.Contains("#mysedimentName#"));
                 
                 /* Sed conc is in ExtForceFile */
                 Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
                 Assert.That(sedWritten, Is.Not.StringContaining("#mysedimentName_SedConc#"));
                 
                 /* Custom property */
-                Assert.That(sedWritten, Is.StringContaining("IniSed"));
-                Assert.That(sedWritten, Is.StringContaining("#mysedimentName_IniSedThick.xyz#"));
+                Assert.That(sedWritten.Contains("IniSed"));
+                Assert.That(sedWritten.Contains("#mysedimentName_IniSedThick.xyz#"));
 
                 Assert.That(sedWritten, Is.Not.StringContaining("12.3"));
 

@@ -50,7 +50,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no valid data was found")]
         public void ReadSimulationTimerFromSobek212ThrowsOnMismatchingFileFormat()
         {
             const string numericalSettingsText = "  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock\r\n" +
@@ -59,18 +58,21 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
                                                  "           1998/01/01-01:00:00 ; simulation end time\r\n" +
                                                  "                             0 ; timestep constant\r\n"; // Time step value line is missing
 
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNumericalSettingsReader), "ParseNumericalSettingsFromSobek212", new[] { numericalSettingsText });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNumericalSettingsReader), "ParseNumericalSettingsFromSobek212", new[] { numericalSettingsText });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no valid data was found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no valid numerical scheme was found")]
         public void ReadNumericalSettingsFromSobek212ThrowsOnMismatchingNumericSchemeFormat()
         {
             const string numericalSettingsText = "  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock\r\n" +
@@ -79,19 +81,21 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
                                                  "           1998/01/01-01:00:00 ; simulation end time\r\n" +
                                                  "                             0 ; timestep constant\r\n" +
                                                  "                     000010018 ; simulation timestep\r\n";
-
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNumericalSettingsReader), "ParseNumericalSettingsFromSobek212", new[] { numericalSettingsText });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNumericalSettingsReader), "ParseNumericalSettingsFromSobek212", new[] { numericalSettingsText });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no valid numerical scheme was found", error.Message);
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException), ExpectedMessage = "no valid numerical settings data was found")]
         public void ReadNumericalSettingsFromSobek212ThrowsOnMismatchingNumericSettingsFormat()
         {
             const string numericalSettingsText = "  86400 'DDHHMMSS' 'DDHHMMSS'  ; system clock\r\n" +
@@ -100,15 +104,18 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekWaqReaders
                                                  "           1998/01/01-01:00:00 ; simulation end time\r\n" +
                                                  "                             0 ; timestep constant\r\n" +
                                                  "                     000010018 ; simulation timestep\r\n";
-
-            try
+            var error = Assert.Throws<FormatException>(() =>
             {
-                TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNumericalSettingsReader), "ParseNumericalSettingsFromSobek212", new[] { numericalSettingsText });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
+                try
+                {
+                    TypeUtils.CallPrivateStaticMethod(typeof(SobekWaqNumericalSettingsReader), "ParseNumericalSettingsFromSobek212", new[] { numericalSettingsText });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            });
+            Assert.AreEqual("no valid numerical settings data was found", error.Message);
         }
 
         # endregion

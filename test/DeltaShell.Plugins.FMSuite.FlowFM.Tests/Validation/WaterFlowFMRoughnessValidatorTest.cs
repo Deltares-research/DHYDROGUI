@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             return flowFmModel;
         }
 
-        private IEnumerable<RoughnessTestCaseData> ValidRoughnessTestCaseSource
+        private static IEnumerable<RoughnessTestCaseData> ValidRoughnessTestCaseSource
         {
             get
             {
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             }
         }
 
-        private IEnumerable<InvalidRoughnessTestCaseData> InvalidRoughnessTestCaseSource
+        private static IEnumerable<InvalidRoughnessTestCaseData> InvalidRoughnessTestCaseSource
         {
             get
             {
