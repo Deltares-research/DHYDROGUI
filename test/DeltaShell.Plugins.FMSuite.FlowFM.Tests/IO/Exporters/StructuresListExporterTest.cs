@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -134,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [TestCase(StructuresListType.Pumps, typeof(IList<IPump>), typeof(IEventedList<IPump>))]
-        [TestCase(StructuresListType.Weirs, typeof(IList<IWeir>), typeof(IEventedList<IWeir>))]
+        [TestCase(StructuresListType.Weirs, typeof(IList<IStructure>), typeof(IEventedList<IStructure>))]
         public void
             GivenStructuresListExporterOfTheSpecifiedTypeWhenSourceTypesIsCalledThenTheCorrectSourceTypesAreReturned(
                 StructuresListType t, Type listClassType, Type eventedListClassType)

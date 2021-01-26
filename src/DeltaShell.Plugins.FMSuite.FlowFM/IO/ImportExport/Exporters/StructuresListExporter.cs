@@ -6,8 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -83,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             };
             try
             {
-                structuresFile.Write(path, list.OfType<IStructure>());
+                structuresFile.Write(path, list.OfType<IStructureObject>());
                 Log.InfoFormat("Written {0} {1}.", list.Count, GetStructuresName());
                 return true;
             }
@@ -111,8 +110,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                     yield return typeof(IEventedList<IPump>);
                     break;
                 case StructuresListType.Weirs:
-                    yield return typeof(IList<IWeir>);
-                    yield return typeof(IEventedList<IWeir>);
+                    yield return typeof(IList<IStructure>);
+                    yield return typeof(IEventedList<IStructure>);
                     break;
             }
         }
