@@ -5,6 +5,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Units;
@@ -23,6 +24,7 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using IStructure = DelftTools.Hydro.Area.Objects.IStructure;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {
@@ -518,9 +520,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 {featureNameStations, typeof(GroupableFeature2DPoint)},
                 {featureNameCrossSection, typeof(ObservationCrossSection2D)},
-                {featureNameGeneralStructures, typeof(IWeir)},
-                {featureNameWeirgens, typeof(IWeir)},
-                {featureNameGategens, typeof(IWeir)},
+                {featureNameGeneralStructures, typeof(IStructure)},
+                {featureNameWeirgens, typeof(IStructure)},
+                {featureNameGategens, typeof(IStructure)},
                 {featureNamePumps, typeof(IPump)}
             };
 
@@ -539,8 +541,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 {typeof(GroupableFeature2DPoint), (name, geometry, _) => CreateFeature2D(name, geometry)},
                 {typeof(ObservationCrossSection2D), (name, geometry, _) => CreateFeature2D(name, geometry)},
-                {typeof(IWeir), CreateGeneralStructureFromNetCdf},
-                {typeof(IPump), (name, geometry, _) => new Pump2D(name) {Geometry = geometry}}
+                {typeof(IStructure), CreateGeneralStructureFromNetCdf},
+                {typeof(IPump), (name, geometry, _) => new Pump() {Name = name, Geometry = geometry}}
             };
 
         // Mapping dictionary used to read feature names for backwards compatibility.
@@ -838,12 +840,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             };
         }
 
-        private static Weir2D CreateGeneralStructureFromNetCdf(string name, IGeometry geometry, IWeirFormula formula)
+        private static Structure CreateGeneralStructureFromNetCdf(string name, IGeometry geometry, IWeirFormula formula)
         {
-            return new Weir2D
+            return new Structure
             {
                 Name = name,
-                WeirFormula = formula,
+                Formula = formula,
                 Geometry = geometry
             };
         }
