@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NSubstitute;
 using NUnit.Framework;
@@ -50,20 +51,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         {
             const string logName = "swan_bat.log";
             const string logContent = "Some log data.";
-            var logFile = new ReadOnlyTextFileData(logName, logContent);
+            var logFile = new ReadOnlyTextFileData(logName, logContent, ReadOnlyTextFileDataType.Default);
 
             const string diagName = "swn-diag.Waves";
             const string diagContent = "Some diagnostic data.";
-            var diagFile = new ReadOnlyTextFileData(diagName, diagContent);
+            var diagFile = new ReadOnlyTextFileData(diagName, diagContent, ReadOnlyTextFileDataType.Default);
 
             const string otherFileName = "waves.mdw";
             const string otherFileContent = "swoosh swash";
-            var otherFile = new ReadOnlyTextFileData(otherFileName, otherFileContent);
+            var otherFile = new ReadOnlyTextFileData(otherFileName, otherFileContent, ReadOnlyTextFileDataType.Default);
 
             const string diagAlternativeName = "swn-diag.dwaves";
             const string diagAlternativeContent = "Some diagnostic data.";
             var diagAlternativeFile = 
-                new ReadOnlyTextFileData(diagAlternativeName, diagAlternativeContent);
+                new ReadOnlyTextFileData(diagAlternativeName, diagAlternativeContent, ReadOnlyTextFileDataType.Default);
 
             yield return new TestCaseData(new List<ReadOnlyTextFileData>(), 
                                           new List<ReadOnlyTextFileData>());
@@ -251,18 +252,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
         {
             List<ReadOnlyTextFileData> sp1Files =
                 Enumerable.Range(0, 3)
-                          .Select(i => new ReadOnlyTextFileData($"spectra{i}.sp1", $"some content {i}"))
+                          .Select(i => new ReadOnlyTextFileData($"spectra{i}.sp1", $"some content {i}", ReadOnlyTextFileDataType.Default))
                           .ToList();
             List<ReadOnlyTextFileData> sp2Files =
                 Enumerable.Range(0, 3)
-                          .Select(i => new ReadOnlyTextFileData($"spectra{i}.sp2", $"some content {i}"))
+                          .Select(i => new ReadOnlyTextFileData($"spectra{i}.sp2", $"some content {i}", ReadOnlyTextFileDataType.Default))
                           .ToList();
 
             ReadOnlyTextFileData[] otherFiles = new[]
             {
-                new ReadOnlyTextFileData("swan_bat.log", "Some log data."),
-                new ReadOnlyTextFileData("swn-diag.Waves", "Some diagnostic data"),
-                new ReadOnlyTextFileData("waves.mdw", "Swoosh swash"),
+                new ReadOnlyTextFileData("swan_bat.log", "Some log data.", ReadOnlyTextFileDataType.Default),
+                new ReadOnlyTextFileData("swn-diag.Waves", "Some diagnostic data", ReadOnlyTextFileDataType.Default),
+                new ReadOnlyTextFileData("waves.mdw", "Swoosh swash", ReadOnlyTextFileDataType.Default),
             };
             
             yield return new TestCaseData(new List<ReadOnlyTextFileData>(), 
@@ -533,7 +534,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.OutputData
                     return false;
                 }
 
-                return x.DocumentName == y.DocumentName && x.Content == y.Content;
+                return x.DocumentName == y.DocumentName && x.Content == y.Content && x.Type == y.Type;
             }
 
             public int GetHashCode(ReadOnlyTextFileData obj)

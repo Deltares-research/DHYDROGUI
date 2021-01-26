@@ -4,8 +4,8 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Functions;
 using DelftTools.Shell.Gui.Swf;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NSubstitute;
@@ -54,8 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
 
             var readOnlyData = new EventedList<ReadOnlyTextFileData>
             {
-                new ReadOnlyTextFileData("1.txt", "1"),
-                new ReadOnlyTextFileData("2.txt", "2")
+                new ReadOnlyTextFileData("1.txt", "1", ReadOnlyTextFileDataType.Default),
+                new ReadOnlyTextFileData("2.txt", "2", ReadOnlyTextFileDataType.Default)
             };
 
             nodeData.DiagnosticFiles.Returns(readOnlyData);
@@ -103,8 +103,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters.OutputData
 
             var spectraFiles = new EventedList<ReadOnlyTextFileData>
             {
-                new ReadOnlyTextFileData("Wave.sp1", "Spooky spooky"),
-                new ReadOnlyTextFileData("Wave.sp2", "skeletons")
+                new ReadOnlyTextFileData("Wave.sp1", "Spooky spooky", ReadOnlyTextFileDataType.Default),
+                new ReadOnlyTextFileData("Wave.sp2", "skeletons", ReadOnlyTextFileDataType.Default)
             };
             nodeData.SpectraFiles.Returns(spectraFiles);
 

@@ -58,14 +58,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 Assert.That(gridNode, Is.Not.Null);
                 Assert.That(gridNode.Text, Is.EqualTo(waveDomainGrid.Name));
                 Assert.That(gridNode.WaveModel, Is.SameAs(model));
-                Assert.That(gridNode.Data, Is.SameAs(waveDomainGrid));
+                Assert.That(gridNode.Value, Is.SameAs(waveDomainGrid));
                 Assert.That(gridNode.ShortCutType, Is.EqualTo(ShortCutType.Grid));
 
                 var bathymetryNode = childNodes[1] as WaveModelTreeShortcut;
                 Assert.That(bathymetryNode, Is.Not.Null);
                 Assert.That(bathymetryNode.Text, Is.EqualTo(waveDomainBathymetry.Name));
                 Assert.That(bathymetryNode.WaveModel, Is.SameAs(model));
-                Assert.That(bathymetryNode.Data, Is.SameAs(waveDomainBathymetry));
+                Assert.That(bathymetryNode.Value, Is.SameAs(waveDomainBathymetry));
                 Assert.That(bathymetryNode.ShortCutType, Is.EqualTo(ShortCutType.SpatialCoverageWithView));
 
                 Assert.That(childNodes[2], Is.SameAs(subDomains[0]));

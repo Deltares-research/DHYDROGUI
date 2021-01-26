@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                 return menu;
             }
 
-            ContextMenuStrip menu1 = ContextMenuFactory.CreateMenuFor(shortcut.Data, Gui, this, sender);
+            ContextMenuStrip menu1 = ContextMenuFactory.CreateMenuFor(shortcut.Value, Gui, this, sender);
             menu.Add(new MenuItemContextMenuStripAdapter(menu1));
             return menu;
         }
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                 return;
             }
 
-            ILayer layer = projectItemMapView.MapView.Map.GetAllLayers(true).FirstOrDefault(l => MatchLayerForCoverage(l, shortcut.Data as ICoverage));
+            ILayer layer = projectItemMapView.MapView.Map.GetAllLayers(true).FirstOrDefault(l => MatchLayerForCoverage(l, shortcut.Value as ICoverage));
 
             if (layer != null)
             {

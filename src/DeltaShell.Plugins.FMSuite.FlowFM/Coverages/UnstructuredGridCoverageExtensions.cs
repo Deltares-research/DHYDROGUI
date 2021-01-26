@@ -94,6 +94,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static void LoadGrid(this UnstructuredGridCoverage coverage, UnstructuredGrid grid,
                                     bool reInterpolate = false)
         {
+            if (coverage.Grid == grid)
+            {
+                return;
+            }
+
             coverage.BeginEdit(new DefaultEditAction("Inserting new grid in coverage"));
             List<Coordinate> newLocations = coverage.GetCoordinatesForGrid(grid).ToList();
             int count = newLocations.Count();

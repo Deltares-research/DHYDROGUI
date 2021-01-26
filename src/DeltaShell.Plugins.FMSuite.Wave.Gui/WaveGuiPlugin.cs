@@ -13,7 +13,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.CommonTools.Gui.Forms;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -22,6 +22,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
@@ -130,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2DPoint, IWaveModel>(
                     "Observation Points (Waves)", m => m.FeatureContainer.ObservationPoints, () => Gui);
             yield return obsPointViewInfo;
-            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsPointViewInfo, o => o.Data,
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsPointViewInfo, o => o.Value,
                                                                        o => o.ShortCutType == ShortCutType.FeatureSet);
 
             yield return ViewInfoWrapper<Feature2DPoint>.Create(obsPointViewInfo,
@@ -149,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     m => m.FeatureContainer.ObservationCrossSections,
                     () => Gui);
             yield return obsCrossSectionViewInfo;
-            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsCrossSectionViewInfo, o => o.Data,
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obsCrossSectionViewInfo, o => o.Value,
                                                                        o => o.ShortCutType == ShortCutType.FeatureSet);
 
             yield return ViewInfoWrapper<Feature2D>.Create(obsCrossSectionViewInfo,
@@ -174,8 +175,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             };
             yield return timePointViewInfo;
             ViewInfo fromTreeShortcut = ViewInfoWrapper<WaveModelTreeShortcut>.Create(
-                timePointViewInfo, o => o.Data,
-                o => o.Data is WaveInputFieldData && o.ShortCutType == ShortCutType.FeatureSet);
+                timePointViewInfo, o => o.Value,
+                o => o.Value is WaveInputFieldData && o.ShortCutType == ShortCutType.FeatureSet);
             fromTreeShortcut.CloseForData = (v, o) => o.Equals(v.Data);
 
             yield return fromTreeShortcut;
@@ -239,8 +240,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 return model != null ? model.FeatureContainer.Obstacles : null;
             });
             yield return ViewInfoWrapper<Feature2D>.Create(obstacleViewInfo, FindObstaclesForFeature, IsModelObstacle);
-            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obstacleViewInfo, o => o.Data,
-                                                                       o => o.WaveModel.FeatureContainer.Obstacles.Equals(o.Data) &&
+            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(obstacleViewInfo, o => o.Value,
+                                                                       o => o.WaveModel.FeatureContainer.Obstacles.Equals(o.Value) &&
                                                                             o.ShortCutType == ShortCutType.FeatureSet);
 
             yield return new ViewInfo<WaveModelTreeShortcut, WaveModel, WpfSettingsView>
@@ -256,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                         return;
                     }
 
-                    v.EnsureVisible(shortcut.Data);
+                    v.EnsureVisible(shortcut.Value);
                 },
                 AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.WaveModel)
             };
@@ -278,7 +279,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 },
                 AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.WaveModel)
             };
+            
+            yield return new ViewInfo<DomainSpecificValidationShortcut, WaveModel, WpfSettingsView>
+            {
+                Description = "Wave settings",
+                GetViewName = (v, o) => o.Name + _wavesSettings,
+                GetViewData = o => o.WaveModel,
+                OnActivateView = (v, o) =>
+                {
+                    var shortcut = o as DomainSpecificValidationShortcut;
+                    if (shortcut == null)
+                    {
+                        return;
+                    }
 
+                    v.EnsureVisible(shortcut.TabName);
+                    SetSelectedDomain(v, shortcut.SelectedDomainData);
+                },
+                AfterCreate = (v, o) =>
+                {
+                    ConfigureWpfSettingsView(v, o.WaveModel);
+                }
+            };
+            
             yield return new ViewInfo<WaveModel, ValidationView>
             {
                 Description = "Validation Report",
@@ -290,18 +313,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     v.OnValidate = d => new WaveModelValidator().Validate(d as WaveModel, d as WaveModel);
                 }
             };
-
-            yield return new ViewInfo<ReadOnlyTextFileData, ReadOnlyTextFileViewModel, TextDocumentView>
-            {
-                Description = "Text File",
-                GetViewName = (v, o) => o.Name,
-                GetViewData = o => new ReadOnlyTextFileViewModel(o),
-                ViewDataContainsData = (v, o) =>
-                    v.Data is ReadOnlyTextFileViewModel viewModel && viewModel.Data.Equals(o),
-                CloseForData = (v, o) =>
-                    v.Data is ReadOnlyTextFileViewModel viewModel && viewModel.Data.Equals(o),
-            };
-
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
@@ -325,7 +336,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
             yield return new WaveOutputDataNodePresenter { GuiPlugin = this};
-            yield return new ReadOnlyTextFileDataNodePresenter {GuiPlugin = this};
         }
 
         public override void OnActiveViewChanged(IView view)
@@ -418,9 +428,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
             }
 
-            if (sender is IWaveModel model && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
+            if (sender is IModel model && 
+                activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
             {
-                CloseOutputFileViews(model.WaveOutputData);
+                CloseWaveModelOutput(model);
             }
 
             if (!(sender is WaveModel) || activityStatusChangedEventArgs.NewStatus != ActivityStatus.Failed)
@@ -430,6 +441,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
 
             Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        }
+
+        private void CloseWaveModelOutput(IModel model)
+        {
+            switch (model)
+            {
+                case IWaveModel waveModel:
+                    CloseOutputFileViews(waveModel.WaveOutputData);
+                    break;
+                case ICompositeActivity compositeActivity:
+                    compositeActivity.Activities.OfType<IWaveModel>()
+                                     .Select(x => x.WaveOutputData)
+                                     .ForEach(CloseOutputFileViews);
+                    break;
+            }
         }
 
         private void CloseOutputFileViews(IWaveOutputData outputData)
@@ -463,6 +489,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             view.SetSynchronizedProperties(propertiesToSynchronize);
             view.GetChangedPropertyName = (sender, propertyName) =>
                 (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+        }
+
+        private void SetSelectedDomain(WpfSettingsView view, IWaveDomainData domain)
+        {
+            ObservableCollection<WpfGuiCategory> wpfGuiCategories = view.SettingsCategories;
+            
+            WpfGuiCategory domainSpecificSettings = 
+                wpfGuiCategories.Single(c => string.Equals(
+                                            c.CategoryName,
+                                            Wave.Properties.Resources.Wave_Domain_specific_settings));
+
+            if (domainSpecificSettings.CustomControl.DataContext is MainDomainSpecificDataViewModel viewModel)
+            {
+                viewModel.SelectedViewModel = viewModel.DomainSpecificDataViewModelsList.FirstOrDefault(
+                    vm => string.Equals(vm.DomainName ,domain.Name));
+            }
         }
     }
 }

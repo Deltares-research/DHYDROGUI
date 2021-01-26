@@ -28,6 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         {
             InitializeComponent();
             BackColorChanged += HydroModelSettingsBackColorChanged;
+            UpdateRunButton();
         }
 
         public HydroModel HydroModel
@@ -162,6 +163,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             updating = true;
             workflowEditorControl.Workflows = model.Workflows;
             workflowEditorControl.CurrentWorkflow = model.CurrentWorkflow;
+            UpdateRunButton();
             updating = false;
         }
 
@@ -191,10 +193,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             {
                 case "CurrentWorkflow":
                     workflowEditorControl.CurrentWorkflow = model.CurrentWorkflow;
+                    UpdateRunButton();
                     break;
             }
 
             updating = false;
+        }
+
+        private void UpdateRunButton()
+        {
+            buttonRun.Enabled = workflowEditorControl.CurrentWorkflow != null;
         }
 
         private void workflowEditorControl_CurrentWorkflowChanged(object sender, EventArgs e)
@@ -207,7 +215,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             model.BeginEdit(new DefaultEditAction("Setting current workflow to : " + workflowEditorControl.CurrentWorkflow));
             model.CurrentWorkflow = workflowEditorControl.CurrentWorkflow;
             model.EndEdit();
-
+            
             if (WorkflowSelectedCallback != null)
             {
                 WorkflowSelectedCallback(model.CurrentWorkflow);

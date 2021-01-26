@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -85,6 +85,86 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         public static string DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_ {
             get {
                 return ResourceManager.GetString("DelftIniFileMigrateBehaviour_HandleMigration_Migrating__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use custom wind file option is switched on but no file has been selected..
+        /// </summary>
+        public static string DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_file_provided {
+            get {
+                return ResourceManager.GetString("DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_fil" +
+                        "e_provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use custom wind file option is switched on but no x-component file has been selected..
+        /// </summary>
+        public static string DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_x_component_file_provided {
+            get {
+                return ResourceManager.GetString("DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_x_c" +
+                        "omponent_file_provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use custom wind file option is switched on but no y-component file has been selected..
+        /// </summary>
+        public static string DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_y_component_file_provided {
+            get {
+                return ResourceManager.GetString("DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_no_y_c" +
+                        "omponent_file_provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided custom wind file does not exist..
+        /// </summary>
+        public static string DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_file_does_not_exist {
+            get {
+                return ResourceManager.GetString("DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_select" +
+                        "ed_file_does_not_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided x-component file does not exist..
+        /// </summary>
+        public static string DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_x_component_file_does_not_exist {
+            get {
+                return ResourceManager.GetString("DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_select" +
+                        "ed_x_component_file_does_not_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided y-component file does not exist..
+        /// </summary>
+        public static string DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_selected_y_component_file_does_not_exist {
+            get {
+                return ResourceManager.GetString("DomainMeteoDataValidator_Validate_Use_custom_wind_file_option_selected_but_select" +
+                        "ed_y_component_file_does_not_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use spider web file option is switched on but no file has been selected..
+        /// </summary>
+        public static string DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provided {
+            get {
+                return ResourceManager.GetString("DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_no_file_provid" +
+                        "ed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided spider web file does not exist..
+        /// </summary>
+        public static string DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_does_not_exist {
+            get {
+                return ResourceManager.GetString("DomainMeteoDataValidator_Validate_Use_spider_web_file_selected_but_selected_file_" +
+                        "does_not_exist", resourceCulture);
             }
         }
         
@@ -237,6 +317,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 object obj = ResourceManager.GetObject("wave", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Domain specific settings.
+        /// </summary>
+        public static string Wave_Domain_specific_settings {
+            get {
+                return ResourceManager.GetString("Wave_Domain_specific_settings", resourceCulture);
             }
         }
         
