@@ -210,29 +210,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             string errorMessage;
             yield break;
-
-            /*if (!CrossSectionValidator.IsCrossSectionAllowedOnBranch((CrossSection)crossSection, out errorMessage))
-            {
-                yield return new ValidationIssue(crossSection, ValidationSeverity.Error, errorMessage, network);
-            }
-
-            if (crossSection.Geometry.Coordinates.Length == 0)
-            {
-                yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "No profile defined", network);
-            }
-
-            if (!CrossSectionValidator.IsFlowProfileValid(crossSection.Definition))
-            {
-                if (crossSection.Definition.CrossSectionType == CrossSectionType.ZW)
-                {
-                    yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
-                        String.Format("tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", crossSection));
-                }
-                else
-                {
-                    yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "Invalid flow profile", network);
-                }
-            }*/
         }
 
         private static IEnumerable<IChannel> GetChainOfChannelsWithSameOrderNumber(IChannel channel, IHydroNetwork network, IList<IChannel> previousLinks = null)

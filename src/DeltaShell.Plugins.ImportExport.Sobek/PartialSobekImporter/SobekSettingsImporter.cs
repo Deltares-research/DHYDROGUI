@@ -156,95 +156,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             waterFlowFMModel.TimeStep = sobekCaseSettings.TimeStep;
             waterFlowFMModel.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.DtMax).Value = sobekCaseSettings.TimeStep.TotalSeconds;
-
-            /*
-            SetCaseSettingsToParameterSettings("LateralLocation", sobekCaseSettings.LateralLocation);
-            SetCaseSettingsToParameterSettings("NoNegativeQlatWhenThereIsNoWater", sobekCaseSettings.NoNegativeQlatWhenThereIsNoWater);
-            SetCaseSettingsToParameterSettings("MaxLoweringCrossAtCulvert", sobekCaseSettings.MaxLoweringCrossAtCulvert);
-
-            // Initial Conditions
-            SetCaseSettingsToParameterSettings("InitialEmptyWells", sobekCaseSettings.InitialEmptyWells);
-
-            // Flow Parameters
-            SetCaseSettingsToParameterSettings("CourantNumber", sobekCaseSettings.CourantNumber);
-            SetCaseSettingsToParameterSettings("MaxDegree", sobekCaseSettings.MaxDegree);
-            SetCaseSettingsToParameterSettings("MaxIterations", sobekCaseSettings.MaxIterations);
-            SetCaseSettingsToParameterSettings("DtMinimum", sobekCaseSettings.DtMinimum);
-            SetCaseSettingsToParameterSettings("EpsilonValueVolume", sobekCaseSettings.EpsilonValueVolume);
-            SetCaseSettingsToParameterSettings("EpsilonValueWaterDepth", sobekCaseSettings.EpsilonValueWaterDepth);
-            SetCaseSettingsToParameterSettings("StructureDynamicsFactor", sobekCaseSettings.StructureDynamicsFactor);
-            SetCaseSettingsToParameterSettings("RelaxationFactor", sobekCaseSettings.RelaxationFactor);
-            SetCaseSettingsToParameterSettings("Rho", sobekCaseSettings.Rho);
-            SetCaseSettingsToParameterSettings("ThresholdValueFlooding", sobekCaseSettings.ThresholdValueFlooding);
-            SetCaseSettingsToParameterSettings("ThresholdValueFloodingFLS", sobekCaseSettings.ThresholdValueFloodingFLS);
-            SetCaseSettingsToParameterSettings("Theta", sobekCaseSettings.Theta);
-            SetCaseSettingsToParameterSettings("MinimumLength", sobekCaseSettings.MinimumLength);
-            SetCaseSettingsToParameterSettings("AccurateVersusSpeed", sobekCaseSettings.AccurateVersusSpeed);
-            SetCaseSettingsToParameterSettings("StructureInertiaDampingFactor", sobekCaseSettings.StructureInertiaDampingFactor);
-            SetCaseSettingsToParameterSettings("MinimumSurfaceinNode", sobekCaseSettings.MinimumSurfaceinNode);
-            SetCaseSettingsToParameterSettings("MinimumSurfaceatStreet", sobekCaseSettings.MinimumSurfaceatStreet);
-            SetCaseSettingsToParameterSettings("ExtraResistanceGeneralStructure", sobekCaseSettings.ExtraResistanceGeneralStructure);
-            SetCaseSettingsToParameterSettings("AccelerationTermFactor", sobekCaseSettings.AccelerationTermFactor);
-            SetCaseSettingsToParameterSettings("UseTimeStepReducerStructures", sobekCaseSettings.UseTimeStepReducerStructures);
-
-            if (sobekCaseSettings.Iadvec1D != null)
-            {
-                SetCaseSettingsToParameterSettings("Iadvec1D", sobekCaseSettings.Iadvec1D);
-            }
-            if (sobekCaseSettings.Limtyphu1D != null)
-            {
-                SetCaseSettingsToParameterSettings("Limtyphu1D", sobekCaseSettings.Limtyphu1D);
-            }
-            if (sobekCaseSettings.Momdilution1D != null)
-            {
-                SetCaseSettingsToParameterSettings("Momdilution1D", sobekCaseSettings.Momdilution1D);
-            }
-            */
-            // RiverOptions
-            //SetCaseSettingsToParameterSettings("TransitionHeightSD", ParameterCategory.AdvancedOptions, sobekCaseSettings.TransitionHeightSummerDike);
         }
-
-        /// <summary>
-        /// Use:
-        ///  SetCaseSettingsToParameterSettings(Name, ParameterCategory, Value);
-        /// or 
-        ///  SetCaseSettingsToParameterSettings(Name, Value);
-        /// </summary>
-        /// <param name="parameterName"></param>
-        /// <param name="p"></param>
-        /*private void SetCaseSettingsToParameterSettings(string parameterName, params object[] p)
-        {
-            var parameterCategory = (ParameterCategory?)((p.Length == 2) ? p[0] : null);
-            var valueIndex = (p.Length == 2) ? 1 : 0;
-            if (p[valueIndex] is double)
-            {
-                SetCaseSettingsToParameterSettings(parameterName, parameterCategory,
-                                                   ((double)p[valueIndex]).ToString(CultureInfo.InvariantCulture));
-            }
-            else if (p[valueIndex] is bool)
-            {
-                SetCaseSettingsToParameterSettings(parameterName, parameterCategory,
-                                                   ((bool)p[valueIndex]).ToString(CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                SetCaseSettingsToParameterSettings(parameterName, parameterCategory, p[valueIndex].ToString());
-            }
-        }
-
-        private void SetCaseSettingsToParameterSettings(string parameterName, ParameterCategory? parameterCategory, string value)
-        {
-            ModelApiParameter parameter = waterFlowModel1D.GetModelApiParameter(parameterName, parameterCategory);
-            if (parameter != null)
-            {
-                parameter.Value = value;
-            }
-            else
-            {
-                Log.Warn(String.Format("Case setting {0} can not be imported, model parameter setting not available.",
-                                       parameterName));
-            }
-        }*/
 
         private void SetOutputSettings()
         {
@@ -298,21 +210,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             // This is an odd one: it selects 15 output settings at once and is accessed differently. 
             if (sobekCaseSettings.RiverSubsectionParameters)
             {
-                //outputSettings.SubSections = AggregationOptions.Current;
             }
         }
 
         private void ConditionallyAddOutputSetting(bool add, QuantityType quantityType, ElementSet elementSet)
         {
-            /*
-            if (add)
-            {
-                var engineParameter = outputSettings.GetEngineParameter(quantityType, elementSet);
-                if (engineParameter != null)
-                {
-                    engineParameter.AggregationOptions = AggregationOptions.Current;
-                }    
-            }*/
+
         }
 
     }

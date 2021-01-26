@@ -29,8 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                 }
             }
             remoteInstanceApi = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true, showConsole: showDebugConsole);
-            // for non-remote use:
-            //remoteInstanceApi = new FlexibleMeshModelApi();
+            // for non-remote use: remoteInstanceApi = new FlexibleMeshModelApi();
         }
 
         private string WorkingDirectory { get; set; }

@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         protected override void OnCancel()
         {
-            //Elements.Clear;
+
         }
 
         protected override void OnCleanUp()

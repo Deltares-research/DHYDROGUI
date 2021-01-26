@@ -70,9 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 case Model1DParametersCategories.Weirs: return WeirNames;
                 case Model1DParametersCategories.CrossSections: return CrossSectionNames;
                 
-                    //return StructureNames;
+                    
                 case Model1DParametersCategories.Retentions:
-                    //return RetentionNames;
+                    
                 default:
                     return null;
             }

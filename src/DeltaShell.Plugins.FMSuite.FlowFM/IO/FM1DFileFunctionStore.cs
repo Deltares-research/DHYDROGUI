@@ -491,7 +491,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ? string.Format("{0} ({1})", longName, netCdfVariableName)
                 : netCdfVariableName;
 
-            var location = netCdfFile.GetDimensionName(netCdfFile.GetDimensions(netcdfVariable).ToArray()[1]);//netCdfFile.GetAttributeValue(netcdfVariable, UGridConstants.Naming.LocationAttributeName);
+            var location = netCdfFile.GetDimensionName(netCdfFile.GetDimensions(netcdfVariable).ToArray()[1]);
             var timeDependentVariableMetaDataBaseKeyForThisLocation = MetaData.Locations.Keys.FirstOrDefault(tdv => tdv.Name.Equals(netCdfVariableName) );
             if (!LocationsByNetworkDataType.ContainsKey(location) &&
                 timeDependentVariableMetaDataBaseKeyForThisLocation != null)

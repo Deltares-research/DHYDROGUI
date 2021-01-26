@@ -53,12 +53,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 }
                 else
                 {
-                    //SobekFlowBoundaryConditionType.Flow == sobekFlowBoundaryCondition.BoundaryType)
                     flowBoundaryCondition.DataType = Model1DBoundaryNodeDataType.FlowWaterLevelTable;
                     DataTableHelper.SetTableToFunction(sobekFlowBoundaryCondition.FlowHqTable, flowBoundaryCondition.Data);
                 }
-                //Log.WarnFormat("Boundary conditions of QH type not yet supported (id = {0}).", sobekFlowBoundaryCondition.ID);
-               // ConvertTableToTimeFunction(sobekFlowBoundaryCondition.FlowTimeTable, flowBoundaryCondition);
+
             }
 
             if (flowBoundaryCondition.DataType == Model1DBoundaryNodeDataType.FlowWaterLevelTable ||

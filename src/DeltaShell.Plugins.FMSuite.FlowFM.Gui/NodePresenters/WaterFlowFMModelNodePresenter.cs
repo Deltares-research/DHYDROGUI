@@ -85,7 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             foreach (var input in GetInputItems(parentNodeData))
                 yield return input;
 
-            //yield return new TreeFolder(parentNodeData, , "Input", FolderImageType.Input);
             yield return new TreeFolder(parentNodeData, GetOutputItems(parentNodeData), "Output", FolderImageType.Output);
         }
 

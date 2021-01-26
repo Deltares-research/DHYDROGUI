@@ -91,30 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         return;
 
                     case NotifyCollectionChangeAction.Remove:
-                        /*WIP
-                         switch (e.Item)
-                        {
-                            case IBranch branch:
-                                if (!Output1DFileStore.OutputNetwork.Branches.Any(b =>
-                                    b.Name.StartsWith(branch.Name, StringComparison.InvariantCultureIgnoreCase)))
-                                    return;
-                                break;
-                            case INode node:
-                                if (!Output1DFileStore.OutputNetwork.Nodes.Any(n =>
-                                    n.Name.StartsWith(node.Name, StringComparison.InvariantCultureIgnoreCase)))
-                                    return;
-                                break;
-                            default:
-                                return;
-                            
-                        }*/
-
                         break;
-                    /*Output1DFileStore?.Functions.OfType<INetworkCoverage>().ForEach(nc =>
-                                {
-                                    nc.Store = new MemoryFunctionStore(nc.Store);
-                                });*/
-
                 }
                 OnClearOutput();
             }
@@ -193,10 +170,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [InvokeRequired]
         private void ClearBoundaryConditionDataIfNodeIsNotAnEndNodeAnymore(INode node)
         {
-            /*if ((node.IncomingBranches.Count > 1 
-                 && node.OutgoingBranches.Count >=1)
-                || (node.IncomingBranches.Count >= 1
-                    && node.OutgoingBranches.Count > 1)*/
             if (node.IncomingBranches.Count >= 1 
                 && node.OutgoingBranches.Count >=1
                 && boundaryConditions1D.Any(bc =>
@@ -840,7 +813,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             ? pipe.SourceCompartment
                             : pipe.TargetCompartment;
                     }
-                    //lateralSource.Name = HydroNetworkHelper.GetUniqueFeatureName(Network, lateralSource, true);
+                    
                     NamingHelper.MakeNamesUnique(Network.LateralSources);
                     AddLateralSourceData(model1DLateralSourceData);
                     break;

@@ -49,16 +49,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             yield break;
         }
 
-        ///// <summary>
-        ///// some rule might require their output logged
-        ///// eg. Integral part for PID rule
-        ///// </summary>
-        ///// <returns></returns>
-        //public virtual IEnumerable<XElement> ToOutputXml(XNamespace xNamespace)
-        //{
-        //    yield break;
-        //}
-
         /// <summary>
         /// implement this if the rule needs to write some state to the
         /// state_import.xml file.

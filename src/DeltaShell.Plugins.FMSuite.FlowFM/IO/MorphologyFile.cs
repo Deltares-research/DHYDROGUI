@@ -101,7 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 bcFilenameProperty.Value = bcmFilePath;
             }
 
-           // var morGroup = new DelftIniCategory(Header);
             morGroup.AddProperty(BcFile, bcmFilePath);
             morCategories.Add(morGroup);
 

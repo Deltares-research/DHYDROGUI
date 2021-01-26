@@ -117,13 +117,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             switch (averagingType)
             {
-                //case GridCellAveragingMethod.SimpleAveraging: return "mean";
                 case (int)GridCellAveragingMethod.ClosestPoint: return "nearestNb";
                 case (int)GridCellAveragingMethod.MaximumValue: return "max";
                 case (int)GridCellAveragingMethod.MinimumValue: return "min";
                 case (int)GridCellAveragingMethod.InverseWeightedDistance: return "invDist";
                 case (int)GridCellAveragingMethod.MinAbs: return "minAbs";
-                //case (int)GridCellAveragingMethod.Median: return "median"; // does not exist in gui
             }
             return "mean";
         }

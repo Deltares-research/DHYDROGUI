@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             // Use ParallelOptions instance to store the CancellationToken
             ParallelOptions po = new ParallelOptions();
             po.CancellationToken = cts.Token;
-            po.MaxDegreeOfParallelism = 1;//Environment.ProcessorCount * 2;
+            po.MaxDegreeOfParallelism = 1;
             OrderablePartitioner<T> partitioner =
                 Partitioner.Create(elementUsedInAction, EnumerablePartitionerOptions.NoBuffering);
             Task t = new Task(() => Parallel.ForEach(partitioner, po, (e, s, l) =>

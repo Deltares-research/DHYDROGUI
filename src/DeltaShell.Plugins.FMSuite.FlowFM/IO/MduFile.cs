@@ -391,23 +391,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).SetValueAsString(string.Empty);
             }
-            /*
-            if (modelDefinition.FmMeteoFields.Any())
-            {
-                var meteoExtFileName =
-                    modelDefinition.GetModelProperty(KnownProperties.MeteoExtForceFile).GetValueAsString();
-                if (string.IsNullOrEmpty(meteoExtFileName))
-                    meteoExtFileName = System.IO.Path.GetFileNameWithoutExtension(extFileName) + "_meteo" +
-                                     ExtForceFile.Extension;
-                var meteoExtForceFilePath = System.IO.Path.Combine(exportDirectory, meteoExtFileName);
-
-                if (MeteoExtForceFile== null)
-                {
-                    MeteoExtForceFile = new MeteoExtForceFile();
-                }
-
-                MeteoExtForceFile.Write(meteoExtForceFilePath, modelDefinition);
-            }*/
         }
 
         private void WriteMorSedFiles(string mduPath, WaterFlowFMModelDefinition modelDefinition, ISedimentModelData sedimentModelData)

@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var initialConditionCategories = categories.Where(category => category.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.CurrentCultureIgnoreCase) &&
                                                                         (category.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all").Equals("1d", StringComparison.InvariantCultureIgnoreCase) ||
                                                                          category.ReadProperty<string>(InitialConditionRegion.DataFileType.Key).Equals("1dField", StringComparison.InvariantCultureIgnoreCase))).ToArray();
-            //if (!initialConditionCategories.Any()) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__no_valid_content_categories_found, filePath));
+            
             if (initialConditionCategories.Length > 1)
             {
                 Log.Warn(Properties.Resources.Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others);
@@ -150,8 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Name = operationName,
             };
             operation.Mask.Provider = new FeatureCollection(features.ToList(), typeof(Feature));
-
-            //existingForceFileItems[extForceFileItem] = operation;
 
             return operation;
         }

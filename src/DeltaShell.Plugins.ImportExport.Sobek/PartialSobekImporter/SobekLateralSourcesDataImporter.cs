@@ -92,7 +92,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                 model1DLateralSourceData.DataType = Model1DLateralDataType.FlowTimeSeries;
                 DataTableHelper.SetTableToFunction(sobekLateralFlow.FlowTimeTable, model1DLateralSourceData.Data);
-                //ConvertTableToTimeFunction(FlowTimeTable, waterFlowModel1DLateralSourceData);
                 model1DLateralSourceData.Data.Arguments[0].InterpolationType = sobekLateralFlow.InterpolationType;
                 model1DLateralSourceData.Data.Arguments[0].ExtrapolationType = sobekLateralFlow.ExtrapolationType;
             }

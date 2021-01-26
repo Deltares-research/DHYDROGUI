@@ -925,10 +925,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 
                 if (isOnOutletCompartment)
                 {
-                    /*node = network.OutletCompartments
-                        .FirstOrDefault(o => o.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase))
-                        ?.ParentManhole;*/
-
                     node = network.Manholes.FirstOrDefault(m => m.Compartments.Any(c => c.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase)));
                 }
                 else
@@ -1088,31 +1084,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             FmMeteoQuantity meteoQuantity = ExtForceQuantNames.MeteoQuantityNames.FirstOrDefault(pair => pair.Value == quantityKey).Key;
 
-            /* WAAAROM IS DIT WEG!!!???!!! logisch toch?
-                         var locationTypeKey = delftIniCategory.GetPropertyValue(LocationTypeKey);
-                        if (string.IsNullOrEmpty(locationTypeKey))
-                        {
-                            Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location type data",
-                                locationTypeKey);
-                            continue;
-                        }
-
-                        FmMeteoLocationType locationType = BcMeteoFileDataBuilder.FmMeteoLocationKernelNames
-                            .FirstOrDefault(pair => pair.Value == locationTypeKey).Key;
-                        if (locationType != FmMeteoLocationType.Global)
-                        {
-                            //because we don't allow for the others we do this stupid quick implementation fix
-                            Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location data",
-                                locationTypeKey);
-                            continue;
-                        }
-
-                        if (!IFMMeteoFieldGenerator.ContainsKey(meteoQuantity))
-                        {
-                            Log.WarnFormat("Could not parse quantity {0} into a valid meteo data", locationTypeKey);
-                            continue;
-                        }
-                        */
             // NU ALTIJD GLOBAL!!!
             var fmMeteoField = IFMMeteoFieldGenerator[meteoQuantity](FmMeteoLocationType.Global);
 
@@ -1123,33 +1094,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 CanCreateNewBoundaryCondition = true,
             };
 
-
-            /*
-                        var meteoPliFile = delftIniCategory.GetPropertyValue(LocationFileKey);
-
-
-                        if (locationType != FmMeteoLocationType.Global)
-                        {
-                            if (locationType != FmMeteoLocationType.Polygon)
-                            {
-                                Log.DebugFormat("Can't read polygon of fm location type: '{0}'", locationTypeKey);
-                                continue;
-                            }
-
-                            var meteoFeature = existingPolylineFiles.FirstOrDefault(kvp => kvp.Value == meteoPliFile)
-                                .Key;
-                            if (meteoFeature != null)
-                            {
-                                var meteoField = modelDefinition.FmMeteoFields.FirstOrDefault(mf =>
-                                    mf.FmMeteoLocationType == FmMeteoLocationType.Polygon &&
-                                    mf.FeatureData.Feature == meteoFeature);
-                                if (meteoField == null) continue;
-                                meteobuilder.InsertBoundaryData(meteoField, dataBlocks);
-                            }
-
-                            continue;
-                        }
-                        */
+            
             meteobuilder.InsertBoundaryData(fmMeteoField, dataBlocks);
 
             if (modelDefinition.FmMeteoFields.Contains(fmMeteoField))

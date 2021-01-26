@@ -74,7 +74,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 
                 prevCap = (double) row[0];
 
-                //var type = structure.Type;
                 var dir = sobekPump.Direction;
 
                 // Set control direction values

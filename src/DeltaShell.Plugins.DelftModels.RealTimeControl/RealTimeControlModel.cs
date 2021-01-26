@@ -1135,7 +1135,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual bool CanMerge(object sourceModel)
         {
-            //return sourceModel is RealTimeControlModel;
             var rtcModel = sourceModel as RealTimeControlModel;
             if (rtcModel == null) return false;
 

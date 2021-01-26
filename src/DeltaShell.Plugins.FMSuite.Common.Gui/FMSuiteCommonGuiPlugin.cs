@@ -335,10 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                         //search same object in current model
                         project.RootFolder.GetAllItemsRecursive().OfType<IModel>().ForEach(model =>
                         {
-                            //var items = model.GetAllItemsRecursive();
-                            //var o1 = items.OfType<INameable>().FirstOrDefault(i => i.Name.Equals(o.Name));
-                            //if (o1 != null)
-                                Gui.CommandHandler.OpenView(o, v.Key);
+                            Gui.CommandHandler.OpenView(o, v.Key);
                         });
                     });
                 });

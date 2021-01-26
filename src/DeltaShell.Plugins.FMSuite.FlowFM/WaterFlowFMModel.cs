@@ -489,15 +489,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [Category("Run mode")]
         public bool ShowModelRunConsole { get; set; }
 
-        // DELFT3DFM-371: Disable Model Inspection
-        /*
-        [PropertyGrid]
-        [DisplayName("Model inspection")]
-        [Description("Run with model inspection")]
-        [Category("Run mode")]
-        public bool ModelInspection { get; set; }
-        */
-
         [PropertyGrid]
         [DisplayName("Use RPC")]
         [Description("For development only--remove at release")]
@@ -646,8 +637,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SynchronizeModelDefinitions()
         {
-            //Network = ModelDefinition.Network;
-            //NetworkDiscretization = ModelDefinition.NetworkDiscretization;
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
             Boundaries = ModelDefinition.Boundaries;
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
@@ -1207,7 +1196,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
                 : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName);
 
-            //AddOrRenameDataItem(InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
             AddOrRenameDataItem(Roughness, WaterFlowFMModelDefinition.RoughnessDataItemName);
             AddOrRenameDataItem(Viscosity, WaterFlowFMModelDefinition.ViscosityDataItemName);
             AddOrRenameDataItem(Diffusivity, WaterFlowFMModelDefinition.DiffusivityDataItemName);
@@ -1545,9 +1533,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 yield return windField;
             }
 
-            //uncomment when required:
-            //yield return Grid;
-
             yield return Links;
 
             foreach (var link in Links)
@@ -1576,7 +1561,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (Output1DFileStore != null)
                 foreach (var function in Output1DFileStore.Functions)
                     yield return function;
-            //yield return ValidationReport;
         }
 
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
@@ -3777,7 +3761,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         .Select(WaterFlowFMModelDefinition.ConvertSpatialOperation)
                         .ToList();
 
-                    //spatialOperations.AddRange(spatialOperation);
                     spatialOperationsLookupTable.Add(dataItem.Name, spatialOperation);
                 }
                 // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
@@ -3813,33 +3796,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             return spatialOperationsLookupTable;
         }
-        #endregion
-
-        #region Control computational timestep loop
-        /*
-        public override bool InitializeComputationalTimeStep(ref TimeSpan dt)
-        {
-            var targetTime = ((CurrentTime + TimeStep) - ReferenceTime).TotalSeconds;
-            
-            var timeStep = FlexibleMeshModelApi.InitializeComputationalTimeStep(targetTime, dt.TotalSeconds);
-            dt = TimeSpan.FromTicks((long)(timeStep*TimeSpan.TicksPerSecond));
-
-            return true;
-        }
-
-        public override bool RunComputationalTimeStep(ref TimeSpan dt)
-        {
-            var dtOld = dt;
-            var timeStep = dt.TotalSeconds;
-            timeStep = FlexibleMeshModelApi.RunComputationalTimeStep(timeStep);
-
-            FlexibleMeshModelApi.Compute1d2dCoefficients();
-            dt = TimeSpan.FromTicks((long)(timeStep * TimeSpan.TicksPerSecond));
-            return (timeStep == dtOld.TotalSeconds);
-        }
-        */
-
-
         #endregion
 
         #region IDimrModel

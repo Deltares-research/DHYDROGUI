@@ -58,13 +58,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             if (enableSaltInModelHasBeenSet) return;
 
             enableSaltInModelHasBeenSet = true;
-
-            var waterFlowFmModel = GetModel<WaterFlowFMModel>();
-
-           // if (waterFlowFmModel.UseSalt)
-                return;
-
-           // waterFlowFmModel.UseSalt = true;
         }
 
         private void SetLookUpDictionary(string path)
@@ -97,11 +90,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var saltLateralBoundaries = new SaltLateralBoundaryReader().Read(path);
             var lateralSourceDataMapping = new Dictionary<IFeature, Model1DLateralSourceData>();
             var createdLateralSourceFeatures = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
-
-            // foreach (var flowModel1DLateralSourceData in waterFlowFmModel.LateralSourceData)
-            // {
-            //     lateralSourceDataMapping[flowModel1DLateralSourceData.Feature] = flowModel1DLateralSourceData;
-            // }
 
             foreach (var sobekSaltBoundary in saltLateralBoundaries)
             {
@@ -204,9 +192,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (branches.ContainsKey(saltInitialCondition.BranchId))
                     {
                         var branch = branches[saltInitialCondition.BranchId];
-                        // InitialConditionsBuilder.AddInitialConditionToNetworkCoverage(saltInitialCondition.Salt,
-                        //                                                               saltInitial,
-                        //                                                               branch, saltCorrectionFactor);
                     }
                     else
                     {
@@ -214,7 +199,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                 }
             }
-            //SobekWaterFlowModel1DReaderHelper.CopyCoverageValuesAndDefault(saltInitial, waterFlowFmModel.InitialSaltConcentration);
+            
         }
 
         private void ImportSaltBoundaries()
@@ -306,26 +291,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 case DispersionOptionType.Option1:
                 case DispersionOptionType.ThatcherHarlemann:
-                    //waterFlowFmModel.DispersionFormulationType = DispersionFormulationType.Constant;
                     break;
                 case DispersionOptionType.Option2:
                 case DispersionOptionType.Empirical:
-                    //log.ErrorFormat("Global dispersion of type {0} not supported; default dispersion set to {1}.",
-                    //                globalDispersion.DispersionOptionType, waterFlowFmModel.DispersionCoverage.DefaultValue);
                     return;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             
-            // var dispersion = waterFlowFmModel.DispersionCoverage;
-            // if (globalDispersion.F1 < 9.9998e+009)
-            // {
-            //     EnableSaltInModel();
-            //     dispersion.DefaultValue = globalDispersion.F1;
-            // }
-            //
-            // var dispersionF3 = waterFlowFmModel.DispersionF3Coverage;
-
             initialPath = GetFilePath(SobekFileNames.SobekSaltLocalDispersionFileName);
             if (!File.Exists(initialPath))
             {
@@ -352,35 +325,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
                 var branch = branches[sobekSaltLocalDispersion.BranchId];
 
-                switch (sobekSaltLocalDispersion.DispersionType)
-                {
-                    // case DispersionType.Constant:
-                    //     dispersion[new NetworkLocation(branch, branch.Geometry.Length / 2)] = sobekSaltLocalDispersion.F1;
-                    //     if (waterFlowFmModel.DispersionFormulationType != DispersionFormulationType.Constant)
-                    //     {
-                    //         dispersionF3[new NetworkLocation(branch, branch.Geometry.Length / 2)] = sobekSaltLocalDispersion.F3;
-                    //     }
-                    //     break;
-                    // case DispersionType.FunctionOfPlace:
-                    //     foreach (DataRow row in sobekSaltLocalDispersion.Data.Rows)
-                    //     {
-                    //         var offset = (double) row[0];
-                    //         var value_f1 = (double)row[1];
-                    //         dispersion[new NetworkLocation(branch, offset)] = value_f1;
-                    //         
-                    //         if (waterFlowFmModel.DispersionFormulationType != DispersionFormulationType.Constant)
-                    //         {
-                    //             var value_f3 = (double) row[2];
-                    //             dispersion[new NetworkLocation(branch, offset)] = new[] {value_f3};
-                    //         }
-                    //     }
-                    //     break;
-                    // case DispersionType.FunctionOfTime:
-                    //     log.WarnFormat("Dispersion as function of time for branch {0} not supported; first timestep set as constant.", branch.Name);
-                    //     var firstStep = sobekSaltLocalDispersion.Data.Rows;
-                    //     dispersion[new NetworkLocation(branch, branch.Geometry.Length / 2)] = firstStep[1];
-                    //     break;
-                }
             }
         }
     }

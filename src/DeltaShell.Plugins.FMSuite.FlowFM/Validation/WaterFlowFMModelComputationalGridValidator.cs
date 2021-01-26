@@ -35,17 +35,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
 
             var branchesWithoutGridSegments = GetBranchesWithoutGridSegments(networkDiscretization).ToList();
-/*
-            var branchLocationsLookup =
-                networkDiscretization.Locations.Values.GroupBy(l => l.Branch).ToDictionary(g => g.Key, g => g);
-*/
 
             foreach (var branch in networkDiscretization.Network.Branches)
             {
                 var sewerConnection = branch as ISewerConnection;
                 if(sewerConnection != null && Math.Abs(sewerConnection.Length) < 10e-6) continue;
 
-                if (branchesWithoutGridSegments.Contains(branch))//|| !branchLocationsLookup.ContainsKey(branch)
+                if (branchesWithoutGridSegments.Contains(branch))
                 {
                     var message =
                         string.Format(
@@ -55,10 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                     continue; //no computational grid, so no sense reporting additional errors
                 }
-
-                /*var branchLocations = branchLocationsLookup[branch].ToList();*/
-
-                //issues.AddRange(CheckBranchLocations(networkDiscretization, branch));
 
                 issues.AddRange(CheckBranchStructureLocations(networkDiscretization, branch, networkDiscretization.GetLocationsForBranch(branch)));
 
@@ -107,16 +99,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
         private static IEnumerable<ValidationIssue> CheckBranchLocations(IDiscretization networkDiscretization, IBranch branch)
         {
-            /*var firstXCoordinate = branch?.Geometry?.Coordinates?.FirstOrDefault()?.X;
-            if(!firstXCoordinate.HasValue) yield break;
-            var firstYCoordinate = branch?.Geometry?.Coordinates?.FirstOrDefault()?.Y;
-            if (!firstYCoordinate.HasValue) yield break;
-            var lastXCoordinate = branch?.Geometry?.Coordinates?.LastOrDefault()?.X;
-            if (!lastXCoordinate.HasValue) yield break;
-            var lastYCoordinate = branch?.Geometry?.Coordinates?.LastOrDefault()?.Y;
-            if (!lastYCoordinate.HasValue) yield break;
-            if (networkDiscretization.GetLocationOnBranch(firstXCoordinate.Value, firstYCoordinate.Value) == null ||
-                networkDiscretization.GetLocationOnBranch(lastXCoordinate.Value, lastYCoordinate.Value) == null)*/
             var locationsForThisBranch = networkDiscretization.GetLocationsForBranch(branch);
             if(!locationsForThisBranch.Any(l => l.Chainage <= BranchFeature.Epsilon) ||
                !locationsForThisBranch.Any(l => DoubleEquals(l.Chainage, branch.Length)))
@@ -218,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
 
             branches.ExceptWith(otherBranches);
-            return branches;//.RemoveWhere(b=>networkDiscretization.Locations.Values.Select(l => l.Geometry.Coordinate.Equals(b.Source.Geometry.Coordinate)));
+            return branches;
         }
 
         private static IEnumerable<ValidationReport> ValidateIds(IDiscretization networkDiscretization)

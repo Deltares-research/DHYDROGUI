@@ -121,11 +121,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 var sobekControllerParameterType = controller.SobekControllerParameterType;
                 var index = -1;
 
-                //if (returnList.Count > 0)
-                //{
-                //    index = returnList.FindLastIndex(0, returnList.Count, sc => sc.SobekControllerParameterType == sobekControllerParameterType);
-                //}
-
                 for (int i = returnList.Count - 1; i >= 0; i--)
                 {
                     if (returnList[i].SobekControllerParameterType == sobekControllerParameterType)
@@ -686,70 +681,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             log.WarnFormat("Combined triggers are not supported. Trigger {0} - {1} has not been imported!",
                            sobekTrigger.Id, sobekTrigger.Name);
             yield return null;
-
-            //DataColumn columnTime = sobekTrigger.TriggerTable.Columns["Time"];
-            //DataColumn columnOnOff = sobekTrigger.TriggerTable.Columns["OnOff"];
-            //DataColumn columnAndOr = sobekTrigger.TriggerTable.Columns["AndOr"];
-            //DataColumn columnOperator = sobekTrigger.TriggerTable.Columns["Operation"];
-            //DataColumn columnValue = sobekTrigger.TriggerTable.Columns["Value"];
-
-            //TimeCondition previousTimeCondition = null;
-
-            //for (int i = 0; i < sobekTrigger.TriggerTable.Rows.Count; i++)
-            //{
-            //    DataRow nextRow = null;
-            //    var row = sobekTrigger.TriggerTable.Rows[i];
-            //    var operation = (bool)row[columnOperator] ? Operation.Greater : Operation.Less;
-            //    var value = Convert.ToDouble(row[columnValue]);
-
-            //    if (i < sobekTrigger.TriggerTable.Rows.Count - 1)
-            //    {
-            //        nextRow = sobekTrigger.TriggerTable.Rows[i + 1];
-            //    }
-
-            //    var timeCondition = new TimeCondition
-            //    {
-            //        Name = sobekTrigger.Id,
-            //        LongName = sobekTrigger.Name,
-            //    };
-
-            //    timeCondition.TimeSeries[row[columnTime]] = row[columnOnOff];
-
-            //    if (nextRow != null)
-            //    {
-            //        timeCondition.TimeSeries[nextRow[columnTime]] = false;
-            //    }
-
-            //    var hydraulicCondition = new StandardCondition
-            //    {
-            //        Name = sobekTrigger.Id,
-            //        LongName = sobekTrigger.Name,
-            //        Operation = operation,
-            //        Value = value
-            //    };
-
-            //    if ((bool)row[columnAndOr])
-            //    {
-            //        //or
-            //        timeCondition.FalseOutputs.Add(hydraulicCondition);
-            //    }
-            //    else
-            //    {
-            //        //and
-            //        timeCondition.TrueOutputs.Add(hydraulicCondition);
-            //    }
-
-
-            //    if (previousTimeCondition != null)
-            //    {
-            //        previousTimeCondition.FalseOutputs.Add(timeCondition);
-            //    }
-
-            //    previousTimeCondition = timeCondition;
-
-            //    yield return timeCondition;
-            //    yield return hydraulicCondition;
-            //}
         }
 
         private static ConditionBase GetTimeCondition(SobekTrigger sobekTrigger)

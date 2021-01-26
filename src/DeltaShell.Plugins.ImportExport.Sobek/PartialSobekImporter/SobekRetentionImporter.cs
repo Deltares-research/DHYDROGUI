@@ -175,8 +175,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 channel.Network.Branches.Add(channel);
 
                 lateralSource.Branch.BranchFeatures.Remove(lateralSource);
-                //lateralSource.Geometry = (IGeometry)newNode.Geometry.Clone();
-                //NetworkHelper.AddBranchFeatureToBranch(channel, lateralSource, 100);
 
                 retention.Geometry = (IGeometry)newNode.Geometry.Clone();
                 NetworkHelper.AddBranchFeatureToBranch(retention, channel, 0.0);
@@ -190,15 +188,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                                : "";
 
                 CreateStructure(channel, 50.0, definitions, structurebuilders, structureId, secondStructureId);
-
-                // UNCOMMENT TO ADD CROSS SECTION
-                //CrossSection crossSection = new CrossSection(splitNode.Name + "-retcs", 50);
-                //crossSection.Geometry = (IGeometry)splitNode.Geometry.Clone();
-                //crossSection.Geometry.Coordinate.X += 50 * Math.Cos(perpendicularAngle);
-                //crossSection.Geometry.Coordinate.Y += 50 * Math.Sin(perpendicularAngle);
-                //crossSection.CrossSectionType = CrossSectionType.GeometryBased;
-                //crossSection.Network = lateralSource.Network;
-                //NetworkHelper.AddBranchFeatureToBranch(channel, crossSection, 50);
             }
 
             SplitBranches(splitBranches);

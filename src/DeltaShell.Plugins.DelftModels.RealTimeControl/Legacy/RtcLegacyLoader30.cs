@@ -79,8 +79,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
                 var hydroModelNetworkDataItem = ((IModel) hydroModel).AllDataItems.First(di => di.Value == network);
 
-                //networkDataItem.LinkTo(hydroModelNetworkDataItem);
-
                 TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "LinkedTo",
                                                    hydroModelNetworkDataItem);
                 TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "ComposedValue",

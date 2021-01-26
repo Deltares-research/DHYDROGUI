@@ -230,33 +230,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             case FmMeteoQuantity.Precipitation:
                                 new TimFile().Write(dataFilePath, data, modelReferenceDate);
                                 break;
-                                /*
-                                case BoundaryConditionDataType.HarmonicCorrection:
-                                case BoundaryConditionDataType.Harmonics:
-                                case BoundaryConditionDataType.AstroCorrection:
-                                case BoundaryConditionDataType.AstroComponents:
-                                    new CmpFile().Write(dataFilePath, ToHarmonicComponents(data));
-                                    break;
-                                case BoundaryConditionDataType.TimeSeries:
-                                    var depthLayerDefinition = fmMeteoField.GetDepthLayerDefinitionAtPoint(i);
-                                    if (depthLayerDefinition != null &&
-                                        depthLayerDefinition.Type != VerticalProfileType.Uniform)
-                                    {
-                                        new T3DFile().Write(
-                                            dataFilePath.Replace(ExtForceQuantNames.TimFileExtension, ExtForceQuantNames.T3DFileExtension), data, depthLayerDefinition,
-                                            modelReferenceDate);
-                                    }
-                                    else
-                                    {
-                                        new TimFile().Write(dataFilePath, data, modelReferenceDate);
-                                    }
-                                    break;
-                                case BoundaryConditionDataType.Qh:
-                                    new QhFile().Write(dataFilePath, data);
-                                    break;
-                                default:
-                                    throw new Exception("Writing boundary condition type " + fmMeteoField.DataType +
-                                                        " not (yet) implemented");*/
                         }
                     }
                 }
@@ -946,11 +919,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             var quantity = ExtForceQuantNames.MeteoQuantityNames.First(kvp => kvp.Value == extForceFileItem.Quantity).Key;
 
-            /*var fileName = extForceFileItem.FileName == null
-                ? null
-                : Path.Combine(Path.GetDirectoryName(extForceFilePath), extForceFileItem.FileName);
-            */
-            
             switch (quantity)
             {
                 case FmMeteoQuantity.Precipitation:

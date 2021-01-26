@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
     public class WeirBuilder:BranchStructureBuilderBase<Weir>
     {
         protected static readonly ILog Log = LogManager.GetLogger(typeof(WeirBuilder));
-        //public Dictionary<string, CrossSectionDefinition> CrossSectionDefinitions { get; private set; }
+        
         public Dictionary<string, SobekCrossSectionDefinition> SobekCrossSectionDefinitions { get; private set; }
 
         public WeirBuilder(Dictionary<string, SobekCrossSectionDefinition> sobekCrossSectionDefinitions)
@@ -184,7 +184,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             if (!weirSobekTypes.Any(type => type == sobekStructureDefinition.Type))
                 yield break;
             
-            //var name = GetName();
             var weir = new Weir(sobekStructureDefinition.Id);
             weir.WeirFormula = CreateWeirFormula(weir, sobekStructureDefinition);
             SetGeneralProperties(sobekStructureDefinition, weir);
@@ -259,7 +258,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             {
                 weir.CrestLevel = orifice.CrestLevel;
                 weir.CrestWidth = orifice.CrestWidth;
-                //weir.ContractionCoefficient = orifice.ContractionCoefficient;
                 weir.FlowDirection = GetFlowDirection(orifice.FlowDirection);
             }
         }

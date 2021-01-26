@@ -537,7 +537,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.HisData
 
         public void UpdateVariableSize(IVariable variable)
         {
-            //throw new NotImplementedException();
+            
         }
 
         public T GetMaxValue<T>(IVariable variable)

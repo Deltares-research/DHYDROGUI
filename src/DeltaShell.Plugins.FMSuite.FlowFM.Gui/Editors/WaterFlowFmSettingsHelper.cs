@@ -148,21 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 // add to begin:
                 = objectDescription.FieldDescriptions
                     // add to end:
-                    /*.Concat(new[]
-                    {
-                        // Disabled toolbox tab see issue : DELFT3DFM-500
-                        /*new FieldUIDescription(d => data, null)
-                        {
-                            Category = "Toolboxes",
-                            CustomControlHelper = new FMToolboxesPanel(),
-                        },#1#
-                        new FieldUIDescription(d => data.TracerDefinitions, null)
-                        {
-                            Category = "Processes",
-                            SubCategory = "Tracers",
-                            CustomControlHelper = new EditTracersControlHelper(),
-                        },
-                    })*/.ToList();
+                    .ToList();
 
             objectDescription.FieldDescriptions.First(f => f.Name == "StopTime").ValidationMethod =
                 (m, t) =>

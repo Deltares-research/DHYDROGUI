@@ -428,7 +428,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                      };
 
             crossSectionDefinitionZW.BeginEdit(new DefaultEditAction("Create new cross section definition"));
-            //crossSectionDefinitionZW.Name = sobekCrossSectionDefinition.ID;
+            
             var table = new FastZWDataTable();
             
             table.BeginLoadData();
@@ -452,7 +452,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             
             CrossSectionHelper.SetDefaultThalweg(crossSectionDefinitionZW);
 
-            //summerdike data);
+            //summerdike data
             if (sobekCrossSectionDefinition.SummerDikeActive)
             {
                 var summerDike = new SummerDike
@@ -775,7 +775,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             // combination of type value not found get next free sectionname. 
             // Extra requirement is the section may not be used for the current branch with another roughness type
-            var count = usedFriction.Count; // -1;
+            var count = usedFriction.Count;
             while (true)
             {
                 if (roughnessTypePerBranchSection.ContainsKey(GetSectionName(count)))
@@ -792,7 +792,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
                 count++;
             }
-            //var newSection = GetSectionName(usedFriction.Count);
+            
             var newSection = GetSectionName(count);
             usedFriction[roughness] = newSection;
             roughnessTypePerBranchSection[newSection] = roughness.First;
@@ -801,7 +801,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private static string GetSectionName(int count)
         {
-            //return NetworkHelper.GetUniqueName(hydroNetwork.CrossSectionSectionFormat, Network.CrossSectionSectionTypes, "");
             return string.Format(DelftTools.Hydro.HydroNetwork.CrossSectionSectionFormat, count);
         }
     }

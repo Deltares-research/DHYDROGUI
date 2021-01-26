@@ -576,9 +576,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var crossSectionSectionType = HydroNetwork.CrossSectionSectionTypes.FirstOrDefault(cst => cst.Name == sectionTypeName);
             if (crossSectionSectionType == null)
             {
-                /*
-                log.WarnFormat("Roughness section type {0} is not available in network. The import of the roughness spatial data has been skipped.", sectionTypeName);
-                return null;*/
                 crossSectionSectionType = new CrossSectionSectionType() { Name = sectionTypeName };
                 HydroNetwork.CrossSectionSectionTypes.Add(crossSectionSectionType);
             }
@@ -674,9 +671,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             // combination of type value not found get next free sectionname. 
             // Extra requirement is the section may not be used for the current branch with another roughness type
-            var count = usedFriction.Count;// -1;
-            //while (roughnessTypePerBranchSection.Contains(
-            //    new KeyValuePair<string, RoughnessType>(GetSectionName(count++), roughness.First)))
+            var count = usedFriction.Count;
+            
             while (true)
             {
                 if (roughnessTypePerBranchSection.ContainsKey(GetSectionName(count)))
@@ -693,7 +689,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
                 count++;
             }
-            //var newSection = GetSectionName(usedFriction.Count);
+            
             var newSection = GetSectionName(count);
             usedFriction[roughness] = newSection;
             roughnessTypePerBranchSection[newSection] = roughness.First;

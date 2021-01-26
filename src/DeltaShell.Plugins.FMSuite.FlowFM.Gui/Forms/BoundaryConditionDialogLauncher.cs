@@ -35,8 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             get
             {
-
-                //yield return new TimFileExporter();
                 yield return new CmpFileExporter();
                 yield return new QhFileExporter();
             }

@@ -704,8 +704,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
-            //yield return new PropertyInfo<Model1DBoundaryNodeData, Model1DBoundaryNodeDataProperties>();
-            //yield return new PropertyInfo<Model1DLateralSourceData, Model1DLateralDataProperties>();
             yield return new PropertyInfo<IWeir, FMWeirProperties>{ AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w)) };
             yield return new PropertyInfo<FmModelTreeShortcut, HydroNetworkProperties>
             {
@@ -789,9 +787,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectSaveFailed += OpenClosedViews;
             base.Gui.Application.ProjectSaved += OpenClosedViews;
             base.Gui.Application.FileImporters.OfType<RasterFileImporter>().ForEach(rfi => rfi.MakeLayerVisibleAfterImport = MakeLayerVisibleAfterImport);
-            // DELFT3DFM-371: Disable Model Inspection
-            // base.Gui.Application.ActivityRunner.Activities.CollectionChanged += Activities_CollectionChanged;
-
+            
             var project = base.Gui.Application.Project;
             if (project != null)
             {
@@ -848,9 +844,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectSaving -= CloseAllViewsBeforeSaving;
             base.Gui.Application.ProjectSaveFailed -= OpenClosedViews;
             base.Gui.Application.ProjectSaved -= OpenClosedViews;
-
-            // DELFT3DFM-371: Disable Model Inspection
-            //base.Gui.Application.ActivityRunner.Activities.CollectionChanged -= Activities_CollectionChanged;
 
             var project = base.Gui.Application.Project;
             if (project != null)

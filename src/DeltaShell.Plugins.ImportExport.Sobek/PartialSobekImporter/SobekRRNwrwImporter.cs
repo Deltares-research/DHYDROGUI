@@ -203,9 +203,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             UpdateMinimumInfiltrationCapacities(nwrwDefinitionArray, readSettings);
             UpdateInfiltrationCapacityDecrease(nwrwDefinitionArray, readSettings);
             UpdateInfiltrationCapacityIncrease(nwrwDefinitionArray, readSettings);
-            //UpdateInfiltrationFromDepressionsOption(nwrwDefinitionArray, readSettings);
-            //UpdateInfiltrationFromRunoffOption(nwrwDefinitionArray, readSettings);
-
         }
 
         private void UpdateRunoffDelayFactors(NwrwDefinition[] nwrwDefinitions, SobekRRNwrwSettings readSettings)

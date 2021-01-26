@@ -70,16 +70,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                                                                       realTimeControlModel,
                                                                                       sobekControllers, sobekTriggers);
             }
-
-            //if (realTimeControlModel.ControlGroups.Count > 0) //All controllers declaired in the Sobek files can be inactive
-            //{
-            //    realTimeControlModel.Models.Add(WaterFlowModel1D);
-            //    model = realTimeControlModel;
-            //}
-            //else
-            //{
-            //    model = WaterFlowModel1D;
-            //}
         }
 
         private RealTimeControlModel RealTimeControlModel

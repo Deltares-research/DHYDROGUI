@@ -323,7 +323,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         {
             var realTimeControlModel = (RealTimeControlModel) ((ToolStripMenuItem) sender).Tag;
 
-            //var choices = new[] { emptyGroup, pidGroup, hydraulicGroup };
             var choices = RealTimeControlModelHelper.StandardControlGroups.ToArray();
 
             var dialog = new ListBasedDialog

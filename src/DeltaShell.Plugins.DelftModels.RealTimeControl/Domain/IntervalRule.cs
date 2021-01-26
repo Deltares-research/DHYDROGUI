@@ -169,15 +169,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             return result;
         }
 
-        //To be removed : Disk Schwanenberg: It is probably better to let RTCTools always determine the start values.
-        //public override IEnumerable<XElement> ToImportState(XNamespace xNamespace)
-        //{
-        //    yield return (new XElement(xNamespace + "treeVectorLeaf",
-        //                               new XAttribute("id", Status),
-        //                               new XElement(xNamespace + "vector", 0.0)));
-
-        //}
-
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
         {
             yield return GetImportTimeSeries(prefix, start, stop, step);

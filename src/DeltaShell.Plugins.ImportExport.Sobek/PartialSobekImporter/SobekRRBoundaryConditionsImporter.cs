@@ -64,23 +64,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 var boundaryData = boundaryCondition.Series;
                 boundaryData.IsConstant = bcBlockData.FunctionType.Equals("constant", StringComparison.InvariantCultureIgnoreCase);
                 boundaryData.Data.Time.ExtrapolationType = ExtrapolationType.Constant;
-                /*
-                boundaryData.Value = bc.FixedLevel;
-                if (!String.IsNullOrEmpty(bc.TableId))
-                {
-                    if (dicBCTable.ContainsKey(bc.TableId))
-                    {
-                        var timeSeries = DataTableHelper.ConvertDataTableToTimeSeries(dicBCTable[bc.TableId],
-                            "boundary conditions");
-                        boundaryData.Data = timeSeries;
-                    }
-                    else
-                    {
-                        log.ErrorFormat(
-                            "Unable to find RR boundary conditions table with id {0} for boundary with id {1}",
-                            bc.TableId, bc.Id);
-                    }
-                */
             }
 
         }

@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -534,9 +535,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var sillWidthProperty = structure2D.GetProperty(StructureRegion.GateCrestWidth.Key);
             var sillWidthString = sillWidthProperty == null ? null : sillWidthProperty.GetValueAsString();
             gate.SillWidth = string.IsNullOrEmpty(sillWidthString) ? 0.0 : DataTypeValueParser.FromString<double>(sillWidthString);
-            /*gate.DoorHeight =
-                DataTypeValueParser.FromString<double>(
-                    structure2D.GetProperty(KnownStructureProperties.GateDoorHeight).GetValueAsString());*/
             var openingDirectionProperty = structure2D.GetProperty(StructureRegion.GateHorizontalOpeningDirection.Key);
             var openingDirectionValue = (Enum) DataTypeValueParser.FromString(openingDirectionProperty.GetValueAsString(), openingDirectionProperty.PropertyDefinition.DataType);
             var displayName = openingDirectionValue.GetDisplayName();

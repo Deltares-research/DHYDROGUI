@@ -76,8 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            /*Write(filePath, modelDefinition.ModelName, modelDefinition.FmMeteoFields,
-                modelDefinition.GetModelProperty(KnownProperties.MeteoExtForceFile), refDate);*/
         }
 
         private void Write(string filePath, string modelDefinitionModelName, IList<IFmMeteoField> fmMeteoFields, WaterFlowFMProperty modelProperty, DateTime refDate)
@@ -310,12 +308,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     continue;
                 }
                 var fmMeteoField = IFMMeteoFieldGenerator[quantity](locationType);
-
-               /*
-                var pliFile = delftIniCategory.GetPropertyValue(LocationFileKey);
-                var feature = existingPolylineFiles.FirstOrDefault(kvp => kvp.Value == pliFile).Key;
-                if (feature == null) continue;
-                */
 
 
                 BcMeteoFileDataBuilder builder;

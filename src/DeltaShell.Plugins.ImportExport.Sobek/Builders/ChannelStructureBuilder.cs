@@ -74,7 +74,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             {
                 if (this.mappings.ContainsKey(m.StructureId))
                 {
-                    //log.Warn($"Structure mapping for id = {m.StructureId} already read, overwriting with new values (defId: \"{m.DefinitionId ?? string.Empty}\", description: \"{m.Name ?? string.Empty }\", Controller Ids: \"{(m.ControllerIDs != null ? string.Join(", ", m.ControllerIDs) : string.Empty)}\"), when placing this structure on the network old values ARE SKIPPED (OLD: defId: \"{this.mappings[m.StructureId].DefinitionId ?? string.Empty}\", description: \"{this.mappings[m.StructureId].Name ?? string.Empty}\", Controller Ids: \"{(this.mappings[m.StructureId].ControllerIDs != null ? string.Join(", ", this.mappings[m.StructureId].ControllerIDs) : string.Empty)}\").");
                     log.Warn( $"Duplicate structure definition statements for " +
                               $"id = {m.StructureId}, " +
                               $"overwriting definition with latest values : " +
@@ -85,8 +84,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 
                 this.mappings[m.StructureId] = m;
             }
-            //mlist.ForEach(m => this.mappings[m.StructureId] = m);
-
+            
             var dlist = definitions as List<SobekStructureDefinition> ?? new List<SobekStructureDefinition>(definitions);
             this.definitions = new Dictionary<string, SobekStructureDefinition>();
             dlist.ForEach(d => this.definitions[d.Id] = d);
@@ -471,7 +469,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             {
                 // if branch has cross section, find nearest and use it to update 
                 // the y-coordinate related values
-                //throw new InvalidOperationException("Does not look OK.Use Abs");
                 var nearestCrossSection = channel.CrossSections.OrderBy(o => Math.Abs( o.Chainage - location.Offset)).First();
                 crossSectionWidth = nearestCrossSection.Definition.Width;
                 crossSectionOffset = nearestCrossSection.Definition.Left;

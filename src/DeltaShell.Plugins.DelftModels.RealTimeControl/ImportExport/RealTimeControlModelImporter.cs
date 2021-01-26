@@ -12,8 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public bool CanImportOn(object targetObject)
         {
-            /*var hydroModel = targetObject as HydroModel.HydroModel;
-            return hydroModel == null || !hydroModel.Activities.Any(a => a.GetType().Implements(typeof(RealTimeControlModel)));*/
             return false;
         }
 
@@ -26,7 +24,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public string Description { get { return Name; } }
         public string Category { get { return "Xml files"; } }
         public Bitmap Image { get { return Properties.Resources.brick_add; } }
-        //public IEnumerable<Type> SupportedItemTypes { get { yield return typeof(HydroModel.HydroModel); } }
         public IEnumerable<Type> SupportedItemTypes
         {
             get { yield break; }

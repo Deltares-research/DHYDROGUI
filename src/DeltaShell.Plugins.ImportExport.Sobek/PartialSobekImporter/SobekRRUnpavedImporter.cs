@@ -202,7 +202,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     {
                         var infiltration = dicInf[sobekUnpaved.InfiltrationId];
                         unpaved.InfiltrationCapacity = infiltration.InfiltrationCapacity;
-                        //unpaved.InfiltrationCapacityUnit -> Just for GUI ??;
                     }
                     else
                     {

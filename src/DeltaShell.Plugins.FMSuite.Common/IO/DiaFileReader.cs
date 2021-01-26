@@ -10,7 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public static string Read(string diaFilePath)
         {
-            //var diaFileContent = File.ReadAllText(diaFilePath);
             var diaFileContent = string.Empty;
             using (var fileStream = new FileStream(diaFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var textReader = new StreamReader(fileStream))
