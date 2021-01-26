@@ -19,11 +19,11 @@ using SharpMap.Extensions.CoordinateSystems;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
-    [Category(TestCategory.Slow)]
     public class FMMapFileFunctionStoreTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void OpenMapFileCheckFunctions_Sedimentation() // Issue #: DELFT3DFM-775
         {
             string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
@@ -54,6 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void OpenMapFileCheckFunctions()
         {
             string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
@@ -75,6 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         [TestCase(@"output_mapfiles\FlowFMWithTimeZones_map.nc", "Wednesday, 09 August 1950 00:00:00")]
         [TestCase(@"output_mapfiles\FlowFMWithoutTimeZones_map.nc", "Monday, 31 August 1992 00:00:00")]
         public void OpenMapFileWithOrWithoutTimeZones_ShouldSetReferenceDateInFunctionsCorrectly(string mapFilePath, string expectedReferenceDate)
@@ -96,6 +99,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void OpenMapFileCheckFunctions_NcFileContaining3DimensionalDataWithLowerUgridVersion()
         {
             string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
@@ -116,6 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void OpenMapFileCheckMinMax()
         {
@@ -140,6 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void OpenSingleTimeSliceMapFileCheckWaterLevelFunction()
         {
@@ -170,6 +177,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void OpenSingleTimeSliceMapFileFilterTime()
         {
             string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
@@ -199,6 +208,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void OpenMapFileReadFlowElements()
         {
             string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
@@ -224,6 +235,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void OpenMapFileCheckWaterLevelFunction()
         {
             string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
@@ -264,6 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void OpenUgridMapFileCheckFunctions()
         {
@@ -319,6 +333,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void OpenMapFileAndSetCoordinateSystemShouldChangeCoordinateSystem()
         {
@@ -341,6 +356,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void Test_GivenAThreeDimensionalVariable_CorrectAmountOfValuesIsGiven()
         {
             string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
@@ -383,6 +400,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// AND an error is logged.
         /// </summary>
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         public void GivenA3DMapFileAndAFunctionStoreReadingThisMapFile_WhenVariablesAreRetrieved_ThenNoExceptionIsThrownAndAnErrorIsLogged()
         {
             using (var tempDir = new TemporaryDirectory())
