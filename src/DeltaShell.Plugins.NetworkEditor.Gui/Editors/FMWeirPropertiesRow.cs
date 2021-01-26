@@ -107,6 +107,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
             set => weir.CrestWidth = value ? weir.Geometry.Length : 0.0;
         }
 
+        [ReadOnly(true)]
+        [DisplayName("Structure Type")]
+        public string FormulaName => Weir.Formula.Name;
+
         [Browsable(false)]
         public bool HasParent { get; set; }
 
