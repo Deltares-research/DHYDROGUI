@@ -47,7 +47,7 @@ namespace DelftTools.Hydro.Area.Objects
 
         public bool UseCapacityTimeSeries { get; set; } = false;
 
-        public double Capacity { get; set; }
+        public double Capacity { get; set; } = 1.0;
 
         public TimeSeries CapacityTimeSeries { get; }
 
@@ -59,13 +59,21 @@ namespace DelftTools.Hydro.Area.Objects
             return new Pump((TimeSeries) CapacityTimeSeries.Clone())
             {
                 GroupName = GroupName,
-                Geometry = (IGeometry) Geometry.Clone(),
-                Attributes = (IFeatureAttributeCollection) Attributes.Clone(),
+                Geometry = (IGeometry) Geometry?.Clone(),
+                Attributes = (IFeatureAttributeCollection) Attributes?.Clone(),
                 Name = Name,
                 IsDefaultGroup = IsDefaultGroup,
                 UseCapacityTimeSeries = UseCapacityTimeSeries,
                 Capacity = Capacity,
             };
         }
+
+        // As part of WaterFlowFMModel.Eventing.GetDataItemListForFeature
+        // uses the `feature.ToString()` method to generate a name. In order
+        // to ensure the name does not get overwritten, we need to overwrite
+        // the `ToString` method to return the Name. This is legacy behaviour 
+        // from the previous Weir implementation unfortunately.
+        public override string ToString() => 
+            !string.IsNullOrEmpty(Name) ? Name : "Unnamed Pump";
     }
 }
