@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.GridGeomApi;
 
 namespace General.tests

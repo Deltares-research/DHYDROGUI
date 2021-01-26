@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Coverages;

@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using DelftTools.Controls;
-using DelftTools.Hydro.CrossSections;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 

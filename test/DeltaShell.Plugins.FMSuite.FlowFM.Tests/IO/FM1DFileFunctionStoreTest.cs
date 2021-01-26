@@ -12,7 +12,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
-using Assert = NUnit.Framework.Assert;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

@@ -8,8 +8,6 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;

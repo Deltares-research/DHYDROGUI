@@ -27,7 +27,6 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
-using PostSharp.Constraints;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

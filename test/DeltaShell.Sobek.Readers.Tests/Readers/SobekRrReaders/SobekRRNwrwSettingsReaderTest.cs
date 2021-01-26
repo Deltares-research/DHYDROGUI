@@ -2,7 +2,6 @@
 using DelftTools.TestUtils;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
 {

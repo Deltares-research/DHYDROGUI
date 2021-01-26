@@ -3,7 +3,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
-using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;

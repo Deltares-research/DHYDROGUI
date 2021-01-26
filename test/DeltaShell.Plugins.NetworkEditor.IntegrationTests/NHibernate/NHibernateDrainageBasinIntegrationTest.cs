@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 

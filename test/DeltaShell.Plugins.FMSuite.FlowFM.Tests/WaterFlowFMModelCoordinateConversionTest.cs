@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using DelftTools.TestUtils;
+﻿using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
-using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 

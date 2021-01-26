@@ -3,7 +3,6 @@ using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
-using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
 namespace DelftTools.Hydro

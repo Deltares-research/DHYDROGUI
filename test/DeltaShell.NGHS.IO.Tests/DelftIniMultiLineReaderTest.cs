@@ -1,10 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
-using NetTopologySuite.Algorithm;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests

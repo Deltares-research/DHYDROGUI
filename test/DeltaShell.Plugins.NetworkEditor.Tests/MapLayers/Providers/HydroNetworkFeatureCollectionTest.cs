@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -5,8 +7,6 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using System;
-using System.Linq;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
 {

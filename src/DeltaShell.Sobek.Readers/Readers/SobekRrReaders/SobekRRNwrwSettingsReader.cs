@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using NetTopologySuite.GeometriesGraph;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {

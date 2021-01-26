@@ -18,7 +18,6 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.Gui;
-using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;

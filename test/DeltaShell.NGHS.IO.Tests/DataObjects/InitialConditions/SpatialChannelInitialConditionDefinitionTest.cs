@@ -1,8 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Roughness;
-using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using NUnit.Framework;
 

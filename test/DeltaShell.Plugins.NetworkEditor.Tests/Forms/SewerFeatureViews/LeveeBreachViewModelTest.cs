@@ -1,6 +1,5 @@
 ﻿using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;

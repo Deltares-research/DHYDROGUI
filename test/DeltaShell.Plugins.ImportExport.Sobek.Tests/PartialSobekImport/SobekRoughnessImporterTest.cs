@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Filters;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
-using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 

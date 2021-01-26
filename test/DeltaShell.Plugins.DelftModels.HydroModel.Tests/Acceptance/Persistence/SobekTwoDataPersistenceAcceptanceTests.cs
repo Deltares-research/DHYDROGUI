@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM;

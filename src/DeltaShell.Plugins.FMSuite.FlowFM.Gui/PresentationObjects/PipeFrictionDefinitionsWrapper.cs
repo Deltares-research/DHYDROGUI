@@ -6,7 +6,7 @@ using DeltaShell.NGHS.IO.DataObjects.Friction;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
 {
     /// <summary>
-    /// Presentation object for visualizing <see cref="IEventedList{PipeFrictionDefinition}"/>
+    /// Presentation object for visualizing <see cref="IEventedList{T}"/>
     /// in project explorer and map tree.
     /// </summary>
     /// <remarks>

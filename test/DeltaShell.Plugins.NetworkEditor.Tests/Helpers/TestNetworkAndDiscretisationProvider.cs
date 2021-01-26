@@ -1,6 +1,5 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
-using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;

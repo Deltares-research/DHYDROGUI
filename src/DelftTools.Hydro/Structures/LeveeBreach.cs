@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
 

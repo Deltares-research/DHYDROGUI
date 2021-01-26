@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Hydro.Link1d2d;

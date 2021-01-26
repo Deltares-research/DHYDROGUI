@@ -7,7 +7,6 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.ImportExport.Gwsw;
-using DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests

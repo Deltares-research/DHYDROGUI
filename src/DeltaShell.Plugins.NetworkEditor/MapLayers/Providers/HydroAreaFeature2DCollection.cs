@@ -1,20 +1,12 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.CoordinateSystems;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
-using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers

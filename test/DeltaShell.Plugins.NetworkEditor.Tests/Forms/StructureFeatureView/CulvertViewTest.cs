@@ -1,13 +1,8 @@
 ﻿using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using DelftTools.Controls.Swf;
-using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;

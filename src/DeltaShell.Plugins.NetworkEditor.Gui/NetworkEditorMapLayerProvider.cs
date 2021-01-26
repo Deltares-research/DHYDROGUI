@@ -22,7 +22,6 @@ using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Api.Editors;

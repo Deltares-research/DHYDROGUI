@@ -1,10 +1,8 @@
 ﻿using System.Linq;
-using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
-using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NUnit.Framework;

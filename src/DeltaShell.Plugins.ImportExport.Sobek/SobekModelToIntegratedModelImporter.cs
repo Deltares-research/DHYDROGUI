@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;

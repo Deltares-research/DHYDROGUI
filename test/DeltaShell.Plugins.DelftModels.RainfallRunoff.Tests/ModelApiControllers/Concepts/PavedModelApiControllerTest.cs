@@ -10,7 +10,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concepts;
 using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using Rhino.Mocks;
-using LinkType = DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter.LinkType;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiControllers.Concepts
 {

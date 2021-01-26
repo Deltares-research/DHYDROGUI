@@ -16,9 +16,7 @@ using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid

@@ -1,8 +1,8 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.IO;
+using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using NUnit.Framework;
-using System;
-using System.IO;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
