@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
             {
                 var shape = new ParallelActivityShape(null) { Activity = ActivityShapeTestHelper.CreateSimpleActivity() };
             });
-            Assert.AreEqual("Value must be a ParallelActivity", error.Message);
+            Assert.AreEqual("Value must be a ParallelActivity\r\nParameter name: value", error.Message);
         }
     }
 }

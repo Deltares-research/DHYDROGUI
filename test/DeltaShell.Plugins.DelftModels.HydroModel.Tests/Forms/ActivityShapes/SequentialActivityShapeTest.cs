@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
                 var shape = new SequentialActivityShape(null) { Activity = ActivityShapeTestHelper.CreateSimpleActivity() };
             });
 
-            Assert.AreEqual("Value must be a SequentialActivity", error.Message);
+            Assert.AreEqual("Value must be a SequentialActivity\r\nParameter name: value", error.Message);
         }
     }
 }
