@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Shell.Core.Workflow;
@@ -187,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     return c;
                 }).ToList();
                 model.Initialize();
-                Pump2D pump = model.Area.Pumps.First(o => o.Name == "pump01");
+                IPump pump = model.Area.Pumps.First(o => o.Name == "pump01");
 
                 string cat = model.GetFeatureCategory(pump);
                 Array result = model.GetVar(cat, pump.Name, "capacity");
@@ -227,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 }).ToList();
                 model.Initialize();
                 // get weir02
-                Weir2D weir = model.Area.Weirs.First(o => o.Name == "weir02");
+                IStructure weir = model.Area.Weirs.First(o => o.Name == "weir02");
 
                 string cat = model.GetFeatureCategory(weir);
                 Array result = model.GetVar(cat, weir.Name, KnownStructureProperties.CrestLevel);

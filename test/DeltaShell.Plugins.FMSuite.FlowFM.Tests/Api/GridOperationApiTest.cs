@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             {
                 using (var api = new UnstrucGridOperationApi(model, false))
                 {
-                    Pump2D pump = model.Area.Pumps.FirstOrDefault();
+                    IPump pump = model.Area.Pumps.FirstOrDefault();
                     Assert.IsNotNull(pump);
                     try
                     {

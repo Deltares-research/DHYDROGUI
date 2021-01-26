@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -1332,7 +1333,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }),
                 IsDefaultGroup = true
             });
-            area.Weirs.Add(new Weir2D
+            area.Weirs.Add(new Structure()
             {
                 GroupName = "MyStructures.ini",
                 Name = "MyGate",

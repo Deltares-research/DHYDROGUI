@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
             var observationPointFm = new GroupableFeature2DPoint {Name = "ObservationFM"};
-            var weirFm = new Weir2D
+            var weirFm = new Structure
             {
                 Name = "Weir1",
                 Geometry = new LineString(new[]
@@ -228,7 +229,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
             var observationPointFm = new GroupableFeature2DPoint {Name = "ObservationFM"};
-            var weirFm = new Weir2D
+            var weirFm = new Structure
             {
                 Name = "Weir1",
                 Geometry = new LineString(new[]

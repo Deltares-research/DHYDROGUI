@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
@@ -123,8 +124,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // Given
             var plugin = new FlowFMApplicationPlugin();
             IEnumerable<IFileImporter> fileImporters = plugin.GetFileImporters();
-            PliFileImporterExporter<Pump2D, Pump2D> importer =
-                fileImporters.OfType<PliFileImporterExporter<Pump2D, Pump2D>>().Single();
+            PliFileImporterExporter<Pump, Pump> importer =
+                fileImporters.OfType<PliFileImporterExporter<Pump, Pump>>().Single();
 
             // Set delegates to null, since they are used for the relation between model en pump
             // and we only want to test the creation of the pump based on the pli file
@@ -133,15 +134,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // When
             var pumps =
-                (List<Pump2D>) importer.ImportItem(TestHelper.GetTestFilePath("structures_all_types\\pump01.pli"));
+                (List<Pump>) importer.ImportItem(TestHelper.GetTestFilePath("structures_all_types\\pump01.pli"));
 
             // Then
             int counter = pumps.Count;
             Assert.AreEqual(1, counter, $"{counter} pumps created instead of 1");
 
-            Pump2D pump = pumps[0];
-            Assert.IsTrue(pump.CanBeTimedependent,
-                          "CreateDelegate of the importer is not correct. Pump2D should be created with \"CanBeTimedependent\" is true");
+            Pump pump = pumps[0];
             Assert.AreEqual(158031.3362860695, pump.Geometry.Coordinates[0].X, "Geometry of the pump is not correctly imported");
             Assert.AreEqual(578431.3969514973, pump.Geometry.Coordinates[0].Y, "Geometry of the pump is not correctly imported");
 
@@ -152,14 +151,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenAPliFileImporterExporter_WhenImporting_ThenTheNameShouldBeCorrect()
         {
-            var importer = new PliFileImporterExporter<Pump2D, Pump2D> {Mode = Feature2DImportExportMode.Import};
+            var importer = new PliFileImporterExporter<Pump, Pump> {Mode = Feature2DImportExportMode.Import};
             Assert.AreEqual("Features from .pli(z) file", ((IFileImporter) importer).Name, "Name of the pli file importer for pumps is not correct");
         }
 
         [Test]
         public void GivenAPliFileImporterExporter_WhenExporting_ThenTheNameShouldBeCorrect()
         {
-            var exporter = new PliFileImporterExporter<Pump2D, Pump2D> {Mode = Feature2DImportExportMode.Export};
+            var exporter = new PliFileImporterExporter<Pump, Pump> {Mode = Feature2DImportExportMode.Export};
             Assert.AreEqual("Features to .pli file", ((IFileExporter) exporter).Name, "Name of the pli file exporter for pumps is not correct");
         }
 

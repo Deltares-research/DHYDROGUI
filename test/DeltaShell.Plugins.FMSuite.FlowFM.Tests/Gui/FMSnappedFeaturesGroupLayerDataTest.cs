@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
@@ -255,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Envelope gridExtent = model.GridExtent;
                 Coordinate center = gridExtent.Centre;
-                model.Area.Pumps.Add(new Pump2D()
+                model.Area.Pumps.Add(new Pump()
                 {
                     Geometry = new LineString(new[]
                     {
@@ -283,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Envelope gridExtent = model.GridExtent;
                 Coordinate center = gridExtent.Centre;
-                model.Area.Weirs.Add(new Weir2D()
+                model.Area.Weirs.Add(new Structure()
                 {
                     Geometry = new LineString(new[]
                     {
