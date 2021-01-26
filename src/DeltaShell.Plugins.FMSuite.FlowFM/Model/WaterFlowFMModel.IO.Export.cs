@@ -8,7 +8,9 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -114,6 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 MduFilePath = mduPath;
                 CacheFile.UpdatePathToMduLocation(mduPath);
+                SpatialData.SwitchTo(Path.GetDirectoryName(mduPath));
 
                 SaveOutput();
             }

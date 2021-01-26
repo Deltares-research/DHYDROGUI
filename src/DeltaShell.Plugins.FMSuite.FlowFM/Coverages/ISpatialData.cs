@@ -106,5 +106,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         /// Thrown when <paramref name="name"/> is <c>null</c> or empty.
         /// </exception>
         void RemoveFraction(string name);
+
+        /// <summary>
+        /// Switches each <seealso cref="SharpMap.SpatialOperations.ImportSamplesOperation"/>
+        /// to the new file path.
+        /// </summary>
+        /// <param name="targetDir"> The target directory to which to switch to. </param>
+        /// <exception cref="System.ArgumentException">
+        /// Thrown when <paramref name="targetDir"/> is <c>null</c> or empty.
+        /// </exception>
+        void SwitchTo(string targetDir);
     }
 }

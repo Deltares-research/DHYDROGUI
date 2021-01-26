@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using NetTopologySuite.Extensions.Coverages;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 {
@@ -123,6 +126,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             }
         }
 
+        public void SwitchTo(string targetDir)
+        {
+            Ensure.NotNullOrEmpty(targetDir, nameof(targetDir));
+
+            foreach (ImportSamplesOperation operation in DataItems.SelectMany(GetImportSamplesOperations))
+            {
+                string fileName = Path.GetFileName(operation.FilePath);
+                operation.FilePath = Path.Combine(targetDir, fileName);
+            }
+        }
+
         public void AddTracer(UnstructuredGridCellCoverage coverage)
         {
             Ensure.NotNull(coverage, nameof(coverage));
@@ -149,7 +163,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             RemoveDataItem(fractionDataItems, name);
         }
 
-        private static void RemoveDataItem(IList<IDataItem> dataItems, string name)
+        private static IEnumerable<ImportSamplesOperation> GetImportSamplesOperations(IDataItem dataItem)
+        {
+            var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
+            return valueConverter?.SpatialOperationSet.GetOperationsRecursive().OfType<ImportSamplesOperation>() ??
+                   Enumerable.Empty<ImportSamplesOperation>();
+        }
+
+        private static void RemoveDataItem(ICollection<IDataItem> dataItems, string name)
         {
             IDataItem dataItem = dataItems.GetByName(name);
             if (dataItem == null)
