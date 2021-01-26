@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers
 
         public bool CanImportOn(object targetObject)
         {
-            return true;
+            return false;
         }
 
         public object ImportItem(string path, object target = null)

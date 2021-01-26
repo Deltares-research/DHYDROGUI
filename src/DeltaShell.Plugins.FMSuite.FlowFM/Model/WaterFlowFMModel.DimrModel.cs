@@ -55,23 +55,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <param name="itemString"> The item string. </param>
         /// <returns> The matching data item. </returns>
         /// <remarks>
-        /// <param name="itemString"/>
-        /// cannot be null.
+        /// <paramref name="itemString"/> cannot be null.
         /// </remarks>
         /// <exception cref="ArgumentException">
-        /// Thrown in case,
-        /// -
-        /// <param name="itemString"/>
-        /// does not contain 3 elements
-        /// - category in
-        /// <param name="itemString"/>
-        /// is unknown
-        /// - feature in
-        /// <param name="itemString"/>
-        /// is unknown
-        /// - parameter name in
-        /// <param name="itemString"/>
-        /// is unknown.
+        /// Thrown when
+        /// - <paramref name="itemString"/> does not contain 3 elements
+        /// - category in <paramref name="itemString"/> is unknown
+        /// - feature in <paramref name="itemString"/> is unknown
+        /// - parameter name in <paramref name="itemString"/> is unknown.
         /// </exception>
         public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString)
         {
@@ -209,19 +200,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             LogWarningWriteRestartModelRun();
         }
 
-        public IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory 
-        {
-            get
-            {
-                var listOfFiles = new List<string>();
-                if (CacheFile.UseCaching && cacheFile.Path.StartsWith(WorkingDirectoryPath))
-                {
-                    listOfFiles.Add(CacheFile.Path);
-                }
-                return listOfFiles;
-            }
-        }
-
+        public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory =>
+            CacheFile.UseCaching && CacheFile.Path.StartsWith(WorkingDirectoryPath)
+                ? new HashSet<string> {CacheFile.Path}
+                : new HashSet<string>();
         #endregion
     }
 }

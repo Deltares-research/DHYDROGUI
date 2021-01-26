@@ -301,6 +301,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 model.ConnectOutput(rtcDirectory);
 
                 // Assert
+                Assert.That(model.OutputIsEmpty, Is.False);
+                
                 RestartFile[] restartOutput = model.RestartOutput.ToArray();
                 Assert.That(restartOutput, Has.Length.EqualTo(5));
 
@@ -374,8 +376,117 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             using (var model = new RealTimeControlModel())
             {
-                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
-                Assert.AreEqual(fileExceptions.Count, 0);
+                Assert.That(model.IgnoredFilePathsWhenCleaningWorkingDirectory, Is.Empty);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetStartTime_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+                
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+                
+                // When
+                model.StartTime = DateTime.Now;
+                
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+        
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetStopTime_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+                
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+                
+                // When
+                model.StopTime = DateTime.Now;
+                
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+        
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetTimeStep_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+                
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+                
+                // When
+                model.TimeStep = TimeSpan.FromDays(1);
+                
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+        
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetWriteRestart_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+                
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+                
+                // When
+                model.WriteRestart = true;
+                
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+        
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetRestartInput_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+                
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+                
+                // When
+                model.RestartInput = new RealTimeControlRestartFile();
+                
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
             }
         }
 
