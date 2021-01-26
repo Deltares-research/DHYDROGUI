@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
@@ -27,7 +27,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <param name="area"> The hydro area of a model. </param>
         /// <param name="category"> The category. </param>
         /// <returns> Features of the hydro area of a model from a specific category. </returns>
-        /// <exception cref="ArgumentException"> ArgumentException will be  returned if category is unknown. </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="category"/> is unknown.
+        /// </exception>
         public static IEnumerable<IFeature> GetFeaturesFromCategory(this HydroArea area, string category)
         {
             switch (category)
@@ -35,11 +37,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 case KnownFeatureCategories.Pumps:
                     return area.Pumps;
                 case KnownFeatureCategories.GeneralStructures:
-                    return area.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula);
+                    return area.Weirs.Where(w => w.Formula is GeneralStructureWeirFormula);
                 case KnownFeatureCategories.Gates:
-                    return area.Weirs.Where(w => w.WeirFormula is GatedWeirFormula);
+                    return area.Weirs.Where(w => w.Formula is GatedWeirFormula);
                 case KnownFeatureCategories.Weirs:
-                    return area.Weirs.Where(w => w.WeirFormula is SimpleWeirFormula);
+                    return area.Weirs.Where(w => w.Formula is SimpleWeirFormula);
                 case KnownFeatureCategories.ObservationPoints:
                     return area.ObservationPoints;
                 case KnownFeatureCategories.ObservationCrossSections:
@@ -58,32 +60,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void RenameStructureGroupNameToStructureFilePath(this IGroupableFeature hydroAreaFeature,
                                                                         WaterFlowFMModel model)
         {
-            if (!(hydroAreaFeature is Weir2D) && !(hydroAreaFeature is Pump2D))
+            if (!(hydroAreaFeature is IStructure) && 
+                !(hydroAreaFeature is IPump))
             {
                 return;
             }
 
-            ChangeStructureGroupName<Weir2D>(hydroAreaFeature, model);
-            ChangeStructureGroupName<Pump2D>(hydroAreaFeature, model);
+            ChangeStructureGroupName<IStructure>(hydroAreaFeature, model);
+            ChangeStructureGroupName<IPump>(hydroAreaFeature, model);
         }
 
         private static void ChangeStructureGroupName<TFeat>(IGroupableFeature hydroAreaFeature, WaterFlowFMModel model)
             where TFeat : class, IGroupableFeature
         {
-            var structure = hydroAreaFeature as TFeat;
-            if (structure == null)
+            if (!(hydroAreaFeature is TFeat structure))
             {
                 return;
             }
 
             string strucGroupName = structure.GroupName;
-            if (string.IsNullOrEmpty(strucGroupName) || !Path.IsPathRooted(strucGroupName) ||
+            if (string.IsNullOrEmpty(strucGroupName) || 
+                !Path.IsPathRooted(strucGroupName) ||
                 strucGroupName.EndsWith(FileConstants.IniFileExtension))
             {
                 return;
             }
 
             string[] iniFiles = Directory.GetFiles(Path.GetDirectoryName(strucGroupName), $"*{FileConstants.IniFileExtension}");
+            
             var strucFile = new StructuresFile
             {
                 StructureSchema = model.ModelDefinition.StructureSchema,
@@ -92,9 +96,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             foreach (string file in iniFiles)
             {
-                IList<IStructure> structures = strucFile.Read(file);
+                IList<IStructureObject> structures = strucFile.Read(file);
                 int numberOfMatchingStructureNames =
                     structures.Count(s => s.Name == Path.GetFileNameWithoutExtension(strucGroupName));
+
                 if (numberOfMatchingStructureNames > 0)
                 {
                     structure.GroupName = file;
