@@ -5,8 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using DelftTools.Controls;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
@@ -15,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 {
     public partial class AreaStructureView : UserControl, IReusableView
     {
-        private IStructure structure;
+        private IStructureObject structure;
         private bool locked;
 
         public AreaStructureView()
@@ -23,12 +22,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             InitializeComponent();
         }
 
-        public IStructure Data
+        public IStructureObject Data
         {
-            get
-            {
-                return structure;
-            }
+            get => structure;
             set
             {
                 if (structure != null)
@@ -89,7 +85,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 return;
             }
 
-            if (structure is Weir2D weir)
+            if (structure is IStructure weir)
             {
                 var controlHost = new ElementHost
                 {
@@ -102,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 return;
             }
 
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -117,14 +113,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         object IView.Data
         {
-            get
-            {
-                return Data;
-            }
-            set
-            {
-                Data = (IStructure) value;
-            }
+            get => Data;
+            set => Data = (IStructureObject) value;
         }
 
         public Image Image { get; set; }
@@ -142,10 +132,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         public bool Locked
         {
-            get
-            {
-                return locked;
-            }
+            get => locked;
             set
             {
                 locked = value;
